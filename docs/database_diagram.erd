@@ -1,0 +1,41 @@
+<diagram version="1" name="empty" time="202111041240">
+	<entities>
+		<data-source id="postgres-jdbc-17cba9dc9bf-208a8c0aef753b6f">
+			<entity id="1" name="SequelizeMeta" fq-name="public.&quot;SequelizeMeta&quot;" order="0" color-bg="0,0,0" x="660" y="0">
+				<path name="public"/>
+				<path name="myworkspace_db_docker"/>
+			</entity>
+			<entity id="2" name="bibliographies" fq-name="public.bibliographies" order="1" color-bg="115,210,22" x="180" y="480">
+				<path name="public"/>
+				<path name="myworkspace_db_docker"/>
+			</entity>
+			<entity id="3" name="proj_tasks" fq-name="public.proj_tasks" order="2" color-bg="32,74,135" x="20" y="20">
+				<path name="public"/>
+				<path name="myworkspace_db_docker"/>
+			</entity>
+			<entity id="4" name="projects" fq-name="public.projects" order="3" color-bg="52,101,164" x="180" y="60">
+				<path name="public"/>
+				<path name="myworkspace_db_docker"/>
+			</entity>
+			<entity id="5" name="tasks" fq-name="public.tasks" order="4" color-bg="245,121,0" x="180" y="240">
+				<path name="public"/>
+				<path name="myworkspace_db_docker"/>
+			</entity>
+			<entity id="6" name="user_preferences" fq-name="public.user_preferences" order="5" color-bg="117,80,123" x="640" y="240">
+				<path name="public"/>
+				<path name="myworkspace_db_docker"/>
+			</entity>
+			<entity id="7" name="users" fq-name="public.users" order="6" color-bg="204,0,0" x="440" y="220">
+				<path name="public"/>
+				<path name="myworkspace_db_docker"/>
+			</entity>
+		</data-source>
+	</entities>
+	<relations>
+		<relation name="proj_tasks_proj_id_fkey" fq-name="public.proj_tasks.proj_tasks_proj_id_fkey" type="fk" pk-ref="4" fk-ref="3"/>
+		<relation name="bibliographies_user_id_fkey" fq-name="public.bibliographies.bibliographies_user_id_fkey" type="fk" pk-ref="7" fk-ref="2"/>
+		<relation name="projects_user_id_fkey" fq-name="public.projects.projects_user_id_fkey" type="fk" pk-ref="7" fk-ref="4"/>
+		<relation name="tasks_user_id_fkey" fq-name="public.tasks.tasks_user_id_fkey" type="fk" pk-ref="7" fk-ref="5"/>
+		<relation name="user_preferences_user_id_fkey" fq-name="public.user_preferences.user_preferences_user_id_fkey" type="fk" pk-ref="7" fk-ref="6"/>
+	</relations>
+</diagram>

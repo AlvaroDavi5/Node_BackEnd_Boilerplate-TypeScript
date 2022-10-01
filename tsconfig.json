@@ -34,39 +34,39 @@
     "moduleResolution": "node",
     "baseUrl": "./",
     "paths": {
-      "@modules/*": [
-        "./node_modules/*"
-      ],
       "@root/*": [
         "./*"
       ],
-      "@config/*": [
-        "./config/*"
+      "@configs/*": [
+        "./configs/*"
       ],
-      "@pages/*": [
-        "./pages/*"
+      "@app/*": [
+        "./src/app/*"
       ],
-      "@api/*": [
-        "./pages/api/*"
+      "@domain/*": [
+        "./src/domain/*"
       ],
-      "@database/*": [
-        "./database/*"
+      "@infra/*": [
+        "./src/infra/*"
       ],
-      "@middlewares/*": [
-        "./middlewares/*"
+      "@interface/*": [
+        "./src/interface/*"
       ],
-      "@controllers/*": [
-        "./controllers/*"
-      ],
-      "@services/*": [
-        "./services/*"
+      "@types/*": [
+        "./src/types/*"
       ],
       "@source/*": [
         "./src/*"
       ],
-      "@test/*": [
-        "./test/*"
-      ]
+      "@tests/*": [
+        "./tests/*"
+      ],
+      "@scripts/*": [
+        "./scripts/*"
+      ],
+      "@modules/*": [
+        "./node_modules/*"
+      ],
     },
     "rootDirs": [
       "./src",
@@ -136,7 +136,6 @@
     "skipLibCheck": true
   },
   "include": [
-    "next-env.d.ts",
     "**/*.ts",
     "**/*.tsx"
   ],

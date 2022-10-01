@@ -6,8 +6,6 @@ npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 coverage
-.next
-out
 .vercel
 .DS_Store
 *.pem

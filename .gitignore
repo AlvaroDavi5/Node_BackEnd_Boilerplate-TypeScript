@@ -13,9 +13,6 @@ yarn-debug.log*
 yarn-error.log*
 # testing
 /coverage
-# next.js
-/.next
-/out
 # vercel
 .vercel
 # misc

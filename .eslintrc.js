@@ -24,5 +24,20 @@ module.exports = {
 		'no-undef': 'off',
 		'one-var': 'off',
 		camelcase: 'off',
-	}
+	},
+	overrides: [
+		{
+			parser: '@typescript-eslint/parser',
+			extends: [
+				'plugin:@typescript-eslint/recommended',
+				'plugin:@typescript-eslint/eslint-recommended',
+				'plugin:import/typescript',
+			],
+			plugins: ['@typescript-eslint'],
+
+			files: ['*.ts', '*.tsx'],
+
+			rules: {},
+		},
+	],
 };

@@ -5,14 +5,13 @@ LABEL Description="Docker Image for NodeJS"
 LABEL org.opencontainers.image.authors="alvaro.davsa@gmail.com"
 ENV Version="1.0.0"
 
-WORKDIR /home/node/MyWorkspace
+WORKDIR /home/app
 USER root
 
-COPY package*.json *.lock ./
+COPY ./package.json ./yarn.lock ./.env ./src/ ./scripts/
 RUN yarn install
-COPY ./ ./
-CMD [ "npm", "run", "dev" ]
+CMD [ "yarn", "run", "dev" ]
 
-#VOLUME [ "/home/node/MyWorkspace" ]
-EXPOSE 8080
+#VOLUME [ "/home/app" ]
+EXPOSE 3000
 #ENTRYPOINT ["/usr/bin/node", "-D", "FOREGROUND"]

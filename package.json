@@ -1,0 +1,38 @@
+{
+	"name": "node_ddd_boilerplate_typescript",
+	"author": "Álvaro Davi Santos Alves <alvaro.davisa@gmail.com>",
+	"version": "0.1.0",
+	"description": "Node.js boilerplate using TypeScript.",
+	"license": "MIT",
+	"main": "index.js",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/AlvaroDavi5/MyWorkspace"
+	},
+	"private": false,
+	"os": [
+		"linux",
+		"ubuntu",
+		"win32"
+	],
+	"keywords": [
+		"boilerplate",
+		"node",
+		"typescript",
+		"javascript"
+	],
+	"scripts": {
+		"dev": "next dev -p 8080",
+		"build": "next build",
+		"start": "next start -p 3000",
+		"db:setup": "yarn sequelize-cli db:drop && yarn sequelize-cli db:create && yarn sequelize-cli db:migrate && yarn sequelize-cli db:seed:all",
+		"test": "jest",
+		"lint": "next lint",
+		"format": "prettier --write \"./**/*.{js,ts,jsx,tsx,json}\"",
+		"versioning": "semver"
+	},
+	"dependencies": {
+	},
+	"devDependencies": {
+	}
+}

@@ -1,0 +1,81 @@
+{
+	"trailingComma": "es5",
+	"useTabs": true,
+	"tabWidth": 2,
+	"semi": false,
+	"singleQuote": false,
+	"printWidth": 120,
+	"proseWrap": "always",
+	"endOfLine": "lf",
+	"overrides": [
+		{
+			"files": "*.js",
+			"options": {
+				"tabWidth": 2,
+				"useTabs": true,
+				"semi": true,
+				"singleQuote": true,
+				"printWidth": 120,
+				"proseWrap": "never",
+				"endOfLine": "crlf"
+			}
+		},
+		{
+			"files": "*.ts",
+			"options": {
+				"tabWidth": 2,
+				"useTabs": true,
+				"semi": true,
+				"singleQuote": true,
+				"printWidth": 120,
+				"proseWrap": "never",
+				"endOfLine": "crlf"
+			}
+		},
+		{
+			"files": "*.jsx",
+			"options": {
+				"tabWidth": 2,
+				"useTabs": true,
+				"semi": true,
+				"singleQuote": true,
+				"printWidth": 120,
+				"proseWrap": "never",
+				"endOfLine": "crlf"
+			}
+		},
+		{
+			"files": "*.tsx",
+			"options": {
+				"tabWidth": 2,
+				"useTabs": true,
+				"semi": true,
+				"singleQuote": true,
+				"printWidth": 120,
+				"proseWrap": "never",
+				"endOfLine": "crlf"
+			}
+		},
+		{
+			"files": "*.json",
+			"options": {
+				"tabWidth": 2,
+				"useTabs": true,
+				"semi": true,
+				"singleQuote": false,
+				"printWidth": 120,
+				"proseWrap": "never",
+				"endOfLine": "crlf"
+			}
+		},
+		{
+			"files": "*.md",
+			"options": {
+				"semi": true,
+				"printWidth": 120,
+				"proseWrap": "never",
+				"endOfLine": "crlf"
+			}
+		}
+	]
+}

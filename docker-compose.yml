@@ -1,0 +1,51 @@
+# Docker Compose Version
+version: "3.7"
+
+# Containers
+services:
+
+  # Frontend
+  app:
+    # Refered Dockerfile
+    build: ./
+    container_name: MyWorkspace-App_NodeJS
+    command: npm run dev
+    user: root
+    networks:
+      - default_network
+    ports:
+      - 8080:8080
+    volumes:
+      # host_path:container_path
+      - ./:/home/node/MyWorkspace/
+    depends_on:
+      - db
+    links:
+      - db
+
+  # Backend
+  db:
+    image: postgres:latest
+    container_name: MyWorkspace-DB_PostgreSQL
+    #restart: always
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass
+      POSTGRES_DB: myworkspace_db
+    user: root
+    networks:
+      - default_network
+    volumes:
+      - myworkspace_db_volume:/var/lib/postgresql/
+    ports:
+      - 5432:5432
+
+# Networks for Containers
+networks:
+  default_network:
+    driver: bridge
+
+# Volumes for Containers
+volumes:
+  myworkspace_db_volume:
+    name: myworkspace_db_volume

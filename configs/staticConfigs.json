@@ -1,0 +1,16 @@
+{
+	"db": {
+		"database": "$DB_NAME",
+		"username": "$DB_USERNAME",
+		"password": "$DB_PASSWORD",
+		"host": "$DB_HOST",
+		"charset": "utf8",
+		"dialect": "$DB_DBMS_NAME",
+		"port": "$DB_PORT",
+		"define": {
+			"underscored": true,
+			"timestamps": true,
+			"freezeTableName": false
+		}
+	}
+}

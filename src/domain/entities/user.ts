@@ -1,4 +1,4 @@
-import { userInterface, userPreferenceInterface } from './_interfaces';
+import { userInterface, userPreferenceInterface } from 'src/types/_entitiesInterfaces';
 
 
 export default class User {

@@ -1,11 +1,11 @@
-import { containerType } from 'src/types/_containerType';
+import { containerType, containerInterface } from 'src/types/_containerInterface';
 
 
 export default class Application {
 	logger: containerType;
 	getUsersOperation: containerType;
 
-	constructor({ logger, getUsersOperation }: containerType) {
+	constructor({ logger, getUsersOperation }: containerInterface) {
 		this.logger = logger;
 		this.getUsersOperation = getUsersOperation;
 	}

@@ -2,12 +2,13 @@
  @param {Object} ctx - Dependency Injection
  @param {import('src/app/operation/users/getUsersOperation')} ctx.getUsersOperation
 **/
-import { containerType } from 'src/types/_containerType';
+import { containerInterface } from 'src/types/_containerInterface';
+
 
 export default ({
 	logger,
 	appInfo,
-}: containerType) => ({
+}: containerInterface) => ({
 	execute: (data: object | string) => {
 		logger.warn({ data, appInfo });
 	}

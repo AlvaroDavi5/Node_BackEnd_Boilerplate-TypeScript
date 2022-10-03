@@ -8,7 +8,7 @@
 		"dialect": "$DB_DBMS_NAME",
 		"port": "$DB_PORT",
 		"define": {
-			"underscored": true,
+			"underscored": false,
 			"timestamps": true,
 			"freezeTableName": false
 		}

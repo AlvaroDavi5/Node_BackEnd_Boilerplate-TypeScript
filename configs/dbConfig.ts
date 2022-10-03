@@ -37,8 +37,8 @@ const config: DatabaseConfig = {
 	*/
 	port: parseInt(`${process.env.DB_PORT}`), // database port
 	define: {
-		underscored: true, // underscored name of fields
-		timestamps: true, // to created_at and updated_at
+		underscored: false, // underscored name of fields
+		timestamps: true, // to createdAt and updatedAt
 		freezeTableName: false // not set table names on plural
 	}
 };

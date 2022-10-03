@@ -1,12 +1,15 @@
 
 export default class Application {
-	logger: string;
+	logger: any;
+	getUsersOperation: any;
 
-	constructor(logger: string) {
+	constructor({ logger, getUsersOperation }: any) {
 		this.logger = logger;
+		this.getUsersOperation = getUsersOperation;
 	}
 
-	start() {
-		console.log(this.logger);
+	async start() {
+		this.logger.info('Started Application');
+		this.getUsersOperation.execute({});
 	}
 }

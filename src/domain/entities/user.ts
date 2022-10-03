@@ -1,7 +1,7 @@
 import { userInterface, userPreferenceInterface } from './_interfaces';
 
 
-class User {
+export default class User {
 	public id!: number;
 	public fullName!: string;
 	public email!: string;
@@ -21,6 +21,3 @@ class User {
 		this.preference = preference;
 	}
 }
-
-
-export default User;

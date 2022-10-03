@@ -1,7 +1,7 @@
 import { userPreferenceInterface } from './_interfaces';
 
 
-class UserPreferences {
+export default class UserPreference {
 	public id!: number;
 	public userId!: number;
 	public imagePath!: string;
@@ -14,6 +14,3 @@ class UserPreferences {
 		this.defaultTheme = defaultTheme;
 	}
 }
-
-
-export default UserPreferences;

@@ -11,14 +11,14 @@ export interface DatabaseConfig {
 	charset?: string | undefined,
 	dialectOptions?: {
 		ssl: {
-			rejectUnauthorized: boolean
+			rejectUnauthorized: boolean,
 		}
 	},
 	define?: {
 		underscored: boolean,
 		timestamps: boolean,
-		freezeTableName: boolean
+		freezeTableName: boolean,
 	},
 	options?: Options | undefined,
-	buildOptions?: BuildOptions | undefined
+	buildOptions?: BuildOptions | undefined,
 }

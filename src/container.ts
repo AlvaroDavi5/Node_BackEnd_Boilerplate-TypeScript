@@ -3,21 +3,22 @@ import {
 	createContainer, InjectionMode,
 	asClass, asFunction, asValue,
 } from 'awilix';
+import { messageType } from "src/types/_messageType";
 
 
 // TODO: load all modules
 import Application from 'src/app/Application';
 const logger = () => ({
-	error: (msg: any) => {
+	error: (msg: messageType) => {
 		console.error(msg);
 	},
-	warn: (msg: any) => {
+	warn: (msg: messageType) => {
 		console.warn(msg);
 	},
-	info: (msg: any) => {
+	info: (msg: messageType) => {
 		console.info(msg);
 	},
-	log: (msg: any) => {
+	log: (msg: messageType) => {
 		console.log(msg);
 	},
 });

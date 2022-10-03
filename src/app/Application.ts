@@ -1,9 +1,11 @@
+import { containerType } from 'src/types/_containerType';
+
 
 export default class Application {
-	logger: any;
-	getUsersOperation: any;
+	logger: containerType;
+	getUsersOperation: containerType;
 
-	constructor({ logger, getUsersOperation }: any) {
+	constructor({ logger, getUsersOperation }: containerType) {
 		this.logger = logger;
 		this.getUsersOperation = getUsersOperation;
 	}

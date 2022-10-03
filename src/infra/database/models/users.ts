@@ -40,8 +40,8 @@ Users.init(
 		fu: DataTypes.STRING(2),
 	},
 	{
-		modelName: 'users',
-		tableName: 'users',
+		modelName: 'Users',
+		tableName: 'Users',
 		scopes: {
 			withoutPassword: {
 				attributes: {

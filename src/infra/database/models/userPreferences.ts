@@ -30,8 +30,8 @@ UserPreferences.init(
 		defaultTheme: DataTypes.INTEGER
 	},
 	{
-		modelName: 'userPreferences',
-		tableName: 'userPreferences',
+		modelName: 'UserPreferences',
+		tableName: 'UserPreferences',
 		sequelize: connection
 	}
 );

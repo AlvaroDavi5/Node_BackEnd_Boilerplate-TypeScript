@@ -6,7 +6,7 @@ Project DB_Example {
 
 
 // tables creation
-Table users as USR {
+Table Users as USR {
 	id int [increment, not null, unique, primary key]
 	fullName varchar(100) [not null]
 	email varchar(70) [not null]
@@ -19,7 +19,7 @@ Table users as USR {
 	updatedAt timestamp [not null, default: `now()`]
 }
 
-Table userPreferences as PREF {
+Table UserPreferences as PREF {
 	id int [increment, not null, pk]
 	userId int [not null]
 	imagePath varchar(255)

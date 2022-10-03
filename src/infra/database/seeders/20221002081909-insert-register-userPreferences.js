@@ -2,7 +2,7 @@
 
 module.exports = {
 	async up(queryInterface, Sequelize) {
-		await queryInterface.bulkInsert('userPreferences', [
+		await queryInterface.bulkInsert('UserPreferences', [
 			{
 				userId: 1,
 				imagePath: './',
@@ -12,6 +12,6 @@ module.exports = {
 	},
 
 	async down(queryInterface, Sequelize) {
-		await queryInterface.bulkDelete('userPreferences', null, {});
+		await queryInterface.bulkDelete('UserPreferences', null, {});
 	}
 };

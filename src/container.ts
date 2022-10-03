@@ -3,7 +3,7 @@ import {
 	createContainer, InjectionMode,
 	asClass, asFunction, asValue,
 } from 'awilix';
-import { messageType } from "src/types/_messageType";
+import { messageType } from 'src/types/_messageType';
 
 
 // TODO: load all modules

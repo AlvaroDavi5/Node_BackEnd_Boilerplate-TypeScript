@@ -2,8 +2,8 @@ const path = require('path')
 
 
 module.exports = {
-	config: path.resolve(__dirname, "database", "dbConfig.js"),
-	'models-path': path.resolve(__dirname, "database", "models"),
-	'migrations-path': path.resolve(__dirname, "database", "migrations"),
-	'seeders-path': path.resolve(__dirname, "database", "seeders")
+	config: path.resolve(__dirname, "src", "infra", "configs", "dbConfigStatic.js"),
+	'models-path': path.resolve(__dirname, "src", "infra", "database", "models"),
+	'migrations-path': path.resolve(__dirname, "src", "infra", "database", "migrations"),
+	'seeders-path': path.resolve(__dirname, "src", "infra", "database", "seeders")
 }

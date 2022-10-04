@@ -41,9 +41,10 @@ yarn-error.log*
 # Docker files
 /.docker/
 # others
-TODO.txt
+TODO*
 
 
 # --------- except ---------
 
 !/env/.env.development.local
+!TODO-sample.txt

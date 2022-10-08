@@ -3,6 +3,7 @@
 * @param {import('src/index')} ctx.aws
 **/
 import container from './container';
+import { messageType } from 'src/types/_messageType';
 
 
 async function startApplication() {
@@ -10,7 +11,7 @@ async function startApplication() {
 
 	app
 		.start()
-		.catch((error: Error) => {
+		.catch((error: messageType) => {
 			app.logger.error(error);
 			process.exit();
 		});

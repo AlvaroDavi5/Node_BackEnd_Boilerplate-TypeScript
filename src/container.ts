@@ -3,26 +3,12 @@ import {
 	createContainer, InjectionMode,
 	asClass, asFunction, asValue,
 } from 'awilix';
-import { messageType } from 'src/types/_messageType';
 
 
-// TODO: load all modules
+// TODO: load all main modules
 import staticConfigs from 'configs/staticConfigs';
+import logger from 'src/infra/logging/logger';
 import Application from 'src/app/Application';
-const logger = () => ({
-	error: (msg: messageType) => {
-		console.error(msg);
-	},
-	warn: (msg: messageType) => {
-		console.warn(msg);
-	},
-	info: (msg: messageType) => {
-		console.info(msg);
-	},
-	log: (msg: messageType) => {
-		console.log(msg);
-	},
-});
 
 // ! container creation
 const container = createContainer({
@@ -38,8 +24,8 @@ container
 	.register({
 		// * modules manual register
 		configs: asValue(staticConfigs),
+		logger: asValue(logger),
 		application: asClass(Application).singleton(),
-		logger: asFunction(logger).singleton(),
 	})
 	// ? modules dynamic load
 	.loadModules(

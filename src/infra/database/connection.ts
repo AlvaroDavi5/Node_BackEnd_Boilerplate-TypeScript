@@ -1,5 +1,5 @@
 import { Sequelize } from 'sequelize';
-import DBConfig from 'configs/dbConfig';
+import DBConfig from './dbConfig';
 
 
 /* connecting to a database */

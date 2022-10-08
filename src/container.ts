@@ -48,10 +48,11 @@ container
 	.loadModules(
 		[
 			'src/app/helpers/**/*.ts',
-			'src/app/mappers/**/*.ts',
 			'src/app/operation/**/*.ts',
 			'src/app/services/**/*.ts',
 			'src/app/strategies/**/*.ts',
+			'src/domain/entities/**/*.ts',
+			'src/domain/enums/**/*.ts',
 			'src/domain/factories/**/*.ts',
 			'src/domain/stateMachines/**/*.ts',
 			'src/infra/crons/**/*.ts',
@@ -59,8 +60,10 @@ container
 			'src/infra/helpers/**/*.ts',
 			'src/infra/integration/**/*.ts',
 			'src/infra/logging/**/*.ts',
+			'src/infra/mappers/**/*.ts',
 			'src/infra/providers/**/*.ts',
 			'src/infra/repositories/**/*.ts',
+			'src/infra/security/**/*.ts',
 			'src/interface/api/http/**/*.ts',
 			'src/interface/api/webscoket/**/*.ts',
 		],

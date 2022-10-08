@@ -7,6 +7,7 @@ import { messageType } from 'src/types/_messageType';
 
 
 // TODO: load all modules
+import staticConfigs from 'configs/staticConfigs';
 import Application from 'src/app/Application';
 const logger = () => ({
 	error: (msg: messageType) => {
@@ -22,10 +23,6 @@ const logger = () => ({
 		console.log(msg);
 	},
 });
-const appInfo = {
-	name: 'Node.js DDD Boilerplate',
-	type: 'boilerplate',
-};
 
 // ! container creation
 const container = createContainer({
@@ -40,9 +37,9 @@ const container = createContainer({
 container
 	.register({
 		// * modules manual register
+		configs: asValue(staticConfigs),
 		application: asClass(Application).singleton(),
 		logger: asFunction(logger).singleton(),
-		appInfo: asValue(appInfo),
 	})
 	// ? modules dynamic load
 	.loadModules(

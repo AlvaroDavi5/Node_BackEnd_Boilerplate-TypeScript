@@ -9,7 +9,7 @@ module.exports = {
 	],
 	parserOptions: {
 		ecmaVersion: 2020,
-		sourceType: 'module'
+		sourceType: 'module',
 	},
 	plugins: ['prettier'],
 	rules: {
@@ -19,7 +19,7 @@ module.exports = {
 		quotes: ['error', 'single'],
 		'object-curly-spacing': [
 			1,
-			'always'
+			'always',
 		],
 		'no-undef': 'off',
 		'one-var': 'off',

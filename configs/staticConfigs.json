@@ -12,5 +12,16 @@
 			"timestamps": true,
 			"freezeTableName": false
 		}
+	},
+	"integration": {
+		"aws": {
+			"congito": {},
+			"s3": {},
+			"sqs": {},
+			"sns": {}
+		},
+		"redis": {
+			"sessionManager": "$REDIS_SESSION_MANAGER"
+		}
 	}
 }

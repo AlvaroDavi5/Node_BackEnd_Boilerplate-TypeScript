@@ -7,9 +7,9 @@ import { containerInterface } from 'src/types/_containerInterface';
 
 export default ({
 	logger,
-	appInfo,
+	configs,
 }: containerInterface) => ({
 	execute: (data: object | string) => {
-		logger.warn({ data, appInfo });
+		logger.warn({ data, configs });
 	}
 });

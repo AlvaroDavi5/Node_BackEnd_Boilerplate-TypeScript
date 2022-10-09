@@ -1,3 +1,6 @@
+/**
+ @param {Object} ctx - Dependency Injection (container)
+**/
 import { containerType, containerInterface } from 'src/types/_containerInterface';
 
 

@@ -1,6 +1,5 @@
 /**
- @param {Object} ctx - Dependency Injection
- @param {import('src/app/operation/users/getUsersOperation')} ctx.getUsersOperation
+ @param {Object} ctx - Dependency Injection (container)
 **/
 import IORedis from 'ioredis';
 import { ScanStreamOptions } from 'ioredis/built/types';

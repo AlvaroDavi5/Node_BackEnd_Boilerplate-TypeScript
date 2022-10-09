@@ -1,10 +1,13 @@
+/**
+ @param {Object} ctx - Dependency Injection (container)
+**/
 import express from 'express';
 import compression from 'compression';
 import handler from 'express-async-handler';
 import { containerInterface } from 'src/types/_containerInterface';
 
 
-export default (container: containerInterface) => {
+export default (ctx: containerInterface) => {
 	const defaultRouter = express.Router();
 	const apiRouter = express.Router();
 
@@ -14,8 +17,8 @@ export default (container: containerInterface) => {
 		.use(compression());
 
 	// default response
-	defaultRouter.use('/*', (request, response, next) => next(container.exception.notFound()));
-	defaultRouter.use(container.httpErrorMiddleware);
+	defaultRouter.use('/*', (request, response, next) => next(ctx.exception.notFound()));
+	defaultRouter.use(ctx.httpErrorMiddleware);
 
 	// internal routes
 	apiRouter.get('/check', (request, response) => {
@@ -30,11 +33,11 @@ export default (container: containerInterface) => {
 				body: request?.body,
 			});
 	});
-	apiRouter.use('/docs', container.swaggerMiddleware);
+	apiRouter.use('/docs', ctx.swaggerMiddleware);
 
 	// application routes
-	apiRouter.use('/users', handler(container.userController.router));
-	apiRouter.use('/user-preferences', handler(container.userPreferenceController.router));
+	apiRouter.use('/users', handler(ctx.userController.router));
+	apiRouter.use('/user-preferences', handler(ctx.userPreferenceController.router));
 
 	defaultRouter.use('/api', apiRouter);
 

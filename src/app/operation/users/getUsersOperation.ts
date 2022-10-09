@@ -1,5 +1,5 @@
 /**
- @param {Object} ctx - Dependency Injection
+ @param {Object} ctx - Dependency Injection (container)
  @param {import('src/app/operation/users/getUsersOperation')} ctx.getUsersOperation
 **/
 import { containerInterface } from 'src/types/_containerInterface';

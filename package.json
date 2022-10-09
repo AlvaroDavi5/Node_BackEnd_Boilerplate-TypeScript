@@ -51,10 +51,10 @@
 		"test:coverage:#it": "jest --coverage --collectCoverage -t=#it",
 		"test:interact": "jest --watch",
 		"commit": "git-cz",
-		"lint": "yarn js:lint --quiet && yarn ts:lint --quiet",
+		"lint": "yarn js:lint && yarn ts:lint",
 		"lint:fix": "yarn js:lint --fix && yarn ts:lint --fix",
 		"js:lint": "eslint --ext .js ./configs/ ./tests/",
-		"ts:lint": "eslint --ext .ts ./src/ ./scripts/ ./tests/",
+		"ts:lint": "eslint --ext .ts ./src/ ./scripts/ ./tests/ --quiet",
 		"format": "prettier --write \"./**/*.{js,ts,jsx,tsx,json}\"",
 		"versioning": "semver"
 	},

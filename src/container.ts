@@ -9,6 +9,7 @@ import {
 import staticConfigs from 'configs/staticConfigs';
 import logger from 'src/infra/logging/logger';
 import Application from 'src/app/Application';
+import Router from 'src/interface/api/http/routers/router';
 
 // ! container creation
 const container = createContainer({
@@ -22,12 +23,13 @@ const container = createContainer({
 **/
 container
 	.register({
-		// * modules manual register
+		// ? modules manual register
 		configs: asValue(staticConfigs),
 		logger: asValue(logger),
 		application: asClass(Application).singleton(),
+		router: asFunction(Router).singleton(),
 	})
-	// ? modules dynamic load
+	// * modules dynamic load
 	.loadModules(
 		[
 			'src/app/helpers/**/*.ts',
@@ -47,8 +49,14 @@ container
 			'src/infra/providers/**/*.ts',
 			'src/infra/repositories/**/*.ts',
 			'src/infra/security/**/*.ts',
-			'src/interface/api/http/**/*.ts',
-			'src/interface/api/webscoket/**/*.ts',
+			'src/interface/api/http/constants/**/*.ts',
+			'src/interface/api/http/controllers/**/*.ts',
+			'src/interface/api/http/middlewares/**/*.ts',
+			'src/interface/api/http/schemas/**/*.ts',
+			'src/interface/api/websocket/constants/**/*.ts',
+			'src/interface/api/websocket/controllers/**/*.ts',
+			'src/interface/api/websocket/middlewares/**/*.ts',
+			'src/interface/api/websocket/schemas/**/*.ts',
 		],
 		{
 			formatName: 'camelCase',

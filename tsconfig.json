@@ -128,6 +128,7 @@
 		"skipLibCheck": true
 	},
 	"include": [
+		"configs/**/*.d.ts",
 		"src/**/*.ts",
 		"src/**/*.tsx",
 		"src/**/*.js",

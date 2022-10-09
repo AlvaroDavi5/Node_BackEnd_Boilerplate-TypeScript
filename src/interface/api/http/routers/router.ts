@@ -17,7 +17,7 @@ export default (ctx: containerInterface) => {
 		.use(compression());
 
 	// default response
-	defaultRouter.use('/*', (request, response, next) => next(ctx.exception.notFound()));
+	defaultRouter.use('/*', (request, response, next) => next(ctx.exceptions.notFound()));
 	defaultRouter.use(ctx.httpErrorMiddleware);
 
 	// internal routes
@@ -33,7 +33,6 @@ export default (ctx: containerInterface) => {
 				body: request?.body,
 			});
 	});
-	apiRouter.use('/docs', ctx.swaggerMiddleware);
 
 	// application routes
 	apiRouter.use('/users', handler(ctx.userController.router));

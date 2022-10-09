@@ -1,6 +1,7 @@
 {
 	"application": {
-		"port": "$APP_PORT"
+		"port": "$APP_PORT",
+		"stackErrorVisible": true
 	},
 	"db": {
 		"database": "$DB_NAME",

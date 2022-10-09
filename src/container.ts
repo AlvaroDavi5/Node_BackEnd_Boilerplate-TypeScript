@@ -12,6 +12,7 @@ import HttpServer from 'src/interface/httpServer';
 import RestServer from 'src/interface/api/http/server/restServer';
 import Router from 'src/interface/api/http/routers/router';
 import logger from 'src/infra/logging/logger';
+import Exceptions from 'src/infra/errors/exceptions';
 
 // ! container creation
 const container = createContainer({
@@ -32,6 +33,7 @@ container
 		restServer: asClass(RestServer).singleton(),
 		router: asFunction(Router).singleton(),
 		logger: asValue(logger),
+		exceptions: asFunction(Exceptions).singleton(),
 		container: asValue(container),
 	})
 	// * modules dynamic load
@@ -46,7 +48,6 @@ container
 			'src/domain/factories/**/*.ts',
 			'src/domain/stateMachines/**/*.ts',
 			'src/infra/crons/**/*.ts',
-			'src/infra/errors/**/*.ts',
 			'src/infra/helpers/**/*.ts',
 			'src/infra/integration/**/*.ts',
 			'src/infra/logging/**/*.ts',
@@ -58,7 +59,6 @@ container
 			'src/interface/api/http/controllers/**/*.ts',
 			'src/interface/api/http/middlewares/**/*.ts',
 			'src/interface/api/http/schemas/**/*.ts',
-			'src/interface/api/websocket/constants/**/*.ts',
 			'src/interface/api/websocket/controllers/**/*.ts',
 			'src/interface/api/websocket/middlewares/**/*.ts',
 			'src/interface/api/websocket/schemas/**/*.ts',

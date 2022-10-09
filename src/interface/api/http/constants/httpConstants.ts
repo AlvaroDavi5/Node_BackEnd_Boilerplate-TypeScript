@@ -35,13 +35,7 @@ const apiMessages = {
 };
 
 
-type httpConstants = {
-	status: typeof httpStatus,
-	messages: typeof apiMessages
-}
-
-
-export const httpConstants: httpConstants = {
+export default () => ({
 	status: httpStatus,
 	messages: apiMessages
-};
+});

@@ -1,6 +1,6 @@
 /**
  @param {Object} ctx - Dependency Injection (container)
- @param {import('src/app/operation/users/getUsersOperation')} ctx.getUsersOperation
+ @param {import('src/infra/logging/logger')} ctx.logger
 **/
 import { containerInterface } from 'src/types/_containerInterface';
 import { messageType } from 'src/types/_messageType';

@@ -1,20 +1,22 @@
-/**
- @param {Object} ctx - Dependency Injection (container)
-**/
 import { containerType, containerInterface } from 'src/types/_containerInterface';
 
 
 export default class Application {
+	httpServer: containerType;
 	logger: containerType;
-	getUsersOperation: containerType;
 
-	constructor({ logger, getUsersOperation }: containerInterface) {
+	/**
+	 @param {Object} ctx - Dependency Injection (container)
+	 @param {import('src/interface/httpServer')} ctx.httpServer
+	 @param {import('src/infra/logging/logger')} ctx.logger
+	**/
+	constructor({ httpServer, logger }: containerInterface) {
+		this.httpServer = httpServer;
 		this.logger = logger;
-		this.getUsersOperation = getUsersOperation;
 	}
 
 	async start() {
 		this.logger.info('Started Application');
-		this.getUsersOperation.execute({});
+		this.httpServer.start();
 	}
 }

@@ -6,10 +6,12 @@ import {
 
 
 // TODO: load all main modules
-import staticConfigs from 'configs/staticConfigs';
-import logger from 'src/infra/logging/logger';
 import Application from 'src/app/Application';
+import staticConfigs from 'configs/staticConfigs';
+import HttpServer from 'src/interface/httpServer';
+import RestServer from 'src/interface/api/http/server/restServer';
 import Router from 'src/interface/api/http/routers/router';
+import logger from 'src/infra/logging/logger';
 
 // ! container creation
 const container = createContainer({
@@ -24,10 +26,13 @@ const container = createContainer({
 container
 	.register({
 		// ? modules manual register
-		configs: asValue(staticConfigs),
-		logger: asValue(logger),
 		application: asClass(Application).singleton(),
+		configs: asValue(staticConfigs),
+		httpServer: asClass(HttpServer).singleton(),
+		restServer: asClass(RestServer).singleton(),
 		router: asFunction(Router).singleton(),
+		logger: asValue(logger),
+		container: asValue(container),
 	})
 	// * modules dynamic load
 	.loadModules(

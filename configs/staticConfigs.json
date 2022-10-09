@@ -1,4 +1,7 @@
 {
+	"application": {
+		"port": "$APP_PORT"
+	},
 	"db": {
 		"database": "$DB_NAME",
 		"username": "$DB_USERNAME",

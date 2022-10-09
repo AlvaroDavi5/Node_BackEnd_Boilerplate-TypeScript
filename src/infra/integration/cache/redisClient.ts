@@ -1,13 +1,14 @@
 /**
  @param {Object} ctx - Dependency Injection (container)
+ @param {import('configs/staticConfigs')} ctx.configs
 **/
 import IORedis from 'ioredis';
 import { ScanStreamOptions } from 'ioredis/built/types';
 import { containerInterface } from 'src/types/_containerInterface';
 
 
-export default ({ config }: containerInterface) => {
-	const redisConfig = config.integration.redis.sessionManager;
+export default ({ configs }: containerInterface) => {
+	const redisConfig = configs.integration.redis.sessionManager;
 
 	const redis = new IORedis(redisConfig);
 

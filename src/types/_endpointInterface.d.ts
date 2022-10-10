@@ -4,8 +4,8 @@ import { Request, Response, NextFunction } from 'express';
 interface RequestInterface extends Request {
 	user: object | any,
 }
-interface ResponseInterface extends Response {};
-interface NextFunctionInterface extends NextFunction {};
+type ResponseInterface = Response;
+type NextFunctionInterface = NextFunction;
 
 export interface EndpointInterface {
 	error: Error | any,

@@ -9,6 +9,7 @@ services:
     container_name: App_Node
     # Refered Dockerfile
     build: ./
+    working_dir: /home/app/
     command: yarn run dev
     env_file:
       - ./.env

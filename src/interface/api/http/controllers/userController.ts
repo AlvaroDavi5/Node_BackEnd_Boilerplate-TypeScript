@@ -1,12 +1,12 @@
-/**
- @param {Object} ctx - Dependency Injection (container)
- @param {import('src/infra/logging/logger')} ctx.logger
-**/
 import { Router } from 'express';
 import { RequestInterface, ResponseInterface, NextFunctionInterface } from 'src/types/_endpointInterface';
 import { containerInterface } from 'src/types/_containerInterface';
 
 
+/**
+@param {Object} ctx - Dependency Injection (container)
+@param {import('src/infra/logging/logger')} ctx.logger
+**/
 export default ({
 	createUserOperation,
 	httpConstants,

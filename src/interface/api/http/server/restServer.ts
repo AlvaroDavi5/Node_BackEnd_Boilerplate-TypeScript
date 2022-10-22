@@ -13,12 +13,16 @@ export default class RestServer {
 	router: containerType;
 
 	/**
-	 @param {Object} ctx - Dependency Injection (container)
-	 @param {import('src/infra/logging/logger')} ctx.logger
-	 @param {import('src/interface/api/http/routers/router')} ctx.router
-	 @param {import('src/container')} ctx.container
+	@param {Object} ctx - Dependency Injection (container)
+	@param {import('src/interface/api/http/routers/router')} ctx.router
+	@param {import('src/infra/logging/logger')} ctx.logger
+	@param {import('src/container')} ctx.container
 	**/
-	constructor({ logger, router, container }: containerInterface) {
+	constructor({
+		logger,
+		router,
+		container,
+	}: containerInterface) {
 		this.logger = logger;
 		this.express = express();
 		this.express.use(scopePerRequest(container));

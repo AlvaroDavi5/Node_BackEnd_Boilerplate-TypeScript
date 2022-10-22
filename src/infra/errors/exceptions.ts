@@ -1,14 +1,17 @@
-/**
- @param {Object} ctx - Dependency Injection (container)
- @param {import('src/domain/enums/exceptionsEnum')} ctx.exceptionsEnum
- @param {import('src/interface/api/http/constants/httpConstants')} ctx.httpConstants
-**/
 import ExceptionGenerator from './exceptionGenerator';
 import { containerInterface } from 'src/types/_containerInterface';
 import { ErrorInterface } from 'src/types/_errorInterface';
 
 
-export default ({ exceptionsEnum, httpConstants }: containerInterface) => ({
+/**
+@param {Object} ctx - Dependency Injection (container)
+@param {import('src/domain/enums/exceptionsEnum')} ctx.exceptionsEnum
+@param {import('src/interface/api/http/constants/httpConstants')} ctx.httpConstants
+**/
+export default ({
+	exceptionsEnum,
+	httpConstants,
+}: containerInterface) => ({
 	[exceptionsEnum.BUSINESS]: ({ error, errorType = exceptionsEnum.BUSINESS, details = [] }: ErrorInterface) => {
 		if (!(error instanceof Error))
 			error = new ExceptionGenerator(`${errorType}: ${error?.message}`);

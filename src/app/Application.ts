@@ -6,11 +6,14 @@ export default class Application {
 	logger: containerType;
 
 	/**
-	 @param {Object} ctx - Dependency Injection (container)
-	 @param {import('src/interface/httpServer')} ctx.httpServer
-	 @param {import('src/infra/logging/logger')} ctx.logger
+	@param {Object} ctx - Dependency Injection (container)
+	@param {import('src/interface/httpServer')} ctx.httpServer
+	@param {import('src/infra/logging/logger')} ctx.logger
 	**/
-	constructor({ httpServer, logger }: containerInterface) {
+	constructor({
+		httpServer,
+		logger,
+	}: containerInterface) {
 		this.httpServer = httpServer;
 		this.logger = logger;
 	}

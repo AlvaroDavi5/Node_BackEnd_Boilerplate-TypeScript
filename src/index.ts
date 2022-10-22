@@ -1,10 +1,10 @@
-/**
-* @param {Object} ctx - container dependency injection
-**/
 import container from './container';
 import { messageType } from 'src/types/_messageType';
 
 
+/**
+*@param {Object} ctx - container dependency injection
+**/
 async function startApplication() {
 	const app = container.resolve('application');
 

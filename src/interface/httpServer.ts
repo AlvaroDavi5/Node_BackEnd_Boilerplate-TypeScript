@@ -11,12 +11,16 @@ export default class HttpServer {
 	server: any;
 
 	/**
-	 @param {Object} ctx - Dependency Injection (container)
-	 @param {import('configs/staticConfigs')} ctx.configs
-	 @param {import('src/infra/logging/logger')} ctx.logger
-	 @param {import('src/interface/api/http/server/restServer')} ctx.restServer
+	@param {Object} ctx - Dependency Injection (container)
+	@param {import('src/interface/api/http/server/restServer')} ctx.restServer
+	@param {import('src/infra/logging/logger')} ctx.logger
+	@param {import('configs/staticConfigs')} ctx.configs
 	**/
-	constructor({ configs, logger, restServer }: containerInterface) {
+	constructor({
+		restServer,
+		logger,
+		configs,
+	}: containerInterface) {
 		this.configs = configs;
 		this.logger = logger;
 		this.server = createServer(restServer.get());

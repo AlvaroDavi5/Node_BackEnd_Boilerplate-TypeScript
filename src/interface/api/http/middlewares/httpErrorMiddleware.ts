@@ -1,14 +1,19 @@
-/**
- @param {Object} ctx - Dependency Injection (container)
- @param {import('src/interface/httpServer')} ctx.httpServer
- @param {import('src/infra/logging/logger')} ctx.logger
-**/
 import { Request, Response, NextFunction } from 'express';
 import { containerInterface } from 'src/types/_containerInterface';
 import { ErrorInterface } from 'src/types/_errorInterface';
 
 
-export default ({ logger, configs, httpConstants }: containerInterface) => (error: ErrorInterface, request: Request, response: Response, next: NextFunction) => {
+/**
+@param {Object} ctx - Dependency Injection (container)
+@param {import('src/interface/api/http/constants/httpConstants')} ctx.httpConstants
+@param {import('src/infra/logging/logger')} ctx.logger
+@param {import('configs/staticConfigs')} ctx.configs
+**/
+export default ({
+	httpConstants,
+	logger,
+	configs,
+}: containerInterface) => (error: ErrorInterface, request: Request, response: Response, next: NextFunction) => {
 	logger.error(error);
 	const hasTrace = configs?.application?.stackErrorVisible;
 

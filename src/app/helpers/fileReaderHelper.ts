@@ -1,11 +1,14 @@
-/**
- @param {Object} ctx - Dependency Injection (container)
-**/
 import fs from 'fs';
 import { containerInterface } from 'src/types/_containerInterface';
 
 
-export default ({ logger }: containerInterface) => ({
+/**
+@param {Object} ctx - Dependency Injection (container)
+@param {import('src/infra/logging/logger')} ctx.logger
+**/
+export default ({
+	logger,
+}: containerInterface) => ({
 	read: (fileName: string) => {
 		let content = '';
 

@@ -1,6 +1,6 @@
 import { createServer } from 'http';
 import dotenv from 'dotenv';
-import { containerInterface, containerType } from 'src/types/_containerInterface';
+import { ContainerInterface, containerType } from 'src/types/_containerInterface';
 dotenv.config();
 
 
@@ -20,7 +20,7 @@ export default class HttpServer {
 		restServer,
 		logger,
 		configs,
-	}: containerInterface) {
+	}: ContainerInterface) {
 		this.configs = configs;
 		this.logger = logger;
 		this.server = createServer(restServer.get());
@@ -30,7 +30,7 @@ export default class HttpServer {
 	start() {
 		const serverPort = this.configs.application.port;
 
-		return this.server.listen(serverPort || 3000, () => {
+		return this.server.listen(parseInt(serverPort) || 3000, () => {
 			this.logger.info(`Server started on port: ${serverPort} - Environment ${this.environment}`);
 		});
 	}

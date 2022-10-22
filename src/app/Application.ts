@@ -1,4 +1,4 @@
-import { containerType, containerInterface } from 'src/types/_containerInterface';
+import { containerType, ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default class Application {
@@ -13,7 +13,7 @@ export default class Application {
 	constructor({
 		httpServer,
 		logger,
-	}: containerInterface) {
+	}: ContainerInterface) {
 		this.httpServer = httpServer;
 		this.logger = logger;
 	}

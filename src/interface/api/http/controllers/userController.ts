@@ -1,6 +1,6 @@
 import { Router } from 'express';
 import { RequestInterface, ResponseInterface, NextFunctionInterface } from 'src/types/_endpointInterface';
-import { containerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 /**
@@ -13,7 +13,7 @@ export default ({
 	jwtDecodeMiddleware,
 	validatorMiddleware,
 	createUserSchema,
-}: containerInterface) => ({
+}: ContainerInterface) => ({
 	createUser: async (request: RequestInterface | any, response: ResponseInterface, next: NextFunctionInterface): Promise<ResponseInterface | any> => {
 		try {
 			const { user, body } = request;

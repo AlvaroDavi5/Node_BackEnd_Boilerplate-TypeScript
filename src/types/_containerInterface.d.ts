@@ -1,7 +1,7 @@
 import { AwilixContainer } from 'awilix';
 
 
-export interface containerInterface {
+export interface ContainerInterface {
 	[key: string]: object | string | any,
 }
 

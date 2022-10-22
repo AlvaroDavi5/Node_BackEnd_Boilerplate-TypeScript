@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { containerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 /**
@@ -8,7 +8,7 @@ import { containerInterface } from 'src/types/_containerInterface';
 **/
 export default ({
 	logger,
-}: containerInterface) => ({
+}: ContainerInterface) => ({
 	read: (fileName: string) => {
 		let content = '';
 

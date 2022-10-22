@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { containerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/types/_containerInterface';
 import { ErrorInterface } from 'src/types/_errorInterface';
 
 
@@ -13,18 +13,18 @@ export default ({
 	httpConstants,
 	logger,
 	configs,
-}: containerInterface) => (error: ErrorInterface, request: Request, response: Response, next: NextFunction) => {
+}: ContainerInterface) => (error: ErrorInterface, request: Request, response: Response, next: NextFunction) => {
 	logger.error(error);
 	const hasTrace = configs?.application?.stackErrorVisible;
 
 	const options = hasTrace ? { stack: error.stack } : '';
 
-	const statusCode = error.statusCode || httpConstants.status.INTERNAL_SERVER_ERROR;
+	const statusCode = error?.statusCode || httpConstants.status.INTERNAL_SERVER_ERROR;
 
 	const errorCustom = {
 		message: error.message,
 		statusCode,
-		details: error.details || []
+		details: error.details || [],
 	};
-	return error.status(statusCode).json(Object.assign(errorCustom, options));
+	return response.status(statusCode).json(Object.assign(errorCustom, options));
 };

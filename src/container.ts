@@ -11,7 +11,7 @@ import staticConfigs from 'configs/staticConfigs';
 import HttpServer from 'src/interface/httpServer';
 import RestServer from 'src/interface/api/http/server/restServer';
 import Router from 'src/interface/api/http/routers/router';
-import logger from 'src/infra/logging/logger';
+import { logger, LoggerStream } from 'src/infra/logging/logger';
 import Exceptions from 'src/infra/errors/exceptions';
 
 // ! container creation
@@ -33,6 +33,7 @@ container
 		restServer: asClass(RestServer).singleton(),
 		router: asFunction(Router).singleton(),
 		logger: asValue(logger),
+		loggerStream: asClass(LoggerStream).singleton(),
 		exceptions: asFunction(Exceptions).singleton(),
 		container: asValue(container),
 	})
@@ -44,7 +45,6 @@ container
 			'src/app/services/**/*.ts',
 			'src/app/strategies/**/*.ts',
 			'src/domain/entities/**/*.ts',
-			'src/domain/enums/**/*.ts',
 			'src/domain/factories/**/*.ts',
 			'src/domain/stateMachines/**/*.ts',
 			'src/infra/crons/**/*.ts',

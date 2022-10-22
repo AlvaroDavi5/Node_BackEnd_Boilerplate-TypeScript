@@ -1,31 +1,36 @@
+import { NotFound, MakeErrorClass } from 'fejl';
 import ExceptionGenerator from './exceptionGenerator';
-import { containerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/types/_containerInterface';
 import { ErrorInterface } from 'src/types/_errorInterface';
+import exceptionsEnum from 'src/domain/enums/exceptionsEnum';
 
+
+class Business extends MakeErrorClass('Business') { }
+class Contract extends MakeErrorClass('Contract') { }
+class Integration extends MakeErrorClass('Integration') { }
+class Operation extends MakeErrorClass('Operation') { }
 
 /**
 @param {Object} ctx - Dependency Injection (container)
-@param {import('src/domain/enums/exceptionsEnum')} ctx.exceptionsEnum
 @param {import('src/interface/api/http/constants/httpConstants')} ctx.httpConstants
 **/
 export default ({
-	exceptionsEnum,
 	httpConstants,
-}: containerInterface) => ({
-	[exceptionsEnum.BUSINESS]: ({ error, errorType = exceptionsEnum.BUSINESS, details = [] }: ErrorInterface) => {
+}: ContainerInterface) => ({
+
+	[exceptionsEnum.BUSINESS]: (error: string | any, errorType = exceptionsEnum.BUSINESS) => {
 		if (!(error instanceof Error))
-			error = new ExceptionGenerator(`${errorType}: ${error?.message}`);
+			error = new Business(error);
 
 		error.errorType = errorType;
-		error.details = details;
 		error.statusCode = httpConstants.status.FORBIDDEN;
 
 		return error;
 	},
 
-	[exceptionsEnum.CONTRACT]: ({ error, errorType = exceptionsEnum.CONTRACT, details = [] }: ErrorInterface) => {
+	[exceptionsEnum.CONTRACT]: (error: string | any, errorType = exceptionsEnum.CONTRACT, details = []) => {
 		if (!(error instanceof Error))
-			error = new ExceptionGenerator(`${errorType}: ${error?.message}`);
+			error = new Contract(error);
 
 		error.errorType = errorType;
 		error.details = details;
@@ -34,36 +39,22 @@ export default ({
 		return error;
 	},
 
-	[exceptionsEnum.INTEGRATION]: ({ error, errorType = exceptionsEnum.INTEGRATION, details = [] }: ErrorInterface) => {
+	[exceptionsEnum.INTEGRATION]: (error: string | any, errorType = exceptionsEnum.INTEGRATION) => {
 		if (!(error instanceof Error))
-			error = new ExceptionGenerator(`${errorType}: ${error?.message}`);
+			error = new Integration(error);
 
 		error.errorType = errorType;
-		error.details = details;
 		error.statusCode = httpConstants.status.INTERNAL_SERVER_ERROR;
 
 		return error;
 	},
 
-	[exceptionsEnum.OPERATION]: ({ error, errorType = exceptionsEnum.OPERATION, details = [] }: ErrorInterface) => {
+	[exceptionsEnum.OPERATION]: (error: string | any, errorType = exceptionsEnum.OPERATION) => {
 		if (!(error instanceof Error))
-			error = new ExceptionGenerator(`${errorType}: ${error?.message}`);
+			error = new Operation(error);
 
-		error.errorType = errorType;
-		error.details = details;
-		error.statusCode = 500;
-
-		return error;
-	},
-
-	[exceptionsEnum.NOT_FOUND]: ({ error, errorType = exceptionsEnum.NOT_FOUND, details = [] }: ErrorInterface) => {
-		if (!(error instanceof Error))
-			error = new ExceptionGenerator(`${errorType}: ${error?.message}`);
-
-		error.errorType = errorType;
-		error.details = details;
-		error.statusCode = httpConstants.status.NOT_FOUND;
-
+		error.errorType = errorType || exceptionsEnum.OPERATION;
+		error.statusCode = 403;
 		return error;
 	},
 
@@ -77,4 +68,14 @@ export default ({
 
 		return error;
 	},
+
+	[exceptionsEnum.NOT_FOUND]: (error: string | any, errorType = exceptionsEnum.NOT_FOUND) => {
+		if (!(error instanceof Error))
+			error = new NotFound(error);
+
+		error.errorType = errorType || exceptionsEnum.NOT_FOUND;
+		error.statusCode = httpConstants.status.NOT_FOUND;
+
+		return error;
+	}
 });

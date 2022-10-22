@@ -1,4 +1,4 @@
-import { userInterface, userPreferenceInterface } from 'src/types/_entitiesInterfaces';
+import { UserInterface, UserPreferenceInterface } from 'src/types/_entitiesInterfaces';
 
 
 export default class User {
@@ -10,11 +10,11 @@ export default class User {
 	public docType!: string;
 	public document!: string;
 	public fu!: string;
-	public preference: userPreferenceInterface;
+	public preference: UserPreferenceInterface;
 	public readonly createdAt!: Date;
 	public readonly updatedAt!: Date;
 
-	constructor({ fullName, email, preference }: userInterface) {
+	constructor({ fullName, email, preference }: UserInterface) {
 		this.fullName = fullName;
 		this.email = email;
 		this.password = '';

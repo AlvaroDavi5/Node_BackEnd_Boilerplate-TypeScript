@@ -1,4 +1,4 @@
-import { createLogger, transports, format } from 'winston';
+import { createLogger, transports, format, exitOnError } from 'winston';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -17,7 +17,7 @@ const defaultMessageFormat = format.printf(msg => {
 });
 
 const appFormat = format.combine(
-	format.errors({ stack: true }),
+	format.errors({ stack: false }),
 	format.timestamp(),
 	defaultMessageFormat
 );
@@ -37,10 +37,16 @@ const options = {
 			),
 		}),
 		new transports.File({ filename: logsFilePath })
-	]
+	],
+	exitOnError: false,
 };
 
-const logger = createLogger(options);
+export const logger = createLogger(options);
 
+export class LoggerStream {
+	write(message: string | any, encoding: string | any) {
+		logger.info(message.substring(0, message.lastIndexOf('\n')));
+	}
+}
 
 export default logger;

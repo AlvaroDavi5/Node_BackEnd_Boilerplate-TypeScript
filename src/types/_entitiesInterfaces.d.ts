@@ -1,5 +1,5 @@
 
-export interface userPreferenceInterface {
+export interface UserPreferenceInterface {
 	id: number,
 	userId: number,
 	imagePath: string,
@@ -8,7 +8,7 @@ export interface userPreferenceInterface {
 	updatedAt: Date,
 }
 
-export interface userInterface {
+export interface UserInterface {
 	id: number,
 	fullName: string,
 	email: string,
@@ -17,7 +17,7 @@ export interface userInterface {
 	docType: string,
 	document: string,
 	uf: string,
-	preference: userPreferenceInterface,
+	preference: UserPreferenceInterface,
 	createdAt: Date,
 	updatedAt: Date,
 }

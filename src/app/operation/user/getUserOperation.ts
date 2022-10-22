@@ -1,4 +1,4 @@
-import { containerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/types/_containerInterface';
 import { messageType } from 'src/types/_messageType';
 
 
@@ -8,7 +8,7 @@ import { messageType } from 'src/types/_messageType';
 **/
 export default ({
 	logger,
-}: containerInterface) => ({
+}: ContainerInterface) => ({
 	execute: (data: messageType) => {
 		logger.warn(JSON.stringify(data));
 	}

@@ -1,6 +1,6 @@
 import IORedis from 'ioredis';
 import { ScanStreamOptions } from 'ioredis/built/types';
-import { containerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 /**
@@ -11,15 +11,13 @@ import { containerInterface } from 'src/types/_containerInterface';
 export default ({
 	configs,
 	exceptions,
-}: containerInterface) => {
+}: ContainerInterface) => {
 	const redisConfig = configs.integration.redis;
 
 	const redis = new IORedis(redisConfig);
 
 	if (!redis) {
-		throw exceptions.integration({
-			details: 'Error to connect on redis cache',
-		});
+		throw exceptions.integration('Error to connect on redis cache');
 	}
 
 	return {

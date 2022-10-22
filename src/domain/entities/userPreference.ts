@@ -1,4 +1,4 @@
-import { userPreferenceInterface } from 'src/types/_entitiesInterfaces';
+import { UserPreferenceInterface } from 'src/types/_entitiesInterfaces';
 
 
 export default class UserPreference {
@@ -9,7 +9,7 @@ export default class UserPreference {
 	public readonly createdAt!: Date;
 	public readonly updatedAt!: Date;
 
-	constructor({ userId, defaultTheme }: userPreferenceInterface) {
+	constructor({ userId, defaultTheme }: UserPreferenceInterface) {
 		this.userId = userId;
 		this.defaultTheme = defaultTheme;
 	}

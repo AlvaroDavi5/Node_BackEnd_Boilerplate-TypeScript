@@ -1,5 +1,5 @@
 # Docker Compose Version
-version: "3.7"
+version: '3.7'
 
 # Containers
 services:
@@ -7,30 +7,25 @@ services:
   # Application
   app:
     container_name: App_Node
-    # Refered Dockerfile
-    build: ./
-    working_dir: /home/app/
-    command: yarn run dev
     env_file:
       - ./.env
+    # Refered Dockerfile
+    build: ./
     user: root
     networks:
       - default_network
     ports:
       - 3000:3000
-    volumes:
-      # host_path:container_path
-      - ./:/home/app/
+    extra_hosts:
+      - 'host.docker.internal:host-gateway'
     depends_on:
-      - db
-      - cloud
+      - database
       - cache
-    links:
-      - db
+      - cloud
 
   # DataBase
-  db:
-    container_name: DB_PostgreSQL
+  database:
+    container_name: DataBase_PostgreSQL
     image: postgres:latest
     #restart: always
     environment:
@@ -41,6 +36,7 @@ services:
     networks:
       - default_network
     volumes:
+      # host_path:container_path
       - db_volume:/var/lib/postgresql/
     ports:
       - 5432:5432
@@ -54,10 +50,10 @@ services:
       - EDGE_PORT=4566
       - SERVICES=sqs,sns,s3,cognito
     ports:
-      - '4566:4566'
+      - 4566:4566
     volumes:
-      - "${TMPDIR:-/tmp/localstack}:/tmp/localstack"
-      - "/var/run/docker.sock:/var/run/docker.sock"
+      - '${TMPDIR:-/tmp/localstack}:/tmp/localstack'
+      - '/var/run/docker.sock:/var/run/docker.sock'
 
   # Cache
   cache:

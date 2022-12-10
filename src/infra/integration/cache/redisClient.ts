@@ -17,8 +17,32 @@ export default ({
 	const redis = new IORedis(redisConfig);
 
 	if (!redis) {
-		throw exceptions.integration('Error to connect on redis cache');
+		throw exceptions.integration({
+			details: 'Error to connect on redis cache',
+		});
 	}
+
+	const _toString = (value: object | string | null) => {
+		let val = '';
+
+		if (typeof (value) === 'object')
+			val = JSON.stringify(value);
+		else if (typeof (value) === 'string')
+			val = String(value);
+
+		return val;
+	};
+	const _toValue = (value: string) => {
+		let val = null;
+
+		try {
+			val = JSON.parse(value);
+		} catch (error) {
+			val = value;
+		}
+
+		return val;
+	};
 
 	return {
 		lib: () => redis,
@@ -30,25 +54,48 @@ export default ({
 		},
 
 		get: async (key: string) => {
-			const value = await redis.get(key);
-			return value ? JSON.parse(value) : null;
+			const value = await redis.get(String(key));
+			return value ? _toValue(value) : null;
 		},
 
 		set: async (key: string, value: object, ttl = -1) => {
-			const result = await redis.set(key, JSON.stringify(value));
-			await redis.expire(key, ttl);
+			const result = await redis.set(String(key), _toString(value));
+			await redis.expire(String(key), Number(ttl)); // [key] expires in [ttl] seconds
 			return result;
 		},
 
 		getByKeyPattern: async (pattern: string) => {
 			const keys = await redis.keys(pattern);
-			const getByKeyPromises = keys.map(async (key) => redis.get(key));
+			const getByKeyPromises = keys.map(
+				async (key) => {
+					const value = _toValue(String(await redis.get(key)));
+
+					return {
+						key,
+						...value,
+					};
+				}
+			);
 
 			return Promise.allSettled(getByKeyPromises);
 		},
 
+		getValuesByKeyPattern: async (key: string) => {
+			const keys = await redis.keys(key);
+
+			if (!keys || keys?.length < 1) {
+				return [];
+			}
+
+			const caches = await redis.mget(keys);
+
+			return caches.map((cache) => {
+				return _toValue(String(cache));
+			});
+		},
+
 		delete: async (key: string) => {
-			const result = await redis.del(key);
+			const result = await redis.del(String(key));
 			return result;
 		},
 
@@ -67,7 +114,7 @@ export default ({
 					const pipeline = redis.pipeline();
 
 					keys.forEach((key: string) => {
-						pipeline.del(key);
+						pipeline.del(String(key));
 					});
 
 					pipeline.exec();

@@ -3,7 +3,7 @@ import { messageType } from 'src/types/_messageType';
 
 
 /**
-*@param {Object} ctx - container dependency injection
+@param {Object} ctx - container dependency injection
 **/
 async function startApplication() {
 	const app = container.resolve('application');
@@ -21,7 +21,7 @@ startApplication();
 
 // Better Comments:
 // normal
-// // hiden
+// // hidden
 // * document
 // ? topic
 // ! alert

@@ -70,7 +70,6 @@
 		}
 	},
 	"dependencies": {
-		"aglio": "^2.3.0",
 		"awilix": "^7.0.3",
 		"awilix-express": "^7.0.0",
 		"aws-sdk": "^2.1227.0",

@@ -29,6 +29,11 @@ module.exports = {
 				type: Sequelize.DATE,
 				allowNull: false,
 				defaultValue: new Date(),
+			},
+			deletedAt: {
+				type: Sequelize.DATE,
+				allowNull: true,
+				defaultValue: null,
 			}
 		});
 	},

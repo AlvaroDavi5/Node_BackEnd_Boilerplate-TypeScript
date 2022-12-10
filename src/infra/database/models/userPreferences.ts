@@ -12,6 +12,7 @@ class UserPreferences extends Model {
 	public defaultTheme!: number;
 	public readonly createdAt!: Date;
 	public readonly updatedAt!: Date;
+	public readonly deletedAt!: Date;
 
 	// ? ------ Methods ------
 	public getUser!: HasOneGetAssociationMixin<Users>;

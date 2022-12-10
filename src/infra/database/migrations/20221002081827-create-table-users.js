@@ -28,7 +28,7 @@ module.exports = {
 			docType: {
 				type: Sequelize.STRING(10),
 			},
-			cpf: {
+			document: {
 				type: Sequelize.STRING(18),
 			},
 			fu: {
@@ -43,6 +43,11 @@ module.exports = {
 				type: Sequelize.DATE,
 				allowNull: false,
 				defaultValue: new Date(),
+			},
+			deletedAt: {
+				type: Sequelize.DATE,
+				allowNull: true,
+				defaultValue: null,
 			}
 		});
 	},

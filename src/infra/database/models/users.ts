@@ -17,6 +17,7 @@ class Users extends Model {
 	public fu!: string;
 	public readonly createdAt!: Date;
 	public readonly updatedAt!: Date;
+	public readonly deletedAt!: Date;
 
 	// // ------ Association Method ------
 	public static associations: {

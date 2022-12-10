@@ -100,7 +100,7 @@
 		/* Interop Constraints */
 		"isolatedModules": true,
 		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": true,
+		"esModuleInterop": false,
 		// "preserveSymlinks": true,
 		"forceConsistentCasingInFileNames": true,
 		/* Type Checking */

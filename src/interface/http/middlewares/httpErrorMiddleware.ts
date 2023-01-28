@@ -5,9 +5,9 @@ import { ErrorInterface } from 'src/types/_errorInterface';
 
 /**
 @param {Object} ctx - Dependency Injection (container)
-@param {import('src/interface/api/http/constants/httpConstants')} ctx.httpConstants
+@param {import('src/interface/http/constants/httpConstants')} ctx.httpConstants
 @param {import('src/infra/logging/logger')} ctx.logger
-@param {import('configs/staticConfigs')} ctx.configs
+@param {import('configs/configs')} ctx.configs
 **/
 export default ({
 	httpConstants,

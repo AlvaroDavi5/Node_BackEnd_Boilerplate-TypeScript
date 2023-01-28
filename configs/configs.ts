@@ -2,9 +2,8 @@ import dotenv from 'dotenv';
 import staticConfigs from './staticConfigs.json';
 dotenv.config();
 
-
-function convert(config) {
-	const result = {};
+function convert(config: object | any) {
+	const result: any = {};
 
 	Object.keys(config).forEach(name => {
 		let value = config[name];

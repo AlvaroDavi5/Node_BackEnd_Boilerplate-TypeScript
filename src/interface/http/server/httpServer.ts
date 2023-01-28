@@ -1,7 +1,5 @@
 import { createServer } from 'http';
-import dotenv from 'dotenv';
 import { ContainerInterface, containerType } from 'src/types/_containerInterface';
-dotenv.config();
 
 
 export default class HttpServer {
@@ -12,9 +10,9 @@ export default class HttpServer {
 
 	/**
 	@param {Object} ctx - Dependency Injection (container)
-	@param {import('src/interface/api/http/server/restServer')} ctx.restServer
+	@param {import('src/interface/http/server/restServer')} ctx.restServer
 	@param {import('src/infra/logging/logger')} ctx.logger
-	@param {import('configs/staticConfigs')} ctx.configs
+	@param {import('configs/configs')} ctx.configs
 	**/
 	constructor({
 		restServer,
@@ -24,13 +22,13 @@ export default class HttpServer {
 		this.configs = configs;
 		this.logger = logger;
 		this.server = createServer(restServer.get());
-		this.environment = process.env.NODE_ENV;
+		this.environment = configs.application.environment || 'development';
 	}
 
 	start() {
-		const serverPort = this.configs.application.port;
+		const serverPort = this.configs.application.port || 3000;
 
-		return this.server.listen(parseInt(serverPort) || 3000, () => {
+		return this.server.listen(parseInt(serverPort), () => {
 			this.logger.info(`Server started on port: ${serverPort} - Environment ${this.environment}`);
 		});
 	}

@@ -6,5 +6,5 @@ export default createEnum({
 	INTEGRATION: 'integration',
 	OPERATION: 'operation',
 	NOT_FOUND: 'notFound',
-	UNAUTHORIZED: 'unauthorized',
+	INTERNAL: 'internal',
 });

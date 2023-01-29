@@ -1,7 +1,7 @@
 import { Dialect } from 'sequelize/types';
 import dotenv from 'dotenv';
-// import path from 'path'
-// dotenv.config({ path: __dirname + "/../.env.development.local" })
+// import path from 'path';
+// dotenv.config({ path: __dirname + "/../.env.development.local" });
 import { DatabaseConfig } from 'src/types/_databaseConfigInterface'; // use environment variables to save sesitive data like database password
 dotenv.config();
 

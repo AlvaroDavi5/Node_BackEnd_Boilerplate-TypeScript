@@ -2,6 +2,7 @@ import dotenv from 'dotenv';
 import staticConfigs from './staticConfigs.json';
 dotenv.config();
 
+
 function convert(config: object | any) {
 	const result: any = {};
 

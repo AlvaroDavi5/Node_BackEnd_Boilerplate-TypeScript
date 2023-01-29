@@ -7,10 +7,10 @@ import {
 
 // TODO: load all main modules
 import Application from 'src/app/Application';
-import staticConfigs from 'configs/staticConfigs';
-import HttpServer from 'src/interface/httpServer';
-import RestServer from 'src/interface/api/http/server/restServer';
-import Router from 'src/interface/api/http/routers/router';
+import configs from 'configs/configs';
+import HttpServer from 'src/interface/http/server/httpServer';
+import RestServer from 'src/interface/http/server/restServer';
+import Router from 'src/interface/http/routers/router';
 import { logger, LoggerStream } from 'src/infra/logging/logger';
 import Exceptions from 'src/infra/errors/exceptions';
 
@@ -28,7 +28,7 @@ container
 	.register({
 		// ? modules manual register
 		application: asClass(Application).singleton(),
-		configs: asValue(staticConfigs),
+		configs: asValue(configs),
 		httpServer: asClass(HttpServer).singleton(),
 		restServer: asClass(RestServer).singleton(),
 		router: asFunction(Router).singleton(),
@@ -41,24 +41,23 @@ container
 	.loadModules(
 		[
 			'src/app/helpers/**/*.ts',
+			'src/app/mappers/**/*.ts',
 			'src/app/operation/**/*.ts',
 			'src/app/services/**/*.ts',
 			'src/app/strategies/**/*.ts',
-			'src/infra/crons/**/*.ts',
-			'src/infra/helpers/**/*.ts',
-			'src/infra/integration/**/*.ts',
-			'src/infra/logging/**/*.ts',
-			'src/infra/mappers/**/*.ts',
+			'src/infra/integration/queue/handlers/**/*.ts',
+			'src/infra/integration/queue/helpers/**/*.ts',
 			'src/infra/providers/**/*.ts',
 			'src/infra/repositories/**/*.ts',
 			'src/infra/security/**/*.ts',
-			'src/interface/api/http/constants/**/*.ts',
-			'src/interface/api/http/controllers/**/*.ts',
-			'src/interface/api/http/middlewares/**/*.ts',
-			'src/interface/api/http/schemas/**/*.ts',
-			'src/interface/api/websocket/controllers/**/*.ts',
-			'src/interface/api/websocket/middlewares/**/*.ts',
-			'src/interface/api/websocket/schemas/**/*.ts',
+			'src/interface/http/constants/**/*.ts',
+			'src/interface/http/controllers/**/*.ts',
+			'src/interface/http/middlewares/**/*.ts',
+			'src/interface/http/schemas/**/*.ts',
+			'src/interface/queue/schemas/**/*.ts',
+			'src/interface/webSocket/helpers/**/*.ts',
+			'src/interface/webSocket/events/**/*.ts',
+			'src/interface/websocket/schemas/**/*.ts',
 		],
 		{
 			formatName: 'camelCase',

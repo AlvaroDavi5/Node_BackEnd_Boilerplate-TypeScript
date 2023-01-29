@@ -2,7 +2,7 @@
 export interface ErrorInterface {
 	error: ErrorInterface | any,
 	errorType: string | any,
-	details: Array | any,
+	details: Array<string> | Array<any> | any,
 	statusCode: number | any,
 	status: string | any,
 	stack: string | any,

@@ -1,6 +1,5 @@
-import { createLogger, transports, format, exitOnError } from 'winston';
-import dotenv from 'dotenv';
-dotenv.config();
+import { createLogger, transports, format } from 'winston';
+import configs from 'configs/configs';
 
 
 const defaultMessageFormat = format.printf(msg => {
@@ -22,7 +21,7 @@ const appFormat = format.combine(
 	defaultMessageFormat
 );
 
-const logsFilePath = process.env.APP_LOGS_PATH || './logs/info.log';
+const logsFilePath = configs.application.logsPath || './logs/info.log';
 
 const options = {
 	format: format.combine(

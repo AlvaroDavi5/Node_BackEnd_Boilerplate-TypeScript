@@ -5,14 +5,14 @@ import { ContainerInterface } from 'src/types/_containerInterface';
 
 /**
 @param {Object} ctx - Dependency Injection (container)
-@param {import('configs/staticConfigs')} ctx.configs
+@param {import('configs/configs')} ctx.configs
 @param {import('src/infra/errors/exceptions')} ctx.exceptions
 **/
 export default ({
 	configs,
 	exceptions,
 }: ContainerInterface) => {
-	const redisConfig = configs.integration.redis;
+	const redisConfig = configs.cache.redis;
 
 	const redis = new IORedis(redisConfig);
 

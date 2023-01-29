@@ -1,9 +1,10 @@
 import container from './container';
+import exceptionsEnum from 'src/domain/enums/exceptionsEnum';
 import { messageType } from 'src/types/_messageType';
 
 
 /**
-@param {Object} ctx - container dependency injection
+@param {Object} ctx - Dependency Injection (container)
 **/
 async function startApplication() {
 	const app = container.resolve('application');
@@ -12,8 +13,22 @@ async function startApplication() {
 		.start()
 		.catch((error: messageType) => {
 			app.logger.error(error);
-			process.exit();
 		});
+
+	process.on('uncaughtException', function (error) {
+		const knowExceptions = exceptionsEnum.values();
+
+		function toCamelCase(str: string) {
+			return str.replace(/(?:^\w|[A-Z]|\b\w)/g, function (word: string, index: number) {
+				return index === 0 ? word.toLowerCase() : word.toUpperCase();
+			}).replace(/\s+/g, '');
+		}
+
+		if (!knowExceptions?.includes(toCamelCase(error.name))) {
+			console.error('\n', error, '\n');
+			process.exit();
+		}
+	});
 }
 
 

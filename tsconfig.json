@@ -34,6 +34,9 @@
 			"@configs/*": [
 				"configs/*",
 			],
+			"@dev/*": [
+				"dev/*"
+			],
 			"@app/*": [
 				"src/app/*",
 			],
@@ -100,7 +103,7 @@
 		/* Interop Constraints */
 		"isolatedModules": true,
 		"allowSyntheticDefaultImports": true,
-		"esModuleInterop": false,
+		"esModuleInterop": true,
 		// "preserveSymlinks": true,
 		"forceConsistentCasingInFileNames": true,
 		/* Type Checking */
@@ -136,5 +139,11 @@
 	],
 	"exclude": [
 		"node_modules",
+		"**/node_modules/**"
 	],
+	"typeAcquisition": {
+		"include": [
+			"jest"
+		]
+	}
 }

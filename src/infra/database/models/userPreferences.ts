@@ -1,6 +1,6 @@
 import { Model, DataTypes, Association, HasOneGetAssociationMixin, HasManyHasAssociationMixin } from 'sequelize';
 import Users from './users';
-import connection from '../connection';
+import connection from 'src/infra/database/connection';
 
 
 class UserPreferences extends Model {

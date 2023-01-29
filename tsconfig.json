@@ -31,10 +31,10 @@
 		"moduleResolution": "node",
 		"baseUrl": ".",
 		"paths": {
-			"@configs/*": [
+			"configs/*": [
 				"configs/*",
 			],
-			"@dev/*": [
+			"dev/*": [
 				"dev/*"
 			],
 			"@app/*": [
@@ -52,20 +52,25 @@
 			"@types/*": [
 				"src/types/*",
 			],
-			"@source/*": [
+			"src/*": [
 				"src/*",
 			],
-			"@tests/*": [
+			"tests/*": [
 				"tests/*",
 			],
-			"@scripts/*": [
+			"scripts/*": [
 				"scripts/*",
+			],
+			"~/*": [
+				"*",
 			],
 		},
 		"rootDirs": [
+			"./configs",
+			"./dev",
 			"./src",
 			"./scripts",
-			"./test",
+			"./tests",
 		],
 		// "typeRoots": [],
 		// "types": [],

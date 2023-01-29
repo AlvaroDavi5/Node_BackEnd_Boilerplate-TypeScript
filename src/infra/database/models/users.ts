@@ -1,6 +1,6 @@
 import { Model, DataTypes, Association, HasOneGetAssociationMixin, HasManyHasAssociationMixin } from 'sequelize';
 import UserPreferences from './userPreferences';
-import connection from '../connection';
+import connection from 'src/infra/database/connection';
 
 
 // EcmaScript 6 format

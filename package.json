@@ -62,8 +62,8 @@
 		"test:watch": "jest --watch --verbose --detectOpenHandles",
 		"lint": "yarn js:lint && yarn ts:lint",
 		"lint:fix": "yarn js:lint --fix && yarn ts:lint --fix",
-		"js:lint": "eslint --ext .js ./dev/ ./scripts/ ./tests/",
-		"ts:lint": "eslint --ext .ts ./configs/ ./src/ --quiet",
+		"js:lint": "eslint --ext .js ./dev/ ./scripts/",
+		"ts:lint": "eslint --ext .ts ./configs/ ./src/ ./tests/ --quiet",
 		"format": "prettier --write \"./**/*.{js,ts,jsx,tsx,json}\"",
 		"commit": "git-cz",
 		"versioning": "semver"
@@ -125,6 +125,7 @@
 		"@types/dotenv": "^8.2.0",
 		"@types/ejs": "^3.1.1",
 		"@types/express": "^4.17.16",
+		"@types/ioredis-mock": "^8.2.1",
 		"@types/jest": "^29.4.0",
 		"@types/joi": "^17.2.3",
 		"@types/jsonwebtoken": "^9.0.1",

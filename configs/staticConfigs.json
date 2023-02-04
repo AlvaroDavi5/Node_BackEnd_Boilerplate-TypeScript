@@ -1,5 +1,6 @@
 {
 	"application": {
+		"name": "$APP_NAME",
 		"environment": "$NODE_ENV",
 		"port": "$APP_PORT",
 		"url": "$APP_URL",
@@ -23,13 +24,13 @@
 	},
 	"cache": {
 		"redis": {
-			"sessionManager": "$REDIS_SESSION_MANAGER"
+			"host": "$REDIS_HOST",
+			"port": "$REDIS_PORT"
 		}
 	},
 	"integration": {
 		"aws": {
 			"credentials": {
-				"endpoint": "$AWS_ENDPOINT_URL",
 				"region": "$AWS_REGION",
 				"accessKeyId": "$AWS_ACCESS_KEY_ID",
 				"secretAccessKey": "$AWS_SECRET_ACCESS_KEY",
@@ -42,6 +43,7 @@
 				"userPoolId": "$AWS_COGNITO_USER_POOL_ID",
 				"clientName": "$AWS_COGNITO_USER_POOL_CLIENT_NAME",
 				"clientId": "$AWS_COGNITO_USER_POOL_CLIENT_ID",
+				"endpoint": "$AWS_ENDPOINT_URL",
 				"apiVersion": "$AWS_API_VERSION"
 			},
 			"sqs": {
@@ -49,6 +51,7 @@
 					"queueName": "$AWS_SQS_DEFAULT_QUEUE_NAME",
 					"queueUrl": "$AWS_SQS_DEFAULT_QUEUE_URL"
 				},
+				"endpoint": "$AWS_ENDPOINT_URL",
 				"apiVersion": "$AWS_API_VERSION"
 			},
 			"sns": {
@@ -57,12 +60,20 @@
 					"topicArn": "$AWS_SNS_DEFAULT_TOPIC_ARN",
 					"topicProtocol": "$AWS_TOPIC_PROTOCOL"
 				},
+				"endpoint": "$AWS_ENDPOINT_URL",
 				"apiVersion": "$AWS_API_VERSION"
 			},
 			"s3": {
 				"bucketName": "$AWS_S3_BUCKET_NAME",
 				"bucketUrl": "$LOCALSTACK_URL",
+				"endpoint": "$AWS_ENDPOINT_URL",
 				"apiVersion": "$AWS_API_VERSION"
+			}
+		},
+		"rest": {
+			"mockedService": {
+				"serviceName": "$MOCKED_SERVICE_NAME",
+				"baseUrl": "$MOCKED_SERVICE_URL"
 			}
 		}
 	},

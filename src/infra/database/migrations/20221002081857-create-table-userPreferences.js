@@ -13,6 +13,12 @@ module.exports = {
 			userId: {
 				type: Sequelize.INTEGER,
 				allowNull: false,
+				references: {
+					model: 'Users', // table name, not model name
+					key: 'id'
+				},
+				onUpdate: 'CASCADE',
+				onDelete: 'CASCADE'
 			},
 			imagePath: {
 				type: Sequelize.STRING(255),

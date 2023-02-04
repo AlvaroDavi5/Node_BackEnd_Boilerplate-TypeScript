@@ -1,8 +1,7 @@
-import { Dialect } from 'sequelize/types';
+import { Options, BuildOptions, Dialect } from 'sequelize/types';
 import dotenv from 'dotenv';
 // import path from 'path';
 // dotenv.config({ path: __dirname + "/../.env.development.local" });
-import { DatabaseConfig } from 'src/types/_databaseConfigInterface'; // use environment variables to save sesitive data like database password
 dotenv.config();
 
 
@@ -21,7 +20,29 @@ function getDialect(dialect: string): Dialect {
 	}
 }
 
-const config: DatabaseConfig = {
+export interface DatabaseConfigInterface {
+	database: string | undefined,
+	username: string | undefined,
+	password: string | undefined,
+	dialect: Dialect | undefined,
+	host: string | undefined,
+	port: number | undefined,
+	charset?: string | undefined,
+	dialectOptions?: {
+		ssl: {
+			rejectUnauthorized: boolean,
+		}
+	},
+	define?: {
+		underscored: boolean,
+		timestamps: boolean,
+		freezeTableName: boolean,
+	},
+	options?: Options | undefined,
+	buildOptions?: BuildOptions | undefined,
+}
+
+const config: DatabaseConfigInterface = {
 	database: process.env.DB_NAME, // database name
 	username: process.env.DB_USERNAME, // database username
 	password: process.env.DB_PASSWORD, // database password

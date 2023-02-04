@@ -1,10 +1,9 @@
 import { Model, DataTypes, Association, HasOneGetAssociationMixin, HasManyHasAssociationMixin } from 'sequelize';
-import Users from './users';
+import Users from './Users';
 import connection from 'src/infra/database/connection';
 
 
-class UserPreferences extends Model {
-
+export default class UserPreferences extends Model {
 	// * ------ Attributes ------
 	public id!: number;
 	public userId!: number;
@@ -36,6 +35,3 @@ UserPreferences.init(
 		sequelize: connection
 	}
 );
-
-
-export default UserPreferences;

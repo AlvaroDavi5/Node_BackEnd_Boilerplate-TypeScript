@@ -1,12 +1,12 @@
 import { createServer } from 'http';
-import { ContainerInterface, containerType } from 'src/types/_containerInterface';
+import { ContainerInterface, genericType } from 'src/types/_containerInterface';
 
 
 export default class HttpServer {
-	configs: containerType;
-	logger: containerType;
-	environment: string | undefined;
 	server: any;
+	configs: genericType;
+	logger: genericType;
+	environment: string | undefined;
 
 	/**
 	@param {Object} ctx - Dependency Injection (container)
@@ -23,6 +23,10 @@ export default class HttpServer {
 		this.logger = logger;
 		this.server = createServer(restServer.get());
 		this.environment = configs.application.environment || 'development';
+	}
+
+	getServer() {
+		return this.server;
 	}
 
 	start() {

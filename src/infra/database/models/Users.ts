@@ -1,11 +1,10 @@
 import { Model, DataTypes, Association, HasOneGetAssociationMixin, HasManyHasAssociationMixin } from 'sequelize';
-import UserPreferences from './userPreferences';
+import UserPreferences from './UserPreferences';
 import connection from 'src/infra/database/connection';
 
 
 // EcmaScript 6 format
-class Users extends Model {
-
+export default class Users extends Model {
 	// * ------ Attributes ------
 	public id!: number;
 	public fullName!: string;
@@ -58,6 +57,3 @@ Users.init(
 		sequelize: connection,
 	}
 );
-
-
-export default Users;

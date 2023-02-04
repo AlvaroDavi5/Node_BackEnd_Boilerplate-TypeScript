@@ -2,14 +2,14 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import { scopePerRequest } from 'awilix-express';
-import { ContainerInterface, containerType } from 'src/types/_containerInterface';
+import { ContainerInterface, genericType } from 'src/types/_containerInterface';
 
 
 export default class RestServer {
-	router: containerType;
-	logger: containerType;
-	loggerStream: containerType;
-	configs: containerType;
+	router: genericType;
+	logger: genericType;
+	loggerStream: genericType;
+	configs: genericType;
 	express: express.Express;
 
 	/**

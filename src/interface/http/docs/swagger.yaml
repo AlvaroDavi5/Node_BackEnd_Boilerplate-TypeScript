@@ -1,0 +1,177 @@
+
+openapi: 3.0.1
+info:
+    title: Subscriptions Service
+    version: 0.3.0
+    description: "<p>This is the Subscriptions Service openApi specifications</p>"
+servers:
+    - url: http://localhost:4000/api
+      description: Local
+
+
+paths:
+    /api/healthcheck:
+        get:
+            operationId: api-healthcheck
+            tags:
+                - API
+            summary: API HealthCheck
+            description: Get infos about API
+            responses:
+                200:
+                    description: Return infos successfully
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    method:
+                                        type: string
+                                        example: GET
+                                    url:
+                                        type: string
+                                        example: /api/healthcheck
+                                    statusCode:
+                                        type: number
+                                        example: 200
+                                    status:
+                                        type: string
+                                        example: OK
+
+
+    /connection/subscribe:
+        post:
+            tags:
+                - Connection
+            # security:
+            #    - Authorization: []
+            operationId: connection-save
+            summary: Subscribe Connection
+            description: Save WebSocket Connection
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/connection-save"
+            responses:
+                200:
+                    description: Save/Update Connection
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    status:
+                                        type: string
+                                        example: OK
+
+    /connection/unsubscribe:
+        post:
+            tags:
+                - Connection
+            # security:
+            #    - Authorization: []
+            operationId: connection-delete
+            summary: Unsubscribe Connection
+            description: Delete WebSocket Connection
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/connection-delete"
+            responses:
+                200:
+                    description: Delete Connection
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    status:
+                                        type: number
+                                        example: 1
+
+    /connection/sync:
+        post:
+            tags:
+                - Connection
+            # security:
+            #    - Authorization: []
+            operationId: connection-sync
+            summary: Synchronize Connection
+            description: Synchronize WebSocket Connection
+            requestBody:
+                content:
+                    application/json:
+                        schema:
+                            $ref: "#/components/schemas/connection-sync"
+            responses:
+                200:
+                    description: Synchronize Connection
+                    content:
+                        application/json:
+                            schema:
+                                properties:
+                                    status:
+                                        type: boolean
+                                        example: true
+
+
+
+components:
+    securitySchemes:
+        Authorization:
+            type: apiKey
+            name: Authorization
+            in: header
+    schemas:
+        connection-save:
+            type: object
+            properties:
+                connectionId:
+                    type: string
+                    default: Xxx_xxxxxx
+                data:
+                    type: object
+                    properties:
+                        action:
+                            type: string
+                            default: subscribe
+                        token:
+                            type: string
+                            default: Bearer XXX
+                        dataValues:
+                            type: object
+                            properties:
+                                clientId:
+                                    type: string
+                                    default: Xxxxxx=
+                                userId:
+                                    type: number
+                                    default: 0
+                                merchantIds:
+                                    type: array
+                                    items:
+                                        type: number
+                                    default: [0]
+        connection-delete:
+            type: object
+            properties:
+                connectionId:
+                    type: string
+                    default: Xxx_xxxxxx
+                data:
+                    type: object
+                    properties:
+                        action:
+                            type: string
+                            default: unsubscribe
+        connection-sync:
+            type: object
+            properties:
+                connectionId:
+                    type: string
+                    default: Xxx_xxxxxx
+                data:
+                    type: object
+                    properties:
+                        action:
+                            type: string
+                            default: sync

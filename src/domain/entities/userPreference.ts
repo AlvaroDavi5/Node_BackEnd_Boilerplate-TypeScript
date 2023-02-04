@@ -1,7 +1,16 @@
-import { UserPreferenceInterface } from 'src/types/_entitiesInterfaces';
+import Entity from './entity';
 
 
-export default class UserPreference {
+export interface UserPreferenceInterface {
+	id: number,
+	userId: number,
+	imagePath: string,
+	defaultTheme: number,
+	createdAt: Date,
+	updatedAt: Date,
+}
+
+export default class UserPreference extends Entity {
 	public id!: number;
 	public userId!: number;
 	public imagePath!: string;
@@ -10,6 +19,7 @@ export default class UserPreference {
 	public readonly updatedAt!: Date;
 
 	constructor({ userId, defaultTheme }: UserPreferenceInterface) {
+		super();
 		this.userId = userId;
 		this.defaultTheme = defaultTheme;
 	}

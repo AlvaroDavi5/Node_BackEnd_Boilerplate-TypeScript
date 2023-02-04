@@ -1,5 +1,5 @@
-import dotenv from 'dotenv';
 import staticConfigs from './staticConfigs.json';
+import dotenv from 'dotenv';
 dotenv.config();
 
 
@@ -30,5 +30,90 @@ function convert(config: object | any) {
 	return result;
 }
 
+
+export interface ConfigsInterface {
+	application: {
+		name: string,
+		environment: string,
+		port: string,
+		url: string,
+		socketEnv: string,
+		logsPath: string,
+		stackErrorVisible: boolean,
+	},
+	database: {
+		database: string,
+		username: string,
+		password: string,
+		host: string,
+		charset: string,
+		dialect: string,
+		port: string,
+		define: {
+			underscored: boolean,
+			timestamps: boolean,
+			freezeTableName: boolean,
+		}
+	},
+	cache: {
+		redis: {
+			port: number,
+			host: string,
+		}
+	},
+	integration: {
+		aws: {
+			credentials: {
+				region: string,
+				accessKeyId: string,
+				secretAccessKey: string,
+				messageDeduplicationId: string,
+				messageGroupId: string,
+				apiVersion: string,
+			},
+			congito: {
+				userPoolName: string,
+				userPoolId: string,
+				clientName: string,
+				clientId: string,
+				endpoint: string,
+				apiVersion: string,
+			},
+			sqs: {
+				defaultQueue: {
+					queueName: string,
+					queueUrl: string,
+				},
+				endpoint: string,
+				apiVersion: string,
+			},
+			sns: {
+				defaultTopic: {
+					topicName: string,
+					topicArn: string,
+					topicProtocol: string,
+				},
+				endpoint: string,
+				apiVersion: string,
+			},
+			s3: {
+				bucketName: string,
+				bucketUrl: string,
+				endpoint: string,
+				apiVersion: string,
+			}
+		},
+		rest: {
+			mockedService: {
+				serviceName: string,
+				baseUrl: string,
+			},
+		},
+	},
+	security: {
+		cryptoAlgorithm: string,
+		secretKey: string,
+	}
+}
 
 export default convert(staticConfigs);

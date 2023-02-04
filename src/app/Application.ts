@@ -1,13 +1,15 @@
-import { containerType, ContainerInterface } from 'src/types/_containerInterface';
+import { config } from 'aws-sdk';
+import { genericType, ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default class Application {
-	httpServer: containerType;
-	webSocketServer: containerType;
-	eventsQueueConsumer: containerType;
-	syncCron: containerType;
-	isSocketEnvEnabled: containerType;
-	logger: containerType;
+	httpServer: genericType;
+	webSocketServer: genericType;
+	eventsQueueConsumer: genericType;
+	syncCron: genericType;
+	logger: genericType;
+	configs: genericType;
+	isSocketEnvEnabled: boolean;
 
 	/**
 	@param {Object} ctx - Dependency Injection (container)
@@ -16,7 +18,7 @@ export default class Application {
 	@param {import('src/infra/integration/queue/consumers/EventsQueueConsumer')} ctx.eventsQueueConsumer
 	@param {import('src/infra/cron/SyncCron')}  ctx.syncCron
 	@param {import('src/infra/logging/logger')} ctx.logger
-	@param {import('config/index')} ctx.config
+	@param {import('configs/configs')} ctx.configs
 	**/
 	constructor({
 		httpServer,
@@ -24,16 +26,16 @@ export default class Application {
 		eventsQueueConsumer,
 		syncCron,
 		logger,
-		config,
+		configs,
 	}: ContainerInterface) {
 		this.httpServer = httpServer;
 		this.webSocketServer = webSocketServer;
 		this.eventsQueueConsumer = eventsQueueConsumer;
 		this.syncCron = syncCron;
-		this.isSocketEnvEnabled = config?.application?.socketEnv === 'enabled';
 		this.logger = logger;
+		this.configs = configs;
+		this.isSocketEnvEnabled = configs?.application?.socketEnv === 'enabled';
 	}
-
 
 	startCrons() {
 		this.syncCron.start();
@@ -46,11 +48,18 @@ export default class Application {
 	}
 
 	async start() {
+		// AWS Configs
+		config.update({
+			...this.configs?.integration?.aws?.credentials,
+		});
+
+		// Servers
 		if (this.isSocketEnvEnabled) {
 			this.webSocketServer.start();
 		}
-
 		this.httpServer.start();
+
+		// Background Services
 		this.startCrons();
 		this.startQueueConsumers();
 	}

@@ -5,6 +5,10 @@ import { ErrorInterface } from 'src/types/_errorInterface';
 import exceptionsEnum from 'src/domain/enums/exceptionsEnum';
 
 
+export interface ExceptionInterface {
+	[key: string]: (info?: any) => Error,
+}
+
 class Business extends MakeErrorClass('Business') { }
 class Contract extends MakeErrorClass('Contract') { }
 class Integration extends MakeErrorClass('Integration') { }

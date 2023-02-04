@@ -1,6 +1,6 @@
 import connection from './connection';
-import Users from './models/users';
-import UserPreferences from './models/userPreferences';
+import Users from './models/Users';
+import UserPreferences from './models/UserPreferences';
 
 
 // ! saving models

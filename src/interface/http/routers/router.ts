@@ -31,6 +31,7 @@ export default (ctx: ContainerInterface) => {
 	});
 
 	// application routes
+	apiRouter.use('/docs', ctx.swaggerMiddleware);
 	apiRouter.use('/users', handler(ctx.userController.router));
 
 	// default response

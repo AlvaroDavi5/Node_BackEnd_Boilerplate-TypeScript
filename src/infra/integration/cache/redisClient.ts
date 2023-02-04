@@ -3,6 +3,21 @@ import { ScanStreamOptions } from 'ioredis/built/types';
 import { ContainerInterface } from 'src/types/_containerInterface';
 
 
+export interface RedisClientInterface {
+	lib: () => IORedis,
+
+	list: () => Promise<any>,
+	get: (key: string) => Promise<any>,
+	set: (key: string, value: object | any, ttl: number) => Promise<any>,
+
+	getByKeyPattern: (pattern: string) => Promise<any>,
+	getValuesByKeyPattern: (key: string) => Promise<any>,
+
+	delete: (key: string) => Promise<any>,
+	deleteAll: () => Promise<any>,
+	remove: (keyPattern: ScanStreamOptions | object | string) => Promise<void>,
+}
+
 /**
 @param {Object} ctx - Dependency Injection (container)
 @param {import('configs/configs')} ctx.configs

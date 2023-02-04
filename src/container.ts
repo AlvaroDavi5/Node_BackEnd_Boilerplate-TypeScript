@@ -6,11 +6,17 @@ import {
 
 
 // TODO: load all main modules
-import Application from 'src/app/Application';
 import configs from 'configs/configs';
+import Application from 'src/app/Application';
+import syncCron from 'src/infra/cron/syncCron';
+import eventsQueueConsumer from 'src/infra/integration/queue/consumers/eventsQueueConsumer';
 import HttpServer from 'src/interface/http/server/httpServer';
 import RestServer from 'src/interface/http/server/restServer';
 import Router from 'src/interface/http/routers/router';
+import WebSocketServer from 'src/interface/webSocket/server/Server';
+import socketEventsRegister from 'src/interface/webSocket/events/socketEventsRegister';
+import WebSocketClient from 'src/interface/webSocket/client/Client';
+import redisClient from 'src/infra/integration/cache/redisClient';
 import { logger, LoggerStream } from 'src/infra/logging/logger';
 import Exceptions from 'src/infra/errors/exceptions';
 
@@ -32,6 +38,14 @@ container
 		httpServer: asClass(HttpServer).singleton(),
 		restServer: asClass(RestServer).singleton(),
 		router: asFunction(Router).singleton(),
+		webSocketServer: asClass(WebSocketServer).singleton(),
+		socketEventsRegister: asFunction(socketEventsRegister).singleton(),
+		webSocketClient: asClass(WebSocketClient).singleton(),
+		redisClient: asFunction(redisClient).singleton(),
+		syncCron: asFunction(syncCron).singleton(),
+		eventsQueueConsumer: asFunction(eventsQueueConsumer).singleton(),
+		// apiGatewayClient: asClass(ApiGatewayClient).singleton(),
+		// entitiesClient: asClass(EntitiesClient).singleton(),
 		logger: asValue(logger),
 		loggerStream: asClass(LoggerStream).singleton(),
 		exceptions: asFunction(Exceptions).singleton(),

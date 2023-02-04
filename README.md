@@ -84,8 +84,9 @@ $ docker-compose up -d # create and run all docker containers in background
 ```shell
 $ yarn migrate # create database entities
 $ yarn seed # populate database registers
-$ yarn mock-dependencies # create external services mock
-$ yarn dev # execute API
+$ yarn mock-dependencies # create messages queue and started external services mock
+$ yarn dev # start service
+$ yarn receive-messages # create websocket client and start connection
 $ yarn send-message # send message to queue
 ```
 
@@ -100,6 +101,7 @@ $ yarn send-message # send message to queue
 
 ## Interface
 
-- [localhost:3000](`http://localhost:3000/`) - Node API
+- [localhost:3000](`http://localhost:3000/`) - Node Application
+  * `/` - WebSocket Root Endpoint
   * `/api` - API Root Endpoint
   * `/api/docs` - API Documentation

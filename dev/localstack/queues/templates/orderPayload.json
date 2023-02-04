@@ -1,0 +1,216 @@
+{
+    "id": 1,
+    "origin": "IFOOD",
+    "originOrderId": "005a6dae-6ec5-4697-942b-2e07633ba8d4",
+    "logistics": {
+        "trackingUrl": "",
+        "logisticsId": "",
+        "logisticsShortReference": "",
+        "status": "",
+        "origin": "",
+        "price": 0,
+        "timestamp": "1970-01-01T00:00:00.000Z",
+        "cancellation": {
+            "code": "",
+            "reason": ""
+        }
+    },
+    "customerOrdersCount": 0,
+    "integrator": "",
+    "pdvMerchantId": "1",
+    "externalOrderId": "123",
+    "status": "CONCLUDED",
+    "originStatus": "CONCLUDED",
+    "targetStatus": "",
+    "originShortReference": "1234",
+    "placedAt": "2022-12-09T21:26:50.000Z",
+    "forcedUpdatedAt": "1970-01-01T00:00:00.000Z",
+    "invoiceDocument": "",
+    "ackPending": false,
+    "serviceType": "DELIVERY",
+    "cancellationCode": "",
+    "cancellationReason": "",
+    "posIntegrationError": "",
+    "posIntegrationStatus": "",
+    "timeToAcceptInSeconds": 300,
+    "preparation": {
+        "preparationTimeInSeconds": 13000,
+        "minPreparationTimeInSeconds": 10000,
+        "maxPreparationTimeInSeconds": 15000,
+        "preparationStartDateTime": "2017-05-02T16:01:16.000Z"
+    },
+    "packaging": {
+        "shouldIncludeDisposableItems": true
+    },
+    "merchant": {
+        "originId": "",
+        "externalId": "",
+        "name": "Restaurante Test",
+        "phoneNumber": "32-99999999",
+        "address": {
+            "formattedAddress": "PEDIDO DE TESTE - NÃO ENTREGAR - Ramal Bujari, 10",
+            "country": "BR",
+            "state": "AC",
+            "city": "Bujari",
+            "coordinates": {
+                "latitude": "-9.821256",
+                "longitude": "-67.948009"
+            },
+            "neighborhood": "Bairro",
+            "streetName": "PEDIDO DE TESTE - NÃO ENTREGAR - Ramal Bujar",
+            "number": "10",
+            "postalCode": "69923000",
+            "reference": "Ponto de referência",
+            "complement": "Complemento do endereço"
+        }
+    },
+    "payment": {
+        "paymentMethods": [
+            {
+                "name": "VISA",
+                "code": "VIS",
+                "issuer": "VISA",
+                "prepaid": true,
+                "value": 28,
+                "changeFor": 0,
+                "method": "CREDIT"
+            },
+            {
+                "name": "DINHEIRO",
+                "code": "DIN",
+                "issuer": "",
+                "prepaid": false,
+                "value": 3,
+                "changeFor": 3,
+                "method": "CASH"
+            }
+        ],
+        "discounts": [
+            {
+                "value": 131,
+                "provider": "ORIGIN",
+                "type": "VOUCHER",
+                "target": "CART",
+                "targetId": "eaae8dba-c128-4c37-b98e-3f0cff758a7b"
+            },
+            {
+                "value": 400,
+                "provider": "MERCHANT",
+                "type": "",
+                "target": "ITEM",
+                "targetId": "5f65f3ef-5748-4288-b700-53b5101eca08"
+            },
+            {
+                "value": 450,
+                "provider": "MERCHANT",
+                "type": "",
+                "target": "PROGRESSIVE_DISCOUNT_ITEM",
+                "targetId": "8eff9926-471e-4ac0-94b8-95a0a85b88c5"
+            }
+        ],
+        "charges": {
+            "subTotal": 2000,
+            "total": 1700,
+            "totalDiscounts": 300,
+            "totalInCash": 2000,
+            "tip": 0,
+            "tax": 0,
+            "totalFee": 0,
+            "totalFeeTax": 0,
+            "packagingFee": 0,
+            "deliveryFee": 0,
+            "serviceFee": 0,
+            "pos": false,
+            "posId": 0,
+            "posTimestamp": "1970-01-01T00:00:00.000Z"
+        }
+    },
+    "customer": {
+        "originId": "114235279",
+        "ordersCount": 11,
+        "firstName": "Pedido",
+        "displayName": "Pedido de teste",
+        "lastName": "Teste",
+        "document": "77788866655",
+        "phoneNumber": "0800 + ID ",
+        "email": "String - Email do cliente"
+    },
+    "cart": {
+        "originId": "123124123",
+        "notes": "String - Observações sobre o pedido",
+        "items": [
+            {
+                "originId": "348c2343-ce00-452d-8745-b721b62a0ae3",
+                "sku": "44423212",
+                "name": "Nome do Produto",
+                "type": "Tipo do Produto",
+                "quantity": 2,
+                "description": "Dados complementares sobre o produto fornecidos pelo estabelecimento",
+                "comments": "Comentarios sobre o produto fornecidos pelo cliente",
+                "image": "Endereço da imagem do produto",
+                "unitPrice": 2000,
+                "totalPrice": 2000,
+                "baseUnitPrice": 2000,
+                "baseTotalPrice": 2000,
+                "discount": 0,
+                "addition": 0,
+                "integrationCode": "1231223",
+                "cancellationCode": "",
+                "parentPatchedId": "",
+                "deletedAt": null,
+                "subItems": [
+                    {
+                        "name": "Nome do subitem",
+                        "originId": "749ef67f-8438-436b-b178-4c88128454bd",
+                        "quantity": 1,
+                        "description": "",
+                        "comments": "",
+                        "unitPrice": 0,
+                        "totalPrice": 0,
+                        "discount": 0,
+                        "addition": 0,
+                        "integrationCode": "1231223"
+                    }
+                ]
+            }
+        ]
+    },
+    "delivery": {
+        "deliveredAt": "2022-12-09T21:26:51.000Z",
+        "deliveryDateTime": "8601-01-01T03:00:00.000Z",
+        "deliveredBy": "ORIGIN",
+        "trackingStatus": "",
+        "worker": {
+            "name": "Foo Bar",
+            "phoneNumber": "+55 999999999",
+            "instructions": "Deixar pedido na portaria",
+            "latitude": "",
+            "longitude": "",
+            "photo": "",
+            "logisticCompany": "",
+            "vehiclePlateNumber": "",
+            "vehicleType": "",
+            "eta": 400,
+            "firstEta": 400
+        },
+        "address": {
+            "formattedAddress": "PEDIDO DE TESTE - NÃO ENTREGAR - Ramal Bujari, 10",
+            "country": "BR",
+            "state": "AC",
+            "city": "Bujari",
+            "coordinates": {
+                "latitude": "-9.821256",
+                "longitude": "-67.948009"
+            },
+            "neighborhood": "Bairro",
+            "streetName": "PEDIDO DE TESTE - NÃO ENTREGAR - Ramal Bujar",
+            "number": "10",
+            "postalCode": "69923000",
+            "reference": "Ponto de referência",
+            "complement": "Complemento do endereço"
+        }
+    },
+    "createdAt": "2022-12-09T21:36:06.000Z",
+    "scheduled": false,
+    "printedAt": null
+}

@@ -76,6 +76,11 @@ const apiMessages = {
 };
 
 
+export interface HttpConstantsInteface {
+	status: typeof httpStatus,
+	messages: typeof apiMessages,
+}
+
 export default () => ({
 	status: httpStatus,
 	messages: apiMessages

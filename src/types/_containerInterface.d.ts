@@ -6,6 +6,7 @@ import { AnySchema } from 'joi';
 import { Logger } from 'winston';
 import { LoggerStream } from 'src/infra/logging/logger';
 import SqsClient from 'src/infra/integration/aws/SqsClient';
+import RestClient from 'src/infra/integration/rest/RestClient';
 import Application from 'src/app/Application';
 import Repository from 'src/infra/repositories/Repository';
 import HttpServer from 'src/interface/http/server/httpServer';
@@ -37,8 +38,8 @@ export interface ContainerInterface {
 	redisClient: RedisClientInterface,
 	syncCron: ScheduledTask,
 	eventsQueueConsumer: Consumer,
-	SqsClient: SqsClient,
-	// entitiesClient: moduleType,
+	sqsClient: SqsClient,
+	restClient: RestClient,
 	eventSchema: AnySchema,
 	httpConstants: HttpConstantsInteface,
 	logger: Logger,

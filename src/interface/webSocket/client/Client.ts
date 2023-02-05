@@ -1,5 +1,5 @@
 import { io, Socket } from 'socket.io-client';
-import { ContainerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/container';
 
 
 export interface WebSocketClientInterface {

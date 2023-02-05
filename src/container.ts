@@ -1,24 +1,33 @@
 // // libs import
 import {
-	createContainer, InjectionMode,
+	AwilixContainer, createContainer, InjectionMode,
 	asClass, asFunction, asValue,
 } from 'awilix';
-
+import { Consumer } from 'sqs-consumer';
+import { ScheduledTask } from 'node-cron';
+import { Router as ExpressRouter } from 'express';
+import { AnySchema } from 'joi';
+import { Logger as WinstonLogger } from 'winston';
 
 // TODO: load all main modules
-import configs from 'configs/configs';
+import configs, { ConfigsInterface } from 'configs/configs';
 import Application from 'src/app/Application';
 import syncCron from 'src/infra/cron/syncCron';
 import eventsQueueConsumer from 'src/infra/integration/queue/consumers/eventsQueueConsumer';
 import HttpServer from 'src/interface/http/server/httpServer';
 import RestServer from 'src/interface/http/server/restServer';
 import Router from 'src/interface/http/routers/router';
-import WebSocketServer from 'src/interface/webSocket/server/Server';
+import SqsClient from 'src/infra/integration/aws/SqsClient';
+import RestClient from 'src/infra/integration/rest/RestClient';
+import Repository from 'src/infra/repositories/Repository';
+import WebSocketServer, { WebSocketServerInterface } from 'src/interface/webSocket/server/Server';
 import socketEventsRegister from 'src/interface/webSocket/events/socketEventsRegister';
 import WebSocketClient from 'src/interface/webSocket/client/Client';
-import redisClient from 'src/infra/integration/cache/redisClient';
+import redisClient, { RedisClientInterface } from 'src/infra/integration/cache/redisClient';
 import { logger, LoggerStream } from 'src/infra/logging/logger';
-import Exceptions from 'src/infra/errors/exceptions';
+import Exceptions, { ExceptionInterface } from 'src/infra/errors/exceptions';
+import { HttpConstantsInteface } from 'src/interface/http/constants/httpConstants';
+
 
 // ! container creation
 const container = createContainer({
@@ -81,5 +90,34 @@ container
 		},
 	);
 
+
+export type genericType = AwilixContainer | NodeModule | object | any
+export type moduleType = { execute: (arg1?: any, arg2?: any) => genericType }
+
+export interface ContainerInterface {
+	[key: string]: genericType,
+
+	application: Application,
+	configs: ConfigsInterface,
+	httpServer: HttpServer,
+	restServer: RestServer,
+	router: ExpressRouter,
+	webSocketServer: WebSocketServer,
+	socketEventsRegister: (server: WebSocketServerInterface) => void,
+	webSocketClient: WebSocketClient,
+	userRepository: Repository,
+	userPreferenceRepository: Repository,
+	redisClient: RedisClientInterface,
+	syncCron: ScheduledTask,
+	eventsQueueConsumer: Consumer,
+	sqsClient: SqsClient,
+	restClient: RestClient,
+	eventSchema: AnySchema,
+	httpConstants: HttpConstantsInteface,
+	logger: WinstonLogger,
+	loggerStream: LoggerStream,
+	exceptions: ExceptionInterface,
+	container: AwilixContainer,
+}
 
 export default container;

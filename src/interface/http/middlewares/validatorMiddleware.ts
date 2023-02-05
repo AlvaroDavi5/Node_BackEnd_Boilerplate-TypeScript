@@ -1,6 +1,6 @@
 import { AnySchema } from 'joi';
 import { Request, Response, NextFunction } from 'express';
-import { ContainerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/container';
 
 
 const wrapperError = (error: any) => {

@@ -1,6 +1,6 @@
 import { Consumer } from 'sqs-consumer';
 import { SQSClient } from '@aws-sdk/client-sqs';
-import { ContainerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/container';
 
 
 /**

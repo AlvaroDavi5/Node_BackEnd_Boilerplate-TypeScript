@@ -2,7 +2,7 @@ import uuid from 'uuid';
 import { Logger } from 'winston';
 import AWS, { SQS } from 'aws-sdk';
 import { ConfigsInterface } from 'configs/configs';
-import { ContainerInterface, genericType } from 'src/types/_containerInterface';
+import { ContainerInterface, genericType } from 'src/container';
 
 
 export default class SqsClient {

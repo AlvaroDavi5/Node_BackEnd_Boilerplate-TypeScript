@@ -2,7 +2,7 @@ import Entity from 'src/domain/entities/entity';
 import Users from 'src/infra/database/models/Users';
 import { Logger } from 'winston';
 import { ExceptionInterface } from 'src/infra/errors/exceptions';
-import { ContainerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/container';
 
 
 export default class Repository {

@@ -1,5 +1,5 @@
 import { config } from 'aws-sdk';
-import { genericType, ContainerInterface } from 'src/types/_containerInterface';
+import { genericType, ContainerInterface } from 'src/container';
 
 
 export default class Application {

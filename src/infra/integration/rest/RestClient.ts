@@ -1,7 +1,7 @@
 import axios, { AxiosInstance } from 'axios';
 import axiosRetry from 'axios-retry';
 import { Logger } from 'winston';
-import { ContainerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/container';
 
 
 export default class EntitiesClient {

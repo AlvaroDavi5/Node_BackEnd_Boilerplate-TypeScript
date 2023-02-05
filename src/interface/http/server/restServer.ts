@@ -2,7 +2,7 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import { scopePerRequest } from 'awilix-express';
-import { ContainerInterface, genericType } from 'src/types/_containerInterface';
+import { ContainerInterface, genericType } from 'src/container';
 
 
 export default class RestServer {

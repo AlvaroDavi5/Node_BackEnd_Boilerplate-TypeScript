@@ -1,6 +1,6 @@
 import IORedis from 'ioredis';
 import { ScanStreamOptions } from 'ioredis/built/types';
-import { ContainerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/container';
 
 
 export interface RedisClientInterface {

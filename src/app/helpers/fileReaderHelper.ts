@@ -1,5 +1,5 @@
 import fs from 'fs';
-import { ContainerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/container';
 
 
 /**

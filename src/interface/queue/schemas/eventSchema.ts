@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import eventsEnum from 'src/domain/enums/eventsEnum';
-import { ContainerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/container';
 
 
 /**

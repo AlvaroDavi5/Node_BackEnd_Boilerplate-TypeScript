@@ -1,5 +1,5 @@
 import cron from 'node-cron';
-import { ContainerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/container';
 
 
 /**

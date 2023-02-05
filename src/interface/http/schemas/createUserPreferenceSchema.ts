@@ -1,6 +1,6 @@
 import Joi from 'joi';
 import themesEnum from 'src/domain/enums/themesEnum';
-import { ContainerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/container';
 
 
 /**

@@ -1,4 +1,4 @@
-import { ContainerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/container';
 import { messageType } from 'src/types/_messageType';
 
 

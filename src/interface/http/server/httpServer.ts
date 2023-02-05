@@ -1,5 +1,5 @@
 import { createServer } from 'http';
-import { ContainerInterface, genericType } from 'src/types/_containerInterface';
+import { ContainerInterface, genericType } from 'src/container';
 
 
 export default class HttpServer {

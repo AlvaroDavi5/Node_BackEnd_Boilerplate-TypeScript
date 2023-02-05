@@ -1,6 +1,6 @@
 import { NotFound, MakeErrorClass } from 'fejl';
 import ExceptionGenerator from './exceptionGenerator';
-import { ContainerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/container';
 import { ErrorInterface } from 'src/types/_errorInterface';
 import exceptionsEnum from 'src/domain/enums/exceptionsEnum';
 

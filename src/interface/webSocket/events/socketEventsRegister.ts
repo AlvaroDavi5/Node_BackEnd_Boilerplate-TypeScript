@@ -1,6 +1,6 @@
 import webSocketEventsEnum from 'src/domain/enums/webSocketEventsEnum';
 import { WebSocketServerInterface } from 'src/interface/webSocket/server/Server';
-import { ContainerInterface } from 'src/types/_containerInterface';
+import { ContainerInterface } from 'src/container';
 
 
 /**

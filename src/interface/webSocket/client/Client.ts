@@ -1,4 +1,5 @@
 import { io, Socket } from 'socket.io-client';
+import { Logger } from 'winston';
 import { ContainerInterface } from 'src/container';
 
 
@@ -12,16 +13,10 @@ export interface WebSocketClientInterface {
 }
 
 export default class WebSocketClient {
-	formatMessageBeforeSendHelper: any;
-	clientSocket!: Socket;
-	logger: any;
+	private formatMessageBeforeSendHelper: any;
+	private clientSocket!: Socket;
+	private logger: Logger;
 
-	/**
-	@param {Object} ctx - Dependency Injection.
-	@param {import('src/interface/webSocket/helpers/formatMessageBeforeSendHelper')} ctx.formatMessageBeforeSendHelper
-	@param {import('src/infra/logging/logger')} ctx.logger
-	@param {import('configs/configs')} ctx.configs
-	**/
 	constructor({ formatMessageBeforeSendHelper, logger, config }: ContainerInterface) {
 		const socketUrl = config.application.url;
 		const isSocketEnvEnabled = config?.application?.socketEnv === 'enabled';

@@ -1,16 +1,11 @@
 import { ContainerInterface } from 'src/container';
+
+
 interface queueMessageInterface {
 	Body: string
 }
 
-
-/**
-@param {Object} ctx - Dependency Injection.
-@param {import('src/interface/queue/schemas/eventSchema')} ctx.eventSchema
-@param {import('src/infra/error/exceptions')} ctx.exceptions
-@param {import('src/infra/logging/logger')} ctx.logger
-**/
-module.exports = ({
+export default ({
 	eventSchema,
 	exceptions,
 	logger,

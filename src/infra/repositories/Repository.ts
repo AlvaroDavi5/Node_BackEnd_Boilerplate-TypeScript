@@ -1,4 +1,4 @@
-import Entity from 'src/domain/entities/entity';
+import Entity from 'src/domain/entities/Entity';
 import Users from 'src/infra/database/models/Users';
 import { Logger } from 'winston';
 import { ExceptionInterface } from 'src/infra/errors/exceptions';
@@ -6,34 +6,34 @@ import { ContainerInterface } from 'src/container';
 
 
 export default class Repository {
-	public DomainEntity: typeof Entity;
-	public ResourceModel: typeof Users;
-	public ResourceMapper: {
+	private DomainEntity: typeof Entity;
+	private ResourceModel: typeof Users;
+	private resourceMapper: {
 		toDatabase: (data: any) => any,
 		toEntity: (data: any) => any,
 	};
 
-	public QueryParamsBuilder: {
+	private queryParamsBuilder: {
 		buildParams: (data: any) => any,
 	};
 
-	public queryOptions: any;
-	public exceptions: ExceptionInterface;
-	public logger: Logger;
+	private queryOptions: any;
+	private exceptions: ExceptionInterface;
+	private logger: Logger;
 
 	constructor({
 		DomainEntity,
 		ResourceModel,
-		ResourceMapper,
-		QueryParamsBuilder,
+		resourceMapper,
+		queryParamsBuilder,
 		QueryOptions,
 		exceptions,
 		logger,
 	}: ContainerInterface) {
 		this.DomainEntity = DomainEntity;
 		this.ResourceModel = ResourceModel;
-		this.ResourceMapper = ResourceMapper;
-		this.QueryParamsBuilder = QueryParamsBuilder;
+		this.resourceMapper = resourceMapper;
+		this.queryParamsBuilder = queryParamsBuilder;
 		this.queryOptions = QueryOptions;
 		this.exceptions = exceptions;
 		this.logger = logger;
@@ -57,11 +57,11 @@ export default class Repository {
 
 	async create(data: any) {
 		const result = await this.ResourceModel.create(
-			this.ResourceMapper.toDatabase(data)
+			this.resourceMapper.toDatabase(data)
 		);
 		if (!result) return;
 
-		return this.ResourceMapper.toEntity(result);
+		return this.resourceMapper.toEntity(result);
 	}
 
 	async getById(id: number) {
@@ -71,7 +71,7 @@ export default class Repository {
 		);
 		if (!result) return;
 
-		return this.ResourceMapper.toEntity(result);
+		return this.resourceMapper.toEntity(result);
 	}
 
 	async findOne(query: any) {
@@ -81,7 +81,7 @@ export default class Repository {
 		});
 		if (!result) return;
 
-		return this.ResourceMapper.toEntity(result);
+		return this.resourceMapper.toEntity(result);
 	}
 
 	async findAll(query: any) {
@@ -91,7 +91,7 @@ export default class Repository {
 		});
 		if (!result) return;
 
-		return result.map(this.ResourceMapper.toEntity);
+		return result.map(this.resourceMapper.toEntity);
 	}
 
 	async update(id: number, data: any) {
@@ -102,11 +102,11 @@ export default class Repository {
 		const result = await this.ResourceModel.findByPk(id);
 		if (!result) return;
 
-		return this.ResourceMapper.toEntity(result);
+		return this.resourceMapper.toEntity(result);
 	}
 
 	async list(query: any) {
-		const buildedQuery = this.QueryParamsBuilder?.buildParams(query);
+		const buildedQuery = this.queryParamsBuilder?.buildParams(query);
 		const { rows, count } = await this.ResourceModel.findAndCountAll(buildedQuery);
 
 		const totalPages = Math.ceil(count / Number(query?.size)) || 0;
@@ -116,7 +116,7 @@ export default class Repository {
 		let content = [];
 		if (count > 0) {
 			content = rows.map((item: any) =>
-				this.ResourceMapper.toEntity(item)
+				this.resourceMapper.toEntity(item)
 			);
 		}
 

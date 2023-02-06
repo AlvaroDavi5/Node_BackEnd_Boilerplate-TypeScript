@@ -1,5 +1,5 @@
-import Entity from './entity';
-import { UserPreferenceInterface } from './userPreference';
+import Entity from './Entity';
+import { UserPreferenceInterface } from './UserPreference';
 
 
 export interface UserInterface {
@@ -17,17 +17,18 @@ export interface UserInterface {
 }
 
 export default class User extends Entity {
-	public id!: number;
+	private id!: number;
 	public fullName!: string;
-	public email!: string;
-	public password!: string;
-	public phone!: string;
+	private email!: string;
+	private password!: string;
+	private phone!: string;
 	public docType!: string;
-	public document!: string;
+	private document!: string;
 	public fu!: string;
 	public preference: UserPreferenceInterface;
 	public readonly createdAt!: Date;
-	public readonly updatedAt!: Date;
+	public updatedAt!: Date;
+	public deletedAt!: Date;
 
 	constructor({ fullName, email, preference }: UserInterface) {
 		super();
@@ -35,6 +36,7 @@ export default class User extends Entity {
 		this.email = email;
 		this.password = '';
 		this.preference = preference;
+		this.createdAt = new Date();
 	}
 
 	validate() {

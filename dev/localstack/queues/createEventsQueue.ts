@@ -1,4 +1,4 @@
-import SqsClient from '../../../src/infra/integration/aws/sqs/SqsClient';
+import SqsClient from '../../../src/infra/integration/aws/SqsClient';
 
 
 export default async ({ formatMessageBeforeSendHelper, logger, configs }) => {

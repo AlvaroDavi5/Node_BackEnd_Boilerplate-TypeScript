@@ -1,23 +1,24 @@
 import { config } from 'aws-sdk';
-import { genericType, ContainerInterface } from 'src/container';
+import HttpServer from 'src/interface/http/server/httpServer';
+import WebSocketServer from 'src/interface/webSocket/server/Server';
+import { Consumer } from 'sqs-consumer';
+import { ScheduledTask } from 'node-cron';
+import { Logger } from 'winston';
+import { ConfigsInterface } from 'configs/configs';
+import { ContainerInterface } from 'src/container';
 
 
 export default class Application {
-	httpServer: genericType;
-	webSocketServer: genericType;
-	eventsQueueConsumer: genericType;
-	syncCron: genericType;
-	logger: genericType;
-	configs: genericType;
-	isSocketEnvEnabled: boolean;
+	private httpServer: HttpServer;
+	private webSocketServer: WebSocketServer;
+	private eventsQueueConsumer: Consumer;
+	private syncCron: ScheduledTask;
+	private logger: Logger;
+	private configs: ConfigsInterface;
+	private isSocketEnvEnabled: boolean;
 
 	/**
 	@param {Object} ctx - Dependency Injection (container)
-	@param {import('src/interface/http/server/httpServer')} ctx.httpServer
-	@param {import('src/interface/webSocket/Server')} ctx.webSocketServer
-	@param {import('src/infra/integration/queue/consumers/EventsQueueConsumer')} ctx.eventsQueueConsumer
-	@param {import('src/infra/cron/SyncCron')}  ctx.syncCron
-	@param {import('src/infra/logging/logger')} ctx.logger
 	@param {import('configs/configs')} ctx.configs
 	**/
 	constructor({

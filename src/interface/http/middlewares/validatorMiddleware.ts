@@ -33,10 +33,6 @@ const filterReceivedRequest = (req: Request, value: any) => {
 	return request;
 };
 
-/**
-@param {Object} container - Dependency Injection.
-@param {import('src/infra/logging/logger')} container.logger
-*/
 export default ({
 	logger,
 }: ContainerInterface) => (schema: AnySchema) => {

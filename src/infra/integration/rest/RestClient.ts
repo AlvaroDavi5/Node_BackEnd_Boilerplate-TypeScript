@@ -5,15 +5,10 @@ import { ContainerInterface } from 'src/container';
 
 
 export default class EntitiesClient {
-	serviceName: string;
-	client: AxiosInstance;
-	logger: Logger;
+	private serviceName: string;
+	private client: AxiosInstance;
+	private logger: Logger;
 
-	/**
-	@param {Object} ctx - Dependency Injection.
-	@param {import('src/infra/logging/logger')} ctx.logger
-	@param {import('configs/configs')} ctx.configs
-	**/
 	constructor(
 		{ logger,
 			configs,

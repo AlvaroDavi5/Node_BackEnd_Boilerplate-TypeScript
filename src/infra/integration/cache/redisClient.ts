@@ -1,43 +1,31 @@
 import IORedis from 'ioredis';
 import { ScanStreamOptions } from 'ioredis/built/types';
+import { ExceptionInterface } from 'src/infra/errors/exceptions';
 import { ContainerInterface } from 'src/container';
 
 
-export interface RedisClientInterface {
-	lib: () => IORedis,
+export default class RedisClient {
+	private redis: IORedis;
+	private exceptions: ExceptionInterface;
 
-	list: () => Promise<any>,
-	get: (key: string) => Promise<any>,
-	set: (key: string, value: object | any, ttl: number) => Promise<any>,
+	constructor({
+		configs,
+		exceptions,
+	}: ContainerInterface) {
+		this.exceptions = exceptions;
 
-	getByKeyPattern: (pattern: string) => Promise<any>,
-	getValuesByKeyPattern: (key: string) => Promise<any>,
+		const { port, host } = configs.cache.redis;
+		this.redis = new IORedis(port, host);
 
-	delete: (key: string) => Promise<any>,
-	deleteAll: () => Promise<any>,
-	remove: (keyPattern: ScanStreamOptions | object | string) => Promise<void>,
-}
-
-/**
-@param {Object} ctx - Dependency Injection (container)
-@param {import('configs/configs')} ctx.configs
-@param {import('src/infra/errors/exceptions')} ctx.exceptions
-**/
-export default ({
-	configs,
-	exceptions,
-}: ContainerInterface) => {
-	const redisConfig = configs.cache.redis;
-
-	const redis = new IORedis(redisConfig);
-
-	if (!redis) {
-		throw exceptions.integration({
-			details: 'Error to connect on redis cache',
-		});
+		if (!this.redis) {
+			throw this.exceptions.integration({
+				details: 'Error to instance redis client',
+			});
+		}
 	}
 
-	const _toString = (value: object | string | null) => {
+
+	private _toString(value: object | string | null) {
 		let val = '';
 
 		if (typeof (value) === 'object')
@@ -46,8 +34,9 @@ export default ({
 			val = String(value);
 
 		return val;
-	};
-	const _toValue = (value: string) => {
+	}
+
+	private _toValue(value: string) {
 		let val = null;
 
 		try {
@@ -57,84 +46,91 @@ export default ({
 		}
 
 		return val;
-	};
+	}
 
-	return {
-		lib: () => redis,
+	lib(): IORedis {
+		return this.redis;
+	}
 
-		list: async () => {
-			const result = await redis.keys('*');
+	isConnected(): boolean {
+		return this.redis?.status === 'ready';
+	}
 
-			return result;
-		},
+	async listKeys(): Promise<string[]> {
+		const result = await this.redis.keys('*');
 
-		get: async (key: string) => {
-			const value = await redis.get(String(key));
-			return value ? _toValue(value) : null;
-		},
+		if (!result)
+			return [];
 
-		set: async (key: string, value: object, ttl = -1) => {
-			const result = await redis.set(String(key), _toString(value));
-			await redis.expire(String(key), Number(ttl)); // [key] expires in [ttl] seconds
-			return result;
-		},
+		return result;
+	}
 
-		getByKeyPattern: async (pattern: string) => {
-			const keys = await redis.keys(pattern);
-			const getByKeyPromises = keys.map(
-				async (key) => {
-					const value = _toValue(String(await redis.get(key)));
+	async get(key: string): Promise<any> {
+		const value = await this.redis.get(String(key));
+		return value ? this._toValue(value) : null;
+	}
 
-					return {
-						key,
-						...value,
-					};
-				}
-			);
+	async set(key: string, value: object, ttl = 30): Promise<string> {
+		const result = await this.redis.set(String(key), this._toString(value));
+		await this.redis.expire(String(key), Number(ttl)); // [key] expires in [ttl] seconds
+		return result;
+	}
 
-			return Promise.allSettled(getByKeyPromises);
-		},
+	async getByKeyPattern(pattern: string): Promise<PromiseSettledResult<any>[]> {
+		const keys = await this.redis.keys(pattern);
+		const getByKeyPromises = keys.map(
+			async (key: string) => {
+				const value = this._toValue(String(await this.redis.get(key)));
 
-		getValuesByKeyPattern: async (key: string) => {
-			const keys = await redis.keys(key);
-
-			if (!keys || keys?.length < 1) {
-				return [];
+				return {
+					key,
+					value,
+				};
 			}
+		);
 
-			const caches = await redis.mget(keys);
+		return Promise.allSettled(getByKeyPromises);
+	}
 
-			return caches.map((cache) => {
-				return _toValue(String(cache));
-			});
-		},
+	async getValuesByKeyPattern(key: string): Promise<any[]> {
+		const keys = await this.redis.keys(key);
 
-		delete: async (key: string) => {
-			const result = await redis.del(String(key));
-			return result;
-		},
+		if (!keys || keys?.length < 1) {
+			return [];
+		}
 
-		deleteAll: async () => {
-			const result = await redis.flushall();
+		const caches = await this.redis.mget(keys);
 
-			return result;
-		},
+		return caches.map((cache) => {
+			return this._toValue(String(cache));
+		});
+	}
 
-		remove: async (keyPattern: ScanStreamOptions | object | string) => {
-			const scanValue: string | any = `${keyPattern}:*`;
-			const stream = redis.scanStream(scanValue);
+	async delete(key: string): Promise<number> {
+		const result = await this.redis.del(String(key));
+		return result;
+	}
 
-			stream.on('data', (keys: string[]) => {
-				if (keys.length) {
-					const pipeline = redis.pipeline();
+	async deleteAll(): Promise<string> {
+		const result = await this.redis.flushall();
 
-					keys.forEach((key: string) => {
-						pipeline.del(String(key));
-					});
+		return result;
+	}
 
-					pipeline.exec();
-				}
-			});
-		},
-	};
-};
+	async remove(keyPattern: ScanStreamOptions | object | string): Promise<void> {
+		const scanValue: string | any = `${keyPattern}:*`;
+		const stream = this.redis.scanStream(scanValue);
+
+		stream.on('data', (keys: string[]) => {
+			if (keys.length) {
+				const pipeline = this.redis.pipeline();
+
+				keys.forEach((key: string) => {
+					pipeline.del(String(key));
+				});
+
+				pipeline.exec();
+			}
+		});
+	}
+}

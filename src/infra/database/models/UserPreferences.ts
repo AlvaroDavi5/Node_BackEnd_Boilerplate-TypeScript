@@ -5,21 +5,42 @@ import connection from 'src/infra/database/connection';
 
 export default class UserPreferences extends Model {
 	// * ------ Attributes ------
-	public id!: number;
-	public userId!: number;
-	public imagePath!: string;
+	private id!: number;
+	private userId!: number;
+	private imagePath!: string;
 	public defaultTheme!: number;
 	public readonly createdAt!: Date;
-	public readonly updatedAt!: Date;
-	public readonly deletedAt!: Date;
+	public updatedAt!: Date;
+	public deletedAt!: Date;
+
+	/**
+	 * ?    Association Method
+	 * @belongsTo - One-to-One, source -> target
+	 * @hasOne - One-to-One, target -> source
+	 * @hasMany - One-to-Many, target -> source
+	 * @belongsToMany - Many-to-Many, source -> target
+	**/
+	static associate() {
+		this.belongsTo(
+			Users,
+			{
+				constraints: true,
+				foreignKeyConstraint: true,
+				foreignKey: 'userId',
+				targetKey: 'id',
+				as: 'user',
+			}
+		);
+	}
+
+	// // ------ Association Attribute ------
+	public static associations: {
+		user: Association<Users>
+	};
 
 	// ? ------ Methods ------
 	public getUser!: HasOneGetAssociationMixin<Users>;
 	public hasUser!: HasManyHasAssociationMixin<Users, number>;
-	/// / ------ Association Method ------
-	public static associations: {
-		user: Association<Users>
-	};
 }
 
 // ! ------ Class Constructor Method ------
@@ -35,3 +56,4 @@ UserPreferences.init(
 		sequelize: connection
 	}
 );
+UserPreferences.associate();

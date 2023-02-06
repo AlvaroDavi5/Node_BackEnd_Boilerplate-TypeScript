@@ -3,10 +3,6 @@ import jwt from 'jsonwebtoken';
 import { ContainerInterface } from 'src/container';
 
 
-/**
-@param {Object} ctx - Dependency Injection (container)
-@param {import('src/infra/errors/exceptions')} ctx.exceptions
-**/
 export default ({
 	exceptions,
 }: ContainerInterface) => (request: Request | any, response: Response, next: NextFunction) => {

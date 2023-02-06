@@ -1,5 +1,6 @@
 import createEventsQueue from '../dev/localstack/queues/createEventsQueue';
 import MockedExternalServers from '../dev/mockedExternalServers/index';
+import connection, { syncConnection, testConnection } from '../src/infra/database/connection';
 import configs from '../configs/configs';
 
 
@@ -30,6 +31,11 @@ async function mockServiceDependencies() {
 		logger,
 		configs,
 	});
+
+	const isConnected = await testConnection(connection);
+	if (!isConnected) {
+		await syncConnection(connection);
+	}
 }
 
 

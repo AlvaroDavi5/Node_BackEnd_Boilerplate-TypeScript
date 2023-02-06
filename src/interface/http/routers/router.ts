@@ -4,9 +4,6 @@ import handler from 'express-async-handler';
 import { ContainerInterface } from 'src/container';
 
 
-/**
-@param {Object} ctx - Dependency Injection (container)
-**/
 export default (ctx: ContainerInterface) => {
 	const defaultRouter = express.Router();
 	const apiRouter = express.Router();

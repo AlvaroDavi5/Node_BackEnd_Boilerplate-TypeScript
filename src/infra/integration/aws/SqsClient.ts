@@ -1,22 +1,15 @@
 import uuid from 'uuid';
 import { Logger } from 'winston';
 import AWS, { SQS } from 'aws-sdk';
-import { ConfigsInterface } from 'configs/configs';
 import { ContainerInterface, genericType } from 'src/container';
 
 
 export default class SqsClient {
-	awsConfig: genericType;
-	messageGroupId: string;
-	sqs: SQS;
-	logger: Logger;
-	configs: ConfigsInterface;
+	private awsConfig: genericType;
+	private messageGroupId: string;
+	private sqs: SQS;
+	private logger: Logger;
 
-	/**
-		@param {Object} ctx - Dependency Injection.
-		@param {import('src/infra/logging/logger')} ctx.logger
-		@param {import('configs/configs')} ctx.configs
-		**/
 	constructor({
 		logger,
 		configs,
@@ -37,11 +30,10 @@ export default class SqsClient {
 		this.messageGroupId = messageGroupId || 'DefaultGroup';
 		this.sqs = new AWS.SQS(this.awsConfig);
 		this.logger = logger;
-		this.configs = configs;
 	}
 
 
-	_formatMessageBeforeSend(message: any = {}) {
+	private _formatMessageBeforeSend(message: any = {}) {
 		let msg = '';
 
 		try {
@@ -54,7 +46,7 @@ export default class SqsClient {
 		return msg;
 	}
 
-	_createParams(queueName: string) {
+	private _createParams(queueName: string) {
 		return {
 			QueueName: queueName,
 			Attributes: {
@@ -106,7 +98,7 @@ export default class SqsClient {
 		};
 	}
 
-	listQueues() {
+	async listQueues(): Promise<any> {
 		try {
 			return this.sqs.listQueues({});
 		} catch (error) {
@@ -115,7 +107,7 @@ export default class SqsClient {
 		}
 	}
 
-	createQueue(queueName: string) {
+	async createQueue(queueName: string): Promise<any> {
 		try {
 			return this.sqs.createQueue(this._createParams(queueName));
 		} catch (error) {
@@ -124,7 +116,7 @@ export default class SqsClient {
 		}
 	}
 
-	async deleteQueue(queueUrl: string) {
+	async deleteQueue(queueUrl: string): Promise<any> {
 		try {
 			return this.sqs.deleteQueue({ QueueUrl: queueUrl });
 		} catch (error) {
@@ -133,7 +125,7 @@ export default class SqsClient {
 		}
 	}
 
-	async sendMessage(queueUrl: string, title: string, author: string, message: any) {
+	async sendMessage(queueUrl: string, title: string, author: string, message: any): Promise<any> {
 		try {
 			return this.sqs.sendMessage(this._msgParams(queueUrl, message, title, author));
 		} catch (error) {
@@ -142,7 +134,7 @@ export default class SqsClient {
 		}
 	}
 
-	async getMessages(queueUrl: string) {
+	async getMessages(queueUrl: string): Promise<any> {
 		const logger = this.logger;
 
 		try {

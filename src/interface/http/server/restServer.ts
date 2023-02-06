@@ -2,32 +2,22 @@ import express from 'express';
 import cors from 'cors';
 import morgan from 'morgan';
 import { scopePerRequest } from 'awilix-express';
-import { ContainerInterface, genericType } from 'src/container';
+import { LoggerStream } from 'src/infra/logging/logger';
+import { ConfigsInterface } from 'configs/configs';
+import { ContainerInterface } from 'src/container';
 
 
 export default class RestServer {
-	router: genericType;
-	logger: genericType;
-	loggerStream: genericType;
-	configs: genericType;
-	express: express.Express;
+	private express: express.Express;
+	private loggerStream: LoggerStream;
+	private configs: ConfigsInterface;
 
-	/**
-	@param {Object} ctx - Dependency Injection (container)
-	@param {import('src/interface/http/routers/router')} ctx.router
-	@param {import('src/infra/logging/logger')} ctx.logger
-	@param {import('src/infra/logging/logger')} ctx.loggerStream
-	@param {import('configs/configs')} ctx.configs
-	@param {import('src/container')} ctx.container
-	**/
 	constructor({
 		router,
-		logger,
 		loggerStream,
 		configs,
 		container,
 	}: ContainerInterface) {
-		this.logger = logger;
 		this.loggerStream = loggerStream;
 		this.configs = configs;
 		this.express = express();

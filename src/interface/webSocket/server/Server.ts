@@ -1,4 +1,6 @@
 import { Server } from 'socket.io';
+import { Server as HttpServer } from 'http';
+import { Logger } from 'winston';
 import { ContainerInterface } from 'src/container';
 
 
@@ -22,17 +24,11 @@ export interface WebSocketServerInterface {
 }
 
 export default class WebSocketServer {
-	httpServer: any;
-	webSocketServer: Server;
-	socketEventsRegister: (server: WebSocketServerInterface) => void;
-	logger: any;
+	private httpServer: HttpServer;
+	private webSocketServer: Server;
+	private socketEventsRegister: (server: WebSocketServerInterface) => void;
+	private logger: Logger;
 
-	/**
-	@param {Object} ctx - Dependency Injection.
-	@param {import('src/interface/http/server/httpServer')} ctx.httpServer
-	@param {import('src/interface/webSocket/socketEventsRegister')} ctx.socketEventsRegister
-	@param {import('src/infra/logging/logger')} ctx.logger
-	**/
 	constructor({ httpServer, socketEventsRegister, logger }: ContainerInterface) {
 		const corsConfig = {
 			origin: '*',

@@ -3,12 +3,6 @@ import { WebSocketServerInterface } from 'src/interface/webSocket/server/Server'
 import { ContainerInterface } from 'src/container';
 
 
-/**
-@param {Object} ctx - Dependency Injection.
-@param {import('src/interface/webSocket/helpers/formatMessageAfterReceiveHelper')} ctx.formatMessageAfterReceiveHelper
-@param {import('src/interface/webSocket/helpers/formatMessageBeforeSendHelper')} ctx.formatMessageBeforeSendHelper
-@param {import('src/infra/logging/logger')} ctx.logger
-**/
 export default ({
 	formatMessageAfterReceiveHelper,
 	formatMessageBeforeSendHelper,

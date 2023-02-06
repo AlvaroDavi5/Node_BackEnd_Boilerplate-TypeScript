@@ -2,10 +2,6 @@ import fs from 'fs';
 import { ContainerInterface } from 'src/container';
 
 
-/**
-@param {Object} ctx - Dependency Injection (container)
-@param {import('src/infra/logging/logger')} ctx.logger
-**/
 export default ({
 	logger,
 }: ContainerInterface) => ({

@@ -1,12 +1,8 @@
 import Joi from 'joi';
 import themesEnum from 'src/domain/enums/themesEnum';
-import { ContainerInterface } from 'src/container';
 
 
-/**
-@param {Object} ctx - Dependency Injection (container)
-**/
-export default (ctx: ContainerInterface) =>
+export default () =>
 	Joi.object().keys({
 		body: Joi.object().keys({
 			fullName: Joi.string().empty('').trim(),

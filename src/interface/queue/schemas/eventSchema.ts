@@ -1,12 +1,8 @@
 import Joi from 'joi';
 import eventsEnum from 'src/domain/enums/eventsEnum';
-import { ContainerInterface } from 'src/container';
 
 
-/**
-@param {Object} ctx - Dependency Injection (container)
-**/
-export default (ctx: ContainerInterface) =>
+export default () =>
 	Joi.object().keys({
 		id: Joi.string(),
 		timestamp: Joi.alternatives().try(Joi.date(), Joi.string()),

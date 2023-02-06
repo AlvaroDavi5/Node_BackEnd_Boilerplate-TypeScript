@@ -3,12 +3,6 @@ import { SQSClient } from '@aws-sdk/client-sqs';
 import { ContainerInterface } from 'src/container';
 
 
-/**
-@param {Object} ctx - Dependency Injection.
-@param {import('configs/configs')} ctx.configs
-@param {import('src/infra/integration/queue/handlers/eventsQueueMessageHandler')} ctx.eventsQueueMessageHandler
-@param {import('src/infra/logging/logger')} ctx.logger
-**/
 export default ({
 	configs,
 	eventsQueueMessageHandler,

@@ -5,20 +5,17 @@ import { ErrorInterface } from 'src/types/_errorInterface';
 import exceptionsEnum from 'src/domain/enums/exceptionsEnum';
 
 
-export interface ExceptionInterface {
-	[key: string]: (info?: any) => Error,
-}
-
 class Business extends MakeErrorClass('Business') { }
 class Contract extends MakeErrorClass('Contract') { }
 class Integration extends MakeErrorClass('Integration') { }
 class Operation extends MakeErrorClass('Operation') { }
 class Internal extends MakeErrorClass('Internal') { }
 
-/**
-@param {Object} ctx - Dependency Injection (container)
-@param {import('src/interface/http/constants/httpConstants')} ctx.httpConstants
-**/
+
+export interface ExceptionInterface {
+	[key: string]: (info?: any) => Error,
+}
+
 export default ({
 	httpConstants,
 }: ContainerInterface) => ({

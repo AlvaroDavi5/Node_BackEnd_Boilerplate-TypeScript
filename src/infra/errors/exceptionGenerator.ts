@@ -1,8 +1,8 @@
 
 export default class ExceptionGenerator extends Error {
-	errorType!: string | any;
-	details!: any;
-	statusCode!: number;
+	public errorType!: string | any;
+	public details!: any;
+	public statusCode!: number;
 
 	constructor(msg: string) {
 		super(msg);

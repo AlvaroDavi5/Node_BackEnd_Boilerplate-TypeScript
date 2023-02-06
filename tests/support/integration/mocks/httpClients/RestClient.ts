@@ -1,5 +1,5 @@
 
-export default class EntitiesClient {
+export default class RestClient {
 	logger: any;
 
 	constructor({ logger }) {

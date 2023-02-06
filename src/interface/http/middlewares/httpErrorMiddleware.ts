@@ -3,12 +3,6 @@ import { ErrorInterface } from 'src/types/_errorInterface';
 import { ContainerInterface } from 'src/container';
 
 
-/**
-@param {Object} ctx - Dependency Injection (container)
-@param {import('src/interface/http/constants/httpConstants')} ctx.httpConstants
-@param {import('src/infra/logging/logger')} ctx.logger
-@param {import('configs/configs')} ctx.configs
-**/
 export default ({
 	httpConstants,
 	logger,

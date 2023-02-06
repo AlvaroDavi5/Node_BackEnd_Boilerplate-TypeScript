@@ -9,18 +9,27 @@ const connection = new Sequelize(DBConfig);
 // const sequelize = new Sequelize('postgres://user:pass@example.com:5432/dbname')
 
 
-/* testing the connection */
-try {
-	connection.authenticate();
-	console.log('Database connection has been established successfully.');
+export async function testConnection(connection: Sequelize): Promise<boolean> {
+	try {
+		await connection.authenticate();
+		console.log('Database connection has been established successfully.');
+		return true;
+	}
+	catch (error: any) {
+		console.error('Unable to connect to the database: ', error);
+		console.warn('Closing Connection.');
+		await connection.close();
+		return false;
+	}
 }
-catch (error) {
-	console.error('Unable to connect to the database: ', error);
+
+export async function syncConnection(connection: Sequelize) {
+	/* drop all tables and recreate them */
+	await connection.sync({ force: true }).then(
+		(value: Sequelize) => {
+			console.info('Database synced.');
+		}
+	);
 }
-
-
-/* closing connection */
-// connection.close()
-
 
 export default connection;

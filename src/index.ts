@@ -3,9 +3,6 @@ import exceptionsEnum from 'src/domain/enums/exceptionsEnum';
 import { messageType } from 'src/types/_messageType';
 
 
-/**
-@param {Object} ctx - Dependency Injection (container)
-**/
 async function startApplication() {
 	const app = container.resolve('application');
 

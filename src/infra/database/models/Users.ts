@@ -3,24 +3,43 @@ import UserPreferences from './UserPreferences';
 import connection from 'src/infra/database/connection';
 
 
-// EcmaScript 6 format
 export default class Users extends Model {
 	// * ------ Attributes ------
-	public id!: number;
+	private id!: number;
 	public fullName!: string;
-	public email!: string;
-	public password!: string;
-	public phone!: string;
+	private email!: string;
+	private password!: string;
+	private phone!: string;
 	public docType!: string;
-	public document!: string;
+	private document!: string;
 	public fu!: string;
 	public readonly createdAt!: Date;
-	public readonly updatedAt!: Date;
-	public readonly deletedAt!: Date;
+	public updatedAt!: Date;
+	public deletedAt!: Date;
 
-	// // ------ Association Method ------
+	/**
+	 * ?    Association Method
+	 * @belongsTo - One-to-One, source -> target
+	 * @hasOne - One-to-One, target -> source
+	 * @hasMany - One-to-Many, target -> source
+	 * @belongsToMany - Many-to-Many, source -> target
+	**/
+	static associate() {
+		this.hasOne(
+			UserPreferences,
+			{
+				constraints: true,
+				foreignKeyConstraint: true,
+				foreignKey: 'userId',
+				sourceKey: 'id',
+				as: 'preference',
+			}
+		);
+	}
+
+	// // ------ Association Attribute ------
 	public static associations: {
-		preference: Association<UserPreferences>
+		preference: Association<UserPreferences>,
 	};
 
 	// ? ------ Methods ------
@@ -57,3 +76,4 @@ Users.init(
 		sequelize: connection,
 	}
 );
+Users.associate();

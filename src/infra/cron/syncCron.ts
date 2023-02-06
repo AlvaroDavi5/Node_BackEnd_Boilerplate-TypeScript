@@ -2,10 +2,6 @@ import cron from 'node-cron';
 import { ContainerInterface } from 'src/container';
 
 
-/**
-@param {Object} ctx - Dependency Injection.
-@param {import('src/infra/logging/logger')} ctx.logger
-**/
 export default ({
 	logger,
 }: ContainerInterface) => {

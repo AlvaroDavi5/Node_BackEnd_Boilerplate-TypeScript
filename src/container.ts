@@ -3,14 +3,13 @@ import {
 	AwilixContainer, createContainer, InjectionMode,
 	asClass, asFunction, asValue,
 } from 'awilix';
+import { AnySchema } from 'joi';
 import { Consumer } from 'sqs-consumer';
 import { ScheduledTask } from 'node-cron';
 import { Router as ExpressRouter } from 'express';
-import { AnySchema } from 'joi';
 import { Logger as WinstonLogger } from 'winston';
 
 // TODO: load all main modules
-import configs, { ConfigsInterface } from 'configs/configs';
 import Application from 'src/app/Application';
 import syncCron from 'src/infra/cron/syncCron';
 import eventsQueueConsumer from 'src/infra/integration/queue/consumers/eventsQueueConsumer';
@@ -20,10 +19,11 @@ import Router from 'src/interface/http/routers/router';
 import SqsClient from 'src/infra/integration/aws/SqsClient';
 import RestClient from 'src/infra/integration/rest/RestClient';
 import Repository from 'src/infra/repositories/Repository';
+import configs, { ConfigsInterface } from 'configs/configs';
 import WebSocketServer, { WebSocketServerInterface } from 'src/interface/webSocket/server/Server';
 import socketEventsRegister from 'src/interface/webSocket/events/socketEventsRegister';
 import WebSocketClient from 'src/interface/webSocket/client/Client';
-import redisClient, { RedisClientInterface } from 'src/infra/integration/cache/redisClient';
+import RedisClient from 'src/infra/integration/cache/redisClient';
 import { logger, LoggerStream } from 'src/infra/logging/logger';
 import Exceptions, { ExceptionInterface } from 'src/infra/errors/exceptions';
 import { HttpConstantsInteface } from 'src/interface/http/constants/httpConstants';
@@ -50,7 +50,7 @@ container
 		webSocketServer: asClass(WebSocketServer).singleton(),
 		socketEventsRegister: asFunction(socketEventsRegister).singleton(),
 		webSocketClient: asClass(WebSocketClient).singleton(),
-		redisClient: asFunction(redisClient).singleton(),
+		redisClient: asClass(RedisClient).singleton(),
 		syncCron: asFunction(syncCron).singleton(),
 		eventsQueueConsumer: asFunction(eventsQueueConsumer).singleton(),
 		// apiGatewayClient: asClass(ApiGatewayClient).singleton(),
@@ -107,11 +107,11 @@ export interface ContainerInterface {
 	webSocketClient: WebSocketClient,
 	userRepository: Repository,
 	userPreferenceRepository: Repository,
-	redisClient: RedisClientInterface,
-	syncCron: ScheduledTask,
-	eventsQueueConsumer: Consumer,
+	redisClient: RedisClient,
 	sqsClient: SqsClient,
 	restClient: RestClient,
+	syncCron: ScheduledTask,
+	eventsQueueConsumer: Consumer,
 	eventSchema: AnySchema,
 	httpConstants: HttpConstantsInteface,
 	logger: WinstonLogger,

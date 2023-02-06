@@ -3,7 +3,7 @@ import entitiesRoutes from './entities/Router.js';
 
 
 export default class Server {
-	express: Express;
+	private express: Express;
 
 	constructor() {
 		this.express = express();

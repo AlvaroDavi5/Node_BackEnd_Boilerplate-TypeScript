@@ -1,9 +1,6 @@
 import { ContainerInterface } from 'src/container';
 
 
-/**
-@param {Object} ctx - Dependency Injection (container)
-**/
 export default (ctx: ContainerInterface) => ({
 	execute: (message = '{}') => {
 		let msg = '';

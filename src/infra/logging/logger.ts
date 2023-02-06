@@ -43,7 +43,7 @@ const options = {
 export const logger = createLogger(options);
 
 export class LoggerStream {
-	write(message: string | any, encoding: string | any) {
+	write(message: string): void {
 		logger.info(message.substring(0, message.lastIndexOf('\n')));
 	}
 }

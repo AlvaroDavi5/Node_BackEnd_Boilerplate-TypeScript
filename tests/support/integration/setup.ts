@@ -16,12 +16,8 @@ jest.mock('src/infra/logging/logger', () =>
 	jest.requireActual('./mocks/logging/logger')
 );
 
-jest.mock('src/infra/integration/rest/EntitiesClient', () =>
-	jest.requireActual('./mocks/httpClients/EntitiesClient')
-);
-
-jest.mock('src/infra/integration/aws/ApiGatewayClient', () =>
-	jest.requireActual('./mocks/awsClients/ApiGatewayClient')
+jest.mock('src/infra/integration/rest/RestClient', () =>
+	jest.requireActual('./mocks/httpClients/RestClient')
 );
 
 jest.mock('sqs-consumer', () => {

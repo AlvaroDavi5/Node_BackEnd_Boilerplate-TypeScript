@@ -1,19 +1,15 @@
-import { createServer } from 'http';
-import { ContainerInterface, genericType } from 'src/container';
+import { createServer, Server } from 'http';
+import { Logger } from 'winston';
+import { ConfigsInterface } from 'configs/configs';
+import { ContainerInterface } from 'src/container';
 
 
 export default class HttpServer {
-	server: any;
-	configs: genericType;
-	logger: genericType;
-	environment: string | undefined;
+	private server: Server;
+	private configs: ConfigsInterface;
+	private logger: Logger;
+	private environment: string;
 
-	/**
-	@param {Object} ctx - Dependency Injection (container)
-	@param {import('src/interface/http/server/restServer')} ctx.restServer
-	@param {import('src/infra/logging/logger')} ctx.logger
-	@param {import('configs/configs')} ctx.configs
-	**/
 	constructor({
 		restServer,
 		logger,
@@ -30,7 +26,7 @@ export default class HttpServer {
 	}
 
 	start() {
-		const serverPort = this.configs.application.port || 3000;
+		const serverPort = this.configs.application.port || '3000';
 
 		return this.server.listen(parseInt(serverPort), () => {
 			this.logger.info(`Server started on port: ${serverPort} - Environment ${this.environment}`);

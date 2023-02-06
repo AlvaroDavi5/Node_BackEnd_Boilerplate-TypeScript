@@ -5,21 +5,9 @@ import configs from '../configs/configs';
 
 
 const logger = console;
-const formatMessageBeforeSendHelper = {
-	execute: (message: any) => {
-		let msg = '';
-		try {
-			msg = JSON.stringify(message);
-		}
-		catch (error: any) {
-			msg = String(message);
-		}
-		return msg;
-	}
-};
 
 async function mockServiceDependencies() {
-	logger.log(
+	logger.info(
 		'\n # Mocking service dependencies... \n # Update your projects env file \n'
 	);
 
@@ -27,7 +15,6 @@ async function mockServiceDependencies() {
 	externalServices.start();
 
 	await createEventsQueue({
-		formatMessageBeforeSendHelper,
 		logger,
 		configs,
 	});

@@ -1,8 +1,12 @@
 import cron from 'node-cron';
+import connection, { testConnection, syncConnection } from 'src/infra/database/connection';
 import { ContainerInterface } from 'src/container';
 
 
 export default ({
+	webSocketServer,
+	webSocketClient,
+	redisClient,
 	logger,
 }: ContainerInterface) => {
 	/*
@@ -14,12 +18,30 @@ export default ({
 	? day of week (0 - 7)
 	*/
 	const job = cron.schedule(
-		'0 */3 * * * *', // // every 3 minutes
-		() => {
+		'0 */2 * * * *', // // every 2 minutes
+		async () => {
+			logger.info('Running Sync cron');
+
+			let isDatabaseActive = false;
+			let isCacheActive = false;
+			let isWebsocketActive = false;
+
 			try {
-				logger.info('Running Sync cron');
+				isDatabaseActive = await testConnection(connection, logger);
+				isCacheActive = redisClient.isConnected();
+				isWebsocketActive = webSocketClient.isConnected();
+
+				if (!isDatabaseActive) {
+					await syncConnection(connection, logger);
+					isDatabaseActive = await testConnection(connection);
+				}
 			} catch (error) {
 				logger.error(error);
+			}
+
+			if (!isCacheActive || !isDatabaseActive || !isWebsocketActive) {
+				logger.warn('Unavailable Backing Services, disconnecting all sockets');
+				webSocketServer.disconnectAllSockets();
 			}
 		},
 		{ scheduled: false }

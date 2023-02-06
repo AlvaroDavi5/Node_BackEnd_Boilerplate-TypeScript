@@ -1,10 +1,11 @@
 import container from './container';
 import exceptionsEnum from 'src/domain/enums/exceptionsEnum';
+import Application from 'src/app/Application';
 import { messageType } from 'src/types/_messageType';
 
 
 async function startApplication() {
-	const app = container.resolve('application');
+	const app: Application = container.resolve('application');
 
 	app
 		.start()
@@ -12,7 +13,7 @@ async function startApplication() {
 			app.logger.error(error);
 		});
 
-	process.on('uncaughtException', function (error) {
+	process.on('uncaughtException', function (error: Error) {
 		const knowExceptions = exceptionsEnum.values();
 
 		function toCamelCase(str: string) {

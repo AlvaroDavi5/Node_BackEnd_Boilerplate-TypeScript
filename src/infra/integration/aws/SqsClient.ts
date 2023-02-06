@@ -73,7 +73,7 @@ export default class SqsClient {
 		const messageBody = this._formatMessageBeforeSend(message);
 
 		return {
-			MessageHeader: {
+			MessageAttributes: {
 				title: {
 					DataType: 'String',
 					StringValue: String(title)
@@ -124,7 +124,7 @@ export default class SqsClient {
 	}
 
 	async createQueue(queueName: string): Promise<string> {
-		let queueUrl: string = '';
+		let queueUrl = '';
 
 		try {
 			this.sqs.createQueue(this._createParams(queueName), (err, data) => {
@@ -143,7 +143,7 @@ export default class SqsClient {
 	}
 
 	async deleteQueue(queueUrl: string): Promise<boolean> {
-		let isDeleted: boolean = false;
+		let isDeleted = false;
 
 		try {
 			this.sqs.deleteQueue({ QueueUrl: queueUrl }, (err, data) => {
@@ -162,7 +162,7 @@ export default class SqsClient {
 	}
 
 	async sendMessage(queueUrl: string, title: string, author: string, message: any): Promise<string> {
-		let messageId: string = '';
+		let messageId = '';
 
 		try {
 			this.sqs.sendMessage(this._msgParams(queueUrl, message, title, author), (err, data) => {
@@ -181,7 +181,7 @@ export default class SqsClient {
 	}
 
 	async getMessages(queueUrl: string): Promise<Array<SQS.Message>> {
-		let messages: Array<SQS.Message> = [];
+		const messages: Array<SQS.Message> = [];
 
 		try {
 			this.sqs.receiveMessage(this._receiveParam(queueUrl), (err, data) => {

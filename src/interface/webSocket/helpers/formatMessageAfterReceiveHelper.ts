@@ -1,7 +1,5 @@
-import { ContainerInterface } from 'src/container';
 
-
-export default (ctx: ContainerInterface) => ({
+export default () => ({
 	execute: (message = '{}') => {
 		let msg = '';
 

@@ -13,7 +13,7 @@ export default class Application {
 	private webSocketServer: WebSocketServer;
 	private eventsQueueConsumer: Consumer;
 	private syncCron: ScheduledTask;
-	private logger: Logger;
+	public logger: Logger;
 	private configs: ConfigsInterface;
 	private isSocketEnvEnabled: boolean;
 

@@ -1,11 +1,9 @@
-import { ContainerInterface } from 'src/container';
 
-
-export default (ctx: ContainerInterface) => ({
-	generateKey: (keyPattern = '', id = '') => {
+export default () => ({
+	generateKey: (id: string, keyPattern = '') => {
 		return `${keyPattern}:${id}`;
 	},
-	getId: (keyPattern = '', key = '') => {
+	getId: (key: string, keyPattern = '') => {
 		return key?.replace(
 			`${keyPattern}:`,
 			'');

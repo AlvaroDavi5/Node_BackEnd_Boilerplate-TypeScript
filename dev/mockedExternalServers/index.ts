@@ -18,7 +18,7 @@ export default class Server {
 
 		return this.express.listen(serverPort, () => {
 			console.log(
-				`\nMOCKED_SERVICE_URL='http://localhost:${serverPort}/'`
+				`\nMOCKED_SERVERS_URL='http://localhost:${serverPort}/'`
 			);
 			console.log(
 				`Mocked external servers listening at PORT: ${serverPort}\n`

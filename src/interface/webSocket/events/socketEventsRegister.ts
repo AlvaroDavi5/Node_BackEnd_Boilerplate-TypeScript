@@ -4,9 +4,11 @@ import { ContainerInterface } from 'src/container';
 
 
 export default ({
+	saveConnectionsService,
+	deleteConnectionsService,
+	logger,
 	formatMessageAfterReceiveHelper,
 	formatMessageBeforeSendHelper,
-	logger,
 }: ContainerInterface) => {
 
 	const register = (server: WebSocketServerInterface) => {
@@ -15,12 +17,28 @@ export default ({
 			webSocketEventsEnum.CONNECT,
 			async (socket) => {
 				logger.info(`Client connected: ${socket.id}`);
+				saveConnectionsService.execute(socket.id, {
+					connectionId: socket.id,
+				});
 
 				// listen disconnect event from client
 				socket.on(
 					webSocketEventsEnum.DISCONNECT,
 					async (msg) => {
 						logger.info(`Client disconnected: ${socket.id}`);
+						deleteConnectionsService.execute(socket.id);
+					},
+				);
+
+				// listen reconnect event from client
+				socket.on(
+					webSocketEventsEnum.RECONNECT,
+					async (msg) => {
+						logger.info(`Client reconnected: ${socket.id}`);
+						saveConnectionsService.execute(socket.id, {
+							connectionId: socket.id,
+							...formatMessageAfterReceiveHelper.execute(msg),
+						});
 					},
 				);
 

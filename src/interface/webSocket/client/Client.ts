@@ -13,20 +13,43 @@ export interface WebSocketClientInterface {
 }
 
 export default class WebSocketClient {
-	private formatMessageBeforeSendHelper: any;
 	private clientSocket!: Socket;
 	private logger: Logger;
 
-	constructor({ formatMessageBeforeSendHelper, logger, config }: ContainerInterface) {
-		const socketUrl = config.application.url;
-		const isSocketEnvEnabled = config?.application?.socketEnv === 'enabled';
+	constructor({ logger, configs }: ContainerInterface) {
+		const socketUrl = configs.application.url;
+		const isSocketEnvEnabled = configs?.application?.socketEnv === 'enabled';
 
-		this.formatMessageBeforeSendHelper = formatMessageBeforeSendHelper;
 		this.logger = logger;
-
 		if (isSocketEnvEnabled) {
 			this.clientSocket = io(socketUrl);
 		}
+	}
+
+	_formatMessageBeforeSend(message: any = {}): string {
+		let msg = '';
+
+		try {
+			msg = JSON.stringify(message);
+		}
+		catch (error) {
+			msg = String(message);
+		}
+
+		return msg;
+	}
+
+	_formatMessageAfterReceive(message: string): any {
+		let msg = '';
+
+		try {
+			msg = JSON.parse(message);
+		}
+		catch (error) {
+			msg = String(message);
+		}
+
+		return msg;
 	}
 
 	// send message to server
@@ -34,7 +57,7 @@ export default class WebSocketClient {
 
 		this.clientSocket?.emit(
 			String(event),
-			this.formatMessageBeforeSendHelper.execute(msg),
+			this._formatMessageBeforeSend(msg),
 		);
 	}
 

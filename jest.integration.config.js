@@ -76,7 +76,7 @@ module.exports = {
 		'node_modules',
 		'src',
 		'dev',
-		'config',
+		'configs',
 		'test',
 	],
 

@@ -7,7 +7,7 @@ import configs from '../configs/configs';
 const logger = console;
 
 async function mockServiceDependencies() {
-	logger.info(
+	logger.log(
 		'\n # Mocking service dependencies... \n # Update your projects env file \n'
 	);
 

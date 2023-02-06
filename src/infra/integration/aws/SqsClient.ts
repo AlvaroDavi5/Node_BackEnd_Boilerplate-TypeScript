@@ -1,11 +1,11 @@
 import uuid from 'uuid';
 import { Logger } from 'winston';
 import AWS, { SQS } from 'aws-sdk';
-import { ContainerInterface, genericType } from 'src/container';
+import { ContainerInterface } from 'src/container';
 
 
 export default class SqsClient {
-	private awsConfig: genericType;
+	private awsConfig: any;
 	private messageGroupId: string;
 	private sqs: SQS;
 	private logger: Logger;
@@ -47,14 +47,20 @@ export default class SqsClient {
 	}
 
 	private _createParams(queueName: string) {
-		return {
+		const isFifoQueue: boolean = queueName?.includes('.fifo');
+
+		const params: any = {
 			QueueName: queueName,
 			Attributes: {
 				DelaySeconds: '10', // Unused in FIFO queues
 				MessageRetentionPeriod: '86400',
-				FifoQueue: String(queueName?.includes('.fifo')),
 			}
 		};
+		if (isFifoQueue) {
+			params.Attributes.FifoQueue = String(isFifoQueue);
+		}
+
+		return params;
 	}
 
 	_msgParams(queueUrl: string, message: any, title: string, author: string) {
@@ -98,57 +104,95 @@ export default class SqsClient {
 		};
 	}
 
-	async listQueues(): Promise<any> {
-		try {
-			return this.sqs.listQueues({});
-		} catch (error) {
-			this.logger.error('List Error:', error);
-			return null;
-		}
-	}
-
-	async createQueue(queueName: string): Promise<any> {
-		try {
-			return this.sqs.createQueue(this._createParams(queueName));
-		} catch (error) {
-			this.logger.error('Create Error:', error);
-			return null;
-		}
-	}
-
-	async deleteQueue(queueUrl: string): Promise<any> {
-		try {
-			return this.sqs.deleteQueue({ QueueUrl: queueUrl });
-		} catch (error) {
-			this.logger.error('Delete Error:', error);
-			return null;
-		}
-	}
-
-	async sendMessage(queueUrl: string, title: string, author: string, message: any): Promise<any> {
-		try {
-			return this.sqs.sendMessage(this._msgParams(queueUrl, message, title, author));
-		} catch (error) {
-			this.logger.error('Send Error:', error);
-			return null;
-		}
-	}
-
-	async getMessages(queueUrl: string): Promise<any> {
-		const logger = this.logger;
+	async listQueues(): Promise<SQS.QueueUrlList> {
+		let list: SQS.QueueUrlList = [];
 
 		try {
-			return this.sqs.receiveMessage(this._receiveParam(queueUrl), (err: AWS.AWSError, data: SQS.ReceiveMessageResult) => {
+			this.sqs.listQueues({}, (err, data) => {
 				if (err) {
-					logger.error('Receive Error:', err);
+					this.logger.error('List Error:', err);
+				}
+				else {
+					list = data.QueueUrls || [];
+				}
+			});
+		} catch (error) {
+			this.logger.error(error);
+		}
+
+		return list;
+	}
+
+	async createQueue(queueName: string): Promise<string> {
+		let queueUrl: string = '';
+
+		try {
+			this.sqs.createQueue(this._createParams(queueName), (err, data) => {
+				if (err) {
+					this.logger.error('Create Error:', err);
+				}
+				else {
+					queueUrl = data.QueueUrl || '';
+				}
+			});
+		} catch (error) {
+			this.logger.error(error);
+		}
+
+		return queueUrl;
+	}
+
+	async deleteQueue(queueUrl: string): Promise<boolean> {
+		let isDeleted: boolean = false;
+
+		try {
+			this.sqs.deleteQueue({ QueueUrl: queueUrl }, (err, data) => {
+				if (err) {
+					this.logger.error('Delete Error:', err);
+				}
+				else {
+					isDeleted = true;
+				}
+			});
+		} catch (error) {
+			this.logger.error(error);
+		}
+
+		return isDeleted;
+	}
+
+	async sendMessage(queueUrl: string, title: string, author: string, message: any): Promise<string> {
+		let messageId: string = '';
+
+		try {
+			this.sqs.sendMessage(this._msgParams(queueUrl, message, title, author), (err, data) => {
+				if (err) {
+					this.logger.error('Send Error:', err);
+				}
+				else {
+					messageId = data.MessageId || '';
+				}
+			});
+		} catch (error) {
+			this.logger.error(error);
+		}
+
+		return messageId;
+	}
+
+	async getMessages(queueUrl: string): Promise<Array<SQS.Message>> {
+		let messages: Array<SQS.Message> = [];
+
+		try {
+			this.sqs.receiveMessage(this._receiveParam(queueUrl), (err, data) => {
+				if (err) {
+					this.logger.error('Receive Error:', err);
 				}
 				else if (data?.Messages) {
-					logger.info(`Messages (${Array(data?.Messages).length}):`);
+					this.logger.info(`Messages (${Array(data?.Messages).length}):`);
 
 					for (const message of data?.Messages) {
-						logger.info('----- Message -----');
-						logger.info(message);
-						logger.info('----- Message End -----');
+						messages.push(message);
 
 						const deleteParams: SQS.DeleteMessageRequest = {
 							QueueUrl: queueUrl,
@@ -156,18 +200,19 @@ export default class SqsClient {
 						};
 						this.sqs.deleteMessage(deleteParams, (err: AWS.AWSError, data: any) => {
 							if (err) {
-								logger.error('Error to Delete Message:', err);
+								this.logger.error('Error to Delete Message:', err);
 							}
 							else {
-								logger.info('Message Deleted:', { queueUrl, requestId: data?.ResponseMetadata?.RequestId });
+								this.logger.info('Message Deleted:', { queueUrl, requestId: data?.ResponseMetadata?.RequestId });
 							}
 						});
 					}
 				}
 			});
 		} catch (error) {
-			logger.error(error);
-			return null;
+			this.logger.error(error);
 		}
+
+		return messages;
 	}
 }

@@ -37,8 +37,6 @@ yarn-error.log*
 **/__snapshots__
 # Docker files
 /.docker/
-# misc
-.DS_Store
 # VS Code settings
 /.vscode/*
 # others

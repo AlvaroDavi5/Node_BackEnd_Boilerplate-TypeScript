@@ -58,7 +58,7 @@
 		"test:watch": "jest --watch --verbose --detectOpenHandles",
 		"lint": "yarn js:lint && yarn ts:lint",
 		"lint:fix": "yarn js:lint --fix && yarn ts:lint --fix",
-		"js:lint": "eslint --ext .js ./src/",
+		"js:lint": "eslint --ext .js ./src/ --quiet",
 		"ts:lint": "eslint --ext .ts ./dev/ ./configs/ ./scripts/ ./src/ ./tests/unit ./tests/integration --quiet",
 		"format": "prettier --write \"./**/*.{js,ts,jsx,tsx,json}\"",
 		"commit": "git-cz",

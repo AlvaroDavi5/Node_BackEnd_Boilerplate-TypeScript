@@ -35,7 +35,7 @@ module.exports = {
 			],
 			plugins: ['@typescript-eslint'],
 
-			files: ['*.ts', '*.tsx'],
+			files: ['*.ts', '*.tsx', '*.js', '*.jsx'],
 
 			rules: {},
 		},

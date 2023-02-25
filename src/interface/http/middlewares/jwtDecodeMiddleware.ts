@@ -1,11 +1,11 @@
-import { Request, Response, NextFunction } from 'express';
 import jwt from 'jsonwebtoken';
 import { ContainerInterface } from 'src/container';
+import { RequestInterface, ResponseInterface, NextFunctionInterface } from 'src/types/_endpointInterface';
 
 
 export default ({
 	exceptions,
-}: ContainerInterface) => (request: Request | any, response: Response, next: NextFunction) => {
+}: ContainerInterface) => (request: RequestInterface, response: ResponseInterface, next: NextFunctionInterface) => {
 	const authorization = request?.headers?.authorization;
 
 	if (!authorization)
@@ -16,7 +16,7 @@ export default ({
 	if (!decoded)
 		throw exceptions.unauthorized('Authorization token is invalid');
 
-	let cognitoUserName = '', cognitoClientId = '';
+	let cognitoUserName = null, cognitoClientId = null;
 	if (typeof (decoded) !== 'string') {
 		cognitoUserName = decoded?.username || decoded['cognito:username'];
 		cognitoClientId = decoded?.client_id;
@@ -26,5 +26,6 @@ export default ({
 		cognitoUserName: cognitoUserName,
 		cognitoClientId: cognitoClientId,
 	};
+
 	next();
 };

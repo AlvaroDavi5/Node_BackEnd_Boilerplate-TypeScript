@@ -1,13 +1,14 @@
 import Entity from 'src/domain/entities/Entity';
-import Users from 'src/infra/database/models/Users';
+import { Model } from 'sequelize';
 import { Logger } from 'winston';
 import { ExceptionInterface } from 'src/infra/errors/exceptions';
-import { ContainerInterface } from 'src/container';
 
 
-export default class Repository {
+class RepositoryModel extends Model { }
+
+export default abstract class Repository {
 	private DomainEntity: typeof Entity;
-	private ResourceModel: typeof Users;
+	private ResourceModel: typeof RepositoryModel;
 	private resourceMapper: {
 		toDatabase: (data: any) => any,
 		toEntity: (data: any) => any,
@@ -29,7 +30,7 @@ export default class Repository {
 		QueryOptions,
 		exceptions,
 		logger,
-	}: ContainerInterface) {
+	}: any) {
 		this.DomainEntity = DomainEntity;
 		this.ResourceModel = ResourceModel;
 		this.resourceMapper = resourceMapper;
@@ -84,7 +85,7 @@ export default class Repository {
 		return this.resourceMapper.toEntity(result);
 	}
 
-	async findAll(query: any) {
+	async findAll(query?: any) {
 		const result = await this.ResourceModel.findAll({
 			where: query,
 			...this.queryOptions,
@@ -105,7 +106,7 @@ export default class Repository {
 		return this.resourceMapper.toEntity(result);
 	}
 
-	async list(query: any) {
+	async list(query?: any) {
 		const buildedQuery = this.queryParamsBuilder?.buildParams(query);
 		const { rows, count } = await this.ResourceModel.findAndCountAll(buildedQuery);
 
@@ -141,7 +142,7 @@ export default class Repository {
 	}
 
 
-	async deleteOne(id: number, softDelete = true, agentId: any = null) {
+	async deleteOne(id: number, softDelete = true, agentId: number | string | null = null) {
 		let result = null;
 
 		if (softDelete) {
@@ -171,7 +172,7 @@ export default class Repository {
 		return result;
 	}
 
-	async deleteMany(ids: Array<number>, softDelete = true, agentId: any = null) {
+	async deleteMany(ids: Array<number>, softDelete = true, agentId: number | string | null = null) {
 		let result = null;
 
 		if (softDelete) {

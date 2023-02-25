@@ -3,7 +3,7 @@ import Users from './Users';
 import connection from 'src/infra/database/connection';
 
 
-export default class UserPreferences extends Model {
+class UserPreferences extends Model {
 	// * ------ Attributes ------
 	private id!: number;
 	private userId!: number;
@@ -56,4 +56,7 @@ UserPreferences.init(
 		sequelize: connection
 	}
 );
-UserPreferences.associate();
+// UserPreferences.associate();
+
+
+export default UserPreferences;

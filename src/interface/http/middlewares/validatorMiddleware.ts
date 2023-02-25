@@ -1,23 +1,23 @@
 import { AnySchema } from 'joi';
-import { Request, Response, NextFunction } from 'express';
 import { ContainerInterface } from 'src/container';
+import { RequestInterface, ResponseInterface, NextFunctionInterface } from 'src/types/_endpointInterface';
 
 
 const wrapperError = (error: any) => {
-	return error.map(({ message, path }: any) => ({
+	return error?.map(({ message, path }: any) => ({
 		message,
 		path: path.join('.'),
 	}));
 };
 
-const validate = (req: Request, schema: AnySchema) =>
+const validate = (req: RequestInterface, schema: AnySchema) =>
 	schema.validate(req, {
 		abortEarly: false,
 		stripUnknown: true,
 		allowUnknown: true,
 	});
 
-const filterReceivedRequest = (req: Request, value: any) => {
+const filterReceivedRequest = (req: RequestInterface, value: any) => {
 	const request: any = {};
 
 	if (value.body) {
@@ -36,7 +36,7 @@ const filterReceivedRequest = (req: Request, value: any) => {
 export default ({
 	logger,
 }: ContainerInterface) => (schema: AnySchema) => {
-	return (request: Request, response: Response, next: NextFunction): any => {
+	return (request: RequestInterface, response: ResponseInterface, next: NextFunctionInterface): any => {
 		try {
 			const { error, value } = validate(request, schema);
 			if (error) {

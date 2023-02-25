@@ -13,7 +13,7 @@ class Internal extends MakeErrorClass('Internal') { }
 
 
 export interface ExceptionInterface {
-	[key: string]: (info?: any) => Error,
+	[key: string]: (msg?: any) => Error,
 }
 
 export default ({

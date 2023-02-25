@@ -34,7 +34,7 @@ export default class EntitiesClient {
 	async test() {
 		try {
 			this.logger.info(`Requesting ${this.serviceName} to healthcheck`);
-			const { data } = await this.client.get('/healthcheck');
+			const { data } = await this.client.get('/check');
 			return data;
 		} catch (error) {
 			this.logger.error(error);

@@ -5,8 +5,8 @@
 		"port": "$APP_PORT",
 		"url": "$APP_URL",
 		"socketEnv": "$SOCKET_ENV",
-		"logsPath": "$APP_LOGS_PATH",
-		"stackErrorVisible": false
+		"stackErrorVisible": "$SHOW_ERROR_STACK",
+		"logsPath": "$APP_LOGS_PATH"
 	},
 	"database": {
 		"database": "$DB_NAME",

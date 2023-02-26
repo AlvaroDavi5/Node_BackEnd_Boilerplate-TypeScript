@@ -1,0 +1,14 @@
+
+· TASK
+- SUBTASK
+🛈 INFO
+⚠ ERROR/WARNING
+→ TO DO
+↝ MAYBE TO DO
+⟿ DOING
+✓ DONE
+🗙 CANCELLED
+
+___
+
+...

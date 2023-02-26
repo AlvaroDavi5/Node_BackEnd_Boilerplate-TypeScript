@@ -1,5 +1,6 @@
 import { Sequelize } from 'sequelize';
-import DBConfig from 'configs/dbConfig';
+import { Logger } from 'winston';
+import DBConfig from './dbConfig';
 
 
 /* connecting to a database */
@@ -9,18 +10,32 @@ const connection = new Sequelize(DBConfig);
 // const sequelize = new Sequelize('postgres://user:pass@example.com:5432/dbname')
 
 
-/* testing the connection */
-try {
-	connection.authenticate();
-	console.log('Database connection has been established successfully.');
+export async function testConnection(connection: Sequelize, logger?: Logger): Promise<boolean> {
+	try {
+		await connection.authenticate({
+			logging: false,
+		});
+		logger?.info('Database connection has been established successfully.');
+		return true;
+	}
+	catch (error: any) {
+		logger?.warn('Unable to connect to the database:');
+		logger?.error(error);
+
+		return false;
+	}
 }
-catch (error) {
-	console.error('Unable to connect to the database: ', error);
+
+export async function syncConnection(connection: Sequelize, logger?: Logger) {
+	try {
+		/* drop all tables and recreate them */
+		await connection.sync({ force: true, logging: false }).then(
+			(value: Sequelize) => {
+				logger?.info('Database synced.');
+			}
+		);
+	}
+	catch (error: any) { }
 }
-
-
-/* closing connection */
-// connection.close()
-
 
 export default connection;

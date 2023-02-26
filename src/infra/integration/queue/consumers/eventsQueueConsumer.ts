@@ -1,23 +1,20 @@
 import { Consumer } from 'sqs-consumer';
-import { SQSClient } from '@aws-sdk/client-sqs';
 import { ContainerInterface } from 'src/container';
 
 
 export default ({
-	configs,
+	sqsClient,
 	eventsQueueMessageHandler,
+	configs,
 	logger,
 }: ContainerInterface) => {
-	const { credentials, sqs } = configs.integration.aws;
+	const { sqs } = configs.integration.aws;
 
 	const consumer = Consumer.create({
 		queueUrl: sqs.defaultQueue.queueUrl,
 		batchSize: 10,
 		handleMessageBatch: eventsQueueMessageHandler,
-		sqs: new SQSClient({
-			apiVersion: sqs.apiVersion,
-			region: credentials.region,
-		}),
+		sqs: sqsClient.getClient(),
 	});
 
 	consumer.on('error', (err) => {

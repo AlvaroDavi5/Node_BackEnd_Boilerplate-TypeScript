@@ -9,10 +9,12 @@ function convert(config: object | any) {
 	Object.keys(config).forEach(name => {
 		let value = config[name];
 
+		// if is a object
 		if (typeof (value) === 'object' && value !== null) {
-			value = convert(value);
+			value = convert(value); // recursion
 		}
 
+		// if is a environment variable key
 		if (typeof (value) === 'string' && value.indexOf('$') > -1) {
 			const key = value.replace(/\$/g, '');
 
@@ -38,8 +40,8 @@ export interface ConfigsInterface {
 		port: string,
 		url: string,
 		socketEnv: string,
+		stackErrorVisible: string,
 		logsPath: string,
-		stackErrorVisible: boolean,
 	},
 	database: {
 		database: string,
@@ -57,7 +59,7 @@ export interface ConfigsInterface {
 	},
 	cache: {
 		redis: {
-			port: number,
+			port: string,
 			host: string,
 		}
 	},
@@ -67,6 +69,7 @@ export interface ConfigsInterface {
 				region: string,
 				accessKeyId: string,
 				secretAccessKey: string,
+				sessionToken: string,
 				messageDeduplicationId: string,
 				messageGroupId: string,
 				apiVersion: string,

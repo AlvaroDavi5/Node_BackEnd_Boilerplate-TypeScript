@@ -9,7 +9,7 @@ export default ({
 	configs,
 }: ContainerInterface) => (error: ErrorInterface, request: Request, response: Response, next: NextFunction) => {
 	logger.error(error);
-	const hasTrace = configs?.application?.stackErrorVisible;
+	const hasTrace = configs?.application?.stackErrorVisible === 'true';
 
 	const options = hasTrace ? { stack: error.stack } : '';
 

@@ -1,10 +1,8 @@
-import { config } from 'aws-sdk';
 import HttpServer from 'src/interface/http/server/httpServer';
 import WebSocketServer from 'src/interface/webSocket/server/Server';
 import { Consumer } from 'sqs-consumer';
 import { ScheduledTask } from 'node-cron';
 import { Logger } from 'winston';
-import { ConfigsInterface } from 'configs/configs';
 import { ContainerInterface } from 'src/container';
 
 
@@ -14,7 +12,6 @@ export default class Application {
 	private eventsQueueConsumer: Consumer;
 	private syncCron: ScheduledTask;
 	public logger: Logger;
-	private configs: ConfigsInterface;
 	private isSocketEnvEnabled: boolean;
 
 	/**
@@ -34,7 +31,6 @@ export default class Application {
 		this.eventsQueueConsumer = eventsQueueConsumer;
 		this.syncCron = syncCron;
 		this.logger = logger;
-		this.configs = configs;
 		this.isSocketEnvEnabled = configs?.application?.socketEnv === 'enabled';
 	}
 
@@ -49,11 +45,6 @@ export default class Application {
 	}
 
 	async start() {
-		// AWS Configs
-		config.update({
-			...this.configs?.integration?.aws?.credentials,
-		});
-
 		// Servers
 		if (this.isSocketEnvEnabled) {
 			this.webSocketServer.start();

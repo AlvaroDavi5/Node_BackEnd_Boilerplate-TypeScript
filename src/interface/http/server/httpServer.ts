@@ -18,7 +18,7 @@ export default class HttpServer {
 		this.configs = configs;
 		this.logger = logger;
 		this.server = createServer(restServer.get());
-		this.environment = configs.application.environment || 'development';
+		this.environment = configs.application.environment || 'dev';
 	}
 
 	getServer() {
@@ -29,7 +29,7 @@ export default class HttpServer {
 		const serverPort = this.configs.application.port || '3000';
 
 		return this.server.listen(parseInt(serverPort), () => {
-			this.logger.info(`Server started on port: ${serverPort} - Environment ${this.environment}`);
+			this.logger.info(`Server started on port: ${serverPort} - Environment: ${this.environment}`);
 		});
 	}
 }

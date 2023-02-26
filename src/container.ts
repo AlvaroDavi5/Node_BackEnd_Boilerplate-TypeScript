@@ -18,7 +18,7 @@ import RestServer from 'src/interface/http/server/restServer';
 import Router from 'src/interface/http/routers/router';
 import SqsClient from 'src/infra/integration/aws/SqsClient';
 import RestClient from 'src/infra/integration/rest/RestClient';
-import Repository from 'src/infra/repositories/Repository';
+import UserRepository from 'src/infra/repositories/user/UserRepository';
 import configs, { ConfigsInterface } from 'configs/configs';
 import WebSocketServer, { WebSocketServerInterface } from 'src/interface/webSocket/server/Server';
 import socketEventsRegister from 'src/interface/webSocket/events/socketEventsRegister';
@@ -53,8 +53,9 @@ container
 		redisClient: asClass(RedisClient).singleton(),
 		syncCron: asFunction(syncCron).singleton(),
 		eventsQueueConsumer: asFunction(eventsQueueConsumer).singleton(),
-		// apiGatewayClient: asClass(ApiGatewayClient).singleton(),
-		// entitiesClient: asClass(EntitiesClient).singleton(),
+		sqsClient: asClass(SqsClient).singleton(),
+		restClient: asClass(RestClient).singleton(),
+		userRepository: asClass(UserRepository).singleton(),
 		logger: asValue(logger),
 		loggerStream: asClass(LoggerStream).singleton(),
 		exceptions: asFunction(Exceptions).singleton(),
@@ -71,7 +72,6 @@ container
 			'src/infra/integration/queue/handlers/**/*.ts',
 			'src/infra/integration/queue/helpers/**/*.ts',
 			'src/infra/providers/**/*.ts',
-			'src/infra/repositories/**/*.ts',
 			'src/infra/security/**/*.ts',
 			'src/interface/http/constants/**/*.ts',
 			'src/interface/http/controllers/**/*.ts',
@@ -105,8 +105,7 @@ export interface ContainerInterface {
 	webSocketServer: WebSocketServer,
 	socketEventsRegister: (server: WebSocketServerInterface) => void,
 	webSocketClient: WebSocketClient,
-	userRepository: Repository,
-	userPreferenceRepository: Repository,
+	userRepository: UserRepository,
 	redisClient: RedisClient,
 	sqsClient: SqsClient,
 	restClient: RestClient,

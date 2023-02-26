@@ -15,7 +15,11 @@ export default class RedisClient {
 		this.exceptions = exceptions;
 
 		const { port, host } = configs.cache.redis;
-		this.redis = new IORedis(port, host);
+		this.redis = new IORedis({
+			host: host,
+			port: parseInt(port),
+			showFriendlyErrorStack: true,
+		});
 
 		if (!this.redis) {
 			throw this.exceptions.integration({

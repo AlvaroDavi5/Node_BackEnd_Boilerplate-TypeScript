@@ -19,7 +19,7 @@ services:
     ports:
       - 3000:3000
     volumes:
-      - ./:/app
+      - ./src:/app/src
       - /node_modules
     depends_on:
       - cache

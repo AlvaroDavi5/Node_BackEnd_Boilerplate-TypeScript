@@ -1,9 +1,11 @@
+# AccessToken:
+#    Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJkZXZlbG9wZXItbG9jYWwiLCJjbGllbnRJZCI6IjAwMDEiLCJpYXQiOjE1MTYyMzkwMjJ9.WeqG2zbkjst9z25EVqqScjh9DI8GnmyZJsyGpeWUehg
 
 openapi: 3.0.1
 info:
-    title: Subscriptions Service
+    title: Node DDD Boilerplate Service
     version: 0.3.0
-    description: "<p>This is the Subscriptions Service openApi specifications</p>"
+    description: "<p>This is the Node DDD Boilerplate Service openApi specifications</p>"
 servers:
     - url: http://localhost:4000/api
       description: Local

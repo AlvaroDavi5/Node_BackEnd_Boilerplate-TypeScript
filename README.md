@@ -48,7 +48,7 @@ $ yarn install
 
 2. Copy dotenv file  
 ```shell
-$ cp .env.development.local .env
+$ cp env/.env.development.local ./.env
 ```
 
 3. Install AWS CLI  

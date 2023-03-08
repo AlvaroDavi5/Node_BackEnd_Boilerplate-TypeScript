@@ -12,9 +12,9 @@
 		// "disableSolutionSearching": true,
 		// "disableReferencedProjectLoad": true,
 		/* Language and Environment */
-		"target": "ES5",
+		"target": "ES6",
 		"lib": [
-			"ES5",
+			"ES6",
 		],
 		"jsx": "preserve",
 		"experimentalDecorators": true,
@@ -82,7 +82,7 @@
 		// "checkJs": true,
 		// "maxNodeModuleJsDepth": 1,
 		/* Emit */
-		// "declaration": true,
+		"declaration": true,
 		// "declarationMap": true,
 		// "emitDeclarationOnly": true,
 		"sourceMap": true,
@@ -133,7 +133,8 @@
 		// "allowUnreachableCode": true,
 		/* Completeness */
 		// "skipDefaultLibCheck": true,
-		"skipLibCheck": true
+		"skipLibCheck": true,
+		"pretty": true,
 	},
 	"include": [
 		"src/**/*.d.ts",

@@ -19,8 +19,10 @@
 		"define": {
 			"underscored": false,
 			"timestamps": true,
+			"paranoid": true,
 			"freezeTableName": false
-		}
+		},
+		"logging": "$SHOW_QUERIES"
 	},
 	"cache": {
 		"redis": {

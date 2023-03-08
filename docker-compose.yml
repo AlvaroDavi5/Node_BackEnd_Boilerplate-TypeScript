@@ -19,7 +19,11 @@ services:
     ports:
       - 3000:3000
     volumes:
+      - ./configs:/app/configs
       - ./src:/app/src
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./yarn.lock:/app/yarn.lock
+      - ./init.sh:/app/init.sh
       - /node_modules
     depends_on:
       - cache

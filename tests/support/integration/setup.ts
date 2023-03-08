@@ -1,9 +1,7 @@
+import dotenv from 'dotenv';
 import supertest from 'supertest';
 import defaults from 'superagent-defaults';
 import container from '../../../src/container';
-import dotenv from 'dotenv';
-
-
 import { getConsumerInstance } from './mocks/queue/sqs-consumer';
 import { getCronInstance } from './mocks/cron/node-cron';
 import { Server, getServerInstance } from './mocks/webSocket/socket.io';

@@ -38,20 +38,4 @@ export default class User extends Entity {
 		this.preference = preference;
 		this.createdAt = new Date();
 	}
-
-	validate() {
-		let value: any = null;
-		let valid = false;
-		let errors: Error | null = null;
-
-		if (this instanceof User) {
-			valid = true;
-			value = { ...this };
-		}
-		else {
-			errors = new Error('Invalid Entity');
-		}
-
-		return { value, valid, errors };
-	}
 }

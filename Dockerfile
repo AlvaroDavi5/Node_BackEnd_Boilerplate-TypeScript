@@ -14,6 +14,7 @@ WORKDIR /app
 
 #COPY --from=build /app /app
 COPY ./configs ./configs
+COPY ./docs/swagger.yaml ./docs/swagger.yaml
 COPY ./src ./src
 COPY ./tsconfig.json ./tsconfig.json
 COPY ./package.json ./package.json

@@ -35,7 +35,7 @@ export default class SqsClient {
 				secretAccessKey,
 				sessionToken,
 			},
-			//logger: logger,
+			// logger: logger,
 		};
 		this.messageGroupId = messageGroupId || 'DefaultGroup';
 		this.sqs = new SQSClient(this.awsConfig);
@@ -57,8 +57,6 @@ export default class SqsClient {
 	}
 
 	private _createParams(queueName: string): CreateQueueCommandInput {
-		const isFifoQueue: boolean = queueName?.includes('.fifo');
-
 		const params: CreateQueueCommandInput = {
 			QueueName: queueName,
 			Attributes: {

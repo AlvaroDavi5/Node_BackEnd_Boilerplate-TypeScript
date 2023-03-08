@@ -3,8 +3,8 @@ import { Request, Response, NextFunction } from 'express';
 
 interface RequestInterface extends Request {
 	user: {
-		cognitoUserName: string | null | undefined,
-		cognitoClientId: string | null | undefined,
+		username: string | null | undefined,
+		clientId: string | null | undefined,
 	} | null | undefined,
 }
 type ResponseInterface = Response;

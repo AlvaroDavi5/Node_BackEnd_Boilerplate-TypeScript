@@ -4,7 +4,7 @@ import { Logger } from 'winston';
 import { ContainerInterface } from 'src/container';
 
 
-export default class EntitiesClient {
+export default class RestClient {
 	private serviceName: string;
 	private client: AxiosInstance;
 	private logger: Logger;

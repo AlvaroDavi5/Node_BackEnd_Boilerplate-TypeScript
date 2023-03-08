@@ -21,7 +21,7 @@ module.exports = {
 			1,
 			'always',
 		],
-		'no-undef': 'off',
+		'no-undef': 'error',
 		'one-var': 'off',
 		camelcase: 'off',
 	},

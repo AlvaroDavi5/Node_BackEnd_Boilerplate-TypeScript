@@ -16,15 +16,15 @@ export default ({
 	if (!decoded)
 		throw exceptions.unauthorized('Authorization token is invalid');
 
-	let cognitoUserName = null, cognitoClientId = null;
+	let username = null, clientId = null;
 	if (typeof (decoded) !== 'string') {
-		cognitoUserName = decoded?.username || decoded['cognito:username'];
-		cognitoClientId = decoded?.client_id;
+		username = decoded?.username || decoded['cognito:username'];
+		clientId = decoded?.clientId || decoded?.client_id;
 	}
 
 	request.user = {
-		cognitoUserName: cognitoUserName,
-		cognitoClientId: cognitoClientId,
+		username,
+		clientId,
 	};
 
 	next();

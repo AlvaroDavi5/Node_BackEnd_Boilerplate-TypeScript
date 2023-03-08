@@ -1,26 +1,26 @@
-import Entity from 'src/domain/entities/Entity';
 import { Model } from 'sequelize';
 import { Logger } from 'winston';
+import Entity from 'src/domain/entities/Entity';
 import { ExceptionInterface } from 'src/infra/errors/exceptions';
 
 
 class RepositoryModel extends Model { }
 
 export default abstract class Repository {
-	private DomainEntity: typeof Entity;
-	private ResourceModel: typeof RepositoryModel;
-	private resourceMapper: {
+	declare DomainEntity: typeof Entity;
+	declare ResourceModel: typeof RepositoryModel;
+	declare resourceMapper: {
 		toDatabase: (data: any) => any,
 		toEntity: (data: any) => any,
 	};
 
-	private queryParamsBuilder: {
+	declare queryParamsBuilder: {
 		buildParams: (data: any) => any,
 	};
 
-	private queryOptions: any;
-	private exceptions: ExceptionInterface;
-	private logger: Logger;
+	declare queryOptions: any;
+	declare exceptions: ExceptionInterface;
+	declare logger: Logger;
 
 	constructor({
 		DomainEntity,
@@ -46,12 +46,12 @@ export default abstract class Repository {
 			error.message = 'Invalid parameter type';
 			throw error;
 		}
-		const { valid, errors } = entity.validate();
+		const { valid, error } = entity.validate();
 
 		if (!valid) {
 			throw this.exceptions.contract({
 				errorType: 'ValidationError',
-				stack: errors,
+				stack: error,
 			});
 		}
 	}
@@ -110,7 +110,7 @@ export default abstract class Repository {
 		const buildedQuery = this.queryParamsBuilder?.buildParams(query);
 		const { rows, count } = await this.ResourceModel.findAndCountAll(buildedQuery);
 
-		const totalPages = Math.ceil(count / Number(query?.size)) || 0;
+		const totalPages = Math.ceil(count / Number(query?.size)) || 1;
 		const pageNumber = Number(query?.page) || 0;
 		const pageSize = Number(query?.limit) || Number(count);
 

@@ -12,7 +12,7 @@ const defaultMessageFormat = format.printf(msg => {
 		log = stack;
 	}
 
-	return `${timestamp} / ${level}: ${log}`;
+	return `${timestamp} | ${level}: ${log}`;
 });
 
 const appFormat = format.combine(

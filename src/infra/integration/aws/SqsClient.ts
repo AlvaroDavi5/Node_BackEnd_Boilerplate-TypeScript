@@ -57,8 +57,6 @@ export default class SqsClient {
 	}
 
 	private _createParams(queueName: string): CreateQueueCommandInput {
-		const isFifoQueue: boolean = queueName?.includes('.fifo');
-
 		const params: CreateQueueCommandInput = {
 			QueueName: queueName,
 			Attributes: {

@@ -92,7 +92,6 @@ container
 
 
 export type genericType = AwilixContainer | NodeModule | object | any
-export type moduleType = { execute: (arg1?: any, arg2?: any) => genericType }
 
 export interface ContainerInterface {
 	[key: string]: genericType,

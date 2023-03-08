@@ -58,7 +58,7 @@ export default ({
 			filterReceivedRequest(request, value);
 
 			logger.info({
-				received_request: request.body,
+				requestBody: request.body,
 			});
 			next();
 		} catch (err) {

@@ -69,7 +69,7 @@ Users.init(
 			},
 			withoutSensibleData: {
 				attributes: {
-					exclude: ['email', 'password', 'phone', 'docType', 'document'],
+					exclude: ['email', 'password', 'phone', 'document'],
 				},
 			}
 		},

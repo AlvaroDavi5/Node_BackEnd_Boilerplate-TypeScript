@@ -24,10 +24,13 @@ const filterReceivedRequest = (req: RequestInterface, value: any) => {
 		req.body = value.body;
 		request.body = value.body;
 	}
-
 	if (value.query) {
 		req.query = value.query;
 		request.query = value.query;
+	}
+	if (value.params) {
+		req.params = value.params;
+		request.params = value.params;
 	}
 
 	return request;
@@ -45,7 +48,8 @@ export default ({
 
 				const message = {
 					title: err.name,
-					message: wrapperError(error.details),
+					message: error.message,
+					detais: wrapperError(error.details),
 					received: request.body,
 				};
 
@@ -55,10 +59,12 @@ export default ({
 
 				return response.status(400).json(message);
 			}
-			filterReceivedRequest(request, value);
+			const req = filterReceivedRequest(request, value);
 
 			logger.info({
-				requestBody: request.body,
+				requestBody: req?.body,
+				requestQuery: req?.query,
+				requestParams: req?.params,
 			});
 			next();
 		} catch (err) {

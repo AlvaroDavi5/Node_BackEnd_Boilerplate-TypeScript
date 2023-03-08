@@ -36,7 +36,7 @@ export interface DatabaseConfigInterface {
 		paranoid?: boolean, // to deletedAt
 		freezeTableName?: boolean, // to set table names on plural
 	},
-	logging?: boolean, // enable queries logger
+	logging?: boolean | ((msg?: any) => void), // enable queries logger
 	options?: Options | undefined,
 	buildOptions?: BuildOptions | undefined,
 }
@@ -45,7 +45,7 @@ const config: DatabaseConfigInterface = {
 	...configs.database,
 	dialect: getDialect(`${configs.database.dialect}`),
 	port: parseInt(configs.database.port),
-	logging: Boolean(configs.database.logging),
+	logging: configs.database.logging === 'true' ? console.log : false,
 };
 
 

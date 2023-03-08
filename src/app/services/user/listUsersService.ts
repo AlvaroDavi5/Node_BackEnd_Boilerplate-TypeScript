@@ -4,9 +4,10 @@ import { userAuthType } from 'src/types/_userAuthInterface';
 
 
 export default ({
-	logger,
+	userRepository,
 }: ContainerInterface) => ({
 	execute: async (data: messageType, user?: userAuthType): Promise<any> => {
-		logger.warn({ data, user });
+		const result = userRepository.list(data);
+		return result;
 	}
 });

@@ -4,9 +4,14 @@ import { userAuthType } from 'src/types/_userAuthInterface';
 
 
 export default ({
+	listUsersService,
 	logger,
 }: ContainerInterface) => ({
 	execute: async (data: messageType, user?: userAuthType): Promise<any> => {
-		logger.warn({ data, user });
+		if (!user)
+			logger.warn('Invalid user!');
+
+		const result = await listUsersService.execute(data);
+		return result;
 	}
 });

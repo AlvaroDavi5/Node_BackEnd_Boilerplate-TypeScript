@@ -1,36 +1,8 @@
 import staticConfigs from './staticConfigs.json';
 import dotenv from 'dotenv';
+// import path from 'path';
+// dotenv.config({ path: __dirname + "/../.env.development.local" });
 dotenv.config();
-
-
-function convert(config: object | any) {
-	const result: any = {};
-
-	Object.keys(config).forEach(name => {
-		let value = config[name];
-
-		// if is a object
-		if (typeof (value) === 'object' && value !== null) {
-			value = convert(value); // recursion
-		}
-
-		// if is a environment variable key
-		if (typeof (value) === 'string' && value.indexOf('$') > -1) {
-			const key = value.replace(/\$/g, '');
-
-			if (process.env[key]) {
-				value = process.env[key];
-			}
-			else {
-				value = undefined;
-			}
-		}
-
-		result[name] = value;
-	});
-
-	return result;
-}
 
 
 export interface ConfigsInterface {
@@ -48,14 +20,16 @@ export interface ConfigsInterface {
 		username: string,
 		password: string,
 		host: string,
-		charset: string,
-		dialect: string,
 		port: string,
+		dialect: string,
+		charset: string,
 		define: {
 			underscored: boolean,
 			timestamps: boolean,
+			paranoid: boolean,
 			freezeTableName: boolean,
-		}
+		},
+		logging: string,
 	},
 	cache: {
 		redis: {
@@ -117,6 +91,35 @@ export interface ConfigsInterface {
 		cryptoAlgorithm: string,
 		secretKey: string,
 	}
+}
+
+function convert(config: object | any): ConfigsInterface {
+	const result: any = {};
+
+	Object.keys(config).forEach(name => {
+		let value = config[name];
+
+		// if is a object
+		if (typeof (value) === 'object' && value !== null) {
+			value = convert(value); // recursion
+		}
+
+		// if is a environment variable key
+		if (typeof (value) === 'string' && value.indexOf('$') > -1) {
+			const key = value.replace(/\$/g, '');
+
+			if (process.env[key]) {
+				value = process.env[key];
+			}
+			else {
+				value = undefined;
+			}
+		}
+
+		result[name] = value;
+	});
+
+	return result;
 }
 
 export default convert(staticConfigs);

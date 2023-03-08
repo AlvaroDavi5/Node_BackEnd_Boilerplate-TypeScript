@@ -1,8 +1,5 @@
 import { Options, BuildOptions, Dialect } from 'sequelize/types';
-import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: __dirname + "/../.env.development.local" });
-dotenv.config();
+import configs from 'configs/configs';
 
 
 function getDialect(dialect: string): Dialect {
@@ -21,47 +18,34 @@ function getDialect(dialect: string): Dialect {
 }
 
 export interface DatabaseConfigInterface {
-	database: string | undefined,
-	username: string | undefined,
-	password: string | undefined,
-	dialect: Dialect | undefined,
-	host: string | undefined,
-	port: number | undefined,
-	charset?: string | undefined,
+	database: string, // database name
+	username: string, // database username
+	password: string, // database password
+	host: string, // database host
+	port: number, // database port
+	dialect: Dialect, // one of 'mysql' | 'mariadb' | 'postgres' | 'mssql'
+	charset?: string, // database charset encoding
 	dialectOptions?: {
-		ssl: {
-			rejectUnauthorized: boolean,
+		ssl?: {
+			rejectUnauthorized?: boolean, // to use SSL protocol (in production)
 		}
 	},
 	define?: {
-		underscored: boolean,
-		timestamps: boolean,
-		freezeTableName: boolean,
+		underscored?: boolean, // to force underscore on name of fields
+		timestamps?: boolean, // to createdAt and updatedAt
+		paranoid?: boolean, // to deletedAt
+		freezeTableName?: boolean, // to set table names on plural
 	},
+	logging?: boolean, // enable queries logger
 	options?: Options | undefined,
 	buildOptions?: BuildOptions | undefined,
 }
 
 const config: DatabaseConfigInterface = {
-	database: process.env.DB_NAME, // database name
-	username: process.env.DB_USERNAME, // database username
-	password: process.env.DB_PASSWORD, // database password
-	host: process.env.DB_HOST, // database host (change to 'db' if your connection its between docker containers or to 'localhost' if you use local machine)
-	charset: 'utf8', // database charset encoding
-	dialect: getDialect(`${process.env.DB_DBMS_NAME}`), // one of 'mysql' | 'mariadb' | 'postgres' | 'mssql'
-	/*
-	dialectOptions: {
-		ssl: {
-			rejectUnauthorized: false // to use SSL protocol (in production)
-		}
-	}
-	*/
-	port: parseInt(`${process.env.DB_PORT}`), // database port
-	define: {
-		underscored: false, // underscored name of fields
-		timestamps: true, // to createdAt and updatedAt
-		freezeTableName: false // not set table names on plural
-	}
+	...configs.database,
+	dialect: getDialect(`${configs.database.dialect}`),
+	port: parseInt(configs.database.port),
+	logging: Boolean(configs.database.logging),
 };
 
 

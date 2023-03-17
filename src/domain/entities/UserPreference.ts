@@ -24,4 +24,11 @@ export default class UserPreference extends Entity {
 		this.userId = userId;
 		this.defaultTheme = defaultTheme;
 	}
+
+	public getId(): number { return this.id; }
+
+	public getUserId(): number { return this.userId; }
+
+	public getImagePath(): string { return this.imagePath; }
+	public setImagePath(path: string) { this.imagePath = path; }
 }

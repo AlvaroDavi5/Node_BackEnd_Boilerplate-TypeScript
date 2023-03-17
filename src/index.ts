@@ -1,7 +1,6 @@
 import container from './container';
 import exceptionsEnum from 'src/domain/enums/exceptionsEnum';
 import Application from 'src/app/Application';
-import { messageType } from 'src/types/_messageType';
 
 
 async function startApplication() {
@@ -9,7 +8,7 @@ async function startApplication() {
 
 	app
 		.start()
-		.catch((error: messageType) => {
+		.catch((error: any) => {
 			app.logger.error(error);
 		});
 

@@ -66,7 +66,7 @@ container
 		[
 			'src/app/helpers/**/*.ts',
 			'src/app/mappers/**/*.ts',
-			'src/app/operation/**/*.ts',
+			'src/app/operations/**/*.ts',
 			'src/app/services/**/*.ts',
 			'src/app/strategies/**/*.ts',
 			'src/infra/integration/queue/handlers/**/*.ts',

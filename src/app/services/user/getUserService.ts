@@ -5,7 +5,9 @@ export default ({
 	userRepository,
 }: ContainerInterface) => ({
 	execute: async (data: any): Promise<any> => {
-		const result = await userRepository.list(data);
+		const { id } = data;
+
+		const result = await userRepository.getById(Number(id));
 		return result;
 	}
 });

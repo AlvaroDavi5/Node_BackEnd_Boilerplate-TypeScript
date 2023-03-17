@@ -1,14 +1,14 @@
-import { Model } from 'sequelize';
+import { Model, QueryTypes } from 'sequelize';
 import { Logger } from 'winston';
 import Entity from 'src/domain/entities/Entity';
 import { ExceptionInterface } from 'src/infra/errors/exceptions';
 
 
-class RepositoryModel extends Model { }
+class _RepositoryModel extends Model { }
 
 export default abstract class Repository {
 	declare DomainEntity: typeof Entity;
-	declare ResourceModel: typeof RepositoryModel;
+	declare ResourceModel: typeof _RepositoryModel;
 	declare resourceMapper: {
 		toDatabase: (data: any) => any,
 		toEntity: (data: any) => any,
@@ -205,11 +205,13 @@ export default abstract class Repository {
 		return result;
 	}
 
-	async executeQuery(sqlQuery: string) {
+	async executeQuery(sqlQuery: string, QueryType?: QueryTypes) {
 		let result: any;
 
 		try {
-			result = await this.ResourceModel.sequelize?.query(sqlQuery);
+			result = await this.ResourceModel.sequelize?.query(sqlQuery, {
+				type: QueryType,
+			});
 		} catch (error) {
 			this.logger.error(error);
 			result = null;

@@ -16,6 +16,7 @@ class Users extends Model {
 	public readonly createdAt!: Date;
 	public updatedAt!: Date;
 	public deletedAt!: Date;
+	private deletedBy!: string;
 
 	/**
 	 * ?    Association Method

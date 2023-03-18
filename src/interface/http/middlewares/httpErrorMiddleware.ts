@@ -8,17 +8,17 @@ export default ({
 	logger,
 	configs,
 }: ContainerInterface) => (error: ErrorInterface, request: Request, response: Response, next: NextFunction) => {
+	const errorStackVisible = configs?.application?.stackErrorVisible === 'true';
+
 	logger.error(error);
-	const hasTrace = configs?.application?.stackErrorVisible === 'true';
 
-	const options = hasTrace ? { stack: error.stack } : '';
-
+	const options = errorStackVisible ? { stack: error.stack } : '';
 	const statusCode = error?.statusCode || httpConstants.status.INTERNAL_SERVER_ERROR;
 
 	const errorCustom = {
 		message: error.message,
 		statusCode,
-		details: error.details || [],
+		details: error.details,
 	};
 	return response.status(statusCode).json(Object.assign(errorCustom, options));
 };

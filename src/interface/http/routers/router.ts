@@ -16,7 +16,7 @@ export default (ctx: ContainerInterface) => {
 	// internal routes
 	apiRouter.get('/check', (request, response) => {
 		return response
-			.status(200)
+			.status(ctx.httpConstants.status.OK)
 			.json({
 				url: request?.url,
 				statusCode: request?.statusCode || 200,

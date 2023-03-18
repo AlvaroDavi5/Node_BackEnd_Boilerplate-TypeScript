@@ -37,6 +37,7 @@ const filterReceivedRequest = (req: RequestInterface, value: any) => {
 };
 
 export default ({
+	httpConstants,
 	logger,
 }: ContainerInterface) => (schema: AnySchema) => {
 	return (request: RequestInterface, response: ResponseInterface, next: NextFunctionInterface): any => {
@@ -57,7 +58,7 @@ export default ({
 
 				delete message.received;
 
-				return response.status(400).json(message);
+				return response.status(httpConstants.status.BAD_REQUEST).json(message);
 			}
 			const req = filterReceivedRequest(request, value);
 

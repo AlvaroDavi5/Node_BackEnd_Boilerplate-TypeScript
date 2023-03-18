@@ -9,12 +9,16 @@ export default ({
 	const authorization = request?.headers?.authorization;
 
 	if (!authorization)
-		throw exceptions.unauthorized('Authorization token is required');
+		throw exceptions.unauthorized({
+			message: 'Authorization token is required'
+		});
 
 	const token = authorization.replace('Bearer ', '');
 	const decoded = jwt.decode(token);
 	if (!decoded)
-		throw exceptions.unauthorized('Authorization token is invalid');
+		throw exceptions.unauthorized({
+			message: 'Authorization token is invalid'
+		});
 
 	let username = null, clientId = null;
 	if (typeof (decoded) !== 'string') {

@@ -24,7 +24,7 @@ module.exports = {
 				type: Sequelize.STRING(255),
 			},
 			defaultTheme: {
-				type: Sequelize.INTEGER,
+				type: Sequelize.STRING(20),
 			},
 			createdAt: {
 				type: Sequelize.DATE,

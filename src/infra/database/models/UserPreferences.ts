@@ -8,7 +8,7 @@ class UserPreferences extends Model {
 	private id!: number;
 	private userId!: number;
 	private imagePath!: string;
-	public defaultTheme!: number;
+	public defaultTheme!: string;
 	public readonly createdAt!: Date;
 	public updatedAt!: Date;
 	public deletedAt!: Date;
@@ -48,7 +48,7 @@ UserPreferences.init(
 	{
 		userId: DataTypes.INTEGER,
 		imagePath: DataTypes.STRING(255),
-		defaultTheme: DataTypes.INTEGER
+		defaultTheme: DataTypes.STRING(20)
 	},
 	{
 		modelName: 'UserPreferences',

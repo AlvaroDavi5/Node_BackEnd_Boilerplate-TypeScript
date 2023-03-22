@@ -1,5 +1,5 @@
 
-export type enumValue = string | number
+export type enumValue = string
 
 export interface EnumInterface {
 	[key: string]: enumValue,

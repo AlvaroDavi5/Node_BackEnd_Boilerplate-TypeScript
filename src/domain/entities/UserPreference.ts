@@ -5,7 +5,7 @@ export interface UserPreferenceInterface {
 	id: number,
 	userId: number,
 	imagePath: string,
-	defaultTheme: number,
+	defaultTheme: string,
 	createdAt: Date,
 	updatedAt: Date,
 }
@@ -14,7 +14,7 @@ export default class UserPreference extends Entity {
 	private id!: number;
 	private userId!: number;
 	private imagePath!: string;
-	public defaultTheme: number;
+	public defaultTheme: string;
 	public readonly createdAt!: Date;
 	public updatedAt!: Date | null;
 	public deletedAt!: Date | null;
@@ -23,7 +23,7 @@ export default class UserPreference extends Entity {
 		super();
 		this.userId = userId;
 		this.imagePath = imagePath || './';
-		this.defaultTheme = defaultTheme || 0;
+		this.defaultTheme = defaultTheme || '0';
 		this.createdAt = new Date();
 		this.updatedAt = null;
 		this.deletedAt = null;
@@ -35,8 +35,8 @@ export default class UserPreference extends Entity {
 	public getUserId(): number { return this.userId; }
 	public setUserId(userId: number) { this.userId = userId; }
 
-	public getDefaultTheme(): number { return this.defaultTheme; }
-	public setDefaultTheme(theme: number) {
+	public getDefaultTheme(): string { return this.defaultTheme; }
+	public setDefaultTheme(theme: string) {
 		this.defaultTheme = theme;
 		this.updatedAt = new Date();
 	}

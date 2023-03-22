@@ -6,41 +6,56 @@ dotenv.config();
 
 
 export interface ConfigsInterface {
+	// ! Application Service
 	application: {
-		name: string,
-		environment: string,
-		port: string,
-		url: string,
-		socketEnv: string,
-		stackErrorVisible: string,
-		logsPath: string,
+		name: string, // app name
+		environment: string, // app env
+		port: string, // app port
+		url: string, // app url
+		socketEnv: string, // enable websocket
+		stackErrorVisible: string, // enable app error stack
+		logsPath: string, // logs file path
+		logging: string, // enable third-party and backing services logging
 	},
+	// ? DataBase Backing-Service
 	database: {
-		database: string,
-		username: string,
-		password: string,
-		host: string,
-		port: string,
-		dialect: string,
-		charset: string,
-		define: {
-			underscored: boolean,
-			timestamps: boolean,
-			paranoid: boolean,
-			freezeTableName: boolean,
+		database: string, // database name
+		username: string, // database username
+		password: string, // database password
+		host: string, // database host
+		port: string, // database port
+		dialect: string, // one of 'mysql' | 'mariadb' | 'postgres' | 'mssql'
+		dialectOptions?: {
+			ssl?: {
+				rejectUnauthorized?: boolean, // to use SSL protocol (in production)
+			}
 		},
-		logging: string,
+		charset: string, // database charset encoding
+		define: {
+			underscored: boolean, // to force underscore on name of fields
+			timestamps: boolean, // to createdAt and updatedAt
+			paranoid: boolean, // to deletedAt
+			freezeTableName: boolean, // to set table names on plural
+		},
+		pool: {
+			min: number, // minimum number of connections in pool
+			max: number, // maximum number of connections in pool
+			acquire: number, // maximum time, in milliseconds, that pool will try to get connection before throwing error
+			idle: number, // maximum time, in milliseconds, that a connection can be idle before being released
+		},
 	},
+	// ? Caching Backing-Service
 	cache: {
 		redis: {
-			port: string,
-			host: string,
+			port: string, // cache port
+			host: string, // cache host
 		}
 	},
+	// ? Third-Party Services
 	integration: {
 		aws: {
 			credentials: {
-				region: string,
+				region: string, // service region
 				accessKeyId: string,
 				secretAccessKey: string,
 				sessionToken: string,
@@ -48,6 +63,7 @@ export interface ConfigsInterface {
 				messageGroupId: string,
 				apiVersion: string,
 			},
+			// * Authentication Service
 			congito: {
 				userPoolName: string,
 				userPoolId: string,
@@ -56,6 +72,7 @@ export interface ConfigsInterface {
 				endpoint: string,
 				apiVersion: string,
 			},
+			// * Message Queues Service
 			sqs: {
 				defaultQueue: {
 					queueName: string,
@@ -64,6 +81,7 @@ export interface ConfigsInterface {
 				endpoint: string,
 				apiVersion: string,
 			},
+			// * Notification Topics Service
 			sns: {
 				defaultTopic: {
 					topicName: string,
@@ -73,6 +91,7 @@ export interface ConfigsInterface {
 				endpoint: string,
 				apiVersion: string,
 			},
+			// * Storage Service
 			s3: {
 				bucketName: string,
 				bucketUrl: string,
@@ -81,15 +100,17 @@ export interface ConfigsInterface {
 			}
 		},
 		rest: {
+			// * Another Service
 			mockedService: {
 				serviceName: string,
 				baseUrl: string,
 			},
 		},
 	},
+	// ? Cryptography and Security
 	security: {
-		cryptoAlgorithm: string,
-		secretKey: string,
+		cryptoAlgorithm: string, // cryptography algorithm
+		secretKey: string, // JWT secret key
 	}
 }
 
@@ -109,14 +130,14 @@ function convert(config: object | any): ConfigsInterface {
 			const key = value.replace(/\$/g, '');
 
 			if (process.env[key]) {
-				value = process.env[key];
+				value = process.env[key]; // string
 			}
 			else {
 				value = undefined;
 			}
 		}
 
-		result[name] = value;
+		result[name] = value; // fixed value
 	});
 
 	return result;

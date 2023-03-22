@@ -9,7 +9,7 @@ then
 	if [ $NODE_ENV = 'hml' ]; then
 		SHOW_ERROR_STACK='true'; # show application errors stack
 	elif [ $NODE_ENV = 'dev' ]; then
-		SHOW_QUERIES='true'; # show database queries
+		SHOW_LOGS='true'; # show third-party and backing services logs
 	fi
 	COMMAND='dev';
 fi;

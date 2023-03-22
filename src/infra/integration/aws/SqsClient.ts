@@ -35,7 +35,7 @@ export default class SqsClient {
 				secretAccessKey,
 				sessionToken,
 			},
-			// logger: logger,
+			logger: configs.application.logging === 'true' ? logger : undefined,
 		};
 		this.messageGroupId = messageGroupId || 'DefaultGroup';
 		this.sqs = new SQSClient(this.awsConfig);

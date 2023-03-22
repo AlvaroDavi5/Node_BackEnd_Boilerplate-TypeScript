@@ -18,25 +18,31 @@ function getDialect(dialect: string): Dialect {
 }
 
 export interface DatabaseConfigInterface {
-	database: string, // database name
-	username: string, // database username
-	password: string, // database password
-	host: string, // database host
-	port: number, // database port
-	dialect: Dialect, // one of 'mysql' | 'mariadb' | 'postgres' | 'mssql'
-	charset?: string, // database charset encoding
+	database: string,
+	username: string,
+	password: string,
+	host: string,
+	port: number,
+	dialect: Dialect,
+	charset?: string,
 	dialectOptions?: {
 		ssl?: {
-			rejectUnauthorized?: boolean, // to use SSL protocol (in production)
+			rejectUnauthorized?: boolean,
 		}
 	},
 	define?: {
-		underscored?: boolean, // to force underscore on name of fields
-		timestamps?: boolean, // to createdAt and updatedAt
-		paranoid?: boolean, // to deletedAt
-		freezeTableName?: boolean, // to set table names on plural
+		underscored?: boolean,
+		timestamps?: boolean,
+		paranoid?: boolean,
+		freezeTableName?: boolean,
 	},
-	logging?: boolean | ((msg?: any) => void), // enable queries logger
+	pool?: {
+		min?: number,
+		max?: number,
+		acquire?: number,
+		idle?: number,
+	},
+	logging?: boolean | ((msg: string) => void),
 	options?: Options | undefined,
 	buildOptions?: BuildOptions | undefined,
 }
@@ -45,7 +51,7 @@ const config: DatabaseConfigInterface = {
 	...configs.database,
 	dialect: getDialect(`${configs.database.dialect}`),
 	port: parseInt(configs.database.port),
-	logging: configs.database.logging === 'true' ? console.log : false,
+	logging: configs.application.logging === 'true' ? console.log : false,
 };
 
 

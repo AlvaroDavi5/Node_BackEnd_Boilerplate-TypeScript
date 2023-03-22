@@ -7,7 +7,7 @@ services:
   # Application
   app:
     container_name: App_Node
-    env_file: ./.env
+    env_file: ./env/.env.development.local
     # Refered Dockerfile
     build: ./
     #image: node:alpine
@@ -72,6 +72,16 @@ services:
       - default_network
     ports:
       - 6379:6379
+
+  # Quality
+  quality:
+    container_name: Quality_SonarQube
+    image: sonarqube:latest
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    ports:
+      - 9000:9000
+      - 9092:9092
 
 # Networks for Containers
 networks:

@@ -18,6 +18,9 @@ yarn-error.log*
 # testing
 /coverage
 /tests/database.sqlite
+# sonar
+test-report.xml
+/.scannerwork
 # vercel
 .vercel
 # misc

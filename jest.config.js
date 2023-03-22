@@ -19,7 +19,7 @@ module.exports = {
 
 	// An array of glob patterns indicating a set of files for which coverage information should be collected
 	collectCoverageFrom: [
-		'src/**/*.{js,jsx}'
+		'src/**/*.{ts,tsx,js,jsx}'
 	],
 
 	// The directory where Jest should output its coverage files
@@ -32,9 +32,9 @@ module.exports = {
 		'src/infra/',
 		'src/interface/http/',
 		'src/interface/queue/',
-		'src/interface/webSocket/Client.ts',
-		'src/interface/webSocket/Server.ts',
-		'src/interface/webSocket/socketEventsRegister.ts',
+		'src/interface/webSocket/client/Client.ts',
+		'src/interface/webSocket/server/Server.ts',
+		'src/interface/webSocket/events/socketEventsRegister.ts',
 	],
 
 	// Indicates which provider should be used to instrument code for coverage
@@ -84,11 +84,11 @@ module.exports = {
 
 	// An array of file extensions your modules use
 	moduleFileExtensions: [
-		'js',
-		'json',
-		'jsx',
 		'ts',
 		'tsx',
+		'js',
+		'jsx',
+		'json',
 		'node',
 	],
 
@@ -177,7 +177,7 @@ module.exports = {
 	// testRegex: [],
 
 	// This option allows the use of a custom results processor
-	// testResultsProcessor: undefined,
+	testResultsProcessor: 'jest-sonar-reporter',
 
 	// This option allows use of a custom test runner
 	// testRunner: "jasmine2",

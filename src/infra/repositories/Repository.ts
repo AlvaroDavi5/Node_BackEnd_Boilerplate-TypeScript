@@ -7,20 +7,20 @@ import { ExceptionInterface } from 'src/infra/errors/exceptions';
 class _RepositoryModel extends Model { }
 
 export default abstract class Repository {
-	declare DomainEntity: typeof Entity;
-	declare ResourceModel: typeof _RepositoryModel;
-	declare resourceMapper: {
+	public DomainEntity: typeof Entity;
+	public ResourceModel: typeof _RepositoryModel;
+	public resourceMapper: {
 		toDatabase: (data: any) => any,
 		toEntity: (data: any) => any,
 	};
 
-	declare queryParamsBuilder: {
+	public queryParamsBuilder: {
 		buildParams: (data: any) => any,
 	};
 
-	declare queryOptions: any;
-	declare exceptions: ExceptionInterface;
-	declare logger: Logger;
+	public queryOptions: any;
+	public exceptions: ExceptionInterface;
+	public logger: Logger;
 
 	constructor({
 		DomainEntity,
@@ -42,16 +42,19 @@ export default abstract class Repository {
 
 	validatePayload(entity: any) {
 		if (!(entity instanceof this.DomainEntity)) {
-			const error = new Error('ValidationError');
-			error.message = 'Invalid parameter type';
-			throw error;
+			throw this.exceptions.contract({
+				message: 'ValidationError',
+				details: 'Invalid parameter type',
+			});
 		}
+
 		const { valid, error } = entity.validate();
 
 		if (!valid) {
 			throw this.exceptions.contract({
-				errorType: 'ValidationError',
-				stack: error,
+				message: 'ValidationError',
+				details: error?.message,
+				stack: error?.stack,
 			});
 		}
 	}
@@ -110,9 +113,9 @@ export default abstract class Repository {
 		const buildedQuery = this.queryParamsBuilder?.buildParams(query);
 		const { rows, count } = await this.ResourceModel.findAndCountAll(buildedQuery);
 
-		const totalPages = Math.ceil(count / Number(query?.size)) || 1;
-		const pageNumber = Number(query?.page) || 0;
-		const pageSize = Number(query?.limit) || Number(count);
+		const totalPages = Math.ceil(count / parseInt(query?.size)) || 1;
+		const pageNumber = parseInt(query?.page) || 0;
+		const pageSize = parseInt(query?.limit) || count;
 
 		let content = [];
 		if (count > 0) {

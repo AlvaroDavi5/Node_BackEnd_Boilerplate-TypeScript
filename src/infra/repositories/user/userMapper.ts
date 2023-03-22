@@ -4,22 +4,22 @@ import UserEntity from 'src/domain/entities/User';
 const toEntity = (dataValues: any): UserEntity | object => {
 	const userEntity = new UserEntity(dataValues);
 
-	if (!userEntity.validate().valid)
+	if (!(userEntity.validate().valid))
 		return {};
 
 	return userEntity;
 };
 
 const toDatabase = (entity: UserEntity): any => {
+	if (!(entity.validate().valid))
+	return null;
+
 	return {
 		id: entity.getId(),
-		fullName: entity.fullName,
-		email: entity.getEmail(),
+		...entity.getLogin(),
 		password: entity.getPassword(),
 		phone: entity.getPhone(),
-		docType: entity.docType,
-		document: entity.getDocument(),
-		fu: entity.fu,
+		...entity.getDocInfos(),
 		preference: entity.preference,
 		createdAt: entity.createdAt,
 		updatedAt: entity.updatedAt,

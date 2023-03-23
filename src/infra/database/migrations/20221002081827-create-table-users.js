@@ -17,6 +17,7 @@ module.exports = {
 			email: {
 				type: Sequelize.STRING(70),
 				allowNull: false,
+				unique: true,
 			},
 			password: {
 				type: Sequelize.STRING(60),
@@ -46,6 +47,11 @@ module.exports = {
 			},
 			deletedAt: {
 				type: Sequelize.DATE,
+				allowNull: true,
+				defaultValue: null,
+			},
+			deletedBy: {
+				type: Sequelize.STRING(256),
 				allowNull: true,
 				defaultValue: null,
 			}

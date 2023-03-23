@@ -1,14 +1,12 @@
 
 export default () => ({
-	execute: (message: any = {}) => {
+	execute: (message: any = '') => {
 		let msg = '';
 
 		try {
 			msg = JSON.stringify(message);
 		}
-		catch (error) {
-			msg = String(message);
-		}
+		catch (error) { }
 
 		return msg;
 	}

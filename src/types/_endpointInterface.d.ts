@@ -1,11 +1,9 @@
 import { Request, Response, NextFunction } from 'express';
+import { userAuthType } from './_userAuthInterface';
 
 
 interface RequestInterface extends Request {
-	user: {
-		username: string | null | undefined,
-		clientId: string | null | undefined,
-	} | null | undefined,
+	user: userAuthType,
 }
 type ResponseInterface = Response;
 type NextFunctionInterface = NextFunction;

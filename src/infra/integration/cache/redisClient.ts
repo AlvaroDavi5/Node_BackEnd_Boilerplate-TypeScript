@@ -23,7 +23,7 @@ export default class RedisClient {
 
 		if (!this.redis) {
 			throw this.exceptions.integration({
-				details: 'Error to instance redis client',
+				message: 'Error to instance redis client',
 			});
 		}
 	}

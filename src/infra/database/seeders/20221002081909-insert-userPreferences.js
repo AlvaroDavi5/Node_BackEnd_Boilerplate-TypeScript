@@ -6,7 +6,7 @@ module.exports = {
 			{
 				userId: 1,
 				imagePath: './',
-				defaultTheme: 1,
+				defaultTheme: '2',
 			}
 		], {});
 	},

@@ -2,7 +2,10 @@ import { createLogger, transports, format } from 'winston';
 import configs from 'configs/configs';
 
 
-const defaultMessageFormat = format.printf(msg => {
+const logsFilePath = configs.application.logsPath || './logs/logs.log';
+const serviceName = configs.application.name || 'Node Boilerplate';
+
+const defaultMessageFormatter = format.printf(msg => {
 	const { level, timestamp, message, stack } = msg;
 	let log = typeof message === 'object'
 		? JSON.stringify(msg.message)
@@ -14,34 +17,35 @@ const defaultMessageFormat = format.printf(msg => {
 
 	return `${timestamp} | ${level}: ${log}`;
 });
-
-const appFormat = format.combine(
-	format.errors({ stack: false }),
+const defaultFormat = format.combine(
 	format.timestamp(),
-	defaultMessageFormat
+	format.errors({ stack: false }),
+	defaultMessageFormatter,
 );
-
-const logsFilePath = configs.application.logsPath || './logs/info.log';
 
 const options = {
 	format: format.combine(
-		appFormat,
-		format.json()
+		defaultFormat,
+		format.json(),
 	),
+	defaultMeta: {
+		service: serviceName,
+		env: process.env.NODE_ENV,
+	},
 	transports: [
 		new transports.Console({
 			format: format.combine(
 				format.colorize(),
-				appFormat,
+				defaultFormat,
 			),
 		}),
-		new transports.File({ filename: logsFilePath })
+		new transports.File({ filename: logsFilePath }),
 	],
 	exitOnError: false,
 };
 
-export const logger = createLogger(options);
 
+const logger = createLogger(options);
 export class LoggerStream {
 	write(message: string): void {
 		logger.info(message.substring(0, message.lastIndexOf('\n')));

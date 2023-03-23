@@ -24,7 +24,7 @@ import WebSocketServer, { WebSocketServerInterface } from 'src/interface/webSock
 import socketEventsRegister from 'src/interface/webSocket/events/socketEventsRegister';
 import WebSocketClient from 'src/interface/webSocket/client/Client';
 import RedisClient from 'src/infra/integration/cache/redisClient';
-import { logger, LoggerStream } from 'src/infra/logging/logger';
+import logger, { LoggerStream } from 'src/infra/logging/logger';
 import Exceptions, { ExceptionInterface } from 'src/infra/errors/exceptions';
 import { HttpConstantsInteface } from 'src/interface/http/constants/httpConstants';
 
@@ -66,7 +66,7 @@ container
 		[
 			'src/app/helpers/**/*.ts',
 			'src/app/mappers/**/*.ts',
-			'src/app/operation/**/*.ts',
+			'src/app/operations/**/*.ts',
 			'src/app/services/**/*.ts',
 			'src/app/strategies/**/*.ts',
 			'src/infra/integration/queue/handlers/**/*.ts',

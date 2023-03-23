@@ -1,6 +1,8 @@
 import Repository from '../Repository';
 import UserEntity from 'src/domain/entities/User';
 import UsersModel from 'src/infra/database/models/Users';
+import userMapper from './userMapper';
+import { userQueryParamsBuilder, userQueryOptions } from './userQuery';
 import { ContainerInterface } from 'src/container';
 
 
@@ -13,16 +15,11 @@ export default class UserRepository extends Repository {
 		super({
 			DomainEntity: UserEntity,
 			ResourceModel: UsersModel,
-			resourceMapper: {
-				toDatabase: (data: any) => data,
-				toEntity: (data: any) => data,
-			},
-			queryParamsBuilder: {
-				buildParams: (data: any) => data,
-			},
-			queryOptions: null,
-			exceptions,
-			logger,
+			resourceMapper: userMapper,
+			queryParamsBuilder: userQueryParamsBuilder,
+			queryOptions: userQueryOptions,
+			exceptions: exceptions,
+			logger: logger,
 		});
 	}
 
@@ -30,9 +27,9 @@ export default class UserRepository extends Repository {
 		const buildedQuery = this.queryParamsBuilder?.buildParams(query);
 		const { rows, count } = await this.ResourceModel.scope('withoutSensibleData').findAndCountAll(buildedQuery);
 
-		const totalPages = Math.ceil(count / Number(query?.size)) || 1;
-		const pageNumber = Number(query?.page) || 0;
-		const pageSize = Number(query?.limit) || Number(count);
+		const totalPages = Math.ceil(count / parseInt(query?.size)) || 1;
+		const pageNumber = parseInt(query?.page) || 0;
+		const pageSize = parseInt(query?.limit) || count;
 
 		let content = [];
 		if (count > 0) {

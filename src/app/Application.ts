@@ -12,7 +12,7 @@ export default class Application {
 	private eventsQueueConsumer: Consumer;
 	private syncCron: ScheduledTask;
 	public logger: Logger;
-	private isSocketEnvEnabled: boolean;
+	public isSocketEnvEnabled: boolean;
 
 	/**
 	@param {Object} ctx - Dependency Injection (container)
@@ -31,7 +31,7 @@ export default class Application {
 		this.eventsQueueConsumer = eventsQueueConsumer;
 		this.syncCron = syncCron;
 		this.logger = logger;
-		this.isSocketEnvEnabled = configs?.application?.socketEnv === 'enabled';
+		this.isSocketEnvEnabled = configs.application.socketEnv === 'enabled';
 	}
 
 	startCrons() {

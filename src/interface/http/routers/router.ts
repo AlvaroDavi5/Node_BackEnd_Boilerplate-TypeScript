@@ -16,7 +16,7 @@ export default (ctx: ContainerInterface) => {
 	// internal routes
 	apiRouter.get('/check', (request, response) => {
 		return response
-			.status(200)
+			.status(ctx.httpConstants.status.OK)
 			.json({
 				url: request?.url,
 				statusCode: request?.statusCode || 200,
@@ -34,7 +34,10 @@ export default (ctx: ContainerInterface) => {
 	// default response
 	defaultRouter.use('/api', apiRouter);
 	defaultRouter.use('/*', (request, response, next) => next(
-		ctx.exceptions.notFound('Not Found')
+		ctx.exceptions.notFound({
+			message: 'Endpoint Not Found',
+			details: { baseUrl: request.baseUrl },
+		})
 	));
 	defaultRouter.use(ctx.httpErrorMiddleware);
 

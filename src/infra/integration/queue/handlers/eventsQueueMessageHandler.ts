@@ -21,7 +21,11 @@ export default ({
 			);
 
 			if (error)
-				throw exceptions.contract(error);
+				throw exceptions.contract({
+					name: error.name,
+					message: error.message,
+					stack: error.stack,
+				});
 
 			logger.info(value);
 		} catch (error) {

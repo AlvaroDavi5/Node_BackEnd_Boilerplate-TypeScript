@@ -6,7 +6,8 @@
 		"url": "$APP_URL",
 		"socketEnv": "$SOCKET_ENV",
 		"stackErrorVisible": "$SHOW_ERROR_STACK",
-		"logsPath": "$APP_LOGS_PATH"
+		"logsPath": "$APP_LOGS_PATH",
+		"logging": "$SHOW_LOGS"
 	},
 	"database": {
 		"database": "$DB_NAME",
@@ -22,7 +23,12 @@
 			"paranoid": true,
 			"freezeTableName": false
 		},
-		"logging": "$SHOW_QUERIES"
+		"pool": {
+			"min": 0,
+			"max": 5,
+			"acquire": 20000,
+			"idle": 20000
+		}
 	},
 	"cache": {
 		"redis": {

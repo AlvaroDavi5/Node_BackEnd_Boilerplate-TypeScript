@@ -1,93 +1,98 @@
-import { NotFound, MakeErrorClass } from 'fejl';
 import ExceptionGenerator from './exceptionGenerator';
+import exceptionsEnum from 'src/domain/enums/exceptionsEnum';
 import { ContainerInterface } from 'src/container';
 import { ErrorInterface } from 'src/types/_errorInterface';
-import exceptionsEnum from 'src/domain/enums/exceptionsEnum';
-
-
-class Business extends MakeErrorClass('Business') { }
-class Contract extends MakeErrorClass('Contract') { }
-class Integration extends MakeErrorClass('Integration') { }
-class Operation extends MakeErrorClass('Operation') { }
-class Internal extends MakeErrorClass('Internal') { }
 
 
 export interface ExceptionInterface {
-	[key: string]: (msg?: any) => Error,
+	[key: string]: (msg: ErrorInterface) => ExceptionGenerator,
 }
 
 export default ({
 	httpConstants,
 }: ContainerInterface) => ({
 
-	[exceptionsEnum.CONTRACT]: ({ error, errorType, details = [] }: ErrorInterface) => {
-		if (!(error instanceof Error))
-			error = new Contract(error);
+	[exceptionsEnum.CONTRACT]: (msg: ErrorInterface) => {
+		const exception = new ExceptionGenerator(msg.message);
 
-		error.errorType = errorType || exceptionsEnum.CONTRACT;
-		error.statusCode = httpConstants.status.BAD_REQUEST;
-		error.details = details;
+		exception.setName('Contract');
+		exception.setCode(httpConstants.status.BAD_REQUEST);
+		exception.setErrorType(exceptionsEnum.CONTRACT);
+		exception.setStack(msg.stack);
+		exception.setDetails(msg.details);
 
-		return error;
+		return exception;
 	},
 
-	[exceptionsEnum.OPERATION]: (error: any, errorType: string) => {
-		if (!(error instanceof Error))
-			error = new Operation(error);
+	[exceptionsEnum.OPERATION]: (msg: ErrorInterface) => {
+		const exception = new ExceptionGenerator(msg.message);
 
-		error.errorType = errorType || exceptionsEnum.OPERATION;
-		error.statusCode = httpConstants.status.FORBIDDEN;
+		exception.setName('Operation');
+		exception.setCode(httpConstants.status.FAILED_DEPENDENCY);
+		exception.setErrorType(exceptionsEnum.OPERATION);
+		exception.setStack(msg.stack);
+		exception.setDetails(msg.details);
 
-		return error;
+		return exception;
 	},
 
-	[exceptionsEnum.BUSINESS]: (error: any, errorType: string) => {
-		if (!(error instanceof Error))
-			error = new Business(error);
+	[exceptionsEnum.BUSINESS]: (msg: ErrorInterface) => {
+		const exception = new ExceptionGenerator(msg.message);
 
-		error.errorType = errorType || exceptionsEnum.BUSINESS;
-		error.statusCode = httpConstants.status.FORBIDDEN;
+		exception.setName('Business');
+		exception.setCode(httpConstants.status.FORBIDDEN);
+		exception.setErrorType(exceptionsEnum.BUSINESS);
+		exception.setStack(msg.stack);
+		exception.setDetails(msg.details);
 
-		return error;
+		return exception;
 	},
 
-	[exceptionsEnum.UNAUTHORIZED]: ({ error, errorType, details = [] }: ErrorInterface) => {
-		if (!(error instanceof Error))
-			error = new ExceptionGenerator(`${errorType}: ${error?.message}`);
+	[exceptionsEnum.UNAUTHORIZED]: (msg: ErrorInterface) => {
+		const exception = new ExceptionGenerator(msg.message);
 
-		error.errorType = errorType || exceptionsEnum.UNAUTHORIZED;
-		error.statusCode = httpConstants.status.UNAUTHORIZED;
-		error.details = details;
+		exception.setName('Unauthorized');
+		exception.setCode(httpConstants.status.UNAUTHORIZED);
+		exception.setErrorType(exceptionsEnum.UNAUTHORIZED);
+		exception.setStack(msg.stack);
+		exception.setDetails(msg.details);
 
-		return error;
+		return exception;
 	},
 
-	[exceptionsEnum.NOT_FOUND]: (error: any, errorType: string) => {
-		if (!(error instanceof Error))
-			error = new NotFound(error);
+	[exceptionsEnum.NOT_FOUND]: (msg: ErrorInterface) => {
+		const exception = new ExceptionGenerator(msg.message);
 
-		error.errorType = errorType || exceptionsEnum.NOT_FOUND;
-		error.statusCode = httpConstants.status.NOT_FOUND;
+		exception.setName('Not Found');
+		exception.setCode(httpConstants.status.NOT_FOUND);
+		exception.setErrorType(exceptionsEnum.NOT_FOUND);
+		exception.setStack(msg.stack);
+		exception.setDetails(msg.details);
 
-		return error;
+		return exception;
 	},
 
-	[exceptionsEnum.INTEGRATION]: (error: any, errorType: string) => {
-		if (!(error instanceof Error))
-			error = new Integration(error);
+	[exceptionsEnum.INTEGRATION]: (msg: ErrorInterface) => {
+		const exception = new ExceptionGenerator(msg.message);
 
-		error.errorType = errorType || exceptionsEnum.INTEGRATION;
-		error.statusCode = httpConstants.status.FAILED_DEPENDENCY;
+		exception.setName('Integration');
+		exception.setCode(httpConstants.status.SERVICE_UNAVAILABLE);
+		exception.setErrorType(exceptionsEnum.INTEGRATION);
+		exception.setStack(msg.stack);
+		exception.setDetails(msg.details);
 
-		return error;
+		return exception;
 	},
 
-	[exceptionsEnum.INTERNAL]: (error: any, errorType: string) => {
-		if (!(error instanceof Error))
-			error = new Internal(error);
+	[exceptionsEnum.INTERNAL]: (msg: ErrorInterface) => {
+		const exception = new ExceptionGenerator(msg.message);
 
-		error.errorType = errorType || exceptionsEnum.INTERNAL;
-		error.statusCode = httpConstants.status.INTERNAL_SERVER_ERROR;
-		return error;
-	}
+		exception.setName('Internal');
+		exception.setCode(httpConstants.status.SERVICE_UNAVAILABLE);
+		exception.setErrorType(exceptionsEnum.INTERNAL);
+		exception.setStack(msg.stack);
+		exception.setDetails(msg.details);
+
+		return exception;
+	},
 });

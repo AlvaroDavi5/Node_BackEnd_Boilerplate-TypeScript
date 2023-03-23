@@ -13,6 +13,6 @@ export default () =>
 			document: Joi.string().empty('').trim(),
 			fu: Joi.string().empty('').trim().min(2),
 			imagePath: Joi.string().empty('').trim(),
-			defaultTheme: Joi.number().valid(...themesEnum.values()),
+			defaultTheme: Joi.string().valid(...themesEnum.values()),
 		}),
 	});

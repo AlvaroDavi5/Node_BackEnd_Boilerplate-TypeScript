@@ -1,5 +1,6 @@
 import createEnum from './createEnum';
 
 export default createEnum({
-	USER_SETTINGS: 'USER_SETTINGS',
+	CONNECTIONS: 'connections',
+	USER_SETTINGS: 'user_settings',
 });

@@ -12,7 +12,7 @@ const toEntity = (dataValues: any): UserEntity | object => {
 
 const toDatabase = (entity: UserEntity): any => {
 	if (!(entity.validate().valid))
-	return null;
+		return null;
 
 	return {
 		id: entity.getId(),

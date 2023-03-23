@@ -58,6 +58,7 @@ export default class User extends Entity {
 			email: this.email,
 		};
 	}
+
 	public setLogin(email: string, fullName: string) {
 		this.fullName = fullName;
 		this.email = email;
@@ -83,6 +84,7 @@ export default class User extends Entity {
 			fu: this.fu,
 		};
 	}
+
 	public setDocInfos(docValue: string, docType: string, fu: string) {
 		this.document = docValue;
 		this.docType = docType;

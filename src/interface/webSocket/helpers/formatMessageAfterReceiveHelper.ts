@@ -1,6 +1,6 @@
 
 export default () => ({
-	execute: (message = '{}') => {
+	execute: (message: any = '') => {
 		let msg = '';
 
 		if (typeof message === 'object')

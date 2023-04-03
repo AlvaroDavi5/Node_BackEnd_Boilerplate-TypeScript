@@ -49,8 +49,8 @@ $ yarn install
 2. Copy dotenv file  
 ```shell
 $ cp env/.env.development.local ./.env
+$ source ./.env
 ```
-
 3. Install AWS CLI  
 [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
@@ -105,3 +105,5 @@ $ yarn send-message # send message to queue
   * `/` - WebSocket Root Endpoint
   * `/api` - API Root Endpoint
   * `/api/docs` - API Documentation
+- [localhost:9000](`http://localhost:9000/`) - SonarQube Page
+

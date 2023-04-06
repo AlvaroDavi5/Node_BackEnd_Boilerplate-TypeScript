@@ -21,23 +21,26 @@ Node.js Domain-Driven Design Boilerplate with TypeScript for Back-End.
 
 ## Main technologies
 
-- Express: Robust tooling for HTTP servers.
+- JavaScript: Web programming laguage;
+- TypeScript: JavaScript superset for typing;
+- Node.js: JavaScript runtime;
+- Express: Robust tooling for HTTP servers;
+- Socket.io: WebSocket library;
 - AWS-SDK: A Node.js SDK to access AWS resources, such as:
-  - SQS: Queue management service;
-  - SNS: Topic notification service;
-  - S3: Files storage service;
-  - Cognito: Users authenticator service;
-- Sequelize: ORM for MySQL database.
-- MySQL: Relational database.
-- Redis: Cache and in-memory key-value NoSQL database.
-- Docker: Services isolation and process resources management with containers.
-- Winston: Custom logger with transports.
-- Morgan: HTTP request logger middleware used with winston.
-- Joi: Schema validator library.
-- Structure: A simple schema/attributes library, used for defining domain attributes.
-- Eslint: JavaScript linter.
-- Jest: Testing Framework.
-- Huksy: Git hook-listenner used to format the code and the commits.
+  * SQS: Queue management service;
+  * SNS: Topic notification service;
+  * S3: Files storage service;
+  * Cognito: Users authenticator service;
+- Sequelize: ORM for relational databases;
+- PostgreSQL: Relational database;
+- Redis: Cache and in-memory key-value NoSQL database;
+- Docker: Services isolation and process resources management with containers;
+- Winston: Custom logger with transports;
+- Morgan: HTTP request logger middleware used with winston;
+- Joi: Schema validator library;
+- Eslint: JavaScript/TypeScript linter;
+- Jest: Testing Framework;
+- Huksy: Git hook-listenner used to check tests, format the code and the commits;
 
 ### Install dependencies
 

@@ -4,7 +4,7 @@ import morgan from 'morgan';
 import { scopePerRequest } from 'awilix-express';
 import { LoggerStream } from 'src/infra/logging/logger';
 import { ConfigsInterface } from 'configs/configs';
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default class RestServer {

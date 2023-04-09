@@ -1,5 +1,5 @@
 import { Consumer } from 'sqs-consumer';
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default ({

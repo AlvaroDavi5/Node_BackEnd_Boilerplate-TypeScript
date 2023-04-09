@@ -1,6 +1,6 @@
 import { Request, Response, NextFunction } from 'express';
 import { ErrorInterface } from 'src/types/_errorInterface';
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default ({

@@ -5,14 +5,14 @@ import themesEnum from 'src/domain/enums/themesEnum';
 export default () =>
 	Joi.object().keys({
 		body: Joi.object().keys({
-			fullName: Joi.string().empty('').trim(),
-			email: Joi.string().email(),
-			password: Joi.string().empty('').trim().min(8),
-			phone: Joi.string().empty('').trim(),
-			docType: Joi.string().empty('').trim(),
-			document: Joi.string().empty('').trim(),
-			fu: Joi.string().empty('').trim().min(2),
-			imagePath: Joi.string().empty('').trim(),
-			defaultTheme: Joi.string().valid(...themesEnum.values()),
+			email: Joi.string().email().max(70).required(),
+			password: Joi.string().min(8).max(60).required(),
+			fullName: Joi.string().trim().max(100).required(),
+			phone: Joi.string().empty('').max(16).trim(),
+			docType: Joi.string().empty('').max(10).trim(),
+			document: Joi.string().empty('').max(18).trim(),
+			fu: Joi.string().empty('').trim().min(2).max(2),
+			imagePath: Joi.string().empty('').max(255).trim(),
+			defaultTheme: Joi.string().valid(...themesEnum.keys()).max(20),
 		}),
 	});

@@ -3,7 +3,7 @@ import UserEntity from 'src/domain/entities/User';
 import UsersModel from 'src/infra/database/models/Users';
 import userMapper from './userMapper';
 import { userQueryParamsBuilder, userQueryOptions } from './userQuery';
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default class UserRepository extends Repository {

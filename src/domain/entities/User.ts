@@ -49,6 +49,30 @@ export default class User extends Entity {
 		this.deletedBy = null;
 	}
 
+	toJSON() {
+		const data = {
+			id: this.id,
+			fullName: this.fullName,
+			email: this.email,
+			password: this.password,
+			phone: this.phone,
+			docType: this.docType,
+			document: this.document,
+			fu: this.fu,
+			preference: this.preference,
+			createdAt: this.createdAt,
+			updatedAt: this.updatedAt,
+			deletedAt: this.deletedAt,
+			deletedBy: this.deletedBy,
+		};
+
+		try {
+			return JSON.parse(JSON.stringify(data));
+		} catch (error) {
+			return null;
+		}
+	}
+
 	public getId(): number { return this.id; }
 	public setId(id: number) { this.id = id; }
 

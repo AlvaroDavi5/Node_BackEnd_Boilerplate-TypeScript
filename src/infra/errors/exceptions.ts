@@ -1,6 +1,6 @@
 import ExceptionGenerator from './exceptionGenerator';
 import exceptionsEnum from 'src/domain/enums/exceptionsEnum';
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 import { ErrorInterface } from 'src/types/_errorInterface';
 
 

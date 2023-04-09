@@ -29,6 +29,24 @@ export default class UserPreference extends Entity {
 		this.deletedAt = null;
 	}
 
+	toJSON() {
+		const data = {
+			id: this.id,
+			userId: this.userId,
+			imagePath: this.imagePath,
+			defaultTheme: this.defaultTheme,
+			createdAt: this.createdAt,
+			updatedAt: this.updatedAt,
+			deletedAt: this.deletedAt,
+		};
+
+		try {
+			return JSON.parse(JSON.stringify(data));
+		} catch (error) {
+			return null;
+		}
+	}
+
 	public getId(): number { return this.id; }
 	public setId(id: number) { this.id = id; }
 

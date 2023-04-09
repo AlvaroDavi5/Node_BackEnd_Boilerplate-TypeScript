@@ -1,4 +1,4 @@
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 import { userAuthType } from 'src/types/_userAuthInterface';
 
 

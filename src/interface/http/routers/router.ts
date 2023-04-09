@@ -1,7 +1,7 @@
 import express from 'express';
 import compression from 'compression';
 import handler from 'express-async-handler';
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default (ctx: ContainerInterface) => {

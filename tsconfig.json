@@ -15,7 +15,9 @@
 		"target": "ES6",
 		"lib": [
 			"ES6",
+			"DOM",
 		],
+		"types": [],
 		"jsx": "preserve",
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,

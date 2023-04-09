@@ -17,8 +17,10 @@ export default abstract class Entity {
 	}
 
 	toJSON() {
+		const data = {};
+
 		try {
-			return JSON.parse(JSON.stringify(this));
+			return JSON.parse(JSON.stringify(data));
 		} catch (error) {
 			return null;
 		}

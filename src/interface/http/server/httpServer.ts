@@ -1,7 +1,7 @@
 import { createServer, Server } from 'http';
 import { Logger } from 'winston';
 import { ConfigsInterface } from 'configs/configs';
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default class HttpServer {

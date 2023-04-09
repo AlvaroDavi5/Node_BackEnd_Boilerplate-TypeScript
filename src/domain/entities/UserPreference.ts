@@ -29,8 +29,8 @@ export default class UserPreference extends Entity {
 		this.deletedAt = null;
 	}
 
-	toJSON() {
-		const data = {
+	getAttributes() {
+		return {
 			id: this.id,
 			userId: this.userId,
 			imagePath: this.imagePath,
@@ -39,12 +39,6 @@ export default class UserPreference extends Entity {
 			updatedAt: this.updatedAt,
 			deletedAt: this.deletedAt,
 		};
-
-		try {
-			return JSON.parse(JSON.stringify(data));
-		} catch (error) {
-			return null;
-		}
 	}
 
 	public getId(): number { return this.id; }

@@ -49,8 +49,8 @@ export default class User extends Entity {
 		this.deletedBy = null;
 	}
 
-	toJSON() {
-		const data = {
+	getAttributes() {
+		return {
 			id: this.id,
 			fullName: this.fullName,
 			email: this.email,
@@ -65,12 +65,6 @@ export default class User extends Entity {
 			deletedAt: this.deletedAt,
 			deletedBy: this.deletedBy,
 		};
-
-		try {
-			return JSON.parse(JSON.stringify(data));
-		} catch (error) {
-			return null;
-		}
 	}
 
 	public getId(): number { return this.id; }

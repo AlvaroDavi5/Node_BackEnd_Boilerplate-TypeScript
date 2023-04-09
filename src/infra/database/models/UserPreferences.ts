@@ -56,7 +56,6 @@ UserPreferences.init(
 		sequelize: connection
 	}
 );
-// UserPreferences.associate();
 
 
 export default UserPreferences;

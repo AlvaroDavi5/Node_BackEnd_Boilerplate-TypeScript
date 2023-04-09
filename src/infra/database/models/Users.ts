@@ -77,7 +77,6 @@ Users.init(
 		sequelize: connection,
 	}
 );
-// Users.associate();
 
 
 export default Users;

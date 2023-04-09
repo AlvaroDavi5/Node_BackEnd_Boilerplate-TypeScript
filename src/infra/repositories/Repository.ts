@@ -4,7 +4,14 @@ import Entity from 'src/domain/entities/Entity';
 import { ExceptionInterface } from 'src/infra/errors/exceptions';
 
 
-class _RepositoryModel extends Model { }
+class _RepositoryModel extends Model {
+	static associate() {
+		this.hasOne(
+			_RepositoryModel,
+			{}
+		);
+	}
+}
 
 export default abstract class Repository {
 	public DomainEntity: typeof Entity;
@@ -38,6 +45,8 @@ export default abstract class Repository {
 		this.queryOptions = QueryOptions;
 		this.exceptions = exceptions;
 		this.logger = logger;
+
+		this.ResourceModel?.associate();
 	}
 
 	validatePayload(entity: any) {

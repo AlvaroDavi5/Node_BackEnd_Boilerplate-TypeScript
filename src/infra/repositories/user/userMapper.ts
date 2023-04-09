@@ -1,13 +1,17 @@
 import UserEntity from 'src/domain/entities/User';
 
 
-const toEntity = (dataValues: any): UserEntity | object => {
-	const userEntity = new UserEntity(dataValues);
+const toEntity = ({ dataValues }: any): UserEntity | object => {
+	const { preference } = dataValues;
+	dataValues.preference = preference.getAttributes();
+
+	const data = dataValues;
+	const userEntity = new UserEntity(data);
 
 	if (!(userEntity.validate().valid))
 		return {};
 
-	return userEntity;
+	return userEntity.getAttributes();
 };
 
 const toDatabase = (entity: UserEntity): any => {

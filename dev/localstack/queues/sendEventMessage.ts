@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import { v4 as uuidV4 } from 'uuid';
 import SqsClient from '../../../src/infra/integration/aws/SqsClient';
 import eventPayload from '../../../tests/support/integration/payloads/templates/EventPayload.json';
 dotenv.config();
@@ -14,9 +15,9 @@ export default ({ logger, configs }: any) => {
 	const queueUrl = process.env.AWS_SQS_DEFAULT_QUEUE_URL || 'http://localhost:4566/000000000000/DEFAULT_QUEUE';
 
 	const message = {
-		event: 'CREATE',
-		...eventPayload,
+		id: uuidV4(),
 		timestamp: new Date().toString(),
+		payload: eventPayload,
 	};
 
 	sqsClient.sendMessage(

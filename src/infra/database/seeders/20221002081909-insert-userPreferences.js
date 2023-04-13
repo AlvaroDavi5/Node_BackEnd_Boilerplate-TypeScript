@@ -5,8 +5,8 @@ module.exports = {
 		await queryInterface.bulkInsert('UserPreferences', [
 			{
 				userId: 1,
-				imagePath: './',
-				defaultTheme: '2',
+				imagePath: './generic.png',
+				defaultTheme: 'DARK',
 			}
 		], {});
 	},

@@ -48,7 +48,10 @@ UserPreferences.init(
 	{
 		userId: DataTypes.INTEGER,
 		imagePath: DataTypes.STRING(255),
-		defaultTheme: DataTypes.STRING(20)
+		defaultTheme: DataTypes.STRING(20),
+		createdAt: DataTypes.DATE,
+		updatedAt: DataTypes.DATE,
+		deletedAt: DataTypes.DATE,
 	},
 	{
 		modelName: 'UserPreferences',

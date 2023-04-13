@@ -2,11 +2,12 @@ import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default ({
-	listUsersService,
+	userPreferenceRepository,
 }: ContainerInterface) => ({
 	execute: async (data: any): Promise<any> => {
-		const usersList = await listUsersService.execute(data);
+		const { id, softDelete } = data;
 
-		return usersList;
+		const result = await userPreferenceRepository.deleteOne(Number(id), Boolean(softDelete));
+		return result;
 	}
 });

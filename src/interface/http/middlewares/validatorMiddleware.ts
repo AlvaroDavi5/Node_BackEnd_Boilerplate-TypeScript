@@ -13,8 +13,8 @@ const wrapperError = (error: any) => {
 const validate = (req: RequestInterface, schema: AnySchema) =>
 	schema.validate(req, {
 		abortEarly: false,
-		stripUnknown: true,
 		allowUnknown: true,
+		stripUnknown: true,
 	});
 
 const filterReceivedRequest = (req: RequestInterface, value: any) => {

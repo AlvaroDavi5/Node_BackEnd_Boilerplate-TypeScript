@@ -1,4 +1,4 @@
-import { Model, QueryTypes } from 'sequelize';
+import { Model, Op, QueryTypes } from 'sequelize';
 import { Logger } from 'winston';
 import Entity from 'src/domain/entities/Entity';
 import { ExceptionInterface } from 'src/infra/errors/exceptions';
@@ -34,7 +34,7 @@ export default abstract class Repository {
 		ResourceModel,
 		resourceMapper,
 		queryParamsBuilder,
-		QueryOptions,
+		queryOptions,
 		exceptions,
 		logger,
 	}: any) {
@@ -42,7 +42,7 @@ export default abstract class Repository {
 		this.ResourceModel = ResourceModel;
 		this.resourceMapper = resourceMapper;
 		this.queryParamsBuilder = queryParamsBuilder;
-		this.queryOptions = QueryOptions;
+		this.queryOptions = queryOptions;
 		this.exceptions = exceptions;
 		this.logger = logger;
 
@@ -53,7 +53,7 @@ export default abstract class Repository {
 		if (!(entity instanceof this.DomainEntity)) {
 			throw this.exceptions.contract({
 				message: 'ValidationError',
-				details: 'Invalid parameter type',
+				details: 'Invalid object',
 			});
 		}
 
@@ -155,29 +155,21 @@ export default abstract class Repository {
 
 
 	async deleteOne(id: number, softDelete = true, agentId: number | string | null = null) {
-		let result = null;
+		const where = {
+			id: Number(id),
+		};
 
+		let result = null;
 		if (softDelete) {
 			const timestamp = new Date();
-			result = await this.ResourceModel.update(
-				{
-					deletedAt: timestamp,
-					deletedBy: agentId,
-				},
-				{
-					where: {
-						id: id,
-					},
-				}
-			);
+			result = await this.ResourceModel.update({
+				deletedAt: timestamp,
+				deletedBy: agentId,
+			}, { where });
 		}
 		else {
-			result = await this.ResourceModel.findOne({
-				where: {
-					id: Number(id),
-				},
-			});
-			result = await result?.destroy();
+			const register = await this.ResourceModel.findByPk(id);
+			result = await register?.destroy();
 		}
 		if (!result) return;
 
@@ -185,8 +177,10 @@ export default abstract class Repository {
 	}
 
 	async deleteMany(ids: Array<number>, softDelete = true, agentId: number | string | null = null) {
-		let result = null;
+		const where: any = {};
+		where.id = { [Op.in]: ids };
 
+		let result = null;
 		if (softDelete) {
 			const timestamp = new Date();
 			result = await this.ResourceModel.update(
@@ -195,17 +189,13 @@ export default abstract class Repository {
 					deletedBy: agentId,
 				},
 				{
-					where: {
-						id: ids,
-					},
+					where,
 				}
 			);
 		}
 		else {
 			const registers = await this.ResourceModel.findAll({
-				where: {
-					id: ids,
-				}
+				where,
 			});
 			if (!registers) return;
 

@@ -49,7 +49,10 @@ export interface ConfigsInterface {
 		redis: {
 			port: string, // cache port
 			host: string, // cache host
-		}
+		},
+		expirationTime: {
+			connections: number // 1 day
+		},
 	},
 	// ? Third-Party Services
 	integration: {

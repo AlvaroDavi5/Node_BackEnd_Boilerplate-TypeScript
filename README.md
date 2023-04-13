@@ -109,4 +109,3 @@ $ yarn send-message # send message to queue
   * `/api` - API Root Endpoint
   * `/api/docs` - API Documentation
 - [localhost:9000](`http://localhost:9000/`) - SonarQube Page
-

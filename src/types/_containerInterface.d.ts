@@ -11,6 +11,7 @@ import RestServer from 'src/interface/http/server/restServer';
 import SqsClient from 'src/infra/integration/aws/SqsClient';
 import RestClient from 'src/infra/integration/rest/RestClient';
 import UserRepository from 'src/infra/repositories/user/UserRepository';
+import UserPreferenceRepository from 'src/infra/repositories/userPreference/UserPreferenceRepository';
 import { ConfigsInterface } from 'configs/configs';
 import WebSocketServer, { WebSocketServerInterface } from 'src/interface/webSocket/server/Server';
 import WebSocketClient from 'src/interface/webSocket/client/Client';
@@ -34,6 +35,7 @@ export interface ContainerInterface {
 	socketEventsRegister: (server: WebSocketServerInterface) => void,
 	webSocketClient: WebSocketClient,
 	userRepository: UserRepository,
+	userPreferenceRepository: UserPreferenceRepository,
 	redisClient: RedisClient,
 	sqsClient: SqsClient,
 	restClient: RestClient,

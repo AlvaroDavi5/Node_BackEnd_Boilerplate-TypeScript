@@ -34,6 +34,9 @@
 		"redis": {
 			"host": "$REDIS_HOST",
 			"port": "$REDIS_PORT"
+		},
+		"expirationTime": {
+			"connections": 86400
 		}
 	},
 	"integration": {

@@ -2,11 +2,12 @@ import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default ({
-	listUsersService,
+	userPreferenceRepository,
 }: ContainerInterface) => ({
 	execute: async (data: any): Promise<any> => {
-		const usersList = await listUsersService.execute(data);
+		const { id, ...dataValues } = data;
 
-		return usersList;
+		const result = await userPreferenceRepository.update(Number(id), dataValues);
+		return result;
 	}
 });

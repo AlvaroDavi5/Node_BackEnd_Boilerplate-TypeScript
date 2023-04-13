@@ -14,6 +14,7 @@ import Router from 'src/interface/http/routers/router';
 import SqsClient from 'src/infra/integration/aws/SqsClient';
 import RestClient from 'src/infra/integration/rest/RestClient';
 import UserRepository from 'src/infra/repositories/user/UserRepository';
+import UserPreferenceRepository from 'src/infra/repositories/userPreference/UserPreferenceRepository';
 import configs from 'configs/configs';
 import WebSocketServer from 'src/interface/webSocket/server/Server';
 import socketEventsRegister from 'src/interface/webSocket/events/socketEventsRegister';
@@ -50,6 +51,7 @@ container
 		sqsClient: asClass(SqsClient).singleton(),
 		restClient: asClass(RestClient).singleton(),
 		userRepository: asClass(UserRepository).singleton(),
+		userPreferenceRepository: asClass(UserPreferenceRepository).singleton(),
 		logger: asValue(logger),
 		loggerStream: asClass(LoggerStream).singleton(),
 		exceptions: asFunction(Exceptions).singleton(),

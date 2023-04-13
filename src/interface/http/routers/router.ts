@@ -24,7 +24,7 @@ export default (ctx: ContainerInterface) => {
 				query: request?.query,
 				params: request?.params,
 				body: request?.body,
-			});
+			}); // [METHOD]:CODE http://url/:param1/:param2?query1=X&query2=Y { "body": {} }
 	});
 
 	// application routes

@@ -1,5 +1,5 @@
 import Entity from './Entity';
-import { UserPreferenceInterface } from './UserPreference';
+import UserPreference from './UserPreference';
 
 
 export interface UserInterface {
@@ -11,7 +11,7 @@ export interface UserInterface {
 	docType: string,
 	document: string,
 	fu: string,
-	preference: UserPreferenceInterface,
+	preference: UserPreference,
 	createdAt: Date,
 	updatedAt: Date,
 	deletedAt: Date,
@@ -19,34 +19,35 @@ export interface UserInterface {
 }
 
 export default class User extends Entity {
-	private id!: number;
+	public id!: number;
 	public fullName!: string;
-	private email!: string;
+	public email!: string;
 	private password!: string;
-	private phone!: string;
+	public phone!: string;
 	public docType!: string;
-	private document!: string;
+	public document!: string;
 	public fu!: string;
-	public preference: UserPreferenceInterface;
-	public readonly createdAt!: Date;
+	public preference: UserPreference;
+	public createdAt!: Date;
 	public updatedAt!: Date | null;
 	public deletedAt!: Date | null;
-	private deletedBy!: string | null;
+	public deletedBy!: string | null;
 
-	constructor({ fullName, email, docType, document, fu, phone, preference }: UserInterface) {
+	constructor(dataValues: any) {
 		super();
-		this.fullName = fullName;
-		this.email = email;
-		this.docType = docType;
-		this.document = document;
-		this.fu = fu;
-		this.phone = phone;
-		this.preference = preference;
-		this.password = '';
-		this.createdAt = new Date();
-		this.updatedAt = null;
-		this.deletedAt = null;
-		this.deletedBy = null;
+		this.id = (dataValues?.id) ? dataValues.id : null;
+		this.fullName = (dataValues?.fullName) ? dataValues.fullName : null;
+		this.email = (dataValues?.email) ? dataValues.email : null;
+		this.password = (dataValues?.password) ? dataValues.password : null;
+		this.phone = (dataValues?.phone) ? dataValues.phone : null;
+		this.docType = (dataValues?.docType) ? dataValues.docType : null;
+		this.document = (dataValues?.document) ? dataValues.document : null;
+		this.fu = (dataValues?.fu) ? dataValues.fu : null;
+		this.preference = (dataValues?.preference) ? dataValues.preference : null;
+		this.createdAt = (dataValues?.createdAt) ? dataValues.createdAt : new Date();
+		this.updatedAt = (dataValues?.updatedAt) ? dataValues.updatedAt : null;
+		this.deletedAt = (dataValues?.deletedAt) ? dataValues.deletedAt : null;
+		this.deletedBy = (dataValues?.deletedBy) ? dataValues.deletedBy : null;
 	}
 
 	getAttributes() {
@@ -76,7 +77,6 @@ export default class User extends Entity {
 			email: this.email,
 		};
 	}
-
 	public setLogin(email: string, fullName: string) {
 		this.fullName = fullName;
 		this.email = email;
@@ -102,7 +102,6 @@ export default class User extends Entity {
 			fu: this.fu,
 		};
 	}
-
 	public setDocInfos(docValue: string, docType: string, fu: string) {
 		this.document = docValue;
 		this.docType = docType;
@@ -115,5 +114,9 @@ export default class User extends Entity {
 		this.deletedBy = agentId;
 		this.deletedAt = new Date();
 		this.updatedAt = new Date();
+	}
+
+	public setPreference(preference: UserPreference) {
+		this.preference = preference;
 	}
 }

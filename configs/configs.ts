@@ -62,8 +62,6 @@ export interface ConfigsInterface {
 				accessKeyId: string,
 				secretAccessKey: string,
 				sessionToken: string,
-				messageDeduplicationId: string,
-				messageGroupId: string,
 				apiVersion: string,
 			},
 			// * Authentication Service

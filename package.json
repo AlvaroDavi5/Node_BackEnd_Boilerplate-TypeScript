@@ -143,7 +143,6 @@
 		"@typescript-eslint/typescript-estree": "^5.50.0",
 		"@typescript-eslint/utils": "^5.50.0",
 		"babel-jest": "^29.4.1",
-		"child_process": "^1.0.2",
 		"commitizen": "^4.3.0",
 		"cz-conventional-changelog": "^3.3.0",
 		"eslint": "^8.33.0",

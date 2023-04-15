@@ -48,5 +48,5 @@ TODO*
 
 # --------- except ---------
 
-!/env/.env.development.local
+!/envs/.env.development.local
 !TODO-sample.txt

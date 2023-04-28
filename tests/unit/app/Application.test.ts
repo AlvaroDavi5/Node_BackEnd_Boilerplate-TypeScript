@@ -2,21 +2,26 @@ import Application from '../../../src/app/Application';
 
 
 describe('App :: Application', function () {
-	const webSocketServer: any = {},
-		httpServer: any = {},
-		eventsQueueConsumer: any = {},
-		syncCron: any = {},
-		logger: any = {},
+	const webSocketServer: any = {
+		start: jest.fn()
+	},
+		httpServer: any = {
+			start: jest.fn()
+		},
+		eventsQueueConsumer: any = {
+			start: jest.fn()
+		},
+		syncCron: any = {
+			start: jest.fn()
+		},
+		logger: any = {
+			info: jest.fn()
+		},
 		configs: any = {};
 	let app: any = null;
 
 	describe('# start with WebSocket server', () => {
 		beforeEach(() => {
-			webSocketServer.start = jest.fn();
-			httpServer.start = jest.fn();
-			eventsQueueConsumer.start = jest.fn();
-			syncCron.start = jest.fn();
-			logger.info = jest.fn();
 			configs.application = {
 				socketEnv: 'enabled',
 			};
@@ -40,11 +45,6 @@ describe('App :: Application', function () {
 	});
 	describe('# start without WebSocket server', () => {
 		beforeEach(() => {
-			webSocketServer.start = jest.fn();
-			httpServer.start = jest.fn();
-			eventsQueueConsumer.start = jest.fn();
-			syncCron.start = jest.fn();
-			logger.info = jest.fn();
 			configs.application = {};
 			app = new Application({
 				webSocketServer,

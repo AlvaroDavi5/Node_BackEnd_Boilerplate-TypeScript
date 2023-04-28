@@ -11,8 +11,8 @@ describe('Interface :: WebSocket :: Helpers :: FormatMessageAfterReceiveHelper',
 				age: 29,
 			};
 
-			const formatMessageAfterReceiveHelperResult = helper.execute(data);
-			expect(formatMessageAfterReceiveHelperResult).toEqual(data);
+			const formattedMessageAfterReceive = helper.execute(data);
+			expect(formattedMessageAfterReceive).toEqual(data);
 		});
 	});
 	describe('# execute with a stringified object', () => {
@@ -22,24 +22,24 @@ describe('Interface :: WebSocket :: Helpers :: FormatMessageAfterReceiveHelper',
 				age: 29,
 			};
 
-			const formatMessageAfterReceiveHelperResult = helper.execute('{"name":"tester","age":29}');
-			expect(formatMessageAfterReceiveHelperResult).toEqual(data);
+			const formattedMessageAfterReceive = helper.execute('{"name":"tester","age":29}');
+			expect(formattedMessageAfterReceive).toEqual(data);
 		});
 	});
 	describe('# execute with a string data', () => {
 		it('should return the same string', async () => {
 			const data = 'testing';
 
-			const formatMessageAfterReceiveHelperResult = helper.execute(data);
-			expect(formatMessageAfterReceiveHelperResult).toEqual('testing');
+			const formattedMessageAfterReceive = helper.execute(data);
+			expect(formattedMessageAfterReceive).toEqual('testing');
 		});
 	});
 	describe('# execute without message data', () => {
 		it('should return a empty string', async () => {
 			const data = undefined;
 
-			const formatMessageAfterReceiveHelperResult = helper.execute(data);
-			expect(formatMessageAfterReceiveHelperResult).toEqual('');
+			const formattedMessageAfterReceive = helper.execute(data);
+			expect(formattedMessageAfterReceive).toEqual('');
 		});
 	});
 });

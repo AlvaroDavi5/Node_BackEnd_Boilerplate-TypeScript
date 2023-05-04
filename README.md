@@ -21,23 +21,27 @@ Node.js Domain-Driven Design Boilerplate with TypeScript for Back-End.
 
 ## Main technologies
 
-- Express: Robust tooling for HTTP servers.
+- JavaScript: Web programming laguage;
+- TypeScript: JavaScript superset for typing;
+- Node.js: JavaScript runtime;
+- Express: Robust tooling for HTTP servers;
+- Socket.io: WebSocket library;
 - AWS-SDK: A Node.js SDK to access AWS resources, such as:
-  - SQS: Queue management service;
-  - SNS: Topic notification service;
-  - S3: Files storage service;
-  - Cognito: Users authenticator service;
-- Sequelize: ORM for MySQL database.
-- MySQL: Relational database.
-- Redis: Cache and in-memory key-value NoSQL database.
-- Docker: Services isolation and process resources management with containers.
-- Winston: Custom logger with transports.
-- Morgan: HTTP request logger middleware used with winston.
-- Joi: Schema validator library.
-- Structure: A simple schema/attributes library, used for defining domain attributes.
-- Eslint: JavaScript linter.
-- Jest: Testing Framework.
-- Huksy: Git hook-listenner used to format the code and the commits.
+  * SQS: Queue management service;
+  * SNS: Topic notification service;
+  * S3: Files storage service;
+  * Cognito: Users authenticator service;
+- Sequelize: ORM for relational databases;
+- PostgreSQL: Relational database;
+- Redis: Cache and in-memory key-value NoSQL database;
+- Docker: Services isolation and process resources management with containers;
+- SonarQube: Test coverage and code quality analyzer;
+- Winston: Custom logger with transports;
+- Morgan: HTTP request logger middleware used with winston;
+- Joi: Schema validator library;
+- Eslint: JavaScript/TypeScript linter;
+- Jest: Testing Framework;
+- Huksy: Git hook-listenner used to check tests, format the code and the commits;
 
 ### Install dependencies
 
@@ -46,34 +50,27 @@ Node.js Domain-Driven Design Boilerplate with TypeScript for Back-End.
 $ yarn install
 ```
 
-2. Copy dotenv file  
-```shell
-$ cp env/.env.development.local ./.env
-```
-
-3. Install AWS CLI  
+2. Install AWS CLI  
 [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
-4. Configure AWS CLI
+3. Configure AWS CLI
 ```shell
 $ aws configure
 > AWS Access Key ID [****]: mock
 > AWS Secret Access Key [****]: mock
 > Default region name [us-east-1]: us-east-1
-> Default output format [json]: table
+> Default output format [table]: json
 ```
 
 ## Environment Preparation
 
-Access the project root folder (with the `Dockerfile`) and run the following commands:
-
+1. Copy dotenv file  
 ```shell
-$ docker build . -t <service_name>:1
-$ docker images | grep <service_name>
-$ docker run -ti <service_name>:1
+$ cp env/.env.development.local ./.env # copy development local sample
+$ source ./.env # load envs on shell session
 ```
 
-And initialize the composefile (`docker-compose.yml`) available on project root folder.
+2. Initialize the composefile (`docker-compose.yml`) available on project root folder.
 
 ```shell
 $ docker-compose up -d # create and run all docker containers in background
@@ -101,7 +98,8 @@ $ yarn send-message # send message to queue
 
 ## Interface
 
-- [localhost:3000](`http://localhost:3000/`) - Node Application
+- [localhost:3000](`http://localhost:3000/`) - Node Application  
   * `/` - WebSocket Root Endpoint
   * `/api` - API Root Endpoint
   * `/api/docs` - API Documentation
+- [localhost:9000](`http://localhost:9000/`) - SonarQube Page  

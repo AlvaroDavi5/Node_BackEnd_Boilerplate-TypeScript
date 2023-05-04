@@ -3,7 +3,7 @@ import UserEntity from 'src/domain/entities/User';
 import UsersModel from 'src/infra/database/models/Users';
 import userMapper from './userMapper';
 import { userQueryParamsBuilder, userQueryOptions } from './userQuery';
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default class UserRepository extends Repository {
@@ -23,9 +23,23 @@ export default class UserRepository extends Repository {
 		});
 	}
 
-	async list(query?: any) {
+	async getById(id: number, restrictData = true) {
+		const userModel = (restrictData) ? this.ResourceModel.scope('withoutPassword') : this.ResourceModel;
+
+		const result = await userModel.findByPk(
+			id,
+			this.queryOptions,
+		);
+		if (!result) return;
+
+		return this.resourceMapper.toEntity(result);
+	}
+
+	async list(query?: any, restrictData = true) {
+		const userModel = (restrictData) ? this.ResourceModel.scope('withoutSensibleData') : this.ResourceModel;
 		const buildedQuery = this.queryParamsBuilder?.buildParams(query);
-		const { rows, count } = await this.ResourceModel.scope('withoutSensibleData').findAndCountAll(buildedQuery);
+
+		const { rows, count } = await userModel.findAndCountAll(buildedQuery);
 
 		const totalPages = Math.ceil(count / parseInt(query?.size)) || 1;
 		const pageNumber = parseInt(query?.page) || 0;

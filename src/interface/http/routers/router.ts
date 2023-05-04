@@ -1,7 +1,7 @@
 import express from 'express';
 import compression from 'compression';
 import handler from 'express-async-handler';
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default (ctx: ContainerInterface) => {
@@ -24,7 +24,7 @@ export default (ctx: ContainerInterface) => {
 				query: request?.query,
 				params: request?.params,
 				body: request?.body,
-			});
+			}); // [METHOD]:CODE http://url/:param1/:param2?query1=X&query2=Y { "body": {} }
 	});
 
 	// application routes

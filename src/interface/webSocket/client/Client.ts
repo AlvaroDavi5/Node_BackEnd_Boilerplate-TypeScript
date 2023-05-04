@@ -1,6 +1,6 @@
 import { io, Socket } from 'socket.io-client';
 import { Logger } from 'winston';
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 export interface WebSocketClientInterface {

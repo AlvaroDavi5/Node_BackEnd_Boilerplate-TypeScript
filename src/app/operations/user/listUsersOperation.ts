@@ -1,16 +1,12 @@
-import { ContainerInterface } from 'src/container';
-import { userAuthType } from 'src/types/_userAuthInterface';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default ({
 	listUsersService,
-	logger,
 }: ContainerInterface) => ({
-	execute: async (data: any, user?: userAuthType): Promise<any> => {
-		if (!user)
-			logger.warn('Invalid user!');
+	execute: async (data: any): Promise<any> => {
+		const usersList = await listUsersService.execute(data);
 
-		const result = await listUsersService.execute(data);
-		return result;
+		return usersList;
 	}
 });

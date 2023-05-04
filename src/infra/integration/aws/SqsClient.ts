@@ -7,7 +7,7 @@ import {
 	SendMessageCommand, ReceiveMessageCommand, DeleteMessageCommand,
 	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput, DeleteMessageCommandInput,
 } from '@aws-sdk/client-sqs';
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default class SqsClient {
@@ -21,8 +21,8 @@ export default class SqsClient {
 		configs,
 	}: ContainerInterface) {
 		const {
-			region, messageGroupId,
-			accessKeyId, secretAccessKey, sessionToken,
+			region, sessionToken,
+			accessKeyId, secretAccessKey,
 		} = configs.integration.aws.credentials;
 		const { endpoint, apiVersion } = configs.integration.aws.sqs;
 
@@ -37,7 +37,7 @@ export default class SqsClient {
 			},
 			logger: configs.application.logging === 'true' ? logger : undefined,
 		};
-		this.messageGroupId = messageGroupId || 'DefaultGroup';
+		this.messageGroupId = 'DefaultGroup';
 		this.sqs = new SQSClient(this.awsConfig);
 		this.logger = logger;
 	}
@@ -57,11 +57,14 @@ export default class SqsClient {
 	}
 
 	private _createParams(queueName: string): CreateQueueCommandInput {
+		const isFifoQueue: boolean = queueName?.includes('.fifo');
+
 		const params: CreateQueueCommandInput = {
 			QueueName: queueName,
 			Attributes: {
+				FifoQueue: String(isFifoQueue),
 				DelaySeconds: '10', // Unused in FIFO queues
-				MessageRetentionPeriod: '86400',
+				MessageRetentionPeriod: '7200',
 			}
 		};
 

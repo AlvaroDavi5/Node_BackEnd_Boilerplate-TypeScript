@@ -1,11 +1,17 @@
 import ExceptionGenerator from './exceptionGenerator';
 import exceptionsEnum from 'src/domain/enums/exceptionsEnum';
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 import { ErrorInterface } from 'src/types/_errorInterface';
 
 
 export interface ExceptionInterface {
-	[key: string]: (msg: ErrorInterface) => ExceptionGenerator,
+	contract: (msg: ErrorInterface) => ExceptionGenerator,
+	operation: (msg: ErrorInterface) => ExceptionGenerator,
+	business: (msg: ErrorInterface) => ExceptionGenerator,
+	unauthorized: (msg: ErrorInterface) => ExceptionGenerator,
+	notFound: (msg: ErrorInterface) => ExceptionGenerator,
+	integration: (msg: ErrorInterface) => ExceptionGenerator,
+	internal: (msg: ErrorInterface) => ExceptionGenerator,
 }
 
 export default ({
@@ -76,7 +82,7 @@ export default ({
 		const exception = new ExceptionGenerator(msg.message);
 
 		exception.setName('Integration');
-		exception.setCode(httpConstants.status.SERVICE_UNAVAILABLE);
+		exception.setCode(httpConstants.status.NOT_IMPLEMENTED);
 		exception.setErrorType(exceptionsEnum.INTEGRATION);
 		exception.setStack(msg.stack);
 		exception.setDetails(msg.details);

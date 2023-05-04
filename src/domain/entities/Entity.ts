@@ -16,11 +16,7 @@ export default abstract class Entity {
 		return { value, valid, error };
 	}
 
-	toJSON() {
-		try {
-			return JSON.parse(JSON.stringify(this));
-		} catch (error) {
-			return null;
-		}
+	getAttributes() {
+		return {};
 	}
 }

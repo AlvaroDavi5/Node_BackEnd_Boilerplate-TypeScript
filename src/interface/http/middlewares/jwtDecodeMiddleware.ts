@@ -1,5 +1,5 @@
 import jwt from 'jsonwebtoken';
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 import { RequestInterface, ResponseInterface, NextFunctionInterface } from 'src/types/_endpointInterface';
 
 

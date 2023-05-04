@@ -1,4 +1,4 @@
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 interface queueMessageInterface {
@@ -6,6 +6,7 @@ interface queueMessageInterface {
 }
 
 export default ({
+	emitEventOperation,
 	eventSchema,
 	exceptions,
 	logger,
@@ -27,7 +28,7 @@ export default ({
 					stack: error.stack,
 				});
 
-			logger.info(value);
+			emitEventOperation.execute(value);
 		} catch (error) {
 			logger.error(error);
 		}

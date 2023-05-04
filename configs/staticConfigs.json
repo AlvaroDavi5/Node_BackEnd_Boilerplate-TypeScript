@@ -34,6 +34,9 @@
 		"redis": {
 			"host": "$REDIS_HOST",
 			"port": "$REDIS_PORT"
+		},
+		"expirationTime": {
+			"connections": 86400
 		}
 	},
 	"integration": {
@@ -43,8 +46,6 @@
 				"accessKeyId": "$AWS_ACCESS_KEY_ID",
 				"secretAccessKey": "$AWS_SECRET_ACCESS_KEY",
 				"sessionToken": "$AWS_SESSION_TOKEN",
-				"messageDeduplicationId": "$AWS_MESSAGE_DEDUPLICATION_ID",
-				"messageGroupId": "$AWS_MESSAGE_GROUP_ID",
 				"apiVersion": "$AWS_API_VERSION"
 			},
 			"congito": {

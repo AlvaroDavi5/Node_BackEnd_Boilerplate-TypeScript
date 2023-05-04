@@ -1,21 +1,21 @@
 import webSocketEventsEnum from 'src/domain/enums/webSocketEventsEnum';
 import { WebSocketServerInterface } from 'src/interface/webSocket/server/Server';
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default ({
 	saveConnectionsService,
 	deleteConnectionsService,
-	logger,
 	formatMessageAfterReceiveHelper,
 	formatMessageBeforeSendHelper,
+	logger,
 }: ContainerInterface) => {
 
 	const register = (server: WebSocketServerInterface) => {
 		// listen connect event from client
 		server.on(
 			webSocketEventsEnum.CONNECT,
-			async (socket) => {
+			(socket) => {
 				logger.info(`Client connected: ${socket.id}`);
 				saveConnectionsService.execute(socket.id, {
 					connectionId: socket.id,
@@ -24,7 +24,7 @@ export default ({
 				// listen disconnect event from client
 				socket.on(
 					webSocketEventsEnum.DISCONNECT,
-					async (msg) => {
+					(msg) => {
 						logger.info(`Client disconnected: ${socket.id}`);
 						deleteConnectionsService.execute(socket.id);
 					},
@@ -33,11 +33,11 @@ export default ({
 				// listen reconnect event from client
 				socket.on(
 					webSocketEventsEnum.RECONNECT,
-					async (msg) => {
+					(msg) => {
 						logger.info(`Client reconnected: ${socket.id}`);
 						saveConnectionsService.execute(socket.id, {
-							connectionId: socket.id,
 							...formatMessageAfterReceiveHelper.execute(msg),
+							connectionId: socket.id,
 						});
 					},
 				);
@@ -45,7 +45,7 @@ export default ({
 				// listen broadcast order event from client
 				socket.on(
 					webSocketEventsEnum.BROADCAST,
-					async (msg) => {
+					(msg) => {
 						socket.broadcast.emit(webSocketEventsEnum.EMIT, msg); // emit to all clients, except the sender
 					},
 				);
@@ -53,7 +53,7 @@ export default ({
 				// listen emit privately order event from client
 				socket.on(
 					webSocketEventsEnum.EMIT_PRIVATE,
-					async (msg) => {
+					(msg) => {
 						msg = formatMessageAfterReceiveHelper.execute(msg);
 						const payload = formatMessageBeforeSendHelper.execute(msg?.payload);
 

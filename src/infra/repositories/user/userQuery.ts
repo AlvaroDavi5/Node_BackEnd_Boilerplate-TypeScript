@@ -4,16 +4,14 @@ import UserPreferences from 'src/infra/database/models/UserPreferences';
 import themesEnum from 'src/domain/enums/themesEnum';
 
 
-const _buildIncludeParams = (): Includeable[] => {
-	const includeParams: Includeable[] = [
+export const userQueryOptions: { include: Includeable[] } = {
+	include: [
 		{
 			model: UserPreferences,
 			association: Users.associations.preference,
 			as: 'preference',
 		},
-	];
-
-	return includeParams;
+	],
 };
 
 const _buildPaginationParams = ({ size, page, order, sort }: any): any => {
@@ -21,7 +19,7 @@ const _buildPaginationParams = ({ size, page, order, sort }: any): any => {
 
 	if (size !== undefined && page !== undefined) {
 		paginationParams.limit = parseInt(size) || 10;
-		paginationParams.offset = (parseInt(page) || 0) * size;
+		paginationParams.offset = (parseInt(page) || 0) * paginationParams.limit;
 	}
 
 	if (sort || order) {
@@ -43,12 +41,12 @@ const _buildWhereParams = ({
 	docType,
 	document,
 	fu,
-	preference: { defaultTheme },
+	preference,
 }: any): any => {
 	const where: any = {};
 
-	if (!selectSoftDeleted) {
-		where[Op.and] = [
+	if (selectSoftDeleted === true) {
+		where[Op.or] = [
 			{ deletedAt: { [Op.not]: null } },
 			{ deletedBy: { [Op.not]: null } },
 		];
@@ -68,44 +66,32 @@ const _buildWhereParams = ({
 	if (fullName) where.fullName = { [Op.eq]: fullName };
 	if (email) where.email = { [Op.like]: email };
 
-	if (defaultTheme) {
+	if (preference?.defaultTheme) {
 		where[Op.and] = [
 			{
 				'$preference.defaultTheme$': {
 					[Op.in]: themesEnum.values(),
 				},
 			},
-			{ '$preference.defaultTheme$': { [Op.is]: defaultTheme } },
+			{ '$preference.defaultTheme$': { [Op.is]: preference.defaultTheme } },
 		];
 	}
 
 	return where;
 };
 
-export const userQueryParamsBuilder = () => ({
+export const userQueryParamsBuilder = ({
 
 	buildParams: (data: any) => {
-
 		const where = _buildWhereParams(data);
 		const pagination = _buildPaginationParams(data);
-		const include = _buildIncludeParams();
 
 		return {
 			...pagination,
 			where,
 			subQuery: false,
 			distinct: true,
-			include,
+			...userQueryOptions,
 		};
 	}
 });
-
-export const userQueryOptions: { include: Includeable[] } = {
-	include: [
-		{
-			model: UserPreferences,
-			association: Users.associations.preference,
-			as: 'preference',
-		},
-	],
-};

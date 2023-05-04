@@ -28,6 +28,7 @@ module.exports = {
 	// An array of regexp pattern strings used to skip coverage collection
 	coveragePathIgnorePatterns: [
 		'src/container.ts',
+		'src/types/',
 		'src/domain/',
 		'src/infra/',
 		'src/interface/http/',

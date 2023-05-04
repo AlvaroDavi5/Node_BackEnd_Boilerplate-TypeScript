@@ -1,13 +1,18 @@
 import UserEntity from 'src/domain/entities/User';
+import userPreferenceMapper from '../userPreference/userPreferenceMapper';
 
 
-const toEntity = (dataValues: any): UserEntity | object => {
-	const userEntity = new UserEntity(dataValues);
+const toEntity = ({ dataValues }: any): UserEntity => {
+	const preference = {
+		...dataValues?.preference?.toJSON(),
+		userId: dataValues?.id,
+	};
 
-	if (!(userEntity.validate().valid))
-		return {};
+	const userPreference = userPreferenceMapper.toEntity({ dataValues: preference });
+	dataValues.preference = userPreference;
 
-	return userEntity;
+	const user = new UserEntity(dataValues);
+	return user;
 };
 
 const toDatabase = (entity: UserEntity): any => {
@@ -15,12 +20,10 @@ const toDatabase = (entity: UserEntity): any => {
 		return null;
 
 	return {
-		id: entity.getId(),
 		...entity.getLogin(),
 		password: entity.getPassword(),
 		phone: entity.getPhone(),
 		...entity.getDocInfos(),
-		preference: entity.preference,
 		createdAt: entity.createdAt,
 		updatedAt: entity.updatedAt,
 		deletedAt: entity.deletedAt,

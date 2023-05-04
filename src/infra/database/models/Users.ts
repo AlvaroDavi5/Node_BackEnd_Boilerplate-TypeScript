@@ -58,6 +58,10 @@ Users.init(
 		docType: DataTypes.STRING(10),
 		document: DataTypes.STRING(18),
 		fu: DataTypes.STRING(2),
+		createdAt: DataTypes.DATE,
+		updatedAt: DataTypes.DATE,
+		deletedAt: DataTypes.DATE,
+		deletedBy: DataTypes.STRING(256),
 	},
 	{
 		modelName: 'Users',
@@ -77,7 +81,6 @@ Users.init(
 		sequelize: connection,
 	}
 );
-// Users.associate();
 
 
 export default Users;

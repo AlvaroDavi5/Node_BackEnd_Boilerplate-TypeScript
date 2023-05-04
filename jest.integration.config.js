@@ -28,6 +28,7 @@ module.exports = {
 	// An array of regexp pattern strings used to skip coverage collection
 	coveragePathIgnorePatterns: [
 		'src/container.ts',
+		'src/types/',
 		'src/app/',
 		'src/domain/',
 		'src/infra/error',
@@ -172,7 +173,7 @@ module.exports = {
 	// testRegex: [],
 
 	// This option allows the use of a custom results processor
-	// testResultsProcessor: undefined,
+	testResultsProcessor: 'jest-sonar-reporter',
 
 	// This option allows use of a custom test runner
 	// testRunner: 'jasmine2',

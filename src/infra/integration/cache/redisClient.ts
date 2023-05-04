@@ -1,7 +1,7 @@
 import IORedis from 'ioredis';
 import { ScanStreamOptions } from 'ioredis/built/types';
 import { ExceptionInterface } from 'src/infra/errors/exceptions';
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default class RedisClient {

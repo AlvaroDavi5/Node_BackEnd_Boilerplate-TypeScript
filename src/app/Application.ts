@@ -3,7 +3,7 @@ import WebSocketServer from 'src/interface/webSocket/server/Server';
 import { Consumer } from 'sqs-consumer';
 import { ScheduledTask } from 'node-cron';
 import { Logger } from 'winston';
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default class Application {

@@ -1,6 +1,6 @@
 import cron from 'node-cron';
 import connection, { testConnection, syncConnection } from 'src/infra/database/connection';
-import { ContainerInterface } from 'src/container';
+import { ContainerInterface } from 'src/types/_containerInterface';
 
 
 export default ({

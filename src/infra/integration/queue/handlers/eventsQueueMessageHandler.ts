@@ -6,7 +6,7 @@ interface queueMessageInterface {
 }
 
 export default ({
-	emitEventOperation,
+	broadcastEventOperation,
 	eventSchema,
 	exceptions,
 	logger,
@@ -28,7 +28,7 @@ export default ({
 					stack: error.stack,
 				});
 
-			emitEventOperation.execute(value);
+			broadcastEventOperation.execute(value);
 		} catch (error) {
 			logger.error(error);
 		}

@@ -89,7 +89,9 @@ export default ({
 	},
 
 	get router() {
-		return Router()
+		const controllerRouter = Router();
+
+		return controllerRouter
 			.get(
 				'/',
 				validatorMiddleware(listUsersSchema),

@@ -43,7 +43,7 @@ export default class SqsClient {
 	}
 
 
-	private _formatMessageBeforeSend(message: any = {}) {
+	private _formatMessageBeforeSend(message: any = {}): string {
 		let msg = '';
 
 		try {

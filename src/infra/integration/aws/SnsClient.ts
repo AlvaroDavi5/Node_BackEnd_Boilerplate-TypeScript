@@ -5,7 +5,7 @@ import {
 	SNSClient, SNSClientConfig, Topic,
 	ListTopicsCommand, CreateTopicCommand, DeleteTopicCommand,
 	SubscribeCommand, UnsubscribeCommand, PublishCommand,
-	CreateTopicCommandInput, SubscribeCommandInput, PublishCommandInput
+	CreateTopicCommandInput, SubscribeCommandInput, PublishCommandInput,
 } from '@aws-sdk/client-sns';
 import { ContainerInterface } from 'src/types/_containerInterface';
 
@@ -80,7 +80,7 @@ export default class SnsClient {
 			TopicArn: topicArn,
 			Endpoint: String(endpoint),
 		};
-	};
+	}
 
 	private _publishParams(protocol: protocolType, topicArn: string, topicName: string, { message, subject, phoneNumber }: any): PublishCommandInput {
 		const isFifoTopic: boolean = topicName?.includes('.fifo');
@@ -94,20 +94,20 @@ export default class SnsClient {
 		};
 
 		switch (protocol) {
-			case 'email':
-				publishData.Subject = subject;
-				break;
-			case 'sms':
-				publishData.PhoneNumber = phoneNumber;
-				break;
-			default: // application | sqs | lambda | http(s)
-				publishData.TopicArn = topicArn;
-				publishData.TargetArn = topicArn;
-				break;
+		case 'email':
+			publishData.Subject = subject;
+			break;
+		case 'sms':
+			publishData.PhoneNumber = phoneNumber;
+			break;
+		default: // application | sqs | lambda | http(s)
+			publishData.TopicArn = topicArn;
+			publishData.TargetArn = topicArn;
+			break;
 		}
 
 		return publishData;
-	};
+	}
 
 	getClient(): SNSClient {
 		return this.sns;

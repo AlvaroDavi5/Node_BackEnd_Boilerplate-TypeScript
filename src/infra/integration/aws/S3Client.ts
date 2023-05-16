@@ -6,7 +6,7 @@ import { AWSError } from 'aws-sdk';
 import {
 	S3Client as S3AWSClient, S3ClientConfig, Bucket, NotificationConfiguration,
 	ListBucketsCommand, CreateBucketCommand, DeleteBucketCommand, PutBucketNotificationConfigurationCommand, UploadPartCommand, GetObjectCommand, DeleteObjectCommand,
-	CreateBucketCommandInput, PutBucketNotificationConfigurationCommandInput, UploadPartCommandInput, GetObjectCommandInput, DeleteObjectCommandInput,
+	UploadPartCommandInput, GetObjectCommandInput, DeleteObjectCommandInput,
 } from '@aws-sdk/client-s3';
 import { ContainerInterface } from 'src/types/_containerInterface';
 
@@ -43,26 +43,6 @@ export default class S3Client {
 		this.logger = logger;
 	}
 
-
-	private _createParams(bucketName: string): CreateBucketCommandInput {
-		const params: CreateBucketCommandInput = {
-			Bucket: bucketName,
-			CreateBucketConfiguration: {
-				LocationConstraint: this.region,
-			},
-		};
-
-		return params;
-	}
-
-	private _notificationConfigureParams(bucketName: string, configuration: NotificationConfiguration | undefined): PutBucketNotificationConfigurationCommandInput {
-		const params: PutBucketNotificationConfigurationCommandInput = {
-			Bucket: bucketName,
-			NotificationConfiguration: configuration,
-		};
-
-		return params;
-	}
 
 	private _uploadParams(bucketName: string, filePath: string): UploadPartCommandInput {
 
@@ -126,7 +106,12 @@ export default class S3Client {
 		let location = '';
 
 		try {
-			this.s3.send(new CreateBucketCommand(this._createParams(bucketName)), (err: AWSError, data) => {
+			this.s3.send(new CreateBucketCommand({
+				Bucket: bucketName,
+				CreateBucketConfiguration: {
+					LocationConstraint: this.region,
+				},
+			}), (err: AWSError, data) => {
 				if (err) {
 					this.logger.error('Create Error:', err);
 				}
@@ -164,7 +149,10 @@ export default class S3Client {
 		let httpStatusCode = 0;
 
 		try {
-			this.s3.send(new PutBucketNotificationConfigurationCommand(this._notificationConfigureParams(bucketName, configuration)), (err: AWSError, data) => {
+			this.s3.send(new PutBucketNotificationConfigurationCommand({
+				Bucket: bucketName,
+				NotificationConfiguration: configuration,
+			}), (err: AWSError, data) => {
 				if (err) {
 					this.logger.error('Configure Error:', err);
 				}

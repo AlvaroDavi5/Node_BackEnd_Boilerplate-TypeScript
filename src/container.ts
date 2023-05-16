@@ -12,6 +12,9 @@ import HttpServer from 'src/interface/http/server/httpServer';
 import RestServer from 'src/interface/http/server/restServer';
 import Router from 'src/interface/http/routers/router';
 import SqsClient from 'src/infra/integration/aws/SqsClient';
+import SnsClient from 'src/infra/integration/aws/SnsClient';
+import S3Client from 'src/infra/integration/aws/S3Client';
+import CognitoClient from 'src/infra/integration/aws/CognitoClient';
 import RestClient from 'src/infra/integration/rest/RestClient';
 import UserRepository from 'src/infra/repositories/user/UserRepository';
 import UserPreferenceRepository from 'src/infra/repositories/userPreference/UserPreferenceRepository';
@@ -49,6 +52,9 @@ container
 		syncCron: asFunction(syncCron).singleton(),
 		eventsQueueConsumer: asFunction(eventsQueueConsumer).singleton(),
 		sqsClient: asClass(SqsClient).singleton(),
+		SnsClient: asClass(SnsClient).singleton(),
+		S3Client: asClass(S3Client).singleton(),
+		CognitoClient: asClass(CognitoClient).singleton(),
 		restClient: asClass(RestClient).singleton(),
 		userRepository: asClass(UserRepository).singleton(),
 		userPreferenceRepository: asClass(UserPreferenceRepository).singleton(),

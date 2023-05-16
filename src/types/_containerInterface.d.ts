@@ -9,6 +9,9 @@ import Application from 'src/app/Application';
 import HttpServer from 'src/interface/http/server/httpServer';
 import RestServer from 'src/interface/http/server/restServer';
 import SqsClient from 'src/infra/integration/aws/SqsClient';
+import SnsClient from 'src/infra/integration/aws/SnsClient';
+import S3Client from 'src/infra/integration/aws/S3Client';
+import CognitoClient from 'src/infra/integration/aws/CognitoClient';
 import RestClient from 'src/infra/integration/rest/RestClient';
 import UserRepository from 'src/infra/repositories/user/UserRepository';
 import UserPreferenceRepository from 'src/infra/repositories/userPreference/UserPreferenceRepository';
@@ -38,6 +41,9 @@ export interface ContainerInterface {
 	userPreferenceRepository: UserPreferenceRepository,
 	redisClient: RedisClient,
 	sqsClient: SqsClient,
+	snsClient: SnsClient,
+	s3Client: S3Client,
+	cognitoClient: CognitoClient,
 	restClient: RestClient,
 	syncCron: ScheduledTask,
 	eventsQueueConsumer: Consumer,

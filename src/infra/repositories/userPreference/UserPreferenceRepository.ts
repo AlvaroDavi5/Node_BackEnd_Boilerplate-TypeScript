@@ -1,4 +1,4 @@
-import Repository from '../Repository';
+import Repository from '../AbstractRepository';
 import UserPreference from 'src/domain/entities/UserPreference';
 import UserPreferencesModel from 'src/infra/database/models/UserPreferences';
 import userPreferenceMapper from './userPreferenceMapper';

@@ -13,7 +13,7 @@ class _RepositoryModel extends Model {
 	}
 }
 
-export default abstract class Repository {
+export default abstract class AbstractRepository {
 	public DomainEntity: typeof Entity;
 	public ResourceModel: typeof _RepositoryModel;
 	public resourceMapper: {

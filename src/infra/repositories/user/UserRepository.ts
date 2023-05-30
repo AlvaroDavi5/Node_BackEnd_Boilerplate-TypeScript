@@ -1,4 +1,4 @@
-import Repository from '../Repository';
+import Repository from '../AbstractRepository';
 import UserEntity from 'src/domain/entities/User';
 import UsersModel from 'src/infra/database/models/Users';
 import userMapper from './userMapper';

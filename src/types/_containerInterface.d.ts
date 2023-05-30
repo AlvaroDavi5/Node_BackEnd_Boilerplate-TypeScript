@@ -18,7 +18,8 @@ import UserPreferenceRepository from 'src/infra/repositories/userPreference/User
 import { ConfigsInterface } from 'configs/configs';
 import WebSocketServer, { WebSocketServerInterface } from 'src/interface/webSocket/server/Server';
 import WebSocketClient from 'src/interface/webSocket/client/Client';
-import RedisClient from 'src/infra/integration/cache/redisClient';
+import eventsQueueProducer from 'src/infra/integration/queues/producers/eventsQueueProducer';
+import RedisClient from 'src/infra/cache/redisClient';
 import { LoggerStream } from 'src/infra/logging/logger';
 import { ExceptionInterface } from 'src/infra/errors/exceptions';
 import { HttpConstantsInteface } from 'src/interface/http/constants/httpConstants';
@@ -37,16 +38,17 @@ export interface ContainerInterface {
 	webSocketServer: WebSocketServer,
 	socketEventsRegister: (server: WebSocketServerInterface) => void,
 	webSocketClient: WebSocketClient,
+	redisClient: RedisClient,
+	syncCron: ScheduledTask,
 	userRepository: UserRepository,
 	userPreferenceRepository: UserPreferenceRepository,
-	redisClient: RedisClient,
+	eventsQueueConsumer: Consumer,
+	eventsQueueProducer: eventsQueueProducer,
 	sqsClient: SqsClient,
 	snsClient: SnsClient,
 	s3Client: S3Client,
 	cognitoClient: CognitoClient,
 	restClient: RestClient,
-	syncCron: ScheduledTask,
-	eventsQueueConsumer: Consumer,
 	eventSchema: AnySchema,
 	httpConstants: HttpConstantsInteface,
 	logger: Logger,

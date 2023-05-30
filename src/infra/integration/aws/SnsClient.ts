@@ -1,4 +1,4 @@
-import uuid from 'uuid';
+import { v4 as uuidV4 } from 'uuid';
 import { Logger } from 'winston';
 import { AWSError } from 'aws-sdk';
 import {
@@ -89,7 +89,7 @@ export default class SnsClient {
 		const publishData: PublishCommandInput = {
 			TopicArn: topicArn,
 			Message: messageBody,
-			MessageDeduplicationId: isFifoTopic ? uuid.v4() : undefined,
+			MessageDeduplicationId: isFifoTopic ? uuidV4() : undefined,
 			MessageGroupId: isFifoTopic ? this.messageGroupId : undefined, // Required for FIFO topics
 		};
 

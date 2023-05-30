@@ -7,7 +7,8 @@ import {
 // TODO: load all main modules
 import Application from 'src/app/Application';
 import syncCron from 'src/infra/cron/syncCron';
-import eventsQueueConsumer from 'src/infra/integration/queue/consumers/eventsQueueConsumer';
+import eventsQueueConsumer from 'src/infra/integration/queues/consumers/eventsQueueConsumer';
+import eventsQueueProducer from 'src/infra/integration/queues/producers/eventsQueueProducer';
 import HttpServer from 'src/interface/http/server/httpServer';
 import RestServer from 'src/interface/http/server/restServer';
 import Router from 'src/interface/http/routers/router';
@@ -22,7 +23,7 @@ import configs from 'configs/configs';
 import WebSocketServer from 'src/interface/webSocket/server/Server';
 import socketEventsRegister from 'src/interface/webSocket/events/socketEventsRegister';
 import WebSocketClient from 'src/interface/webSocket/client/Client';
-import RedisClient from 'src/infra/integration/cache/redisClient';
+import RedisClient from 'src/infra/cache/redisClient';
 import logger, { LoggerStream } from 'src/infra/logging/logger';
 import Exceptions from 'src/infra/errors/exceptions';
 
@@ -51,10 +52,11 @@ container
 		redisClient: asClass(RedisClient).singleton(),
 		syncCron: asFunction(syncCron).singleton(),
 		eventsQueueConsumer: asFunction(eventsQueueConsumer).singleton(),
+		eventsQueueProducer: asClass(eventsQueueProducer).singleton(),
 		sqsClient: asClass(SqsClient).singleton(),
-		SnsClient: asClass(SnsClient).singleton(),
-		S3Client: asClass(S3Client).singleton(),
-		CognitoClient: asClass(CognitoClient).singleton(),
+		snsClient: asClass(SnsClient).singleton(),
+		s3Client: asClass(S3Client).singleton(),
+		cognitoClient: asClass(CognitoClient).singleton(),
 		restClient: asClass(RestClient).singleton(),
 		userRepository: asClass(UserRepository).singleton(),
 		userPreferenceRepository: asClass(UserPreferenceRepository).singleton(),
@@ -71,8 +73,8 @@ container
 			'src/app/operations/**/*.ts',
 			'src/app/services/**/*.ts',
 			'src/app/strategies/**/*.ts',
-			'src/infra/integration/queue/handlers/**/*.ts',
-			'src/infra/integration/queue/helpers/**/*.ts',
+			'src/infra/integration/queues/handlers/**/*.ts',
+			'src/infra/integration/queues/helpers/**/*.ts',
 			'src/infra/providers/**/*.ts',
 			'src/infra/security/**/*.ts',
 			'src/interface/http/constants/**/*.ts',

@@ -39,7 +39,7 @@ export default class Application {
 		this.logger.info('Sync cron started');
 	}
 
-	startQueueConsumers() {
+	startConsumers() {
 		this.eventsQueueConsumer.start();
 		this.logger.info('Events queue consumer started');
 	}
@@ -53,6 +53,6 @@ export default class Application {
 
 		// Background Services
 		this.startCrons();
-		this.startQueueConsumers();
+		this.startConsumers();
 	}
 }

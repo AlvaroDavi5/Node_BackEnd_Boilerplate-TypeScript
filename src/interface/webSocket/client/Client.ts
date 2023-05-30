@@ -63,7 +63,7 @@ export default class WebSocketClient {
 
 	// listen/ignore event messages from the server
 	listen(event: string, callback: any) {
-		this.logger.info('Listenned event from the WebSocket server');
+		this.logger.info(`Listenned event '${event}' from the WebSocket server`);
 
 		this.clientSocket?.on(
 			String(event),
@@ -72,7 +72,7 @@ export default class WebSocketClient {
 	}
 
 	ignore(event: string, callback: any) {
-		this.logger.info('Ignored event from the WebSocket server');
+		this.logger.info(`Ignored event '${event}' from the WebSocket server`);
 
 		this.clientSocket?.off(
 			String(event),

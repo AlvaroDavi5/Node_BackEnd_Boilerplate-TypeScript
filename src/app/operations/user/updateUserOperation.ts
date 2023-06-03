@@ -5,6 +5,7 @@ import { userAuthType } from 'src/types/_userAuthInterface';
 
 
 export default ({
+	userManageAuthStrategy,
 	updateUserService,
 	updateUserPreferenceService,
 	getUserService,
@@ -23,6 +24,12 @@ export default ({
 		if (!user || !preference)
 			throw exceptions.operation({
 				message: 'User or preference not found!'
+			});
+
+		const isAllowedToUpdateUser: boolean = userManageAuthStrategy.execute(user, userAgent);
+		if (!isAllowedToUpdateUser)
+			throw exceptions.unauthorized({
+				message: 'userAgent not allowed to execute this action'
 			});
 
 		const updatedPreference = await updateUserPreferenceService.execute({

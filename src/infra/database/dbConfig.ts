@@ -53,11 +53,6 @@ const config: DatabaseConfigInterface = {
 	host: process.env.DB_HOST || 'localhost',
 	charset: 'utf8',
 	dialect: getDialect(process.env.DB_DBMS_NAME || 'postgres'),
-	dialectOptions: {
-		ssl: {
-			rejectUnauthorized: false,
-		}
-	},
 	port: parseInt(process.env.DB_PORT || '5432'),
 	define: {
 		underscored: false,

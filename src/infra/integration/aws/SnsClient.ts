@@ -16,9 +16,9 @@ export type protocolType = 'email' | 'sms' | 'http' | 'https' | 'sqs' | 'lambda'
 
 @Injectable()
 export default class SnsClient {
-	private awsConfig: SNSClientConfig;
-	private messageGroupId: string;
-	private sns: SNSClient;
+	private readonly awsConfig: SNSClientConfig;
+	private readonly messageGroupId: string;
+	private readonly sns: SNSClient;
 	private readonly logger: Logger;
 
 	constructor(

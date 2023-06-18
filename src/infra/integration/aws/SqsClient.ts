@@ -15,9 +15,9 @@ import LoggerGenerator from '@infra/logging/logger';
 
 @Injectable()
 export default class SqsClient {
-	private awsConfig: SQSClientConfig;
-	private messageGroupId: string;
-	private sqs: SQSClient;
+	private readonly awsConfig: SQSClientConfig;
+	private readonly messageGroupId: string;
+	private readonly sqs: SQSClient;
 	private readonly logger: Logger;
 
 	constructor(

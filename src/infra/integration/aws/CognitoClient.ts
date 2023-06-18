@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from 'winston';
-import { AWSError } from 'aws-sdk';
 import {
 	CognitoIdentityProviderClient, CognitoIdentityProviderClientConfig, UserPoolDescriptionType,
 	ListUserPoolsCommand, CreateUserPoolCommand, DeleteUserPoolCommand, CreateUserPoolClientCommand, DeleteUserPoolClientCommand, AdminCreateUserCommand, AdminGetUserCommand, AdminDeleteUserCommand, SignUpCommand, AdminConfirmSignUpCommand,
@@ -13,11 +12,11 @@ import LoggerGenerator from '@infra/logging/logger';
 
 @Injectable()
 export default class CognitoClient {
-	private awsConfig: CognitoIdentityProviderClientConfig;
-	private userPoolName: string;
-	private userPoolId: string;
-	private clientId: string;
-	private cognito: CognitoIdentityProviderClient;
+	private readonly awsConfig: CognitoIdentityProviderClientConfig;
+	private readonly userPoolName: string;
+	private readonly userPoolId: string;
+	private readonly clientId: string;
+	private readonly cognito: CognitoIdentityProviderClient;
 	private readonly logger: Logger;
 
 	constructor(

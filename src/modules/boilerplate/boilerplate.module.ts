@@ -1,4 +1,5 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import LoggerMiddleware from '@modules/boilerplate/interface/http/middlewares/LoggerMiddleware';
 import JwtDecodeMiddleware from '@modules/boilerplate/interface/http/middlewares/JwtDecodeMiddleware';
 import DefaultController from '@modules/boilerplate/interface/http/controllers/DefaultController';
 import UserController from '@modules/boilerplate/interface/http/controllers/UserController';
@@ -29,6 +30,8 @@ import UserPreferenceRepository from '@modules/boilerplate/infra/repositories/us
 export default class BoilerplateModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
 		consumer
+			.apply(LoggerMiddleware)
+			.forRoutes(DefaultController, UserController)
 			.apply(JwtDecodeMiddleware)
 			.forRoutes(UserController);
 	}

@@ -6,11 +6,6 @@ module.exports = {
 	host: process.env.DB_HOST,
 	charset: 'utf8',
 	dialect: process.env.DB_DBMS_NAME,
-	dialectOptions: {
-		ssl: {
-			rejectUnauthorized: false,
-		}
-	},
 	port: process.env.DB_PORT,
 	define: {
 		underscored: false,

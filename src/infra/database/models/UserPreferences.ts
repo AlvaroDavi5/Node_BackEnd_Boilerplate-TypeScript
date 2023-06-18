@@ -1,6 +1,6 @@
 import { Model, DataTypes, Association, HasOneGetAssociationMixin, HasManyHasAssociationMixin } from 'sequelize';
 import Users from './Users';
-import connection from 'src/infra/database/connection';
+import connection from '@infra/database/connection';
 
 
 class UserPreferences extends Model {
@@ -10,8 +10,8 @@ class UserPreferences extends Model {
 	private imagePath!: string;
 	public defaultTheme!: string;
 	public readonly createdAt!: Date;
-	public updatedAt!: Date;
-	public deletedAt!: Date;
+	public updatedAt!: Date | null;
+	public deletedAt!: Date | null;
 
 	/**
 	 * ?    Association Method

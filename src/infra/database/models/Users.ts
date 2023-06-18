@@ -1,6 +1,6 @@
 import { Model, DataTypes, Association, HasOneGetAssociationMixin, HasManyHasAssociationMixin } from 'sequelize';
 import UserPreferences from './UserPreferences';
-import connection from 'src/infra/database/connection';
+import connection from '@infra/database/connection';
 
 
 class Users extends Model {
@@ -14,9 +14,9 @@ class Users extends Model {
 	private document!: string;
 	public fu!: string;
 	public readonly createdAt!: Date;
-	public updatedAt!: Date;
-	public deletedAt!: Date;
-	private deletedBy!: string;
+	public updatedAt!: Date | null;
+	public deletedAt!: Date | null;
+	private deletedBy!: string | null;
 
 	/**
 	 * ?    Association Method

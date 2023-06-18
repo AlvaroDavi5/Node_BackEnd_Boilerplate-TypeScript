@@ -2,13 +2,21 @@ import { NestFactory } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import ContainerModule from './container.module';
-import exceptionsEnum from './domain/enums/exceptionsEnum';
-import { ErrorInterface } from './types/_errorInterface';
+import CoreModule from './core.module';
+import { ExceptionsEnum } from '@infra/errors/exceptionsEnum';
+import { ErrorInterface } from 'src/types/_errorInterface';
 
 
 async function startNestApplication() {
-	const nestApp = await NestFactory.create(ContainerModule);
+	const nestApp = await NestFactory.create(CoreModule);
+	nestApp.setGlobalPrefix('api');
+	nestApp.useGlobalPipes(
+		new ValidationPipe({
+			whitelist: true,
+			forbidNonWhitelisted: true,
+			transform: true,
+		}),
+	);
 
 	const config = new DocumentBuilder()
 		.setTitle('Node DDD Back-End Boilerplate')
@@ -22,20 +30,11 @@ async function startNestApplication() {
 		},
 	});
 
-	nestApp.setGlobalPrefix('api');
-	nestApp.useGlobalPipes(
-		new ValidationPipe({
-			whitelist: true,
-			forbidNonWhitelisted: true,
-			transform: true,
-		}),
-	);
-
 	const { port } = nestApp.get(ConfigService).get('application');
 	await nestApp.listen(Number(port)).catch((error: ErrorInterface) => {
-		const knowExceptions = exceptionsEnum.values();
+		const knowExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
 
-		if (!knowExceptions?.includes(String(error.errorType))) {
+		if (error?.name && !knowExceptions.includes(error?.name)) {
 			const err = new Error(`${error.message}`);
 			err.name = error.name || err.name;
 			err.stack = error.stack;

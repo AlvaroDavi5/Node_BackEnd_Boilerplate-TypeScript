@@ -1,55 +1,58 @@
-import { createLogger, transports, format } from 'winston';
-import configs from 'configs/configs';
+import { createLogger, transports, format, Logger } from 'winston';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { ConfigsInterface } from '@configs/configs';
 
 
-const logsFilePath = configs.application.logsPath || './logs/logs.log';
-const serviceName = configs.application.name || 'Node Boilerplate';
+@Injectable()
+export default class LoggerGenerator {
+	constructor(
+		private readonly configService: ConfigService,
+	) { }
 
-const defaultMessageFormatter = format.printf(msg => {
-	const { level, timestamp, message, stack } = msg;
-	let log = typeof message === 'object'
-		? JSON.stringify(msg.message)
-		: message;
+	private readonly applicationConfigs: ConfigsInterface['application'] = this.configService.get<any>('application');
 
-	if (stack) {
-		log = stack;
-	}
+	private readonly defaultMessageFormatter = format.printf(msg => {
+		const { level, timestamp, message, stack } = msg;
+		let log = typeof message === 'object'
+			? JSON.stringify(msg.message)
+			: message;
 
-	return `${timestamp} | ${level}: ${log}`;
-});
-const defaultFormat = format.combine(
-	format.timestamp(),
-	format.errors({ stack: false }),
-	defaultMessageFormatter,
-);
+		if (stack) {
+			log = stack;
+		}
 
-const options = {
-	format: format.combine(
-		defaultFormat,
-		format.json(),
-	),
-	defaultMeta: {
-		service: serviceName,
-		env: process.env.NODE_ENV,
-	},
-	transports: [
-		new transports.Console({
-			format: format.combine(
-				format.colorize(),
-				defaultFormat,
-			),
-		}),
-		new transports.File({ filename: logsFilePath }),
-	],
-	exitOnError: false,
-};
+		return `${timestamp} | ${level}: ${log}`;
+	});
 
+	private readonly defaultFormat = format.combine(
+		format.timestamp(),
+		format.errors({ stack: false }),
+		this.defaultMessageFormatter,
+	);
 
-const logger = createLogger(options);
-export class LoggerStream {
-	write(message: string): void {
-		logger.info(message.substring(0, message.lastIndexOf('\n')));
+	private readonly loggerOptions = {
+		format: format.combine(
+			this.defaultFormat,
+			format.json(),
+		),
+		defaultMeta: {
+			service: this.applicationConfigs?.name || 'Node Boilerplate',
+			env: this.applicationConfigs?.environment || 'dev',
+		},
+		transports: [
+			new transports.Console({
+				format: format.combine(
+					format.colorize(),
+					this.defaultFormat,
+				),
+			}),
+			new transports.File({ filename: this.applicationConfigs?.logsPath || './logs/logs.log' }),
+		],
+		exitOnError: false,
+	};
+
+	getLogger(): Logger {
+		return createLogger(this.loggerOptions);
 	}
 }
-
-export default logger;

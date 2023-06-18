@@ -1,5 +1,7 @@
-import { v4 as uuidV4 } from 'uuid';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Logger } from 'winston';
+import { v4 as uuidV4 } from 'uuid';
 import { AWSError } from 'aws-sdk';
 import {
 	SQSClient, SQSClientConfig, Message,
@@ -7,39 +9,43 @@ import {
 	SendMessageCommand, ReceiveMessageCommand, DeleteMessageCommand,
 	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput, DeleteMessageCommandInput,
 } from '@aws-sdk/client-sqs';
-import { ContainerInterface } from 'src/types/_containerInterface';
+import { ConfigsInterface } from '@configs/configs';
+import LoggerGenerator from '@infra/logging/logger';
 
 
+@Injectable()
 export default class SqsClient {
 	private awsConfig: SQSClientConfig;
 	private messageGroupId: string;
 	private sqs: SQSClient;
-	private logger: Logger;
+	private readonly logger: Logger;
 
-	constructor({
-		logger,
-		configs,
-	}: ContainerInterface) {
+	constructor(
+		private readonly configService: ConfigService,
+		private readonly loggerGenerator: LoggerGenerator,
+	) {
+		this.logger = this.loggerGenerator.getLogger();
+		const awsConfigs: ConfigsInterface['integration']['aws'] = this.configService.get<any>('integration.aws');
+		const logging: ConfigsInterface['application']['logging'] = this.configService.get<any>('application.logging');
 		const {
 			region, sessionToken,
 			accessKeyId, secretAccessKey,
-		} = configs.integration.aws.credentials;
-		const { endpoint, apiVersion } = configs.integration.aws.sqs;
+		} = awsConfigs.credentials;
+		const { endpoint, apiVersion } = awsConfigs.sqs;
 
 		this.awsConfig = {
 			endpoint,
 			region,
 			apiVersion,
 			credentials: {
-				accessKeyId,
-				secretAccessKey,
+				accessKeyId: String(accessKeyId),
+				secretAccessKey: String(secretAccessKey),
 				sessionToken,
 			},
-			logger: configs.application.logging === 'true' ? logger : undefined,
+			logger: logging === 'true' ? this.logger : undefined,
 		};
 		this.messageGroupId = 'DefaultGroup';
 		this.sqs = new SQSClient(this.awsConfig);
-		this.logger = logger;
 	}
 
 
@@ -116,18 +122,13 @@ export default class SqsClient {
 		let list: string[] = [];
 
 		try {
-			this.sqs.send(new ListQueuesCommand({
+			const result = await this.sqs.send(new ListQueuesCommand({
 				MaxResults: 200,
-			}), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('List Error:', err);
-				}
-				else {
-					list = data?.QueueUrls || [];
-				}
-			});
+			}));
+			if (result?.QueueUrls)
+				list = result.QueueUrls;
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('List Error:', error);
 		}
 
 		return list;
@@ -137,18 +138,13 @@ export default class SqsClient {
 		let queueUrl = '';
 
 		try {
-			this.sqs.send(new CreateQueueCommand(
+			const result = await this.sqs.send(new CreateQueueCommand(
 				this._createParams(queueName)
-			), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('Create Error:', err);
-				}
-				else {
-					queueUrl = data?.QueueUrl || '';
-				}
-			});
+			));
+			if (result?.QueueUrl)
+				queueUrl = result.QueueUrl;
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('Create Error:', error);
 		}
 
 		return queueUrl;
@@ -158,18 +154,13 @@ export default class SqsClient {
 		let isDeleted = false;
 
 		try {
-			this.sqs.send(new DeleteQueueCommand({
+			const result = await this.sqs.send(new DeleteQueueCommand({
 				QueueUrl: queueUrl,
-			}), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('Delete Error:', err);
-				}
-				else {
-					isDeleted = true;
-				}
-			});
+			}));
+			if (result.$metadata?.httpStatusCode && String(result.$metadata?.httpStatusCode)[2] === '2')
+				isDeleted = true;
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('Delete Error:', error);
 		}
 
 		return isDeleted;
@@ -179,18 +170,13 @@ export default class SqsClient {
 		let messageId = '';
 
 		try {
-			this.sqs.send(new SendMessageCommand(
+			const result = await this.sqs.send(new SendMessageCommand(
 				this._msgParams(queueUrl, message, title, author)
-			), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('Send Error:', err);
-				}
-				else {
-					messageId = data?.MessageId || '';
-				}
-			});
+			));
+			if (result?.MessageId)
+				messageId = result.MessageId;
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('Send Error:', error);
 		}
 
 		return messageId;
@@ -200,37 +186,31 @@ export default class SqsClient {
 		const messages: Array<Message> = [];
 
 		try {
-			this.sqs.send(new ReceiveMessageCommand(
+			const result = await this.sqs.send(new ReceiveMessageCommand(
 				this._receiveParam(queueUrl)
-			), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('Receive Error:', err);
-				}
-				else if (data?.Messages) {
-					this.logger.info(`Messages (${Array(data?.Messages).length}):`);
+			));
+			if (result?.Messages) {
+				for (const message of result?.Messages) {
+					messages.push(message);
 
-					for (const message of data?.Messages) {
-						messages.push(message);
-
-						const deleteParams: DeleteMessageCommandInput = {
-							QueueUrl: queueUrl,
-							ReceiptHandle: `${message?.ReceiptHandle}`,
-						};
-						this.sqs.send(new DeleteMessageCommand(
-							deleteParams
-						), (err: AWSError, data) => {
-							if (err) {
-								this.logger.error('Error to Delete Message:', err);
-							}
-							else {
-								this.logger.info('Message Deleted:', { queueUrl, requestId: data?.$metadata?.requestId });
-							}
-						});
-					}
+					const deleteParams: DeleteMessageCommandInput = {
+						QueueUrl: queueUrl,
+						ReceiptHandle: `${message?.ReceiptHandle}`,
+					};
+					this.sqs.send(new DeleteMessageCommand(
+						deleteParams
+					), (err: AWSError, data) => {
+						if (err) {
+							this.logger.error('Error to Delete Message:', err);
+						}
+						else {
+							this.logger.info('Message Deleted:', { queueUrl, requestId: data?.$metadata?.requestId });
+						}
+					});
 				}
-			});
+			}
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('Receive Error:', error);
 		}
 
 		return messages;

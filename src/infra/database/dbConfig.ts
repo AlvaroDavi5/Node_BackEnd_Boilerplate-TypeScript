@@ -1,5 +1,4 @@
 import { Options, BuildOptions, Dialect } from 'sequelize/types';
-import configs from 'configs/configs';
 
 
 function getDialect(dialect: string): Dialect {
@@ -48,11 +47,31 @@ export interface DatabaseConfigInterface {
 }
 
 const config: DatabaseConfigInterface = {
-	...configs.database,
-	dialect: getDialect(`${configs.database.dialect}`),
-	port: parseInt(configs.database.port),
-	logging: configs.application.logging === 'true' ? console.log : false,
+	database: process.env.DB_NAME || 'db_postgres',
+	username: process.env.DB_USERNAME || 'postgres',
+	password: process.env.DB_PASSWORD || 'pass',
+	host: process.env.DB_HOST || 'localhost',
+	charset: 'utf8',
+	dialect: getDialect(process.env.DB_DBMS_NAME || 'postgres'),
+	dialectOptions: {
+		ssl: {
+			rejectUnauthorized: false,
+		}
+	},
+	port: parseInt(process.env.DB_PORT || '5432'),
+	define: {
+		underscored: false,
+		timestamps: true,
+		paranoid: true,
+		freezeTableName: false,
+	},
+	pool: {
+		min: 0,
+		max: 5,
+		acquire: 20000,
+		idle: 20000,
+	},
+	logging: process.env.SHOW_LOGS === 'true' ? console.log : false,
 };
-
 
 export default config;

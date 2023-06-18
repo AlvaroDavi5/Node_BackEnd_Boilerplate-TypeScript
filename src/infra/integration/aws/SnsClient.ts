@@ -1,47 +1,52 @@
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { v4 as uuidV4 } from 'uuid';
 import { Logger } from 'winston';
-import { AWSError } from 'aws-sdk';
 import {
 	SNSClient, SNSClientConfig, Topic,
 	ListTopicsCommand, CreateTopicCommand, DeleteTopicCommand,
 	SubscribeCommand, UnsubscribeCommand, PublishCommand,
 	CreateTopicCommandInput, SubscribeCommandInput, PublishCommandInput,
 } from '@aws-sdk/client-sns';
-import { ContainerInterface } from 'src/types/_containerInterface';
+import { ConfigsInterface } from '@configs/configs';
+import LoggerGenerator from '@infra/logging/logger';
 
 
 export type protocolType = 'email' | 'sms' | 'http' | 'https' | 'sqs' | 'lambda' | 'application'
 
+@Injectable()
 export default class SnsClient {
 	private awsConfig: SNSClientConfig;
 	private messageGroupId: string;
 	private sns: SNSClient;
-	private logger: Logger;
+	private readonly logger: Logger;
 
-	constructor({
-		logger,
-		configs,
-	}: ContainerInterface) {
+	constructor(
+		private readonly configService: ConfigService,
+		private readonly loggerGenerator: LoggerGenerator,
+	) {
+		this.logger = this.loggerGenerator.getLogger();
+		const awsConfigs: ConfigsInterface['integration']['aws'] = this.configService.get<any>('integration.aws');
+		const logging: ConfigsInterface['application']['logging'] = this.configService.get<any>('application.logging');
 		const {
 			region, sessionToken,
 			accessKeyId, secretAccessKey,
-		} = configs.integration.aws.credentials;
-		const { endpoint, apiVersion } = configs.integration.aws.sns;
+		} = awsConfigs.credentials;
+		const { endpoint, apiVersion } = awsConfigs.sns;
 
 		this.awsConfig = {
 			endpoint,
 			region,
 			apiVersion,
 			credentials: {
-				accessKeyId,
-				secretAccessKey,
+				accessKeyId: String(accessKeyId),
+				secretAccessKey: String(secretAccessKey),
 				sessionToken,
 			},
-			logger: configs.application.logging === 'true' ? logger : undefined,
+			logger: logging === 'true' ? this.logger : undefined,
 		};
 		this.messageGroupId = 'DefaultGroup';
 		this.sns = new SNSClient(this.awsConfig);
-		this.logger = logger;
 	}
 
 
@@ -117,16 +122,11 @@ export default class SnsClient {
 		let list: Topic[] = [];
 
 		try {
-			this.sns.send(new ListTopicsCommand({}), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('List Error:', err);
-				}
-				else {
-					list = data?.Topics || [];
-				}
-			});
+			const result = await this.sns.send(new ListTopicsCommand({}));
+			if (result?.Topics)
+				list = result?.Topics;
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('List Error:', error);
 		}
 
 		return list;
@@ -136,18 +136,13 @@ export default class SnsClient {
 		let topicArn = '';
 
 		try {
-			this.sns.send(new CreateTopicCommand(
+			const result = await this.sns.send(new CreateTopicCommand(
 				this._createParams(topicName)
-			), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('Create Error:', err);
-				}
-				else {
-					topicArn = data?.TopicArn || '';
-				}
-			});
+			));
+			if (result?.TopicArn)
+				topicArn = result.TopicArn;
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('Create Error:', error);
 		}
 
 		return topicArn;
@@ -157,18 +152,13 @@ export default class SnsClient {
 		let isDeleted = false;
 
 		try {
-			this.sns.send(new DeleteTopicCommand({
+			const result = await this.sns.send(new DeleteTopicCommand({
 				TopicArn: topicArn,
-			}), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('Delete Error:', err);
-				}
-				else {
-					isDeleted = true;
-				}
-			});
+			}));
+			if (result.$metadata?.httpStatusCode && String(result.$metadata?.httpStatusCode)[2] === '2')
+				isDeleted = true;
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('Delete Error:', error);
 		}
 
 		return isDeleted;
@@ -178,18 +168,13 @@ export default class SnsClient {
 		let subscriptionArn = '';
 
 		try {
-			this.sns.send(new SubscribeCommand(
+			const result = await this.sns.send(new SubscribeCommand(
 				this._subscribeParams(protocol, topicArn, to)
-			), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('Subscribe Error:', err);
-				}
-				else {
-					subscriptionArn = data?.SubscriptionArn || '';
-				}
-			});
+			));
+			if (result?.SubscriptionArn)
+				subscriptionArn = result.SubscriptionArn;
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('Subscribe Error:', error);
 		}
 
 		return subscriptionArn;
@@ -199,18 +184,13 @@ export default class SnsClient {
 		let httpStatusCode = 0;
 
 		try {
-			this.sns.send(new UnsubscribeCommand({
+			const result = await this.sns.send(new UnsubscribeCommand({
 				SubscriptionArn: subscriptionArn
-			}), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('Unsubscribe Error:', err);
-				}
-				else {
-					httpStatusCode = data?.$metadata?.httpStatusCode || 0;
-				}
-			});
+			}));
+			if (result?.$metadata?.httpStatusCode)
+				httpStatusCode = result.$metadata.httpStatusCode;
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('Unsubscribe Error:', error);
 		}
 
 		return httpStatusCode;
@@ -220,18 +200,13 @@ export default class SnsClient {
 		let messageId = '';
 
 		try {
-			this.sns.send(new PublishCommand(
+			const result = await this.sns.send(new PublishCommand(
 				this._publishParams(protocol, topicArn, topicName, msgData)
-			), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('Publish Error:', err);
-				}
-				else {
-					messageId = data?.MessageId || '';
-				}
-			});
+			));
+			if (result?.MessageId)
+				messageId = result.MessageId;
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('Publish Error:', error);
 		}
 
 		return messageId;

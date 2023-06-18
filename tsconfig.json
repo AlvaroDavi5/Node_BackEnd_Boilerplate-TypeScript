@@ -33,38 +33,17 @@
 		"moduleResolution": "node",
 		"baseUrl": "./",
 		"paths": {
-			"configs/*": [
-				"configs/*",
+			"@configs/*": [
+				"src/configs/*",
 			],
-			"dev/*": [
-				"dev/*"
-			],
-			"@app/*": [
-				"src/app/*",
-			],
-			"@domain/*": [
-				"src/domain/*",
+			"@dev/*": [
+				"src/dev/*",
 			],
 			"@infra/*": [
 				"src/infra/*",
 			],
-			"@interface/*": [
-				"src/interface/*",
-			],
-			"@types/*": [
-				"src/types/*",
-			],
-			"src/*": [
-				"src/*",
-			],
-			"tests/*": [
-				"tests/*",
-			],
-			"scripts/*": [
-				"scripts/*",
-			],
-			"~/*": [
-				"*",
+			"@modules/*": [
+				"src/modules/*",
 			],
 		},
 		"rootDirs": [

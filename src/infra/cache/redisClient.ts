@@ -1,23 +1,24 @@
 import IORedis from 'ioredis';
 import { ScanStreamOptions } from 'ioredis/built/types';
-import { ExceptionInterface } from 'src/infra/errors/exceptions';
-import { ContainerInterface } from 'src/types/_containerInterface';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { ConfigsInterface } from '@configs/configs';
+import Exceptions from '@infra/errors/exceptions';
 
 
+@Injectable()
 export default class RedisClient {
 	private redis: IORedis;
-	private exceptions: ExceptionInterface;
 
-	constructor({
-		configs,
-		exceptions,
-	}: ContainerInterface) {
-		this.exceptions = exceptions;
+	constructor(
+		private readonly configService: ConfigService,
+		private readonly exceptions: Exceptions,
+	) {
+		const { host, port }: ConfigsInterface['cache']['redis'] = this.configService.get<any>('cache.redis');
 
-		const { port, host } = configs.cache.redis;
 		this.redis = new IORedis({
-			host: host,
-			port: parseInt(port),
+			host: String(host),
+			port: Number(port),
 			showFriendlyErrorStack: true,
 		});
 

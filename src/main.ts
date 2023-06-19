@@ -19,7 +19,7 @@ async function startNestApplication() {
 	);
 
 	const config = new DocumentBuilder()
-		.setTitle('Node DDD Back-End Boilerplate')
+		.setTitle('Node Back-End Boilerplate')
 		.setVersion('1.0.0')
 		.build();
 	const document = SwaggerModule.createDocument(nestApp, config);

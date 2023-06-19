@@ -1,4 +1,4 @@
-# Node DDD Back-End Boilerplate (TypeScript)
+# Node Back-End Boilerplate
 
 ## Description
 

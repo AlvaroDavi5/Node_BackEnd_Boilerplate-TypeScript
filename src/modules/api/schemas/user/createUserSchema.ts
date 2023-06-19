@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { ThemesEnum } from '@modules/boilerplate/domain/enums/themesEnum';
+import { ThemesEnum } from '@modules/app/domain/enums/themesEnum';
 
 
 export default Joi.object().keys({

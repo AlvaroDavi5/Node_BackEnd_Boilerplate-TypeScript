@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import UserPreferenceRepository from '@modules/boilerplate/infra/repositories/userPreference/UserPreferenceRepository';
-import UserPreferenceEntity, { UserPreferenceInterface } from '@modules/boilerplate/domain/entities/UserPreference';
+import UserPreferenceRepository from '@modules/app/infra/repositories/userPreference/UserPreferenceRepository';
+import UserPreferenceEntity, { UserPreferenceInterface } from '@modules/app/domain/entities/UserPreference';
 
 
 @Injectable()

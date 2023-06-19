@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
-import UserEntity from '@modules/boilerplate/domain/entities/User';
-import UserPreferenceEntity from '@modules/boilerplate/domain/entities/UserPreference';
-import UserService from '@modules/boilerplate/app/services/UserService';
-import UserPreferenceService from '@modules/boilerplate/app/services/UserPreferenceService';
-import UserStrategy from '@modules/boilerplate/app/strategies/UserStrategy';
+import UserEntity from '@modules/app/domain/entities/User';
+import UserPreferenceEntity from '@modules/app/domain/entities/UserPreference';
+import UserService from '@modules/app/services/UserService';
+import UserPreferenceService from '@modules/app/services/UserPreferenceService';
+import UserStrategy from '@modules/app/strategies/UserStrategy';
 import Exceptions from '@infra/errors/exceptions';
 import { userAuthType } from 'src/types/_userAuthInterface';
 

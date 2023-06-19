@@ -1,4 +1,4 @@
-import UserEntity from '@modules/boilerplate/domain/entities/User';
+import UserEntity from '@modules/app/domain/entities/User';
 import userPreferenceMapper from '../userPreference/userPreferenceMapper';
 
 

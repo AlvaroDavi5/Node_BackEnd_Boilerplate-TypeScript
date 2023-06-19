@@ -2,8 +2,8 @@ import {
 	Controller, Req, UsePipes,
 	Get, Post, Put, Delete, Param, Query, Body,
 } from '@nestjs/common';
-import UserOperation from '@modules/boilerplate/app/operations/UserOperation';
-import { CreateUserValidatorPipe, UpdateUserValidatorPipe } from '@modules/boilerplate/interface/http/pipes/UserValidatorPipe';
+import UserOperation from '@modules/app/operations/UserOperation';
+import { CreateUserValidatorPipe, UpdateUserValidatorPipe } from '@modules/api/pipes/UserValidatorPipe';
 import { RequestInterface } from 'src/types/_endpointInterface';
 
 

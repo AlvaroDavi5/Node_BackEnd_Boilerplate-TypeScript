@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import LoggerGenerator from '@infra/logging/logger';
 import Exceptions from '@infra/errors/exceptions';
-import AbstractRepository from '@infra/database/repository/AbstractRepository';
+import AbstractRepository from '@infra/database/repositories/AbstractRepository';
 import UsersModel from '@infra/database/models/Users';
-import UserEntity from '@modules/boilerplate/domain/entities/User';
+import UserEntity from '@modules/app/domain/entities/User';
 import userMapper from './userMapper';
 import { userQueryParamsBuilder, userQueryOptions } from './userQuery';
 

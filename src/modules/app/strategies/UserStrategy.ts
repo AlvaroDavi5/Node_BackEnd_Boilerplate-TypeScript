@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import UserEntity from '@modules/boilerplate/domain/entities/User';
+import UserEntity from '@modules/app/domain/entities/User';
 import { userAuthType } from 'src/types/_userAuthInterface';
 
 

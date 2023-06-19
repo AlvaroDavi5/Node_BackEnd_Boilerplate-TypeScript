@@ -9,14 +9,16 @@ import SnsClient from '@infra/integration/aws/SnsClient';
 import S3Client from '@infra/integration/aws/S3Client';
 import CognitoClient from '@infra/integration/aws/CognitoClient';
 import RestClient from '@infra/integration/rest/RestClient';
-import BoilerplateModule from '@modules/boilerplate/boilerplate.module';
+import ApiModule from '@modules/api/api.module';
+import AppModule from '@modules/app/app.module';
 
 
 @Global()
 @Module({
 	imports: [
 		ConfigModule.forRoot({ isGlobal: true, load: [configs] }),
-		BoilerplateModule,
+		ApiModule,
+		AppModule,
 	],
 	controllers: [],
 	providers: [

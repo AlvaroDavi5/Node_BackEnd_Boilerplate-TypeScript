@@ -6,8 +6,6 @@ import { Request, Response } from 'express';
 
 @Controller()
 export default class DefaultController {
-	constructor(
-	) { }
 
 	@Get('/check')
 	healthCheck(

@@ -25,7 +25,7 @@ export default class UserRepository extends AbstractRepository {
 		});
 	}
 
-	async getById(id: number, restrictData = true) {
+	public async getById(id: number, restrictData = true): Promise<any> {
 		const userModel = (restrictData) ? this.ResourceModel.scope('withoutPassword') : this.ResourceModel;
 
 		const result = await userModel.findByPk(
@@ -37,7 +37,13 @@ export default class UserRepository extends AbstractRepository {
 		return this.resourceMapper.toEntity(result);
 	}
 
-	async list(query?: any, restrictData = true) {
+	public async list(query?: any, restrictData = true): Promise<{
+		content: any[];
+		pageNumber: number;
+		pageSize: number;
+		totalPages: number;
+		totalItems: number;
+	}> {
 		const userModel = (restrictData) ? this.ResourceModel.scope('withoutSensibleData') : this.ResourceModel;
 		const buildedQuery = this.queryParamsBuilder?.buildParams(query);
 

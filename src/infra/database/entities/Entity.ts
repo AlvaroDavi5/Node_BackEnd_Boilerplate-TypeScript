@@ -1,6 +1,6 @@
 
 export default abstract class Entity {
-	validate() {
+	public validate() {
 		let value: any = null;
 		let valid = false;
 		let error: Error | null = null;

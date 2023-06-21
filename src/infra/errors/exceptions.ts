@@ -22,7 +22,7 @@ export default class Exceptions {
 		return false;
 	}
 
-	[ExceptionsEnum.CONTRACT](msg: ErrorInterface) {
+	public [ExceptionsEnum.CONTRACT](msg: ErrorInterface) {
 		const exception = new BadRequestException(msg.message);
 
 		exception.name = ExceptionsEnum.CONTRACT;
@@ -34,7 +34,7 @@ export default class Exceptions {
 		return exception;
 	}
 
-	[ExceptionsEnum.BUSINESS](msg: ErrorInterface) {
+	public [ExceptionsEnum.BUSINESS](msg: ErrorInterface) {
 		const exception = new ForbiddenException(msg.message);
 
 		exception.name = ExceptionsEnum.BUSINESS;
@@ -46,7 +46,7 @@ export default class Exceptions {
 		return exception;
 	}
 
-	[ExceptionsEnum.UNAUTHORIZED](msg: ErrorInterface) {
+	public [ExceptionsEnum.UNAUTHORIZED](msg: ErrorInterface) {
 		const exception = new UnauthorizedException(msg.message);
 
 		exception.name = ExceptionsEnum.UNAUTHORIZED;
@@ -58,7 +58,7 @@ export default class Exceptions {
 		return exception;
 	}
 
-	[ExceptionsEnum.CONFLICT](msg: ErrorInterface) {
+	public [ExceptionsEnum.CONFLICT](msg: ErrorInterface) {
 		const exception = new ConflictException(msg.message);
 
 		exception.name = ExceptionsEnum.CONFLICT;
@@ -70,7 +70,7 @@ export default class Exceptions {
 		return exception;
 	}
 
-	[ExceptionsEnum.NOT_FOUND](msg: ErrorInterface) {
+	public [ExceptionsEnum.NOT_FOUND](msg: ErrorInterface) {
 		const exception = new NotFoundException(msg.message);
 
 		exception.name = ExceptionsEnum.NOT_FOUND;
@@ -82,7 +82,7 @@ export default class Exceptions {
 		return exception;
 	}
 
-	[ExceptionsEnum.INTEGRATION](msg: ErrorInterface) {
+	public [ExceptionsEnum.INTEGRATION](msg: ErrorInterface) {
 		const exception = new ServiceUnavailableException(msg.message);
 
 		exception.name = ExceptionsEnum.INTEGRATION;
@@ -94,7 +94,7 @@ export default class Exceptions {
 		return exception;
 	}
 
-	[ExceptionsEnum.INTERNAL](msg: ErrorInterface) {
+	public [ExceptionsEnum.INTERNAL](msg: ErrorInterface) {
 		const exception = new InternalServerErrorException(msg.message);
 
 		exception.name = ExceptionsEnum.INTERNAL;

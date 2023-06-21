@@ -114,11 +114,11 @@ export default class SnsClient {
 		return publishData;
 	}
 
-	getClient(): SNSClient {
+	public getClient(): SNSClient {
 		return this.sns;
 	}
 
-	async listTopics(): Promise<Topic[]> {
+	public async listTopics(): Promise<Topic[]> {
 		let list: Topic[] = [];
 
 		try {
@@ -132,7 +132,7 @@ export default class SnsClient {
 		return list;
 	}
 
-	async createtopic(topicName: string): Promise<string> {
+	public async createtopic(topicName: string): Promise<string> {
 		let topicArn = '';
 
 		try {
@@ -148,7 +148,7 @@ export default class SnsClient {
 		return topicArn;
 	}
 
-	async deletetopic(topicArn: string): Promise<boolean> {
+	public async deletetopic(topicArn: string): Promise<boolean> {
 		let isDeleted = false;
 
 		try {
@@ -164,7 +164,7 @@ export default class SnsClient {
 		return isDeleted;
 	}
 
-	async subscribeTopic(protocol: protocolType, topicArn: string, to: string): Promise<string> {
+	public async subscribeTopic(protocol: protocolType, topicArn: string, to: string): Promise<string> {
 		let subscriptionArn = '';
 
 		try {
@@ -180,7 +180,7 @@ export default class SnsClient {
 		return subscriptionArn;
 	}
 
-	async unsubscribeTopic(subscriptionArn: string): Promise<number> {
+	public async unsubscribeTopic(subscriptionArn: string): Promise<number> {
 		let httpStatusCode = 0;
 
 		try {
@@ -196,7 +196,7 @@ export default class SnsClient {
 		return httpStatusCode;
 	}
 
-	async publishMessage(protocol: protocolType, topicArn: string, topicName: string, msgData: string): Promise<string> {
+	public async publishMessage(protocol: protocolType, topicArn: string, topicName: string, msgData: string): Promise<string> {
 		let messageId = '';
 
 		try {

@@ -9,7 +9,7 @@ export default class UserService {
 		private readonly userRepository: UserRepository,
 	) { }
 
-	async getById(id: number): Promise<UserEntity | null | undefined> {
+	public async getById(id: number): Promise<UserEntity | null | undefined> {
 		try {
 			const result = await this.userRepository.getById(id);
 			return result;
@@ -18,7 +18,7 @@ export default class UserService {
 		}
 	}
 
-	async create(entity: UserEntity): Promise<UserEntity | null | undefined> {
+	public async create(entity: UserEntity): Promise<UserEntity | null | undefined> {
 		try {
 			const result = await this.userRepository.create(entity);
 			return result;
@@ -27,7 +27,7 @@ export default class UserService {
 		}
 	}
 
-	async update(id: number, data: UserInterface): Promise<UserEntity | null | undefined> {
+	public async update(id: number, data: UserInterface): Promise<UserEntity | null | undefined> {
 		try {
 			const result = await this.userRepository.update(id, data);
 			return result;
@@ -36,7 +36,7 @@ export default class UserService {
 		}
 	}
 
-	async delete(id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<[affectedCount: number] | null | undefined> {
+	public async delete(id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<[affectedCount: number] | null | undefined> {
 		try {
 			const result = await this.userRepository.deleteOne(id, Boolean(data.softDelete), String(data.userAgentId));
 			return result;
@@ -45,7 +45,7 @@ export default class UserService {
 		}
 	}
 
-	async list(
+	public async list(
 		data: {
 			size?: number,
 			page?: number,

@@ -65,11 +65,11 @@ export default class CognitoClient {
 	}
 
 
-	getClient(): CognitoIdentityProviderClient {
+	public getClient(): CognitoIdentityProviderClient {
 		return this.cognito;
 	}
 
-	async listUserPools(): Promise<UserPoolDescriptionType[]> {
+	public async listUserPools(): Promise<UserPoolDescriptionType[]> {
 		let list: UserPoolDescriptionType[] = [];
 
 		try {
@@ -85,7 +85,7 @@ export default class CognitoClient {
 		return list;
 	}
 
-	async createUserPool(userPoolName: string | null): Promise<string> {
+	public async createUserPool(userPoolName: string | null): Promise<string> {
 		let userPoolId = '';
 
 		try {
@@ -101,7 +101,7 @@ export default class CognitoClient {
 		return userPoolId;
 	}
 
-	async deleteUserPool(userPoolId: string | null): Promise<number> {
+	public async deleteUserPool(userPoolId: string | null): Promise<number> {
 		let httpStatusCode = 0;
 
 		try {
@@ -117,7 +117,7 @@ export default class CognitoClient {
 		return httpStatusCode;
 	}
 
-	async createClient(userPoolName: string | null, userPoolId: string | null): Promise<string> {
+	public async createClient(userPoolName: string | null, userPoolId: string | null): Promise<string> {
 		let clientId = '';
 
 		try {
@@ -134,7 +134,7 @@ export default class CognitoClient {
 		return clientId;
 	}
 
-	async deleteClient(clientId: string | null, userPoolId: string | null): Promise<number> {
+	public async deleteClient(clientId: string | null, userPoolId: string | null): Promise<number> {
 		let httpStatusCode = 0;
 
 		try {
@@ -151,7 +151,7 @@ export default class CognitoClient {
 		return httpStatusCode;
 	}
 
-	async createUser(userName: string, userPoolId: string | null): Promise<string> {
+	public async createUser(userName: string, userPoolId: string | null): Promise<string> {
 		let userStatus = '';
 
 		try {
@@ -168,7 +168,7 @@ export default class CognitoClient {
 		return userStatus;
 	}
 
-	async getUser(userName: string, userPoolId: string | null): Promise<boolean> {
+	public async getUser(userName: string, userPoolId: string | null): Promise<boolean> {
 		let userEnabled = false;
 
 		try {
@@ -185,7 +185,7 @@ export default class CognitoClient {
 		return userEnabled;
 	}
 
-	async deleteUser(userName: string, userPoolId: string | null): Promise<number> {
+	public async deleteUser(userName: string, userPoolId: string | null): Promise<number> {
 		let httpStatusCode = 0;
 
 		try {
@@ -202,7 +202,7 @@ export default class CognitoClient {
 		return httpStatusCode;
 	}
 
-	async signUp(userName: string, userEmail: string, password: string): Promise<boolean> {
+	public async signUp(userName: string, userEmail: string, password: string): Promise<boolean> {
 		let userConfirmed = false;
 
 		try {
@@ -216,7 +216,7 @@ export default class CognitoClient {
 		return userConfirmed;
 	}
 
-	async confirmSignUp(userName: string, userPoolId: string | null): Promise<number> {
+	public async confirmSignUp(userName: string, userPoolId: string | null): Promise<number> {
 		let httpStatusCode = 0;
 
 		try {

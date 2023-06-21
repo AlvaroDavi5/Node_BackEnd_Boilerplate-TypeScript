@@ -31,7 +31,7 @@ export default class UserPreference extends Entity {
 		this.deletedAt = (dataValues?.deletedAt) ? dataValues.deletedAt : null;
 	}
 
-	getAttributes() {
+	public getAttributes() {
 		return {
 			id: this.id,
 			userId: this.userId,
@@ -44,19 +44,19 @@ export default class UserPreference extends Entity {
 	}
 
 	public getId(): number { return this.id; }
-	public setId(id: number) { this.id = id; }
+	public setId(id: number): void { this.id = id; }
 
 	public getUserId(): number { return this.userId; }
-	public setUserId(userId: number) { this.userId = userId; }
+	public setUserId(userId: number): void { this.userId = userId; }
 
 	public getDefaultTheme(): string { return this.defaultTheme; }
-	public setDefaultTheme(theme: string) {
+	public setDefaultTheme(theme: string): void {
 		this.defaultTheme = theme;
 		this.updatedAt = new Date();
 	}
 
 	public getImagePath(): string { return this.imagePath; }
-	public setImagePath(path: string) {
+	public setImagePath(path: string): void {
 		this.imagePath = path;
 		this.updatedAt = new Date();
 	}

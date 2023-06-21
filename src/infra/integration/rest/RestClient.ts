@@ -36,7 +36,7 @@ export default class RestClient {
 		});
 	}
 
-	async test() {
+	public async test(): Promise<any> {
 		try {
 			this.logger.info(`Requesting ${this.serviceName} to healthcheck`);
 			const { data } = await this.client.get('/check');

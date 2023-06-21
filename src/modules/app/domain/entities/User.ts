@@ -50,7 +50,7 @@ export default class User extends Entity {
 		this.deletedBy = (dataValues?.deletedBy) ? dataValues.deletedBy : null;
 	}
 
-	getAttributes() {
+	public getAttributes() {
 		return {
 			id: this.id,
 			fullName: this.fullName,
@@ -69,7 +69,7 @@ export default class User extends Entity {
 	}
 
 	public getId(): number { return this.id; }
-	public setId(id: number) { this.id = id; }
+	public setId(id: number): void { this.id = id; }
 
 	public getLogin(): { fullName: string, email: string } {
 		return {
@@ -78,20 +78,20 @@ export default class User extends Entity {
 		};
 	}
 
-	public setLogin(email: string, fullName: string) {
+	public setLogin(email: string, fullName: string): void {
 		this.fullName = fullName;
 		this.email = email;
 		this.updatedAt = new Date();
 	}
 
 	public getPassword(): string { return this.password; }
-	public setPassword(passwd: string) {
+	public setPassword(passwd: string): void {
 		this.password = passwd;
 		this.updatedAt = new Date();
 	}
 
 	public getPhone(): string { return this.phone; }
-	public setPhone(phone: string) {
+	public setPhone(phone: string): void {
 		this.phone = phone;
 		this.updatedAt = new Date();
 	}
@@ -104,7 +104,7 @@ export default class User extends Entity {
 		};
 	}
 
-	public setDocInfos(docValue: string, docType: string, fu: string) {
+	public setDocInfos(docValue: string, docType: string, fu: string): void {
 		this.document = docValue;
 		this.docType = docType;
 		this.fu = fu;
@@ -112,13 +112,13 @@ export default class User extends Entity {
 	}
 
 	public getDeletedBy(): string | null { return this.deletedBy; }
-	public setDeletedBy(agentId: string) {
+	public setDeletedBy(agentId: string): void {
 		this.deletedBy = agentId;
 		this.deletedAt = new Date();
 		this.updatedAt = new Date();
 	}
 
-	public setPreference(preference: UserPreference) {
+	public setPreference(preference: UserPreference): void {
 		this.preference = preference;
 	}
 }

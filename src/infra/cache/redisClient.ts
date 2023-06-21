@@ -30,7 +30,7 @@ export default class RedisClient {
 	}
 
 
-	private _toString(value: object | string | null) {
+	private _toString(value: object | string | null): string {
 		let val = '';
 
 		if (typeof (value) === 'object')
@@ -41,7 +41,7 @@ export default class RedisClient {
 		return val;
 	}
 
-	private _toValue(value: string) {
+	private _toValue(value: string): any {
 		let val = null;
 
 		try {
@@ -53,15 +53,15 @@ export default class RedisClient {
 		return val;
 	}
 
-	lib(): IORedis {
+	public lib(): IORedis {
 		return this.redis;
 	}
 
-	isConnected(): boolean {
+	public isConnected(): boolean {
 		return this.redis?.status === 'ready';
 	}
 
-	async listKeys(): Promise<string[]> {
+	public async listKeys(): Promise<string[]> {
 		const result = await this.redis.keys('*');
 
 		if (!result)
@@ -70,18 +70,18 @@ export default class RedisClient {
 		return result;
 	}
 
-	async get(key: string): Promise<any> {
+	public async get(key: string): Promise<any> {
 		const value = await this.redis.get(String(key));
 		return value ? this._toValue(value) : null;
 	}
 
-	async set(key: string, value: object, ttl = 30): Promise<string> {
+	public async set(key: string, value: object, ttl = 30): Promise<string> {
 		const result = await this.redis.set(String(key), this._toString(value));
 		await this.redis.expire(String(key), Number(ttl)); // [key] expires in [ttl] seconds
 		return result;
 	}
 
-	async getByKeyPattern(pattern: string): Promise<PromiseSettledResult<any>[]> {
+	public async getByKeyPattern(pattern: string): Promise<PromiseSettledResult<any>[]> {
 		const keys = await this.redis.keys(pattern);
 		const getByKeyPromises = keys.map(
 			async (key: string) => {
@@ -97,7 +97,7 @@ export default class RedisClient {
 		return Promise.allSettled(getByKeyPromises);
 	}
 
-	async getValuesByKeyPattern(key: string): Promise<any[]> {
+	public async getValuesByKeyPattern(key: string): Promise<any[]> {
 		const keys = await this.redis.keys(key);
 
 		if (!keys || keys?.length < 1) {
@@ -111,18 +111,18 @@ export default class RedisClient {
 		});
 	}
 
-	async delete(key: string): Promise<number> {
+	public async delete(key: string): Promise<number> {
 		const result = await this.redis.del(String(key));
 		return result;
 	}
 
-	async deleteAll(): Promise<string> {
+	public async deleteAll(): Promise<string> {
 		const result = await this.redis.flushall();
 
 		return result;
 	}
 
-	async remove(keyPattern: ScanStreamOptions | object | string): Promise<void> {
+	public async remove(keyPattern: ScanStreamOptions | object | string): Promise<void> {
 		const scanValue: string | any = `${keyPattern}:*`;
 		const stream = this.redis.scanStream(scanValue);
 

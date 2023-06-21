@@ -8,7 +8,7 @@ import { Request, Response } from 'express';
 export default class DefaultController {
 
 	@Get('/check')
-	healthCheck(
+	public healthCheck(
 		@Req() request: Request,
 		@Param() params: string[],
 		@Query() query: object,

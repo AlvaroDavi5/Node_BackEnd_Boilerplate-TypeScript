@@ -14,7 +14,7 @@ export default class UserController {
 	) { }
 
 	@Get('/users')
-	async listUsers(
+	public async listUsers(
 		@Query() query: any,
 	): Promise<any> {
 		try {
@@ -27,7 +27,7 @@ export default class UserController {
 
 	@Post('/users')
 	@UsePipes(CreateUserValidatorPipe)
-	async createUser(
+	public async createUser(
 		@Req() request: RequestInterface,
 		@Body() body: any,
 	): Promise<any> {
@@ -42,7 +42,7 @@ export default class UserController {
 	}
 
 	@Get('/users/:userId')
-	async getUser(
+	public async getUser(
 		@Req() request: RequestInterface,
 		@Param('userId') userId: number,
 	): Promise<any> {
@@ -58,7 +58,7 @@ export default class UserController {
 
 	@Put('/users/:userId')
 	@UsePipes(UpdateUserValidatorPipe)
-	async updateUser(
+	public async updateUser(
 		@Req() request: RequestInterface,
 		@Param('userId') userId: number,
 		@Body() body: any,
@@ -74,7 +74,7 @@ export default class UserController {
 	}
 
 	@Delete('/users/:userId')
-	async deleteUser(
+	public async deleteUser(
 		@Req() request: RequestInterface,
 		@Param('userId') userId: number,
 	): Promise<any> {

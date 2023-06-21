@@ -52,7 +52,7 @@ export default class LoggerGenerator {
 		exitOnError: false,
 	};
 
-	getLogger(): Logger {
+	public getLogger(): Logger {
 		return createLogger(this.loggerOptions);
 	}
 }

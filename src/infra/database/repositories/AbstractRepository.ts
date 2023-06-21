@@ -49,7 +49,7 @@ export default abstract class AbstractRepository {
 		this.ResourceModel?.associate();
 	}
 
-	validatePayload(entity: any) {
+	public validatePayload(entity: any): void {
 		if (!(entity instanceof this.DomainEntity)) {
 			throw this.exceptions.contract({
 				message: 'ValidationError',
@@ -68,57 +68,63 @@ export default abstract class AbstractRepository {
 		}
 	}
 
-	async create(data: any) {
+	public async create(data: any): Promise<any> {
 		const result = await this.ResourceModel.create(
 			this.resourceMapper.toDatabase(data)
 		);
-		if (!result) return;
+		if (!result) return null;
 
 		return this.resourceMapper.toEntity(result);
 	}
 
-	async getById(id: number) {
+	public async getById(id: number): Promise<any> {
 		const result = await this.ResourceModel.findByPk(
 			id,
 			this.queryOptions,
 		);
-		if (!result) return;
+		if (!result) return null;
 
 		return this.resourceMapper.toEntity(result);
 	}
 
-	async findOne(query: any) {
+	public async findOne(query: any): Promise<any> {
 		const result = await this.ResourceModel.findOne({
 			where: query,
 			...this.queryOptions,
 		});
-		if (!result) return;
+		if (!result) return null;
 
 		return this.resourceMapper.toEntity(result);
 	}
 
-	async findAll(query?: any) {
+	public async findAll(query?: any): Promise<any> {
 		const result = await this.ResourceModel.findAll({
 			where: query,
 			...this.queryOptions,
 		});
-		if (!result) return;
+		if (!result) return null;
 
 		return result.map(this.resourceMapper.toEntity);
 	}
 
-	async update(id: number, data: any) {
+	public async update(id: number, data: any): Promise<any> {
 		const where = {
 			id: Number(id),
 		};
 		await this.ResourceModel.update(data, { where });
 		const result = await this.ResourceModel.findByPk(id);
-		if (!result) return;
+		if (!result) return null;
 
 		return this.resourceMapper.toEntity(result);
 	}
 
-	async list(query?: any) {
+	public async list(query?: any): Promise<{
+		content: any[];
+		pageNumber: number;
+		pageSize: number;
+		totalPages: number;
+		totalItems: number;
+	}> {
 		const buildedQuery = this.queryParamsBuilder?.buildParams(query);
 		const { rows, count } = await this.ResourceModel.findAndCountAll(buildedQuery);
 
@@ -144,7 +150,7 @@ export default abstract class AbstractRepository {
 		return list;
 	}
 
-	async count(query: any) {
+	public async count(query: any): Promise<any> {
 		const resource = await this.ResourceModel.count({
 			where: query,
 			...this.queryOptions,
@@ -154,7 +160,7 @@ export default abstract class AbstractRepository {
 	}
 
 
-	async deleteOne(id: number, softDelete = true, agentId: number | string | null = null) {
+	public async deleteOne(id: number, softDelete = true, agentId: number | string | null = null): Promise<any> {
 		const where = {
 			id: Number(id),
 		};
@@ -171,12 +177,12 @@ export default abstract class AbstractRepository {
 			const register = await this.ResourceModel.findByPk(id);
 			result = await register?.destroy();
 		}
-		if (!result) return;
+		if (!result) return null;
 
 		return result;
 	}
 
-	async deleteMany(ids: Array<number>, softDelete = true, agentId: number | string | null = null) {
+	public async deleteMany(ids: Array<number>, softDelete = true, agentId: number | string | null = null): Promise<any> {
 		const where: any = {};
 		where.id = { [Op.in]: ids };
 
@@ -197,7 +203,7 @@ export default abstract class AbstractRepository {
 			const registers = await this.ResourceModel.findAll({
 				where,
 			});
-			if (!registers) return;
+			if (!registers) return null;
 
 			for (const register of registers) {
 				result = result && await register.destroy();
@@ -207,7 +213,7 @@ export default abstract class AbstractRepository {
 		return result;
 	}
 
-	async executeQuery(sqlQuery: string, QueryType?: QueryTypes) {
+	public async executeQuery(sqlQuery: string, QueryType?: QueryTypes): Promise<any> {
 		let result: any;
 
 		try {

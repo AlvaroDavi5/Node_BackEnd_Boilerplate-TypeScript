@@ -84,11 +84,11 @@ export default class S3Client {
 		return params;
 	}
 
-	getClient(): S3AWSClient {
+	public getClient(): S3AWSClient {
 		return this.s3;
 	}
 
-	async listBuckets(): Promise<Bucket[]> {
+	public async listBuckets(): Promise<Bucket[]> {
 		let list: Bucket[] = [];
 
 		try {
@@ -102,7 +102,7 @@ export default class S3Client {
 		return list;
 	}
 
-	async createBucket(bucketName: string): Promise<string> {
+	public async createBucket(bucketName: string): Promise<string> {
 		let location = '';
 
 		try {
@@ -121,7 +121,7 @@ export default class S3Client {
 		return location;
 	}
 
-	async deleteBucket(bucketName: string): Promise<number> {
+	public async deleteBucket(bucketName: string): Promise<number> {
 		let httpStatusCode = 0;
 
 		try {
@@ -135,7 +135,7 @@ export default class S3Client {
 		return httpStatusCode;
 	}
 
-	async putBucketNotification(bucketName: string, configuration: NotificationConfiguration | undefined): Promise<number> {
+	public async putBucketNotification(bucketName: string, configuration: NotificationConfiguration | undefined): Promise<number> {
 		let httpStatusCode = 0;
 
 		try {
@@ -152,7 +152,7 @@ export default class S3Client {
 		return httpStatusCode;
 	}
 
-	async uploadFile(bucketName: string, filePath: string): Promise<string> {
+	public async uploadFile(bucketName: string, filePath: string): Promise<string> {
 		let key = '';
 
 		try {
@@ -166,7 +166,7 @@ export default class S3Client {
 		return key;
 	}
 
-	async downloadFile(bucketName: string, objectKey: string): Promise<number> {
+	public async downloadFile(bucketName: string, objectKey: string): Promise<number> {
 		let contentLength = 0;
 
 		try {
@@ -188,7 +188,7 @@ export default class S3Client {
 		return contentLength;
 	}
 
-	async deleteFile(bucketName: string, objectKey: string): Promise<boolean> {
+	public async deleteFile(bucketName: string, objectKey: string): Promise<boolean> {
 		let marker = false;
 
 		try {

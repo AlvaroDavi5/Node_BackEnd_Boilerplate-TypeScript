@@ -114,11 +114,11 @@ export default class SqsClient {
 		};
 	}
 
-	getClient(): SQSClient {
+	public getClient(): SQSClient {
 		return this.sqs;
 	}
 
-	async listQueues(): Promise<string[]> {
+	public async listQueues(): Promise<string[]> {
 		let list: string[] = [];
 
 		try {
@@ -134,7 +134,7 @@ export default class SqsClient {
 		return list;
 	}
 
-	async createQueue(queueName: string): Promise<string> {
+	public async createQueue(queueName: string): Promise<string> {
 		let queueUrl = '';
 
 		try {
@@ -150,7 +150,7 @@ export default class SqsClient {
 		return queueUrl;
 	}
 
-	async deleteQueue(queueUrl: string): Promise<boolean> {
+	public async deleteQueue(queueUrl: string): Promise<boolean> {
 		let isDeleted = false;
 
 		try {
@@ -166,7 +166,7 @@ export default class SqsClient {
 		return isDeleted;
 	}
 
-	async sendMessage(queueUrl: string, title: string, author: string, message: any): Promise<string> {
+	public async sendMessage(queueUrl: string, title: string, author: string, message: any): Promise<string> {
 		let messageId = '';
 
 		try {
@@ -182,7 +182,7 @@ export default class SqsClient {
 		return messageId;
 	}
 
-	async getMessages(queueUrl: string): Promise<Array<Message>> {
+	public async getMessages(queueUrl: string): Promise<Array<Message>> {
 		const messages: Array<Message> = [];
 
 		try {

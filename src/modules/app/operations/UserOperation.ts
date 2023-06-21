@@ -17,12 +17,12 @@ export default class UserOperation {
 		private readonly exceptions: Exceptions,
 	) { }
 
-	async listUsers(data: any): Promise<any> {
+	public async listUsers(data: any): Promise<any> {
 		const usersList = await this.userService.list(data);
 		return usersList;
 	}
 
-	async createUser(data: any, userAgent?: userAuthType): Promise<any> {
+	public async createUser(data: any, userAgent?: userAuthType): Promise<any> {
 		if (!userAgent?.username)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
@@ -41,7 +41,7 @@ export default class UserOperation {
 		return result;
 	}
 
-	async getUser(id: number, userAgent?: userAuthType): Promise<any> {
+	public async getUser(id: number, userAgent?: userAuthType): Promise<any> {
 		if (!userAgent?.username)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
@@ -61,7 +61,7 @@ export default class UserOperation {
 		return foundedUser;
 	}
 
-	async updateUser(id: number, data: any, userAgent?: userAuthType): Promise<any> {
+	public async updateUser(id: number, data: any, userAgent?: userAuthType): Promise<any> {
 		if (!userAgent?.username)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
@@ -89,7 +89,7 @@ export default class UserOperation {
 		return updatedUser;
 	}
 
-	async deleteUser(id: number, userAgent?: userAuthType): Promise<any> {
+	public async deleteUser(id: number, userAgent?: userAuthType): Promise<any> {
 		if (!userAgent?.username)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'

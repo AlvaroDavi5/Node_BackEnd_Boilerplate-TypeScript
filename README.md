@@ -24,6 +24,7 @@ Node.js Domain-Driven Design Boilerplate with TypeScript for Back-End.
 - JavaScript: Web programming laguage;
 - TypeScript: JavaScript superset for typing;
 - Node.js: JavaScript runtime;
+- Nest.js: TypeScript Framework for Back-End;
 - Express: Robust tooling for HTTP servers;
 - Socket.io: WebSocket library;
 - AWS-SDK: A Node.js SDK to access AWS resources, such as:

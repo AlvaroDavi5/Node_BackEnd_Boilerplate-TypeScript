@@ -1,3 +1,4 @@
+import { ApiProperty } from '@nestjs/swagger';
 import Entity from '@infra/database/entities/Entity';
 import UserPreference from './UserPreference';
 
@@ -19,35 +20,60 @@ export interface UserInterface {
 }
 
 export default class User extends Entity {
-	private id: number;
-	public fullName: string;
-	private email: string;
-	private password: string;
-	private phone: string;
-	public docType: string;
-	private document: string;
-	public fu: string;
-	public preference: UserPreference;
+	@ApiProperty({ type: Number, default: 0 })
+	private id = 0;
+
+	@ApiProperty({ type: String, default: 'User Default' })
+	public fullName: string | null = null;
+
+	@ApiProperty({ type: String, default: 'user.default@nomail.dev' })
+	private email: string | null = null;
+
+	@ApiProperty({ type: String, default: null })
+	private password: string | null = null;
+
+	@ApiProperty({ type: String, default: '+0000000000000' })
+	private phone: string | null = null;
+
+	@ApiProperty({ type: String, default: 'INVALID' })
+	public docType: string | null = null;
+
+	@ApiProperty({ type: String, default: '00000000000' })
+	private document: string | null = null;
+
+	@ApiProperty({ type: String, default: 'UF' })
+	public fu: string | null = null;
+
+	@ApiProperty({ type: UserPreference, default: (new UserPreference({ id: 0, userId: 0, imagePath: './image.png', defaultTheme: 'DEFAULT' })) })
+	public preference: UserPreference | null = null;
+
+	@ApiProperty({ type: Date, default: (new Date()) })
 	public readonly createdAt: Date;
-	public updatedAt: Date | null;
-	public deletedAt: Date | null;
-	private deletedBy: string | null;
+
+	@ApiProperty({ type: Date, default: null })
+	public updatedAt: Date | null = null;
+
+	@ApiProperty({ type: Date, default: null })
+	public deletedAt: Date | null = null;
+
+	@ApiProperty({ type: String, default: null })
+	private deletedBy: string | null = null;
 
 	constructor(dataValues: any) {
 		super();
-		this.id = (dataValues?.id) ? dataValues.id : null;
-		this.fullName = (dataValues?.fullName) ? dataValues.fullName : null;
-		this.email = (dataValues?.email) ? dataValues.email : null;
-		this.password = (dataValues?.password) ? dataValues.password : null;
-		this.phone = (dataValues?.phone) ? dataValues.phone : null;
-		this.docType = (dataValues?.docType) ? dataValues.docType : null;
-		this.document = (dataValues?.document) ? dataValues.document : null;
-		this.fu = (dataValues?.fu) ? dataValues.fu : null;
-		this.preference = (dataValues?.preference) ? dataValues.preference : null;
-		this.createdAt = (dataValues?.createdAt) ? dataValues.createdAt : new Date();
-		this.updatedAt = (dataValues?.updatedAt) ? dataValues.updatedAt : null;
-		this.deletedAt = (dataValues?.deletedAt) ? dataValues.deletedAt : null;
-		this.deletedBy = (dataValues?.deletedBy) ? dataValues.deletedBy : null;
+		if (this.exists(dataValues?.id)) this.id = dataValues.id;
+		if (this.exists(dataValues?.fullName)) this.fullName = dataValues.fullName;
+		if (this.exists(dataValues?.email)) this.email = dataValues.email;
+		if (this.exists(dataValues?.password)) this.password = dataValues.password;
+		if (this.exists(dataValues?.phone)) this.phone = dataValues.phone;
+		if (this.exists(dataValues?.docType)) this.docType = dataValues.docType;
+		if (this.exists(dataValues?.document)) this.document = dataValues.document;
+		if (this.exists(dataValues?.fu)) this.fu = dataValues.fu;
+		if (this.exists(dataValues?.preference)) this.preference = dataValues.preference;
+		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
+		if (this.exists(dataValues?.deletedAt)) this.deletedAt = dataValues.deletedAt;
+		if (this.exists(dataValues?.deletedBy)) this.deletedBy = dataValues.deletedBy;
+		this.createdAt = new Date();
 	}
 
 	public getAttributes() {
@@ -71,7 +97,7 @@ export default class User extends Entity {
 	public getId(): number { return this.id; }
 	public setId(id: number): void { this.id = id; }
 
-	public getLogin(): { fullName: string, email: string } {
+	public getLogin(): { fullName: string | null, email: string | null } {
 		return {
 			fullName: this.fullName,
 			email: this.email,
@@ -84,19 +110,19 @@ export default class User extends Entity {
 		this.updatedAt = new Date();
 	}
 
-	public getPassword(): string { return this.password; }
+	public getPassword(): string | null { return this.password; }
 	public setPassword(passwd: string): void {
 		this.password = passwd;
 		this.updatedAt = new Date();
 	}
 
-	public getPhone(): string { return this.phone; }
+	public getPhone(): string | null { return this.phone; }
 	public setPhone(phone: string): void {
 		this.phone = phone;
 		this.updatedAt = new Date();
 	}
 
-	public getDocInfos(): { document: string, docType: string, fu: string } {
+	public getDocInfos(): { document: string | null, docType: string | null, fu: string | null } {
 		return {
 			document: this.document,
 			docType: this.docType,

@@ -2,11 +2,18 @@ import {
 	Controller, Req, Res,
 	Get, Param, Query, Body,
 } from '@nestjs/common';
+import { ApiOperation, ApiTags, ApiOkResponse } from '@nestjs/swagger';
 import { Request, Response } from 'express';
+import authSwagger from '@modules/api/middlewares/authSwagger';
 
+
+@ApiTags('HealthCheck')
+@authSwagger()
 @Controller()
 export default class DefaultController {
 
+	@ApiOperation({ summary: 'Check API' })
+	@ApiOkResponse({ type: Object })
 	@Get('/check')
 	public healthCheck(
 		@Req() request: Request,
@@ -20,7 +27,7 @@ export default class DefaultController {
 		return {
 			baseUrl: request?.baseUrl,
 			method: request?.method,
-			statusCode: request?.statusCode || 200,
+			statusCode: response?.statusCode || 200,
 			statusMessage: response?.statusMessage,
 			params: params,
 			query: query,

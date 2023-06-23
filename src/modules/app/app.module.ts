@@ -19,8 +19,6 @@ import UserPreferenceRepository from '@modules/app/infra/repositories/userPrefer
 	],
 	exports: [
 		UserOperation,
-		UserService,
-		UserPreferenceService,
 	],
 })
 export default class AppModule { }

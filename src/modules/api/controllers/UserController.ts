@@ -2,21 +2,38 @@ import {
 	Controller, Req, UsePipes,
 	Get, Post, Put, Delete, Param, Query, Body,
 } from '@nestjs/common';
+import { ApiOperation, ApiTags, ApiOkResponse } from '@nestjs/swagger';
+import authSwagger from '@modules/api/middlewares/authSwagger';
 import UserOperation from '@modules/app/operations/UserOperation';
 import { CreateUserValidatorPipe, UpdateUserValidatorPipe } from '@modules/api/pipes/UserValidatorPipe';
 import { RequestInterface } from 'src/types/_endpointInterface';
+import User from '@modules/app/domain/entities/User';
 
 
-@Controller()
+@ApiTags('Users')
+@authSwagger()
+@Controller('/users')
 export default class UserController {
 	constructor(
 		private readonly userOperation: UserOperation,
 	) { }
 
-	@Get('/users')
+	@ApiOperation({ summary: 'List Users' })
+	@ApiOkResponse({
+		type: Object, schema: {
+			example: {
+				content: [],
+				pageNumber: 0,
+				pageSize: 0,
+				totalPages: 0,
+				totalItems: 0,
+			}
+		}
+	})
+	@Get()
 	public async listUsers(
 		@Query() query: any,
-	): Promise<any> {
+	): Promise<any | unknown> {
 		try {
 			const result = await this.userOperation.listUsers(query);
 			return result;
@@ -25,12 +42,14 @@ export default class UserController {
 		}
 	}
 
-	@Post('/users')
+	@ApiOperation({ summary: 'Create User' })
+	@ApiOkResponse({ type: User })
+	@Post()
 	@UsePipes(CreateUserValidatorPipe)
 	public async createUser(
 		@Req() request: RequestInterface,
 		@Body() body: any,
-	): Promise<any> {
+	): Promise<User | unknown> {
 		try {
 			const { user } = request;
 
@@ -41,11 +60,13 @@ export default class UserController {
 		}
 	}
 
-	@Get('/users/:userId')
+	@ApiOperation({ summary: 'Get User' })
+	@ApiOkResponse({ type: User })
+	@Get('/:userId')
 	public async getUser(
 		@Req() request: RequestInterface,
 		@Param('userId') userId: number,
-	): Promise<any> {
+	): Promise<User | unknown> {
 		try {
 			const { user } = request;
 
@@ -56,13 +77,15 @@ export default class UserController {
 		}
 	}
 
-	@Put('/users/:userId')
+	@ApiOperation({ summary: 'Update User' })
+	@ApiOkResponse({ type: User })
+	@Put('/:userId')
 	@UsePipes(UpdateUserValidatorPipe)
 	public async updateUser(
 		@Req() request: RequestInterface,
 		@Param('userId') userId: number,
 		@Body() body: any,
-	): Promise<any> {
+	): Promise<User | unknown> {
 		try {
 			const { user } = request;
 
@@ -73,11 +96,13 @@ export default class UserController {
 		}
 	}
 
-	@Delete('/users/:userId')
+	@ApiOperation({ summary: 'Delete User' })
+	@ApiOkResponse({ type: Number, schema: { example: 1 } })
+	@Delete('/:userId')
 	public async deleteUser(
 		@Req() request: RequestInterface,
 		@Param('userId') userId: number,
-	): Promise<any> {
+	): Promise<[affectedCount: number] | unknown> {
 		try {
 			const { user } = request;
 

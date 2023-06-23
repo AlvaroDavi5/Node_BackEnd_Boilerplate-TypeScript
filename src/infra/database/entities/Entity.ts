@@ -1,6 +1,6 @@
 
 export default abstract class Entity {
-	public validate() {
+	public validate(): { value: any, valid: boolean, error: Error | null } {
 		let value: any = null;
 		let valid = false;
 		let error: Error | null = null;
@@ -16,7 +16,13 @@ export default abstract class Entity {
 		return { value, valid, error };
 	}
 
-	getAttributes() {
+	public exists(value: any): boolean {
+		if (value !== null || value !== undefined)
+			return true;
+		return false;
+	}
+
+	public getAttributes(): any {
 		return {};
 	}
 }

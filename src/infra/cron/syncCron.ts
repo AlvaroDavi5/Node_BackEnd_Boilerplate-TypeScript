@@ -44,7 +44,13 @@ export default ({
 				webSocketServer.disconnectAllSockets();
 			}
 		},
-		{ scheduled: false }
+		{
+			name: 'SyncCron',
+			timezone: 'America/Sao_Paulo',
+			scheduled: true,
+			runOnInit: false,
+			recoverMissedExecutions: false,
+		}
 	);
 
 	return job;

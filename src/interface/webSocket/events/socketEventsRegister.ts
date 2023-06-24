@@ -6,6 +6,7 @@ import { ContainerInterface } from 'src/types/_containerInterface';
 export default ({
 	saveConnectionsService,
 	deleteConnectionsService,
+	eventsQueueProducer,
 	formatMessageAfterReceiveHelper,
 	formatMessageBeforeSendHelper,
 	logger,
@@ -17,6 +18,13 @@ export default ({
 			webSocketEventsEnum.CONNECT,
 			(socket) => {
 				logger.info(`Client connected: ${socket.id}`);
+				eventsQueueProducer.send({
+					title: 'New client connected',
+					event: {
+						connectionId: socket.id,
+					},
+					author: 'Websocket Server',
+				});
 				saveConnectionsService.execute(socket.id, {
 					connectionId: socket.id,
 				});

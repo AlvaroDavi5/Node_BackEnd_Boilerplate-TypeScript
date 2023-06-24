@@ -7,7 +7,7 @@ services:
   # Application
   app:
     container_name: App_Node
-    env_file: ./env/.env.development.local
+    env_file: ./envs/.env.development.local
     # Refered Dockerfile
     build: ./
     #image: node:alpine

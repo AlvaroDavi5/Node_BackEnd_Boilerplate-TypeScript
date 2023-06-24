@@ -7,8 +7,8 @@ export default ({
 	logger,
 }: ContainerInterface) => ({
 	execute: (msg: any): any => {
-		logger.info('Emiting event');
-		webSocketClient.send(webSocketEventsEnum.EMIT_PRIVATE, msg);
+		logger.info('Broadcasting event');
+		webSocketClient.send(webSocketEventsEnum.BROADCAST, msg);
 
 		return true;
 	}

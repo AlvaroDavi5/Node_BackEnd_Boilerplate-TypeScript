@@ -25,7 +25,7 @@ export default class RestClient {
 		axiosRetry(this.client, {
 			retries: 3,
 			retryDelay: (retryCount) => {
-				this.logger.info(`Request failed - attempt: ${retryCount}`);
+				this.logger.warn(`Request failed - attempt: ${retryCount}`);
 				return retryCount * 2000;
 			},
 		});
@@ -38,7 +38,7 @@ export default class RestClient {
 			return data;
 		} catch (error) {
 			this.logger.error(error);
-			return {};
+			return null;
 		}
 	}
 }

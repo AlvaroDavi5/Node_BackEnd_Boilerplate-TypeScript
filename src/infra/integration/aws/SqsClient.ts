@@ -1,4 +1,4 @@
-import uuid from 'uuid';
+import { v4 as uuidV4 } from 'uuid';
 import { Logger } from 'winston';
 import { AWSError } from 'aws-sdk';
 import {
@@ -43,7 +43,7 @@ export default class SqsClient {
 	}
 
 
-	private _formatMessageBeforeSend(message: any = {}) {
+	private _formatMessageBeforeSend(message: any = {}): string {
 		let msg = '';
 
 		try {
@@ -64,7 +64,7 @@ export default class SqsClient {
 			Attributes: {
 				FifoQueue: String(isFifoQueue),
 				DelaySeconds: '10', // Unused in FIFO queues
-				MessageRetentionPeriod: '7200',
+				MessageRetentionPeriod: '3600',
 			}
 		};
 
@@ -88,7 +88,7 @@ export default class SqsClient {
 					StringValue: String(author)
 				},
 			},
-			MessageDeduplicationId: isFifoQueue ? uuid.v4() : undefined,
+			MessageDeduplicationId: isFifoQueue ? uuidV4() : undefined,
 			MessageGroupId: isFifoQueue ? this.messageGroupId : undefined, // Required for FIFO queues
 		};
 	}

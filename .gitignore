@@ -40,8 +40,9 @@ test-report.xml
 **/__snapshots__
 # Docker files
 /.docker/
-# VS Code settings
+# VS Code and ASDF settings
 /.vscode/*
+.tool-versions
 # others
 TODO*
 .idea

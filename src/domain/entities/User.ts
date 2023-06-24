@@ -71,7 +71,7 @@ export default class User extends Entity {
 	public getId(): number { return this.id; }
 	public setId(id: number) { this.id = id; }
 
-	public getLogin(): object {
+	public getLogin(): { fullName: string, email: string } {
 		return {
 			fullName: this.fullName,
 			email: this.email,
@@ -96,7 +96,7 @@ export default class User extends Entity {
 		this.updatedAt = new Date();
 	}
 
-	public getDocInfos(): object {
+	public getDocInfos(): { document: string, docType: string, fu: string } {
 		return {
 			document: this.document,
 			docType: this.docType,

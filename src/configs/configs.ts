@@ -50,7 +50,7 @@ export interface ConfigsInterface {
 			host: string | undefined, // cache host
 		},
 		expirationTime: {
-			connections: number // 1 day
+			subscriptions: number // 1 day
 		},
 	},
 	// ? Third-Party Services
@@ -157,7 +157,7 @@ export default (): ConfigsInterface => ({
 			port: process.env.REDIS_PORT,
 		},
 		expirationTime: {
-			connections: 86400,
+			subscriptions: 86400,
 		},
 	},
 	integration: {

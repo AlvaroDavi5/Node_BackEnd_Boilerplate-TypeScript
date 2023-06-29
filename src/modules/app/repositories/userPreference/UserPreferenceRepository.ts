@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import LoggerGenerator from '@infra/logging/logger';
-import Exceptions from '@infra/errors/exceptions';
+import LoggerGenerator from '@infra/logging/LoggerGenerator';
+import Exceptions from '@infra/errors/Exceptions';
 import AbstractRepository from '@infra/database/repositories/AbstractRepository';
 import UserPreferencesModel from '@infra/database/models/UserPreferences';
 import UserPreference from '@modules/app/domain/entities/UserPreference';

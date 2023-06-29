@@ -7,6 +7,7 @@ import UserController from '@modules/api/controllers/UserController';
 
 
 @Module({
+	imports: [],
 	controllers: [
 		DefaultController,
 		UserController,
@@ -14,6 +15,7 @@ import UserController from '@modules/api/controllers/UserController';
 	providers: [
 		HttpConstants,
 	],
+	exports: [],
 })
 export default class ApiModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {

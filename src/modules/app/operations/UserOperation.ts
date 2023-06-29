@@ -4,7 +4,7 @@ import UserPreferenceEntity from '@modules/app/domain/entities/UserPreference';
 import UserService from '@modules/app/services/UserService';
 import UserPreferenceService from '@modules/app/services/UserPreferenceService';
 import UserStrategy from '@modules/app/strategies/UserStrategy';
-import Exceptions from '@infra/errors/exceptions';
+import Exceptions from '@infra/errors/Exceptions';
 import { userAuthType } from 'src/types/_userAuthInterface';
 
 

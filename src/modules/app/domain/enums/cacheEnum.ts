@@ -1,5 +1,5 @@
 
 export enum CacheEnum {
-	CONNECTIONS = 'connections',
+	SUBSCRIPTIONS = 'subscriptions',
 	USER_SETTINGS = 'user_settings',
 }

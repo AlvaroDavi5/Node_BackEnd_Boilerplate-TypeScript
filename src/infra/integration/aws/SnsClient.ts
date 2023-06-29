@@ -9,7 +9,8 @@ import {
 	CreateTopicCommandInput, SubscribeCommandInput, PublishCommandInput,
 } from '@aws-sdk/client-sns';
 import { ConfigsInterface } from '@configs/configs';
-import LoggerGenerator from '@infra/logging/logger';
+import LoggerGenerator from '@infra/logging/LoggerGenerator';
+import DataParserHelper from '@modules/utils/helpers/DataParserHelper';
 
 
 export type protocolType = 'email' | 'sms' | 'http' | 'https' | 'sqs' | 'lambda' | 'application'
@@ -24,6 +25,7 @@ export default class SnsClient {
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly loggerGenerator: LoggerGenerator,
+		private readonly dataParserHelper: DataParserHelper,
 	) {
 		this.logger = this.loggerGenerator.getLogger();
 		const awsConfigs: ConfigsInterface['integration']['aws'] = this.configService.get<any>('integration.aws');
@@ -50,20 +52,11 @@ export default class SnsClient {
 	}
 
 
-	private _formatMessageBeforeSend(message: any = {}): string {
-		let msg = '';
-
-		try {
-			msg = JSON.stringify(message);
-		}
-		catch (error) {
-			msg = String(message);
-		}
-
-		return msg;
+	private formatMessageBeforeSend(message: any = {}): string {
+		return this.dataParserHelper.toString(message);
 	}
 
-	private _createParams(topicName: string): CreateTopicCommandInput {
+	private createParams(topicName: string): CreateTopicCommandInput {
 		const isFifoTopic: boolean = topicName?.includes('.fifo');
 
 		const params: CreateTopicCommandInput = {
@@ -77,7 +70,7 @@ export default class SnsClient {
 		return params;
 	}
 
-	private _subscribeParams(protocol: protocolType, topicArn: string, to: string): SubscribeCommandInput {
+	private subscribeParams(protocol: protocolType, topicArn: string, to: string): SubscribeCommandInput {
 		const endpoint = to || this.awsConfig.endpoint;
 
 		return {
@@ -87,9 +80,9 @@ export default class SnsClient {
 		};
 	}
 
-	private _publishParams(protocol: protocolType, topicArn: string, topicName: string, { message, subject, phoneNumber }: any): PublishCommandInput {
+	private publishParams(protocol: protocolType, topicArn: string, topicName: string, { message, subject, phoneNumber }: any): PublishCommandInput {
 		const isFifoTopic: boolean = topicName?.includes('.fifo');
-		const messageBody = this._formatMessageBeforeSend(message);
+		const messageBody = this.formatMessageBeforeSend(message);
 
 		const publishData: PublishCommandInput = {
 			TopicArn: topicArn,
@@ -137,7 +130,7 @@ export default class SnsClient {
 
 		try {
 			const result = await this.sns.send(new CreateTopicCommand(
-				this._createParams(topicName)
+				this.createParams(topicName)
 			));
 			if (result?.TopicArn)
 				topicArn = result.TopicArn;
@@ -169,7 +162,7 @@ export default class SnsClient {
 
 		try {
 			const result = await this.sns.send(new SubscribeCommand(
-				this._subscribeParams(protocol, topicArn, to)
+				this.subscribeParams(protocol, topicArn, to)
 			));
 			if (result?.SubscriptionArn)
 				subscriptionArn = result.SubscriptionArn;
@@ -201,7 +194,7 @@ export default class SnsClient {
 
 		try {
 			const result = await this.sns.send(new PublishCommand(
-				this._publishParams(protocol, topicArn, topicName, msgData)
+				this.publishParams(protocol, topicArn, topicName, msgData)
 			));
 			if (result?.MessageId)
 				messageId = result.MessageId;

@@ -10,7 +10,7 @@ import {
 	UploadPartCommandInput, GetObjectCommandInput, DeleteObjectCommandInput,
 } from '@aws-sdk/client-s3';
 import { ConfigsInterface } from '@configs/configs';
-import LoggerGenerator from '@infra/logging/logger';
+import LoggerGenerator from '@infra/logging/LoggerGenerator';
 
 
 @Injectable()
@@ -49,7 +49,7 @@ export default class S3Client {
 	}
 
 
-	private _uploadParams(bucketName: string, filePath: string): UploadPartCommandInput {
+	private uploadParams(bucketName: string, filePath: string): UploadPartCommandInput {
 
 		const params: UploadPartCommandInput = {
 			Bucket: bucketName,
@@ -73,7 +73,7 @@ export default class S3Client {
 		return params;
 	}
 
-	private _getObjectParams(bucketName: string, objectKey: string): GetObjectCommandInput | DeleteObjectCommandInput {
+	private getObjectParams(bucketName: string, objectKey: string): GetObjectCommandInput | DeleteObjectCommandInput {
 
 		const params: GetObjectCommandInput | DeleteObjectCommandInput = {
 			Bucket: bucketName,
@@ -156,7 +156,7 @@ export default class S3Client {
 		let key = '';
 
 		try {
-			const result = await this.s3.send(new UploadPartCommand(this._uploadParams(bucketName, filePath)));
+			const result = await this.s3.send(new UploadPartCommand(this.uploadParams(bucketName, filePath)));
 			if (result?.SSEKMSKeyId)
 				key = result.SSEKMSKeyId;
 		} catch (error) {
@@ -170,7 +170,7 @@ export default class S3Client {
 		let contentLength = 0;
 
 		try {
-			const result = await this.s3.send(new GetObjectCommand(this._getObjectParams(bucketName, objectKey)));
+			const result = await this.s3.send(new GetObjectCommand(this.getObjectParams(bucketName, objectKey)));
 			if (result?.Body) {
 				fs.writeFile(`./${objectKey}`, `${result?.Body}`, err => {
 					if (err) {
@@ -192,7 +192,7 @@ export default class S3Client {
 		let marker = false;
 
 		try {
-			const result = await this.s3.send(new DeleteObjectCommand(this._getObjectParams(bucketName, objectKey)));
+			const result = await this.s3.send(new DeleteObjectCommand(this.getObjectParams(bucketName, objectKey)));
 			if (result?.DeleteMarker)
 				marker = result.DeleteMarker;
 		} catch (error) {

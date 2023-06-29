@@ -7,7 +7,7 @@ import {
 	SignUpCommandInput,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { ConfigsInterface } from '@configs/configs';
-import LoggerGenerator from '@infra/logging/logger';
+import LoggerGenerator from '@infra/logging/LoggerGenerator';
 
 
 @Injectable()
@@ -50,7 +50,7 @@ export default class CognitoClient {
 		this.cognito = new CognitoIdentityProviderClient(this.awsConfig);
 	}
 
-	private _signUpParams(userName: string, userEmail: string, password: string): SignUpCommandInput {
+	private signUpParams(userName: string, userEmail: string, password: string): SignUpCommandInput {
 		return {
 			Username: userName,
 			Password: password,
@@ -206,7 +206,7 @@ export default class CognitoClient {
 		let userConfirmed = false;
 
 		try {
-			const result = await this.cognito.send(new SignUpCommand(this._signUpParams(userName, userEmail, password)));
+			const result = await this.cognito.send(new SignUpCommand(this.signUpParams(userName, userEmail, password)));
 			if (result?.UserConfirmed)
 				userConfirmed = result.UserConfirmed;
 		} catch (error) {

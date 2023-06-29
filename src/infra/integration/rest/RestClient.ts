@@ -4,7 +4,7 @@ import axios, { AxiosInstance } from 'axios';
 import axiosRetry from 'axios-retry';
 import { Logger } from 'winston';
 import { ConfigsInterface } from '@configs/configs';
-import LoggerGenerator from '@infra/logging/logger';
+import LoggerGenerator from '@infra/logging/LoggerGenerator';
 
 
 @Injectable()

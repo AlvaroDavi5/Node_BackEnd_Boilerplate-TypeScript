@@ -1,7 +1,7 @@
 import { Model, Op, QueryTypes } from 'sequelize';
 import { Logger } from 'winston';
 import Entity from '@infra/database/entities/Entity';
-import Exceptions from '@infra/errors/exceptions';
+import Exceptions from '@infra/errors/Exceptions';
 
 
 class _RepositoryModel extends Model {

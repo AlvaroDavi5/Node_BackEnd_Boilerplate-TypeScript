@@ -10,7 +10,8 @@ import {
 	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput, DeleteMessageCommandInput,
 } from '@aws-sdk/client-sqs';
 import { ConfigsInterface } from '@configs/configs';
-import LoggerGenerator from '@infra/logging/logger';
+import LoggerGenerator from '@infra/logging/LoggerGenerator';
+import DataParserHelper from '@modules/utils/helpers/DataParserHelper';
 
 
 @Injectable()
@@ -23,6 +24,7 @@ export default class SqsClient {
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly loggerGenerator: LoggerGenerator,
+		private readonly dataParserHelper: DataParserHelper,
 	) {
 		this.logger = this.loggerGenerator.getLogger();
 		const awsConfigs: ConfigsInterface['integration']['aws'] = this.configService.get<any>('integration.aws');
@@ -49,20 +51,11 @@ export default class SqsClient {
 	}
 
 
-	private _formatMessageBeforeSend(message: any = {}): string {
-		let msg = '';
-
-		try {
-			msg = JSON.stringify(message);
-		}
-		catch (error) {
-			msg = String(message);
-		}
-
-		return msg;
+	private formatMessageBeforeSend(message: any = {}): string {
+		return this.dataParserHelper.toString(message);
 	}
 
-	private _createParams(queueName: string): CreateQueueCommandInput {
+	private createParams(queueName: string): CreateQueueCommandInput {
 		const isFifoQueue: boolean = queueName?.includes('.fifo');
 
 		const params: CreateQueueCommandInput = {
@@ -77,9 +70,9 @@ export default class SqsClient {
 		return params;
 	}
 
-	private _msgParams(queueUrl: string, message: any, title: string, author: string): SendMessageCommandInput {
+	private msgParams(queueUrl: string, message: any, title: string, author: string): SendMessageCommandInput {
 		const isFifoQueue: boolean = queueUrl?.includes('.fifo');
-		const messageBody = this._formatMessageBeforeSend(message);
+		const messageBody = this.formatMessageBeforeSend(message);
 
 		return {
 			QueueUrl: queueUrl,
@@ -99,7 +92,7 @@ export default class SqsClient {
 		};
 	}
 
-	private _receiveParam(queueUrl: string): ReceiveMessageCommandInput {
+	private receiveParam(queueUrl: string): ReceiveMessageCommandInput {
 		return {
 			QueueUrl: queueUrl,
 			AttributeNames: [
@@ -139,7 +132,7 @@ export default class SqsClient {
 
 		try {
 			const result = await this.sqs.send(new CreateQueueCommand(
-				this._createParams(queueName)
+				this.createParams(queueName)
 			));
 			if (result?.QueueUrl)
 				queueUrl = result.QueueUrl;
@@ -171,7 +164,7 @@ export default class SqsClient {
 
 		try {
 			const result = await this.sqs.send(new SendMessageCommand(
-				this._msgParams(queueUrl, message, title, author)
+				this.msgParams(queueUrl, message, title, author)
 			));
 			if (result?.MessageId)
 				messageId = result.MessageId;
@@ -187,7 +180,7 @@ export default class SqsClient {
 
 		try {
 			const result = await this.sqs.send(new ReceiveMessageCommand(
-				this._receiveParam(queueUrl)
+				this.receiveParam(queueUrl)
 			));
 			if (result?.Messages) {
 				for (const message of result?.Messages) {

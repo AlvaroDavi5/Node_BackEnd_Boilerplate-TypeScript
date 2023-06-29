@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import CoreModule from './core.module';
 import { ExceptionsEnum } from '@infra/errors/exceptionsEnum';
+import { ConfigsInterface } from '@configs/configs';
 import { ErrorInterface } from 'src/types/_errorInterface';
 
 
@@ -30,7 +31,7 @@ async function startNestApplication() {
 		},
 	});
 
-	const { port } = nestApp.get(ConfigService).get('application');
+	const port: ConfigsInterface['application']['port'] = nestApp.get(ConfigService).get('application.port');
 	await nestApp.listen(Number(port)).catch((error: ErrorInterface) => {
 		const knowExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
 

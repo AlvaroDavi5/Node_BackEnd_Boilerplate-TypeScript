@@ -9,6 +9,8 @@ import { ErrorInterface } from 'src/types/_errorInterface';
 
 
 async function startNestApplication() {
+	console.log(`\n Started with PID ${process.pid} \n`);
+
 	const nestApp = await NestFactory.create(CoreModule);
 	nestApp.setGlobalPrefix('api');
 	nestApp.useGlobalPipes(
@@ -22,6 +24,14 @@ async function startNestApplication() {
 	const config = new DocumentBuilder()
 		.setTitle('Node Back-End Boilerplate')
 		.setVersion('1.0.0')
+		.addBearerAuth({
+			type: 'http',
+			scheme: 'bearer',
+			in: 'header',
+			bearerFormat: 'JWT',
+			name: 'JWT',
+			description: 'Enter JWT token',
+		}, 'Authorization')
 		.build();
 	const document = SwaggerModule.createDocument(nestApp, config);
 	SwaggerModule.setup('/api/docs', nestApp, document, {

@@ -13,8 +13,8 @@ import RestClient from '@infra/integration/rest/RestClient';
 import SyncCron from '@infra/cron/SyncCron';
 import UtilsModule from '@modules/utils/utils.module';
 import AppModule from '@modules/app/app.module';
-import ApiModule from '@modules/api/api.module';
 import EventsModule from '@modules/events/events.module';
+import ApiModule from '@modules/api/api.module';
 
 
 @Global()
@@ -24,8 +24,8 @@ import EventsModule from '@modules/events/events.module';
 		ScheduleModule.forRoot(),
 		UtilsModule,
 		AppModule,
-		ApiModule,
 		EventsModule,
+		ApiModule,
 	],
 	controllers: [],
 	providers: [

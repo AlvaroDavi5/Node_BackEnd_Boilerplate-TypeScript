@@ -11,7 +11,7 @@ import {
 
 export default () =>
 	applyDecorators(
-		ApiBearerAuth(),
+		ApiBearerAuth('Authorization'),
 		ApiBadRequestResponse({
 			description: 'Invalid request format (body, query, params...).',
 			type: BadRequestException,

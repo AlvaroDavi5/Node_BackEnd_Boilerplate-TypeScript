@@ -4,11 +4,9 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiOkResponse } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import authSwagger from '@modules/api/middlewares/authSwagger';
 
 
 @ApiTags('HealthCheck')
-@authSwagger()
 @Controller()
 export default class DefaultController {
 

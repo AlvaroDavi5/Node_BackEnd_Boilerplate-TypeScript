@@ -31,7 +31,7 @@
 	],
 	"scripts": {
 		"start": "cross-env NODE_PATH=. ts-node -r tsconfig-paths/register ./src/main.ts",
-		"start:dev": "cross-env NODE_PATH=. NODE_ENV=dev nodemon",
+		"start:dev": "cross-env NODE_PATH=. NODE_ENV=dev nodemon --config nodemon.json",
 		"start:debug": "cross-env NODE_PATH=. NODE_ENV=dev nodemon --config nodemon-debug.json",
 		"start:hmr": "node build/server",
 		"start:prod": "node build/main.js",

@@ -74,7 +74,7 @@ export interface ConfigsInterface {
 			},
 			// * Message Queues Service
 			sqs: {
-				defaultQueue: {
+				eventsQueue: {
 					queueName: string | undefined,
 					queueUrl: string | undefined,
 				},
@@ -178,9 +178,9 @@ export default (): ConfigsInterface => ({
 				apiVersion: process.env.AWS_API_VERSION,
 			},
 			sqs: {
-				defaultQueue: {
-					queueName: process.env.AWS_SQS_DEFAULT_QUEUE_NAME,
-					queueUrl: process.env.AWS_SQS_DEFAULT_QUEUE_URL,
+				eventsQueue: {
+					queueName: process.env.AWS_SQS_EVENTS_QUEUE_NAME,
+					queueUrl: process.env.AWS_SQS_EVENTS_QUEUE_URL,
 				},
 				endpoint: process.env.AWS_ENDPOINT_URL,
 				apiVersion: process.env.AWS_API_VERSION,

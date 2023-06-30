@@ -7,12 +7,13 @@ import { Server as SocketIoServer, Socket } from 'socket.io';
 import { Logger } from 'winston';
 import { WebSocketEventsEnum } from '@modules/app/domain/enums/webSocketEventsEnum';
 import SubscriptionService from '@modules/app/services/SubscriptionService';
+import EventsQueueProducer from '@modules/events/queue/producers/EventsQueueProducer';
 import LoggerGenerator from '@infra/logging/LoggerGenerator';
 import DataParserHelper from '@modules/utils/helpers/DataParserHelper';
 
 
 @WebSocketGateway({
-	namespace: 'webSocketServer',
+	namespace: 'WebSocketServer',
 	cors: {
 		origin: '*',
 		allowedHeaders: '*',
@@ -27,7 +28,7 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 
 	constructor(
 		private readonly subscriptionService: SubscriptionService,
-		private readonly eventsQueueProducer: any,
+		private readonly eventsQueueProducer: EventsQueueProducer,
 		private readonly loggerGenerator: LoggerGenerator,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
@@ -49,26 +50,26 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 	}
 
 	// listen connect event from client
-	public handleConnection(socket: Socket, ...args: any[]): void {
+	public async handleConnection(socket: Socket, ...args: any[]): Promise<void> {
 		this.logger.debug(`${WebSocketEventsEnum.CONNECT} - ${socket}: ${args}`);
 		this.logger.info(`Client connected: ${socket.id}`);
-		this.eventsQueueProducer.send({
+		this.eventsQueueProducer.dispatch({
 			title: 'New client connected',
 			event: {
 				subscriptionId: socket.id,
 			},
 			author: 'Websocket Server',
 		});
-		this.subscriptionService.save(socket.id, {
+		await this.subscriptionService.save(socket.id, {
 			subscriptionId: socket.id,
 		});
 	}
 
 	// listen disconnect event from client
-	public handleDisconnect(socket: Socket): void {
+	public async handleDisconnect(socket: Socket): Promise<void> {
 		this.logger.debug(`${WebSocketEventsEnum.DISCONNECT} - ${socket}`);
 		this.logger.info(`Client disconnected: ${socket.id}`);
-		this.subscriptionService.delete(socket.id);
+		await this.subscriptionService.delete(socket.id);
 	}
 
 	public async getSocketsIds(): Promise<string[]> {
@@ -81,12 +82,12 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 	}
 
 	@SubscribeMessage(WebSocketEventsEnum.RECONNECT)
-	public handleReconnect(
+	public async handleReconnect(
 		@MessageBody() msg: string,
 		@ConnectedSocket() socket: Socket,
-	): void { // listen reconnect event from client
+	): Promise<void> { // listen reconnect event from client
 		this.logger.info(`Client reconnected: ${socket.id}`);
-		this.subscriptionService.save(socket.id, {
+		await this.subscriptionService.save(socket.id, {
 			...this.formatMessageAfterReceiveHelper(msg),
 			subscriptionId: socket.id,
 		});

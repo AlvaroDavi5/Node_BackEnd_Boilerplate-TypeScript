@@ -9,7 +9,6 @@ import DataParserHelper from '@modules/utils/helpers/DataParserHelper';
 export default class LoggerGenerator {
 	constructor(
 		private readonly configService: ConfigService,
-		private readonly dataParserHelper: DataParserHelper,
 	) { }
 
 	private readonly applicationConfigs: ConfigsInterface['application'] = this.configService.get<any>('application');
@@ -17,7 +16,7 @@ export default class LoggerGenerator {
 	private readonly defaultMessageFormatter = format.printf(msg => {
 		const { level, timestamp, message, stack } = msg;
 		let log = typeof message === 'object'
-			? this.dataParserHelper.toString(msg.message)
+			? JSON.stringify(msg.message)
 			: message;
 
 		if (stack) {

@@ -23,7 +23,13 @@ export default class WebSocketClient {
 
 		this.logger = this.loggerGenerator.getLogger();
 		if (isSocketEnvEnabled) {
-			this.clientSocket = io(socketUrl);
+			this.clientSocket = io(socketUrl, {
+				autoConnect: true,
+				closeOnBeforeunload: true,
+				reconnectionAttempts: 3,
+				timeout: 1000,
+				ackTimeout: (2 * 1000),
+			});
 		}
 	}
 
@@ -32,7 +38,7 @@ export default class WebSocketClient {
 	}
 
 	// send message to server
-	send(event: string, msg: object) {
+	send(event: string, msg: any) {
 
 		this.clientSocket?.emit(
 			String(event),

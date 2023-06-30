@@ -1,7 +1,7 @@
-import IORedis from 'ioredis';
-import { ScanStreamOptions } from 'ioredis/built/types';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import IORedis from 'ioredis';
+import { ScanStreamOptions } from 'ioredis/built/types';
 import { ConfigsInterface } from '@configs/configs';
 import Exceptions from '@infra/errors/Exceptions';
 import DataParserHelper from '@modules/utils/helpers/DataParserHelper';

@@ -1,7 +1,7 @@
-import WebSocketClient from '../../src/interface/webSocket/client/Client';
+import WebSocketClient from './WebSocketClient';
 
 
-export default async ({ logger, configs }: any) => {
+export default ({ logger, configs }: any): WebSocketClient => {
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
 	const webSocketClient = new WebSocketClient({ logger, configs });

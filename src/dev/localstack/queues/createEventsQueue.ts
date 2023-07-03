@@ -1,14 +1,11 @@
-import SqsClient from '../../../src/infra/integration/aws/SqsClient';
+import SqsClient from './SqsClient';
 
 
-export default async ({ logger, configs }: any) => {
+export default ({ logger, configs }: any): boolean => {
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore
-	const sqsClient = new SqsClient({
-		logger,
-		configs,
-	});
-	const queue = configs.integration.aws.sqs.defaultQueue;
+	const sqsClient = new SqsClient({ logger, configs });
+	const queue = configs.integration.aws.sqs.eventsQueue;
 	let hasCreated = false;
 
 	try {

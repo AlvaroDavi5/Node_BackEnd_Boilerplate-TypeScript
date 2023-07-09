@@ -13,25 +13,25 @@ export interface UserPreferenceInterface {
 }
 
 export default class UserPreference extends Entity {
-	@ApiProperty({ type: Number, default: 0 })
+	@ApiProperty({ type: Number, example: 0 })
 	private id = 0;
 
-	@ApiProperty({ type: Number, default: 0 })
+	@ApiProperty({ type: Number, example: 0 })
 	private userId = 0;
 
-	@ApiProperty({ type: String, default: './image.png' })
+	@ApiProperty({ type: String, example: './image.png' })
 	private imagePath: string | null = null;
 
-	@ApiProperty({ type: String, default: 'DEFAULT' })
+	@ApiProperty({ type: String, example: 'DEFAULT' })
 	public defaultTheme: string | null = null;
 
-	@ApiProperty({ type: Date, default: (new Date()) })
+	@ApiProperty({ type: Date, example: (new Date()) })
 	public readonly createdAt: Date;
 
-	@ApiProperty({ type: Date, default: null })
+	@ApiProperty({ type: Date, example: null })
 	public updatedAt: Date | null = null;
 
-	@ApiProperty({ type: Date, default: null })
+	@ApiProperty({ type: Date, example: null })
 	public deletedAt: Date | null = null;
 
 	constructor(dataValues: any) {

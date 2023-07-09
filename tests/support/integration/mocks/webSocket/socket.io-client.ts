@@ -8,12 +8,12 @@ export class Client {
 		this.options = options || {};
 	}
 
-	on: (event: string, callback: any) => {};
-	off: (event: string, callback: any) => {};
-	emit: (event: string, msg: string) => {};
+	on: (event: String, callback: any) => {};
+	off: (event: String, callback: any) => {};
+	emit: (event: String, msg: String) => {};
 	connected: () => true;
-	connect: (event: string, msg: string) => {};
-	disconnect: (event: string, msg: string) => {};
+	connect: (event: String, msg: String) => {};
+	disconnect: (event: String, msg: String) => {};
 }
 
 let client: Client;

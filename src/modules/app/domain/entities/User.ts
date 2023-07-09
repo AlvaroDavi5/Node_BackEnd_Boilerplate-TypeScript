@@ -1,4 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { Type } from 'class-transformer';
 import Entity from '@infra/database/entities/Entity';
 import UserPreference from './UserPreference';
 
@@ -20,43 +21,44 @@ export interface UserInterface {
 }
 
 export default class User extends Entity {
-	@ApiProperty({ type: Number, default: 0 })
+	@ApiProperty({ type: Number, example: 0 })
 	private id = 0;
 
-	@ApiProperty({ type: String, default: 'User Default' })
+	@ApiProperty({ type: String, example: 'User Default' })
 	public fullName: string | null = null;
 
-	@ApiProperty({ type: String, default: 'user.default@nomail.dev' })
+	@ApiProperty({ type: String, example: 'user.default@nomail.dev' })
 	private email: string | null = null;
 
-	@ApiProperty({ type: String, default: null })
+	@ApiProperty({ type: String, example: '' })
 	private password: string | null = null;
 
-	@ApiProperty({ type: String, default: '+0000000000000' })
+	@ApiProperty({ type: String, example: '+0000000000000' })
 	private phone: string | null = null;
 
-	@ApiProperty({ type: String, default: 'INVALID' })
+	@ApiProperty({ type: String, example: 'INVALID' })
 	public docType: string | null = null;
 
-	@ApiProperty({ type: String, default: '00000000000' })
+	@ApiProperty({ type: String, example: '00000000000' })
 	private document: string | null = null;
 
-	@ApiProperty({ type: String, default: 'UF' })
+	@ApiProperty({ type: String, example: 'UF' })
 	public fu: string | null = null;
 
-	@ApiProperty({ type: UserPreference, default: (new UserPreference({ id: 0, userId: 0, imagePath: './image.png', defaultTheme: 'DEFAULT' })) })
+	@ApiProperty({ type: UserPreference, example: ('') })
+	@Type(() => UserPreference)
 	public preference: UserPreference | null = null;
 
-	@ApiProperty({ type: Date, default: (new Date()) })
+	@ApiProperty({ type: Date, example: (new Date()) })
 	public readonly createdAt: Date;
 
-	@ApiProperty({ type: Date, default: null })
+	@ApiProperty({ type: Date, example: null })
 	public updatedAt: Date | null = null;
 
-	@ApiProperty({ type: Date, default: null })
+	@ApiProperty({ type: Date, example: null })
 	public deletedAt: Date | null = null;
 
-	@ApiProperty({ type: String, default: null })
+	@ApiProperty({ type: String, example: null })
 	private deletedBy: string | null = null;
 
 	constructor(dataValues: any) {

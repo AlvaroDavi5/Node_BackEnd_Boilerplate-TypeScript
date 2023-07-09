@@ -55,11 +55,11 @@ export default class EventsQueueConsumer {
 
 	@SqsConsumerEventHandler(eventsQueueName, 'error')
 	public onError(error: Error, message: Message): void {
-		this.logger.error(`[${EventsQueueConsumer.name}] event error from [${this.sqsQueueName}] - MessageId: ${message.MessageId}. Error: ${error.message}`);
+		this.logger.error(`[${EventsQueueConsumer.name}] event error from [${this.sqsQueueName}] - MessageId: ${message?.MessageId}. Error: ${error.message}`);
 	}
 
 	@SqsConsumerEventHandler(eventsQueueName, 'processing_error')
 	public onProcessingError(error: Error, message: Message): void {
-		this.logger.error(`[${EventsQueueConsumer.name}] processing error from [${this.sqsQueueName}] - MessageId: ${message.MessageId}. Error: ${error.message}`);
+		this.logger.error(`[${EventsQueueConsumer.name}] processing error from [${this.sqsQueueName}] - MessageId: ${message?.MessageId}. Error: ${error.message}`);
 	}
 }

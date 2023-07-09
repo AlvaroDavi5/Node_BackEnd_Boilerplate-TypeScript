@@ -4,8 +4,8 @@
 	],
 	"ext": "ts",
 	"ignore": [
-		"src/**/*.test.ts",
-		"src/**/*.spec.ts"
+		"**/*.test.ts",
+		"**/*.spec.ts"
 	],
 	"exec": "node --inspect-brk -r ts-node/register src/main.ts"
 }

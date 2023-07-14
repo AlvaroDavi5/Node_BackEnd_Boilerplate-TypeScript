@@ -39,7 +39,7 @@ export default class RestClient {
 	public async test(): Promise<any> {
 		try {
 			this.logger.info(`Requesting ${this.serviceName} to healthcheck`);
-			const { data } = await this.client.get('/check');
+			const { data } = await this.client.get('mockedService/api/check');
 			return data;
 		} catch (error) {
 			this.logger.error(error);

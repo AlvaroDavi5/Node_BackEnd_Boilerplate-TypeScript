@@ -12,7 +12,7 @@ export default ({ logger, configs }: any): void => {
 		logger,
 		configs,
 	});
-	const queueUrl = process.env.AWS_SQS_DEFAULT_QUEUE_URL || 'http://localhost:4566/000000000000/DEFAULT_QUEUE';
+	const queueUrl = process.env.AWS_SQS_EVENTS_QUEUE_URL || 'http://localhost:4566/000000000000/eventsQueue.fifo';
 
 	const message = {
 		id: uuidV4(),

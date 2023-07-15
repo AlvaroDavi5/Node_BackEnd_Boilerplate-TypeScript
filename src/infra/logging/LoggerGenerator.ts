@@ -2,7 +2,6 @@ import { createLogger, transports, format, Logger } from 'winston';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ConfigsInterface } from '@configs/configs';
-import DataParserHelper from '@modules/utils/helpers/DataParserHelper';
 
 
 @Injectable()
@@ -28,7 +27,7 @@ export default class LoggerGenerator {
 
 	private readonly defaultFormat = format.combine(
 		format.timestamp(),
-		format.errors({ stack: false }),
+		format.errors({ stack: this.applicationConfigs?.stackErrorVisible || false }),
 		this.defaultMessageFormatter,
 	);
 
@@ -43,12 +42,16 @@ export default class LoggerGenerator {
 		},
 		transports: [
 			new transports.Console({
+				level: 'debug', // error,warn,info,debug
 				format: format.combine(
 					format.colorize(),
 					this.defaultFormat,
 				),
 			}),
-			new transports.File({ filename: this.applicationConfigs?.logsPath || './logs/logs.log' }),
+			new transports.File({
+				level: 'info',
+				filename: this.applicationConfigs?.logsPath || './logs/logs.log'
+			}),
 		],
 		exitOnError: false,
 	};

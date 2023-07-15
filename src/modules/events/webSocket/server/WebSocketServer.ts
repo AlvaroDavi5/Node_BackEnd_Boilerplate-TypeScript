@@ -17,7 +17,7 @@ import DataParserHelper from '@modules/utils/helpers/DataParserHelper';
 	cors: {
 		origin: '*',
 		allowedHeaders: '*',
-		methods: ['HEAD', 'GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 	}
 })
 export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, OnGatewayConnection<Socket>, OnGatewayDisconnect<Socket> {
@@ -44,9 +44,11 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 	}
 
 	public afterInit(server: SocketIoServer): void {
-		this.logger.debug(`this.server: ${this.server} - server: ${server}`);
+		server.setMaxListeners(5);
 		if (!this.server)
 			this.server = server;
+		this.server.setMaxListeners(5);
+		this.logger.debug('Started Websocket Server');
 	}
 
 	// listen connect event from client
@@ -83,8 +85,8 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 
 	@SubscribeMessage(WebSocketEventsEnum.RECONNECT)
 	public async handleReconnect(
-		@MessageBody() msg: string,
 		@ConnectedSocket() socket: Socket,
+		@MessageBody() msg: string,
 	): Promise<void> { // listen reconnect event from client
 		this.logger.info(`Client reconnected: ${socket.id}`);
 		await this.subscriptionService.save(socket.id, {
@@ -95,16 +97,16 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 
 	@SubscribeMessage(WebSocketEventsEnum.BROADCAST)
 	public broadcast(
-		@MessageBody() msg: string,
 		@ConnectedSocket() socket: Socket,
+		@MessageBody() msg: string,
 	): void { // listen broadcast order event from client
 		socket.broadcast.emit(WebSocketEventsEnum.EMIT, msg); // emit to all clients, except the sender
 	}
 
 	@SubscribeMessage(WebSocketEventsEnum.EMIT_PRIVATE)
 	public emitPrivate(
-		@MessageBody() msg: string,
 		@ConnectedSocket() socket: Socket,
+		@MessageBody() msg: string,
 	): void { // listen emit privately order event from client
 		this.logger.debug(`${msg} - ${socket}`);
 		socket.emit('events', { name: 'Nest' });

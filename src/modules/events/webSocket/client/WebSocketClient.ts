@@ -38,7 +38,7 @@ export default class WebSocketClient {
 	}
 
 	// send message to server
-	send(event: string, msg: any) {
+	public send(event: string, msg: any) {
 
 		this.clientSocket?.emit(
 			String(event),
@@ -46,8 +46,8 @@ export default class WebSocketClient {
 		);
 	}
 
-	// listen/ignore event messages from the server
-	listen(event: string, callback: any) {
+	// listen event messages from the server
+	public listen(event: string, callback: any) {
 		this.logger.info(`Listenned event '${event}' from the WebSocket server`);
 
 		this.clientSocket?.on(
@@ -56,7 +56,8 @@ export default class WebSocketClient {
 		);
 	}
 
-	ignore(event: string, callback: any) {
+	// ignore listenned event messages from the server
+	public ignore(event: string, callback: any) {
 		this.logger.info(`Ignored event '${event}' from the WebSocket server`);
 
 		this.clientSocket?.off(
@@ -65,15 +66,15 @@ export default class WebSocketClient {
 		);
 	}
 
-	isConnected() {
+	public isConnected() {
 		return this.clientSocket.connected;
 	}
 
-	connect() {
+	public connect() {
 		this.clientSocket.connect();
 	}
 
-	disconnect() {
+	public disconnect() {
 		this.clientSocket.disconnect();
 	}
 }

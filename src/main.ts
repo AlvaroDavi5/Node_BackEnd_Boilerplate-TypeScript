@@ -9,8 +9,6 @@ import { ErrorInterface } from 'src/types/_errorInterface';
 
 
 async function startNestApplication() {
-	console.log(`\n Started with PID ${process.pid} \n`);
-
 	const nestApp = await NestFactory.create(CoreModule);
 	nestApp.setGlobalPrefix('api');
 	nestApp.useGlobalPipes(
@@ -41,8 +39,8 @@ async function startNestApplication() {
 		},
 	});
 
-	const port: ConfigsInterface['application']['port'] = nestApp.get(ConfigService).get('application.port');
-	await nestApp.listen(Number(port)).catch((error: ErrorInterface) => {
+	const appConfigs: ConfigsInterface['application'] | undefined = nestApp.get(ConfigService).get('application');
+	await nestApp.listen(Number(appConfigs?.port)).catch((error: ErrorInterface) => {
 		const knowExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
 
 		if (error?.name && !knowExceptions.includes(error?.name)) {
@@ -52,6 +50,8 @@ async function startNestApplication() {
 			throw err;
 		}
 	});
+
+	console.log(`\n App started with PID: ${process.pid} on URL: ${appConfigs?.url} \n`);
 
 	process.on('uncaughtException', function (error: Error) {
 		console.error('\n', error, '\n');

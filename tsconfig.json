@@ -25,7 +25,7 @@
 		// "jsxFragmentFactory": "",
 		// "jsxImportSource": "",
 		// "reactNamespace": "",
-		// "noLib": true,
+		"noLib": false,
 		// "useDefineForClassFields": true,
 		/* Modules */
 		"module": "CommonJS",
@@ -33,46 +33,23 @@
 		"moduleResolution": "node",
 		"baseUrl": "./",
 		"paths": {
-			"configs/*": [
-				"configs/*",
+			"@configs/*": [
+				"src/configs/*",
 			],
-			"dev/*": [
-				"dev/*"
-			],
-			"@app/*": [
-				"src/app/*",
-			],
-			"@domain/*": [
-				"src/domain/*",
+			"@dev/*": [
+				"src/dev/*",
 			],
 			"@infra/*": [
 				"src/infra/*",
 			],
-			"@interface/*": [
-				"src/interface/*",
-			],
-			"@types/*": [
-				"src/types/*",
-			],
-			"src/*": [
-				"src/*",
-			],
-			"tests/*": [
-				"tests/*",
-			],
-			"scripts/*": [
-				"scripts/*",
-			],
-			"~/*": [
-				"*",
+			"@modules/*": [
+				"src/modules/*",
 			],
 		},
 		"rootDirs": [
-			"./configs",
-			"./dev",
-			"./src",
-			"./scripts",
-			"./tests",
+			"src",
+			"scripts",
+			"tests",
 		],
 		// "typeRoots": [],
 		// "types": [],
@@ -147,11 +124,12 @@
 	],
 	"exclude": [
 		"node_modules",
-		"**/node_modules/**"
+		"**/*.test.ts",
+		"**/*.spec.ts"
 	],
 	"typeAcquisition": {
 		"include": [
 			"jest"
 		]
-	}
+	},
 }

@@ -12,5 +12,11 @@ module.exports = {
 		timestamps: true,
 		paranoid: true,
 		freezeTableName: false,
-	}
+	},
+	pool: {
+		min: 0,
+		max: 5,
+		acquire: 20000,
+		idle: 20000,
+	},
 };

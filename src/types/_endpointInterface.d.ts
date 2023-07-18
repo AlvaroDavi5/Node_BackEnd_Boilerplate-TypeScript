@@ -3,7 +3,7 @@ import { userAuthType } from './_userAuthInterface';
 
 
 interface RequestInterface extends Request {
-	user: userAuthType,
+	user?: userAuthType,
 }
 type ResponseInterface = Response;
 type NextFunctionInterface = NextFunction;

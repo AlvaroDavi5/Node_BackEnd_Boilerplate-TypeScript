@@ -1,50 +1,55 @@
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import path from 'path';
 import fs from 'fs';
 import uuid from 'uuid';
 import { Logger } from 'winston';
-import { AWSError } from 'aws-sdk';
 import {
 	S3Client as S3AWSClient, S3ClientConfig, Bucket, NotificationConfiguration,
 	ListBucketsCommand, CreateBucketCommand, DeleteBucketCommand, PutBucketNotificationConfigurationCommand, UploadPartCommand, GetObjectCommand, DeleteObjectCommand,
 	UploadPartCommandInput, GetObjectCommandInput, DeleteObjectCommandInput,
 } from '@aws-sdk/client-s3';
-import { ContainerInterface } from 'src/types/_containerInterface';
+import { ConfigsInterface } from '@configs/configs';
+import LoggerGenerator from '@infra/logging/LoggerGenerator';
 
 
+@Injectable()
 export default class S3Client {
-	private awsConfig: S3ClientConfig;
-	private region: string;
-	private s3: S3AWSClient;
-	private logger: Logger;
+	private readonly awsConfig: S3ClientConfig;
+	private readonly region: string;
+	private readonly s3: S3AWSClient;
+	private readonly logger: Logger;
 
-	constructor({
-		logger,
-		configs,
-	}: ContainerInterface) {
+	constructor(
+		private readonly configService: ConfigService,
+		private readonly loggerGenerator: LoggerGenerator,
+	) {
+		this.logger = this.loggerGenerator.getLogger();
+		const awsConfigs: ConfigsInterface['integration']['aws'] = this.configService.get<any>('integration.aws');
+		const logging: ConfigsInterface['application']['logging'] = this.configService.get<any>('application.logging');
 		const {
 			region, sessionToken,
 			accessKeyId, secretAccessKey,
-		} = configs.integration.aws.credentials;
-		const { endpoint, apiVersion } = configs.integration.aws.s3;
+		} = awsConfigs.credentials;
+		const { endpoint, apiVersion } = awsConfigs.s3;
 
 		this.awsConfig = {
 			endpoint,
 			region,
 			apiVersion,
 			credentials: {
-				accessKeyId,
-				secretAccessKey,
+				accessKeyId: String(accessKeyId),
+				secretAccessKey: String(secretAccessKey),
 				sessionToken,
 			},
-			logger: configs.application.logging === 'true' ? logger : undefined,
+			logger: logging === 'true' ? this.logger : undefined,
 		};
-		this.region = region;
+		this.region = region || 'us-east-1';
 		this.s3 = new S3AWSClient(this.awsConfig);
-		this.logger = logger;
 	}
 
 
-	private _uploadParams(bucketName: string, filePath: string): UploadPartCommandInput {
+	private uploadParams(bucketName: string, filePath: string): UploadPartCommandInput {
 
 		const params: UploadPartCommandInput = {
 			Bucket: bucketName,
@@ -68,7 +73,7 @@ export default class S3Client {
 		return params;
 	}
 
-	private _getObjectParams(bucketName: string, objectKey: string): GetObjectCommandInput | DeleteObjectCommandInput {
+	private getObjectParams(bucketName: string, objectKey: string): GetObjectCommandInput | DeleteObjectCommandInput {
 
 		const params: GetObjectCommandInput | DeleteObjectCommandInput = {
 			Bucket: bucketName,
@@ -79,153 +84,119 @@ export default class S3Client {
 		return params;
 	}
 
-	getClient(): S3AWSClient {
+	public getClient(): S3AWSClient {
 		return this.s3;
 	}
 
-	async listBuckets(): Promise<Bucket[]> {
+	public async listBuckets(): Promise<Bucket[]> {
 		let list: Bucket[] = [];
 
 		try {
-			this.s3.send(new ListBucketsCommand({}), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('List Error:', err);
-				}
-				else {
-					list = data?.Buckets || [];
-				}
-			});
+			const result = await this.s3.send(new ListBucketsCommand({}));
+			if (result?.Buckets)
+				list = result?.Buckets;
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('List Error:', error);
 		}
 
 		return list;
 	}
 
-	async createBucket(bucketName: string): Promise<string> {
+	public async createBucket(bucketName: string): Promise<string> {
 		let location = '';
 
 		try {
-			this.s3.send(new CreateBucketCommand({
+			const result = await this.s3.send(new CreateBucketCommand({
 				Bucket: bucketName,
 				CreateBucketConfiguration: {
 					LocationConstraint: this.region,
 				},
-			}), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('Create Error:', err);
-				}
-				else {
-					location = data?.Location || '';
-				}
-			});
+			}));
+			if (result?.Location)
+				location = result?.Location;
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('Create Error:', error);
 		}
 
 		return location;
 	}
 
-	async deleteBucket(bucketName: string): Promise<number> {
+	public async deleteBucket(bucketName: string): Promise<number> {
 		let httpStatusCode = 0;
 
 		try {
-			this.s3.send(new DeleteBucketCommand({ Bucket: bucketName }), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('Delete Error:', err);
-				}
-				else {
-					httpStatusCode = data?.$metadata?.httpStatusCode || 0;
-				}
-			});
+			const result = await this.s3.send(new DeleteBucketCommand({ Bucket: bucketName }));
+			if (result?.$metadata?.httpStatusCode)
+				httpStatusCode = result.$metadata.httpStatusCode;
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('Delete Error:', error);
 		}
 
 		return httpStatusCode;
 	}
 
-	async putBucketNotification(bucketName: string, configuration: NotificationConfiguration | undefined): Promise<number> {
+	public async putBucketNotification(bucketName: string, configuration: NotificationConfiguration | undefined): Promise<number> {
 		let httpStatusCode = 0;
 
 		try {
-			this.s3.send(new PutBucketNotificationConfigurationCommand({
+			const result = await this.s3.send(new PutBucketNotificationConfigurationCommand({
 				Bucket: bucketName,
 				NotificationConfiguration: configuration,
-			}), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('Configure Error:', err);
-				}
-				else {
-					httpStatusCode = data?.$metadata?.httpStatusCode || 0;
-				}
-			});
+			}));
+			if (result?.$metadata?.httpStatusCode)
+				httpStatusCode = result.$metadata.httpStatusCode;
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('Configure Error:', error);
 		}
 
 		return httpStatusCode;
 	}
 
-	async uploadFile(bucketName: string, filePath: string): Promise<string> {
+	public async uploadFile(bucketName: string, filePath: string): Promise<string> {
 		let key = '';
 
 		try {
-			this.s3.send(new UploadPartCommand(this._uploadParams(bucketName, filePath)), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('Upload Error:', err);
-				}
-				else {
-					key = data?.SSEKMSKeyId || '';
-				}
-			});
+			const result = await this.s3.send(new UploadPartCommand(this.uploadParams(bucketName, filePath)));
+			if (result?.SSEKMSKeyId)
+				key = result.SSEKMSKeyId;
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('Upload Error:', error);
 		}
 
 		return key;
 	}
 
-	async downloadFile(bucketName: string, objectKey: string): Promise<number> {
+	public async downloadFile(bucketName: string, objectKey: string): Promise<number> {
 		let contentLength = 0;
 
 		try {
-			this.s3.send(new GetObjectCommand(this._getObjectParams(bucketName, objectKey)), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('Download Error:', err);
-				}
-				else if (data?.Body) {
-					fs.writeFile(`./${objectKey}`, `${data?.Body}`, err => {
-						if (err) {
-							this.logger.error('Save Error:', err);
-						}
-					});
-				}
-				if (data?.ContentLength) {
-					contentLength = data?.ContentLength || 0;
-				}
-			});
+			const result = await this.s3.send(new GetObjectCommand(this.getObjectParams(bucketName, objectKey)));
+			if (result?.Body) {
+				fs.writeFile(`./${objectKey}`, `${result?.Body}`, err => {
+					if (err) {
+						this.logger.error('Save Error:', err);
+					}
+				});
+			}
+			if (result?.ContentLength) {
+				contentLength = result.ContentLength;
+			}
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('Download Error:', error);
 		}
 
 		return contentLength;
 	}
 
-	async deleteFile(bucketName: string, objectKey: string): Promise<boolean> {
+	public async deleteFile(bucketName: string, objectKey: string): Promise<boolean> {
 		let marker = false;
 
 		try {
-			this.s3.send(new DeleteObjectCommand(this._getObjectParams(bucketName, objectKey)), (err: AWSError, data) => {
-				if (err) {
-					this.logger.error('Delete Error:', err);
-				}
-				else {
-					marker = data?.DeleteMarker || false;
-				}
-			});
+			const result = await this.s3.send(new DeleteObjectCommand(this.getObjectParams(bucketName, objectKey)));
+			if (result?.DeleteMarker)
+				marker = result.DeleteMarker;
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error('Delete Error:', error);
 		}
 
 		return marker;

@@ -1,7 +1,7 @@
-import sendEventMessage from '../dev/localstack/queues/sendEventMessage';
-import configs from '../configs/configs';
+import sendEventMessage from '../src/dev/localstack/queues/sendEventMessage';
+import configs from '../src/configs/configs';
 
 
 const logger = console;
 
-sendEventMessage({ logger, configs });
+sendEventMessage({ logger, configs: configs() });

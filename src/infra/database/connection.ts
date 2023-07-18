@@ -18,7 +18,7 @@ export async function testConnection(connection: Sequelize, logger?: Logger): Pr
 		logger?.info('Database connection has been established successfully.');
 		return true;
 	}
-	catch (error: any) {
+	catch (error: unknown) {
 		logger?.warn('Unable to connect to the database:');
 		logger?.error(error);
 
@@ -35,7 +35,7 @@ export async function syncConnection(connection: Sequelize, logger?: Logger) {
 			}
 		);
 	}
-	catch (error: any) { }
+	catch (error: unknown) { }
 }
 
 export default connection;

@@ -2,8 +2,8 @@
 export class Server {
 	httpServer: any;
 	options!: object;
-	private _emit: (event: string, msg: string) => void;
-	private _on: (event: string, callback: () => void) => void;
+	private _emit: (event: String, msg: String) => void;
+	private _on: (event: String, callback: () => void) => void;
 
 	constructor(httpServer?: any, options?: object) {
 		this.httpServer = httpServer || null;
@@ -39,9 +39,9 @@ export class Server {
 		};
 	}
 
-	on: (event: string, callback: any) => {};
-	to: (socketId: string) => {
-		emit: (event: string, msg: string) => {},
+	on: (event: String, callback: any) => {};
+	to: (socketId: String) => {
+		emit: (event: String, msg: String) => {},
 	};
 
 	disconnectSockets: () => null;

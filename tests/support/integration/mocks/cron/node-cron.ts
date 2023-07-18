@@ -3,7 +3,7 @@ export class Cron {
 	schedule: any;
 
 	constructor() {
-		this.schedule = (cronExpression: string, callback: any, options = {}) => {
+		this.schedule = (cronExpression: String, callback: any, options = {}) => {
 			if (cronExpression.length)
 				callback();
 

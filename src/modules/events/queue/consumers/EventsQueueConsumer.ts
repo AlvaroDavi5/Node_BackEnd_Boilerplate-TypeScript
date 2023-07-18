@@ -38,14 +38,16 @@ export default class EventsQueueConsumer {
 						{ stripUnknown: false }
 					);
 
-					if (error)
+					if (error) {
 						throw this.exceptions.contract({
 							name: error.name,
 							message: error.message,
 							stack: error.stack,
 						});
-
-					this.subscriptionService.broadcast(value);
+					}
+					else {
+						this.subscriptionService.broadcast(value);
+					}
 				}
 			} catch (error) {
 				this.logger.error(error);

@@ -48,6 +48,7 @@ test-report.xml
 .tool-versions
 # others
 TODO*
+*.tsbuildinfo
 .idea
 
 # --------- except ---------

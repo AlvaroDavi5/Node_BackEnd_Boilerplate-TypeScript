@@ -13,7 +13,6 @@ import DataParserHelper from '@modules/utils/helpers/DataParserHelper';
 
 
 @WebSocketGateway({
-	namespace: 'WebSocketServer',
 	cors: {
 		origin: '*',
 		allowedHeaders: '*',
@@ -53,7 +52,7 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 
 	// listen connect event from client
 	public async handleConnection(socket: Socket, ...args: any[]): Promise<void> {
-		this.logger.debug(`${WebSocketEventsEnum.CONNECT} - ${socket}: ${args}`);
+		this.logger.debug(`${WebSocketEventsEnum.CONNECT} - ${socket.id}: ${args}`);
 		this.logger.info(`Client connected: ${socket.id}`);
 		this.eventsQueueProducer.dispatch({
 			title: 'New client connected',
@@ -69,7 +68,7 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 
 	// listen disconnect event from client
 	public async handleDisconnect(socket: Socket): Promise<void> {
-		this.logger.debug(`${WebSocketEventsEnum.DISCONNECT} - ${socket}`);
+		this.logger.debug(`${WebSocketEventsEnum.DISCONNECT} - ${socket.id}`);
 		this.logger.info(`Client disconnected: ${socket.id}`);
 		await this.subscriptionService.delete(socket.id);
 	}
@@ -86,7 +85,7 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 	@SubscribeMessage(WebSocketEventsEnum.RECONNECT)
 	public async handleReconnect(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() msg: string,
+		@MessageBody() msg: any,
 	): Promise<void> { // listen reconnect event from client
 		this.logger.info(`Client reconnected: ${socket.id}`);
 		await this.subscriptionService.save(socket.id, {
@@ -106,9 +105,9 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 	@SubscribeMessage(WebSocketEventsEnum.EMIT_PRIVATE)
 	public emitPrivate(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() msg: string,
+		@MessageBody() msg: any,
 	): void { // listen emit privately order event from client
-		this.logger.debug(`${msg} - ${socket}`);
+		this.logger.debug(`${msg} - ${socket.id}`);
 		socket.emit('events', { name: 'Nest' });
 		const message = this.formatMessageAfterReceiveHelper(msg);
 		const payload = this.formatMessageBeforeSendHelper(message?.payload);

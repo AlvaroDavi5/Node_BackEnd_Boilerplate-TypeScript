@@ -64,7 +64,7 @@
 		"lint": "yarn js:lint && yarn ts:lint",
 		"lint:fix": "yarn js:lint --fix && yarn ts:lint --fix",
 		"js:lint": "eslint --ext .js \"{dev,configs,scripts,src,tests}/**/*.js\" --quiet",
-		"ts:lint": "eslint --ext .ts \"{dev,configs,scripts,src,tests/unit,tests/e2e}/**/*.ts\" --quiet",
+		"ts:lint": "eslint --ext .ts \"{dev,configs,scripts,src,tests}/**/*.ts\" --quiet",
 		"format": "prettier --write \"./**/*.{js,ts,jsx,tsx,json}\"",
 		"commit": "git-cz",
 		"versioning": "semver",

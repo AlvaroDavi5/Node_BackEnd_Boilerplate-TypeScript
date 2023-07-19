@@ -1,10 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { io, Socket } from 'socket.io-client';
 import { Logger } from 'winston';
-import LoggerGenerator from '@infra/logging/LoggerGenerator';
-import DataParserHelper from '@modules/utils/helpers/DataParserHelper';
-import { ConfigsInterface } from '@configs/configs';
+import { ConfigsInterface } from '@configs/configs.config';
 
 
 @Injectable()

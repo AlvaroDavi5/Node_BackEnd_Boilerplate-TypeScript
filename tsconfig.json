@@ -33,11 +33,11 @@
 		"moduleResolution": "node",
 		"baseUrl": "./",
 		"paths": {
-			"@configs/*": [
-				"src/configs/*",
-			],
 			"@dev/*": [
 				"src/dev/*",
+			],
+			"@configs/*": [
+				"src/configs/*",
 			],
 			"@infra/*": [
 				"src/infra/*",

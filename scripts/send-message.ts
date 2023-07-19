@@ -1,5 +1,5 @@
 import sendEventMessage from '../src/dev/localstack/queues/sendEventMessage';
-import configs from '../src/configs/configs';
+import configs from '../src/configs/configs.config';
 
 
 const logger = console;

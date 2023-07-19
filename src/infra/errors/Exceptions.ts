@@ -4,8 +4,8 @@ import {
 	ConflictException, InternalServerErrorException, ServiceUnavailableException,
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ConfigsInterface } from '@configs/configs';
-import { ExceptionsEnum } from './exceptionsEnum';
+import { ConfigsInterface } from '@configs/configs.config';
+import { ExceptionsEnum } from './exceptions.enum';
 import { ErrorInterface } from 'src/types/_errorInterface';
 
 

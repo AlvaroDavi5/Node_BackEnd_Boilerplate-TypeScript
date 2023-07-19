@@ -1,6 +1,6 @@
 import { Sequelize } from 'sequelize';
 import { Logger } from 'winston';
-import DBConfig from './dbConfig';
+import DBConfig from './db.config';
 
 
 /* connecting to a database */

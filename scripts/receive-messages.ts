@@ -1,6 +1,6 @@
 import createWebSocketClient from '../src/dev/websocket/createWebSocketClient';
-import { WebSocketEventsEnum } from '../src/modules/app/domain/enums/webSocketEventsEnum';
-import configs from '../src/configs/configs';
+import { WebSocketEventsEnum } from '../src/modules/app/domain/enums/webSocketEvents.enum';
+import configs from '../src/configs/configs.config';
 
 
 const logger = console;

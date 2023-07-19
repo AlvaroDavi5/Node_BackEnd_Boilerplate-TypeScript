@@ -1,7 +1,7 @@
 import { Module, Global } from '@nestjs/common';
-import DataParserHelper from '@modules/utils/helpers/DataParserHelper';
-import CacheAccessHelper from '@modules/utils/helpers/CacheAccessHelper';
-import FileReaderHelper from '@modules/utils/helpers/FileReaderHelper';
+import DataParserHelper from '@modules/utils/helpers/DataParser.helper';
+import CacheAccessHelper from '@modules/utils/helpers/CacheAccess.helper';
+import FileReaderHelper from '@modules/utils/helpers/FileReader.helper';
 
 
 @Global()

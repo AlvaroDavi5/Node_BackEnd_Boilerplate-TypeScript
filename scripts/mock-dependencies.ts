@@ -1,6 +1,6 @@
 import createEventsQueue from '../src/dev/localstack/queues/createEventsQueue';
 import MockedExternalServers from '../src/dev/mockedExternalServers/index';
-import configs from '../src/configs/configs';
+import configs from '../src/configs/configs.config';
 
 
 const logger = console;

@@ -4,8 +4,8 @@ import { ValidationPipe } from '@nestjs/common';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import CoreModule from './core.module';
-import { ExceptionsEnum } from '@infra/errors/exceptionsEnum';
-import { ConfigsInterface } from '@configs/configs';
+import { ExceptionsEnum } from '@infra/errors/exceptions.enum';
+import { ConfigsInterface } from '@configs/configs.config';
 import { ErrorInterface } from 'src/types/_errorInterface';
 
 
@@ -40,7 +40,7 @@ async function startNestApplication() {
 		},
 	});
 
-	const appConfigs: ConfigsInterface['application'] | undefined = nestApp.get(ConfigService).get('application');
+	const appConfigs: ConfigsInterface['application'] | undefined = nestApp.get<ConfigService>(ConfigService).get<any>('application');
 	nestApp.useWebSocketAdapter(new IoAdapter(nestApp)); // WsAdapter
 	await nestApp.listen(Number(appConfigs?.port)).catch((error: ErrorInterface) => {
 		const knowExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());

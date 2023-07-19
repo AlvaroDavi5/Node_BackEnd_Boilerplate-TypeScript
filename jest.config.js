@@ -27,8 +27,10 @@ module.exports = {
 
 	// An array of regexp pattern strings used to skip coverage collection
 	coveragePathIgnorePatterns: [
-		'src/container.ts',
-		'src/types/',
+		'src/main.ts',
+		'src/dev/',
+		'src/infra/',
+		'src/modules/app/repositories/',
 	],
 
 	// Indicates which provider should be used to instrument code for coverage

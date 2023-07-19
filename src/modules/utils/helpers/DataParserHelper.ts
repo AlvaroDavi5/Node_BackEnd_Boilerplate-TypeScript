@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { Logger } from 'winston';
 import LoggerGenerator from '@infra/logging/LoggerGenerator';
 
@@ -8,6 +8,7 @@ export default class DataParserHelper {
 	private readonly logger: Logger;
 
 	constructor(
+		@Inject(forwardRef(() => LoggerGenerator)) // resolve circular dependency
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
 		this.logger = this.loggerGenerator.getLogger();

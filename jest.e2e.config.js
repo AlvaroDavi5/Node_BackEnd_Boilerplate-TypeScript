@@ -27,8 +27,15 @@ module.exports = {
 
 	// An array of regexp pattern strings used to skip coverage collection
 	coveragePathIgnorePatterns: [
-		'src/container.ts',
-		'src/types/',
+		'src/types',
+		'src/dev',
+		'src/configs',
+		'src/modules/utils',
+		'src/modules/app/domain',
+		'src/infra/error',
+		'src/modules/api/constants',
+		'src/core.module.ts',
+		'src/main.ts',
 	],
 
 	// Indicates which provider should be used to instrument code for coverage
@@ -55,10 +62,10 @@ module.exports = {
 	// forceCoverageMatch: [],
 
 	// A path to a module which exports an async function that is triggered once before all test suites
-	// globalSetup: undefined,
+	globalSetup: '<rootDir>/tests/support/e2e/jestInit.ts',
 
 	// A path to a module which exports an async function that is triggered once after all test suites
-	// globalTeardown: undefined,
+	globalTeardown: '<rootDir>/tests/support/e2e/jestFinish.ts',
 
 	// A set of global variables that need to be available in all test environments
 	// globals: {},
@@ -127,7 +134,7 @@ module.exports = {
 
 	// A list of paths to directories that Jest should use to search for files in
 	roots: [
-		'<rootDir>/tests/unit',
+		'<rootDir>/tests/e2e',
 	],
 
 	// Allows you to use a custom runner instead of Jest's default test runner
@@ -136,7 +143,7 @@ module.exports = {
 	// The paths to modules that run some code to configure or set up the testing environment before each test
 	setupFiles: [
 		'dotenv/config',
-		'<rootDir>/tests/support/unit/setup.ts',
+		'<rootDir>/tests/support/e2e/setup.ts',
 	],
 
 	// A list of paths to modules that run some code to configure or set up the testing framework before each test

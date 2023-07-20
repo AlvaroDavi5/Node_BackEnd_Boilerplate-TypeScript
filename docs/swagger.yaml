@@ -3,9 +3,9 @@
 
 openapi: 3.0.1
 info:
-    title: Node DDD Boilerplate Service
+    title: Node Backend Boilerplate Service
     version: 0.3.0
-    description: "<p>This is the Node DDD Boilerplate Service openApi specifications</p>"
+    description: "<p>This is the Node Backend Boilerplate Service openApi specifications</p>"
 servers:
     - url: http://localhost:4000/api
       description: Local

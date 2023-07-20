@@ -1,4 +1,4 @@
-# Node DDD Back-End Boilerplate (TypeScript)
+# Node Back-End Boilerplate :fire:
 
 ## Description
 
@@ -24,6 +24,7 @@ Node.js Domain-Driven Design Boilerplate with TypeScript for Back-End.
 - JavaScript: Web programming laguage;
 - TypeScript: JavaScript superset for typing;
 - Node.js: JavaScript runtime;
+- Nest.js: TypeScript Framework for Back-End;
 - Express: Robust tooling for HTTP servers;
 - Socket.io: WebSocket library;
 - AWS-SDK: A Node.js SDK to access AWS resources, such as:
@@ -37,9 +38,9 @@ Node.js Domain-Driven Design Boilerplate with TypeScript for Back-End.
 - Docker: Services isolation and process resources management with containers;
 - SonarQube: Test coverage and code quality analyzer;
 - Winston: Custom logger with transports;
-- Morgan: HTTP request logger middleware used with winston;
 - Joi: Schema validator library;
-- Eslint: JavaScript/TypeScript linter;
+- EsLint: JavaScript/TypeScript linter;
+- Prettier: JavaScript/TypeScript formatter;
 - Jest: Testing Framework;
 - Huksy: Git hook-listenner used to check tests, format the code and the commits;
 

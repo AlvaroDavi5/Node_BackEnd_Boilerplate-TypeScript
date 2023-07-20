@@ -27,15 +27,10 @@ module.exports = {
 
 	// An array of regexp pattern strings used to skip coverage collection
 	coveragePathIgnorePatterns: [
-		'src/container.ts',
-		'src/types/',
-		'src/domain/',
+		'src/main.ts',
+		'src/dev/',
 		'src/infra/',
-		'src/interface/http/',
-		'src/interface/queue/',
-		'src/interface/webSocket/client/Client.ts',
-		'src/interface/webSocket/server/Server.ts',
-		'src/interface/webSocket/events/socketEventsRegister.ts',
+		'src/modules/app/repositories/',
 	],
 
 	// Indicates which provider should be used to instrument code for coverage
@@ -93,6 +88,10 @@ module.exports = {
 	// A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
 	moduleNameMapper: {
 		'~/(.*)': '<rootDir>/src/$1',
+		'@dev/(.*)': '<rootDir>/src/dev/$1',
+		'@configs/(.*)': '<rootDir>/src/configs/$1',
+		'@infra/(.*)': '<rootDir>/src/infra/$1',
+		'@modules/(.*)': '<rootDir>/src/modules/$1',
 	},
 
 	// An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -123,7 +122,7 @@ module.exports = {
 	// resolver: undefined,
 
 	// Automatically restore mock state between every test
-	// restoreMocks: false,
+	restoreMocks: true,
 
 	// The root directory that Jest should scan for tests and modules within
 	rootDir: './',
@@ -188,7 +187,7 @@ module.exports = {
 
 	// A map from regular expressions to paths to transformers
 	transform: {
-		'^.+\\.tsx?$': [
+		'^.+\\.(t|j)s$': [
 			'ts-jest',
 			{
 				diagnostics: false,

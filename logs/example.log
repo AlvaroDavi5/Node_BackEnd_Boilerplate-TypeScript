@@ -1,0 +1,13 @@
+
+{"env":"dev","level":"info","message":"WebSocket started with HTTP server","service":"Node Boilerplate","timestamp":"2023-03-18T00:02:46.278Z"}
+{"env":"dev","level":"info","message":"Sync cron started","service":"Node Boilerplate","timestamp":"2023-03-18T00:02:46.290Z"}
+{"env":"dev","level":"info","message":"Events queue consumer started","service":"Node Boilerplate","timestamp":"2023-03-18T00:02:46.295Z"}
+{"env":"dev","level":"info","message":"Server started on port: 3000 - Environment: dev","service":"Node Boilerplate","timestamp":"2023-03-18T00:02:46.299Z"}
+{"env":"dev","level":"info","message":"Client connected: gwluArR6HGOBdtW9AAAB","service":"Node Boilerplate","timestamp":"2023-03-18T00:02:46.367Z"}
+{"env":"dev","level":"info","message":"Running Sync cron","service":"Node Boilerplate","timestamp":"2023-03-18T00:04:00.381Z"}
+{"env":"dev","level":"info","message":"Database connection has been established successfully.","service":"Node Boilerplate","timestamp":"2023-03-18T00:04:00.449Z"}
+
+{"env":"dev","level":"info","message":{"requestQuery":{"limit":10,"page":0,"size":50}},"service":"Node Boilerplate","timestamp":"2023-03-18T00:05:54.348Z"}
+{"env":"dev","level":"warn","message":"Invalid user!","service":"Node Boilerplate","timestamp":"2023-03-18T00:05:54.349Z"}
+{"env":"dev","level":"error","message":"Include unexpected. Element has to be either a Model, an Association or an object.","service":"Node Boilerplate","timestamp":"2023-03-18T00:05:54.356Z"}
+{"env":"dev","level":"info","message":"::ffff:172.18.0.1 - - [18/Mar/2023:00:05:54 +0000] \"GET /api/users HTTP/1.1\" 500 965 \"-\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 OPR/96.0.0.0\"","service":"Node Boilerplate","timestamp":"2023-03-18T00:05:54.406Z"}

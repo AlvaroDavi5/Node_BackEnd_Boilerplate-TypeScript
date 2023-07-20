@@ -1,6 +1,6 @@
-import createWebSocketClient from '../dev/websocket/createWebSocketClient';
-import webSocketEventsEnum from '../src/domain/enums/webSocketEventsEnum';
-import configs from '../configs/configs';
+import createWebSocketClient from '../src/dev/websocket/createWebSocketClient';
+import { WebSocketEventsEnum } from '../src/modules/app/domain/enums/webSocketEvents.enum';
+import configs from '../src/configs/configs.config';
 
 
 const logger = console;
@@ -16,21 +16,21 @@ function formatMessageAfterReceiveHelper(message: string) {
 	return msg;
 }
 
-async function createSocketClient() {
+function createSocketClient() {
 	logger.info(
 		'\n # Creating socket client \n'
 	);
 
-	const webSocketClient = await createWebSocketClient({
+	const webSocketClient = createWebSocketClient({
 		logger,
-		configs,
+		configs: configs(),
 	});
-	webSocketClient.send(webSocketEventsEnum.RECONNECT, {
+	webSocketClient.send(WebSocketEventsEnum.RECONNECT, {
 		dataValues: {
 			clientId: 'localDev#1',
 		},
 	});
-	webSocketClient.listen(webSocketEventsEnum.EMIT, (msg: string) => {
+	webSocketClient.listen(WebSocketEventsEnum.EMIT, (msg: string) => {
 		msg = formatMessageAfterReceiveHelper(msg);
 		logger.info(msg);
 	});

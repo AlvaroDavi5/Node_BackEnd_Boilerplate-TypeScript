@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import { Logger } from 'winston';
 import RedisClient from '@infra/cache/Redis.client';
-import WebSocketServer from '@modules/events/webSocket/server/WebSocket.server';
-import WebSocketClient from '@modules/events/webSocket/client/WebSocket.client';
+import WebSocketServer from '@modules/events/websocket/server/WebSocket.server';
+import WebSocketClient from '@modules/events/websocket/client/WebSocket.client';
 import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
 import connection, { testConnection, syncConnection } from '@infra/database/connection';
 

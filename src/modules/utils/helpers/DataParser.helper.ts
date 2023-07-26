@@ -31,12 +31,7 @@ export default class DataParserHelper {
 			result = data;
 			break;
 		case 'object':
-			try {
-				result = JSON.stringify(data);
-			} catch (error) {
-				result = '';
-				this.logger.warn('Object:String parse error');
-			}
+			result = JSON.stringify(data) || data?.toString() || '';
 			break;
 		case 'symbol':
 			result = data.toString();

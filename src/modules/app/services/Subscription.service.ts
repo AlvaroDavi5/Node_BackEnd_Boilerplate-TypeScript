@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { Logger } from 'winston';
 import { ConfigsInterface } from '@configs/configs.config';
 import RedisClient from '@infra/cache/Redis.client';
-import WebSocketClient from '@modules/events/webSocket/client/WebSocket.client';
+import WebSocketClient from '@modules/events/websocket/client/WebSocket.client';
 import CacheAccessHelper from '@modules/utils/helpers/CacheAccess.helper';
 import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
 import { CacheEnum } from '@modules/app/domain/enums/cache.enum';

@@ -81,7 +81,7 @@ export default class UserOperation {
 				message: 'User or preference not found!'
 			});
 
-		const isAllowedToUpdateUser = this.userStrategy.manageAuth(user, userAgent);
+		const isAllowedToUpdateUser = this.userStrategy.isAllowed(user, userAgent);
 		if (!isAllowedToUpdateUser)
 			throw this.exceptions.unauthorized({
 				message: 'userAgent not allowed to execute this action'

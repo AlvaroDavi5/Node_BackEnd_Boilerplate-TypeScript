@@ -1,33 +1,28 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import { ModuleMocker, MockFunctionMetadata } from 'jest-mock';
-import HttpConstants from '../../../../../src/modules/api/constants/Http.constants';
+import HttpConstants from './Http.constants';
 
-
-const moduleMocker = new ModuleMocker(global);
 
 describe('Modules :: API :: Constants :: HttpConstants', () => {
+	let nestTestApp: TestingModule;
+
 	let httpConstants: HttpConstants;
 
 	// ? build test app
 	beforeEach(async () => {
-		const nestTestApp: TestingModule = await Test.createTestingModule({
+		nestTestApp = await Test.createTestingModule({
 			providers: [HttpConstants],
-		})
-			.useMocker((injectionToken) => {
-				if (typeof injectionToken === 'function') {
-					const mockMetadata = moduleMocker.getMetadata(injectionToken) as MockFunctionMetadata<any, any>;
-					const Mock = moduleMocker.generateFromMetadata(mockMetadata);
-					return new Mock();
-				}
-			})
-			.compile();
+		}).compile();
 
 		// * get app provider
 		httpConstants = nestTestApp.get<HttpConstants>(HttpConstants);
 	});
 
+	afterEach(() => {
+		nestTestApp.close();
+	});
+
 	describe('# Status Code', () => {
-		it('Should return the same value', () => {
+		test('Should return the same value', () => {
 			expect(httpConstants.status.OK).toBe(200);
 			expect(httpConstants.status.BAD_REQUEST).toBe(400);
 			expect(httpConstants.status.UNAUTHORIZED).toBe(401);
@@ -38,7 +33,7 @@ describe('Modules :: API :: Constants :: HttpConstants', () => {
 	});
 
 	describe('# Messages', () => {
-		it('Should return the same value', () => {
+		test('Should return the same value', () => {
 			expect(httpConstants.messages.found('Resource')).toBe('Resource finded successfully');
 			expect(httpConstants.messages.notFound('Resource')).toBe('Resource not found!');
 			expect(httpConstants.messages.created('Resource')).toBe('Resource created successfully.');

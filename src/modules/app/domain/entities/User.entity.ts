@@ -21,44 +21,44 @@ export interface UserInterface {
 }
 
 export default class User extends Entity {
-	@ApiProperty({ type: Number, example: 0 })
+	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false })
 	private id = 0;
 
-	@ApiProperty({ type: String, example: 'User Default' })
+	@ApiProperty({ type: String, example: 'User Default', default: null, nullable: true })
 	public fullName: string | null = null;
 
-	@ApiProperty({ type: String, example: 'user.default@nomail.dev' })
+	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: null, nullable: true })
 	private email: string | null = null;
 
-	@ApiProperty({ type: String, example: '' })
+	@ApiProperty({ type: String, example: '', default: null, nullable: true })
 	private password: string | null = null;
 
-	@ApiProperty({ type: String, example: '+0000000000000' })
+	@ApiProperty({ type: String, example: '+0000000000000', default: null, nullable: true })
 	private phone: string | null = null;
 
-	@ApiProperty({ type: String, example: 'INVALID' })
+	@ApiProperty({ type: String, example: 'INVALID', default: null, nullable: true })
 	public docType: string | null = null;
 
-	@ApiProperty({ type: String, example: '00000000000' })
+	@ApiProperty({ type: String, example: '00000000000', default: null, nullable: true })
 	private document: string | null = null;
 
-	@ApiProperty({ type: String, example: 'UF' })
+	@ApiProperty({ type: String, example: 'UF', default: null, nullable: true })
 	public fu: string | null = null;
 
-	@ApiProperty({ type: UserPreference, example: ('') })
+	@ApiProperty({ type: UserPreference, default: null, nullable: true })
 	@Type(() => UserPreference)
-	public preference: UserPreference | null = null;
+	private preference: UserPreference | null = null;
 
-	@ApiProperty({ type: Date, example: (new Date()) })
+	@ApiProperty({ type: Date, example: (new Date()), default: (new Date()), nullable: false })
 	public readonly createdAt: Date;
 
-	@ApiProperty({ type: Date, example: null })
+	@ApiProperty({ type: Date, example: null, default: null, nullable: true })
 	public updatedAt: Date | null = null;
 
-	@ApiProperty({ type: Date, example: null })
+	@ApiProperty({ type: Date, example: null, default: null, nullable: true })
 	public deletedAt: Date | null = null;
 
-	@ApiProperty({ type: String, example: null })
+	@ApiProperty({ type: String, example: null, default: null, nullable: true })
 	private deletedBy: string | null = null;
 
 	constructor(dataValues: any) {
@@ -140,10 +140,15 @@ export default class User extends Entity {
 	}
 
 	public getDeletedBy(): string | null { return this.deletedBy; }
+
 	public setDeletedBy(agentId: string): void {
 		this.deletedBy = agentId;
 		this.deletedAt = new Date();
 		this.updatedAt = new Date();
+	}
+
+	public getPreference(): UserPreference | null {
+		return this.preference;
 	}
 
 	public setPreference(preference: UserPreference): void {

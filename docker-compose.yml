@@ -47,6 +47,19 @@ services:
       # host_path:container_path
       - db_volume:/var/lib/postgresql/
 
+  # Data
+  data:
+    container_name: Data_MongoDB
+    image: mongo:latest
+    restart: always
+    environment:
+      MONGO_INITDB_ROOT_USERNAME: admin
+      MONGO_INITDB_ROOT_PASSWORD: pass
+    ports:
+      - 27017:27017
+    networks:
+      - default_network
+
   # Cache
   cache:
     container_name: Cache_Redis

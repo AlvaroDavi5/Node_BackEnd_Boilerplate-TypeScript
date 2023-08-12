@@ -7,17 +7,17 @@ services:
   # Application
   app:
     container_name: App_Node
-    env_file: ./envs/.env.development.local
+    #image: node:alpine
     # Refered Dockerfile
     build: ./
-    #image: node:alpine
     #user: root
+    env_file: ./envs/.env.development.local
     #working_dir: /app
     #command: ['./init.sh']
-    networks:
-      - default_network
     ports:
       - 3000:3000
+    networks:
+      - default_network
     volumes:
       - ./configs:/app/configs
       - ./src:/app/src
@@ -34,19 +34,27 @@ services:
   database:
     container_name: DataBase_PostgreSQL
     image: postgres:latest
-    #restart: always
+    user: root
     environment:
       POSTGRES_USER: postgres
       POSTGRES_PASSWORD: pass
       POSTGRES_DB: db_postgres
-    user: root
+    ports:
+      - 5432:5432
+    networks:
+      - default_network
     volumes:
       # host_path:container_path
       - db_volume:/var/lib/postgresql/
+
+  # Cache
+  cache:
+    container_name: Cache_Redis
+    image: redis:latest
+    ports:
+      - 6379:6379
     networks:
       - default_network
-    ports:
-      - 5432:5432
 
   # Cloud Services
   cloud:
@@ -56,22 +64,13 @@ services:
       - AWS_DEFAULT_REGION=us-east-1
       - EDGE_PORT=4566
       - SERVICES=sqs,sns,s3,cognito
-    networks:
-      - default_network
     ports:
       - 4566:4566
+    networks:
+      - default_network
     volumes:
       - ${TMPDIR:-/tmp/localstack}:/var/lib/localstack
       - /var/run/docker.sock:/var/run/docker.sock
-
-  # Cache
-  cache:
-    container_name: Cache_Redis
-    image: redis:latest
-    networks:
-      - default_network
-    ports:
-      - 6379:6379
 
   # Quality
   quality:
@@ -82,6 +81,8 @@ services:
     ports:
       - 9000:9000
       - 9092:9092
+    networks:
+      - default_network
 
 # Networks for Containers
 networks:

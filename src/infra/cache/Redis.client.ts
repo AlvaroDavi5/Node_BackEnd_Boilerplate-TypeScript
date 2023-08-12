@@ -9,7 +9,7 @@ import DataParserHelper from '@modules/utils/helpers/DataParser.helper';
 
 @Injectable()
 export default class RedisClient {
-	private redis: IORedis;
+	private readonly redisClient: IORedis;
 
 	constructor(
 		private readonly configService: ConfigService,
@@ -18,29 +18,29 @@ export default class RedisClient {
 	) {
 		const { host, port }: ConfigsInterface['cache']['redis'] = this.configService.get<any>('cache.redis');
 
-		this.redis = new IORedis({
+		this.redisClient = new IORedis({
 			host: String(host),
 			port: Number(port),
 			showFriendlyErrorStack: true,
 		});
 
-		if (!this.redis) {
+		if (!this.redisClient) {
 			throw this.exceptions.integration({
 				message: 'Error to instance redis client',
 			});
 		}
 	}
 
-	public lib(): IORedis {
-		return this.redis;
+	public getClient(): IORedis {
+		return this.redisClient;
 	}
 
 	public isConnected(): boolean {
-		return this.redis?.status === 'ready';
+		return this.redisClient?.status === 'ready';
 	}
 
 	public async listKeys(): Promise<string[]> {
-		const result = await this.redis.keys('*');
+		const result = await this.redisClient.keys('*');
 
 		if (!result)
 			return [];
@@ -49,21 +49,21 @@ export default class RedisClient {
 	}
 
 	public async get(key: string): Promise<any> {
-		const value = await this.redis.get(String(key));
+		const value = await this.redisClient.get(String(key));
 		return value ? this.dataParserHelper.toObject(value) : null;
 	}
 
 	public async set(key: string, value: object, ttl = 30): Promise<string> {
-		const result = await this.redis.set(String(key), this.dataParserHelper.toString(value));
-		await this.redis.expire(String(key), Number(ttl)); // [key] expires in [ttl] seconds
+		const result = await this.redisClient.set(String(key), this.dataParserHelper.toString(value));
+		await this.redisClient.expire(String(key), Number(ttl)); // [key] expires in [ttl] seconds
 		return result;
 	}
 
 	public async getByKeyPattern(pattern: string): Promise<PromiseSettledResult<any>[]> {
-		const keys = await this.redis.keys(pattern);
+		const keys = await this.redisClient.keys(pattern);
 		const getByKeyPromises = keys.map(
 			async (key: string) => {
-				const value = this.dataParserHelper.toObject(String(await this.redis.get(key)));
+				const value = this.dataParserHelper.toObject(String(await this.redisClient.get(key)));
 
 				return {
 					key,
@@ -76,13 +76,13 @@ export default class RedisClient {
 	}
 
 	public async getValuesByKeyPattern(key: string): Promise<any[]> {
-		const keys = await this.redis.keys(key);
+		const keys = await this.redisClient.keys(key);
 
 		if (!keys || keys?.length < 1) {
 			return [];
 		}
 
-		const caches = await this.redis.mget(keys);
+		const caches = await this.redisClient.mget(keys);
 
 		return caches.map((cache) => {
 			return this.dataParserHelper.toObject(String(cache));
@@ -90,23 +90,23 @@ export default class RedisClient {
 	}
 
 	public async delete(key: string): Promise<number> {
-		const result = await this.redis.del(String(key));
+		const result = await this.redisClient.del(String(key));
 		return result;
 	}
 
 	public async deleteAll(): Promise<string> {
-		const result = await this.redis.flushall();
+		const result = await this.redisClient.flushall();
 
 		return result;
 	}
 
 	public async remove(keyPattern: ScanStreamOptions | object | string): Promise<void> {
 		const scanValue: string | any = `${keyPattern}:*`;
-		const stream = this.redis.scanStream(scanValue);
+		const stream = this.redisClient.scanStream(scanValue);
 
 		stream.on('data', (keys: string[]) => {
 			if (keys.length) {
-				const pipeline = this.redis.pipeline();
+				const pipeline = this.redisClient.pipeline();
 
 				keys.forEach((key: string) => {
 					pipeline.del(String(key));

@@ -18,7 +18,7 @@ import DataParserHelper from '@modules/utils/helpers/DataParser.helper';
 export default class SqsClient {
 	private readonly awsConfig: SQSClientConfig;
 	private readonly messageGroupId: string;
-	private readonly sqs: SQSClient;
+	private readonly sqsClient: SQSClient;
 	private readonly logger: Logger;
 
 	constructor(
@@ -47,7 +47,7 @@ export default class SqsClient {
 			logger: logging === 'true' ? this.logger : undefined,
 		};
 		this.messageGroupId = 'DefaultGroup';
-		this.sqs = new SQSClient(this.awsConfig);
+		this.sqsClient = new SQSClient(this.awsConfig);
 	}
 
 
@@ -108,14 +108,14 @@ export default class SqsClient {
 	}
 
 	public getClient(): SQSClient {
-		return this.sqs;
+		return this.sqsClient;
 	}
 
 	public async listQueues(): Promise<string[]> {
 		let list: string[] = [];
 
 		try {
-			const result = await this.sqs.send(new ListQueuesCommand({
+			const result = await this.sqsClient.send(new ListQueuesCommand({
 				MaxResults: 200,
 			}));
 			if (result?.QueueUrls)
@@ -131,7 +131,7 @@ export default class SqsClient {
 		let queueUrl = '';
 
 		try {
-			const result = await this.sqs.send(new CreateQueueCommand(
+			const result = await this.sqsClient.send(new CreateQueueCommand(
 				this.createParams(queueName)
 			));
 			if (result?.QueueUrl)
@@ -147,7 +147,7 @@ export default class SqsClient {
 		let isDeleted = false;
 
 		try {
-			const result = await this.sqs.send(new DeleteQueueCommand({
+			const result = await this.sqsClient.send(new DeleteQueueCommand({
 				QueueUrl: queueUrl,
 			}));
 			if (result.$metadata?.httpStatusCode && String(result.$metadata?.httpStatusCode)[2] === '2')
@@ -163,7 +163,7 @@ export default class SqsClient {
 		let messageId = '';
 
 		try {
-			const result = await this.sqs.send(new SendMessageCommand(
+			const result = await this.sqsClient.send(new SendMessageCommand(
 				this.msgParams(queueUrl, message, title, author)
 			));
 			if (result?.MessageId)
@@ -179,7 +179,7 @@ export default class SqsClient {
 		const messages: Array<Message> = [];
 
 		try {
-			const result = await this.sqs.send(new ReceiveMessageCommand(
+			const result = await this.sqsClient.send(new ReceiveMessageCommand(
 				this.receiveParam(queueUrl)
 			));
 			if (result?.Messages) {
@@ -190,7 +190,7 @@ export default class SqsClient {
 						QueueUrl: queueUrl,
 						ReceiptHandle: `${message?.ReceiptHandle}`,
 					};
-					this.sqs.send(new DeleteMessageCommand(
+					this.sqsClient.send(new DeleteMessageCommand(
 						deleteParams
 					), (err: AWSError, data) => {
 						if (err) {

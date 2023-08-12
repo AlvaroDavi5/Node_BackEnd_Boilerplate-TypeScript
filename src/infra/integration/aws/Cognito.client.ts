@@ -16,7 +16,7 @@ export default class CognitoClient {
 	private readonly userPoolName: string;
 	private readonly userPoolId: string;
 	private readonly clientId: string;
-	private readonly cognito: CognitoIdentityProviderClient;
+	private readonly cognitoClient: CognitoIdentityProviderClient;
 	private readonly logger: Logger;
 
 	constructor(
@@ -47,7 +47,7 @@ export default class CognitoClient {
 		this.userPoolName = userPoolName || 'defaultPool';
 		this.userPoolId = userPoolId || '';
 		this.clientId = clientId || '';
-		this.cognito = new CognitoIdentityProviderClient(this.awsConfig);
+		this.cognitoClient = new CognitoIdentityProviderClient(this.awsConfig);
 	}
 
 	private signUpParams(userName: string, userEmail: string, password: string): SignUpCommandInput {
@@ -66,14 +66,14 @@ export default class CognitoClient {
 
 
 	public getClient(): CognitoIdentityProviderClient {
-		return this.cognito;
+		return this.cognitoClient;
 	}
 
 	public async listUserPools(): Promise<UserPoolDescriptionType[]> {
 		let list: UserPoolDescriptionType[] = [];
 
 		try {
-			const result = await this.cognito.send(new ListUserPoolsCommand({
+			const result = await this.cognitoClient.send(new ListUserPoolsCommand({
 				MaxResults: 200,
 			}));
 			if (result?.UserPools)
@@ -89,7 +89,7 @@ export default class CognitoClient {
 		let userPoolId = '';
 
 		try {
-			const result = await this.cognito.send(new CreateUserPoolCommand({
+			const result = await this.cognitoClient.send(new CreateUserPoolCommand({
 				PoolName: userPoolName || this.userPoolName,
 			}));
 			if (result?.UserPool?.Id)
@@ -105,7 +105,7 @@ export default class CognitoClient {
 		let httpStatusCode = 0;
 
 		try {
-			const result = await this.cognito.send(new DeleteUserPoolCommand({
+			const result = await this.cognitoClient.send(new DeleteUserPoolCommand({
 				UserPoolId: userPoolId || this.userPoolId,
 			}));
 			if (result?.$metadata?.httpStatusCode)
@@ -121,7 +121,7 @@ export default class CognitoClient {
 		let clientId = '';
 
 		try {
-			const result = await this.cognito.send(new CreateUserPoolClientCommand({
+			const result = await this.cognitoClient.send(new CreateUserPoolClientCommand({
 				ClientName: userPoolName || this.userPoolName,
 				UserPoolId: userPoolId || this.userPoolId,
 			}));
@@ -138,7 +138,7 @@ export default class CognitoClient {
 		let httpStatusCode = 0;
 
 		try {
-			const result = await this.cognito.send(new DeleteUserPoolClientCommand({
+			const result = await this.cognitoClient.send(new DeleteUserPoolClientCommand({
 				ClientId: clientId || this.clientId,
 				UserPoolId: userPoolId || this.userPoolId,
 			}));
@@ -155,7 +155,7 @@ export default class CognitoClient {
 		let userStatus = '';
 
 		try {
-			const result = await this.cognito.send(new AdminCreateUserCommand({
+			const result = await this.cognitoClient.send(new AdminCreateUserCommand({
 				Username: userName,
 				UserPoolId: userPoolId || this.userPoolId,
 			}));
@@ -172,7 +172,7 @@ export default class CognitoClient {
 		let userEnabled = false;
 
 		try {
-			const result = await this.cognito.send(new AdminGetUserCommand({
+			const result = await this.cognitoClient.send(new AdminGetUserCommand({
 				Username: userName,
 				UserPoolId: userPoolId || this.userPoolId,
 			}));
@@ -189,7 +189,7 @@ export default class CognitoClient {
 		let httpStatusCode = 0;
 
 		try {
-			const result = await this.cognito.send(new AdminDeleteUserCommand({
+			const result = await this.cognitoClient.send(new AdminDeleteUserCommand({
 				Username: userName,
 				UserPoolId: userPoolId || this.userPoolId,
 			}));
@@ -206,7 +206,7 @@ export default class CognitoClient {
 		let userConfirmed = false;
 
 		try {
-			const result = await this.cognito.send(new SignUpCommand(this.signUpParams(userName, userEmail, password)));
+			const result = await this.cognitoClient.send(new SignUpCommand(this.signUpParams(userName, userEmail, password)));
 			if (result?.UserConfirmed)
 				userConfirmed = result.UserConfirmed;
 		} catch (error) {
@@ -220,7 +220,7 @@ export default class CognitoClient {
 		let httpStatusCode = 0;
 
 		try {
-			const result = await this.cognito.send(new AdminConfirmSignUpCommand({
+			const result = await this.cognitoClient.send(new AdminConfirmSignUpCommand({
 				Username: userName,
 				UserPoolId: userPoolId || this.userPoolId,
 			}));

@@ -46,6 +46,16 @@ services:
     volumes:
       # host_path:container_path
       - db_volume:/var/lib/postgresql/
+  # DataBase Admin
+  database_admin:
+    container_name: DataBaseAdmin_Adminer
+    image: adminer:latest
+    ports:
+      - 8080:8080
+    networks:
+      - default_network
+    depends_on:
+      - database
 
   # Data
   data:
@@ -59,6 +69,21 @@ services:
       - 27017:27017
     networks:
       - default_network
+  # Data Admin
+  data_admin:
+    container_name: DataAdmin_MongoExpress
+    image: mongo-express:latest
+    restart: always
+    environment:
+      ME_CONFIG_MONGODB_ADMINUSERNAME: admin
+      ME_CONFIG_MONGODB_ADMINPASSWORD: pass
+      ME_CONFIG_MONGODB_URL: mongodb://admin:pass@data:27017/
+    ports:
+      - 8081:8081
+    networks:
+      - default_network
+    depends_on:
+      - data
 
   # Cache
   cache:
@@ -68,6 +93,19 @@ services:
       - 6379:6379
     networks:
       - default_network
+  # Cache Admin
+  cache_admin:
+    container_name: CacheAdmin_RedisCommander
+    image: rediscommander/redis-commander:latest
+    hostname: redis-commander
+    environment:
+      REDIS_HOSTS: localhost:cache:6379
+    ports:
+      - 8082:8081
+    networks:
+      - default_network
+    depends_on:
+      - cache
 
   # Cloud Services
   cloud:

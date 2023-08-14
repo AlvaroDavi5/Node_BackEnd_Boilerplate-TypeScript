@@ -5,6 +5,7 @@ import configs from '@configs/configs.config';
 import Exceptions from '@infra/errors/Exceptions';
 import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
 import RedisClient from '@infra/cache/Redis.client';
+import MongoClient from '@infra/data/Mongo.client';
 import SqsClient from '@infra/integration/aws/Sqs.client';
 import SnsClient from '@infra/integration/aws/Sns.client';
 import S3Client from '@infra/integration/aws/S3.client';
@@ -32,6 +33,7 @@ import ApiModule from '@modules/api/api.module';
 		Exceptions,
 		LoggerGenerator,
 		RedisClient,
+		MongoClient,
 		SqsClient,
 		SnsClient,
 		S3Client,
@@ -43,6 +45,7 @@ import ApiModule from '@modules/api/api.module';
 		Exceptions,
 		LoggerGenerator,
 		RedisClient,
+		MongoClient,
 		SqsClient,
 		SnsClient,
 		S3Client,

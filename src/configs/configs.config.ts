@@ -43,6 +43,17 @@ export interface ConfigsInterface {
 			idle: number, // maximum time, in milliseconds, that a connection can be idle before being released
 		},
 	},
+	// ? Data Backing-Service
+	data: {
+		mongo: {
+			uri: string | undefined, // connection URI
+			maxConnecting: number, // maximum number of connections concurrently the pool
+			maxPoolSize: number, // maximum number of connections in pool
+		},
+		databases: {
+			datalake: string | undefined,
+		},
+	},
 	// ? Caching Backing-Service
 	cache: {
 		redis: {
@@ -149,6 +160,16 @@ export default (): ConfigsInterface => ({
 			max: 5,
 			acquire: 20000,
 			idle: 20000,
+		},
+	},
+	data: {
+		mongo: {
+			uri: process.env.MONGO_URI,
+			maxConnecting: 2,
+			maxPoolSize: 5,
+		},
+		databases: {
+			datalake: process.env.MONGO_DB_NAME_DATALAKE,
 		},
 	},
 	cache: {

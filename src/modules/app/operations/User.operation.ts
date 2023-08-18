@@ -61,7 +61,7 @@ export default class UserOperation {
 		const foundedPreference = await this.userPreferenceService.getByUserId(id);
 
 		if (!foundedUser)
-			throw this.exceptions.conflict({
+			throw this.exceptions.notFound({
 				message: 'User not found!'
 			});
 
@@ -81,13 +81,13 @@ export default class UserOperation {
 		const preference = await this.userPreferenceService.getByUserId(id);
 
 		if (!user || !preference)
-			throw this.exceptions.contract({
+			throw this.exceptions.notFound({
 				message: 'User or preference not found!'
 			});
 
 		const isAllowedToUpdateUser = this.userStrategy.isAllowed(user, userAgent);
 		if (!isAllowedToUpdateUser)
-			throw this.exceptions.unauthorized({
+			throw this.exceptions.business({
 				message: 'userAgent not allowed to execute this action'
 			});
 
@@ -109,8 +109,14 @@ export default class UserOperation {
 		const preference = await this.userPreferenceService.getByUserId(id);
 
 		if (!user || !preference)
-			throw this.exceptions.conflict({
+			throw this.exceptions.notFound({
 				message: 'User or preference not found!'
+			});
+
+		const isAllowedToUpdateUser = this.userStrategy.isAllowed(user, userAgent);
+		if (!isAllowedToUpdateUser)
+			throw this.exceptions.business({
+				message: 'userAgent not allowed to execute this action'
 			});
 
 		await this.userPreferenceService.delete(preference.getId(), {

@@ -18,9 +18,9 @@ export default class UserPreferenceService {
 		}
 	}
 
-	public async create(data: UserPreferenceEntity): Promise<UserPreferenceEntity | null> {
+	public async create(entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> {
 		try {
-			const result = await this.userPreferenceRepository.create(data);
+			const result = await this.userPreferenceRepository.create(entity);
 			return result;
 		} catch (error) {
 			return null;

@@ -19,7 +19,7 @@ export type protocolType = 'email' | 'sms' | 'http' | 'https' | 'sqs' | 'lambda'
 export default class SnsClient {
 	private readonly awsConfig: SNSClientConfig;
 	private readonly messageGroupId: string;
-	private readonly sns: SNSClient;
+	private readonly snsClient: SNSClient;
 	private readonly logger: Logger;
 
 	constructor(
@@ -48,7 +48,7 @@ export default class SnsClient {
 			logger: logging === 'true' ? this.logger : undefined,
 		};
 		this.messageGroupId = 'DefaultGroup';
-		this.sns = new SNSClient(this.awsConfig);
+		this.snsClient = new SNSClient(this.awsConfig);
 	}
 
 
@@ -108,14 +108,14 @@ export default class SnsClient {
 	}
 
 	public getClient(): SNSClient {
-		return this.sns;
+		return this.snsClient;
 	}
 
 	public async listTopics(): Promise<Topic[]> {
 		let list: Topic[] = [];
 
 		try {
-			const result = await this.sns.send(new ListTopicsCommand({}));
+			const result = await this.snsClient.send(new ListTopicsCommand({}));
 			if (result?.Topics)
 				list = result?.Topics;
 		} catch (error) {
@@ -129,7 +129,7 @@ export default class SnsClient {
 		let topicArn = '';
 
 		try {
-			const result = await this.sns.send(new CreateTopicCommand(
+			const result = await this.snsClient.send(new CreateTopicCommand(
 				this.createParams(topicName)
 			));
 			if (result?.TopicArn)
@@ -145,7 +145,7 @@ export default class SnsClient {
 		let isDeleted = false;
 
 		try {
-			const result = await this.sns.send(new DeleteTopicCommand({
+			const result = await this.snsClient.send(new DeleteTopicCommand({
 				TopicArn: topicArn,
 			}));
 			if (result.$metadata?.httpStatusCode && String(result.$metadata?.httpStatusCode)[2] === '2')
@@ -161,7 +161,7 @@ export default class SnsClient {
 		let subscriptionArn = '';
 
 		try {
-			const result = await this.sns.send(new SubscribeCommand(
+			const result = await this.snsClient.send(new SubscribeCommand(
 				this.subscribeParams(protocol, topicArn, to)
 			));
 			if (result?.SubscriptionArn)
@@ -177,7 +177,7 @@ export default class SnsClient {
 		let httpStatusCode = 0;
 
 		try {
-			const result = await this.sns.send(new UnsubscribeCommand({
+			const result = await this.snsClient.send(new UnsubscribeCommand({
 				SubscriptionArn: subscriptionArn
 			}));
 			if (result?.$metadata?.httpStatusCode)
@@ -193,7 +193,7 @@ export default class SnsClient {
 		let messageId = '';
 
 		try {
-			const result = await this.sns.send(new PublishCommand(
+			const result = await this.snsClient.send(new PublishCommand(
 				this.publishParams(protocol, topicArn, topicName, msgData)
 			));
 			if (result?.MessageId)

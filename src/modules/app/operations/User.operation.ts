@@ -5,7 +5,7 @@ import UserService from '@modules/app/services/User.service';
 import UserPreferenceService from '@modules/app/services/UserPreference.service';
 import UserStrategy from '@modules/app/strategies/User.strategy';
 import Exceptions from '@infra/errors/Exceptions';
-import { userAuthType } from 'src/types/_userAuthInterface';
+import { UserAuthInterface } from 'src/types/_userAuthInterface';
 
 
 @Injectable()
@@ -28,7 +28,7 @@ export default class UserOperation {
 		return usersList;
 	}
 
-	public async createUser(data: any, userAgent?: userAuthType): Promise<UserEntity | null | undefined> {
+	public async createUser(data: any, userAgent?: UserAuthInterface): Promise<UserEntity | null> {
 		if (!userAgent?.username)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
@@ -43,11 +43,15 @@ export default class UserOperation {
 			await this.userPreferenceService.create(newPreference);
 		}
 
-		const result = await this.userService.getById(createdUser?.getId() || 0);
-		return result;
+		const foundedUser = await this.userService.getById(createdUser?.getId() || 0);
+		const foundedPreference = await this.userPreferenceService.getByUserId(createdUser?.getId() || 0);
+		if (foundedPreference)
+			foundedUser?.setPreference(foundedPreference);
+
+		return foundedUser;
 	}
 
-	public async getUser(id: number, userAgent?: userAuthType): Promise<UserEntity | null | undefined> {
+	public async getUser(id: number, userAgent?: UserAuthInterface): Promise<UserEntity | null> {
 		if (!userAgent?.username)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
@@ -57,7 +61,7 @@ export default class UserOperation {
 		const foundedPreference = await this.userPreferenceService.getByUserId(id);
 
 		if (!foundedUser)
-			throw this.exceptions.conflict({
+			throw this.exceptions.notFound({
 				message: 'User not found!'
 			});
 
@@ -67,7 +71,7 @@ export default class UserOperation {
 		return foundedUser;
 	}
 
-	public async updateUser(id: number, data: any, userAgent?: userAuthType): Promise<UserEntity | null | undefined> {
+	public async updateUser(id: number, data: any, userAgent?: UserAuthInterface): Promise<UserEntity | null> {
 		if (!userAgent?.username)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
@@ -77,13 +81,13 @@ export default class UserOperation {
 		const preference = await this.userPreferenceService.getByUserId(id);
 
 		if (!user || !preference)
-			throw this.exceptions.contract({
+			throw this.exceptions.notFound({
 				message: 'User or preference not found!'
 			});
 
-		const isAllowedToUpdateUser = this.userStrategy.manageAuth(user, userAgent);
+		const isAllowedToUpdateUser = this.userStrategy.isAllowed(user, userAgent);
 		if (!isAllowedToUpdateUser)
-			throw this.exceptions.unauthorized({
+			throw this.exceptions.business({
 				message: 'userAgent not allowed to execute this action'
 			});
 
@@ -95,7 +99,7 @@ export default class UserOperation {
 		return updatedUser;
 	}
 
-	public async deleteUser(id: number, userAgent?: userAuthType): Promise<[affectedCount: number] | null | undefined> {
+	public async deleteUser(id: number, userAgent?: UserAuthInterface): Promise<[affectedCount: number] | null | undefined> {
 		if (!userAgent?.username)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
@@ -105,8 +109,14 @@ export default class UserOperation {
 		const preference = await this.userPreferenceService.getByUserId(id);
 
 		if (!user || !preference)
-			throw this.exceptions.conflict({
+			throw this.exceptions.notFound({
 				message: 'User or preference not found!'
+			});
+
+		const isAllowedToUpdateUser = this.userStrategy.isAllowed(user, userAgent);
+		if (!isAllowedToUpdateUser)
+			throw this.exceptions.business({
+				message: 'userAgent not allowed to execute this action'
 			});
 
 		await this.userPreferenceService.delete(preference.getId(), {

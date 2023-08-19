@@ -17,7 +17,7 @@ import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
 export default class S3Client {
 	private readonly awsConfig: S3ClientConfig;
 	private readonly region: string;
-	private readonly s3: S3AWSClient;
+	private readonly s3Client: S3AWSClient;
 	private readonly logger: Logger;
 
 	constructor(
@@ -45,7 +45,7 @@ export default class S3Client {
 			logger: logging === 'true' ? this.logger : undefined,
 		};
 		this.region = region || 'us-east-1';
-		this.s3 = new S3AWSClient(this.awsConfig);
+		this.s3Client = new S3AWSClient(this.awsConfig);
 	}
 
 
@@ -85,14 +85,14 @@ export default class S3Client {
 	}
 
 	public getClient(): S3AWSClient {
-		return this.s3;
+		return this.s3Client;
 	}
 
 	public async listBuckets(): Promise<Bucket[]> {
 		let list: Bucket[] = [];
 
 		try {
-			const result = await this.s3.send(new ListBucketsCommand({}));
+			const result = await this.s3Client.send(new ListBucketsCommand({}));
 			if (result?.Buckets)
 				list = result?.Buckets;
 		} catch (error) {
@@ -106,7 +106,7 @@ export default class S3Client {
 		let location = '';
 
 		try {
-			const result = await this.s3.send(new CreateBucketCommand({
+			const result = await this.s3Client.send(new CreateBucketCommand({
 				Bucket: bucketName,
 				CreateBucketConfiguration: {
 					LocationConstraint: this.region,
@@ -125,7 +125,7 @@ export default class S3Client {
 		let httpStatusCode = 0;
 
 		try {
-			const result = await this.s3.send(new DeleteBucketCommand({ Bucket: bucketName }));
+			const result = await this.s3Client.send(new DeleteBucketCommand({ Bucket: bucketName }));
 			if (result?.$metadata?.httpStatusCode)
 				httpStatusCode = result.$metadata.httpStatusCode;
 		} catch (error) {
@@ -139,7 +139,7 @@ export default class S3Client {
 		let httpStatusCode = 0;
 
 		try {
-			const result = await this.s3.send(new PutBucketNotificationConfigurationCommand({
+			const result = await this.s3Client.send(new PutBucketNotificationConfigurationCommand({
 				Bucket: bucketName,
 				NotificationConfiguration: configuration,
 			}));
@@ -156,7 +156,7 @@ export default class S3Client {
 		let key = '';
 
 		try {
-			const result = await this.s3.send(new UploadPartCommand(this.uploadParams(bucketName, filePath)));
+			const result = await this.s3Client.send(new UploadPartCommand(this.uploadParams(bucketName, filePath)));
 			if (result?.SSEKMSKeyId)
 				key = result.SSEKMSKeyId;
 		} catch (error) {
@@ -170,7 +170,7 @@ export default class S3Client {
 		let contentLength = 0;
 
 		try {
-			const result = await this.s3.send(new GetObjectCommand(this.getObjectParams(bucketName, objectKey)));
+			const result = await this.s3Client.send(new GetObjectCommand(this.getObjectParams(bucketName, objectKey)));
 			if (result?.Body) {
 				fs.writeFile(`./${objectKey}`, `${result?.Body}`, err => {
 					if (err) {
@@ -192,7 +192,7 @@ export default class S3Client {
 		let marker = false;
 
 		try {
-			const result = await this.s3.send(new DeleteObjectCommand(this.getObjectParams(bucketName, objectKey)));
+			const result = await this.s3Client.send(new DeleteObjectCommand(this.getObjectParams(bucketName, objectKey)));
 			if (result?.DeleteMarker)
 				marker = result.DeleteMarker;
 		} catch (error) {

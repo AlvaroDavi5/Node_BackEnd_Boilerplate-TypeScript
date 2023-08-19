@@ -9,7 +9,7 @@ export default class UserService {
 		private readonly userRepository: UserRepository,
 	) { }
 
-	public async getById(id: number): Promise<UserEntity | null | undefined> {
+	public async getById(id: number): Promise<UserEntity | null> {
 		try {
 			const result = await this.userRepository.getById(id);
 			return result;
@@ -18,7 +18,7 @@ export default class UserService {
 		}
 	}
 
-	public async create(entity: UserEntity): Promise<UserEntity | null | undefined> {
+	public async create(entity: UserEntity): Promise<UserEntity | null> {
 		try {
 			const result = await this.userRepository.create(entity);
 			return result;
@@ -27,7 +27,7 @@ export default class UserService {
 		}
 	}
 
-	public async update(id: number, data: UserInterface): Promise<UserEntity | null | undefined> {
+	public async update(id: number, data: UserInterface): Promise<UserEntity | null> {
 		try {
 			const result = await this.userRepository.update(id, data);
 			return result;

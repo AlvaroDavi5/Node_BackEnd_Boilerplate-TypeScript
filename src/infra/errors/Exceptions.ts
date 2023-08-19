@@ -22,86 +22,86 @@ export default class Exceptions {
 		return false;
 	}
 
-	public [ExceptionsEnum.CONTRACT](msg: ErrorInterface) {
-		const exception = new BadRequestException(msg.message);
+	public [ExceptionsEnum.CONTRACT](err: ErrorInterface) {
+		const exception = new BadRequestException(err.message);
 
 		exception.name = ExceptionsEnum.CONTRACT;
-		exception.message = msg.message;
-		exception.cause = msg.details;
+		exception.message = err.message;
+		exception.cause = err.details;
 		if (this.showStack())
-			exception.stack = msg.stack;
+			exception.stack = err.stack;
 
 		return exception;
 	}
 
-	public [ExceptionsEnum.BUSINESS](msg: ErrorInterface) {
-		const exception = new ForbiddenException(msg.message);
+	public [ExceptionsEnum.BUSINESS](err: ErrorInterface) {
+		const exception = new ForbiddenException(err.message);
 
 		exception.name = ExceptionsEnum.BUSINESS;
-		exception.message = msg.message;
-		exception.cause = msg.details;
+		exception.message = err.message;
+		exception.cause = err.details;
 		if (this.showStack())
-			exception.stack = msg.stack;
+			exception.stack = err.stack;
 
 		return exception;
 	}
 
-	public [ExceptionsEnum.UNAUTHORIZED](msg: ErrorInterface) {
-		const exception = new UnauthorizedException(msg.message);
+	public [ExceptionsEnum.UNAUTHORIZED](err: ErrorInterface) {
+		const exception = new UnauthorizedException(err.message);
 
 		exception.name = ExceptionsEnum.UNAUTHORIZED;
-		exception.message = msg.message;
-		exception.cause = msg.details;
+		exception.message = err.message;
+		exception.cause = err.details;
 		if (this.showStack())
-			exception.stack = msg.stack;
+			exception.stack = err.stack;
 
 		return exception;
 	}
 
-	public [ExceptionsEnum.CONFLICT](msg: ErrorInterface) {
-		const exception = new ConflictException(msg.message);
+	public [ExceptionsEnum.CONFLICT](err: ErrorInterface) {
+		const exception = new ConflictException(err.message);
 
 		exception.name = ExceptionsEnum.CONFLICT;
-		exception.message = msg.message;
-		exception.cause = msg.details;
+		exception.message = err.message;
+		exception.cause = err.details;
 		if (this.showStack())
-			exception.stack = msg.stack;
+			exception.stack = err.stack;
 
 		return exception;
 	}
 
-	public [ExceptionsEnum.NOT_FOUND](msg: ErrorInterface) {
-		const exception = new NotFoundException(msg.message);
+	public [ExceptionsEnum.NOT_FOUND](err: ErrorInterface) {
+		const exception = new NotFoundException(err.message);
 
 		exception.name = ExceptionsEnum.NOT_FOUND;
-		exception.message = msg.message;
-		exception.cause = msg.details;
+		exception.message = err.message;
+		exception.cause = err.details;
 		if (this.showStack())
-			exception.stack = msg.stack;
+			exception.stack = err.stack;
 
 		return exception;
 	}
 
-	public [ExceptionsEnum.INTEGRATION](msg: ErrorInterface) {
-		const exception = new ServiceUnavailableException(msg.message);
+	public [ExceptionsEnum.INTEGRATION](err: ErrorInterface) {
+		const exception = new ServiceUnavailableException(err.message);
 
 		exception.name = ExceptionsEnum.INTEGRATION;
-		exception.message = msg.message;
-		exception.cause = msg.details;
+		exception.message = err.message;
+		exception.cause = err.details;
 		if (this.showStack())
-			exception.stack = msg.stack;
+			exception.stack = err.stack;
 
 		return exception;
 	}
 
-	public [ExceptionsEnum.INTERNAL](msg: ErrorInterface) {
-		const exception = new InternalServerErrorException(msg.message);
+	public [ExceptionsEnum.INTERNAL](err: ErrorInterface) {
+		const exception = new InternalServerErrorException(err.message);
 
 		exception.name = ExceptionsEnum.INTERNAL;
-		exception.message = msg.message;
-		exception.cause = msg.details;
+		exception.message = err.message;
+		exception.cause = err.details;
 		if (this.showStack())
-			exception.stack = msg.stack;
+			exception.stack = err.stack;
 
 		return exception;
 	}

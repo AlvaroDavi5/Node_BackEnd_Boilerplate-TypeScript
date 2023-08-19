@@ -17,7 +17,7 @@ export default abstract class Entity {
 	}
 
 	public exists(value: any): boolean {
-		if (value !== null || value !== undefined)
+		if (value !== undefined && value !== null)
 			return true;
 		return false;
 	}

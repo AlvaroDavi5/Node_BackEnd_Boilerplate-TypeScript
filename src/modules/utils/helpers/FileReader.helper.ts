@@ -14,17 +14,23 @@ export default class CacheAccessHelper {
 		this.logger = this.loggerGenerator.getLogger();
 	}
 
-	public read(fileName: string): string | null {
-		let content = null;
-		const logger = this.logger;
+	public async read(filePath: string): Promise<string | null> {
+		let content: string | null = null;
 
-		fs.readFile(fileName, 'utf8', function (err, data) {
-			if (err) {
-				logger.warn('File read error');
-				throw err;
-			}
-			content = data;
+		const readPromise = new Promise<string>((resolve, reject) => {
+			fs.readFile(filePath, { encoding: 'utf8' }, (error, data) => {
+				if (error) {
+					this.logger.warn('File read error:', error.message);
+					reject(error);
+				} else {
+					resolve(data);
+				}
+			});
 		});
+
+		try {
+			content = await readPromise;
+		} catch (error) { }
 
 		return content;
 	}

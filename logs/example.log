@@ -4,6 +4,9 @@
 {"env":"dev","level":"info","message":"Events queue consumer started","service":"Node Boilerplate","timestamp":"2023-03-18T00:02:46.295Z"}
 {"env":"dev","level":"info","message":"Server started on port: 3000 - Environment: dev","service":"Node Boilerplate","timestamp":"2023-03-18T00:02:46.299Z"}
 {"env":"dev","level":"info","message":"Client connected: gwluArR6HGOBdtW9AAAB","service":"Node Boilerplate","timestamp":"2023-03-18T00:02:46.367Z"}
+{"env":"dev","level":"info","message":"Sended message to queue [eventsQueue.fifo]","service":"Node Boilerplate","timestamp":"2023-03-18T00:02:46.367Z"}
+{"env":"dev","level":"info","message":"New message received from [EventsQueueConsumer]","service":"Node Boilerplate","timestamp":"2023-03-18T00:02:46.367Z"}
+{"env":"dev","level":"error","message":"\"payload.event\" is required","name":"contract","options":{},"response":{"error":"Bad Request","message":"\"payload.event\" is required","statusCode":400},"service":"Node Boilerplate","stack":"ValidationError: \"payload.event\" is required","status":400,"timestamp":"2023-03-18T00:02:46.367Z"}
 {"env":"dev","level":"info","message":"Running Sync cron","service":"Node Boilerplate","timestamp":"2023-03-18T00:04:00.381Z"}
 {"env":"dev","level":"info","message":"Database connection has been established successfully.","service":"Node Boilerplate","timestamp":"2023-03-18T00:04:00.449Z"}
 

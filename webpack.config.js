@@ -2,6 +2,7 @@ const webpack = require('webpack');
 const path = require('path');
 const nodeExternals = require('webpack-node-externals');
 
+
 module.exports = {
 	entry: ['webpack/hot/poll?1000', './src/main.ts'],
 	watch: true,
@@ -20,7 +21,7 @@ module.exports = {
 			},
 		],
 	},
-	mode: "development",
+	mode: 'development',
 	resolve: {
 		extensions: ['.tsx', '.ts', '.js', '.jsx'],
 	},

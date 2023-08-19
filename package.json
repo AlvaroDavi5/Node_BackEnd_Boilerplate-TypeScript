@@ -10,8 +10,8 @@
 	"main": "./src/main.ts",
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/AlvaroDavi5/Node_BackEnd_Boilerplate.git",
-		"ssh": "git@github.com:AlvaroDavi5/Node_BackEnd_Boilerplate.git"
+		"url": "https://github.com/AlvaroDavi5/Node_BackEnd_Boilerplate-TypeScript.git",
+		"ssh": "git@github.com:AlvaroDavi5/Node_BackEnd_Boilerplate-TypeScript.git"
 	},
 	"private": false,
 	"os": [
@@ -145,6 +145,10 @@
 		"@nestjs/cli": "^10.1.7",
 		"@nestjs/schematics": "^10.0.1",
 		"@nestjs/testing": "^10.0.5",
+		"@semantic-release/commit-analyzer": "^10.0.1",
+		"@semantic-release/git": "^10.0.1",
+		"@semantic-release/github": "^9.0.4",
+		"@semantic-release/release-notes-generator": "^11.0.4",
 		"@types/bcrypt": "^5.0.0",
 		"@types/cron": "^2.0.1",
 		"@types/dotenv": "^8.2.0",

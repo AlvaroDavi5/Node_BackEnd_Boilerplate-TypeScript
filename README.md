@@ -33,7 +33,8 @@ Node.js Domain-Driven Design Boilerplate with TypeScript for Back-End.
   * S3: Files storage service;
   * Cognito: Users authenticator service;
 - Sequelize: ORM for relational databases;
-- PostgreSQL: Relational database;
+- PostgreSQL: Relational (SQL) database;
+- MongoDB: Schematic and document-oriented NoSQL database;
 - Redis: Cache and in-memory key-value NoSQL database;
 - Docker: Services isolation and process resources management with containers;
 - SonarQube: Test coverage and code quality analyzer;

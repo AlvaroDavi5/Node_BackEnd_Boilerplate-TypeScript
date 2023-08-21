@@ -11,7 +11,7 @@ import FileReaderHelper from '@modules/utils/helpers/FileReader.helper';
 	providers: [
 		DataParserHelper,
 		CacheAccessHelper,
-		FileReaderHelper
+		FileReaderHelper,
 	],
 	exports: [
 		DataParserHelper,

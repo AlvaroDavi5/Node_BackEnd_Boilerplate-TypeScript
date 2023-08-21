@@ -7,14 +7,13 @@ module.exports = {
 
 	// A list of paths to directories that Jest should use to search for files in
 	roots: [
-		'<rootDir>/src',
-		'<rootDir>/tests/unit',
+		'<rootDir>/tests/integration',
 	],
 
 	// The paths to modules that run some code to configure or set up the testing environment before each test
 	setupFiles: [
 		'dotenv/config',
-		'<rootDir>/tests/unit/support/setup.ts',
+		'<rootDir>/tests/integration/support/setup.ts',
 	],
 
 	// Stop running tests after `n` failures
@@ -27,7 +26,7 @@ module.exports = {
 	collectCoverage: true,
 
 	// The directory where Jest should output its coverage files
-	coverageDirectory: 'coverage',
+	coverageDirectory: 'coverage/integration',
 
 	// An array of glob patterns indicating a set of files for which coverage information should be collected
 	collectCoverageFrom: [
@@ -36,19 +35,16 @@ module.exports = {
 
 	// An array of regexp pattern strings used to skip coverage collection
 	coveragePathIgnorePatterns: [
-		'src/configs/',
 		'src/dev/',
-		'src/infra/',
-		'src/modules/api/controllers/',
-		'src/modules/api/decorators/',
-		'src/modules/api/middlewares/',
-		'src/modules/api/pipes/',
-		'src/modules/api/schemas/',
-		'src/modules/app/repositories/',
-		'src/modules/app/services/',
-		'src/modules/events/',
+		'src/infra/cache/',
+		'src/infra/data/',
+		'src/infra/database/',
+		'src/modules/api/',
+		'src/modules/app/domain/',
+		'src/modules/app/operations/',
+		'src/modules/app/strategies/',
+		'src/modules/utils/',
 		'.d.ts',
-		'.module.ts',
 		'src/main.ts',
 	],
 
@@ -76,10 +72,10 @@ module.exports = {
 	// forceCoverageMatch: [],
 
 	// A path to a module which exports an async function that is triggered once before all test suites
-	// globalSetup: undefined,
+	globalSetup: '<rootDir>/tests/integration/support/jestInit.ts',
 
 	// A path to a module which exports an async function that is triggered once after all test suites
-	// globalTeardown: undefined,
+	globalTeardown: '<rootDir>/tests/integration/support/jestFinish.ts',
 
 	// A set of global variables that need to be available in all test environments
 	// globals: {},
@@ -146,7 +142,7 @@ module.exports = {
 	testResultsProcessor: 'jest-sonar-reporter',
 
 	// A preset that is used as a base for Jest's configuration
-	// preset: 'ts-jest',
+	preset: 'ts-jest',
 
 	// Run tests from one or more projects
 	// projects: undefined,

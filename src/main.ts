@@ -40,7 +40,7 @@ async function startNestApplication() {
 		},
 	});
 
-	const appConfigs: ConfigsInterface['application'] | undefined = nestApp.get<ConfigService>(ConfigService).get<any>('application');
+	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application'] | undefined>('application');
 	nestApp.useWebSocketAdapter(new IoAdapter(nestApp)); // WsAdapter
 	await nestApp.listen(Number(appConfigs?.port)).catch((error: ErrorInterface) => {
 		const knowExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());

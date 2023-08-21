@@ -1,7 +1,7 @@
-import { CacheEnum } from './cache.enum';
-import { EventsEnum } from './events.enum';
-import { ThemesEnum } from './themes.enum';
-import { WebSocketEventsEnum } from './webSocketEvents.enum';
+import { CacheEnum } from '../../../../../../src/modules/app/domain/enums/cache.enum';
+import { EventsEnum } from '../../../../../../src/modules/app/domain/enums/events.enum';
+import { ThemesEnum } from '../../../../../../src/modules/app/domain/enums/themes.enum';
+import { WebSocketEventsEnum } from '../../../../../../src/modules/app/domain/enums/webSocketEvents.enum';
 
 
 describe('Modules :: App :: Domain :: Enums', () => {

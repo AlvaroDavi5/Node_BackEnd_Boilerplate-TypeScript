@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import CacheAccessHelper from './CacheAccess.helper';
+import CacheAccessHelper from '../../../../../src/modules/utils/helpers/CacheAccess.helper';
 
 
 describe('Modules :: Utils :: Helpers :: CacheAccessHelper', () => {

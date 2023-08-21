@@ -1,5 +1,5 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import HttpConstants from './Http.constants';
+import HttpConstants from '../../../../../src/modules/api/constants/Http.constants';
 
 
 describe('Modules :: API :: Constants :: HttpConstants', () => {

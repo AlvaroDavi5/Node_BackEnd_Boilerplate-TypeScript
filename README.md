@@ -103,5 +103,8 @@ $ yarn send-message # send message to queue
 - [localhost:3000](`http://localhost:3000/`) - Node Application  
   * `/` - WebSocket Root Endpoint
   * `/api` - API Root Endpoint
-  * `/api/docs` - API Documentation
+  * `/api/docs` - Swagger API Documentation
+- [localhost:8080](`http://localhost:8080/`) - Adminer Page  
+- [localhost:8081](`http://localhost:8081/`) - Mongo Express Page  
+- [localhost:8082](`http://localhost:8082/`) - Redis Commander Page  
 - [localhost:9000](`http://localhost:9000/`) - SonarQube Page  

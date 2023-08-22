@@ -1,5 +1,5 @@
-import UserEntity from './User.entity';
-import UserPreferenceEntity from './UserPreference.entity';
+import UserEntity from '../../../../../../src/modules/app/domain/entities/User.entity';
+import UserPreferenceEntity from '../../../../../../src/modules/app/domain/entities/UserPreference.entity';
 
 
 describe('Modules :: App :: Domain :: Entities :: UserEntities', () => {

@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import path from 'path';
-import FileReaderHelper from './FileReader.helper';
-import LoggerGenerator from '../../../infra/logging/LoggerGenerator.logger';
+import FileReaderHelper from '../../../../../src/modules/utils/helpers/FileReader.helper';
+import LoggerGenerator from '../../../../../src/infra/logging/LoggerGenerator.logger';
 
 
 describe('Modules :: Utils :: Helpers :: FileReaderHelper', () => {
@@ -42,7 +42,7 @@ describe('Modules :: Utils :: Helpers :: FileReaderHelper', () => {
 
 	describe('# Valid File Path', () => {
 		test('Should return the content string', async () => {
-			const filePath = path.resolve(__dirname, '../../../../LICENSE.txt');
+			const filePath = path.resolve(__dirname, '../../../../../LICENSE.txt');
 			const content = await fileReaderHelper.read(filePath);
 			expect(warnLoggerMock).not.toHaveBeenCalled();
 			expect(content).toContain('MIT License');

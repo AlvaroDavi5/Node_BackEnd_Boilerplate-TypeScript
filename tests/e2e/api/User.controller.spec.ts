@@ -4,7 +4,7 @@ import request from 'supertest';
 import { NestGlobalModule, startNestApplication } from '../support/mocks/nestGlobal.module';
 
 
-describe('API :: DefaultController', () => {
+describe('API :: UserController', () => {
 	let nestTestApp: INestApplication;
 
 	// ? build test app
@@ -18,19 +18,18 @@ describe('API :: DefaultController', () => {
 		await nestTestApp.init();
 	});
 
-	describe('# [GET] /api/check', () => {
+	describe('# [GET] /api/users', () => {
 		it(`Should get success`, async () => {
 			return request(nestTestApp.getHttpServer())
-				.get('/api/check')
+				.get('/api/users')
+				.set('Authorization', 'Bearer ' + process.env.MOCKED_SERVICE_TOKEN)
 				.expect(200)
 				.expect({
-					baseUrl: '',
-					method: 'GET',
-					statusCode: 200,
-					params: {},
-					query: {},
-					body: {},
-					url: '/api/check'
+					content: [],
+					pageNumber: 0,
+					pageSize: 0,
+					totalPages: 0,
+					totalItems: 0,
 				});
 		});
 	});

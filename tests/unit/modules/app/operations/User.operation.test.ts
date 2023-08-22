@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import UserOperation from './User.operation';
-import UserEntity, { UserInterface } from '../../app/domain/entities/User.entity';
-import UserPreferenceEntity, { UserPreferenceInterface } from '../../app/domain/entities/UserPreference.entity';
-import UserService from '../../app/services/User.service';
-import UserPreferenceService from '../../app/services/UserPreference.service';
-import UserStrategy from '../../app/strategies/User.strategy';
-import Exceptions from '../../../infra/errors/Exceptions';
+import UserOperation from '../../../../../src/modules/app/operations/User.operation';
+import UserEntity, { UserInterface } from '../../../../../src/modules/app/domain/entities/User.entity';
+import UserPreferenceEntity, { UserPreferenceInterface } from '../../../../../src/modules/app/domain/entities/UserPreference.entity';
+import UserService from '../../../../../src/modules/app/services/User.service';
+import UserPreferenceService from '../../../../../src/modules/app/services/UserPreference.service';
+import UserStrategy from '../../../../../src/modules/app/strategies/User.strategy';
+import Exceptions from '../../../../../src/infra/errors/Exceptions';
 
 
 describe('Modules :: App :: Operations :: UserOperation', () => {

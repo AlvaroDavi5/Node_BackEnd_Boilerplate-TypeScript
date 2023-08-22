@@ -1,6 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import DataParserHelper from './DataParser.helper';
-import LoggerGenerator from '../../../infra/logging/LoggerGenerator.logger';
+import DataParserHelper from '../../../../../src/modules/utils/helpers/DataParser.helper';
+import LoggerGenerator from '../../../../../src/infra/logging/LoggerGenerator.logger';
 
 
 describe('Modules :: Utils :: Helpers :: DataParserHelper', () => {

@@ -1,0 +1,345 @@
+{
+	"editor.inlineSuggest.enabled": true,
+	"editor.suggestSelection": "first",
+	"editor.fontFamily": "Fira Code",
+	"editor.fontLigatures": true,
+	"editor.fontSize": 15,
+	"editor.fontWeight": "400",
+	"editor.tabSize": 2,
+	"editor.insertSpaces": false,
+	"editor.bracketPairColorization.enabled": true,
+	"editor.guides.bracketPairs": "active",
+	"editor.pasteAs.enabled": false,
+	"editor.pasteAs.showPasteSelector": "never",
+	"explorer.autoReveal": true,
+	"explorer.confirmDragAndDrop": false,
+	"scm.defaultViewMode": "tree",
+	"workbench.productIconTheme": "material-product-icons",
+	"workbench.sideBar.location": "left",
+	"workbench.tree.indent": 15,
+	"workbench.colorTheme": "Dracula",
+	"workbench.iconTheme": "material-icon-theme",
+	"workbench.editor.restoreViewState": true,
+	"terminal.integrated.defaultProfile.linux": "zsh",
+	"security.workspace.trust.untrustedFiles": "open",
+	"extensions.closeExtensionDetailsOnViewChange": false,
+	"sync.gist": "31d051020e1fe66435b53f28a0ed30ee",
+	"sync.forceUpload": true,
+	"sync.quietSync": true,
+	"sync.forceDownload": true,
+	"sync.autoUpload": true,
+	"sync.autoDownload": true,
+	"bracket-pair-colorizer-2.depreciation-notice": false,
+	"material-icon-theme.activeIconPack": "nest",
+	"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+	"vsintellicode.features.python.deepLearning": "enabled",
+	"editorconfig.generateAuto": true,
+	"editorconfig.template": "default",
+	"C_Cpp.errorSquiggles": "disabled",
+	"C_Cpp.dimInactiveRegions": true,
+	"C_Cpp.inactiveRegionOpacity": 0.55,
+	"cSpell.language": "pt,pt-BR,en",
+	"cSpell.enableFiletypes": [
+		"!jade",
+		"!yml",
+		"log",
+		"ruby",
+		"shellscript",
+		"sql",
+		"swift",
+		"xml"
+	],
+	"jupyter.alwaysTrustNotebooks": true,
+	"jupyter.askForKernelRestart": false,
+	"debug.allowBreakpointsEverywhere": true,
+	"debug.console.closeOnEnd": true,
+	"diffEditor.ignoreTrimWhitespace": false,
+	"tabnine.experimentalAutoImports": true,
+	"[json]": {
+		"editor.defaultFormatter": "vscode.json-language-features"
+	},
+	"git.autofetch": true,
+	"git.enableSmartCommit": true,
+	"git.openRepositoryInParentFolders": "always",
+	"gitlens.defaultDateFormat": null,
+	"gitlens.views.remotes.branches.layout": "list",
+	"gitlens.views.tags.branches.layout": "list",
+	"gitlens.views.branches.branches.layout": "list",
+	"git-graph.repository.commits.fetchAvatars": true,
+	"gitlens.plusFeatures.enabled": true,
+	"gitlens.menus": {
+		"editor": {
+			"blame": false,
+			"clipboard": true,
+			"compare": false,
+			"history": false,
+			"remote": false
+		},
+		"editorGroup": {
+			"blame": true,
+			"compare": true
+		},
+		"editorTab": {
+			"clipboard": true,
+			"compare": false,
+			"history": false,
+			"remote": false
+		},
+		"explorer": {
+			"clipboard": true,
+			"compare": true,
+			"history": false,
+			"remote": true
+		},
+		"scm": {
+			"graph": false,
+			"authors": true
+		},
+		"scmRepositoryInline": {
+			"graph": false
+		},
+		"scmRepository": {
+			"authors": true,
+			"graph": false
+		},
+		"scmGroupInline": {
+			"stash": true
+		},
+		"scmGroup": {
+			"compare": true,
+			"openClose": true,
+			"stash": true
+		},
+		"scmItemInline": {
+			"stash": false
+		},
+		"scmItem": {
+			"clipboard": true,
+			"compare": true,
+			"history": true,
+			"remote": false,
+			"stash": true
+		}
+	},
+	"docker.images.groupBy": "RepositoryName",
+	"docker.images.sortBy": "Label",
+	"docker.containers.groupBy": "Compose Project Name",
+	"docker.containers.sortBy": "Label",
+	"c-cpp-compile-run.cpp-flags": "-Wall -Wextra -lm",
+	"debug.onTaskErrors": "debugAnyway",
+	"bookmarks.saveBookmarksInProject": false,
+	"powermode.enabled": true,
+	"powermode.presets": "flames",
+	"powermode.combo.location": "editor",
+	"powermode.shake.enabled": false,
+	"problems.showCurrentInStatus": true,
+	"javascript.updateImportsOnFileMove.enabled": "always",
+	"typescript.updateImportsOnFileMove.enabled": "always",
+	"typescript.enablePromptUseWorkspaceTsdk": true,
+	"typescript.tsserver.maxTsServerMemory": 1536,
+	"github.copilot.enable": {
+		"*": true,
+		"yaml": true,
+		"plaintext": false,
+		"markdown": true,
+		"java": true
+	},
+	"[python]": {
+		"editor.formatOnType": true
+	},
+	"python.defaultInterpreterPath": "/home/alvaro/.asdf/shims/python3.10",
+	"python.terminal.launchArgs": [],
+	"python.showStartPage": false,
+	"r.interpreterPath": "/home/alvaro/.asdf/shims/R",
+	"r.rpath.linux": "/home/alvaro/.asdf/shims/R",
+	"r.lsp.debug": true,
+	"java.configuration.updateBuildConfiguration": "automatic",
+	"java.compile.nullAnalysis.mode": "automatic",
+	"files.exclude": {
+		"**/.classpath": true,
+		"**/.project": true,
+		"**/.settings": true,
+		"**/.factorypath": true
+	},
+	"color-highlight.languages": [
+		"*"
+	],
+	"better-comments.multilineComments": true,
+	"better-comments.highlightPlainText": false,
+	"better-comments.tags": [
+		{
+			"tag": "!",
+			"color": "#ff3117",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "?",
+			"color": "#2da1f1",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "//",
+			"color": "#5b5a5a",
+			"strikethrough": true,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "todo",
+			"color": "#f1d113",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		},
+		{
+			"tag": "*",
+			"color": "#8fbd6e",
+			"strikethrough": false,
+			"underline": false,
+			"backgroundColor": "transparent",
+			"bold": false,
+			"italic": false
+		}
+	],
+	"commentAnchors.tags.matchCase": true,
+	"commentAnchors.tags.anchors": {
+		"ANCHOR": {
+			"iconColor": "#ffdbfe",
+			"highlightColor": "#ffdbfe",
+			"scope": "file"
+		},
+		"TODO": {
+			"iconColor": "orange",
+			"highlightColor": "#ffb300",
+			"scope": "workspace"
+		},
+		"FIXME": {
+			"iconColor": "red",
+			"highlightColor": "#f44336",
+			"scope": "workspace"
+		},
+		"STUB": {
+			"iconColor": "purple",
+			"highlightColor": "#ba68c8",
+			"scope": "file"
+		},
+		"NOTE": {
+			"iconColor": "blue",
+			"highlightColor": "#47acff",
+			"scope": "file"
+		},
+		"REVIEW": {
+			"iconColor": "green",
+			"highlightColor": "#64dd17",
+			"scope": "workspace"
+		},
+		"SECTION": {
+			"iconColor": "blurple",
+			"highlightColor": "#3811ff",
+			"scope": "workspace",
+			"behavior": "region"
+		},
+		"LINK": {
+			"iconColor": "#2ecc71",
+			"highlightColor": "#2ecc71",
+			"scope": "workspace",
+			"behavior": "link"
+		}
+	},
+	"files.associations": {
+		"complex": "c",
+		"array": "c",
+		"vectors-double.h": "c",
+		"vector": "c",
+		"complex-int.h": "c",
+		"ratio": "c",
+		"random": "c",
+		"hash_map": "c",
+		"hash_set": "c",
+		"bitset": "c",
+		"chrono": "c",
+		"algorithm": "c",
+		"optional": "c",
+		"istream": "c",
+		"ostream": "c",
+		"system_error": "c",
+		"functional": "c",
+		"tuple": "c",
+		"type_traits": "c",
+		"utility": "c",
+		"cmath": "c",
+		"sstream": "c",
+		"atomic": "cpp",
+		"bit": "cpp",
+		"*.tcc": "cpp",
+		"cctype": "cpp",
+		"cerrno": "cpp",
+		"clocale": "cpp",
+		"cstdarg": "cpp",
+		"cstddef": "cpp",
+		"cstdint": "cpp",
+		"cstdio": "cpp",
+		"cstdlib": "cpp",
+		"cwchar": "cpp",
+		"cwctype": "cpp",
+		"deque": "cpp",
+		"exception": "cpp",
+		"iterator": "cpp",
+		"memory": "cpp",
+		"memory_resource": "cpp",
+		"numeric": "cpp",
+		"string": "cpp",
+		"string_view": "cpp",
+		"unordered_map": "cpp",
+		"fstream": "cpp",
+		"initializer_list": "cpp",
+		"ios": "cpp",
+		"iosfwd": "cpp",
+		"iostream": "cpp",
+		"limits": "cpp",
+		"new": "cpp",
+		"queue": "cpp",
+		"stdexcept": "cpp",
+		"streambuf": "cpp",
+		"cstdbool": "cpp",
+		"typeinfo": "cpp",
+		"*.rmd": "markdown",
+		"*.apib": "apiblueprint",
+		"*.dbml": "dbml",
+		"list": "cpp",
+		"ctime": "cpp",
+		"ranges": "cpp",
+		"compare": "cpp",
+		"concepts": "cpp",
+		"cstring": "cpp",
+		"stdio.h": "c",
+		"stdlib.h": "c",
+		"stdbool.h": "c",
+		"string.h": "c"
+	},
+	"json.schemas": [
+		{
+			"fileMatch": [
+				"/package.json"
+			],
+			"url": "https://json.schemastore.org/package",
+			"schema": true
+		}
+	],
+	"http.proxy": "",
+	"http.proxySupport": "off",
+	"http.proxyAuthorization": null,
+	"http.proxyStrictSSL": false
+}

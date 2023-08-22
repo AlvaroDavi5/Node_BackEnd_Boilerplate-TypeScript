@@ -5,8 +5,77 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"name": "C/C++: Create and Debug Current File",
+			"type": "cppdbg",
+			"request": "launch",
+			"program": "${fileDirname}/${fileBasenameNoExtension}",
+			"args": [],
+			"stopAtEntry": false,
+			"cwd": "${workspaceFolder}",
+			"environment": [],
+			"externalConsole": false,
+			"MIMode": "gdb",
+			"setupCommands": [
+				{
+					"description": "Habilitar a reformatação automática para gdb",
+					"text": "-enable-pretty-printing",
+					"ignoreFailures": true
+				}
+			],
+			"preLaunchTask": "C/C++: gcc-9 build active file",
+			"miDebuggerPath": "/usr/bin/gdb"
+		},
+		{
+			"name": "Java: Launch with Arguments Prompt",
+			"type": "java",
+			"request": "launch",
+			"mainClass": "",
+			"args": "${command:SpecifyProgramArgs}"
+		},
+		{
+			"name": "Arduino: Launch Debugger",
+			"type": "arduino",
+			"request": "launch",
+			"program": "${file}",
+			"cwd": "${workspaceFolder}",
+			"MIMode": "gdb",
+			"targetArchitecture": "arm",
+			"miDebuggerPath": "",
+			"debugServerPath": "",
+			"debugServerArgs": "",
+			"customLaunchSetupCommands": [
+				{
+					"text": "target remote localhost:3333"
+				},
+				{
+					"text": "file \"${file}\""
+				},
+				{
+					"text": "load"
+				},
+				{
+					"text": "monitor reset halt"
+				},
+				{
+					"text": "monitor reset init"
+				}
+			],
+			"stopAtEntry": true,
+			"serverStarted": "Info\\ :\\ [\\w\\d\\.]*:\\ hardware",
+			"launchCompleteCommand": "exec-continue",
+			"filterStderr": true,
+			"args": []
+		},
+		{
+			"name": "Python: Run Current File",
+			"type": "python",
+			"request": "launch",
+			"program": "${file}",
+			"console": "integratedTerminal"
+		},
+		{
 			"name": "Node.js: Launch Current File",
-			"type": "pwa-node",
+			"type": "node",
 			"request": "launch",
 			"program": "${fileDirname}/${file}",
 			"skipFiles": [
@@ -15,7 +84,7 @@
 		},
 		{
 			"name": "Node.js: Attach by Process ID",
-			"type": "pwa-node",
+			"type": "node",
 			"request": "attach",
 			"processId": "${command:PickProcess}",
 			"skipFiles": [
@@ -24,7 +93,7 @@
 		},
 		{
 			"name": "Chrome: Launch against localhost",
-			"type": "pwa-chrome",
+			"type": "chrome",
 			"request": "launch",
 			"webRoot": "${workspaceFolder}",
 			"url": "http://localhost:8080/"

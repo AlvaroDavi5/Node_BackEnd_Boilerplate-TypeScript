@@ -1,11 +1,7 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import DataParserHelper from '../../../../../src/modules/utils/helpers/DataParser.helper';
-import LoggerGenerator from '../../../../../src/infra/logging/LoggerGenerator.logger';
 
 
 describe('Modules :: Utils :: Helpers :: DataParserHelper', () => {
-	let nestTestApp: TestingModule;
-
 	let dataParserHelper: DataParserHelper;
 	// // mocks
 	const warnLoggerMock = jest.fn();
@@ -15,21 +11,8 @@ describe('Modules :: Utils :: Helpers :: DataParserHelper', () => {
 		}),
 	};
 
-	// ? build test app
-	beforeEach(async () => {
-		nestTestApp = await Test.createTestingModule({
-			providers: [
-				DataParserHelper,
-				{ provide: LoggerGenerator, useValue: loggerGeneratorMock },
-			],
-		}).compile();
-
-		// * get app provider
-		dataParserHelper = nestTestApp.get<DataParserHelper>(DataParserHelper);
-	});
-
-	afterEach(() => {
-		nestTestApp.close();
+	beforeEach(() => {
+		dataParserHelper = new DataParserHelper(loggerGeneratorMock);
 	});
 
 	describe('# Valid Data To String', () => {

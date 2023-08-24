@@ -1,12 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import path from 'path';
 import FileReaderHelper from '../../../../../src/modules/utils/helpers/FileReader.helper';
-import LoggerGenerator from '../../../../../src/infra/logging/LoggerGenerator.logger';
 
 
 describe('Modules :: Utils :: Helpers :: FileReaderHelper', () => {
-	let nestTestApp: TestingModule;
-
 	let fileReaderHelper: FileReaderHelper;
 	// // mocks
 	const warnLoggerMock = jest.fn();
@@ -16,20 +12,8 @@ describe('Modules :: Utils :: Helpers :: FileReaderHelper', () => {
 		}),
 	};
 
-	// ? build test app
-	beforeEach(async () => {
-		nestTestApp = await Test.createTestingModule({
-			providers: [
-				FileReaderHelper,
-				{ provide: LoggerGenerator, useValue: loggerGeneratorMock },
-			],
-		}).compile();
-
-		// * get app provider
-		fileReaderHelper = nestTestApp.get<FileReaderHelper>(FileReaderHelper);
-	});
-	afterEach(() => {
-		nestTestApp.close();
+	beforeEach(() => {
+		fileReaderHelper = new FileReaderHelper(loggerGeneratorMock);
 	});
 
 	describe('# Invalid File Path', () => {

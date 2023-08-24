@@ -1,27 +1,12 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import UserStrategy from '../../../../../src/modules/app/strategies/User.strategy';
 import UserEntity from '../../../../../src/modules/app/domain/entities/User.entity';
 
 
 describe('Modules :: App :: Strategies :: UserStrategy', () => {
-	let nestTestApp: TestingModule;
-
 	let userStrategy: UserStrategy;
 
-	// ? build test app
-	beforeEach(async () => {
-		nestTestApp = await Test.createTestingModule({
-			providers: [
-				UserStrategy,
-			],
-		}).compile();
-
-		// * get app provider
-		userStrategy = nestTestApp.get<UserStrategy>(UserStrategy);
-	});
-
-	afterEach(() => {
-		nestTestApp.close();
+	beforeEach(() => {
+		userStrategy = new UserStrategy();
 	});
 
 	describe('# Same Agent is Allowed', () => {

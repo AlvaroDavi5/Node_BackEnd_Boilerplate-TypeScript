@@ -1,16 +1,10 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import UserOperation from '../../../../../src/modules/app/operations/User.operation';
 import UserEntity, { UserInterface } from '../../../../../src/modules/app/domain/entities/User.entity';
 import UserPreferenceEntity, { UserPreferenceInterface } from '../../../../../src/modules/app/domain/entities/UserPreference.entity';
-import UserService from '../../../../../src/modules/app/services/User.service';
-import UserPreferenceService from '../../../../../src/modules/app/services/UserPreference.service';
 import UserStrategy from '../../../../../src/modules/app/strategies/User.strategy';
-import Exceptions from '../../../../../src/infra/errors/Exceptions';
 
 
 describe('Modules :: App :: Operations :: UserOperation', () => {
-	let nestTestApp: TestingModule;
-
 	let userOperation: UserOperation;
 	// // mocks
 	const userServiceMock = {
@@ -26,30 +20,15 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		update: jest.fn(async (id: number, data: UserPreferenceInterface): Promise<UserPreferenceEntity | null> => (null)),
 		delete: jest.fn(async (id: number, data: { softDelete: boolean }): Promise<[affectedCount: number] | null | undefined> => (null)),
 	};
+	const userStrategy = new UserStrategy();
 	const exceptionsMock = {
 		unauthorized: jest.fn(({ message }: any): Error => (new Error(message))),
 		business: jest.fn(({ message }: any): Error => (new Error(message))),
 		notFound: jest.fn(({ message }: any): Error => (new Error(message))),
 	};
 
-	// ? build test app
-	beforeEach(async () => {
-		nestTestApp = await Test.createTestingModule({
-			providers: [
-				UserOperation,
-				{ provide: UserService, useValue: userServiceMock },
-				{ provide: UserPreferenceService, useValue: userPreferenceServiceMock },
-				UserStrategy,
-				{ provide: Exceptions, useValue: exceptionsMock },
-			],
-		}).compile();
-
-		// * get app provider
-		userOperation = nestTestApp.get<UserOperation>(UserOperation);
-	});
-
-	afterEach(() => {
-		nestTestApp.close();
+	beforeEach(() => {
+		userOperation = new UserOperation(userServiceMock, userPreferenceServiceMock, userStrategy, exceptionsMock);
 	});
 
 	describe('# List Users', () => {

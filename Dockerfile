@@ -5,6 +5,7 @@ LABEL Description="Docker Image for NodeJS"
 LABEL org.opencontainers.image.authors="alvaro.davsa@gmail.com"
 ENV Version="1.0.0"
 
+ENV IS_ON_DOCKER="TRUE"
 ENV NODE_PATH=.
 ENV NODE_ENV=${NODE_ENV:-"prod"}
 ENV APP_PORT=3000
@@ -13,16 +14,19 @@ USER root
 WORKDIR /app
 
 #COPY --from=build /app /app
-COPY ./configs ./configs
-COPY ./docs/swagger.yaml ./docs/swagger.yaml
-COPY ./src ./src
-COPY ./tsconfig.json ./tsconfig.json
 COPY ./package.json ./package.json
 COPY ./yarn.lock ./yarn.lock
+COPY ./tsconfig.json ./tsconfig.json
+COPY ./tsconfig.spec.json ./tsconfig.spec.json
+COPY ./src ./src
+COPY ./nest-cli.json ./nest-cli.json
+COPY ./webpack.config.js ./webpack.config.js
+COPY ./nodemon.json ./nodemon.json
+COPY ./nodemon-debug.json ./nodemon-debug.json
 COPY ./init.sh ./init.sh
 
-RUN yarn install
 RUN chmod +x init.sh
+RUN yarn install
 CMD [ "./init.sh" ]
 
 #ENTRYPOINT ["/usr/bin/node", "-D", "FOREGROUND"]

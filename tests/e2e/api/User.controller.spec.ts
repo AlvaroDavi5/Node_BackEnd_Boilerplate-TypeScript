@@ -19,18 +19,31 @@ describe('API :: UserController', () => {
 	});
 
 	describe('# [GET] /api/users', () => {
-		it(`Should get success`, async () => {
-			return request(nestTestApp.getHttpServer())
+		it('Should get success', async () => {
+			const response = await request(await nestTestApp.getHttpServer())
 				.get('/api/users')
-				.set('Authorization', 'Bearer ' + process.env.MOCKED_SERVICE_TOKEN)
-				.expect(200)
-				.expect({
-					content: [],
-					pageNumber: 0,
-					pageSize: 0,
-					totalPages: 0,
-					totalItems: 0,
-				});
+				.set('Authorization', 'Bearer ' + process.env.MOCKED_SERVICE_TOKEN);
+
+			expect(response.statusCode).toBe(200);
+			expect(response.body).toEqual({
+				content: [],
+				pageNumber: 0,
+				pageSize: 0,
+				totalPages: 0,
+				totalItems: 0,
+			});
+		});
+
+		it('Should get unauthorized', async () => {
+			const response = await request(await nestTestApp.getHttpServer())
+				.get('/api/users');
+
+			expect(response.statusCode).toBe(401);
+			expect(response.body).toEqual({
+				error: 'Unauthorized',
+				message: 'Authorization token is required',
+				statusCode: 401,
+			});
 		});
 	});
 

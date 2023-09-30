@@ -157,6 +157,8 @@ module.exports = {
 				lib: 'always',
 			}
 		],
+		'@typescript-eslint/ban-ts-ignore': 'off',
+		'@typescript-eslint/ban-ts-comment': 'off',
 	},
 	overrides: [
 		{

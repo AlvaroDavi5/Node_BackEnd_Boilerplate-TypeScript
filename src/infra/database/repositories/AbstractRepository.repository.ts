@@ -1,6 +1,6 @@
 import { Model, Op, QueryTypes } from 'sequelize';
 import { Logger } from 'winston';
-import Entity from '@infra/database/entities/AbstractEntity.entity';
+import AbstractEntity from '@infra/database/entities/AbstractEntity.entity';
 import Exceptions from '@infra/errors/Exceptions';
 
 
@@ -14,7 +14,7 @@ class _RepositoryModel extends Model {
 }
 
 export default abstract class AbstractRepository {
-	public DomainEntity: typeof Entity;
+	public DomainEntity: typeof AbstractEntity;
 	public ResourceModel: typeof _RepositoryModel;
 	public resourceMapper: {
 		toDatabase: (data: any) => any,
@@ -119,11 +119,11 @@ export default abstract class AbstractRepository {
 	}
 
 	public async list(query?: any): Promise<{
-		content: any[];
-		pageNumber: number;
-		pageSize: number;
-		totalPages: number;
-		totalItems: number;
+		content: any[],
+		pageNumber: number,
+		pageSize: number,
+		totalPages: number,
+		totalItems: number,
 	}> {
 		const buildedQuery = this.queryParamsBuilder?.buildParams(query);
 		const { rows, count } = await this.ResourceModel.findAndCountAll(buildedQuery);

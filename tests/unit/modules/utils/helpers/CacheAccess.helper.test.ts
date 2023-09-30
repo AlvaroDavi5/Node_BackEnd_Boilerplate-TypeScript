@@ -1,26 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import CacheAccessHelper from '../../../../../src/modules/utils/helpers/CacheAccess.helper';
 
 
 describe('Modules :: Utils :: Helpers :: CacheAccessHelper', () => {
-	let nestTestApp: TestingModule;
-
 	let cacheAccessHelper: CacheAccessHelper;
 
-	beforeEach(async () => {
-		// ? build test app
-		nestTestApp = await Test.createTestingModule({
-			providers: [
-				CacheAccessHelper,
-			],
-		}).compile();
-
-		// * get app provider
-		cacheAccessHelper = nestTestApp.get<CacheAccessHelper>(CacheAccessHelper);
-	});
-
-	afterEach(() => {
-		nestTestApp.close();
+	beforeEach(() => {
+		cacheAccessHelper = new CacheAccessHelper();
 	});
 
 	describe('# Key-ID', () => {

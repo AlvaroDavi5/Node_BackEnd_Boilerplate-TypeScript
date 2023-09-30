@@ -25,24 +25,24 @@ export default class UserRepository extends AbstractRepository {
 		});
 	}
 
-	public async getById(id: number, restrictData = true): Promise<any> {
+	public async getById(id: number, restrictData = true): Promise<UserEntity | null> {
 		const userModel = (restrictData) ? this.ResourceModel.scope('withoutPassword') : this.ResourceModel;
 
 		const result = await userModel.findByPk(
 			id,
 			this.queryOptions,
 		);
-		if (!result) return;
+		if (!result) return null;
 
 		return this.resourceMapper.toEntity(result);
 	}
 
 	public async list(query?: any, restrictData = true): Promise<{
-		content: any[];
-		pageNumber: number;
-		pageSize: number;
-		totalPages: number;
-		totalItems: number;
+		content: any[],
+		pageNumber: number,
+		pageSize: number,
+		totalPages: number,
+		totalItems: number,
 	}> {
 		const userModel = (restrictData) ? this.ResourceModel.scope('withoutSensibleData') : this.ResourceModel;
 		const buildedQuery = this.queryParamsBuilder?.buildParams(query);

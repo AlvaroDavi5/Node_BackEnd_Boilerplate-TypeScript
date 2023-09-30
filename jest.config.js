@@ -37,7 +37,12 @@ module.exports = {
 	coveragePathIgnorePatterns: [
 		'src/configs/',
 		'src/dev/',
-		'src/infra/',
+		'src/infra/cache',
+		'src/infra/cron',
+		'src/infra/data',
+		'src/infra/database',
+		'src/infra/integration',
+		'src/infra/logging',
 		'src/modules/api/controllers/',
 		'src/modules/api/decorators/',
 		'src/modules/api/middlewares/',

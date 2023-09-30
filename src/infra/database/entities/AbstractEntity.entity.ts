@@ -1,11 +1,11 @@
 
-export default abstract class Entity {
+export default abstract class AbstractEntity {
 	public validate(): { value: any, valid: boolean, error: Error | null } {
 		let value: any = null;
 		let valid = false;
 		let error: Error | null = null;
 
-		if (this instanceof Entity) {
+		if (this instanceof AbstractEntity) {
 			valid = true;
 			value = { ...this };
 		}

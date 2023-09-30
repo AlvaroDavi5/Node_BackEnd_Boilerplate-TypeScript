@@ -19,16 +19,17 @@ services:
     networks:
       - default_network
     volumes:
-      - ./configs:/app/configs
-      - ./src:/app/src
-      - ./tsconfig.json:/app/tsconfig.json
+      - ./package.json:/app/package.json
       - ./yarn.lock:/app/yarn.lock
+      - ./tsconfig.json:/app/tsconfig.json
+      - ./src:/app/src
       - ./init.sh:/app/init.sh
       - /node_modules
     depends_on:
       - cache
-      - database
       - cloud
+      - database
+      - data
 
   # DataBase
   database:

@@ -1,24 +1,11 @@
-import { Test, TestingModule } from '@nestjs/testing';
 import HttpConstants from '../../../../../src/modules/api/constants/Http.constants';
 
 
 describe('Modules :: API :: Constants :: HttpConstants', () => {
-	let nestTestApp: TestingModule;
-
 	let httpConstants: HttpConstants;
 
-	// ? build test app
-	beforeEach(async () => {
-		nestTestApp = await Test.createTestingModule({
-			providers: [HttpConstants],
-		}).compile();
-
-		// * get app provider
-		httpConstants = nestTestApp.get<HttpConstants>(HttpConstants);
-	});
-
-	afterEach(() => {
-		nestTestApp.close();
+	beforeEach(() => {
+		httpConstants = new HttpConstants();
 	});
 
 	describe('# Status Code', () => {

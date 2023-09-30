@@ -18,11 +18,11 @@ export default class UserOperation {
 	) { }
 
 	public async listUsers(data: any): Promise<{
-		content: any[];
-		pageNumber: number;
-		pageSize: number;
-		totalPages: number;
-		totalItems: number;
+		content: any[],
+		pageNumber: number,
+		pageSize: number,
+		totalPages: number,
+		totalItems: number,
 	}> {
 		const usersList = await this.userService.list(data);
 		return usersList;

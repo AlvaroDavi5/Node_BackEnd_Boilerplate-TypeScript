@@ -1,26 +1,26 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import Entity from '@infra/database/entities/AbstractEntity.entity';
+import AbstractEntity from '@infra/database/entities/AbstractEntity.entity';
 import UserPreference from './UserPreference.entity';
 
 
 export interface UserInterface {
-	id?: number;
-	fullName: string;
-	email: string;
-	password?: string;
-	phone: string;
-	docType: string;
-	document: string;
-	fu: string;
-	preference?: UserPreference;
-	readonly createdAt: Date;
-	updatedAt: Date | null;
-	deletedAt: Date | null;
-	deletedBy: string | null;
+	id?: number,
+	fullName: string,
+	email: string,
+	password?: string,
+	phone: string,
+	docType: string,
+	document: string,
+	fu: string,
+	preference?: UserPreference,
+	readonly createdAt: Date,
+	updatedAt: Date | null,
+	deletedAt: Date | null,
+	deletedBy: string | null,
 }
 
-export default class User extends Entity {
+export default class User extends AbstractEntity {
 	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false })
 	private id = 0;
 

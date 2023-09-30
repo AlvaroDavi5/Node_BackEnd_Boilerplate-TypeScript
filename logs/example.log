@@ -14,3 +14,4 @@
 {"env":"dev","level":"warn","message":"Invalid user!","service":"Node Boilerplate","timestamp":"2023-03-18T00:05:54.349Z"}
 {"env":"dev","level":"error","message":"Include unexpected. Element has to be either a Model, an Association or an object.","service":"Node Boilerplate","timestamp":"2023-03-18T00:05:54.356Z"}
 {"env":"dev","level":"info","message":"::ffff:172.18.0.1 - - [18/Mar/2023:00:05:54 +0000] \"GET /api/users HTTP/1.1\" 500 965 \"-\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 OPR/96.0.0.0\"","service":"Node Boilerplate","timestamp":"2023-03-18T00:05:54.406Z"}
+{"env":"dev","level":"error","message":"[EventsQueueConsumer] event error from [EventsQueueConsumer] - MessageId: undefined. Error: SQS receive message failed: connect ECONNREFUSED 127.0.0.1:4566","service":"Node Boilerplate","timestamp":"2023-09-30T01:12:18.462Z"}

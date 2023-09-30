@@ -19,19 +19,20 @@ describe('API :: DefaultController', () => {
 	});
 
 	describe('# [GET] /api/check', () => {
-		it(`Should get success`, async () => {
-			return request(nestTestApp.getHttpServer())
-				.get('/api/check')
-				.expect(200)
-				.expect({
-					baseUrl: '',
-					method: 'GET',
-					statusCode: 200,
-					params: {},
-					query: {},
-					body: {},
-					url: '/api/check'
-				});
+		it('Should get success', async () => {
+			const response = await request(await nestTestApp.getHttpServer())
+				.get('/api/check');
+
+			expect(response.statusCode).toBe(200);
+			expect(response.body).toEqual({
+				baseUrl: '',
+				method: 'GET',
+				statusCode: 200,
+				params: {},
+				query: {},
+				body: {},
+				url: '/api/check'
+			});
 		});
 	});
 

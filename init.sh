@@ -1,4 +1,4 @@
-#!/bin/bash
+#!/bin/sh
 
 
 default="\033[0m"
@@ -16,7 +16,7 @@ log() {
 	echo -e "${green} \n[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $@\n ${default}";
 }
 
-if [ ! -e .env ]; then
+if [ ! -e .env -a "$IS_ON_DOCKER" != "TRUE" ]; then
 	log "Copying Dotenv File...";
 	cp envs/.env.development.local .env > /dev/null 2>&1;
 	if [ $? -ne 0 ]; then

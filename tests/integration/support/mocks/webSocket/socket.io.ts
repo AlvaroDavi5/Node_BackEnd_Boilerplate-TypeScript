@@ -9,7 +9,9 @@ export class Server {
 		this.httpServer = httpServer || null;
 		this.options = options || {};
 
-		this._emit = (event = '', msg = '') => { };
+		this._emit = (event = '', msg = '') => {
+			console.log('New event:', event);
+		};
 		this._on = (event = '', callback: any) => {
 			const socket = {
 				id: 'mockedSocket',
@@ -38,10 +40,17 @@ export class Server {
 		};
 	}
 
-	on: (event: string, callback: any) => {};
-	to: (socketId: string) => {
-		emit: (event: string, msg: string) => {},
-	};
+	on(event: string, callback: any) {
+		console.log('New event:', event);
+	}
+
+	to(socketId: string) {
+		return {
+			emit: (event: string, msg: string) => {
+				console.log('New event:', event);
+			},
+		};
+	}
 
 	disconnectSockets: () => null;
 	sockets: {

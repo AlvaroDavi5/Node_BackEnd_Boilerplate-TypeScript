@@ -7,18 +7,19 @@ export default class LoggerGenerator {
 	}
 
 	public getLogger(): any {
-		let errorLogger = (value: any) => { };
+		const commomLogger = (value: any) => console.log(value?.message || value);
+		let errorLogger = (value: any) => console.error(value?.message || value);
 
 		if (this.showLogs) {
 			errorLogger = (value: any) => console.error(value?.message || value);
 		}
 
 		return {
-			error: errorLogger,
-			warn: errorLogger,
-			info: (value: any) => { },
-			debug: (value: any) => { },
-			log: (value: any) => { },
+			error: this.showLogs ? errorLogger : commomLogger,
+			warn: this.showLogs ? errorLogger : commomLogger,
+			info: commomLogger,
+			debug: commomLogger,
+			log: commomLogger,
 		};
 	}
 }

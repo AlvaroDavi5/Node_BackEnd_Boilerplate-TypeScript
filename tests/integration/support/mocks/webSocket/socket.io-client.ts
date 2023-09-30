@@ -8,12 +8,29 @@ export class Client {
 		this.options = options || {};
 	}
 
-	on: (event: string, callback: any) => {};
-	off: (event: string, callback: any) => {};
-	emit: (event: string, msg: string) => {};
-	connected: () => true;
-	connect: (event: string, msg: string) => {};
-	disconnect: (event: string, msg: string) => {};
+	public on(event: string, callback: any) {
+		console.log('New event:', event);
+	}
+
+	public off(event: string, callback: any) {
+		console.log('New event:', event);
+	}
+
+	public emit(event: string, msg: string) {
+		console.log('New event:', event);
+	}
+
+	public connected() {
+		return true;
+	}
+
+	public connect(event: string, msg: string) {
+		console.log('New event:', event);
+	}
+
+	public disconnect(event: string, msg: string) {
+		console.log('New event:', event);
+	}
 }
 
 let client: Client;

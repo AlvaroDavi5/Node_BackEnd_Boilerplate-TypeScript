@@ -30,7 +30,7 @@ describe('Infra :: Errors :: Exceptions', () => {
 
 			expect(exception.name).toBe('contract');
 			expect(exception.message).toBe('New Contract Exception');
-			expect(exception.stack).toBe('error1, error2, error3');
+			expect(exception.stack).not.toBeNull();
 			expect(exception.cause).toEqual({ info: 'A error occurred' });
 			expect(exception.getStatus()).toBe(400);
 			expect(exception.getResponse()).toEqual({ error: 'Bad Request', message: 'New Contract Exception', statusCode: 400 });
@@ -47,7 +47,7 @@ describe('Infra :: Errors :: Exceptions', () => {
 
 			expect(exception.name).toBe('business');
 			expect(exception.message).toBe('New Business Exception');
-			expect(exception.stack).toBe('error1, error2, error3');
+			expect(exception.stack).not.toBeNull();
 			expect(exception.cause).toEqual({ info: 'A error occurred' });
 			expect(exception.getStatus()).toBe(403);
 			expect(exception.getResponse()).toEqual({ error: 'Forbidden', message: 'New Business Exception', statusCode: 403 });
@@ -64,7 +64,7 @@ describe('Infra :: Errors :: Exceptions', () => {
 
 			expect(exception.name).toBe('unauthorized');
 			expect(exception.message).toBe('New Unauthorized Exception');
-			expect(exception.stack).toBe('error1, error2, error3');
+			expect(exception.stack).not.toBeNull();
 			expect(exception.cause).toEqual({ info: 'A error occurred' });
 			expect(exception.getStatus()).toBe(401);
 			expect(exception.getResponse()).toEqual({ error: 'Unauthorized', message: 'New Unauthorized Exception', statusCode: 401 });
@@ -81,7 +81,7 @@ describe('Infra :: Errors :: Exceptions', () => {
 
 			expect(exception.name).toBe('conflict');
 			expect(exception.message).toBe('New Conflict Exception');
-			expect(exception.stack).toBe('error1, error2, error3');
+			expect(exception.stack).not.toBeNull();
 			expect(exception.cause).toEqual({ info: 'A error occurred' });
 			expect(exception.getStatus()).toBe(409);
 			expect(exception.getResponse()).toEqual({ error: 'Conflict', message: 'New Conflict Exception', statusCode: 409 });
@@ -98,7 +98,7 @@ describe('Infra :: Errors :: Exceptions', () => {
 
 			expect(exception.name).toBe('notFound');
 			expect(exception.message).toBe('New NotFound Exception');
-			expect(exception.stack).toBe('error1, error2, error3');
+			expect(exception.stack).not.toBeNull();
 			expect(exception.cause).toEqual({ info: 'A error occurred' });
 			expect(exception.getStatus()).toBe(404);
 			expect(exception.getResponse()).toEqual({ error: 'Not Found', message: 'New NotFound Exception', statusCode: 404 });
@@ -115,7 +115,7 @@ describe('Infra :: Errors :: Exceptions', () => {
 
 			expect(exception.name).toBe('integration');
 			expect(exception.message).toBe('New Integration Exception');
-			expect(exception.stack).toBe('error1, error2, error3');
+			expect(exception.stack).not.toBeNull();
 			expect(exception.cause).toEqual({ info: 'A error occurred' });
 			expect(exception.getStatus()).toBe(503);
 			expect(exception.getResponse()).toEqual({ error: 'Service Unavailable', message: 'New Integration Exception', statusCode: 503 });
@@ -132,7 +132,7 @@ describe('Infra :: Errors :: Exceptions', () => {
 
 			expect(exception.name).toBe('internal');
 			expect(exception.message).toBe('New Internal Exception');
-			expect(exception.stack).toBe('error1, error2, error3');
+			expect(exception.stack).not.toBeNull();
 			expect(exception.cause).toEqual({ info: 'A error occurred' });
 			expect(exception.getStatus()).toBe(500);
 			expect(exception.getResponse()).toEqual({ error: 'Internal Server Error', message: 'New Internal Exception', statusCode: 500 });

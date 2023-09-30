@@ -39,6 +39,7 @@ import DefaultController from '../../../../src/modules/api/controllers/Default.c
 import UserController from '../../../../src/modules/api/controllers/User.controller';
 
 
+// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 // @ts-ignore
 @Module({
 	imports: [

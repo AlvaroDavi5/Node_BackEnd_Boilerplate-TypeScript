@@ -26,7 +26,7 @@ export default class SyncCronJob {
 	*/
 	@Cron('0 */5 * * * *', {
 		// // every 5 minutes
-		name: SyncCronJob.name,
+		name: 'SyncCronJob',
 		timeZone: 'America/Sao_Paulo',
 		disabled: false,
 		unrefTimeout: false,

@@ -35,7 +35,7 @@ export default class RedisClient {
 		return this.redisClient;
 	}
 
-	public async connect(): Promise<Boolean> {
+	public async connect(): Promise<boolean> {
 		try {
 			await this.redisClient.connect();
 			return true;
@@ -51,7 +51,7 @@ export default class RedisClient {
 		return this.redisClient?.status === 'ready';
 	}
 
-	public async close(): Promise<String> {
+	public async close(): Promise<string> {
 		return await this.redisClient.quit();
 	}
 

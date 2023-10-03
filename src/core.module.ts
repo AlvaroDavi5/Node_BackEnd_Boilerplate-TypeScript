@@ -11,7 +11,8 @@ import SnsClient from '@infra/integration/aws/Sns.client';
 import S3Client from '@infra/integration/aws/S3.client';
 import CognitoClient from '@infra/integration/aws/Cognito.client';
 import RestMockedServiceClient from '@infra/integration/rest/RestMockedService.client';
-import SyncCron from '@infra/cron/Sync.cron';
+import SyncCronJob from '@infra/cron/jobs/SyncCron.job';
+import SyncCronTask from '@infra/cron/tasks/SyncCron.task';
 import UtilsModule from '@modules/utils/utils.module';
 import AppModule from '@modules/app/app.module';
 import EventsModule from '@modules/events/events.module';
@@ -39,7 +40,8 @@ import ApiModule from '@modules/api/api.module';
 		S3Client,
 		CognitoClient,
 		RestMockedServiceClient,
-		SyncCron,
+		SyncCronJob,
+		SyncCronTask,
 	],
 	exports: [
 		Exceptions,

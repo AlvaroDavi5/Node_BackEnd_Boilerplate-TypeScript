@@ -2,10 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { SqsMessageHandler, SqsConsumerEventHandler } from '@ssut/nestjs-sqs';
 import { Message } from '@aws-sdk/client-sqs';
 import { Logger } from 'winston';
-import SubscriptionService from 'src/modules/app/services/Subscription.service';
 import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
-import Exceptions from '@infra/errors/Exceptions';
-import eventSchema from '../schemas/event.schema';
+import EventsQueueHandler from '../handlers/EventsQueue.handler';
 import dotenv from 'dotenv';
 dotenv.config();
 
@@ -17,9 +15,8 @@ export default class EventsQueueConsumer {
 	private readonly sqsQueueName: string;
 
 	constructor(
-		private readonly subscriptionService: SubscriptionService,
 		private readonly loggerGenerator: LoggerGenerator,
-		private readonly exceptions: Exceptions,
+		private readonly eventsQueueHandler: EventsQueueHandler,
 	) {
 		this.logger = this.loggerGenerator.getLogger();
 		this.sqsQueueName = EventsQueueConsumer.name;
@@ -28,30 +25,8 @@ export default class EventsQueueConsumer {
 	@SqsMessageHandler(eventsQueueName, true)
 	public async handleMessageBatch(messages: Message[]): Promise<void> {
 		for (const message of messages) {
-			try {
-				this.logger.info(`New message received from [${this.sqsQueueName}]`);
-
-				if (message.Body) {
-					const data = JSON.parse(message.Body);
-					const { value, error } = eventSchema.validate(
-						data,
-						{ stripUnknown: false }
-					);
-
-					if (error) {
-						throw this.exceptions.contract({
-							name: error.name,
-							message: error.message,
-							stack: error.stack,
-						});
-					}
-					else {
-						this.subscriptionService.broadcast(value);
-					}
-				}
-			} catch (error) {
-				this.logger.error(error);
-			}
+			this.logger.info(`New message received from [${this.sqsQueueName}]`);
+			this.eventsQueueHandler.execute(message);
 		}
 	}
 

@@ -3,7 +3,6 @@ import FileReaderHelper from '../../../../../src/modules/utils/helpers/FileReade
 
 
 describe('Modules :: Utils :: Helpers :: FileReaderHelper', () => {
-	let fileReaderHelper: FileReaderHelper;
 	// // mocks
 	const warnLoggerMock = jest.fn();
 	const loggerGeneratorMock = {
@@ -12,9 +11,7 @@ describe('Modules :: Utils :: Helpers :: FileReaderHelper', () => {
 		}),
 	};
 
-	beforeEach(() => {
-		fileReaderHelper = new FileReaderHelper(loggerGeneratorMock);
-	});
+	const fileReaderHelper = new FileReaderHelper(loggerGeneratorMock);
 
 	describe('# Invalid File Path', () => {
 		test('Should return null', async () => {

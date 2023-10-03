@@ -3,7 +3,6 @@ import configs from '../../../../src/configs/configs.config';
 
 
 describe('Infra :: Errors :: Exceptions', () => {
-	let exceptions: Exceptions;
 	// // mocks
 	const configServiceMock: any = {
 		get: (propertyPath?: string) => {
@@ -14,9 +13,7 @@ describe('Infra :: Errors :: Exceptions', () => {
 		},
 	};
 
-	beforeEach(() => {
-		exceptions = new Exceptions(configServiceMock);
-	});
+	const exceptions = new Exceptions(configServiceMock);
 
 	describe('# All Exceptions', () => {
 		test('Should return a Contract exception', () => {

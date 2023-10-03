@@ -2,11 +2,7 @@ import HttpConstants from '../../../../../src/modules/api/constants/Http.constan
 
 
 describe('Modules :: API :: Constants :: HttpConstants', () => {
-	let httpConstants: HttpConstants;
-
-	beforeEach(() => {
-		httpConstants = new HttpConstants();
-	});
+	const httpConstants = new HttpConstants();
 
 	describe('# Status Code', () => {
 		test('Should return the same value', () => {

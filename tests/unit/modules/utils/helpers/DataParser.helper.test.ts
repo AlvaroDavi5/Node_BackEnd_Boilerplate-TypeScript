@@ -2,7 +2,6 @@ import DataParserHelper from '../../../../../src/modules/utils/helpers/DataParse
 
 
 describe('Modules :: Utils :: Helpers :: DataParserHelper', () => {
-	let dataParserHelper: DataParserHelper;
 	// // mocks
 	const warnLoggerMock = jest.fn();
 	const loggerGeneratorMock = {
@@ -11,9 +10,7 @@ describe('Modules :: Utils :: Helpers :: DataParserHelper', () => {
 		}),
 	};
 
-	beforeEach(() => {
-		dataParserHelper = new DataParserHelper(loggerGeneratorMock);
-	});
+	const dataParserHelper = new DataParserHelper(loggerGeneratorMock);
 
 	describe('# Valid Data To String', () => {
 		test('Should return the same string', () => {

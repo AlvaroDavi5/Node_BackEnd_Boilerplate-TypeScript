@@ -5,7 +5,6 @@ import UserStrategy from '../../../../../src/modules/app/strategies/User.strateg
 
 
 describe('Modules :: App :: Operations :: UserOperation', () => {
-	let userOperation: UserOperation;
 	// // mocks
 	const userServiceMock = {
 		getById: jest.fn(async (id: number): Promise<UserEntity | null> => (null)),
@@ -27,9 +26,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		notFound: jest.fn(({ message }: any): Error => (new Error(message))),
 	};
 
-	beforeEach(() => {
-		userOperation = new UserOperation(userServiceMock, userPreferenceServiceMock, userStrategy, exceptionsMock);
-	});
+	const userOperation = new UserOperation(userServiceMock, userPreferenceServiceMock, userStrategy, exceptionsMock);
 
 	describe('# List Users', () => {
 

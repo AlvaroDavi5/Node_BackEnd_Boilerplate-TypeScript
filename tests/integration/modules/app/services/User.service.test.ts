@@ -8,6 +8,7 @@ import UserEntity from '../../../../../src/modules/app/domain/entities/User.enti
 
 
 describe('Modules :: App :: Services :: UserService', () => {
+	let nestTestingModule: TestingModule;
 	let userService: UserService;
 	// // mocks
 	const userRepositoryMock = {
@@ -28,7 +29,7 @@ describe('Modules :: App :: Services :: UserService', () => {
 
 	// ? build test app
 	beforeAll(async () => {
-		const nestTestingModule: TestingModule = await Test.createTestingModule({
+		nestTestingModule = await Test.createTestingModule({
 			providers: [
 				UserService,
 				{ provide: UserRepository, useValue: userRepositoryMock },
@@ -53,5 +54,9 @@ describe('Modules :: App :: Services :: UserService', () => {
 			expect(userRepositoryMock.getById).toBeCalled();
 			expect(user?.getId()).toBe(userEntity.getId());
 		});
+	});
+
+	afterAll(async () => {
+		await nestTestingModule.close();
 	});
 });

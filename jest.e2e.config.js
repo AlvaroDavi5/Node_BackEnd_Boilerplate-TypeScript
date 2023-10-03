@@ -35,16 +35,25 @@ module.exports = {
 
 	// An array of regexp pattern strings used to skip coverage collection
 	coveragePathIgnorePatterns: [
-		'src/dev/',
 		'src/configs/',
-		'src/infra/cron/',
+		'src/dev/',
+		'src/infra/cron/tasks/',
 		'src/infra/errors/',
 		'src/infra/logging/',
 		'src/modules/api/constants/',
 		'src/modules/api/decorators/',
-		'src/modules/app/',
+		'src/modules/api/middlewares/',
+		'src/modules/api/pipes/',
+		'src/modules/api/schemas/',
+		'src/modules/app/domain/',
+		'src/modules/app/operations/',
+		'src/modules/app/services/',
+		'src/modules/app/strategies/',
+		'src/modules/events/queue/handlers/',
+		'src/modules/events/websocket/client/',
 		'src/modules/utils/',
 		'.d.ts',
+		'.module.ts',
 		'src/main.ts',
 	],
 

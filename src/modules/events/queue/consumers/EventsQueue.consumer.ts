@@ -11,32 +11,32 @@ dotenv.config();
 const eventsQueueName = process.env.AWS_SQS_EVENTS_QUEUE_NAME || 'eventsQueue.fifo';
 @Injectable()
 export default class EventsQueueConsumer {
+	private readonly name: string;
 	private readonly logger: Logger;
-	private readonly sqsQueueName: string;
 
 	constructor(
 		private readonly loggerGenerator: LoggerGenerator,
 		private readonly eventsQueueHandler: EventsQueueHandler,
 	) {
 		this.logger = this.loggerGenerator.getLogger();
-		this.sqsQueueName = EventsQueueConsumer.name;
+		this.name = EventsQueueConsumer.name;
 	}
 
 	@SqsMessageHandler(eventsQueueName, true)
 	public async handleMessageBatch(messages: Message[]): Promise<void> {
 		for (const message of messages) {
-			this.logger.info(`New message received from [${this.sqsQueueName}]`);
+			this.logger.info(`New message received from ${this.name}`);
 			this.eventsQueueHandler.execute(message);
 		}
 	}
 
 	@SqsConsumerEventHandler(eventsQueueName, 'error')
 	public onError(error: Error, message: Message): void {
-		this.logger.error(`[${EventsQueueConsumer.name}] event error from [${this.sqsQueueName}] - MessageId: ${message?.MessageId}. Error: ${error.message}`);
+		this.logger.error(`Event error from ${this.name} - MessageId: ${message?.MessageId}. Error: ${error.message}`);
 	}
 
 	@SqsConsumerEventHandler(eventsQueueName, 'processing_error')
 	public onProcessingError(error: Error, message: Message): void {
-		this.logger.error(`[${EventsQueueConsumer.name}] processing error from [${this.sqsQueueName}] - MessageId: ${message?.MessageId}. Error: ${error.message}`);
+		this.logger.error(`Processing error from ${this.name} - MessageId: ${message?.MessageId}. Error: ${error.message}`);
 	}
 }

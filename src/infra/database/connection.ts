@@ -15,7 +15,7 @@ export async function testConnection(connection: Sequelize, logger?: Logger): Pr
 		await connection.authenticate({
 			logging: false,
 		});
-		logger?.info('Database connection has been established successfully.');
+		logger?.info('Database connection has been established successfully');
 		return true;
 	}
 	catch (error) {
@@ -31,7 +31,7 @@ export async function syncConnection(connection: Sequelize, logger?: Logger) {
 		/* drop all tables and recreate them */
 		await connection.sync({ force: true, logging: false }).then(
 			(value: Sequelize) => {
-				logger?.info('Database synced.');
+				logger?.info('Database synced');
 			}
 		);
 	}

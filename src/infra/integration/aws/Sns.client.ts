@@ -111,6 +111,10 @@ export default class SnsClient {
 		return this.snsClient;
 	}
 
+	public destroy(): void {
+		this.snsClient.destroy();
+	}
+
 	public async listTopics(): Promise<Topic[]> {
 		let list: Topic[] = [];
 

@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 import { v4 as uuidV4 } from 'uuid';
 import SqsClient from './SqsClient';
-import eventPayload from 'tests/e2e/support/payloads/templates/EventPayload.json';
+import eventPayload from 'src/dev/templates/payloads/EventPayload.json';
 dotenv.config();
 
 

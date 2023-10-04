@@ -50,10 +50,9 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 		this.logger.debug('Started Websocket Server');
 	}
 
-	// listen connect event from client
+	// listen 'connection' event from client
 	public async handleConnection(socket: Socket, ...args: any[]): Promise<void> {
-		this.logger.debug(`${WebSocketEventsEnum.CONNECT} - ${socket.id}: ${args}`);
-		this.logger.info(`Client connected: ${socket.id}`);
+		this.logger.info(`Client connected: ${socket.id} - ${args}`);
 		this.eventsQueueProducer.dispatch({
 			title: 'New client connected',
 			event: {
@@ -66,9 +65,8 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 		});
 	}
 
-	// listen disconnect event from client
+	// listen 'disconnect' event from client
 	public async handleDisconnect(socket: Socket): Promise<void> {
-		this.logger.debug(`${WebSocketEventsEnum.DISCONNECT} - ${socket.id}`);
 		this.logger.info(`Client disconnected: ${socket.id}`);
 		await this.subscriptionService.delete(socket.id);
 	}
@@ -98,7 +96,8 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 	public broadcast(
 		@ConnectedSocket() socket: Socket,
 		@MessageBody() msg: string,
-	): void { // listen broadcast order event from client
+	): void { // listen 'broadcast' event from client
+		this.logger.info('Emiting message to all clients');
 		socket.broadcast.emit(WebSocketEventsEnum.EMIT, msg); // emit to all clients, except the sender
 	}
 
@@ -106,12 +105,11 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 	public emitPrivate(
 		@ConnectedSocket() socket: Socket,
 		@MessageBody() msg: any,
-	): void { // listen emit privately order event from client
-		this.logger.debug(`${msg} - ${socket.id}`);
-		socket.emit('events', { name: 'Nest' });
+	): void { // listen 'emit-private' order event from client
 		const message = this.formatMessageAfterReceiveHelper(msg);
 		const payload = this.formatMessageBeforeSendHelper(message?.payload);
 
+		this.logger.info(`Emiting message to: ${message?.targetSocketId}`);
 		this.server?.to(message?.targetSocketId).emit(
 			String(WebSocketEventsEnum.EMIT),
 			String(payload),

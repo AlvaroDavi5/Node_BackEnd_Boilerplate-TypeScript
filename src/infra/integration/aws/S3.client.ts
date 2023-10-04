@@ -88,6 +88,10 @@ export default class S3Client {
 		return this.s3Client;
 	}
 
+	public destroy(): void {
+		this.s3Client.destroy();
+	}
+
 	public async listBuckets(): Promise<Bucket[]> {
 		let list: Bucket[] = [];
 

@@ -69,6 +69,10 @@ export default class CognitoClient {
 		return this.cognitoClient;
 	}
 
+	public destroy(): void {
+		this.cognitoClient.destroy();
+	}
+
 	public async listUserPools(): Promise<UserPoolDescriptionType[]> {
 		let list: UserPoolDescriptionType[] = [];
 

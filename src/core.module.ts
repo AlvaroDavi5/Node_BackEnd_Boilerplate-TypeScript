@@ -2,6 +2,7 @@ import { Module, Global } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import configs from '@configs/configs.config';
+import LifecycleService from '@infra/start/Lifecycle.service';
 import Exceptions from '@infra/errors/Exceptions';
 import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
 import RedisClient from '@infra/cache/Redis.client';
@@ -31,6 +32,7 @@ import ApiModule from '@modules/api/api.module';
 	],
 	controllers: [],
 	providers: [
+		LifecycleService,
 		Exceptions,
 		LoggerGenerator,
 		RedisClient,

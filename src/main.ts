@@ -40,6 +40,8 @@ async function startNestApplication() {
 		},
 	});
 
+	nestApp.enableShutdownHooks();
+
 	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application'] | undefined>('application');
 	nestApp.useWebSocketAdapter(new IoAdapter(nestApp)); // WsAdapter
 	await nestApp.listen(Number(appConfigs?.port)).catch((error: ErrorInterface) => {
@@ -55,9 +57,17 @@ async function startNestApplication() {
 
 	console.log(`\n App started with PID: ${process.pid} on URL: ${appConfigs?.url} \n`);
 
-	process.on('uncaughtException', function (error: Error) {
-		console.error('\n', error, '\n');
-		process.exit();
+	process.on('uncaughtException', async (error) => {
+		console.error(`\n${error}\n`);
+		await nestApp.close();
+	});
+	process.on('SIGINT', async (signal) => {
+		console.error(`\n${signal}\n`);
+		await nestApp.close();
+	});
+	process.on('SIGTERM', async (signal) => {
+		console.error(`\n${signal}\n`);
+		await nestApp.close();
 	});
 }
 

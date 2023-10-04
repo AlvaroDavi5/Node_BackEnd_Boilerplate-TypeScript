@@ -2,11 +2,7 @@ import CacheAccessHelper from '../../../../../src/modules/utils/helpers/CacheAcc
 
 
 describe('Modules :: Utils :: Helpers :: CacheAccessHelper', () => {
-	let cacheAccessHelper: CacheAccessHelper;
-
-	beforeEach(() => {
-		cacheAccessHelper = new CacheAccessHelper();
-	});
+	const cacheAccessHelper = new CacheAccessHelper();
 
 	describe('# Key-ID', () => {
 		test('Should return a key', () => {

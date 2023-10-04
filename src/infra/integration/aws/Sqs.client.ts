@@ -111,6 +111,10 @@ export default class SqsClient {
 		return this.sqsClient;
 	}
 
+	public destroy(): void {
+		this.sqsClient.destroy();
+	}
+
 	public async listQueues(): Promise<string[]> {
 		let list: string[] = [];
 

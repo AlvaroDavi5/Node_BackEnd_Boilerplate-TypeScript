@@ -47,7 +47,7 @@ export default class MongoClient {
 	private async connect(): Promise<MongoDBClient> {
 		try {
 			return await this.mongoClient.connect();
-		} catch (error: unknown) {
+		} catch (error) {
 			throw this.exceptions.integration({
 				message: 'Error to connect mongo client',
 			});
@@ -57,7 +57,7 @@ export default class MongoClient {
 	public async close(): Promise<void> {
 		try {
 			return await this.mongoClient.close();
-		} catch (error: unknown) {
+		} catch (error) {
 			throw this.exceptions.integration({
 				message: 'Error to close mongo client',
 			});

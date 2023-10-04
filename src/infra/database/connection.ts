@@ -15,10 +15,10 @@ export async function testConnection(connection: Sequelize, logger?: Logger): Pr
 		await connection.authenticate({
 			logging: false,
 		});
-		logger?.info('Database connection has been established successfully.');
+		logger?.info('Database connection has been established successfully');
 		return true;
 	}
-	catch (error: unknown) {
+	catch (error) {
 		logger?.warn('Unable to connect to the database:');
 		logger?.error(error);
 
@@ -31,11 +31,11 @@ export async function syncConnection(connection: Sequelize, logger?: Logger) {
 		/* drop all tables and recreate them */
 		await connection.sync({ force: true, logging: false }).then(
 			(value: Sequelize) => {
-				logger?.info('Database synced.');
+				logger?.info('Database synced');
 			}
 		);
 	}
-	catch (error: unknown) { }
+	catch (error) { }
 }
 
 export default connection;

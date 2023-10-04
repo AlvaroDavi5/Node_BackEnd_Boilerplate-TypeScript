@@ -4,12 +4,12 @@ const nodeExternals = require('webpack-node-externals');
 
 
 module.exports = {
-	entry: ['webpack/hot/poll?1000', './src/main.ts'],
+	entry: ['webpack/hot/poll?1000', './build/src/main.js'],
 	watch: true,
 	target: 'node',
 	externals: [
 		nodeExternals({
-			whitelist: ['webpack/hot/poll?1000'],
+			allowlist: ['webpack/hot/poll?1000'],
 		}),
 	],
 	module: {
@@ -30,6 +30,6 @@ module.exports = {
 	],
 	output: {
 		path: path.join(__dirname, 'build'),
-		filename: 'server.js',
+		filename: 'src/wp.js',
 	},
 };

@@ -6,10 +6,11 @@ import { NestGlobalModule, startNestApplication } from '../support/mocks/nestGlo
 
 describe('API :: DefaultController', () => {
 	let nestTestApp: INestApplication;
+	let nestTestingModule: TestingModule;
 
 	// ? build test app
 	beforeAll(async () => {
-		const nestTestingModule: TestingModule = await Test.createTestingModule({
+		nestTestingModule = await Test.createTestingModule({
 			imports: [NestGlobalModule]
 		}).compile();
 
@@ -38,5 +39,6 @@ describe('API :: DefaultController', () => {
 
 	afterAll(async () => {
 		await nestTestApp.close();
+		await nestTestingModule.close();
 	});
 });

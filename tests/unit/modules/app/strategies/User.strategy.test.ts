@@ -3,11 +3,7 @@ import UserEntity from '../../../../../src/modules/app/domain/entities/User.enti
 
 
 describe('Modules :: App :: Strategies :: UserStrategy', () => {
-	let userStrategy: UserStrategy;
-
-	beforeEach(() => {
-		userStrategy = new UserStrategy();
-	});
+	const userStrategy = new UserStrategy();
 
 	describe('# Same Agent is Allowed', () => {
 		test('Should return true', () => {

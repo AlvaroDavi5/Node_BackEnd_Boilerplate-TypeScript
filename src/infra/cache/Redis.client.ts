@@ -35,8 +35,24 @@ export default class RedisClient {
 		return this.redisClient;
 	}
 
+	public async connect(): Promise<boolean> {
+		try {
+			await this.redisClient.connect();
+			return true;
+		} catch (error) {
+			this.exceptions.integration({
+				message: 'Error to connect redis client',
+			});
+			return false;
+		}
+	}
+
 	public isConnected(): boolean {
 		return this.redisClient?.status === 'ready';
+	}
+
+	public async close(): Promise<string> {
+		return await this.redisClient.quit();
 	}
 
 	public async listKeys(): Promise<string[]> {

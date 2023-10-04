@@ -37,7 +37,7 @@ export default class UserController {
 		try {
 			const result = await this.userOperation.listUsers(query);
 			return result;
-		} catch (error: unknown) {
+		} catch (error) {
 			return error;
 		}
 	}
@@ -55,7 +55,7 @@ export default class UserController {
 
 			const result = await this.userOperation.createUser(body, user);
 			return result;
-		} catch (error: unknown) {
+		} catch (error) {
 			return error;
 		}
 	}
@@ -72,7 +72,7 @@ export default class UserController {
 
 			const result = await this.userOperation.getUser(userId, user);
 			return result;
-		} catch (error: unknown) {
+		} catch (error) {
 			return error;
 		}
 	}
@@ -91,7 +91,7 @@ export default class UserController {
 
 			const result = await this.userOperation.updateUser(userId, body, user);
 			return result;
-		} catch (error: unknown) {
+		} catch (error) {
 			return error;
 		}
 	}
@@ -108,7 +108,7 @@ export default class UserController {
 
 			const result = await this.userOperation.deleteUser(userId, user);
 			return result;
-		} catch (error: unknown) {
+		} catch (error) {
 			return error;
 		}
 	}

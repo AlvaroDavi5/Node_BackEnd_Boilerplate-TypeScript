@@ -19,7 +19,7 @@ jobs:
         with:
           node-version: 18
       - run: yarn install
-      - run: yarn run prestart:prod
+      - run: yarn run build
       - run: yarn semantic-release
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

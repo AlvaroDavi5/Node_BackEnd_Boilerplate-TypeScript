@@ -19,8 +19,9 @@ export default class EventsQueueConsumer {
 		private readonly loggerGenerator: LoggerGenerator,
 		private readonly eventsQueueHandler: EventsQueueHandler,
 	) {
-		this.logger = this.loggerGenerator.getLogger();
 		this.name = EventsQueueConsumer.name;
+		this.logger = this.loggerGenerator.getLogger();
+		this.logger.debug(`Created ${this.name}`);
 	}
 
 	@SqsMessageHandler(eventsQueueName, true)

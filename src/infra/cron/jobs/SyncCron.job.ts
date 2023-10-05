@@ -1,5 +1,7 @@
 import { Injectable } from '@nestjs/common';
+import { Logger } from 'winston';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
+import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
 import SyncCronTask from '../tasks/SyncCron.task';
 
 
@@ -7,13 +9,17 @@ import SyncCronTask from '../tasks/SyncCron.task';
 export default class SyncCronJob {
 	public readonly name: string;
 	public readonly cronExpression: CronExpression;
+	private readonly logger: Logger;
 
 	constructor(
 		private readonly schedulerRegistry: SchedulerRegistry,
 		private readonly syncCronTask: SyncCronTask,
+		private readonly loggerGenerator: LoggerGenerator,
 	) {
 		this.name = SyncCronJob.name;
 		this.cronExpression = CronExpression.EVERY_5_MINUTES;
+		this.logger = this.loggerGenerator.getLogger();
+		this.logger.debug(`Created ${this.name}`);
 	}
 
 	/*

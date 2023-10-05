@@ -51,7 +51,7 @@ export default class MongoClient {
 			.then(() => {
 				this.isConnected = true;
 			})
-			.catch((error) => {
+			.catch(() => {
 				throw this.exceptions.integration({
 					message: 'Error to connect mongo client',
 				});

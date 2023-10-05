@@ -1,5 +1,7 @@
 import { Injectable, OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { Logger } from 'winston';
+import { ConfigsInterface } from '@configs/configs.config';
 import WebSocketServer from '@modules/events/websocket/server/WebSocket.server';
 import SyncCronJob from '@infra/cron/jobs/SyncCron.job';
 import MongoClient from '@infra/data/Mongo.client';
@@ -10,13 +12,16 @@ import SqsClient from '@infra/integration/aws/Sqs.client';
 import S3Client from '@infra/integration/aws/S3.client';
 import connection from '@infra/database/connection';
 import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
+import { ProcessExitStatusEnum } from './processEvents.enum';
 
 
 @Injectable()
 export default class LifecycleService implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown {
 	private readonly logger: Logger;
+	private readonly appConfigs: ConfigsInterface['application'];
 
 	constructor(
+		private readonly configService: ConfigService,
 		private readonly webSocketServer: WebSocketServer,
 		private readonly syncCronJob: SyncCronJob,
 		private readonly mongoClient: MongoClient,
@@ -28,6 +33,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
 		this.logger = this.loggerGenerator.getLogger();
+		this.appConfigs = this.configService.get<any>('application');
 	}
 
 	public onModuleInit(): void {
@@ -35,33 +41,38 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 	}
 
 	public onApplicationBootstrap(): void {
-		this.logger.debug('Builded all modules');
+		this.logger.debug(`\n\n\tApp started with PID: ${process.pid} on URL: ${this.appConfigs?.url}\n`);
 	}
 
-	public async onModuleDestroy(): Promise<void> {
-		this.logger.warn('Stopping crons, cache, database, websocket, and cloud connections');
+	public onModuleDestroy(): void {
+		this.logger.warn('Disconnecting websocket clients, stopping crons and destroying cloud integrations');
 		try {
 			this.webSocketServer.disconnectAllSockets();
 			this.syncCronJob.stopCron();
-			await this.mongoClient.close();
-			if (this.redisClient.isConnected() === true)
-				await this.redisClient.close();
 			this.cognitoClient.destroy();
 			this.snsClient.destroy();
 			this.sqsClient.destroy();
 			this.s3Client.destroy();
+		} catch (error) {
+			this.logger.error(error);
+		}
+	}
+
+	public async beforeApplicationShutdown(): Promise<void> {
+		this.logger.warn('Closing cache and database connections');
+		try {
+			if (this.redisClient.isConnected() === true)
+				await this.redisClient.close();
+			if (this.mongoClient.isConnected === true)
+				await this.mongoClient.close();
 			await connection.close();
 		} catch (error) {
 			this.logger.error(error);
 		}
 	}
 
-	public beforeApplicationShutdown(): void {
-		this.logger.debug('Closed all connections');
-	}
-
 	public onApplicationShutdown(): void {
 		this.logger.warn('Exiting Application');
-		process.exit(1);
+		process.exit(ProcessExitStatusEnum.SUCCESS);
 	}
 }

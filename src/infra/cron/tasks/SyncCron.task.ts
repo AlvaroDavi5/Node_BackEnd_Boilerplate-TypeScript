@@ -20,7 +20,6 @@ export default class SyncCronTask {
 	) {
 		this.name = SyncCronTask.name;
 		this.logger = this.loggerGenerator.getLogger();
-		this.logger.debug(`Created ${this.name}`);
 	}
 
 	public async execute(): Promise<void> {

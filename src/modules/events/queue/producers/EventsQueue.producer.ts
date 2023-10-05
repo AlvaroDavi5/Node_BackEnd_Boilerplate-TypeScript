@@ -49,10 +49,10 @@ export default class EventsQueueProducer {
 				author,
 				message,
 			);
-			this.logger.info(`Sended message to queue [${this.credentials.queueName}]`);
+			this.logger.info(`Sended message to queue ${this.credentials.queueName}`);
 			return messageId;
 		} catch (error) {
-			this.logger.error(`Error to send message to queue [${this.credentials.queueName}]: ${error}`);
+			this.logger.error(`Error to send message to queue ${this.credentials.queueName}: ${error}`);
 			return null;
 		}
 	}

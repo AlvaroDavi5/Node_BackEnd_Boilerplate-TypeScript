@@ -4,6 +4,7 @@ import { ValidationPipe } from '@nestjs/common';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import CoreModule from './core.module';
+import { ProcessEventsEnum, ProcessSignalsEnum } from '@infra/start/processEvents.enum';
 import { ExceptionsEnum } from '@infra/errors/exceptions.enum';
 import { ConfigsInterface } from '@configs/configs.config';
 import { ErrorInterface } from 'src/types/_errorInterface';
@@ -43,6 +44,7 @@ async function startNestApplication() {
 	nestApp.enableShutdownHooks();
 
 	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application'] | undefined>('application');
+
 	nestApp.useWebSocketAdapter(new IoAdapter(nestApp)); // WsAdapter
 	await nestApp.listen(Number(appConfigs?.port)).catch((error: ErrorInterface) => {
 		const knowExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
@@ -55,20 +57,15 @@ async function startNestApplication() {
 		}
 	});
 
-	console.log(`\n App started with PID: ${process.pid} on URL: ${appConfigs?.url} \n`);
+	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error) => {
+		console.error(`\nApp received error: ${error}\n`);
+		await nestApp.close();
+	});
 
-	process.on('uncaughtException', async (error) => {
-		console.error(`\n${error}\n`);
+	Object.values(ProcessSignalsEnum).map((signal) => process.on(signal, async (signal) => {
+		console.error(`\nApp received signal: ${signal}\n`);
 		await nestApp.close();
-	});
-	process.on('SIGINT', async (signal) => {
-		console.error(`\n${signal}\n`);
-		await nestApp.close();
-	});
-	process.on('SIGTERM', async (signal) => {
-		console.error(`\n${signal}\n`);
-		await nestApp.close();
-	});
+	}));
 }
 
 startNestApplication();

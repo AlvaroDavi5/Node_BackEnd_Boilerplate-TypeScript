@@ -18,6 +18,8 @@ export default class MongoClient {
 		datalake: Db;
 	};
 
+	public isConnected: boolean;
+
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly exceptions: Exceptions,
@@ -33,7 +35,7 @@ export default class MongoClient {
 				deprecationErrors: true,
 			}
 		});
-		this.connect();
+		this.isConnected = this.connect();
 
 		this.databases = {
 			datalake: this.mongoClient.db(databases.datalake),
@@ -44,14 +46,17 @@ export default class MongoClient {
 		return this.mongoClient;
 	}
 
-	private async connect(): Promise<MongoDBClient> {
-		try {
-			return await this.mongoClient.connect();
-		} catch (error) {
-			throw this.exceptions.integration({
-				message: 'Error to connect mongo client',
+	private connect(): boolean {
+		this.mongoClient.connect()
+			.then(() => {
+				this.isConnected = true;
+			})
+			.catch(() => {
+				throw this.exceptions.integration({
+					message: 'Error to connect mongo client',
+				});
 			});
-		}
+		return this.isConnected;
 	}
 
 	public async close(): Promise<void> {

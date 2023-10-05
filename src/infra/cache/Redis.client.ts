@@ -51,8 +51,12 @@ export default class RedisClient {
 		return this.redisClient?.status === 'ready';
 	}
 
-	public async close(): Promise<string> {
-		return await this.redisClient.quit();
+	public async close(): Promise<boolean> {
+		try {
+			return await this.redisClient.quit() === 'OK';
+		} catch (error) {
+			return false;
+		}
 	}
 
 	public async listKeys(): Promise<string[]> {

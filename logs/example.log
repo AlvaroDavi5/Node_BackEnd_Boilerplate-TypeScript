@@ -1,17 +1,17 @@
-
-{"env":"dev","level":"info","message":"WebSocket started with HTTP server","service":"Node Boilerplate","timestamp":"2023-03-18T00:02:46.278Z"}
-{"env":"dev","level":"info","message":"Sync cron started","service":"Node Boilerplate","timestamp":"2023-03-18T00:02:46.290Z"}
-{"env":"dev","level":"info","message":"Events queue consumer started","service":"Node Boilerplate","timestamp":"2023-03-18T00:02:46.295Z"}
-{"env":"dev","level":"info","message":"Server started on port: 3000 - Environment: dev","service":"Node Boilerplate","timestamp":"2023-03-18T00:02:46.299Z"}
-{"env":"dev","level":"info","message":"Client connected: gwluArR6HGOBdtW9AAAB","service":"Node Boilerplate","timestamp":"2023-03-18T00:02:46.367Z"}
-{"env":"dev","level":"info","message":"Sended message to queue [eventsQueue.fifo]","service":"Node Boilerplate","timestamp":"2023-03-18T00:02:46.367Z"}
-{"env":"dev","level":"info","message":"New message received from [EventsQueueConsumer]","service":"Node Boilerplate","timestamp":"2023-03-18T00:02:46.367Z"}
-{"env":"dev","level":"error","message":"\"payload.event\" is required","name":"contract","options":{},"response":{"error":"Bad Request","message":"\"payload.event\" is required","statusCode":400},"service":"Node Boilerplate","stack":"ValidationError: \"payload.event\" is required","status":400,"timestamp":"2023-03-18T00:02:46.367Z"}
-{"env":"dev","level":"info","message":"Running Sync cron","service":"Node Boilerplate","timestamp":"2023-03-18T00:04:00.381Z"}
-{"env":"dev","level":"info","message":"Database connection has been established successfully.","service":"Node Boilerplate","timestamp":"2023-03-18T00:04:00.449Z"}
-
-{"env":"dev","level":"info","message":{"requestQuery":{"limit":10,"page":0,"size":50}},"service":"Node Boilerplate","timestamp":"2023-03-18T00:05:54.348Z"}
-{"env":"dev","level":"warn","message":"Invalid user!","service":"Node Boilerplate","timestamp":"2023-03-18T00:05:54.349Z"}
-{"env":"dev","level":"error","message":"Include unexpected. Element has to be either a Model, an Association or an object.","service":"Node Boilerplate","timestamp":"2023-03-18T00:05:54.356Z"}
-{"env":"dev","level":"info","message":"::ffff:172.18.0.1 - - [18/Mar/2023:00:05:54 +0000] \"GET /api/users HTTP/1.1\" 500 965 \"-\" \"Mozilla/5.0 (X11; Linux x86_64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/110.0.0.0 Safari/537.36 OPR/96.0.0.0\"","service":"Node Boilerplate","timestamp":"2023-03-18T00:05:54.406Z"}
-{"env":"dev","level":"error","message":"[EventsQueueConsumer] event error from [EventsQueueConsumer] - MessageId: undefined. Error: SQS receive message failed: connect ECONNREFUSED 127.0.0.1:4566","service":"Node Boilerplate","timestamp":"2023-09-30T01:12:18.462Z"}
+{"env":"dev","level":"debug","message":"Created EventsQueueConsumer","service":"Node Boilerplate","timestamp":"2023-10-05T04:16:51.487Z"}
+{"env":"dev","level":"debug","message":"Created SyncCronJob","service":"Node Boilerplate","timestamp":"2023-10-05T04:16:51.491Z"}
+{"env":"dev","level":"debug","message":"Started Websocket Server","service":"Node Boilerplate","timestamp":"2023-10-05T04:16:51.706Z"}
+{"env":"dev","level":"debug","message":"Builded host module","service":"Node Boilerplate","timestamp":"2023-10-05T04:16:51.740Z"}
+{"env":"dev","level":"debug","message":"\n\n\tApp started with PID: 94983 on URL: http://localhost:3000/\n","service":"Node Boilerplate","timestamp":"2023-10-05T04:16:51.755Z"}
+{"env":"dev","level":"info","message":"Client connected: se0lMTJo2LU02wnFAAAB - ","service":"Node Boilerplate","timestamp":"2023-10-05T04:16:51.847Z"}
+{"env":"dev","level":"info","message":"Sended message to queue eventsQueue.fifo","service":"Node Boilerplate","timestamp":"2023-10-05T04:16:51.906Z"}
+{"env":"dev","level":"info","message":"Running SyncCronTask","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:00.014Z"}
+{"env":"dev","level":"info","message":"Database connection has been established successfully","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:00.092Z"}
+{"env":"dev","level":"info","message":"New message received from EventsQueueConsumer","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:02.865Z"}
+{"env":"dev","level":"error","message":"\"payload.event\" is required","name":"contract","options":{},"response":{"error":"Bad Request","message":"\"payload.event\" is required","statusCode":400},"service":"Node Boilerplate","stack":"ValidationError: \"payload.event\" is required","status":400,"timestamp":"2023-10-05T04:17:02.871Z"}
+{"env":"dev","level":"info","message":"REQUESTED - [GET]:{null} /api/check?env=test { \"params\": {} \"query\": {env} \"body\": {test} }","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:14.318Z"}
+{"env":"dev","level":"info","message":"REQUESTED - [GET]:{null} /api/users?size=15 { \"params\": {} \"query\": {size} \"body\": {} }","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:25.359Z"}
+{"env":"dev","level":"warn","message":"Disconnecting websocket clients, stopping crons and destroying cloud integrations","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:46.424Z"}
+{"env":"dev","level":"info","message":"Client disconnected: se0lMTJo2LU02wnFAAAB","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:46.430Z"}
+{"env":"dev","level":"warn","message":"Closing cache and database connections","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:46.437Z"}
+{"env":"dev","level":"warn","message":"Exiting Application","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:46.473Z"}

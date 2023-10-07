@@ -8,16 +8,15 @@ describe('Modules :: App :: Domain :: Enums', () => {
 
 	describe('# CacheEnum', () => {
 		test('Should return keys', () => {
-			expect(Object.keys(CacheEnum)).toEqual(['SUBSCRIPTIONS', 'USER_SETTINGS']);
+			expect(Object.keys(CacheEnum)).toEqual(['SUBSCRIPTIONS']);
 		});
 
 		test('Should return values', () => {
-			expect(Object.values(CacheEnum)).toEqual(['subscriptions', 'user_settings']);
+			expect(Object.values(CacheEnum)).toEqual(['subscriptions']);
 		});
 
 		test('Should return value', () => {
 			expect(CacheEnum.SUBSCRIPTIONS).toBe('subscriptions');
-			expect(CacheEnum.USER_SETTINGS).toBe('user_settings');
 		});
 	});
 

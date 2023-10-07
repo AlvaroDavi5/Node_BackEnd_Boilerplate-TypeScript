@@ -60,11 +60,21 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 
 	public async beforeApplicationShutdown(): Promise<void> {
 		this.logger.warn('Closing cache and database connections');
+		if (this.redisClient.isConnected === true)
+			try {
+				await this.redisClient.disconnect();
+			} catch (error) {
+				this.logger.error(error);
+			}
+
+		if (this.mongoClient.isConnected === true)
+			try {
+				await this.mongoClient.disconnect();
+			} catch (error) {
+				this.logger.error(error);
+			}
+
 		try {
-			if (this.redisClient.isConnected() === true)
-				await this.redisClient.close();
-			if (this.mongoClient.isConnected === true)
-				await this.mongoClient.close();
 			await connection.close();
 		} catch (error) {
 			this.logger.error(error);

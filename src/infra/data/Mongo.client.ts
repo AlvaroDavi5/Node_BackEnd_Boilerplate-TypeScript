@@ -9,13 +9,19 @@ import { ConfigsInterface } from '@configs/configs.config';
 import Exceptions from '@infra/errors/Exceptions';
 
 
-export type documentObjectType = { [index: string]: any }
+export type documentObjectType = { [key: string]: any }
 
 @Injectable()
 export default class MongoClient {
 	private readonly mongoClient: MongoDBClient;
 	public readonly databases: {
-		datalake: Db;
+		datalake: {
+			db: Db,
+			collections: {
+				subscriptions: string,
+				unprocessedMessages: string,
+			},
+		},
 	};
 
 	public isConnected: boolean;
@@ -35,10 +41,13 @@ export default class MongoClient {
 				deprecationErrors: true,
 			}
 		});
-		this.isConnected = this.connect();
+		this.isConnected = true;
 
 		this.databases = {
-			datalake: this.mongoClient.db(databases.datalake),
+			datalake: {
+				db: this.mongoClient.db(databases.datalake.name),
+				collections: databases.datalake.collections,
+			}
 		};
 	}
 
@@ -46,26 +55,27 @@ export default class MongoClient {
 		return this.mongoClient;
 	}
 
-	private connect(): boolean {
-		this.mongoClient.connect()
-			.then(() => {
-				this.isConnected = true;
-			})
-			.catch(() => {
-				throw this.exceptions.integration({
-					message: 'Error to connect mongo client',
-				});
+	public async connect(): Promise<boolean> {
+		try {
+			await this.mongoClient.connect();
+			this.isConnected = true;
+		} catch (error) {
+			this.isConnected = false;
+			throw this.exceptions.integration({
+				message: 'Error to connect mongo client',
 			});
+		}
 		return this.isConnected;
 	}
 
-	public async close(): Promise<void> {
+	public async disconnect(): Promise<boolean> {
 		try {
-			return await this.mongoClient.close();
+			await this.mongoClient.close();
+			this.isConnected = false;
+
+			return true;
 		} catch (error) {
-			throw this.exceptions.integration({
-				message: 'Error to close mongo client',
-			});
+			return false;
 		}
 	}
 
@@ -125,27 +135,31 @@ export default class MongoClient {
 		return await collection.insertMany(dataList);
 	}
 
-	public async findOne(collection: Collection<Document>, insertedId: ObjectId): Promise<WithId<Document> | null> {
-		return await collection.findOne({ _id: insertedId });
+	public async get(collection: Collection<Document>, id: ObjectId): Promise<WithId<Document> | null> {
+		return await collection.findOne({ _id: id });
 	}
 
-	public findMany(collection: Collection<Document>, insertedId: ObjectId): FindCursor<WithId<Document>> {
-		return collection.find({ _id: insertedId });
+	public async findOne(collection: Collection<Document>, filterData: documentObjectType): Promise<WithId<Document> | null> {
+		return await collection.findOne(filterData);
 	}
 
-	public async updateOne(collection: Collection<Document>, insertedId: ObjectId, newData: documentObjectType): Promise<UpdateResult<Document>> {
-		return await collection.updateOne({ _id: insertedId }, { $set: newData });
+	public findMany(collection: Collection<Document>, filterData: documentObjectType): FindCursor<WithId<Document>> {
+		return collection.find(filterData);
 	}
 
-	public async updateMany(collection: Collection<Document>, insertedId: ObjectId, newData: documentObjectType): Promise<UpdateResult<Document>> {
-		return await collection.updateMany({ _id: insertedId }, { $set: newData });
+	public async updateOne(collection: Collection<Document>, id: ObjectId, newData: documentObjectType): Promise<UpdateResult<Document>> {
+		return await collection.updateOne({ _id: id }, { $set: newData });
 	}
 
-	public async deleteOne(collection: Collection<Document>, insertedId: ObjectId): Promise<DeleteResult> {
-		return await collection.deleteOne({ _id: insertedId });
+	public async updateMany(collection: Collection<Document>, filterData: documentObjectType, newData: documentObjectType): Promise<UpdateResult<Document>> {
+		return await collection.updateMany(filterData, { $set: newData });
 	}
 
-	public async deleteMany(collection: Collection<Document>, insertedId: ObjectId): Promise<DeleteResult> {
-		return await collection.deleteMany({ _id: insertedId });
+	public async deleteOne(collection: Collection<Document>, id: ObjectId): Promise<DeleteResult> {
+		return await collection.deleteOne({ _id: id });
+	}
+
+	public async deleteMany(collection: Collection<Document>, filterData: documentObjectType): Promise<DeleteResult> {
+		return await collection.deleteMany(filterData);
 	}
 }

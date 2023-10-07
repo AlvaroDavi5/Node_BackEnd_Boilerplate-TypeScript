@@ -1,7 +1,7 @@
 {
 	"name": "node_backend_boilerplate",
 	"description": "Node.js Boilerplate for Back-End using TypeScript.",
-	"version": "1.0.0",
+	"version": "2.0.0",
 	"license": "MIT",
 	"author": "Álvaro Davi Santos Alves <alvaro.davisa@gmail.com>",
 	"contributors": [

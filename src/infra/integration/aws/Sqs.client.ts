@@ -189,21 +189,7 @@ export default class SqsClient {
 			if (result?.Messages) {
 				for (const message of result?.Messages) {
 					messages.push(message);
-
-					const deleteParams: DeleteMessageCommandInput = {
-						QueueUrl: queueUrl,
-						ReceiptHandle: `${message?.ReceiptHandle}`,
-					};
-					this.sqsClient.send(new DeleteMessageCommand(
-						deleteParams
-					), (err: AWSError, data) => {
-						if (err) {
-							this.logger.error('Error to Delete Message:', err);
-						}
-						else {
-							this.logger.info('Message Deleted:', { queueUrl, requestId: data?.$metadata?.requestId });
-						}
-					});
+					this.deleteMessage(queueUrl, message);
 				}
 			}
 		} catch (error) {
@@ -211,5 +197,22 @@ export default class SqsClient {
 		}
 
 		return messages;
+	}
+
+	public async deleteMessage(queueUrl: string, message: Message): Promise<boolean> {
+		let isDeleted = false;
+
+		try {
+			const result = await this.sqsClient.send(new DeleteMessageCommand({
+				QueueUrl: queueUrl,
+				ReceiptHandle: `${message?.ReceiptHandle}`,
+			}));
+			if (result.$metadata?.httpStatusCode && String(result.$metadata?.httpStatusCode)[2] === '2')
+				isDeleted = true;
+		} catch (error) {
+			this.logger.error('Error to Delete Message:', error);
+		}
+
+		return isDeleted;
 	}
 }

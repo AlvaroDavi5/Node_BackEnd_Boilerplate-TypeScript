@@ -14,6 +14,6 @@ export enum ProcessSignalsEnum {
 }
 
 export enum ProcessExitStatusEnum {
-	FAILURE = 1,
 	SUCCESS = 0,
+	FAILURE = 1,
 }

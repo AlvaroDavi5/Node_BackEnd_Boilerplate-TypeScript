@@ -23,7 +23,7 @@ import configs from 'src/configs/configs.config';
 					queueUrl: process.env.AWS_SQS_EVENTS_QUEUE_URL || 'http://localhost:4566/000000000000/eventsQueue.fifo',
 					region: process.env.AWS_REGION || 'us-east-1',
 					batchSize: 10,
-					shouldDeleteMessages: true,
+					shouldDeleteMessages: false,
 					handleMessageTimeout: 1000,
 					waitTimeSeconds: 20,
 				},

@@ -51,7 +51,13 @@ export interface ConfigsInterface {
 			maxPoolSize: number, // maximum number of connections in pool
 		},
 		databases: {
-			datalake: string | undefined,
+			datalake: {
+				name: string | undefined,
+				collections: {
+					subscriptions: string,
+					unprocessedMessages: string,
+				},
+			},
 		},
 	},
 	// ? Caching Backing-Service
@@ -61,7 +67,7 @@ export interface ConfigsInterface {
 			host: string | undefined, // cache host
 		},
 		expirationTime: {
-			subscriptions: number // 1 day
+			subscriptions: number // 12h
 		},
 	},
 	// ? Third-Party Services
@@ -169,7 +175,13 @@ export default (): ConfigsInterface => ({
 			maxPoolSize: 5,
 		},
 		databases: {
-			datalake: process.env.MONGO_DB_NAME_DATALAKE,
+			datalake: {
+				name: process.env.MONGO_DB_NAME_DATALAKE,
+				collections: {
+					subscriptions: 'subscriptions',
+					unprocessedMessages: 'unprocessedMessages',
+				},
+			},
 		},
 	},
 	cache: {
@@ -178,7 +190,7 @@ export default (): ConfigsInterface => ({
 			port: process.env.REDIS_PORT,
 		},
 		expirationTime: {
-			subscriptions: 86400,
+			subscriptions: 43200,
 		},
 	},
 	integration: {

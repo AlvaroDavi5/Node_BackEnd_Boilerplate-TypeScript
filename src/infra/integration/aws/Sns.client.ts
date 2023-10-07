@@ -129,7 +129,7 @@ export default class SnsClient {
 		return list;
 	}
 
-	public async createtopic(topicName: string): Promise<string> {
+	public async createTopic(topicName: string): Promise<string> {
 		let topicArn = '';
 
 		try {
@@ -145,7 +145,7 @@ export default class SnsClient {
 		return topicArn;
 	}
 
-	public async deletetopic(topicArn: string): Promise<boolean> {
+	public async deleteTopic(topicArn: string): Promise<boolean> {
 		let isDeleted = false;
 
 		try {

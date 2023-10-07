@@ -53,15 +53,15 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 	// listen 'connection' event from client
 	public async handleConnection(socket: Socket, ...args: any[]): Promise<void> {
 		this.logger.info(`Client connected: ${socket.id} - ${args}`);
-		this.eventsQueueProducer.dispatch({
+		await this.subscriptionService.save(socket.id, {
+			subscriptionId: socket.id,
+		});
+		await this.eventsQueueProducer.dispatch({
 			title: 'New client connected',
+			author: 'Websocket Server',
 			event: {
 				subscriptionId: socket.id,
 			},
-			author: 'Websocket Server',
-		});
-		await this.subscriptionService.save(socket.id, {
-			subscriptionId: socket.id,
 		});
 	}
 

@@ -11,6 +11,8 @@ import DataParserHelper from '@modules/utils/helpers/DataParser.helper';
 export default class RedisClient {
 	private readonly redisClient: IORedis;
 
+	public isConnected: boolean;
+
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly exceptions: Exceptions,
@@ -29,6 +31,8 @@ export default class RedisClient {
 				message: 'Error to instance redis client',
 			});
 		}
+
+		this.isConnected = true;
 	}
 
 	public getClient(): IORedis {
@@ -38,22 +42,24 @@ export default class RedisClient {
 	public async connect(): Promise<boolean> {
 		try {
 			await this.redisClient.connect();
-			return true;
+			this.isConnected = this.redisClient?.status === 'ready';
 		} catch (error) {
-			this.exceptions.integration({
+			this.isConnected = false;
+			throw this.exceptions.integration({
 				message: 'Error to connect redis client',
 			});
-			return false;
 		}
+		return this.isConnected;
 	}
 
-	public isConnected(): boolean {
-		return this.redisClient?.status === 'ready';
-	}
-
-	public async close(): Promise<boolean> {
+	public async disconnect(): Promise<boolean> {
 		try {
-			return await this.redisClient.quit() === 'OK';
+			const wasClosed = await this.redisClient.quit() === 'OK';
+
+			if (wasClosed)
+				this.isConnected = false;
+
+			return wasClosed;
 		} catch (error) {
 			return false;
 		}

@@ -1,7 +1,8 @@
 import { Injectable } from '@nestjs/common';
 import { Message } from '@aws-sdk/client-sqs';
 import { Logger } from 'winston';
-import SubscriptionService from 'src/modules/app/services/Subscription.service';
+import SubscriptionService from '@modules/app/services/Subscription.service';
+import MongoClient from '@infra/data/Mongo.client';
 import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
 import Exceptions from '@infra/errors/Exceptions';
 import eventSchema from './schemas/event.schema';
@@ -13,13 +14,14 @@ export default class EventsQueueHandler {
 
 	constructor(
 		private readonly subscriptionService: SubscriptionService,
+		private readonly mongoClient: MongoClient,
 		private readonly loggerGenerator: LoggerGenerator,
 		private readonly exceptions: Exceptions,
 	) {
 		this.logger = this.loggerGenerator.getLogger();
 	}
 
-	public async execute(message: Message): Promise<void> {
+	public async execute(message: Message): Promise<boolean> {
 		try {
 			if (message.Body) {
 				const data = JSON.parse(message.Body);
@@ -37,10 +39,19 @@ export default class EventsQueueHandler {
 				}
 				else {
 					this.subscriptionService.broadcast(value);
+					return true;
 				}
 			}
 		} catch (error) {
 			this.logger.error(error);
+
+			const datalake = this.mongoClient.databases.datalake;
+			const unprocessedMessagesCollection = this.mongoClient.getCollection(datalake.db, datalake.collections.unprocessedMessages);
+			await this.mongoClient.insertOne(unprocessedMessagesCollection, message);
+
+			return true;
 		}
+
+		return false;
 	}
 }

@@ -36,7 +36,7 @@ export default class UserService {
 		}
 	}
 
-	public async delete(id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<[affectedCount: number] | null | undefined> {
+	public async delete(id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean | null> {
 		try {
 			const result = await this.userRepository.deleteOne(id, Boolean(data.softDelete), String(data.userAgentId));
 			return result;
@@ -46,7 +46,7 @@ export default class UserService {
 	}
 
 	public async list(
-		data: {
+		query: {
 			size?: number,
 			page?: number,
 			limit?: number,
@@ -55,14 +55,14 @@ export default class UserService {
 			selectSoftDeleted?: boolean,
 			searchTerm?: string,
 		}): Promise<{
-			content: any[],
+			content: UserEntity[],
 			pageNumber: number,
 			pageSize: number,
 			totalPages: number,
 			totalItems: number,
 		}> {
 		try {
-			const result = await this.userRepository.list(data);
+			const result = await this.userRepository.list(query);
 			return result;
 		} catch (error) {
 			return {

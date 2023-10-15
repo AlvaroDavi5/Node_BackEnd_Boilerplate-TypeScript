@@ -17,14 +17,14 @@ export default class UserOperation {
 		private readonly exceptions: Exceptions,
 	) { }
 
-	public async listUsers(data: any): Promise<{
+	public async listUsers(query: any): Promise<{
 		content: any[],
 		pageNumber: number,
 		pageSize: number,
 		totalPages: number,
 		totalItems: number,
 	}> {
-		const usersList = await this.userService.list(data);
+		const usersList = await this.userService.list(query);
 		return usersList;
 	}
 
@@ -99,7 +99,7 @@ export default class UserOperation {
 		return updatedUser;
 	}
 
-	public async deleteUser(id: number, userAgent?: UserAuthInterface): Promise<[affectedCount: number] | null | undefined> {
+	public async deleteUser(id: number, userAgent?: UserAuthInterface): Promise<boolean | null> {
 		if (!userAgent?.username)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'

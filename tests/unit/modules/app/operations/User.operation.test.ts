@@ -10,14 +10,14 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		getById: jest.fn(async (id: number): Promise<UserEntity | null> => (null)),
 		create: jest.fn(async (entity: UserEntity): Promise<UserEntity | null> => (null)),
 		update: jest.fn(async (id: number, data: UserInterface): Promise<UserEntity | null> => (null)),
-		delete: jest.fn(async (id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<[affectedCount: number] | null | undefined> => (null)),
+		delete: jest.fn(async (id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean | null> => (null)),
 		list: jest.fn(async (data: any): Promise<any> => ({ content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 })),
 	};
 	const userPreferenceServiceMock = {
 		getByUserId: jest.fn(async (userId: number): Promise<UserPreferenceEntity | null> => (null)),
 		create: jest.fn(async (data: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (null)),
 		update: jest.fn(async (id: number, data: UserPreferenceInterface): Promise<UserPreferenceEntity | null> => (null)),
-		delete: jest.fn(async (id: number, data: { softDelete: boolean }): Promise<[affectedCount: number] | null | undefined> => (null)),
+		delete: jest.fn(async (id: number, data: { softDelete: boolean }): Promise<boolean | null> => (null)),
 	};
 	const userStrategy = new UserStrategy();
 	const exceptionsMock = {
@@ -288,12 +288,12 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				if (userId === userEntity.getId()) return userPreferenceEntity;
 				else return null;
 			});
-			userServiceMock.delete.mockImplementation(async (id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<[affectedCount: number] | null | undefined> => {
-				if (id === userEntity.getId()) return [1];
+			userServiceMock.delete.mockImplementation(async (id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean | null> => {
+				if (id === userEntity.getId()) return true;
 				else return null;
 			});
-			userPreferenceServiceMock.delete.mockImplementation(async (id: number, data: { softDelete: boolean }): Promise<[affectedCount: number] | null | undefined> => {
-				if (id === userPreferenceEntity.getId()) return [1];
+			userPreferenceServiceMock.delete.mockImplementation(async (id: number, data: { softDelete: boolean }): Promise<boolean | null> => {
+				if (id === userPreferenceEntity.getId()) return true;
 				else return null;
 			});
 
@@ -302,7 +302,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.delete).toHaveBeenCalledWith(2, { softDelete: true });
 			expect(userServiceMock.delete).toHaveBeenCalledWith(1, { softDelete: true, userAgentId: userAgent.username });
-			expect(deletedUser).toEqual([1]);
+			expect(deletedUser).toEqual(true);
 		});
 
 		test('Should throw a conflict error', async () => {

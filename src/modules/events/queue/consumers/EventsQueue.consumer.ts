@@ -51,7 +51,12 @@ export default class EventsQueueConsumer {
 	}
 
 	@SqsConsumerEventHandler(eventsQueueName, ProcessEventsEnum.ERROR)
-	public onError(error: Error, message: Message): void {
-		this.logger.error(`Event error from ${this.name} - MessageId: ${message?.MessageId}. Error: ${error.message}`);
+	public onError(error: Error): void {
+		this.logger.error(`Event error from ${this.name}. Error: ${error.message}`);
+	}
+
+	@SqsConsumerEventHandler(eventsQueueName, ProcessEventsEnum.TIMEOUT_ERROR)
+	public onTimeoutError(error: Error): void {
+		this.logger.error(`Timeout error from ${this.name}. Error: ${error.message}`);
 	}
 }

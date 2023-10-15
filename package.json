@@ -73,7 +73,7 @@
 		"versioning": "semver",
 		"postinstall": "husky install",
 		"clean": "rm -rf ./build ./dist ./coverage ./.scannerwork test-report.xml",
-		"clean:all": "rm -rf ./build ./dist ./coverage ./.scannerwork test-report.xml .tool-versions node_modules .env"
+		"clean:all": "rm -rf ./build ./dist ./coverage ./.scannerwork test-report.xml node_modules .tool-versions .env"
 	},
 	"husky": {
 		"hooks": {

@@ -57,8 +57,8 @@ async function startNestApplication() {
 		}
 	});
 
-	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error) => {
-		console.error(`\nApp received error: ${error}\n`);
+	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error, origin) => {
+		console.error(`\nApp received ${origin}: ${error}\n`);
 		await nestApp.close();
 	});
 

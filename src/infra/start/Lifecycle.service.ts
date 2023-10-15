@@ -1,5 +1,6 @@
 import { Injectable, OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { HttpAdapterHost } from '@nestjs/core';
 import { Logger } from 'winston';
 import { ConfigsInterface } from '@configs/configs.config';
 import WebSocketServer from '@modules/events/websocket/server/WebSocket.server';
@@ -22,6 +23,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 
 	constructor(
 		private readonly configService: ConfigService,
+		private readonly httpAdapterHost: HttpAdapterHost,
 		private readonly webSocketServer: WebSocketServer,
 		private readonly syncCronJob: SyncCronJob,
 		private readonly mongoClient: MongoClient,
@@ -45,8 +47,9 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 	}
 
 	public onModuleDestroy(): void {
-		this.logger.warn('Disconnecting websocket clients, stopping crons and destroying cloud integrations');
+		this.logger.warn('Closing HTTP server, disconnecting websocket clients, stopping crons and destroying cloud integrations');
 		try {
+			this.httpAdapterHost.httpAdapter.close();
 			this.webSocketServer.disconnectAllSockets();
 			this.syncCronJob.stopCron();
 			this.cognitoClient.destroy();

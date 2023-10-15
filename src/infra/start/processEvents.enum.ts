@@ -5,6 +5,7 @@ export enum ProcessEventsEnum {
 	MULTIPLE_RESOLVES = 'multipleResolves',
 	ERROR = 'error',
 	PROCESSING_ERROR = 'processing_error',
+	TIMEOUT_ERROR = 'timeout_error',
 }
 
 export enum ProcessSignalsEnum {

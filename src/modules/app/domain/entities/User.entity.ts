@@ -20,7 +20,7 @@ export interface UserInterface {
 	deletedBy: string | null,
 }
 
-export default class User extends AbstractEntity {
+export default class UserEntity extends AbstractEntity {
 	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false })
 	private id = 0;
 

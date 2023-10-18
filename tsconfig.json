@@ -101,7 +101,7 @@
 		// "strictBindCallApply": true,
 		// "strictPropertyInitialization": true,
 		"noImplicitThis": true,
-		// "useUnknownInCatchVariables": true,
+		"useUnknownInCatchVariables": true,
 		"alwaysStrict": true,
 		// "noUnusedLocals": true,
 		// "noUnusedParameters": true,

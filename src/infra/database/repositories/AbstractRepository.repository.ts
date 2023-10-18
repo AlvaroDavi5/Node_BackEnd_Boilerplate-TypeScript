@@ -3,14 +3,14 @@ import { Logger } from 'winston';
 import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
 import Exceptions from '@infra/errors/Exceptions';
 import AbstractEntity from '@infra/database/entities/AbstractEntity.entity';
+import { TypeConstructor } from 'src/types/_typeConstructor';
 
 
-type Constructor<T> = new (...args: any[]) => T;
-type ModelType<T extends Model<T>> = Constructor<T> & typeof Model;
+type ModelType<T extends Model<T>> = TypeConstructor<T> & typeof Model;
 
 export default abstract class AbstractRepository<M extends Model, E extends AbstractEntity> {
 	// * ------ Attributes ------
-	protected DomainEntity: Constructor<E>;
+	protected DomainEntity: TypeConstructor<E>;
 	protected ResourceModel: ModelType<M>;
 	protected resourceMapper: {
 		toDatabase: (entity: E) => any,
@@ -40,7 +40,7 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 		exceptions,
 		loggerGenerator,
 	}: {
-		DomainEntity: Constructor<E>,
+		DomainEntity: TypeConstructor<E>,
 		ResourceModel: ModelType<M>,
 		resourceAttributes: ModelAttributes,
 		resourceOptions: InitOptions,

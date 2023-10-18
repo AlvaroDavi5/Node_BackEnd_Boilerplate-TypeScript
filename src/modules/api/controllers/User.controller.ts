@@ -7,7 +7,7 @@ import authSwaggerDecorator from '@modules/api/decorators/authSwagger.decorator'
 import UserOperation from '@modules/app/operations/User.operation';
 import { CreateUserValidatorPipe, UpdateUserValidatorPipe } from '@modules/api/pipes/UserValidator.pipe';
 import { RequestInterface } from 'src/types/_endpointInterface';
-import UserEntity from '@modules/app/domain/entities/User.entity';
+import UserEntity, { UserEntityList } from '@modules/app/domain/entities/User.entity';
 
 
 @ApiTags('Users')
@@ -20,14 +20,8 @@ export default class UserController {
 
 	@ApiOperation({ summary: 'List Users' })
 	@ApiOkResponse({
-		type: Object, schema: {
-			example: {
-				content: [],
-				pageNumber: 0,
-				pageSize: 0,
-				totalPages: 0,
-				totalItems: 0,
-			}
+		type: UserEntityList, schema: {
+			example: (new UserEntityList()),
 		}
 	})
 	@Get()

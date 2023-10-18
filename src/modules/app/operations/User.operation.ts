@@ -18,7 +18,7 @@ export default class UserOperation {
 	) { }
 
 	public async listUsers(query: any): Promise<{
-		content: any[],
+		content: UserEntity[],
 		pageNumber: number,
 		pageSize: number,
 		totalPages: number,

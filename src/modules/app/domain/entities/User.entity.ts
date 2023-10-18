@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import AbstractEntity from '@infra/database/entities/AbstractEntity.entity';
+import AbstractEntity, { AbstractEntityList } from '@infra/database/entities/AbstractEntity.entity';
 import UserPreference from './UserPreference.entity';
 
 
@@ -154,4 +154,9 @@ export default class UserEntity extends AbstractEntity {
 	public setPreference(preference: UserPreference): void {
 		this.preference = preference;
 	}
+}
+
+export class UserEntityList extends AbstractEntityList<UserEntity> {
+	@ApiProperty({ type: UserEntity, isArray: true, example: ([new UserEntity({})]), default: [], nullable: false })
+	public content: UserEntity[] = [];
 }

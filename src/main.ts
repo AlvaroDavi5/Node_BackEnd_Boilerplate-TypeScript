@@ -50,7 +50,7 @@ async function startNestApplication() {
 		const knowExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
 
 		if (error?.name && !knowExceptions.includes(error?.name)) {
-			const err = new Error(`${error.message}`);
+			const err = new Error(String(error.message));
 			err.name = error.name || err.name;
 			err.stack = error.stack;
 			throw err;

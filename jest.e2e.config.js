@@ -209,6 +209,7 @@ module.exports = {
 			'ts-jest',
 			{
 				diagnostics: false,
+				tsconfig: 'tsconfig.jest.json',
 			},
 		],
 	},

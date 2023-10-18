@@ -4,10 +4,12 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiOkResponse } from '@nestjs/swagger';
 import authSwaggerDecorator from '@modules/api/decorators/authSwagger.decorator';
+import UserEntity, { UserEntityList } from '@modules/app/domain/entities/User.entity';
 import UserOperation from '@modules/app/operations/User.operation';
 import { CreateUserValidatorPipe, UpdateUserValidatorPipe } from '@modules/api/pipes/UserValidator.pipe';
+import { UpdateUserSchemaInterface } from '../schemas/user/updateUser.schema';
+import { CreateUserSchemaInterface } from '../schemas/user/createUser.schema';
 import { RequestInterface } from 'src/types/_endpointInterface';
-import UserEntity, { UserEntityList } from '@modules/app/domain/entities/User.entity';
 
 
 @ApiTags('Users')
@@ -42,7 +44,7 @@ export default class UserController {
 	@UsePipes(CreateUserValidatorPipe)
 	public async createUser(
 		@Req() request: RequestInterface,
-		@Body() body: any,
+		@Body() body: CreateUserSchemaInterface,
 	): Promise<UserEntity | unknown> {
 		try {
 			const { user } = request;
@@ -78,7 +80,7 @@ export default class UserController {
 	public async updateUser(
 		@Req() request: RequestInterface,
 		@Param('userId') userId: number,
-		@Body() body: any,
+		@Body() body: UpdateUserSchemaInterface,
 	): Promise<UserEntity | unknown> {
 		try {
 			const { user } = request;

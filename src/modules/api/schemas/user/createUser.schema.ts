@@ -13,3 +13,15 @@ export default Joi.object().keys({
 	imagePath: Joi.string().empty('').max(255).trim(),
 	defaultTheme: Joi.string().valid(...Object.values(ThemesEnum)).default(ThemesEnum.DEFAULT).max(20),
 }).unknown(false);
+
+export interface CreateUserSchemaInterface {
+	email: string,
+	password: string,
+	fullName: string,
+	phone?: string,
+	docType?: string,
+	document?: string,
+	fu?: string,
+	imagePath?: string,
+	defaultTheme?: ThemesEnum,
+}

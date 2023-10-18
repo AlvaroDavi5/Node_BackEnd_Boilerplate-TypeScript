@@ -9,3 +9,12 @@ export default Joi.object().keys({
 		event: Joi.string().valid(...Object.values(EventsEnum)).required(),
 	}).unknown(true).required(),
 });
+
+export interface EventSchemaInterface {
+	id?: number | string,
+	timestamp?: Date | string,
+	payload: {
+		event: EventsEnum,
+		[key: string]: any,
+	},
+}

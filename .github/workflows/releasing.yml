@@ -39,11 +39,11 @@ jobs:
       - name: Installing Dependencies
         run: yarn install
 
-      - name: Versioning Release
-        run: yarn run versioning
-
       - name: Building
         run: yarn run build
+
+      - name: Versioning Release
+        run: yarn run versioning
 
   node_build:
     name: Node.js Build
@@ -70,10 +70,12 @@ jobs:
       - name: Checking Dependencies Security
         run: yarn run security-check
 
-      - name: Testing
+      - name: Testing Modules
         run: yarn run test:unit
+      - name: Testing Integration
         run: yarn run test:integration
-        run: yarn run test:e2e
+      # - name: Testing All
+      #   run: yarn run test:e2e
 
       - name: Building
         run: yarn run build

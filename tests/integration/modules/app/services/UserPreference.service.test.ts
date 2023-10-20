@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-import configs from '../../../../../src/configs/configs.config';
+import configs from '../../../../../src/modules/core/configs/configs.config';
 import UserPreferenceService from '../../../../../src/modules/app/services/UserPreference.service';
 import UserPreferenceRepository from '../../../../../src/modules/app/repositories/userPreference/UserPreference.repository';
-import Exceptions from '../../../../../src/infra/errors/Exceptions';
+import Exceptions from '../../../../../src/modules/core/infra/errors/Exceptions';
 import UserPreferenceEntity from '../../../../../src/modules/app/domain/entities/UserPreference.entity';
 
 

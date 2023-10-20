@@ -2,8 +2,8 @@ const path = require('path');
 
 
 module.exports = {
-	config: path.resolve(__dirname, "src", "infra", "database", "dbStatic.config.js"),
-	'models-path': path.resolve(__dirname, "src", "infra", "database", "models"),
-	'migrations-path': path.resolve(__dirname, "src", "infra", "database", "migrations"),
-	'seeders-path': path.resolve(__dirname, "src", "infra", "database", "seeders")
+	config: path.resolve(__dirname, "src", "modules", "core", "infra", "database", "dbStatic.config.js"),
+	'models-path': path.resolve(__dirname, "src", "modules", "core", "infra", "database", "models"),
+	'migrations-path': path.resolve(__dirname, "src", "modules", "core", "infra", "database", "migrations"),
+	'seeders-path': path.resolve(__dirname, "src", "modules", "core", "infra", "database", "seeders")
 };

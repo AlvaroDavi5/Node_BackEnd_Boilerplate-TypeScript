@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Association } from 'sequelize';
-import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
-import Exceptions from '@infra/errors/Exceptions';
-import AbstractRepository from '@infra/database/repositories/AbstractRepository.repository';
-import UserPreferencesModel, { userPreferenceAttributes, userPreferenceOptions } from '@infra/database/models/UserPreferences.model';
-import UserPreferenceEntity from '@modules/app/domain/entities/UserPreference.entity';
+import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import Exceptions from '@core/infra/errors/Exceptions';
+import AbstractRepository from '@core/infra/database/repositories/AbstractRepository.repository';
+import UserPreferencesModel, { userPreferenceAttributes, userPreferenceOptions } from '@core/infra/database/models/UserPreferences.model';
+import UserPreferenceEntity from '@app/domain/entities/UserPreference.entity';
 import userPreferenceMapper from './userPreference.mapper';
 import { userPreferenceQueryParamsBuilder, userPreferenceQueryOptions } from './userPreference.query';
-import UsersModel from '@infra/database/models/Users.model';
+import UsersModel from '@core/infra/database/models/Users.model';
 
 
 @Injectable()
@@ -33,7 +33,7 @@ export default class UserRepository extends AbstractRepository<UserPreferencesMo
 		});
 	}
 
-	public associate() {
+	public associate(): void {
 		this.ResourceModel.belongsTo(
 			UsersModel,
 			{

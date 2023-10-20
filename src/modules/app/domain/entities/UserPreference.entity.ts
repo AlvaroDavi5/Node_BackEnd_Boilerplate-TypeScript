@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import AbstractEntity from '@infra/database/entities/AbstractEntity.entity';
+import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity';
 
 
 export interface UserPreferenceInterface {

@@ -3,10 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import CoreModule from './core.module';
-import { ProcessEventsEnum, ProcessSignalsEnum } from '@infra/start/processEvents.enum';
-import { ExceptionsEnum } from '@infra/errors/exceptions.enum';
-import { ConfigsInterface } from '@configs/configs.config';
+import CoreModule from './modules/core/core.module';
+import { ProcessEventsEnum, ProcessSignalsEnum } from '@core/infra/start/processEvents.enum';
+import { ExceptionsEnum } from '@core/infra/errors/exceptions.enum';
+import { ConfigsInterface } from '@core/configs/configs.config';
 import { ErrorInterface } from 'src/types/_errorInterface';
 
 

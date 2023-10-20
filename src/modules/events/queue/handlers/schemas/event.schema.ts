@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { EventsEnum } from '@modules/app/domain/enums/events.enum';
+import { EventsEnum } from '@app/domain/enums/events.enum';
 
 
 export default Joi.object().keys({

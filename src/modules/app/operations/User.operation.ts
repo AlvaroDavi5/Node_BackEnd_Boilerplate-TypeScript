@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import UserEntity from '@modules/app/domain/entities/User.entity';
-import UserPreferenceEntity from '@modules/app/domain/entities/UserPreference.entity';
-import UserService from '@modules/app/services/User.service';
-import UserPreferenceService from '@modules/app/services/UserPreference.service';
-import UserStrategy from '@modules/app/strategies/User.strategy';
-import Exceptions from '@infra/errors/Exceptions';
+import UserEntity from '@app/domain/entities/User.entity';
+import UserPreferenceEntity from '@app/domain/entities/UserPreference.entity';
+import UserService from '@app/services/User.service';
+import UserPreferenceService from '@app/services/UserPreference.service';
+import UserStrategy from '@app/strategies/User.strategy';
+import Exceptions from '@core/infra/errors/Exceptions';
 import { UserAuthInterface } from 'src/types/_userAuthInterface';
+import { ListQueryInterface, PaginationInterface } from 'src/types/_listPaginationInterface';
 
 
 @Injectable()
@@ -17,13 +18,7 @@ export default class UserOperation {
 		private readonly exceptions: Exceptions,
 	) { }
 
-	public async listUsers(query: any): Promise<{
-		content: UserEntity[],
-		pageNumber: number,
-		pageSize: number,
-		totalPages: number,
-		totalItems: number,
-	}> {
+	public async listUsers(query: ListQueryInterface): Promise<PaginationInterface<UserEntity>> {
 		const usersList = await this.userService.list(query);
 		return usersList;
 	}

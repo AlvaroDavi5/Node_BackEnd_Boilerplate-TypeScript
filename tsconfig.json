@@ -39,14 +39,20 @@
 			"@dev/*": [
 				"src/dev/*",
 			],
-			"@configs/*": [
-				"src/configs/*",
+			"@core/*": [
+				"src/modules/core/*",
 			],
-			"@infra/*": [
-				"src/infra/*",
+			"@app/*": [
+				"src/modules/app/*",
 			],
-			"@modules/*": [
-				"src/modules/*",
+			"@api/*": [
+				"src/modules/api/*",
+			],
+			"@events/*": [
+				"src/modules/events/*",
+			],
+			"@common/*": [
+				"src/modules/common/*",
 			],
 		},
 		"rootDirs": [

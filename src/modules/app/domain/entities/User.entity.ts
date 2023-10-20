@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import AbstractEntity, { AbstractEntityList } from '@infra/database/entities/AbstractEntity.entity';
+import AbstractEntity, { AbstractEntityList } from '@core/infra/database/entities/AbstractEntity.entity';
 import UserPreference from './UserPreference.entity';
 
 

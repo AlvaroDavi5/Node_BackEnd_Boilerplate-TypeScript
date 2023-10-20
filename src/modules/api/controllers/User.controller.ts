@@ -1,24 +1,31 @@
 import {
-	Controller, Req, UsePipes,
-	Get, Post, Put, Delete, Param, Query, Body,
+	Controller, Request, ParseIntPipe,
+	Param, Query, Body,
+	Get, Post, Patch, Delete,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiOkResponse } from '@nestjs/swagger';
-import authSwaggerDecorator from '@modules/api/decorators/authSwagger.decorator';
-import UserEntity, { UserEntityList } from '@modules/app/domain/entities/User.entity';
-import UserOperation from '@modules/app/operations/User.operation';
-import { CreateUserValidatorPipe, UpdateUserValidatorPipe } from '@modules/api/pipes/UserValidator.pipe';
+import { ApiOperation, ApiTags, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
+import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
+import UserEntity, { UserEntityList } from '@app/domain/entities/User.entity';
+import UserOperation from '@app/operations/User.operation';
+import UserOperationAdapter from '@common/adapters/UserOperation.adapter';
+import { ListQueryValidatorPipe, CreateUserValidatorPipe, UpdateUserValidatorPipe } from '@api/pipes/UserValidator.pipe';
 import { UpdateUserSchemaInterface } from '../schemas/user/updateUser.schema';
 import { CreateUserSchemaInterface } from '../schemas/user/createUser.schema';
 import { RequestInterface } from 'src/types/_endpointInterface';
+import { ListQueryInterface, PaginationInterface } from 'src/types/_listPaginationInterface';
 
 
 @ApiTags('Users')
 @authSwaggerDecorator()
 @Controller('/users')
 export default class UserController {
+	private readonly userOperation: UserOperation;
+
 	constructor(
-		private readonly userOperation: UserOperation,
-	) { }
+		private readonly userOperationAdapter: UserOperationAdapter,
+	) {
+		this.userOperation = this.userOperationAdapter.getProvider();
+	}
 
 	@ApiOperation({ summary: 'List Users' })
 	@ApiOkResponse({
@@ -28,8 +35,8 @@ export default class UserController {
 	})
 	@Get()
 	public async listUsers(
-		@Query() query: any,
-	): Promise<any | unknown> {
+		@Query(ListQueryValidatorPipe) query: ListQueryInterface,
+	): Promise<PaginationInterface<UserEntity> | unknown> {
 		try {
 			const result = await this.userOperation.listUsers(query);
 			return result;
@@ -39,12 +46,11 @@ export default class UserController {
 	}
 
 	@ApiOperation({ summary: 'Create User' })
-	@ApiOkResponse({ type: UserEntity })
+	@ApiCreatedResponse({ type: UserEntity })
 	@Post()
-	@UsePipes(CreateUserValidatorPipe)
 	public async createUser(
-		@Req() request: RequestInterface,
-		@Body() body: CreateUserSchemaInterface,
+		@Request() request: RequestInterface,
+		@Body(CreateUserValidatorPipe) body: CreateUserSchemaInterface,
 	): Promise<UserEntity | unknown> {
 		try {
 			const { user } = request;
@@ -60,7 +66,7 @@ export default class UserController {
 	@ApiOkResponse({ type: UserEntity })
 	@Get('/:userId')
 	public async getUser(
-		@Req() request: RequestInterface,
+		@Request() request: RequestInterface,
 		@Param('userId') userId: number,
 	): Promise<UserEntity | unknown> {
 		try {
@@ -75,12 +81,11 @@ export default class UserController {
 
 	@ApiOperation({ summary: 'Update User' })
 	@ApiOkResponse({ type: UserEntity })
-	@Put('/:userId')
-	@UsePipes(UpdateUserValidatorPipe)
+	@Patch('/:userId')
 	public async updateUser(
-		@Req() request: RequestInterface,
-		@Param('userId') userId: number,
-		@Body() body: UpdateUserSchemaInterface,
+		@Request() request: RequestInterface,
+		@Param('userId', ParseIntPipe) userId: number,
+		@Body(UpdateUserValidatorPipe) body: UpdateUserSchemaInterface,
 	): Promise<UserEntity | unknown> {
 		try {
 			const { user } = request;
@@ -96,7 +101,7 @@ export default class UserController {
 	@ApiOkResponse({ type: Number, schema: { example: 1 } })
 	@Delete('/:userId')
 	public async deleteUser(
-		@Req() request: RequestInterface,
+		@Request() request: RequestInterface,
 		@Param('userId') userId: number,
 	): Promise<[affectedCount: number] | unknown> {
 		try {

@@ -35,14 +35,14 @@ module.exports = {
 
 	// An array of regexp pattern strings used to skip coverage collection
 	coveragePathIgnorePatterns: [
-		'src/configs/',
 		'src/dev/',
-		'src/infra/cache/',
-		'src/infra/cron/',
-		'src/infra/data/',
-		'src/infra/database/',
-		'src/infra/integration/',
-		'src/infra/logging/',
+		'src/modules/core/configs/',
+		'src/modules/core/infra/cache/',
+		'src/modules/core/infra/cron/',
+		'src/modules/core/infra/data/',
+		'src/modules/core/infra/database/',
+		'src/modules/core/infra/integration/',
+		'src/modules/core/infra/logging/',
 		'src/modules/api/controllers/',
 		'src/modules/api/decorators/',
 		'src/modules/api/middlewares/',
@@ -111,9 +111,11 @@ module.exports = {
 	moduleNameMapper: {
 		'~/(.*)': '<rootDir>/src/$1',
 		'@dev/(.*)': '<rootDir>/src/dev/$1',
-		'@configs/(.*)': '<rootDir>/src/configs/$1',
-		'@infra/(.*)': '<rootDir>/src/infra/$1',
-		'@modules/(.*)': '<rootDir>/src/modules/$1',
+		'@core/(.*)': '<rootDir>/src/modules/core/$1',
+		'@app/(.*)': '<rootDir>/src/modules/app/$1',
+		'@api/(.*)': '<rootDir>/src/modules/api/$1',
+		'@events/(.*)': '<rootDir>/src/modules/events/$1',
+		'@common/(.*)': '<rootDir>/src/modules/common/$1',
 	},
 
 	// An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

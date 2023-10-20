@@ -1,7 +1,7 @@
 import { Op, Includeable } from 'sequelize';
-import Users from '@infra/database/models/Users.model';
-import UserPreferences from '@infra/database/models/UserPreferences.model';
-import { ThemesEnum } from '@modules/app/domain/enums/themes.enum';
+import Users from '@core/infra/database/models/Users.model';
+import UserPreferences from '@core/infra/database/models/UserPreferences.model';
+import { ThemesEnum } from '@app/domain/enums/themes.enum';
 
 
 export const userPreferenceQueryOptions: { include: Includeable[] } = {

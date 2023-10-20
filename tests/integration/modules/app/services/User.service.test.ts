@@ -1,9 +1,9 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-import configs from '../../../../../src/configs/configs.config';
+import configs from '../../../../../src/modules/core/configs/configs.config';
 import UserService from '../../../../../src/modules/app/services/User.service';
 import UserRepository from '../../../../../src/modules/app/repositories/user/User.repository';
-import Exceptions from '../../../../../src/infra/errors/Exceptions';
+import Exceptions from '../../../../../src/modules/core/infra/errors/Exceptions';
 import UserEntity from '../../../../../src/modules/app/domain/entities/User.entity';
 
 

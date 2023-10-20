@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { io, Socket } from 'socket.io-client';
 import { Logger } from 'winston';
-import { ConfigsInterface } from '@configs/configs.config';
+import { ConfigsInterface } from '@core/configs/configs.config';
 
 
 @Injectable()

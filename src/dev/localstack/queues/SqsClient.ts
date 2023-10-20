@@ -8,7 +8,7 @@ import {
 	SendMessageCommand, ReceiveMessageCommand, DeleteMessageCommand,
 	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput, DeleteMessageCommandInput,
 } from '@aws-sdk/client-sqs';
-import { ConfigsInterface } from '@configs/configs.config';
+import { ConfigsInterface } from '@core/configs/configs.config';
 
 
 @Injectable()

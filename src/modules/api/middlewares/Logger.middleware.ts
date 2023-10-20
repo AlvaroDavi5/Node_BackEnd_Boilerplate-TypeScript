@@ -1,6 +1,6 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Logger } from 'winston';
-import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
+import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import { RequestInterface, ResponseInterface, NextFunctionInterface } from 'src/types/_endpointInterface';
 
 

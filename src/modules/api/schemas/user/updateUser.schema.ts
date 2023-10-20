@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { ThemesEnum } from '@modules/app/domain/enums/themes.enum';
+import { ThemesEnum } from '@app/domain/enums/themes.enum';
 
 
 export default Joi.object().keys({
@@ -12,3 +12,14 @@ export default Joi.object().keys({
 	imagePath: Joi.string().empty('').max(255).trim(),
 	defaultTheme: Joi.string().valid(...Object.values(ThemesEnum)).max(20),
 }).unknown(false);
+
+export interface UpdateUserSchemaInterface {
+	password?: string,
+	fullName?: string,
+	phone?: string,
+	docType?: string,
+	document?: string,
+	fu?: string,
+	imagePath?: string,
+	defaultTheme?: ThemesEnum,
+}

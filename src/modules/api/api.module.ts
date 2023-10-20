@@ -1,9 +1,9 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import HttpConstants from '@modules/api/constants/Http.constants';
-import LoggerMiddleware from '@modules/api/middlewares/Logger.middleware';
-import JwtDecodeMiddleware from '@modules/api/middlewares/JwtDecode.middleware';
-import DefaultController from '@modules/api/controllers/Default.controller';
-import UserController from '@modules/api/controllers/User.controller';
+import HttpConstants from '@api/constants/Http.constants';
+import LoggerMiddleware from '@api/middlewares/Logger.middleware';
+import JwtDecodeMiddleware from '@api/middlewares/JwtDecode.middleware';
+import DefaultController from '@api/controllers/Default.controller';
+import UserController from '@api/controllers/User.controller';
 
 
 @Module({

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import UserPreferenceRepository from '@modules/app/repositories/userPreference/UserPreference.repository';
-import UserPreferenceEntity, { UserPreferenceInterface } from '@modules/app/domain/entities/UserPreference.entity';
+import UserPreferenceRepository from '@app/repositories/userPreference/UserPreference.repository';
+import UserPreferenceEntity, { UserPreferenceInterface } from '@app/domain/entities/UserPreference.entity';
 
 
 @Injectable()
@@ -36,7 +36,7 @@ export default class UserPreferenceService {
 		}
 	}
 
-	public async delete(id: number, data: { softDelete: boolean }): Promise<[affectedCount: number] | null | undefined> {
+	public async delete(id: number, data: { softDelete: boolean }): Promise<boolean | null> {
 		try {
 			const result = await this.userPreferenceRepository.deleteOne(id, Boolean(data.softDelete));
 			return result;

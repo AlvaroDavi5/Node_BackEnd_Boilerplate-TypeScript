@@ -35,11 +35,11 @@ module.exports = {
 
 	// An array of regexp pattern strings used to skip coverage collection
 	coveragePathIgnorePatterns: [
-		'src/configs/',
 		'src/dev/',
-		'src/infra/cron/tasks/',
-		'src/infra/errors/',
-		'src/infra/logging/',
+		'src/modules/core/configs/',
+		'src/modules/core/infra/cron/tasks/',
+		'src/modules/core/infra/errors/',
+		'src/modules/core/infra/logging/',
 		'src/modules/api/constants/',
 		'src/modules/api/decorators/',
 		'src/modules/api/middlewares/',
@@ -51,7 +51,7 @@ module.exports = {
 		'src/modules/app/strategies/',
 		'src/modules/events/queue/handlers/',
 		'src/modules/events/websocket/client/',
-		'src/modules/utils/',
+		'src/modules/common/',
 		'.d.ts',
 		'.module.ts',
 		'src/main.ts',
@@ -112,9 +112,11 @@ module.exports = {
 	moduleNameMapper: {
 		'~/(.*)': '<rootDir>/src/$1',
 		'@dev/(.*)': '<rootDir>/src/dev/$1',
-		'@configs/(.*)': '<rootDir>/src/configs/$1',
-		'@infra/(.*)': '<rootDir>/src/infra/$1',
-		'@modules/(.*)': '<rootDir>/src/modules/$1',
+		'@core/(.*)': '<rootDir>/src/modules/core/$1',
+		'@app/(.*)': '<rootDir>/src/modules/app/$1',
+		'@api/(.*)': '<rootDir>/src/modules/api/$1',
+		'@events/(.*)': '<rootDir>/src/modules/events/$1',
+		'@common/(.*)': '<rootDir>/src/modules/common/$1',
 	},
 
 	// An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -209,6 +211,7 @@ module.exports = {
 			'ts-jest',
 			{
 				diagnostics: false,
+				tsconfig: 'tsconfig.jest.json',
 			},
 		],
 	},

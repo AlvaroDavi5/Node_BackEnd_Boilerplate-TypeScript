@@ -2,6 +2,7 @@ module.exports = {
 	branches: [
 		'main',
 		'dev',
+		'release',
 	],
 	plugins: [
 		'@semantic-release/commit-analyzer',

@@ -20,7 +20,7 @@ describe('API :: DefaultController', () => {
 	});
 
 	describe('# [GET] /api/check', () => {
-		it('Should get success', async () => {
+		test('Should get success', async () => {
 			const response = await request(await nestTestApp.getHttpServer())
 				.get('/api/check');
 

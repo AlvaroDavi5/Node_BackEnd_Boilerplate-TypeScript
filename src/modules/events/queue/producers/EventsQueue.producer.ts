@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { v4 as uuidV4 } from 'uuid';
 import { Logger } from 'winston';
-import SqsClient from '@infra/integration/aws/Sqs.client';
-import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
-import { ConfigsInterface } from '@configs/configs.config';
+import SqsClient from '@core/infra/integration/aws/Sqs.client';
+import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { ConfigsInterface } from '@core/configs/configs.config';
 
 
 @Injectable()

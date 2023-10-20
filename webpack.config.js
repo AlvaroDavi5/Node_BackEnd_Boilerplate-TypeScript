@@ -29,7 +29,8 @@ module.exports = {
 		new webpack.HotModuleReplacementPlugin(),
 	],
 	output: {
+		libraryTarget: 'commonjs',
 		path: path.join(__dirname, 'build'),
-		filename: 'src/wp.js',
+		filename: 'webpack.js',
 	},
 };

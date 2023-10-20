@@ -1,12 +1,12 @@
 import { Module, Global } from '@nestjs/common';
 import { SqsModule } from '@ssut/nestjs-sqs';
-import WebSocketServer from '@modules/events/websocket/server/WebSocket.server';
-import WebSocketClient from '@modules/events/websocket/client/WebSocket.client';
-import EventsQueueConsumer from '@modules/events/queue/consumers/EventsQueue.consumer';
-import EventsQueueProducer from '@modules/events/queue/producers/EventsQueue.producer';
-import EventsQueueHandler from '@modules/events/queue/handlers/EventsQueue.handler';
+import WebSocketServer from '@events/websocket/server/WebSocket.server';
+import WebSocketClient from '@events/websocket/client/WebSocket.client';
+import EventsQueueConsumer from '@events/queue/consumers/EventsQueue.consumer';
+import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
+import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
+import configs from '@core/configs/configs.config';
 import SqsClient from 'src/dev/localstack/queues/SqsClient';
-import configs from 'src/configs/configs.config';
 
 
 @Global()

@@ -19,7 +19,7 @@ describe('API :: UserController', () => {
 	});
 
 	describe('# [GET] /api/users', () => {
-		it('Should get success', async () => {
+		test('Should get success', async () => {
 			const response = await request(await nestTestApp.getHttpServer())
 				.get('/api/users')
 				.set('Authorization', 'Bearer ' + process.env.MOCKED_SERVICE_TOKEN);
@@ -34,7 +34,7 @@ describe('API :: UserController', () => {
 			});
 		});
 
-		it('Should get unauthorized', async () => {
+		test('Should get unauthorized', async () => {
 			const response = await request(await nestTestApp.getHttpServer())
 				.get('/api/users');
 

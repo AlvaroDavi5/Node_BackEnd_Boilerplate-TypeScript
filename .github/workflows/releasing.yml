@@ -1,0 +1,81 @@
+
+name: Releasing
+
+on:
+  push:
+    branches: [ release, main ]
+  pull_request:
+    branches: [ release, main ]
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+
+  semantic_release:
+    name: Semantic Versioning Release
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 18.x ]
+
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+
+      - name: Installing Dependencies
+        run: yarn install
+
+      - name: Building
+        run: yarn run build
+
+      - name: Versioning Release
+        run: yarn run versioning
+
+  node_build:
+    name: Node.js Build
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 18.x ]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+
+      - name: Installing Dependencies
+        run: yarn install
+
+      - name: Checking Dependencies Security
+        run: yarn run security-check
+
+      - name: Testing Modules
+        run: yarn run test:unit
+      - name: Testing Integration
+        run: yarn run test:integration
+      # - name: Testing All
+      #   run: yarn run test:e2e
+
+      - name: Building
+        run: yarn run build

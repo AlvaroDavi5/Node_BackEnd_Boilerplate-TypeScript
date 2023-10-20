@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import UserEntity, { UserInterface } from '@modules/app/domain/entities/User.entity';
-import UserRepository from '@modules/app/repositories/user/User.repository';
+import UserEntity, { UserInterface } from '@app/domain/entities/User.entity';
+import UserRepository from '@app/repositories/user/User.repository';
+import { ListQueryInterface, PaginationInterface } from 'src/types/_listPaginationInterface';
 
 
 @Injectable()
@@ -36,7 +37,7 @@ export default class UserService {
 		}
 	}
 
-	public async delete(id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<[affectedCount: number] | null | undefined> {
+	public async delete(id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean | null> {
 		try {
 			const result = await this.userRepository.deleteOne(id, Boolean(data.softDelete), String(data.userAgentId));
 			return result;
@@ -45,24 +46,9 @@ export default class UserService {
 		}
 	}
 
-	public async list(
-		data: {
-			size?: number,
-			page?: number,
-			limit?: number,
-			order?: 'ASC' | 'DESC',
-			sort?: 'createdAt' | 'updatedAt' | 'deletedAt',
-			selectSoftDeleted?: boolean,
-			searchTerm?: string,
-		}): Promise<{
-			content: any[],
-			pageNumber: number,
-			pageSize: number,
-			totalPages: number,
-			totalItems: number,
-		}> {
+	public async list(query: ListQueryInterface): Promise<PaginationInterface<UserEntity>> {
 		try {
-			const result = await this.userRepository.list(data);
+			const result = await this.userRepository.list(query);
 			return result;
 		} catch (error) {
 			return {

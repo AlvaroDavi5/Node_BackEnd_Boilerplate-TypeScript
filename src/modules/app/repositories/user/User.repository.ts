@@ -1,28 +1,50 @@
 import { Injectable } from '@nestjs/common';
-import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
-import Exceptions from '@infra/errors/Exceptions';
-import AbstractRepository from '@infra/database/repositories/AbstractRepository.repository';
-import UsersModel from '@infra/database/models/Users.model';
-import UserEntity from '@modules/app/domain/entities/User.entity';
+import { Association } from 'sequelize';
+import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import Exceptions from '@core/infra/errors/Exceptions';
+import AbstractRepository from '@core/infra/database/repositories/AbstractRepository.repository';
+import UsersModel, { userAttributes, userOptions } from '@core/infra/database/models/Users.model';
+import UserEntity from '@app/domain/entities/User.entity';
 import userMapper from './user.mapper';
 import { userQueryParamsBuilder, userQueryOptions } from './user.query';
+import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
+import { ListQueryInterface, PaginationInterface } from 'src/types/_listPaginationInterface';
 
 
 @Injectable()
-export default class UserRepository extends AbstractRepository {
+export default class UserRepository extends AbstractRepository<UsersModel, UserEntity> {
+	public static associations: {
+		preference: Association<UserPreferencesModel>,
+	};
+
 	constructor(
 		exceptions: Exceptions,
-		logger: LoggerGenerator,
+		loggerGenerator: LoggerGenerator,
 	) {
 		super({
 			DomainEntity: UserEntity,
 			ResourceModel: UsersModel,
+			resourceAttributes: userAttributes,
+			resourceOptions: userOptions,
 			resourceMapper: userMapper,
 			queryParamsBuilder: userQueryParamsBuilder,
 			queryOptions: userQueryOptions,
 			exceptions: exceptions,
-			logger: logger,
+			loggerGenerator: loggerGenerator,
 		});
+	}
+
+	public associate(): void {
+		this.ResourceModel.hasOne(
+			UserPreferencesModel,
+			{
+				constraints: true,
+				foreignKeyConstraint: true,
+				foreignKey: 'userId',
+				sourceKey: 'id',
+				as: 'preference',
+			}
+		);
 	}
 
 	public async getById(id: number, restrictData = true): Promise<UserEntity | null> {
@@ -37,23 +59,17 @@ export default class UserRepository extends AbstractRepository {
 		return this.resourceMapper.toEntity(result);
 	}
 
-	public async list(query?: any, restrictData = true): Promise<{
-		content: any[],
-		pageNumber: number,
-		pageSize: number,
-		totalPages: number,
-		totalItems: number,
-	}> {
+	public async list(query?: ListQueryInterface, restrictData = true): Promise<PaginationInterface<UserEntity>> {
 		const userModel = (restrictData) ? this.ResourceModel.scope('withoutSensibleData') : this.ResourceModel;
 		const buildedQuery = this.queryParamsBuilder?.buildParams(query);
 
 		const { rows, count } = await userModel.findAndCountAll(buildedQuery);
 
-		const totalPages = Math.ceil(count / parseInt(query?.size)) || 1;
-		const pageNumber = parseInt(query?.page) || 0;
-		const pageSize = parseInt(query?.limit) || count;
+		const totalPages = Math.ceil(count / (query?.size || 1)) || 1;
+		const pageNumber = query?.page || 0;
+		const pageSize = query?.limit || count;
 
-		let content: any[] = [];
+		let content: UserEntity[] = [];
 		if (count > 0) {
 			content = rows.map((item) =>
 				this.resourceMapper.toEntity(item)

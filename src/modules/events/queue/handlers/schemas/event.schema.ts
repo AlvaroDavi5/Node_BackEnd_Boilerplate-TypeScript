@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { EventsEnum } from '@modules/app/domain/enums/events.enum';
+import { EventsEnum } from '@app/domain/enums/events.enum';
 
 
 export default Joi.object().keys({
@@ -9,3 +9,12 @@ export default Joi.object().keys({
 		event: Joi.string().valid(...Object.values(EventsEnum)).required(),
 	}).unknown(true).required(),
 });
+
+export interface EventSchemaInterface {
+	id?: number | string,
+	timestamp?: Date | string,
+	payload: {
+		event: EventsEnum,
+		[key: string]: any,
+	},
+}

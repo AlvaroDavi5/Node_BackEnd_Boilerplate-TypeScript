@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { SqsMessageHandler, SqsConsumerEventHandler } from '@ssut/nestjs-sqs';
 import { Message } from '@aws-sdk/client-sqs';
 import { Logger } from 'winston';
-import MongoClient from '@infra/data/Mongo.client';
-import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
-import SqsClient from '@infra/integration/aws/Sqs.client';
-import { ProcessEventsEnum } from '@infra/start/processEvents.enum';
+import MongoClient from '@core/infra/data/Mongo.client';
+import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import SqsClient from '@core/infra/integration/aws/Sqs.client';
+import { ProcessEventsEnum } from '@core/infra/start/processEvents.enum';
 import EventsQueueHandler from '../handlers/EventsQueue.handler';
 import dotenv from 'dotenv';
 dotenv.config();
@@ -51,7 +51,12 @@ export default class EventsQueueConsumer {
 	}
 
 	@SqsConsumerEventHandler(eventsQueueName, ProcessEventsEnum.ERROR)
-	public onError(error: Error, message: Message): void {
-		this.logger.error(`Event error from ${this.name} - MessageId: ${message?.MessageId}. Error: ${error.message}`);
+	public onError(error: Error): void {
+		this.logger.error(`Event error from ${this.name}. Error: ${error.message}`);
+	}
+
+	@SqsConsumerEventHandler(eventsQueueName, ProcessEventsEnum.TIMEOUT_ERROR)
+	public onTimeoutError(error: Error): void {
+		this.logger.error(`Timeout error from ${this.name}. Error: ${error.message}`);
 	}
 }

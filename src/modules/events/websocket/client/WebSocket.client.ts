@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { io, Socket } from 'socket.io-client';
 import { Logger } from 'winston';
-import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
-import DataParserHelper from '@modules/utils/helpers/DataParser.helper';
-import { ConfigsInterface } from '@configs/configs.config';
+import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import { ConfigsInterface } from '@core/configs/configs.config';
 
 
 @Injectable()

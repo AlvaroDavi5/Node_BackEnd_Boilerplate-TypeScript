@@ -3,10 +3,10 @@ import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import CoreModule from './core.module';
-import { ProcessEventsEnum, ProcessSignalsEnum } from '@infra/start/processEvents.enum';
-import { ExceptionsEnum } from '@infra/errors/exceptions.enum';
-import { ConfigsInterface } from '@configs/configs.config';
+import CoreModule from './modules/core/core.module';
+import { ProcessEventsEnum, ProcessSignalsEnum } from '@core/infra/start/processEvents.enum';
+import { ExceptionsEnum } from '@core/infra/errors/exceptions.enum';
+import { ConfigsInterface } from '@core/configs/configs.config';
 import { ErrorInterface } from 'src/types/_errorInterface';
 
 
@@ -50,15 +50,15 @@ async function startNestApplication() {
 		const knowExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
 
 		if (error?.name && !knowExceptions.includes(error?.name)) {
-			const err = new Error(`${error.message}`);
+			const err = new Error(String(error.message));
 			err.name = error.name || err.name;
 			err.stack = error.stack;
 			throw err;
 		}
 	});
 
-	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error) => {
-		console.error(`\nApp received error: ${error}\n`);
+	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error, origin) => {
+		console.error(`\nApp received ${origin}: ${error}\n`);
 		await nestApp.close();
 	});
 

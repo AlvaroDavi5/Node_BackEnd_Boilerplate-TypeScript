@@ -1,8 +1,8 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Logger } from 'winston';
 import jwt from 'jsonwebtoken';
-import Exceptions from '@infra/errors/Exceptions';
-import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
+import Exceptions from '@core/infra/errors/Exceptions';
+import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import { RequestInterface, ResponseInterface, NextFunctionInterface } from 'src/types/_endpointInterface';
 
 

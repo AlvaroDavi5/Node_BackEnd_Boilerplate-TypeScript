@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import AbstractEntity from '@infra/database/entities/AbstractEntity.entity';
+import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity';
 
 
 export interface UserPreferenceInterface {
@@ -12,7 +12,7 @@ export interface UserPreferenceInterface {
 	deletedAt: Date | null,
 }
 
-export default class UserPreference extends AbstractEntity {
+export default class UserPreferenceEntity extends AbstractEntity {
 	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false })
 	private id = 0;
 

@@ -1,0 +1,82 @@
+
+name: Development
+
+on:
+  push:
+    branches: [ dev ]
+  pull_request:
+    branches: [ dev ]
+  schedule:
+    - cron: '0 0 */3 * *' # every 3 days
+
+env:
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+jobs:
+
+  codeql_analysis:
+    name: CodeQL Analyze
+
+    runs-on: ubuntu-latest
+
+    timeout-minutes: ${{ (matrix.language == 'swift' && 120) || 360 }}
+
+    permissions:
+      actions: read
+      contents: read
+      security-events: write
+
+    strategy:
+      fail-fast: false
+      matrix:
+        language: [ 'javascript', 'typescript' ]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Initialize CodeQL
+        uses: github/codeql-action/init@v2
+        with:
+          languages: ${{ matrix.language }}
+
+      - name: Autobuild CodeQL
+        uses: github/codeql-action/autobuild@v2
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v2
+        with:
+          category: "/language:${{matrix.language}}"
+
+  node_build:
+    name: Node.js Build
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 18.x ]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+
+      - name: Installing Dependencies
+        run: yarn install
+
+      - name: Checking Dependencies Security
+        run: yarn run security-check
+
+      - name: Testing Modules
+        run: yarn run test:unit
+      - name: Testing Integration
+        run: yarn run test:integration
+
+      - name: Building
+        run: yarn run build

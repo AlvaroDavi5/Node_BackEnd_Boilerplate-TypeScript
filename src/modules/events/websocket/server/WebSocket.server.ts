@@ -5,11 +5,12 @@ import {
 } from '@nestjs/websockets';
 import { Server as SocketIoServer, Socket } from 'socket.io';
 import { Logger } from 'winston';
-import { WebSocketEventsEnum } from '@modules/app/domain/enums/webSocketEvents.enum';
-import SubscriptionService from '@modules/app/services/Subscription.service';
-import EventsQueueProducer from '@modules/events/queue/producers/EventsQueue.producer';
-import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
-import DataParserHelper from '@modules/utils/helpers/DataParser.helper';
+import { WebSocketEventsEnum } from '@app/domain/enums/webSocketEvents.enum';
+import SubscriptionService from '@app/services/Subscription.service';
+import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
+import EventsQueueProducerAdapter from '@common/adapters/EventsQueueProducer.adapter';
+import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
 
 @WebSocketGateway({
@@ -23,14 +24,16 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 	@Server()
 	private server: SocketIoServer | undefined;
 
+	private readonly eventsQueueProducer: EventsQueueProducer;
 	private readonly logger: Logger;
 
 	constructor(
 		private readonly subscriptionService: SubscriptionService,
-		private readonly eventsQueueProducer: EventsQueueProducer,
+		private readonly eventsQueueProducerAdapter: EventsQueueProducerAdapter,
 		private readonly loggerGenerator: LoggerGenerator,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
+		this.eventsQueueProducer = this.eventsQueueProducerAdapter.getProvider();
 		this.logger = this.loggerGenerator.getLogger();
 	}
 

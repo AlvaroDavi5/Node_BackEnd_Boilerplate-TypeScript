@@ -1,46 +1,40 @@
 import { Injectable } from '@nestjs/common';
 import { Message } from '@aws-sdk/client-sqs';
 import { Logger } from 'winston';
-import SubscriptionService from '@modules/app/services/Subscription.service';
-import MongoClient from '@infra/data/Mongo.client';
-import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
-import Exceptions from '@infra/errors/Exceptions';
-import eventSchema from './schemas/event.schema';
+import SubscriptionService from '@app/services/Subscription.service';
+import SubscriptionServiceAdapter from '@common/adapters/SubscriptionService.adapter';
+import MongoClient from '@core/infra/data/Mongo.client';
+import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
+import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import eventSchema, { EventSchemaInterface } from './schemas/event.schema';
 
 
 @Injectable()
 export default class EventsQueueHandler {
+	private readonly subscriptionService: SubscriptionService;
 	private readonly logger: Logger;
 
 	constructor(
-		private readonly subscriptionService: SubscriptionService,
+		private readonly subscriptionServiceAdapter: SubscriptionServiceAdapter,
 		private readonly mongoClient: MongoClient,
+		private readonly schemaValidator: SchemaValidator<EventSchemaInterface>,
+		private readonly dataParserHelper: DataParserHelper,
 		private readonly loggerGenerator: LoggerGenerator,
-		private readonly exceptions: Exceptions,
 	) {
+		this.subscriptionService = this.subscriptionServiceAdapter.getProvider();
 		this.logger = this.loggerGenerator.getLogger();
 	}
 
 	public async execute(message: Message): Promise<boolean> {
 		try {
 			if (message.Body) {
-				const data = JSON.parse(message.Body);
-				const { value, error } = eventSchema.validate(
-					data,
-					{ stripUnknown: false }
-				);
+				const data = this.dataParserHelper.toObject(message.Body);
+				const value = this.schemaValidator.validate(data, eventSchema);
 
-				if (error) {
-					throw this.exceptions.contract({
-						name: error.name,
-						message: error.message,
-						stack: error.stack,
-					});
-				}
-				else {
-					this.subscriptionService.broadcast(value);
-					return true;
-				}
+				this.subscriptionService.broadcast(value);
+
+				return true;
 			}
 		} catch (error) {
 			this.logger.error(error);

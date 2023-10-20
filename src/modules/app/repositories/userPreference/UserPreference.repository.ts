@@ -1,27 +1,48 @@
 import { Injectable } from '@nestjs/common';
-import LoggerGenerator from '@infra/logging/LoggerGenerator.logger';
-import Exceptions from '@infra/errors/Exceptions';
-import AbstractRepository from '@infra/database/repositories/AbstractRepository.repository';
-import UserPreferencesModel from '@infra/database/models/UserPreferences.model';
-import UserPreference from '@modules/app/domain/entities/UserPreference.entity';
+import { Association } from 'sequelize';
+import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import Exceptions from '@core/infra/errors/Exceptions';
+import AbstractRepository from '@core/infra/database/repositories/AbstractRepository.repository';
+import UserPreferencesModel, { userPreferenceAttributes, userPreferenceOptions } from '@core/infra/database/models/UserPreferences.model';
+import UserPreferenceEntity from '@app/domain/entities/UserPreference.entity';
 import userPreferenceMapper from './userPreference.mapper';
 import { userPreferenceQueryParamsBuilder, userPreferenceQueryOptions } from './userPreference.query';
+import UsersModel from '@core/infra/database/models/Users.model';
 
 
 @Injectable()
-export default class UserRepository extends AbstractRepository {
+export default class UserRepository extends AbstractRepository<UserPreferencesModel, UserPreferenceEntity> {
+	public static associations: {
+		user: Association<UsersModel>
+	};
+
 	constructor(
 		exceptions: Exceptions,
-		logger: LoggerGenerator,
+		loggerGenerator: LoggerGenerator,
 	) {
 		super({
-			DomainEntity: UserPreference,
+			DomainEntity: UserPreferenceEntity,
 			ResourceModel: UserPreferencesModel,
+			resourceAttributes: userPreferenceAttributes,
+			resourceOptions: userPreferenceOptions,
 			resourceMapper: userPreferenceMapper,
 			queryParamsBuilder: userPreferenceQueryParamsBuilder,
 			queryOptions: userPreferenceQueryOptions,
 			exceptions: exceptions,
-			logger: logger,
+			loggerGenerator: loggerGenerator,
 		});
+	}
+
+	public associate(): void {
+		this.ResourceModel.belongsTo(
+			UsersModel,
+			{
+				constraints: true,
+				foreignKeyConstraint: true,
+				foreignKey: 'userId',
+				targetKey: 'id',
+				as: 'user',
+			}
+		);
 	}
 }

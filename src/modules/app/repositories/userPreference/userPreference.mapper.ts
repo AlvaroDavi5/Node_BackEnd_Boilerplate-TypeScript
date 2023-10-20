@@ -1,4 +1,4 @@
-import UserPreferenceEntity from '@modules/app/domain/entities/UserPreference.entity';
+import UserPreferenceEntity from '@app/domain/entities/UserPreference.entity';
 
 
 const toEntity = ({ dataValues }: any): UserPreferenceEntity => {

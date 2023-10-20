@@ -12,39 +12,6 @@ env:
 
 jobs:
 
-  semantic_release:
-    name: Semantic Versioning Release
-
-    runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [ 18.x ]
-
-    permissions:
-      contents: write
-      issues: write
-      pull-requests: write
-
-    steps:
-      - name: Checkout Repository
-        uses: actions/checkout@v3
-
-      - name: Setup Node.js ${{ matrix.node-version }}
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ matrix.node-version }}
-          cache: 'yarn'
-
-      - name: Installing Dependencies
-        run: yarn install
-
-      - name: Building
-        run: yarn run build
-
-      - name: Versioning Release
-        run: yarn run versioning
-
   node_build:
     name: Node.js Build
 
@@ -79,3 +46,35 @@ jobs:
 
       - name: Building
         run: yarn run build
+
+  semantic_release:
+    name: Semantic Versioning Release
+
+    needs: node_build
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [ 18.x ]
+
+    permissions:
+      contents: write
+      issues: write
+      pull-requests: write
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: 'yarn'
+
+      - name: Installing Dependencies
+        run: yarn install
+
+      - name: Versioning Release
+        run: yarn run versioning

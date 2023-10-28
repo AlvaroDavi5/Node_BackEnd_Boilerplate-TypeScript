@@ -7,7 +7,7 @@ import { Logger } from 'winston';
 import {
 	S3Client as S3AWSClient, S3ClientConfig, Bucket, NotificationConfiguration,
 	ListBucketsCommand, CreateBucketCommand, DeleteBucketCommand, PutBucketNotificationConfigurationCommand, UploadPartCommand, GetObjectCommand, DeleteObjectCommand,
-	UploadPartCommandInput, GetObjectCommandInput, DeleteObjectCommandInput,
+	UploadPartCommandInput, GetObjectCommandInput, DeleteObjectCommandInput, BucketLocationConstraint,
 } from '@aws-sdk/client-s3';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
@@ -107,17 +107,19 @@ export default class S3Client {
 	}
 
 	public async createBucket(bucketName: string): Promise<string> {
-		let location = '';
+		let location: any = this.region;
 
 		try {
 			const result = await this.s3Client.send(new CreateBucketCommand({
 				Bucket: bucketName,
 				CreateBucketConfiguration: {
-					LocationConstraint: this.region,
+					LocationConstraint: location,
 				},
 			}));
 			if (result?.Location)
 				location = result?.Location;
+			else
+				location = '';
 		} catch (error) {
 			this.logger.error('Create Error:', error);
 		}

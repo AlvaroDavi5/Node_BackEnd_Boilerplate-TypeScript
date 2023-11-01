@@ -60,7 +60,7 @@ export class Server {
 		};
 	}
 
-	disconnectSockets(): void { };
+	disconnectSockets(): void { console.log('All Disconnected!'); }
 }
 
 let server: Server;

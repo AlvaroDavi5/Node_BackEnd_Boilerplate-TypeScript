@@ -4,6 +4,7 @@ export class Server {
 	options!: any;
 	private _emit: (event: string, msg: string) => void;
 	private _on: (event: string, callback: () => void) => void;
+	public sockets: { fetchSockets: () => any[] };
 
 	constructor(httpServer?: any, options?: any) {
 		this.httpServer = httpServer || null;
@@ -38,6 +39,13 @@ export class Server {
 			else
 				callback(JSON.stringify(msg));
 		};
+
+		this.sockets = {
+			fetchSockets: () => [
+				{ id: '#1' },
+				{ id: '#2' },
+			]
+		};
 	}
 
 	on(event: string, callback: any) {
@@ -52,13 +60,7 @@ export class Server {
 		};
 	}
 
-	disconnectSockets: () => null;
-	sockets: {
-		fetchSockets: () => [
-			{ id: 1 },
-			{ id: 2 },
-		]
-	};
+	disconnectSockets(): void { };
 }
 
 let server: Server;

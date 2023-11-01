@@ -16,7 +16,7 @@ import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 @Injectable()
 export default class S3Client {
 	private readonly awsConfig: S3ClientConfig;
-	private readonly region: string;
+	private readonly region: any;
 	private readonly s3Client: S3AWSClient;
 	private readonly logger: Logger;
 

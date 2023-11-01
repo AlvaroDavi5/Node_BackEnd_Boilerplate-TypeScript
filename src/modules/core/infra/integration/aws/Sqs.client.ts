@@ -96,7 +96,7 @@ export default class SqsClient {
 		return {
 			QueueUrl: queueUrl,
 			AttributeNames: [
-				'SentTimestamp'
+				'CreatedTimestamp'
 			],
 			MaxNumberOfMessages: 10,
 			MessageAttributeNames: [

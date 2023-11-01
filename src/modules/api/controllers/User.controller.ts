@@ -10,8 +10,8 @@ import UserOperation from '@app/operations/User.operation';
 import UserOperationAdapter from '@common/adapters/UserOperation.adapter';
 import { ListQueryValidatorPipe } from '@api/pipes/QueryValidator.pipe';
 import { CreateUserValidatorPipe, UpdateUserValidatorPipe } from '@api/pipes/UserValidator.pipe';
-import { UpdateUserSchemaInterface } from '../schemas/user/updateUser.schema';
-import { CreateUserSchemaInterface } from '../schemas/user/createUser.schema';
+import { UpdateUserSchemaInterface } from '@api/schemas/user/updateUser.schema';
+import { CreateUserSchemaInterface } from '@api/schemas/user/createUser.schema';
 import { RequestInterface } from 'src/types/_endpointInterface';
 import { ListQueryInterface, PaginationInterface } from 'src/types/_listPaginationInterface';
 

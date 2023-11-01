@@ -2,8 +2,8 @@ import { PipeTransform } from '@nestjs/common';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import Exceptions from '@core/infra/errors/Exceptions';
 import configs from '@core/configs/configs.config';
-import createUserSchema, { CreateUserSchemaInterface } from '../schemas/user/createUser.schema';
-import updateUserSchema, { UpdateUserSchemaInterface } from '../schemas/user/updateUser.schema';
+import createUserSchema, { CreateUserSchemaInterface } from '@api/schemas/user/createUser.schema';
+import updateUserSchema, { UpdateUserSchemaInterface } from '@api/schemas/user/updateUser.schema';
 
 
 export class CreateUserValidatorPipe implements PipeTransform<any, CreateUserSchemaInterface> {

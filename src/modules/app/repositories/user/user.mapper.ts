@@ -1,5 +1,5 @@
 import UserEntity from '@app/domain/entities/User.entity';
-import userPreferenceMapper from '../userPreference/userPreference.mapper';
+import userPreferenceMapper from '@app/repositories/userPreference/userPreference.mapper';
 
 
 const toEntity = ({ dataValues }: any): UserEntity => {

@@ -2,7 +2,7 @@ import { PipeTransform } from '@nestjs/common';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import Exceptions from '@core/infra/errors/Exceptions';
 import configs from '@core/configs/configs.config';
-import listQuerySchema from '../schemas/listQuery.schema';
+import listQuerySchema from '@api/schemas/listQuery.schema';
 import { ListQueryInterface } from 'src/types/_listPaginationInterface';
 
 

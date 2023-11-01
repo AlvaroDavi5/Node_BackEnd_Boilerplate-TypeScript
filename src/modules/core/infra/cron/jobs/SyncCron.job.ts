@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { Logger } from 'winston';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
-import SyncCronTask from '../tasks/SyncCron.task';
+import SyncCronTask from '@core/infra/cron/tasks/SyncCron.task';
 
 
 @Injectable()

@@ -39,12 +39,12 @@ import WebSocketClient from '../../../../src/modules/events/websocket/client/Web
 import EventsQueueConsumer from '../../../../src/modules/events/queue/consumers/EventsQueue.consumer';
 import EventsQueueHandler from '../../../../src/modules/events/queue/handlers/EventsQueue.handler';
 import EventsQueueProducer from '../../../../src/modules/events/queue/producers/EventsQueue.producer';
-import MockedSqsClient from '../../../../src/dev/localstack/queues/SqsClient';
 import HttpConstants from '../../../../src/modules/api/constants/Http.constants';
 import LoggerMiddleware from '../../../../src/modules/api/middlewares/Logger.middleware';
 import JwtDecodeMiddleware from '../../../../src/modules/api/middlewares/JwtDecode.middleware';
 import DefaultController from '../../../../src/modules/api/controllers/Default.controller';
 import UserController from '../../../../src/modules/api/controllers/User.controller';
+import MockedSqsClient from '../../../../src/dev/localstack/queues/SqsClient';
 
 
 // eslint-disable-next-line @typescript-eslint/ban-ts-comment

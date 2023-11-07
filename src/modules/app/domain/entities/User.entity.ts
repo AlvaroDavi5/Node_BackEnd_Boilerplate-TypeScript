@@ -75,7 +75,7 @@ export default class UserEntity extends AbstractEntity {
 		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
 		if (this.exists(dataValues?.deletedAt)) this.deletedAt = dataValues.deletedAt;
 		if (this.exists(dataValues?.deletedBy)) this.deletedBy = dataValues.deletedBy;
-		this.createdAt = new Date();
+		this.createdAt = this.exists(dataValues?.createdAt) ? dataValues.createdAt : new Date();
 	}
 
 	public getAttributes(): UserInterface {

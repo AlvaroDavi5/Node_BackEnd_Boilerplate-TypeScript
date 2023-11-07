@@ -42,7 +42,7 @@ export default class UserPreferenceEntity extends AbstractEntity {
 		if (this.exists(dataValues?.defaultTheme)) this.defaultTheme = dataValues.defaultTheme;
 		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
 		if (this.exists(dataValues?.deletedAt)) this.deletedAt = dataValues.deletedAt;
-		this.createdAt = new Date();
+		this.createdAt = this.exists(dataValues?.createdAt) ? dataValues.createdAt : new Date();
 	}
 
 	public getAttributes(): UserPreferenceInterface {

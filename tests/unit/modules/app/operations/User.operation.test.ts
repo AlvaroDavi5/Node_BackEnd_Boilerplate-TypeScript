@@ -1,7 +1,8 @@
 import UserOperation from '../../../../../src/modules/app/operations/User.operation';
-import UserEntity, { UserInterface } from '../../../../../src/modules/app/domain/entities/User.entity';
-import UserPreferenceEntity, { UserPreferenceInterface } from '../../../../../src/modules/app/domain/entities/UserPreference.entity';
+import UserEntity from '../../../../../src/modules/app/domain/entities/User.entity';
+import UserPreferenceEntity from '../../../../../src/modules/app/domain/entities/UserPreference.entity';
 import UserStrategy from '../../../../../src/modules/app/strategies/User.strategy';
+import { ListQueryInterface, PaginationInterface } from '../../../../../src/types/_listPaginationInterface';
 
 
 describe('Modules :: App :: Operations :: UserOperation', () => {
@@ -9,14 +10,20 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 	const userServiceMock = {
 		getById: jest.fn(async (id: number): Promise<UserEntity | null> => (null)),
 		create: jest.fn(async (entity: UserEntity): Promise<UserEntity | null> => (null)),
-		update: jest.fn(async (id: number, data: UserInterface): Promise<UserEntity | null> => (null)),
+		update: jest.fn(async (id: number, entity: UserEntity): Promise<UserEntity | null> => (null)),
 		delete: jest.fn(async (id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean | null> => (null)),
-		list: jest.fn(async (data: any): Promise<any> => ({ content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 })),
+		list: jest.fn(async (query: ListQueryInterface): Promise<PaginationInterface<UserEntity>> => ({
+			content: [],
+			pageNumber: 0,
+			pageSize: 0,
+			totalPages: 0,
+			totalItems: 0,
+		})),
 	};
 	const userPreferenceServiceMock = {
 		getByUserId: jest.fn(async (userId: number): Promise<UserPreferenceEntity | null> => (null)),
-		create: jest.fn(async (data: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (null)),
-		update: jest.fn(async (id: number, data: UserPreferenceInterface): Promise<UserPreferenceEntity | null> => (null)),
+		create: jest.fn(async (entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (null)),
+		update: jest.fn(async (id: number, entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (null)),
 		delete: jest.fn(async (id: number, data: { softDelete: boolean }): Promise<boolean | null> => (null)),
 	};
 	const userStrategy = new UserStrategy();
@@ -26,6 +33,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		notFound: jest.fn(({ message }: any): Error => (new Error(message))),
 	};
 
+	const createdAt = new Date();
 	const userOperation = new UserOperation(userServiceMock, userPreferenceServiceMock, userStrategy, exceptionsMock);
 
 	describe('# List Users', () => {
@@ -198,20 +206,20 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				if (userId === userEntity.getId()) return userPreferenceEntity;
 				else return null;
 			});
-			userServiceMock.update.mockImplementation(async (id: number, data: UserInterface): Promise<UserEntity | null> => {
-				if (id === userEntity.getId()) return new UserEntity({ ...userEntity.getAttributes(), ...data });
+			userServiceMock.update.mockImplementation(async (id: number, entity: UserEntity): Promise<UserEntity | null> => {
+				if (id === userEntity.getId()) return new UserEntity({ ...userEntity.getAttributes(), ...entity.getAttributes() });
 				else return null;
 			});
-			userPreferenceServiceMock.update.mockImplementation(async (id: number, data: UserPreferenceInterface): Promise<UserPreferenceEntity | null> => {
-				if (id === userPreferenceEntity.getId()) return new UserPreferenceEntity({ ...userPreferenceEntity.getAttributes(), ...data });
+			userPreferenceServiceMock.update.mockImplementation(async (id: number, entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => {
+				if (id === userPreferenceEntity.getId()) return new UserPreferenceEntity({ ...userPreferenceEntity.getAttributes(), ...entity.getAttributes() });
 				else return null;
 			});
 
-			const deletedUser = await userOperation.updateUser(1, { phone: '+55999999999' }, userAgent);
+			const deletedUser = await userOperation.updateUser(1, { phone: '+55999999999', createdAt }, userAgent);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
-			expect(userPreferenceServiceMock.update).toHaveBeenCalledWith(2, { phone: '+55999999999' });
-			expect(userServiceMock.update).toHaveBeenCalledWith(1, { phone: '+55999999999' });
+			expect(userPreferenceServiceMock.update).toHaveBeenCalledWith(2, new UserPreferenceEntity({ phone: '+55999999999', createdAt }));
+			expect(userServiceMock.update).toHaveBeenCalledWith(1, new UserEntity({ phone: '+55999999999', createdAt }));
 			expect(deletedUser?.getPhone()).toEqual('+55999999999');
 		});
 

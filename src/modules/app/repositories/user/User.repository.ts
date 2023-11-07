@@ -4,10 +4,10 @@ import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import Exceptions from '@core/infra/errors/Exceptions';
 import AbstractRepository from '@core/infra/database/repositories/AbstractRepository.repository';
 import UsersModel, { userAttributes, userOptions } from '@core/infra/database/models/Users.model';
+import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 import UserEntity from '@app/domain/entities/User.entity';
 import userMapper from './user.mapper';
 import { userQueryParamsBuilder, userQueryOptions } from './user.query';
-import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 import { ListQueryInterface, PaginationInterface } from 'src/types/_listPaginationInterface';
 
 

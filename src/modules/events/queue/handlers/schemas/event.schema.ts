@@ -11,10 +11,13 @@ export default Joi.object().keys({
 });
 
 export interface EventSchemaInterface {
-	id?: number | string,
-	timestamp?: Date | string,
+	id: number | string,
+	schema?: string,
+	schemaVersion?: number,
 	payload: {
 		event: EventsEnum,
 		[key: string]: any,
 	},
+	source?: string,
+	timestamp: Date | string,
 }

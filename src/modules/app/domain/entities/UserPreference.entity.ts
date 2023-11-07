@@ -3,13 +3,13 @@ import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity'
 
 
 export interface UserPreferenceInterface {
-	id?: number,
-	userId: number,
-	imagePath: string,
-	defaultTheme: string,
-	readonly createdAt: Date,
-	updatedAt: Date | null,
-	deletedAt: Date | null,
+	id: number | undefined,
+	userId: number | undefined,
+	imagePath: string | undefined,
+	defaultTheme: string | undefined,
+	readonly createdAt: Date | undefined,
+	updatedAt: Date | undefined,
+	deletedAt: Date | undefined,
 }
 
 export default class UserPreferenceEntity extends AbstractEntity {
@@ -45,15 +45,15 @@ export default class UserPreferenceEntity extends AbstractEntity {
 		this.createdAt = new Date();
 	}
 
-	public getAttributes() {
+	public getAttributes(): UserPreferenceInterface {
 		return {
-			id: this.id,
-			userId: this.userId,
-			imagePath: this.imagePath,
-			defaultTheme: this.defaultTheme,
-			createdAt: this.createdAt,
-			updatedAt: this.updatedAt,
-			deletedAt: this.deletedAt,
+			id: this.id || undefined,
+			userId: this.userId || undefined,
+			imagePath: this.imagePath || undefined,
+			defaultTheme: this.defaultTheme || undefined,
+			createdAt: this.createdAt || undefined,
+			updatedAt: this.updatedAt || undefined,
+			deletedAt: this.deletedAt || undefined,
 		};
 	}
 

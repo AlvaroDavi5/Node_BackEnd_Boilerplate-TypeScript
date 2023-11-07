@@ -6,7 +6,7 @@ import createUserSchema, { CreateUserSchemaInterface } from '@api/schemas/user/c
 import updateUserSchema, { UpdateUserSchemaInterface } from '@api/schemas/user/updateUser.schema';
 
 
-export class CreateUserValidatorPipe implements PipeTransform<any, CreateUserSchemaInterface> {
+export class CreateUserValidatorPipe implements PipeTransform<unknown, CreateUserSchemaInterface> {
 	private readonly schemaValidator: SchemaValidator<CreateUserSchemaInterface>;
 
 	constructor() {
@@ -23,12 +23,12 @@ export class CreateUserValidatorPipe implements PipeTransform<any, CreateUserSch
 		this.schemaValidator = new SchemaValidator<CreateUserSchemaInterface>(new Exceptions(configServiceMock));
 	}
 
-	public transform(data: any): CreateUserSchemaInterface {
+	public transform(data: unknown): CreateUserSchemaInterface {
 		return this.schemaValidator.validate(data, createUserSchema);
 	}
 }
 
-export class UpdateUserValidatorPipe implements PipeTransform<any, UpdateUserSchemaInterface> {
+export class UpdateUserValidatorPipe implements PipeTransform<unknown, UpdateUserSchemaInterface> {
 	private readonly schemaValidator: SchemaValidator<UpdateUserSchemaInterface>;
 
 	constructor() {
@@ -45,7 +45,7 @@ export class UpdateUserValidatorPipe implements PipeTransform<any, UpdateUserSch
 		this.schemaValidator = new SchemaValidator<UpdateUserSchemaInterface>(new Exceptions(configServiceMock));
 	}
 
-	public transform(data: any): UpdateUserSchemaInterface {
+	public transform(data: unknown): UpdateUserSchemaInterface {
 		return this.schemaValidator.validate(data, updateUserSchema);
 	}
 }

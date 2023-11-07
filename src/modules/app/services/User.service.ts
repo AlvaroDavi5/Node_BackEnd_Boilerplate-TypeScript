@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import UserEntity, { UserInterface } from '@app/domain/entities/User.entity';
+import UserEntity from '@app/domain/entities/User.entity';
 import UserRepository from '@app/repositories/user/User.repository';
 import { ListQueryInterface, PaginationInterface } from 'src/types/_listPaginationInterface';
 
@@ -28,9 +28,9 @@ export default class UserService {
 		}
 	}
 
-	public async update(id: number, data: UserInterface): Promise<UserEntity | null> {
+	public async update(id: number, entity: UserEntity): Promise<UserEntity | null> {
 		try {
-			const result = await this.userRepository.update(id, data);
+			const result = await this.userRepository.update(id, entity);
 			return result;
 		} catch (error) {
 			return null;

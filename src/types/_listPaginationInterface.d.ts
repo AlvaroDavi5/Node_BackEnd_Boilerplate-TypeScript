@@ -10,8 +10,8 @@ export interface ListQueryInterface {
 	[key: string]: any,
 }
 
-export interface PaginationInterface<CT> {
-	content: CT[],
+export interface PaginationInterface<T> {
+	content: T[],
 	pageNumber: number,
 	pageSize: number,
 	totalPages: number,

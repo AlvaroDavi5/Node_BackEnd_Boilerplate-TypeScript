@@ -1,9 +1,9 @@
 import { Model, DataTypes, Association, HasOneGetAssociationMixin, HasManyHasAssociationMixin } from 'sequelize';
-import UserPreferences from './UserPreferences.model';
+import UserPreferencesModel from './UserPreferences.model';
 import connection from '@core/infra/database/connection';
 
 
-class Users extends Model {
+class UsersModel extends Model {
 	protected id!: number;
 	public fullName!: string;
 	protected email!: string;
@@ -19,7 +19,7 @@ class Users extends Model {
 
 	static associate() {
 		this.hasOne(
-			UserPreferences,
+			UserPreferencesModel,
 			{
 				constraints: true,
 				foreignKeyConstraint: true,
@@ -31,11 +31,11 @@ class Users extends Model {
 	}
 
 	public static associations: {
-		preference: Association<UserPreferences>,
+		preference: Association<UserPreferencesModel>,
 	};
 
-	public getPreference!: HasOneGetAssociationMixin<UserPreferences>;
-	public hasPreference!: HasManyHasAssociationMixin<UserPreferences, number>;
+	public getPreference!: HasOneGetAssociationMixin<UserPreferencesModel>;
+	public hasPreference!: HasManyHasAssociationMixin<UserPreferencesModel, number>;
 }
 
 export const userAttributes = {
@@ -69,6 +69,6 @@ export const userOptions = {
 	sequelize: connection,
 };
 
-Users.init(userAttributes, userOptions);
+UsersModel.init(userAttributes, userOptions);
 
-export default Users;
+export default UsersModel;

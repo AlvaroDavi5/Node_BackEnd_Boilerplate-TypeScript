@@ -6,7 +6,7 @@ import listQuerySchema from '@api/schemas/listQuery.schema';
 import { ListQueryInterface } from 'src/types/_listPaginationInterface';
 
 
-export class ListQueryValidatorPipe implements PipeTransform<any, ListQueryInterface> {
+export class ListQueryValidatorPipe implements PipeTransform<unknown, ListQueryInterface> {
 	private readonly schemaValidator: SchemaValidator<ListQueryInterface>;
 
 	constructor() {
@@ -23,7 +23,7 @@ export class ListQueryValidatorPipe implements PipeTransform<any, ListQueryInter
 		this.schemaValidator = new SchemaValidator<ListQueryInterface>(new Exceptions(configServiceMock));
 	}
 
-	public transform(data: any): ListQueryInterface {
+	public transform(data: unknown): ListQueryInterface {
 		return this.schemaValidator.validate(data, listQuerySchema);
 	}
 }

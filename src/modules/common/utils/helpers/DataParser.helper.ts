@@ -14,7 +14,7 @@ export default class DataParserHelper {
 		this.logger = this.loggerGenerator.getLogger();
 	}
 
-	public toString(data: any): string {
+	public toString(data: unknown): string | null {
 		let result = null;
 
 		switch (typeof data) {
@@ -44,7 +44,7 @@ export default class DataParserHelper {
 		return result;
 	}
 
-	public toObject(data: string): any {
+	public toObject(data: string): object | string | null {
 		let result = data;
 
 		try {

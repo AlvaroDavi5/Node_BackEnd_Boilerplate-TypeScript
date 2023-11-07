@@ -14,6 +14,9 @@ import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
 
 export type protocolType = 'email' | 'sms' | 'http' | 'https' | 'sqs' | 'lambda' | 'application'
+interface DestinationInterface {
+	[key: string]: string | undefined,
+}
 
 @Injectable()
 export default class SnsClient {
@@ -53,7 +56,7 @@ export default class SnsClient {
 
 
 	private formatMessageBeforeSend(message: any = {}): string {
-		return this.dataParserHelper.toString(message);
+		return this.dataParserHelper.toString(message) || '{}';
 	}
 
 	private createParams(topicName: string): CreateTopicCommandInput {
@@ -80,7 +83,7 @@ export default class SnsClient {
 		};
 	}
 
-	private publishParams(protocol: protocolType, topicArn: string, topicName: string, { message, subject, phoneNumber }: any): PublishCommandInput {
+	private publishParams(protocol: protocolType, topicArn: string, topicName: string, message: string, { subject, phoneNumber }: DestinationInterface): PublishCommandInput {
 		const isFifoTopic: boolean = topicName?.includes('.fifo');
 		const messageBody = this.formatMessageBeforeSend(message);
 
@@ -193,12 +196,12 @@ export default class SnsClient {
 		return httpStatusCode;
 	}
 
-	public async publishMessage(protocol: protocolType, topicArn: string, topicName: string, msgData: string): Promise<string> {
+	public async publishMessage(protocol: protocolType, topicArn: string, topicName: string, message: string, destination: DestinationInterface): Promise<string> {
 		let messageId = '';
 
 		try {
 			const result = await this.snsClient.send(new PublishCommand(
-				this.publishParams(protocol, topicArn, topicName, msgData)
+				this.publishParams(protocol, topicArn, topicName, message, destination)
 			));
 			if (result?.MessageId)
 				messageId = result.MessageId;

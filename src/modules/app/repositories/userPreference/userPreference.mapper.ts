@@ -1,7 +1,8 @@
 import UserPreferenceEntity from '@app/domain/entities/UserPreference.entity';
+import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 
 
-const toEntity = ({ dataValues }: any): UserPreferenceEntity => {
+const toEntity = ({ dataValues }: UserPreferencesModel): UserPreferenceEntity => {
 	const userPreference = new UserPreferenceEntity(dataValues);
 	return userPreference;
 };

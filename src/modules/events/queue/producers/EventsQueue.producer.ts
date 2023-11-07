@@ -5,7 +5,17 @@ import { Logger } from 'winston';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import { ConfigsInterface } from '@core/configs/configs.config';
+import { EventSchemaInterface } from '@events/queue/handlers/schemas/event.schema';
 
+
+interface EventDispatchInterface {
+	payload: {
+		[key: string]: any,
+	},
+	schema: string,
+	author?: string,
+	title?: string,
+}
 
 @Injectable()
 export default class EventsQueueProducer {
@@ -14,6 +24,8 @@ export default class EventsQueueProducer {
 		queueName: string,
 		queueUrl: string,
 	};
+
+	private readonly applicationName: string;
 
 	constructor(
 		private readonly configService: ConfigService,
@@ -26,27 +38,29 @@ export default class EventsQueueProducer {
 			queueName: queueName || 'eventsQueue.fifo',
 			queueUrl: queueUrl || 'http://localhost:4566/000000000000/eventsQueue.fifo',
 		};
+		const appName: ConfigsInterface['application']['name'] = this.configService.get<any>('application.name');
+		this.applicationName = String(appName);
 	}
 
-	private _buildMessageBody({ event, schema }: { event: any, schema: string | null | undefined }) {
+	private _buildMessageBody({ payload, schema }: { payload: any, schema?: string }): EventSchemaInterface {
 		return {
 			id: uuidV4(),
 			schema: schema || 'EVENTS',
 			schemaVersion: 1.0,
-			payload: event,
+			payload,
 			source: 'BOILERPLATE',
 			timestamp: new Date(),
 		};
 	}
 
-	public async dispatch({ event, schema, author, title }: { event: any, schema?: string, author: string, title?: string }): Promise<string | null> {
-		const message = this._buildMessageBody({ event, schema });
+	public async dispatch({ payload, schema, author, title }: EventDispatchInterface): Promise<string | null> {
+		const message = this._buildMessageBody({ payload, schema });
 
 		try {
 			const messageId = await this.sqsClient.sendMessage(
 				this.credentials.queueUrl,
-				title || 'new event',
-				author,
+				title || 'New Event',
+				author || this.applicationName,
 				message,
 			);
 			this.logger.info(`Sended message to queue ${this.credentials.queueName}`);

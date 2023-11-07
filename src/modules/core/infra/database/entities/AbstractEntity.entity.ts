@@ -18,10 +18,8 @@ export default abstract class AbstractEntity {
 		return { value, valid, error };
 	}
 
-	public exists(value: any): boolean {
-		if (value !== undefined && value !== null)
-			return true;
-		return false;
+	public exists(value: unknown): boolean {
+		return (value !== undefined && value !== null);
 	}
 
 	public getAttributes(): any {

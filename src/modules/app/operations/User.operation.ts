@@ -23,7 +23,7 @@ export default class UserOperation {
 		return usersList;
 	}
 
-	public async createUser(data: any, userAgent?: UserAuthInterface): Promise<UserEntity | null> {
+	public async createUser(data: unknown, userAgent?: UserAuthInterface): Promise<UserEntity | null> {
 		if (!userAgent?.username)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
@@ -66,7 +66,7 @@ export default class UserOperation {
 		return foundedUser;
 	}
 
-	public async updateUser(id: number, data: any, userAgent?: UserAuthInterface): Promise<UserEntity | null> {
+	public async updateUser(id: number, data: unknown, userAgent?: UserAuthInterface): Promise<UserEntity | null> {
 		if (!userAgent?.username)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
@@ -86,8 +86,8 @@ export default class UserOperation {
 				message: 'userAgent not allowed to execute this action'
 			});
 
-		const updatedPreference = await this.userPreferenceService.update(preference.getId(), data);
-		const updatedUser = await this.userService.update(user.getId(), data);
+		const updatedPreference = await this.userPreferenceService.update(preference.getId(), new UserPreferenceEntity(data));
+		const updatedUser = await this.userService.update(user.getId(), new UserEntity(data));
 		if (updatedPreference)
 			updatedUser?.setPreference(updatedPreference);
 

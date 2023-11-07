@@ -33,12 +33,12 @@ export default class WebSocketClient {
 		}
 	}
 
-	private formatMessageBeforeSend(message: any = {}): string {
-		return this.dataParserHelper.toString(message);
+	private formatMessageBeforeSend(message: unknown): string {
+		return this.dataParserHelper.toString(message) || '{}';
 	}
 
 	// send message to server
-	public send(event: string, msg: any) {
+	public send(event: string, msg: unknown) {
 
 		this.clientSocket?.emit(
 			String(event),
@@ -47,7 +47,7 @@ export default class WebSocketClient {
 	}
 
 	// listen event messages from the server
-	public listen(event: string, callback: any) {
+	public listen(event: string, callback: (...args: unknown[]) => void) {
 		this.logger.info(`Listenned event '${event}' from the WebSocket server`);
 
 		this.clientSocket?.on(
@@ -57,7 +57,7 @@ export default class WebSocketClient {
 	}
 
 	// ignore listenned event messages from the server
-	public ignore(event: string, callback: any) {
+	public ignore(event: string, callback: (...args: unknown[]) => void) {
 		this.logger.info(`Ignored event '${event}' from the WebSocket server`);
 
 		this.clientSocket?.off(

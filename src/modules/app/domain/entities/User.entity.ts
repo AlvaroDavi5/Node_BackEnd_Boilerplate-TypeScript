@@ -1,23 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import AbstractEntity, { AbstractEntityList } from '@core/infra/database/entities/AbstractEntity.entity';
-import UserPreference from './UserPreference.entity';
+import UserPreferenceEntity from './UserPreference.entity';
 
 
 export interface UserInterface {
-	id?: number,
-	fullName: string,
-	email: string,
-	password?: string,
-	phone: string,
-	docType: string,
-	document: string,
-	fu: string,
-	preference?: UserPreference,
-	readonly createdAt: Date,
-	updatedAt: Date | null,
-	deletedAt: Date | null,
-	deletedBy: string | null,
+	id: number | undefined,
+	fullName: string | undefined,
+	email: string | undefined,
+	password: string | undefined,
+	phone: string | undefined,
+	docType: string | undefined,
+	document: string | undefined,
+	fu: string | undefined,
+	preference: UserPreferenceEntity | undefined,
+	readonly createdAt: Date | undefined,
+	updatedAt: Date | undefined,
+	deletedAt: Date | undefined,
+	deletedBy: string | undefined,
 }
 
 export default class UserEntity extends AbstractEntity {
@@ -45,9 +45,9 @@ export default class UserEntity extends AbstractEntity {
 	@ApiProperty({ type: String, example: 'UF', default: null, nullable: true })
 	public fu: string | null = null;
 
-	@ApiProperty({ type: UserPreference, default: null, nullable: true })
-	@Type(() => UserPreference)
-	private preference: UserPreference | null = null;
+	@ApiProperty({ type: UserPreferenceEntity, example: (new UserPreferenceEntity({})), default: null, nullable: true })
+	@Type(() => UserPreferenceEntity)
+	private preference: UserPreferenceEntity | null = null;
 
 	@ApiProperty({ type: Date, example: (new Date()), default: (new Date()), nullable: false })
 	public readonly createdAt: Date;
@@ -78,21 +78,21 @@ export default class UserEntity extends AbstractEntity {
 		this.createdAt = new Date();
 	}
 
-	public getAttributes() {
+	public getAttributes(): UserInterface {
 		return {
-			id: this.id,
-			fullName: this.fullName,
-			email: this.email,
-			password: this.password,
-			phone: this.phone,
-			docType: this.docType,
-			document: this.document,
-			fu: this.fu,
-			preference: this.preference,
-			createdAt: this.createdAt,
-			updatedAt: this.updatedAt,
-			deletedAt: this.deletedAt,
-			deletedBy: this.deletedBy,
+			id: this.id || undefined,
+			fullName: this.fullName || undefined,
+			email: this.email || undefined,
+			password: this.password || undefined,
+			phone: this.phone || undefined,
+			docType: this.docType || undefined,
+			document: this.document || undefined,
+			fu: this.fu || undefined,
+			preference: this.preference || undefined,
+			createdAt: this.createdAt || undefined,
+			updatedAt: this.updatedAt || undefined,
+			deletedAt: this.deletedAt || undefined,
+			deletedBy: this.deletedBy || undefined,
 		};
 	}
 
@@ -147,16 +147,17 @@ export default class UserEntity extends AbstractEntity {
 		this.updatedAt = new Date();
 	}
 
-	public getPreference(): UserPreference | null {
+	public getPreference(): UserPreferenceEntity | null {
 		return this.preference;
 	}
 
-	public setPreference(preference: UserPreference): void {
+	public setPreference(preference: UserPreferenceEntity): void {
 		this.preference = preference;
 	}
 }
 
 export class UserEntityList extends AbstractEntityList<UserEntity> {
 	@ApiProperty({ type: UserEntity, isArray: true, example: ([new UserEntity({})]), default: [], nullable: false })
+	@Type(() => Array<UserEntity>)
 	public content: UserEntity[] = [];
 }

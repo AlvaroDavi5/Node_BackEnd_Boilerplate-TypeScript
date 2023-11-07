@@ -3,11 +3,11 @@ import { Association } from 'sequelize';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import Exceptions from '@core/infra/errors/Exceptions';
 import AbstractRepository from '@core/infra/database/repositories/AbstractRepository.repository';
+import UsersModel from '@core/infra/database/models/Users.model';
 import UserPreferencesModel, { userPreferenceAttributes, userPreferenceOptions } from '@core/infra/database/models/UserPreferences.model';
 import UserPreferenceEntity from '@app/domain/entities/UserPreference.entity';
 import userPreferenceMapper from './userPreference.mapper';
 import { userPreferenceQueryParamsBuilder, userPreferenceQueryOptions } from './userPreference.query';
-import UsersModel from '@core/infra/database/models/Users.model';
 
 
 @Injectable()

@@ -37,12 +37,12 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 		this.logger = this.loggerGenerator.getLogger();
 	}
 
-	private formatMessageAfterReceiveHelper(message: string): any {
+	private formatMessageAfterReceiveHelper(message: string): object | string | null {
 		return this.dataParserHelper.toObject(message);
 	}
 
-	private formatMessageBeforeSendHelper(message: any): string {
-		return this.dataParserHelper.toString(message);
+	private formatMessageBeforeSendHelper(message: unknown): string {
+		return this.dataParserHelper.toString(message) || '{}';
 	}
 
 	public afterInit(server: SocketIoServer): void {
@@ -54,17 +54,18 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 	}
 
 	// listen 'connection' event from client
-	public async handleConnection(socket: Socket, ...args: any[]): Promise<void> {
+	public async handleConnection(socket: Socket, ...args: unknown[]): Promise<void> {
 		this.logger.info(`Client connected: ${socket.id} - ${args}`);
 		await this.subscriptionService.save(socket.id, {
 			subscriptionId: socket.id,
 		});
 		await this.eventsQueueProducer.dispatch({
-			title: 'New client connected',
+			title: 'New Client Connected',
 			author: 'Websocket Server',
-			event: {
+			payload: {
 				subscriptionId: socket.id,
 			},
+			schema: WebSocketEventsEnum.CONNECT,
 		});
 	}
 
@@ -86,13 +87,16 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 	@SubscribeMessage(WebSocketEventsEnum.RECONNECT)
 	public async handleReconnect(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() msg: any,
+		@MessageBody() msg: string,
 	): Promise<void> { // listen reconnect event from client
 		this.logger.info(`Client reconnected: ${socket.id}`);
-		await this.subscriptionService.save(socket.id, {
-			...this.formatMessageAfterReceiveHelper(msg),
-			subscriptionId: socket.id,
-		});
+
+		const message = this.formatMessageAfterReceiveHelper(msg);
+		if (message && typeof message === 'object')
+			await this.subscriptionService.save(socket.id, {
+				...message,
+				subscriptionId: socket.id,
+			});
 	}
 
 	@SubscribeMessage(WebSocketEventsEnum.BROADCAST)
@@ -107,9 +111,9 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 	@SubscribeMessage(WebSocketEventsEnum.EMIT_PRIVATE)
 	public emitPrivate(
 		@ConnectedSocket() socket: Socket,
-		@MessageBody() msg: any,
+		@MessageBody() msg: string,
 	): void { // listen 'emit-private' order event from client
-		const message = this.formatMessageAfterReceiveHelper(msg);
+		const message: any = this.formatMessageAfterReceiveHelper(msg);
 		const payload = this.formatMessageBeforeSendHelper(message?.payload);
 
 		this.logger.info(`Emiting message to: ${message?.targetSocketId}`);

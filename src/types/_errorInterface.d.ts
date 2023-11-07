@@ -2,6 +2,6 @@
 export interface ErrorInterface {
 	name?: string,
 	message: string,
-	details?: any,
+	details?: unknown,
 	stack?: string | undefined,
 }

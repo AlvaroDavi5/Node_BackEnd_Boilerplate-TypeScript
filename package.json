@@ -20,7 +20,8 @@
 		"win32"
 	],
 	"engines": {
-		"node": "f>=18.00.x <18.6.0"
+		"node": "f>=18.00.x <18.6.0",
+		"yarn": "f>=1.22.x <3.x.x"
 	},
 	"keywords": [
 		"boilerplate",
@@ -30,6 +31,7 @@
 		"nestjs"
 	],
 	"scripts": {
+		"typecheck": "tsc --project tsconfig.json --noEmit",
 		"start": "cross-env NODE_PATH=. nest start",
 		"build": "rm -rf build && nest build",
 		"start:prod": "node build/src/main.js",
@@ -73,7 +75,7 @@
 		"versioning": "semantic-release",
 		"postinstall": "husky install",
 		"clean": "rm -rf ./build ./dist ./coverage ./.scannerwork test-report.xml",
-		"clean:all": "rm -rf ./build ./dist ./coverage ./.scannerwork test-report.xml node_modules .tool-versions .env"
+		"clean:all": "rm -rf ./build ./dist ./coverage ./.scannerwork test-report.xml ./node_modules .tool-versions .env*"
 	},
 	"husky": {
 		"hooks": {
@@ -181,6 +183,7 @@
 		"eslint-plugin-node": "^11.1.0",
 		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-promise": "^6.1.1",
+		"eslint-plugin-security": "^1.7.1",
 		"eslint-plugin-standard": "^5.0.0",
 		"husky": "^8.0.3",
 		"ioredis-mock": "^8.7.0",

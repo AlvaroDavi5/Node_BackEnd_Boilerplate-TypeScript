@@ -5,6 +5,7 @@ import UserService from '../../../../../src/modules/app/services/User.service';
 import UserRepository from '../../../../../src/modules/app/repositories/user/User.repository';
 import Exceptions from '../../../../../src/modules/core/infra/errors/Exceptions';
 import UserEntity from '../../../../../src/modules/app/domain/entities/User.entity';
+import { ListQueryInterface, PaginationInterface } from '../../../../../src/types/_listPaginationInterface';
 
 
 describe('Modules :: App :: Services :: UserService', () => {
@@ -12,11 +13,10 @@ describe('Modules :: App :: Services :: UserService', () => {
 	let userService: UserService;
 	// // mocks
 	const userRepositoryMock = {
-		getById: jest.fn(async (id: number, restrictData?: boolean): Promise<UserEntity | null> => (null)),
-		create: jest.fn(async (data: any): Promise<UserEntity | null> => (null)),
-		update: jest.fn(async (id: number, data: any): Promise<UserEntity | null> => (null)),
-		deleteOne: jest.fn(async (id: number, softDelete?: boolean, agentId?: string | number | null): Promise<boolean> => (false)),
-		list: jest.fn(async (query?: any, restrictData?: boolean): Promise<any> => ({ content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 })),
+		getById: jest.fn(async (id: number, restrictData = true): Promise<UserEntity | null> => (null)),
+		create: jest.fn(async (entity: UserEntity): Promise<UserEntity | null> => (null)),
+		update: jest.fn(async (id: number, entity: UserEntity): Promise<UserEntity | null> => (null)),
+		deleteOne: jest.fn(async (id: number, softDelete = true, agentId: number | string | null = null): Promise<boolean> => (false)),
 	};
 	const configServiceMock: any = {
 		get: (propertyPath?: string) => {
@@ -45,24 +45,24 @@ describe('Modules :: App :: Services :: UserService', () => {
 	describe('# Create User', () => {
 
 		test('Should create a user successfully', async () => {
-			userRepositoryMock.create.mockImplementation(async (data: any): Promise<UserEntity | null> => (new UserEntity(data)));
+			userRepositoryMock.create.mockImplementation(async (entity: UserEntity): Promise<UserEntity | null> => (new UserEntity(entity.getAttributes())));
 
-			const createdUser = await userService.create({
+			const createdUser = await userService.create(new UserEntity({
 				id: 1,
 				email: 'user.test@nomail.dev',
-			});
+			}));
 			expect(userRepositoryMock.create).toHaveBeenCalledTimes(1);
 			expect(createdUser?.getId()).toBe(1);
 			expect(createdUser?.getLogin()?.email).toBe('user.test@nomail.dev');
 		});
 
 		test('Should not create a user', async () => {
-			userRepositoryMock.create.mockImplementation(async (data: any): Promise<UserEntity | null> => (null));
+			userRepositoryMock.create.mockImplementation(async (entity: UserEntity): Promise<UserEntity | null> => (null));
 
-			const createdUser = await userService.create({
+			const createdUser = await userService.create(new UserEntity({
 				id: 1,
 				email: 'user.test@nomail.dev',
-			});
+			}));
 			expect(userRepositoryMock.create).toHaveBeenCalledTimes(1);
 			expect(createdUser).toBeNull();
 		});
@@ -72,7 +72,7 @@ describe('Modules :: App :: Services :: UserService', () => {
 
 		test('Should find a user successfully', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
-			userRepositoryMock.getById.mockImplementation(async (id: number, restrictData?: boolean): Promise<UserEntity | null> => {
+			userRepositoryMock.getById.mockImplementation(async (id: number, restrictData = true): Promise<UserEntity | null> => {
 				if (id === userEntity.getId()) return userEntity;
 				else return null;
 			});
@@ -83,7 +83,7 @@ describe('Modules :: App :: Services :: UserService', () => {
 		});
 
 		test('Should not find a user', async () => {
-			userRepositoryMock.getById.mockImplementation(async (id: number, restrictData?: boolean): Promise<UserEntity | null> => (null));
+			userRepositoryMock.getById.mockImplementation(async (id: number, restrictData = true): Promise<UserEntity | null> => (null));
 
 			const user = await userService.getById(1);
 			expect(userRepositoryMock.getById).toHaveBeenCalledTimes(1);
@@ -95,25 +95,26 @@ describe('Modules :: App :: Services :: UserService', () => {
 
 		test('Should update a user successfully', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
-			userRepositoryMock.update.mockImplementation(async (id: number, data: any): Promise<UserEntity | null> => {
+			userRepositoryMock.update.mockImplementation(async (id: number, entity: UserEntity): Promise<UserEntity | null> => {
 				if (id !== userEntity.getId()) return null;
-				if (data?.email) userEntity.setLogin(data.email, String(userEntity.getLogin().fullName));
+				const userEmail = entity.getLogin().email;
+				if (userEmail) userEntity.setLogin(userEmail, String(userEntity.getLogin().fullName));
 				return userEntity;
 			});
 
-			const updatedUser = await userService.update(1, {
+			const updatedUser = await userService.update(1, new UserEntity({
 				email: 'user.test@nomail.dev',
-			});
+			}));
 			expect(userRepositoryMock.update).toHaveBeenCalledTimes(1);
 			expect(updatedUser?.getLogin()?.email).toBe('user.test@nomail.dev');
 		});
 
 		test('Should not update a user', async () => {
-			userRepositoryMock.update.mockImplementation(async (id: number, data: any): Promise<UserEntity | null> => (null));
+			userRepositoryMock.update.mockImplementation(async (id: number, entity: UserEntity): Promise<UserEntity | null> => (null));
 
-			const updatedUser = await userService.update(1, {
+			const updatedUser = await userService.update(1, new UserEntity({
 				email: 'user.test@nomail.dev',
-			});
+			}));
 			expect(userRepositoryMock.update).toHaveBeenCalledTimes(1);
 			expect(updatedUser).toBeNull();
 		});
@@ -123,7 +124,7 @@ describe('Modules :: App :: Services :: UserService', () => {
 
 		test('Should delete a user successfully', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
-			userRepositoryMock.deleteOne.mockImplementation(async (id: number, softDelete?: boolean, agentId?: string | number | null): Promise<boolean> => {
+			userRepositoryMock.deleteOne.mockImplementation(async (id: number, softDelete = true, agentId: number | string | null = null): Promise<boolean> => {
 				if (id === userEntity.getId())
 					return true;
 				return false;
@@ -135,7 +136,7 @@ describe('Modules :: App :: Services :: UserService', () => {
 		});
 
 		test('Should not delete a user', async () => {
-			userRepositoryMock.deleteOne.mockImplementation(async (id: number, softDelete?: boolean, agentId?: string | number | null): Promise<boolean> => (false));
+			userRepositoryMock.deleteOne.mockImplementation(async (id: number, softDelete = true, agentId: number | string | null = null): Promise<boolean> => (false));
 
 			const deletedUser = await userService.delete(1, { softDelete: true });
 			expect(userRepositoryMock.deleteOne).toHaveBeenCalledTimes(1);

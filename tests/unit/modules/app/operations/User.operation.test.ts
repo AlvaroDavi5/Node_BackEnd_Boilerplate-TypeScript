@@ -3,6 +3,7 @@ import UserEntity from '../../../../../src/modules/app/domain/entities/User.enti
 import UserPreferenceEntity from '../../../../../src/modules/app/domain/entities/UserPreference.entity';
 import UserStrategy from '../../../../../src/modules/app/strategies/User.strategy';
 import { ListQueryInterface, PaginationInterface } from '../../../../../src/types/_listPaginationInterface';
+import { ErrorInterface } from '../../../../../src/types/_errorInterface';
 
 
 describe('Modules :: App :: Operations :: UserOperation', () => {
@@ -12,13 +13,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		create: jest.fn(async (entity: UserEntity): Promise<UserEntity | null> => (null)),
 		update: jest.fn(async (id: number, entity: UserEntity): Promise<UserEntity | null> => (null)),
 		delete: jest.fn(async (id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean | null> => (null)),
-		list: jest.fn(async (query: ListQueryInterface): Promise<PaginationInterface<UserEntity>> => ({
-			content: [],
-			pageNumber: 0,
-			pageSize: 0,
-			totalPages: 0,
-			totalItems: 0,
-		})),
+		list: jest.fn(async (query: ListQueryInterface): Promise<PaginationInterface<UserEntity>> => ({ content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 })),
 	};
 	const userPreferenceServiceMock = {
 		getByUserId: jest.fn(async (userId: number): Promise<UserPreferenceEntity | null> => (null)),
@@ -28,9 +23,9 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 	};
 	const userStrategy = new UserStrategy();
 	const exceptionsMock = {
-		unauthorized: jest.fn(({ message }: any): Error => (new Error(message))),
-		business: jest.fn(({ message }: any): Error => (new Error(message))),
-		notFound: jest.fn(({ message }: any): Error => (new Error(message))),
+		unauthorized: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
+		business: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
+		notFound: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 	};
 
 	const createdAt = new Date();
@@ -39,7 +34,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 	describe('# List Users', () => {
 
 		test('Should list users', async () => {
-			const listData = {
+			const listData: ListQueryInterface = {
 				size: 15,
 				page: 0,
 				limit: 5,
@@ -55,7 +50,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				totalPages: 1,
 				totalItems: 3,
 			};
-			userServiceMock.list.mockImplementation(async (data: any): Promise<any> => (listResult));
+			userServiceMock.list.mockImplementation(async (query: ListQueryInterface): Promise<PaginationInterface<UserEntity>> => (listResult));
 
 			const listedUsers = await userOperation.listUsers(listData);
 			expect(userServiceMock.list).toHaveBeenCalledTimes(1);

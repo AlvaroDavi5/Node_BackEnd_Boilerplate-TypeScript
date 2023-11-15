@@ -1,19 +1,17 @@
 
 export interface ListQueryInterface {
-	size?: number,
-	page?: number,
-	limit?: number,
+	limit?: number, // results amount by page
+	page?: number, // page index
 	order?: 'ASC' | 'DESC',
-	sort?: 'createdAt' | 'updatedAt' | 'deletedAt',
-	selectSoftDeleted?: boolean,
+	sortBy?: 'createdAt' | 'updatedAt' | 'deletedAt',
 	searchTerm?: string,
-	[key: string]: any,
+	selectSoftDeleted?: boolean,
 }
 
 export interface PaginationInterface<T> {
-	content: T[],
-	pageNumber: number,
-	pageSize: number,
-	totalPages: number,
-	totalItems: number,
+	content: T[], // results list
+	pageNumber: number, // page index
+	pageSize: number, // page results amount
+	totalPages: number, // pages amount
+	totalItems: number, // all results amount
 }

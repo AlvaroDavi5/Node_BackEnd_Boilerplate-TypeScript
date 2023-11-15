@@ -1,4 +1,5 @@
 import { Module, Global } from '@nestjs/common';
+import RegExConstants from '@common/constants/Regex.constants';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
@@ -20,6 +21,7 @@ import EventsModule from '@events/events.module';
 	],
 	controllers: [],
 	providers: [
+		RegExConstants,
 		SchemaValidator,
 		DataParserHelper,
 		CacheAccessHelper,
@@ -31,6 +33,7 @@ import EventsModule from '@events/events.module';
 		WebSocketClientAdapter,
 	],
 	exports: [
+		RegExConstants,
 		SchemaValidator,
 		DataParserHelper,
 		CacheAccessHelper,

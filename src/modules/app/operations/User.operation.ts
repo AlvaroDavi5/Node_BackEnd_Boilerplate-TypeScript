@@ -29,7 +29,7 @@ export default class UserOperation {
 		return usersList;
 	}
 
-	public async createUser(data: unknown, userAgent?: UserAuthInterface): Promise<UserEntity | null> {
+	public async createUser(data: unknown, userAgent?: UserAuthInterface): Promise<UserEntity> {
 		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
@@ -38,21 +38,31 @@ export default class UserOperation {
 		const newUser = new UserEntity(data);
 		const createdUser = await this.userService.create(newUser);
 
+		if (!createdUser)
+			throw this.exceptions.conflict({
+				message: 'User not created!'
+			});
+
 		const newPreference = new UserPreferenceEntity(data);
-		if (createdUser?.getId()) {
+		if (createdUser.getId()) {
 			newPreference.setUserId(createdUser.getId());
 			await this.userPreferenceService.create(newPreference);
 		}
 
-		const foundedUser = await this.userService.getById(createdUser?.getId() || 0);
-		const foundedPreference = await this.userPreferenceService.getByUserId(createdUser?.getId() || 0);
+		const foundedUser = await this.userService.getById(createdUser.getId());
+		const foundedPreference = await this.userPreferenceService.getByUserId(createdUser.getId());
 		if (foundedPreference)
 			foundedUser?.setPreference(foundedPreference);
+
+		if (!foundedUser)
+			throw this.exceptions.notFound({
+				message: 'Created user not found!'
+			});
 
 		return foundedUser;
 	}
 
-	public async getUser(id: number, userAgent?: UserAuthInterface): Promise<UserEntity | null> {
+	public async getUser(id: number, userAgent?: UserAuthInterface): Promise<UserEntity> {
 		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
@@ -72,7 +82,7 @@ export default class UserOperation {
 		return foundedUser;
 	}
 
-	public async updateUser(id: number, data: unknown, userAgent?: UserAuthInterface): Promise<UserEntity | null> {
+	public async updateUser(id: number, data: unknown, userAgent?: UserAuthInterface): Promise<UserEntity> {
 		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
@@ -94,13 +104,19 @@ export default class UserOperation {
 
 		const updatedPreference = await this.userPreferenceService.update(preference.getId(), new UserPreferenceEntity(data));
 		const updatedUser = await this.userService.update(user.getId(), new UserEntity(data));
+
+		if (!updatedUser)
+			throw this.exceptions.conflict({
+				message: 'User not updated!'
+			});
+
 		if (updatedPreference)
-			updatedUser?.setPreference(updatedPreference);
+			updatedUser.setPreference(updatedPreference);
 
 		return updatedUser;
 	}
 
-	public async deleteUser(id: number, userAgent?: UserAuthInterface): Promise<boolean | null> {
+	public async deleteUser(id: number, userAgent?: UserAuthInterface): Promise<boolean> {
 		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
@@ -123,11 +139,16 @@ export default class UserOperation {
 		await this.userPreferenceService.delete(preference.getId(), {
 			softDelete: true,
 		});
-		const updatedUser = await this.userService.delete(user.getId(), {
+		const softDeletedUser = await this.userService.delete(user.getId(), {
 			softDelete: true,
 			userAgentId: userAgent.clientId,
 		});
 
-		return updatedUser;
+		if (typeof softDeletedUser !== 'boolean')
+			throw this.exceptions.conflict({
+				message: 'User not deleted!'
+			});
+
+		return softDeletedUser;
 	}
 }

@@ -45,11 +45,13 @@ Node.js Domain-Driven Design Boilerplate with TypeScript for Back-End.
 - Jest: Testing Framework;
 - Huksy: Git hook-listenner used to check tests, format the code and the commits;
 
+---
+
 ### Install dependencies
 
 1. Install project dependencies  
 ```shell
-$ yarn install
+yarn install
 ```
 
 2. Install AWS CLI  
@@ -64,39 +66,39 @@ $ aws configure
 > Default output format [table]: json
 ```
 
+### Execution Steps
+
+1. Start Docker containers;
+1. Mock external services;
+1. Creat database entities and populat registers;
+1. Start HTTP REST API;
+1. Start TCP WebSocket;
+1. Send message to Queue;
+1. Receive message from Queue;
+
 ## Environment Preparation
 
 1. Copy dotenv file  
 ```shell
-$ cp env/.env.development.local ./.env # copy development local sample
-$ source ./.env # load envs on shell session
+cp env/.env.development.local ./.env # copy development local example
+source ./.env # load envs on shell session
 ```
 
 2. Initialize the composefile (`docker-compose.yml`) available on project root folder.
 
 ```shell
-$ docker-compose up -d # create and run all docker containers in background
+docker-compose up -d # create and run all docker containers in background
 ```
 
 ## Running Locally
 
 ```shell
-$ yarn migrate # create database entities
-$ yarn seed # populate database registers
-$ yarn mock-dependencies # create messages queue and started external services mock
-$ yarn dev # start service
-$ yarn receive-messages # create websocket client and start connection
-$ yarn send-message # send message to queue
+yarn run mock-dependencies # create messages queue and started external services mock
+yarn run migrate && yarn run seed # create database entities and populate database registers
+yarn run start:dev # start application in development mode
+yarn run receive-messages # create websocket client and start connection to receive events
+yarn run send-message # send event message to queue
 ```
-
-### Execution Checklist
-
-- [x] Started Docker containers;
-- [x] Created database entities;
-- [x] Mocked external services;
-- [x] Started HTTP REST API;
-- [x] Started TCP WebSocket;
-- [x] Sended message to Queue;
 
 ## Interface
 
@@ -108,3 +110,73 @@ $ yarn send-message # send message to queue
 - [localhost:8081](`http://localhost:8081/`) - Mongo Express Page  
 - [localhost:8082](`http://localhost:8082/`) - Redis Commander Page  
 - [localhost:9000](`http://localhost:9000/`) - SonarQube Page  
+
+___
+
+### TO DO
+
+- **Tests**
+	* _Integration_
+		- [ ] Configs
+		- [ ] Modules
+			- [ ] Core
+				- [ ] Infra
+					- [ ] Cron Tasks
+					- [ ] Logging
+			- [ ] API
+				- [ ] Pipes
+				- [ ] Schemas
+			- [ ] Events
+				- [ ] Queue Handler
+					- [ ] Handlers Schemas
+				- [ ] Websocket Server
+				- [ ] Websocket Client
+	* _End-to-End_
+		- [ ] Modules
+			- [ ] Core
+				- [ ] Infra
+					- [ ] Database
+					- [ ] Data
+					- [ ] Cache
+					- [ ] Integration
+						- [ ] AWS
+						- [ ] REST
+					- [ ] Cron Jobs
+			- [ ] API
+				- [ ] Controllers
+			- [ ] App
+				- [ ] Repositories
+			- [ ] Events
+				- [ ] Queue Consumer
+				- [ ] Queue Producer
+				- [ ] Websocket Gateway
+- **Jest and Sonarqube**
+	- [ ] Unify Coverage
+- **Build Versioning**
+	- [ ] DockerHub
+	- [ ] Container Images
+- **Security**
+	- [ ] Database InfoSec
+	- [ ] Auth InfoSec
+	- [ ] Cryptography
+	- [ ] Hashing
+	- [ ] OAuth
+	- [ ] JWT
+- **CI/CD**
+	- [x] GitHub Actions
+	- [ ] Jenkins
+- **Deployment**
+	- [ ] Heroku
+	- [ ] AWS
+- **Clustering**
+	- [ ] Kubernetes
+	- [ ] Clusters
+	- [ ] Load Balancing
+- **Monitoring**
+	- [ ] Rancher
+	- [ ] Grafana
+	- [ ] Log Streams
+- [ ] Kafka Integration
+- **AWS Integration**
+	- [ ] Lambda
+- [ ] Manual SQL

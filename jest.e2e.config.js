@@ -40,6 +40,7 @@ module.exports = {
 		'src/modules/core/infra/cron/tasks/',
 		'src/modules/core/infra/errors/',
 		'src/modules/core/infra/logging/',
+		'src/modules/core/infra/security/',
 		'src/modules/api/constants/',
 		'src/modules/api/decorators/',
 		'src/modules/api/middlewares/',

@@ -7,8 +7,10 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import configs from '../../../../src/modules/core/configs/configs.config';
+import LifecycleService from '@core/infra/start/Lifecycle.service';
 import Exceptions from '../../../../src/modules/core/infra/errors/Exceptions';
 import LoggerGenerator from '../../../../src/modules/core/infra/logging/LoggerGenerator.logger';
+import CryptographyService from '@core/infra/security/Cryptography.service';
 import RedisClient from '../../../../src/modules/core/infra/cache/Redis.client';
 import MongoClient from '../../../../src/modules/core/infra/data/Mongo.client';
 import SqsClient from '../../../../src/modules/core/infra/integration/aws/Sqs.client';
@@ -18,6 +20,7 @@ import CognitoClient from '../../../../src/modules/core/infra/integration/aws/Co
 import RestMockedServiceClient from '../../../../src/modules/core/infra/integration/rest/RestMockedService.client';
 import SyncCronJob from '../../../../src/modules/core/infra/cron/jobs/SyncCron.job';
 import SyncCronTask from '../../../../src/modules/core/infra/cron/tasks/SyncCron.task';
+import RegExConstants from '../../../../src/modules/common/constants/Regex.constants';
 import SchemaValidator from '../../../../src/modules/common/utils/validators/SchemaValidator.validator';
 import DataParserHelper from '../../../../src/modules/common/utils/helpers/DataParser.helper';
 import UserOperationAdapter from '../../../../src/modules/common/adapters/UserOperation.adapter';
@@ -78,8 +81,10 @@ import MockedSqsClient from '../../../../src/dev/localstack/queues/SqsClient';
 	],
 	providers: [
 		// * infra
+		LifecycleService,
 		Exceptions,
 		LoggerGenerator,
+		CryptographyService,
 		RedisClient,
 		MongoClient,
 		SqsClient,
@@ -90,6 +95,7 @@ import MockedSqsClient from '../../../../src/dev/localstack/queues/SqsClient';
 		SyncCronJob,
 		SyncCronTask,
 		// * common
+		RegExConstants,
 		SchemaValidator,
 		DataParserHelper,
 		CacheAccessHelper,
@@ -116,6 +122,7 @@ import MockedSqsClient from '../../../../src/dev/localstack/queues/SqsClient';
 		// * api
 		HttpConstants,
 	],
+	exports: [],
 })
 export class NestGlobalModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {

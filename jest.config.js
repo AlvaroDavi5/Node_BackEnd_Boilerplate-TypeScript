@@ -43,6 +43,7 @@ module.exports = {
 		'src/modules/core/infra/database/',
 		'src/modules/core/infra/integration/',
 		'src/modules/core/infra/logging/',
+		'src/modules/core/infra/start/',
 		'src/modules/api/controllers/',
 		'src/modules/api/decorators/',
 		'src/modules/api/middlewares/',

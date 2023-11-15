@@ -42,6 +42,7 @@ module.exports = {
 		'src/modules/core/infra/database/',
 		'src/modules/core/infra/errors/',
 		'src/modules/core/infra/integration/',
+		'src/modules/core/infra/security/',
 		'src/modules/api/constants/',
 		'src/modules/api/controllers/',
 		'src/modules/api/decorators/',

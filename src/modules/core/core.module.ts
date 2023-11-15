@@ -5,6 +5,7 @@ import configs from '@core/configs/configs.config';
 import LifecycleService from '@core/infra/start/Lifecycle.service';
 import Exceptions from '@core/infra/errors/Exceptions';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import CryptographyService from '@core/infra/security/Cryptography.service';
 import RedisClient from '@core/infra/cache/Redis.client';
 import MongoClient from '@core/infra/data/Mongo.client';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
@@ -35,6 +36,7 @@ import ApiModule from '@api/api.module';
 		LifecycleService,
 		Exceptions,
 		LoggerGenerator,
+		CryptographyService,
 		RedisClient,
 		MongoClient,
 		SqsClient,
@@ -48,6 +50,7 @@ import ApiModule from '@api/api.module';
 	exports: [
 		Exceptions,
 		LoggerGenerator,
+		CryptographyService,
 		RedisClient,
 		MongoClient,
 		SqsClient,

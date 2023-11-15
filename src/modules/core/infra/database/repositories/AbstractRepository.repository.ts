@@ -1,4 +1,4 @@
-import { Model, Op, QueryTypes, ModelAttributes, Includeable, InitOptions } from 'sequelize';
+import { Model, Op, QueryTypes, ModelAttributes, Includeable, InitOptions, FindAndCountOptions, Attributes } from 'sequelize';
 import { Logger } from 'winston';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import Exceptions from '@core/infra/errors/Exceptions';
@@ -14,12 +14,12 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 	protected DomainEntity: TypeConstructor<E>;
 	protected ResourceModel: ModelType<M>;
 	protected resourceMapper: {
-		toDatabase: (entity: E) => any,
 		toEntity: ({ dataValues }: M) => E,
+		toDatabase: (entity: E) => any,
 	};
 
 	protected queryParamsBuilder: {
-		buildParams: (data: any) => any,
+		buildParams: (data: any) => Omit<FindAndCountOptions<Attributes<M>>, 'group'>,
 	};
 
 	protected queryOptions: { include: Includeable[] };
@@ -46,8 +46,8 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 		resourceAttributes: ModelAttributes,
 		resourceOptions: InitOptions,
 		resourceMapper: {
-			toDatabase: (entity: E) => any,
 			toEntity: ({ dataValues }: M) => E,
+			toDatabase: (entity: E) => any,
 		},
 		queryParamsBuilder: {
 			buildParams: (data: any) => any,
@@ -148,29 +148,28 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 	}
 
 	public async list(query?: ListQueryInterface): Promise<PaginationInterface<E>> {
-		const buildedQuery = this.queryParamsBuilder?.buildParams(query);
+		const buildedQuery = this.queryParamsBuilder.buildParams(query);
 		const { rows, count } = await this.ResourceModel.findAndCountAll(buildedQuery);
 
-		const totalPages = Math.ceil(count / (query?.size || 1)) || 1;
+		const totalItems = count;
+		const totalPages = Math.ceil(totalItems / (query?.limit || 1)) || 1;
 		const pageNumber = query?.page || 0;
-		const pageSize = query?.limit || count;
+		const pageSize = rows.length;
 
 		let content: E[] = [];
-		if (count > 0) {
-			content = rows.map((item) =>
-				this.resourceMapper.toEntity(item)
+		if (rows.length) {
+			content = rows.map((register) =>
+				this.resourceMapper.toEntity(register)
 			);
 		}
 
-		const list = {
+		return {
 			content,
 			pageNumber,
 			pageSize,
 			totalPages,
-			totalItems: count,
+			totalItems,
 		};
-
-		return list;
 	}
 
 	public async count(query: any): Promise<number> {

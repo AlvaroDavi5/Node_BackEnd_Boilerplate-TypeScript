@@ -65,25 +65,24 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 
 		const { rows, count } = await userModel.findAndCountAll(buildedQuery);
 
-		const totalPages = Math.ceil(count / (query?.size || 1)) || 1;
+		const totalItems = count;
+		const totalPages = Math.ceil(totalItems / (query?.limit || 1)) || 1;
 		const pageNumber = query?.page || 0;
-		const pageSize = query?.limit || count;
+		const pageSize = rows.length;
 
 		let content: UserEntity[] = [];
-		if (count > 0) {
-			content = rows.map((item) =>
-				this.resourceMapper.toEntity(item)
+		if (rows.length) {
+			content = rows.map((register) =>
+				this.resourceMapper.toEntity(register)
 			);
 		}
 
-		const list = {
+		return {
 			content,
 			pageNumber,
 			pageSize,
 			totalPages,
-			totalItems: count,
+			totalItems,
 		};
-
-		return list;
 	}
 }

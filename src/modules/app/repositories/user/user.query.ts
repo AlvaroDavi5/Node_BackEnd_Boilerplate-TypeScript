@@ -1,7 +1,9 @@
-import { Op, Includeable } from 'sequelize';
+import { Op, Includeable, FindAndCountOptions, Attributes, WhereOptions, Order } from 'sequelize';
 import UsersModel from '@core/infra/database/models/Users.model';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 import { ThemesEnum } from '@app/domain/enums/themes.enum';
+import { UserInterface } from '@app/domain/entities/User.entity';
+import { ListQueryInterface } from 'src/types/_listPaginationInterface';
 
 
 export const userQueryOptions: { include: Includeable[] } = {
@@ -14,17 +16,23 @@ export const userQueryOptions: { include: Includeable[] } = {
 	],
 };
 
-const _buildPaginationParams = ({ size, page, order, sort }: any): any => {
-	const paginationParams: any = {};
+interface PaginationOptionsInterface {
+	limit?: number,
+	offset?: number,
+	order?: Order,
+}
 
-	if (size !== undefined && page !== undefined) {
-		paginationParams.limit = parseInt(size) || 10;
-		paginationParams.offset = (parseInt(page) || 0) * paginationParams.limit;
+const _buildPaginationParams = ({ limit, page, order, sortBy }: ListQueryInterface): PaginationOptionsInterface => {
+	const paginationParams: PaginationOptionsInterface = {};
+
+	if (limit && page) {
+		paginationParams.limit = Number(limit) || 10; // max results
+		paginationParams.offset = (Number(page) || 0) * paginationParams.limit; // start from
 	}
 
-	if (sort || order) {
-		const listOrder = order || 'DESC';
-		const sortOrder = sort || 'createdAt';
+	if (sortBy || order) {
+		const listOrder = order || 'ASC';
+		const sortOrder = sortBy || 'createdAt';
 
 		paginationParams.order = [[sortOrder, listOrder]];
 	}
@@ -33,8 +41,8 @@ const _buildPaginationParams = ({ size, page, order, sort }: any): any => {
 };
 
 const _buildWhereParams = ({
-	selectSoftDeleted,
 	searchTerm,
+	selectSoftDeleted,
 	id,
 	fullName,
 	email,
@@ -43,11 +51,11 @@ const _buildWhereParams = ({
 	document,
 	fu,
 	preference,
-}: any): any => {
-	const where: any = {};
+}: ListQueryInterface & UserInterface): WhereOptions => {
+	const where: WhereOptions = {};
 
 	if (selectSoftDeleted === true) {
-		where[Op.or] = [
+		where[Op.or as any] = [
 			{ deletedAt: { [Op.not]: null } },
 			{ deletedBy: { [Op.not]: null } },
 		];
@@ -68,7 +76,7 @@ const _buildWhereParams = ({
 	if (email) where.email = { [Op.like]: email };
 
 	if (preference?.defaultTheme) {
-		where[Op.and] = [
+		where[Op.and as any] = [
 			{
 				'$preference.defaultTheme$': {
 					[Op.in]: Object.values(ThemesEnum),
@@ -83,7 +91,7 @@ const _buildWhereParams = ({
 
 export const userQueryParamsBuilder = ({
 
-	buildParams: (data: any) => {
+	buildParams: (data: any): Omit<FindAndCountOptions<Attributes<UsersModel>>, 'group'> => {
 		const where = _buildWhereParams(data);
 		const pagination = _buildPaginationParams(data);
 

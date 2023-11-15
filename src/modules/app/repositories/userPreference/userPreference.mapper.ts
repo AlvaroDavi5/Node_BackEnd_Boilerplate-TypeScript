@@ -3,8 +3,7 @@ import UserPreferencesModel from '@core/infra/database/models/UserPreferences.mo
 
 
 const toEntity = ({ dataValues }: UserPreferencesModel): UserPreferenceEntity => {
-	const userPreference = new UserPreferenceEntity(dataValues);
-	return userPreference;
+	return new UserPreferenceEntity(dataValues);
 };
 
 const toDatabase = (entity: UserPreferenceEntity): any => {

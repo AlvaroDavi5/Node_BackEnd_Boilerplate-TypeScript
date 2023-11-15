@@ -46,18 +46,12 @@ export default class UserService {
 		}
 	}
 
-	public async list(query: ListQueryInterface): Promise<PaginationInterface<UserEntity>> {
+	public async list(query: ListQueryInterface): Promise<PaginationInterface<UserEntity> | null> {
 		try {
 			const result = await this.userRepository.list(query);
 			return result;
 		} catch (error) {
-			return {
-				content: [],
-				pageNumber: 0,
-				pageSize: 0,
-				totalPages: 0,
-				totalItems: 0,
-			};
+			return null;
 		}
 	}
 }

@@ -20,11 +20,17 @@ export default class UserOperation {
 
 	public async listUsers(query: ListQueryInterface): Promise<PaginationInterface<UserEntity>> {
 		const usersList = await this.userService.list(query);
+
+		if (!usersList)
+			throw this.exceptions.integration({
+				message: 'Error to connect database',
+			});
+
 		return usersList;
 	}
 
 	public async createUser(data: unknown, userAgent?: UserAuthInterface): Promise<UserEntity | null> {
-		if (!userAgent?.username)
+		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
 			});
@@ -47,7 +53,7 @@ export default class UserOperation {
 	}
 
 	public async getUser(id: number, userAgent?: UserAuthInterface): Promise<UserEntity | null> {
-		if (!userAgent?.username)
+		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
 			});
@@ -67,7 +73,7 @@ export default class UserOperation {
 	}
 
 	public async updateUser(id: number, data: unknown, userAgent?: UserAuthInterface): Promise<UserEntity | null> {
-		if (!userAgent?.username)
+		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
 			});
@@ -80,10 +86,10 @@ export default class UserOperation {
 				message: 'User or preference not found!'
 			});
 
-		const isAllowedToUpdateUser = this.userStrategy.isAllowed(user, userAgent);
+		const isAllowedToUpdateUser = this.userStrategy.isAllowedToManageUser(userAgent, user);
 		if (!isAllowedToUpdateUser)
 			throw this.exceptions.business({
-				message: 'userAgent not allowed to execute this action'
+				message: 'userAgent not allowed to update this user'
 			});
 
 		const updatedPreference = await this.userPreferenceService.update(preference.getId(), new UserPreferenceEntity(data));
@@ -95,7 +101,7 @@ export default class UserOperation {
 	}
 
 	public async deleteUser(id: number, userAgent?: UserAuthInterface): Promise<boolean | null> {
-		if (!userAgent?.username)
+		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
 			});
@@ -108,10 +114,10 @@ export default class UserOperation {
 				message: 'User or preference not found!'
 			});
 
-		const isAllowedToUpdateUser = this.userStrategy.isAllowed(user, userAgent);
-		if (!isAllowedToUpdateUser)
+		const isAllowedToDeleteUser = this.userStrategy.isAllowedToManageUser(userAgent, user);
+		if (!isAllowedToDeleteUser)
 			throw this.exceptions.business({
-				message: 'userAgent not allowed to execute this action'
+				message: 'userAgent not allowed to delete this user'
 			});
 
 		await this.userPreferenceService.delete(preference.getId(), {
@@ -119,7 +125,7 @@ export default class UserOperation {
 		});
 		const updatedUser = await this.userService.delete(user.getId(), {
 			softDelete: true,
-			userAgentId: userAgent.username,
+			userAgentId: userAgent.clientId,
 		});
 
 		return updatedUser;

@@ -15,8 +15,7 @@ const toEntity = ({ dataValues }: UsersModel): UserEntity => {
 	const userPreference = userPreferenceMapper.toEntity(preferenceDataValues);
 	dataValues.preference = userPreference;
 
-	const user = new UserEntity(dataValues);
-	return user;
+	return new UserEntity(dataValues);
 };
 
 const toDatabase = (entity: UserEntity): any => {

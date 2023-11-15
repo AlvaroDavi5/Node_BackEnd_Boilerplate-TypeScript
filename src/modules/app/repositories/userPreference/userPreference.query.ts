@@ -1,7 +1,8 @@
-import { Op, Includeable } from 'sequelize';
+import { Op, Includeable, FindAndCountOptions, Attributes, WhereOptions } from 'sequelize';
 import UsersModel from '@core/infra/database/models/Users.model';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 import { ThemesEnum } from '@app/domain/enums/themes.enum';
+import { UserPreferenceInterface } from '@app/domain/entities/UserPreference.entity';
 
 
 export const userPreferenceQueryOptions: { include: Includeable[] } = {
@@ -19,8 +20,8 @@ const _buildWhereParams = ({
 	userId,
 	imagePath,
 	defaultTheme,
-}: any): any => {
-	const where: any = {};
+}: UserPreferenceInterface): WhereOptions => {
+	const where: WhereOptions = {};
 
 	if (id) {
 		where.id = id;
@@ -34,7 +35,7 @@ const _buildWhereParams = ({
 	if (imagePath) where.imagePath = { [Op.like]: imagePath };
 
 	if (defaultTheme) {
-		where[Op.and] = [
+		where[Op.and as any] = [
 			{
 				defaultTheme: {
 					[Op.in]: Object.values(ThemesEnum),
@@ -49,7 +50,7 @@ const _buildWhereParams = ({
 
 export const userPreferenceQueryParamsBuilder = ({
 
-	buildParams: (data: any) => {
+	buildParams: (data: any): Omit<FindAndCountOptions<Attributes<UsersModel>>, 'group'> => {
 		const where = _buildWhereParams(data);
 
 		return {

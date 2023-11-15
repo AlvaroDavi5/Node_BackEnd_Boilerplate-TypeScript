@@ -5,7 +5,7 @@ import { UserAuthInterface } from 'src/types/_userAuthInterface';
 
 @Injectable()
 export default class UserStrategy {
-	public isAllowed(userData: UserEntity, userAgent: UserAuthInterface): boolean {
+	public isAllowedToManageUser(userAgent: UserAuthInterface, userData: UserEntity): boolean {
 		if (userAgent?.username === userData.getLogin().email)
 			return true;
 		else

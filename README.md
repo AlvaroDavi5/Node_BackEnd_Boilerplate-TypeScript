@@ -115,53 +115,74 @@ ___
 
 ### TO DO
 
-- **Tests**
-	* _Integration_
-		- [ ] Configs
-		- [ ] Modules
-			- [ ] Core
-				- [ ] Infra
-					- [ ] Cron Tasks
-					- [ ] Logging
-			- [ ] API
-				- [ ] Pipes
-				- [ ] Schemas
-			- [ ] Events
-				- [ ] Queue Handler
-					- [ ] Handlers Schemas
-				- [ ] Websocket Server
-				- [ ] Websocket Client
-	* _End-to-End_
-		- [ ] Modules
-			- [ ] Core
-				- [ ] Infra
-					- [ ] Database
-					- [ ] Data
-					- [ ] Cache
-					- [ ] Integration
-						- [ ] AWS
-						- [ ] REST
-					- [ ] Cron Jobs
-			- [ ] API
-				- [ ] Controllers
-			- [ ] App
-				- [ ] Repositories
-			- [ ] Events
-				- [ ] Queue Consumer
-				- [ ] Queue Producer
-				- [ ] Websocket Gateway
+- **Nest.js**
+	- [Async Providers](https://docs.nestjs.com/fundamentals/async-providers)
+	- [Dynamic Modules](https://docs.nestjs.com/fundamentals/dynamic-modules)
+	- [Injection Scopes](https://docs.nestjs.com/fundamentals/injection-scopes)
+	- [Circular Dependency](https://docs.nestjs.com/fundamentals/circular-dependency)
+	- [Module Ref](https://docs.nestjs.com/fundamentals/module-ref)
+	- [Lazy Loading Modules](https://docs.nestjs.com/fundamentals/lazy-loading-modules)
+	- [Platform Agnosticism](https://docs.nestjs.com/fundamentals/platform-agnosticism)
+	- [API Versioning](https://docs.nestjs.com/techniques/versioning)
+	- [Authorization](https://docs.nestjs.com/security/authorization)
+	- [File Upload](https://docs.nestjs.com/techniques/file-upload)
+	- [Streaming Files](https://docs.nestjs.com/techniques/streaming-files)
+	- [WebSockets Pipes](https://docs.nestjs.com/websockets/pipes)
+	- [GraphQL](https://docs.nestjs.com/graphql/quick-start)
+	- [kafka](https://docs.nestjs.com/microservices/kafka)
+	- [serverless](https://docs.nestjs.com/faq/serverless)
 - **Jest and Sonarqube**
 	- [ ] Unify Coverage
+		- [Reference](https://stackoverflow.com/questions/52419132/is-it-possible-to-merge-test-coverage-on-sonarqube-level)
 - **Build Versioning**
 	- [ ] DockerHub
 	- [ ] Container Images
 - **Security**
 	- [ ] Database InfoSec
+		> dbRes = salt + hash(salt + password)
 	- [ ] Auth InfoSec
-	- [ ] Cryptography
-	- [ ] Hashing
 	- [ ] OAuth
-	- [ ] JWT
+- **Tests**
+	* _Unit_
+		- Modules
+			- Core
+				- Infra
+					- [ ] Security
+	* _Integration_
+		- [ ] Configs
+		- Modules
+			- Core
+				- Infra
+					- [ ] Cron Tasks
+					- [ ] Logging
+			- API
+				- [x] Pipes
+				- [x] Schemas
+			- Events
+				- [ ] Queue Handler
+					- [ ] Handlers Schemas
+				- [ ] Websocket Server
+				- [ ] Websocket Client
+	* _End-to-End_
+		- Modules
+			- Core
+				- Infra
+					- [ ] Database
+					- [ ] Data
+					- [ ] Cache
+					- Integration
+						- [ ] AWS
+						- [ ] REST
+					- [ ] Cron Jobs
+					- [ ] Start
+			- API
+				- [x] Controllers
+			- App
+				- [ ] Repositories
+			- Events
+				- [ ] Queue Consumer
+				- [ ] Queue Producer
+				- [ ] Websocket Gateway
 - **CI/CD**
 	- [x] GitHub Actions
 	- [ ] Jenkins

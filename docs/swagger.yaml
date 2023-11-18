@@ -1,5 +1,3 @@
-# AccessToken:
-#    Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwidXNlcm5hbWUiOiJkZXZlbG9wZXItbG9jYWwiLCJjbGllbnRJZCI6IjAwMDEiLCJpYXQiOjE1MTYyMzkwMjJ9.WeqG2zbkjst9z25EVqqScjh9DI8GnmyZJsyGpeWUehg
 
 openapi: 3.0.1
 info:

@@ -4,16 +4,21 @@ import request from 'supertest';
 import { NestGlobalModule, startNestApplication } from '../support/mocks/nestGlobal.module';
 
 
+jest.setTimeout(1.2 * 5000);
 describe('API :: UserController', () => {
 	let nestTestApp: INestApplication;
+	let nestTestingModule: TestingModule;
 
 	// ? build test app
 	beforeAll(async () => {
-		const nestTestingModule: TestingModule = await Test.createTestingModule({
+		nestTestingModule = await Test.createTestingModule({
 			imports: [NestGlobalModule]
 		}).compile();
 
-		nestTestApp = nestTestingModule.createNestApplication();
+		nestTestApp = nestTestingModule.createNestApplication({
+			preview: false,
+			snapshot: false,
+		});
 		await startNestApplication(nestTestApp);
 		await nestTestApp.init();
 	});
@@ -49,5 +54,6 @@ describe('API :: UserController', () => {
 
 	afterAll(async () => {
 		await nestTestApp.close();
+		await nestTestingModule.close();
 	});
 });

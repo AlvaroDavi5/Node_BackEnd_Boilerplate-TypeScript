@@ -4,6 +4,7 @@ import request from 'supertest';
 import { NestGlobalModule, startNestApplication } from '../support/mocks/nestGlobal.module';
 
 
+jest.setTimeout(5000);
 describe('API :: DefaultController', () => {
 	let nestTestApp: INestApplication;
 	let nestTestingModule: TestingModule;
@@ -14,7 +15,10 @@ describe('API :: DefaultController', () => {
 			imports: [NestGlobalModule]
 		}).compile();
 
-		nestTestApp = nestTestingModule.createNestApplication();
+		nestTestApp = nestTestingModule.createNestApplication({
+			preview: false,
+			snapshot: false,
+		});
 		await startNestApplication(nestTestApp);
 		await nestTestApp.init();
 	});
@@ -29,6 +33,7 @@ describe('API :: DefaultController', () => {
 				baseUrl: '',
 				method: 'GET',
 				statusCode: 200,
+				statusMessage: 'OK',
 				params: {},
 				query: {},
 				body: {},

@@ -5,7 +5,6 @@ import UserService from '../../../../../src/modules/app/services/User.service';
 import UserRepository from '../../../../../src/modules/app/repositories/user/User.repository';
 import Exceptions from '../../../../../src/modules/core/infra/errors/Exceptions';
 import UserEntity from '../../../../../src/modules/app/domain/entities/User.entity';
-import { ListQueryInterface, PaginationInterface } from '../../../../../src/types/_listPaginationInterface';
 
 
 describe('Modules :: App :: Services :: UserService', () => {

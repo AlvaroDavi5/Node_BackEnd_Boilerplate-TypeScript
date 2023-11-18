@@ -1,4 +1,7 @@
+import { Injectable } from '@nestjs/common';
 
+
+@Injectable()
 export class Server {
 	httpServer: any;
 	options!: any;
@@ -61,13 +64,4 @@ export class Server {
 	}
 
 	disconnectSockets(): void { console.log('All Disconnected!'); }
-}
-
-let server: Server;
-
-export function getServerInstance() {
-	if (!server) {
-		server = new Server();
-	}
-	return server;
 }

@@ -1,4 +1,7 @@
+import { Injectable } from '@nestjs/common';
 
+
+@Injectable()
 export class Client {
 	httpServer: any;
 	options!: any;

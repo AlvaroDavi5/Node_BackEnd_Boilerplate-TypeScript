@@ -4,57 +4,65 @@ import {
 } from '@nestjs/common';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { ConfigModule, ConfigService } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SqsModule } from '@ssut/nestjs-sqs';
-import configs from '../../../../src/modules/core/configs/configs.config';
+import configs from '@core/configs/configs.config';
 import LifecycleService from '@core/infra/start/Lifecycle.service';
-import Exceptions from '../../../../src/modules/core/infra/errors/Exceptions';
-import LoggerGenerator from '../../../../src/modules/core/infra/logging/LoggerGenerator.logger';
+import { ProcessEventsEnum, ProcessSignalsEnum } from '@core/infra/start/processEvents.enum';
+import Exceptions from '@core/infra/errors/Exceptions';
+import { ExceptionsEnum } from '@core/infra/errors/exceptions.enum';
+import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import CryptographyService from '@core/infra/security/Cryptography.service';
-import RedisClient from '../../../../src/modules/core/infra/cache/Redis.client';
-import MongoClient from '../../../../src/modules/core/infra/data/Mongo.client';
-import SqsClient from '../../../../src/modules/core/infra/integration/aws/Sqs.client';
-import SnsClient from '../../../../src/modules/core/infra/integration/aws/Sns.client';
-import S3Client from '../../../../src/modules/core/infra/integration/aws/S3.client';
-import CognitoClient from '../../../../src/modules/core/infra/integration/aws/Cognito.client';
-import RestMockedServiceClient from '../../../../src/modules/core/infra/integration/rest/RestMockedService.client';
-import SyncCronJob from '../../../../src/modules/core/infra/cron/jobs/SyncCron.job';
-import SyncCronTask from '../../../../src/modules/core/infra/cron/tasks/SyncCron.task';
-import RegExConstants from '../../../../src/modules/common/constants/Regex.constants';
-import SchemaValidator from '../../../../src/modules/common/utils/validators/SchemaValidator.validator';
-import DataParserHelper from '../../../../src/modules/common/utils/helpers/DataParser.helper';
-import UserOperationAdapter from '../../../../src/modules/common/adapters/UserOperation.adapter';
-import SubscriptionServiceAdapter from '../../../../src/modules/common/adapters/SubscriptionService.adapter';
-import EventsQueueProducerAdapter from '../../../../src/modules/common/adapters/EventsQueueProducer.adapter';
-import WebSocketServerAdapter from '../../../../src/modules/common/adapters/WebSocketServer.adapter';
-import WebSocketClientAdapter from '../../../../src/modules/common/adapters/WebSocketClient.adapter';
-import CacheAccessHelper from '../../../../src/modules/common/utils/helpers/CacheAccess.helper';
-import FileReaderHelper from '../../../../src/modules/common/utils/helpers/FileReader.helper';
-import UserStrategy from '../../../../src/modules/app/strategies/User.strategy';
-import UserOperation from '../../../../src/modules/app/operations/User.operation';
-import UserService from '../../../../src/modules/app/services/User.service';
-import UserPreferenceService from '../../../../src/modules/app/services/UserPreference.service';
-import SubscriptionService from '../../../../src/modules/app/services/Subscription.service';
-import UserRepository from '../../../../src/modules/app/repositories/user/User.repository';
-import UserPreferenceRepository from '../../../../src/modules/app/repositories/userPreference/UserPreference.repository';
-import WebSocketServer from '../../../../src/modules/events/websocket/server/WebSocket.server';
-import WebSocketClient from '../../../../src/modules/events/websocket/client/WebSocket.client';
-import EventsQueueConsumer from '../../../../src/modules/events/queue/consumers/EventsQueue.consumer';
-import EventsQueueHandler from '../../../../src/modules/events/queue/handlers/EventsQueue.handler';
-import EventsQueueProducer from '../../../../src/modules/events/queue/producers/EventsQueue.producer';
-import HttpConstants from '../../../../src/modules/api/constants/Http.constants';
-import LoggerMiddleware from '../../../../src/modules/api/middlewares/Logger.middleware';
-import JwtDecodeMiddleware from '../../../../src/modules/api/middlewares/JwtDecode.middleware';
-import DefaultController from '../../../../src/modules/api/controllers/Default.controller';
-import UserController from '../../../../src/modules/api/controllers/User.controller';
-import MockedSqsClient from '../../../../src/dev/localstack/queues/SqsClient';
+import RedisClient from '@core/infra/cache/Redis.client';
+import MongoClient from '@core/infra/data/Mongo.client';
+import SqsClient from '@core/infra/integration/aws/Sqs.client';
+import SnsClient from '@core/infra/integration/aws/Sns.client';
+import S3Client from '@core/infra/integration/aws/S3.client';
+import CognitoClient from '@core/infra/integration/aws/Cognito.client';
+import RestMockedServiceClient from '@core/infra/integration/rest/RestMockedService.client';
+import SyncCronJob from '@core/infra/cron/jobs/SyncCron.job';
+import SyncCronTask from '@core/infra/cron/tasks/SyncCron.task';
+import RegExConstants from '@common/constants/Regex.constants';
+import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
+import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
+import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
+import UserOperationAdapter from '@common/adapters/UserOperation.adapter';
+import SubscriptionServiceAdapter from '@common/adapters/SubscriptionService.adapter';
+import EventsQueueProducerAdapter from '@common/adapters/EventsQueueProducer.adapter';
+import WebSocketServerAdapter from '@common/adapters/WebSocketServer.adapter';
+import WebSocketClientAdapter from '@common/adapters/WebSocketClient.adapter';
+import UserStrategy from '@app/strategies/User.strategy';
+import UserOperation from '@app/operations/User.operation';
+import UserService from '@app/services/User.service';
+import UserPreferenceService from '@app/services/UserPreference.service';
+import SubscriptionService from '@app/services/Subscription.service';
+import UserRepository from '@app/repositories/user/User.repository';
+import UserPreferenceRepository from '@app/repositories/userPreference/UserPreference.repository';
+import WebSocketServer from '@events/websocket/server/WebSocket.server';
+import WebSocketClient from '@events/websocket/client/WebSocket.client';
+import EventsQueueConsumer from '@events/queue/consumers/EventsQueue.consumer';
+import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
+import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
+import MockedSqsClient from 'src/dev/localstack/queues/SqsClient';
+import HttpConstants from '@api/constants/Http.constants';
+import LoggerMiddleware from '@api/middlewares/Logger.middleware';
+import JwtDecodeMiddleware from '@api/middlewares/JwtDecode.middleware';
+import DefaultController from '@api/controllers/Default.controller';
+import UserController from '@api/controllers/User.controller';
 
 
-// eslint-disable-next-line @typescript-eslint/ban-ts-comment
-// @ts-ignore
 @Module({
 	imports: [
-		ConfigModule.forRoot({ isGlobal: true, load: [configs] }),
+		ConfigModule.forRoot({
+			isGlobal: true,
+			load: [configs],
+		}),
+		EventEmitterModule.forRoot({
+			maxListeners: 10,
+			verboseMemoryLeak: true,
+		}),
 		ScheduleModule.forRoot(),
 		SqsModule.register({
 			consumers: [
@@ -67,7 +75,7 @@ import MockedSqsClient from '../../../../src/dev/localstack/queues/SqsClient';
 					queueUrl: process.env.AWS_SQS_EVENTS_QUEUE_URL || 'http://localhost:4566/000000000000/eventsQueue.fifo',
 					region: process.env.AWS_REGION || 'us-east-1',
 					batchSize: 10,
-					shouldDeleteMessages: true,
+					shouldDeleteMessages: false,
 					handleMessageTimeout: 1000,
 					waitTimeSeconds: 20,
 				},
@@ -80,7 +88,7 @@ import MockedSqsClient from '../../../../src/dev/localstack/queues/SqsClient';
 		UserController,
 	],
 	providers: [
-		// * infra
+		// * core
 		LifecycleService,
 		Exceptions,
 		LoggerGenerator,
@@ -115,8 +123,8 @@ import MockedSqsClient from '../../../../src/dev/localstack/queues/SqsClient';
 		UserPreferenceRepository,
 		// * events
 		EventsQueueConsumer,
-		EventsQueueHandler,
 		EventsQueueProducer,
+		EventsQueueHandler,
 		WebSocketServer,
 		WebSocketClient,
 		// * api
@@ -144,16 +152,35 @@ export async function startNestApplication(nestApp: INestApplication<any>) {
 		}),
 	);
 
+	nestApp.enableCors({
+		origin: '*',
+		allowedHeaders: '*',
+		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+	});
+
+	nestApp.enableShutdownHooks();
+
 	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<any>('application');
-	nestApp.useWebSocketAdapter(new IoAdapter(nestApp));
-	await nestApp.listen(Number(appConfigs?.port)).catch((error) => {
-		throw error;
+
+	nestApp.useWebSocketAdapter(new IoAdapter(nestApp)); // WsAdapter
+	await nestApp.listen(Number(appConfigs?.port)).catch((error: Error) => {
+		const knowExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
+
+		if (error?.name && !knowExceptions.includes(error?.name)) {
+			const err = new Error(String(error.message));
+			err.name = error.name || err.name;
+			err.stack = error.stack;
+			throw err;
+		}
 	});
 
-	console.log(`\n App started with PID: ${process.pid} on URL: ${appConfigs?.url} \n`);
-
-	process.on('uncaughtException', function (error: Error) {
-		console.error('\n', error, '\n');
-		process.exit();
+	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error, origin) => {
+		console.error(`\nApp received ${origin}: ${error}\n`);
+		await nestApp.close();
 	});
+
+	Object.values(ProcessSignalsEnum).map((signal) => process.on(signal, async (signal) => {
+		console.error(`\nApp received signal: ${signal}\n`);
+		await nestApp.close();
+	}));
 }

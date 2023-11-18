@@ -1,4 +1,7 @@
+import { Injectable } from '@nestjs/common';
 
+
+@Injectable()
 export default class LoggerGenerator {
 	showLogs: boolean;
 
@@ -8,11 +11,7 @@ export default class LoggerGenerator {
 
 	public getLogger(): any {
 		const commomLogger = (value: any) => console.log(value?.message || value);
-		let errorLogger = (value: any) => console.error(value?.message || value);
-
-		if (this.showLogs) {
-			errorLogger = (value: any) => console.error(value?.message || value);
-		}
+		const errorLogger = (value: any) => console.error(value?.message || value);
 
 		return {
 			error: this.showLogs ? errorLogger : commomLogger,

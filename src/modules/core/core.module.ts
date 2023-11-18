@@ -1,5 +1,6 @@
 import { Module, Global } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
+import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import configs from '@core/configs/configs.config';
 import LifecycleService from '@core/infra/start/Lifecycle.service';
@@ -24,7 +25,14 @@ import ApiModule from '@api/api.module';
 @Global()
 @Module({
 	imports: [
-		ConfigModule.forRoot({ isGlobal: true, load: [configs] }),
+		ConfigModule.forRoot({
+			isGlobal: true,
+			load: [configs],
+		}),
+		EventEmitterModule.forRoot({
+			maxListeners: 10,
+			verboseMemoryLeak: true,
+		}),
 		ScheduleModule.forRoot(),
 		CommonModule,
 		AppModule,

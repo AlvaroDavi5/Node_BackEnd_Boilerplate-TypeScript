@@ -8,9 +8,9 @@ import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import { ProcessEventsEnum } from '@core/infra/start/processEvents.enum';
 import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
 import dotenv from 'dotenv';
+
+
 dotenv.config();
-
-
 const eventsQueueName = process.env.AWS_SQS_EVENTS_QUEUE_NAME || 'eventsQueue.fifo';
 const eventsQueueUrl = process.env.AWS_SQS_EVENTS_QUEUE_URL || 'http://localhost:4566/000000000000/eventsQueue.fifo';
 @Injectable()

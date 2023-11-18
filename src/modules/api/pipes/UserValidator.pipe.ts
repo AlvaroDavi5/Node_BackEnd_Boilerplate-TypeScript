@@ -1,6 +1,6 @@
 import { PipeTransform, ArgumentMetadata } from '@nestjs/common';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString } from 'class-validator';
+import { ValidateIf, IsString } from 'class-validator';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import Exceptions from '@core/infra/errors/Exceptions';
 import configs from '@core/configs/configs.config';
@@ -11,76 +11,94 @@ import { ThemesEnum } from '@app/domain/enums/themes.enum';
 
 export abstract class CreateUserPipeModel implements CreateUserSchemaInterface {
 	@ApiProperty({ type: String, example: 'User Default', default: '', nullable: false, required: true })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public fullName = '';
 
 	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: '', nullable: false, required: true })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public email = 'null';
 
 	@ApiProperty({ type: String, example: 'pass123', default: '', nullable: false, required: true })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public password = 'null';
 
 	@ApiProperty({ type: String, example: '+0000000000000', default: undefined, nullable: true, required: false })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public phone: string | undefined = undefined;
 
 	@ApiProperty({ type: String, example: 'INVALID', default: undefined, nullable: true, required: false })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public docType: string | undefined = undefined;
 
 	@ApiProperty({ type: String, example: '00000000000', default: undefined, nullable: true, required: false })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public document: string | undefined = undefined;
 
 	@ApiProperty({ type: String, example: 'UF', default: undefined, nullable: true, required: false })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public fu: string | undefined = undefined;
 
 	@ApiProperty({ type: String, example: './image.png', default: undefined, nullable: true, required: false })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public imagePath: string | undefined = undefined;
 
 	@ApiProperty({ type: String, example: ThemesEnum.DEFAULT, default: undefined, nullable: true, required: false })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public defaultTheme: string | undefined = undefined;
 }
 
 export abstract class UpdateUserPipeModel implements UpdateUserSchemaInterface {
 	@ApiProperty({ type: String, example: 'User Default', default: undefined, nullable: true, required: false })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public fullName: string | undefined = undefined;
 
 	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: undefined, nullable: true, required: false })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public email: string | undefined = undefined;
 
 	@ApiProperty({ type: String, example: 'pass123', default: undefined, nullable: true, required: false })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public password: string | undefined = undefined;
 
 	@ApiProperty({ type: String, example: '+0000000000000', default: undefined, nullable: true, required: false })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public phone: string | undefined = undefined;
 
 	@ApiProperty({ type: String, example: 'INVALID', default: undefined, nullable: true, required: false })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public docType: string | undefined = undefined;
 
 	@ApiProperty({ type: String, example: '00000000000', default: undefined, nullable: true, required: false })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public document: string | undefined = undefined;
 
 	@ApiProperty({ type: String, example: 'UF', default: undefined, nullable: true, required: false })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public fu: string | undefined = undefined;
 
 	@ApiProperty({ type: String, example: './image.png', default: undefined, nullable: true, required: false })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public imagePath: string | undefined = undefined;
 
 	@ApiProperty({ type: String, example: ThemesEnum.DEFAULT, default: undefined, nullable: true, required: false })
+	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public defaultTheme: string | undefined = undefined;
 }

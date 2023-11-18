@@ -1,8 +1,9 @@
 import dotenv from 'dotenv';
 // import path from 'path';
+
+
 // dotenv.config({ path: __dirname + "/../.env.development.local" });
 dotenv.config();
-
 
 export interface ConfigsInterface {
 	// ! Application Service

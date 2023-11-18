@@ -2,9 +2,9 @@ import dotenv from 'dotenv';
 import { v4 as uuidV4 } from 'uuid';
 import SqsClient from './SqsClient';
 import eventPayload from 'src/dev/templates/payloads/EventPayload.json';
+
+
 dotenv.config();
-
-
 export default ({ logger, configs }: any): void => {
 	// eslint-disable-next-line @typescript-eslint/ban-ts-comment
 	// @ts-ignore

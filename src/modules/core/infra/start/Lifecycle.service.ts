@@ -89,6 +89,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 
 	public onApplicationShutdown(): void {
 		this.logger.warn('Exiting Application');
-		process.exit(ProcessExitStatusEnum.SUCCESS);
+		if (this.appConfigs.environment !== 'hml')
+			process.exit(ProcessExitStatusEnum.SUCCESS);
 	}
 }

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import crypto from 'crypto';
-import bcrypt from 'bcrypt';
-import jwt from 'jsonwebtoken';
+import { genSaltSync } from 'bcrypt';
+import { sign, decode, JwtPayload } from 'jsonwebtoken';
 import { Logger } from 'winston';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 
@@ -23,7 +23,7 @@ export default class CryptographyService {
 	}
 
 	public encodeJwt(payload: any, inputEncoding: BufferEncoding, expiration = '30d'): string {
-		return jwt.sign(payload,
+		return sign(payload,
 			null,
 			{
 				algorithm: 'none',
@@ -33,13 +33,13 @@ export default class CryptographyService {
 		);
 	}
 
-	public decodeJwt(token: string): jwt.JwtPayload | string | null {
-		return jwt.decode(token);
+	public decodeJwt(token: string): JwtPayload | string | null {
+		return decode(token);
 	}
 
 	public generateSalt(rounds = 10, minor: 'a' | 'b' = 'b'): string | null {
 		try {
-			return bcrypt.genSaltSync(rounds, minor);
+			return genSaltSync(rounds, minor);
 		} catch (error) {
 			this.logger.error('Error to generate salt', error);
 			return null;

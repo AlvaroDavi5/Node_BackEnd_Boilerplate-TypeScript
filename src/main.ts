@@ -1,8 +1,9 @@
 import { NestFactory } from '@nestjs/core';
-import { ConfigService } from '@nestjs/config';
 import { ValidationPipe } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import compression from 'compression';
 import CoreModule from './modules/core/core.module';
 import { ProcessEventsEnum, ProcessSignalsEnum } from '@core/infra/start/processEvents.enum';
 import { ExceptionsEnum } from '@core/infra/errors/exceptions.enum';
@@ -11,7 +12,10 @@ import { ErrorInterface } from 'src/types/_errorInterface';
 
 
 async function startNestApplication() {
-	const nestApp = await NestFactory.create(CoreModule);
+	const nestApp = await NestFactory.create(CoreModule, {
+		preview: false,
+		snapshot: false,
+	});
 	nestApp.setGlobalPrefix('api');
 	nestApp.useGlobalPipes(
 		new ValidationPipe({
@@ -20,6 +24,13 @@ async function startNestApplication() {
 			transform: true,
 		}),
 	);
+
+	nestApp.use(compression());
+	nestApp.enableCors({
+		origin: '*',
+		allowedHeaders: '*',
+		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+	});
 
 	const config = new DocumentBuilder()
 		.setTitle('Node Back-End Boilerplate')

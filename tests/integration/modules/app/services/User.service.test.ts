@@ -30,10 +30,10 @@ describe('Modules :: App :: Services :: UserService', () => {
 	beforeAll(async () => {
 		nestTestingModule = await Test.createTestingModule({
 			providers: [
-				UserService,
-				{ provide: UserRepository, useValue: userRepositoryMock },
-				Exceptions,
 				{ provide: ConfigService, useValue: configServiceMock },
+				Exceptions,
+				{ provide: UserRepository, useValue: userRepositoryMock },
+				UserService,
 			]
 		}).compile();
 

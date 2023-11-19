@@ -1,10 +1,8 @@
 import dotenv from 'dotenv';
 import ioredisMock from 'ioredis-mock';
 import mongoMock from 'mongo-mock';
-import { Socket as ServerSocket } from 'socket.io';
-import { Socket as ClientSocket } from 'socket.io-client';
-import { Server } from './mocks/webSocket/socket.io';
-import { getClientInstance } from './mocks/webSocket/socket.io-client';
+import { Server, ServerSocket } from './mocks/webSocket/socket.io';
+import { ClientSocket } from './mocks/webSocket/socket.io-client';
 
 
 dotenv.config({ path: '.env.test' });
@@ -49,7 +47,7 @@ jest.mock('socket.io-client', () => {
 	return {
 		__esModule: true,
 		Socket: ClientSocket,
-		io: getClientInstance,
+		io: (uri: string, opts?: any) => (new ClientSocket()),
 	};
 });
 

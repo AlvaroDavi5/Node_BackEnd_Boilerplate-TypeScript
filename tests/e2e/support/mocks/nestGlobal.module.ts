@@ -1,3 +1,4 @@
+import dotenv from 'dotenv';
 import {
 	INestApplication, Module, NestModule,
 	MiddlewareConsumer, ValidationPipe
@@ -143,6 +144,8 @@ export class NestGlobalModule implements NestModule {
 }
 
 export async function startNestApplication(nestApp: INestApplication<any>) {
+	dotenv.config({ path: '.env.test' });
+
 	nestApp.setGlobalPrefix('api');
 	nestApp.useGlobalPipes(
 		new ValidationPipe({

@@ -1,7 +1,7 @@
 import { CacheEnum } from '../../../../../../src/modules/app/domain/enums/cache.enum';
 import { EventsEnum } from '../../../../../../src/modules/app/domain/enums/events.enum';
 import { ThemesEnum } from '../../../../../../src/modules/app/domain/enums/themes.enum';
-import { WebSocketEventsEnum } from '../../../../../../src/modules/app/domain/enums/webSocketEvents.enum';
+import { WebSocketEventsEnum, WebSocketRoomsEnum } from '../../../../../../src/modules/app/domain/enums/webSocketEvents.enum';
 
 
 describe('Modules :: App :: Domain :: Enums', () => {
@@ -22,15 +22,16 @@ describe('Modules :: App :: Domain :: Enums', () => {
 
 	describe('# EventsEnum', () => {
 		test('Should return keys', () => {
-			expect(Object.keys(EventsEnum)).toEqual(['CREATE']);
+			expect(Object.keys(EventsEnum)).toEqual(['INVALID', 'NEW_CONNECTION']);
 		});
 
 		test('Should return values', () => {
-			expect(Object.values(EventsEnum)).toEqual(['CREATE']);
+			expect(Object.values(EventsEnum)).toEqual(['INVALID', 'NEW_CONNECTION']);
 		});
 
 		test('Should return value', () => {
-			expect(EventsEnum.CREATE).toBe('CREATE');
+			expect(EventsEnum.INVALID).toBe('INVALID');
+			expect(EventsEnum.NEW_CONNECTION).toBe('NEW_CONNECTION');
 		});
 	});
 
@@ -50,7 +51,7 @@ describe('Modules :: App :: Domain :: Enums', () => {
 		});
 	});
 
-	describe('# WebSocketEventsEnum', () => {
+	describe('# WebSocketEventsEnum and WebSocketRoomsEnum', () => {
 		test('Should return keys', () => {
 			expect(Object.keys(WebSocketEventsEnum)).toEqual([
 				'CONNECT',
@@ -60,6 +61,8 @@ describe('Modules :: App :: Domain :: Enums', () => {
 				'EMIT_PRIVATE',
 				'BROADCAST',
 			]);
+
+			expect(Object.keys(WebSocketRoomsEnum)).toEqual(['NEW_CONNECTIONS']);
 		});
 
 		test('Should return values', () => {
@@ -68,9 +71,11 @@ describe('Modules :: App :: Domain :: Enums', () => {
 				'disconnect',
 				'reconnect',
 				'emit',
-				'emit-private',
+				'emit_private',
 				'broadcast',
 			]);
+
+			expect(Object.values(WebSocketRoomsEnum)).toEqual(['new_connections']);
 		});
 
 		test('Should return value', () => {
@@ -78,8 +83,10 @@ describe('Modules :: App :: Domain :: Enums', () => {
 			expect(WebSocketEventsEnum.DISCONNECT).toBe('disconnect');
 			expect(WebSocketEventsEnum.RECONNECT).toBe('reconnect');
 			expect(WebSocketEventsEnum.EMIT).toBe('emit');
-			expect(WebSocketEventsEnum.EMIT_PRIVATE).toBe('emit-private');
+			expect(WebSocketEventsEnum.EMIT_PRIVATE).toBe('emit_private');
 			expect(WebSocketEventsEnum.BROADCAST).toBe('broadcast');
+
+			expect(WebSocketRoomsEnum.NEW_CONNECTIONS).toBe('new_connections');
 		});
 	});
 });

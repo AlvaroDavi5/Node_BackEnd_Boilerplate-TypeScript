@@ -1,46 +1,30 @@
-import { Injectable } from '@nestjs/common';
 
+export class ClientSocket {
+	public connected: boolean;
 
-@Injectable()
-export class Client {
-	httpServer: any;
-	options!: any;
-
-	constructor(httpServer?: any, options?: any) {
-		this.httpServer = httpServer || null;
-		this.options = options || {};
+	constructor() {
+		this.connected = true;
 	}
 
-	public on(event: string, callback: any) {
-		console.log('New event:', event);
+	public on(ev: string, listener?: ((...args: any[]) => void)): this {
+		return this;
 	}
 
-	public off(event: string, callback: any) {
-		console.log('New event:', event);
+	public off(ev?: string, listener?: ((...args: any[]) => void)): this {
+		return this;
 	}
 
-	public emit(event: string, msg: string) {
-		console.log('New event:', event);
+	public emit(ev: string, ...args: any[]): this {
+		return this;
 	}
 
-	public connected() {
-		return true;
+	public connect(): this {
+		this.connected = true;
+		return this;
 	}
 
-	public connect(event: string, msg: string) {
-		console.log('New event:', event);
+	public disconnect(): this {
+		this.connected = false;
+		return this;
 	}
-
-	public disconnect(event: string, msg: string) {
-		console.log('New event:', event);
-	}
-}
-
-let client: Client;
-
-export function getClientInstance() {
-	if (!client) {
-		client = new Client();
-	}
-	return client;
 }

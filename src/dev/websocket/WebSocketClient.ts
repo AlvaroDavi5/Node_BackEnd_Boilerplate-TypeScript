@@ -1,13 +1,11 @@
-import { Injectable } from '@nestjs/common';
 import { io, Socket } from 'socket.io-client';
 import { Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/configs.config';
 
 
-@Injectable()
 export default class WebSocketClient {
-	private clientSocket!: Socket;
-	private logger: Logger;
+	private readonly clientSocket!: Socket;
+	private readonly logger: Logger;
 
 	constructor({
 		configs,
@@ -29,8 +27,8 @@ export default class WebSocketClient {
 		}
 	}
 
-	private formatMessageBeforeSend(data: any = {}): string {
-		let result = null;
+	private formatMessageBeforeSend(data: unknown): string {
+		let result = '';
 
 		switch (typeof data) {
 		case 'bigint':
@@ -46,61 +44,53 @@ export default class WebSocketClient {
 			result = data;
 			break;
 		case 'object':
-			try {
-				result = JSON.stringify(data);
-			} catch (error) {
-				result = '';
-				this.logger.warn('Object:String parse error');
-			}
+			result = JSON.stringify(data) || data?.toString() || '';
 			break;
 		case 'symbol':
 			result = data.toString();
 			break;
 		default:
-			result = '';
+			result = '{}';
 			break;
 		}
 
 		return result;
 	}
 
-	// send message to server
-	send(event: string, msg: any) {
-
-		this.clientSocket?.emit(
+	public send(event: string, msg: unknown): void {
+		this.clientSocket.emit(
 			String(event),
 			this.formatMessageBeforeSend(msg),
 		);
 	}
 
-	// listen/ignore event messages from the server
-	listen(event: string, callback: any) {
+	public listen(event: string, callback: (...args: unknown[]) => void): void {
 		this.logger.info(`Listenned event '${event}' from the WebSocket server`);
 
-		this.clientSocket?.on(
+		this.clientSocket.on(
 			String(event),
 			callback,
 		);
 	}
 
-	ignore(event: string, callback: any) {
+	public ignore(event: string, callback: (...args: unknown[]) => void): void {
 		this.logger.info(`Ignored event '${event}' from the WebSocket server`);
 
-		this.clientSocket?.off(
+		this.clientSocket.off(
 			String(event),
 			callback,
 		);
 	}
 
-	isConnected() {
+	public isConnected(): boolean {
 		return this.clientSocket.connected;
 	}
 
-	connect() {
+	public connect(): void {
 		this.clientSocket.connect();
 	}
 
-	disconnect() {
+	public disconnect(): void {
 		this.clientSocket.disconnect();
 	}
 }

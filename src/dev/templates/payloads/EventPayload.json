@@ -1,5 +1,5 @@
 {
-	"event": "CREATE",
+	"event": "INVALID",
 	"originEvent": "unknow",
 	"test": {}
 }

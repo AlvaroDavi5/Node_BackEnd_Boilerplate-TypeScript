@@ -16,8 +16,11 @@ export default ({ logger, configs }: any): void => {
 
 	const message = {
 		id: uuidV4(),
-		timestamp: new Date().toString(),
+		schema: 'INVALID',
+		schemaVersion: 1,
 		payload: eventPayload,
+		source: 'TEST',
+		timestamp: new Date(),
 	};
 
 	sqsClient.sendMessage(

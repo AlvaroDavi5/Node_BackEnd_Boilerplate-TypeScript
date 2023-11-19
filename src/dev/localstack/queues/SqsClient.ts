@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Logger } from 'winston';
 import { v4 as uuidV4 } from 'uuid';
-import { AWSError } from 'aws-sdk';
 import {
 	SQSClient, SQSClientConfig, Message,
 	ListQueuesCommand, CreateQueueCommand, DeleteQueueCommand,
@@ -17,6 +16,7 @@ export default class SqsClient {
 	private readonly messageGroupId: string;
 	private readonly sqs: SQSClient;
 	private readonly logger: Logger;
+
 
 	constructor({
 		configs,
@@ -48,7 +48,7 @@ export default class SqsClient {
 
 
 	private formatMessageBeforeSend(data: any = {}): string {
-		let result = null;
+		let result = '';
 
 		switch (typeof data) {
 		case 'bigint':
@@ -67,7 +67,7 @@ export default class SqsClient {
 			try {
 				result = JSON.stringify(data);
 			} catch (error) {
-				result = '';
+				result = '{}';
 				this.logger.warn('Object:String parse error');
 			}
 			break;
@@ -216,21 +216,7 @@ export default class SqsClient {
 			if (result?.Messages) {
 				for (const message of result?.Messages) {
 					messages.push(message);
-
-					const deleteParams: DeleteMessageCommandInput = {
-						QueueUrl: queueUrl,
-						ReceiptHandle: `${message?.ReceiptHandle}`,
-					};
-					this.sqs.send(new DeleteMessageCommand(
-						deleteParams
-					), (err: AWSError, data) => {
-						if (err) {
-							this.logger.error('Error to Delete Message:', err);
-						}
-						else {
-							this.logger.info('Message Deleted:', { queueUrl, requestId: data?.$metadata?.requestId });
-						}
-					});
+					this.deleteMessage(queueUrl, message);
 				}
 			}
 		} catch (error) {
@@ -238,5 +224,22 @@ export default class SqsClient {
 		}
 
 		return messages;
+	}
+
+	public async deleteMessage(queueUrl: string, message: Message): Promise<boolean> {
+		let isDeleted = false;
+
+		try {
+			const result = await this.sqs.send(new DeleteMessageCommand({
+				QueueUrl: queueUrl,
+				ReceiptHandle: `${message?.ReceiptHandle}`,
+			}));
+			if (result.$metadata?.httpStatusCode && String(result.$metadata?.httpStatusCode)[2] === '2')
+				isDeleted = true;
+		} catch (error) {
+			this.logger.error('Error to Delete Message:', error);
+		}
+
+		return isDeleted;
 	}
 }

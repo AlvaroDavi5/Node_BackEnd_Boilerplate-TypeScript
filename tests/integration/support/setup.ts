@@ -16,6 +16,7 @@ jest.mock('src/modules/core/infra/integration/rest/RestMockedService.client.ts',
 	jest.requireActual('./mocks/rest/RestMockedService.client')
 );
 
+/*
 jest.mock('src/modules/core/infra/database/connection', () => {
 	let isConnected = true;
 
@@ -34,6 +35,7 @@ jest.mock('src/modules/core/infra/database/connection', () => {
 		testConnection: async (connection: any, logger?: any) => (isConnected),
 	};
 });
+*/
 
 jest.mock('socket.io', () => {
 	return {

@@ -9,6 +9,10 @@ export enum WebSocketEventsEnum {
 	EMIT = 'emit',
 
 	// ! Internal Events
-	EMIT_PRIVATE = 'emit-private',
+	EMIT_PRIVATE = 'emit_private',
 	BROADCAST = 'broadcast',
+}
+
+export enum WebSocketRoomsEnum {
+	NEW_CONNECTIONS = 'new_connections',
 }

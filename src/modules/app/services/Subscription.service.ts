@@ -90,12 +90,15 @@ export default class SubscriptionService {
 		return deletedSubscription;
 	}
 
-	public emit(msg: any): void {
+	public emit(msg: unknown, socketIdsOrRooms: string | string[]): void {
 		this.logger.info('Emiting event');
-		this.webSocketClient.send(WebSocketEventsEnum.EMIT_PRIVATE, msg);
+		this.webSocketClient.send(WebSocketEventsEnum.EMIT_PRIVATE, {
+			...msg as any,
+			socketIdsOrRooms,
+		});
 	}
 
-	public broadcast(msg: any): void {
+	public broadcast(msg: unknown): void {
 		this.logger.info('Broadcasting event');
 		this.webSocketClient.send(WebSocketEventsEnum.BROADCAST, msg);
 	}

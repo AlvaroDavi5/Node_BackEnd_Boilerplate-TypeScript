@@ -9,8 +9,8 @@ import { ConfigsInterface } from '@core/configs/configs.config';
 
 @Injectable()
 export default class WebSocketClient {
-	private clientSocket!: Socket;
-	private logger: Logger;
+	private readonly clientSocket!: Socket;
+	private readonly logger: Logger;
 
 	constructor(
 		private readonly configService: ConfigService,
@@ -38,43 +38,42 @@ export default class WebSocketClient {
 	}
 
 	// send message to server
-	public send(event: string, msg: unknown) {
-
-		this.clientSocket?.emit(
+	public send(event: string, msg: unknown): void {
+		this.clientSocket.emit(
 			String(event),
 			this.formatMessageBeforeSend(msg),
 		);
 	}
 
 	// listen event messages from the server
-	public listen(event: string, callback: (...args: unknown[]) => void) {
+	public listen(event: string, callback: (...args: unknown[]) => void): void {
 		this.logger.info(`Listenned event '${event}' from the WebSocket server`);
 
-		this.clientSocket?.on(
+		this.clientSocket.on(
 			String(event),
 			callback,
 		);
 	}
 
 	// ignore listenned event messages from the server
-	public ignore(event: string, callback: (...args: unknown[]) => void) {
+	public ignore(event: string, callback: (...args: unknown[]) => void): void {
 		this.logger.info(`Ignored event '${event}' from the WebSocket server`);
 
-		this.clientSocket?.off(
+		this.clientSocket.off(
 			String(event),
 			callback,
 		);
 	}
 
-	public isConnected() {
+	public isConnected(): boolean {
 		return this.clientSocket.connected;
 	}
 
-	public connect() {
+	public connect(): void {
 		this.clientSocket.connect();
 	}
 
-	public disconnect() {
+	public disconnect(): void {
 		this.clientSocket.disconnect();
 	}
 }

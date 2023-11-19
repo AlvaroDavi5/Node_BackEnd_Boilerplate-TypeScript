@@ -8,6 +8,8 @@ import SchemaValidator from '@common/utils/validators/SchemaValidator.validator'
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import eventSchema, { EventSchemaInterface } from './schemas/event.schema';
+import { EventsEnum } from '@app/domain/enums/events.enum';
+import { WebSocketRoomsEnum } from '@app/domain/enums/webSocketEvents.enum';
 
 
 @Injectable()
@@ -32,7 +34,10 @@ export default class EventsQueueHandler {
 				const data = this.dataParserHelper.toObject(message.Body);
 				const value = this.schemaValidator.validate(data, eventSchema);
 
-				this.subscriptionService.broadcast(value);
+				if (value.payload.event === EventsEnum.NEW_CONNECTION)
+					this.subscriptionService.emit(value, WebSocketRoomsEnum.NEW_CONNECTIONS);
+				else
+					this.subscriptionService.broadcast(value);
 
 				return true;
 			}

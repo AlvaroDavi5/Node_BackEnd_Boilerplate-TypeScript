@@ -5,7 +5,8 @@ import {
 } from '@nestjs/websockets';
 import { Server as SocketIoServer, Socket } from 'socket.io';
 import { Logger } from 'winston';
-import { WebSocketEventsEnum } from '@app/domain/enums/webSocketEvents.enum';
+import { EventsEnum } from '@app/domain/enums/events.enum';
+import { WebSocketEventsEnum, WebSocketRoomsEnum } from '@app/domain/enums/webSocketEvents.enum';
 import SubscriptionService from '@app/services/Subscription.service';
 import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
 import EventsQueueProducerAdapter from '@common/adapters/EventsQueueProducer.adapter';
@@ -46,10 +47,10 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 	}
 
 	public afterInit(server: SocketIoServer): void {
-		server.setMaxListeners(5);
+		server.setMaxListeners(10);
 		if (!this.server)
 			this.server = server;
-		this.server.setMaxListeners(5);
+		this.server.setMaxListeners(10);
 		this.logger.debug('Started Websocket Server');
 	}
 
@@ -64,6 +65,7 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 			author: 'Websocket Server',
 			payload: {
 				subscriptionId: socket.id,
+				event: EventsEnum.NEW_CONNECTION,
 			},
 			schema: WebSocketEventsEnum.CONNECT,
 		});
@@ -72,7 +74,12 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 	// listen 'disconnect' event from client
 	public async handleDisconnect(socket: Socket): Promise<void> {
 		this.logger.info(`Client disconnected: ${socket.id}`);
+		await socket.leave(WebSocketRoomsEnum.NEW_CONNECTIONS);
 		await this.subscriptionService.delete(socket.id);
+	}
+
+	public disconnect(): void {
+		this.server?.close();
 	}
 
 	public async getSocketsIds(): Promise<string[]> {
@@ -92,11 +99,16 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 		this.logger.info(`Client reconnected: ${socket.id}`);
 
 		const message = this.formatMessageAfterReceiveHelper(msg);
-		if (message && typeof message === 'object')
+		if (message && typeof message === 'object') {
 			await this.subscriptionService.save(socket.id, {
 				...message,
 				subscriptionId: socket.id,
 			});
+
+			const { listen } = message as any;
+			if (listen?.newConnections === true)
+				await socket.join(WebSocketRoomsEnum.NEW_CONNECTIONS);
+		}
 	}
 
 	@SubscribeMessage(WebSocketEventsEnum.BROADCAST)
@@ -112,14 +124,19 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 	public emitPrivate(
 		@ConnectedSocket() socket: Socket,
 		@MessageBody() msg: string,
-	): void { // listen 'emit-private' order event from client
-		const message: any = this.formatMessageAfterReceiveHelper(msg);
-		const payload = this.formatMessageBeforeSendHelper(message?.payload);
+	): void { // listen 'emit_private' order event from client
+		const { socketIdsOrRooms, ...message }: { [key: string]: any, socketIdsOrRooms?: string | string[] } = this.formatMessageAfterReceiveHelper(msg) as any;
+		const msgContent = this.formatMessageBeforeSendHelper(message);
 
-		this.logger.info(`Emiting message to: ${message?.targetSocketId}`);
-		this.server?.to(message?.targetSocketId).emit(
+		if (!socketIdsOrRooms) {
+			this.logger.warn('Invalid socketIds or Rooms to emit');
+			return;
+		}
+
+		this.logger.info(`Emiting message to: ${socketIdsOrRooms}`);
+		this.server?.to(socketIdsOrRooms).emit(
 			String(WebSocketEventsEnum.EMIT),
-			String(payload),
-		); // emit to single client
+			String(msgContent),
+		); // emit to specific clients or rooms
 	}
 }

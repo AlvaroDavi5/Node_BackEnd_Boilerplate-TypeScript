@@ -12,7 +12,7 @@ import CognitoClient from '@core/infra/integration/aws/Cognito.client';
 import SnsClient from '@core/infra/integration/aws/Sns.client';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import S3Client from '@core/infra/integration/aws/S3.client';
-import connection from '@core/infra/database/connection';
+import { connection } from '@core/infra/database/connection';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import { ProcessExitStatusEnum } from './processEvents.enum';
 
@@ -54,6 +54,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 		try {
 			this.httpAdapterHost.httpAdapter.close();
 			this.webSocketServer.disconnectAllSockets();
+			this.webSocketServer.disconnect();
 			this.syncCronJob.stopCron();
 			this.cognitoClient.destroy();
 			this.snsClient.destroy();
@@ -89,7 +90,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 
 	public onApplicationShutdown(): void {
 		this.logger.warn('Exiting Application');
-		if (this.appConfigs.environment !== 'hml')
+		if (this.appConfigs.environment !== 'test')
 			process.exit(ProcessExitStatusEnum.SUCCESS);
 	}
 }

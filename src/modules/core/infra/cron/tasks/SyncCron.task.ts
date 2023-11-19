@@ -6,7 +6,7 @@ import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import WebSocketServerAdapter from '@common/adapters/WebSocketServer.adapter';
 import WebSocketClient from '@events/websocket/client/WebSocket.client';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
-import connection, { testConnection, syncConnection } from '@core/infra/database/connection';
+import { connection, testConnection, syncConnection } from '@core/infra/database/connection';
 
 
 @Injectable()

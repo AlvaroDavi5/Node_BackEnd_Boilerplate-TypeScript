@@ -105,7 +105,8 @@ yarn run send-message # send event message to queue
 - [localhost:3000](`http://localhost:3000/`) - Node Application  
   * `/` - WebSocket Root Endpoint
   * `/api` - API Root Endpoint
-  * `/api/docs` - Swagger API Documentation
+  	- `/api/docs` - Swagger API Documentation (Page)
+  	- `/api/docs-json` - Swagger API Documentation (JSON)
 - [localhost:8080](`http://localhost:8080/`) - Adminer Page  
 - [localhost:8081](`http://localhost:8081/`) - Mongo Express Page  
 - [localhost:8082](`http://localhost:8082/`) - Redis Commander Page  
@@ -116,21 +117,22 @@ ___
 ### TO DO
 
 - **Nest.js**
-	- [Async Providers](https://docs.nestjs.com/fundamentals/async-providers)
-	- [Dynamic Modules](https://docs.nestjs.com/fundamentals/dynamic-modules)
-	- [Injection Scopes](https://docs.nestjs.com/fundamentals/injection-scopes)
-	- [Circular Dependency](https://docs.nestjs.com/fundamentals/circular-dependency)
-	- [Module Ref](https://docs.nestjs.com/fundamentals/module-ref)
-	- [Lazy Loading Modules](https://docs.nestjs.com/fundamentals/lazy-loading-modules)
-	- [Platform Agnosticism](https://docs.nestjs.com/fundamentals/platform-agnosticism)
-	- [API Versioning](https://docs.nestjs.com/techniques/versioning)
-	- [Authorization](https://docs.nestjs.com/security/authorization)
-	- [File Upload](https://docs.nestjs.com/techniques/file-upload)
-	- [Streaming Files](https://docs.nestjs.com/techniques/streaming-files)
-	- [WebSockets Pipes](https://docs.nestjs.com/websockets/pipes)
-	- [GraphQL](https://docs.nestjs.com/graphql/quick-start)
-	- [kafka](https://docs.nestjs.com/microservices/kafka)
-	- [serverless](https://docs.nestjs.com/faq/serverless)
+	- Fundamentals
+		- [Async Providers](https://docs.nestjs.com/fundamentals/async-providers)
+		- [Dynamic Modules](https://docs.nestjs.com/fundamentals/dynamic-modules)
+		- [Injection Scopes](https://docs.nestjs.com/fundamentals/injection-scopes)
+		- [Lazy Loading Modules](https://docs.nestjs.com/fundamentals/lazy-loading-modules)
+		- [Platform Agnosticism](https://docs.nestjs.com/fundamentals/platform-agnosticism)
+	- Others
+		- [API Versioning](https://docs.nestjs.com/techniques/versioning)
+		- [File Upload](https://docs.nestjs.com/techniques/file-upload)
+		- [Authorization](https://docs.nestjs.com/security/authorization)
+		- [WebSockets Pipes](https://docs.nestjs.com/websockets/pipes)
+		- [GraphQL](https://docs.nestjs.com/graphql/quick-start)
+		- [kafka](https://docs.nestjs.com/microservices/kafka)
+		- [Serverless](https://docs.nestjs.com/faq/serverless)
+		- [OpenAPI](https://docs.nestjs.com/openapi/introduction)
+		- [DevTools](https://docs.nestjs.com/devtools/overview)
 - **Jest and Sonarqube**
 	- [ ] Unify Coverage
 		- [Reference](https://stackoverflow.com/questions/52419132/is-it-possible-to-merge-test-coverage-on-sonarqube-level)

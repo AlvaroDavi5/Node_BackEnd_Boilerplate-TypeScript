@@ -1,8 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-import { HttpAdapterHost } from '@nestjs/core';
+import { HttpAdapterHost, ModuleRef } from '@nestjs/core';
 import LifecycleService from '../../../../../../src/modules/core/infra/start/Lifecycle.service';
-import WebSocketServerAdapter from '../../../../../../src/modules/common/adapters/WebSocketServer.adapter';
 import SyncCronJob from '../../../../../../src/modules/core/infra/cron/jobs/SyncCron.job';
 import MongoClient from '../../../../../../src/modules/core/infra/data/Mongo.client';
 import RedisClient from '../../../../../../src/modules/core/infra/cache/Redis.client';
@@ -12,6 +11,7 @@ import SqsClient from '../../../../../../src/modules/core/infra/integration/aws/
 import S3Client from '../../../../../../src/modules/core/infra/integration/aws/S3.client';
 import LoggerGenerator from '../../../../../../src/modules/core/infra/logging/LoggerGenerator.logger';
 import configs from '../../../../../../src/modules/core/configs/configs.config';
+import WebSocketServer from '../../../../../../src/modules/events/websocket/server/WebSocket.server';
 import LoggerGeneratorMock from '../../../../support/mocks/logging/LoggerGenerator.logger';
 import { mockObservable } from '../../../../support/mocks/mockObservable';
 
@@ -35,6 +35,13 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 	const webSocketServerMock = {
 		disconnect: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
 		disconnectAllSockets: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
+	};
+	const moduleRefMock: any = {
+		get: (typeOrToken: any, options?: any): any => {
+			if (typeOrToken === WebSocketServer)
+				return webSocketServerMock;
+			return undefined;
+		},
 	};
 	const syncCronJobMock = {
 		stopCron: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
@@ -63,7 +70,7 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 			providers: [
 				{ provide: ConfigService, useValue: configServiceMock },
 				{ provide: HttpAdapterHost, useValue: httpAdapterHostMock },
-				{ provide: WebSocketServerAdapter, useValue: { getProvider: () => (webSocketServerMock), } },
+				{ provide: ModuleRef, useValue: moduleRefMock },
 				{ provide: SyncCronJob, useValue: syncCronJobMock },
 				{ provide: MongoClient, useValue: mongoClientMock },
 				{ provide: RedisClient, useValue: redisClientMock },

@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import compression from 'compression';
-import CoreModule from './modules/core/core.module';
+import CoreModule from '@core/core.module';
 import { ProcessEventsEnum, ProcessSignalsEnum } from '@core/infra/start/processEvents.enum';
 import { ExceptionsEnum } from '@core/infra/errors/exceptions.enum';
 import { ConfigsInterface } from '@core/configs/configs.config';

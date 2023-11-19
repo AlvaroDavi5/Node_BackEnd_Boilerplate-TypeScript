@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import path from 'path';
-import fs from 'fs';
+import { basename } from 'path';
+import { createReadStream, writeFile } from 'fs';
 import uuid from 'uuid';
 import { Logger } from 'winston';
 import {
@@ -60,8 +60,8 @@ export default class S3Client {
 		};
 
 		try {
-			const fileBaseName = path.basename(filePath);
-			const fileStream = fs.createReadStream(filePath);
+			const fileBaseName = basename(filePath);
+			const fileStream = createReadStream(filePath);
 
 			params.Key = fileBaseName;
 			params.Body = fileStream;
@@ -178,7 +178,7 @@ export default class S3Client {
 		try {
 			const result = await this.s3Client.send(new GetObjectCommand(this.getObjectParams(bucketName, objectKey)));
 			if (result?.Body) {
-				fs.writeFile(`./${objectKey}`, `${result?.Body}`, err => {
+				writeFile(`./${objectKey}`, `${result?.Body}`, err => {
 					if (err) {
 						this.logger.error('Save Error:', err);
 					}

@@ -1,12 +1,12 @@
 
 module.exports = {
-	database: process.env.DB_NAME,
-	username: process.env.DB_USERNAME,
-	password: process.env.DB_PASSWORD,
-	host: process.env.DB_HOST,
+	database: process.env.DB_NAME || 'db_postgres',
+	username: process.env.DB_USERNAME || 'postgres',
+	password: process.env.DB_PASSWORD || 'pass',
+	host: process.env.DB_HOST || 'localhost',
 	charset: 'utf8',
-	dialect: process.env.DB_DBMS_NAME,
-	port: process.env.DB_PORT,
+	dialect: process.env.DB_DBMS_NAME || 'postgres',
+	port: parseInt(process.env.DB_PORT || '5432'),
 	define: {
 		underscored: false,
 		timestamps: true,
@@ -19,4 +19,5 @@ module.exports = {
 		acquire: 20000,
 		idle: 20000,
 	},
+	logging: process.env.SHOW_LOGS === 'true' ? console.log : false,
 };

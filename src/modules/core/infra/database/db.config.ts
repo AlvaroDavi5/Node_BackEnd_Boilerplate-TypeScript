@@ -46,7 +46,7 @@ export interface DatabaseConfigInterface {
 	buildOptions?: BuildOptions | undefined,
 }
 
-const config: DatabaseConfigInterface = {
+export const config: DatabaseConfigInterface = {
 	database: process.env.DB_NAME || 'db_postgres',
 	username: process.env.DB_USERNAME || 'postgres',
 	password: process.env.DB_PASSWORD || 'pass',
@@ -68,5 +68,3 @@ const config: DatabaseConfigInterface = {
 	},
 	logging: process.env.SHOW_LOGS === 'true' ? console.log : false,
 };
-
-export default config;

@@ -1,14 +1,13 @@
 import { Sequelize } from 'sequelize';
 import { Logger } from 'winston';
-import DBConfig from './db.config';
+import { config as DBConfig } from './db.config';
 
 
 /* connecting to a database */
 /* passing Parameters separately (other dialects) */
-const connection = new Sequelize(DBConfig);
+export const connection = new Sequelize(DBConfig);
 /* passing a connection URI - example for postgres */
 // const sequelize = new Sequelize('postgres://user:pass@example.com:5432/dbname')
-
 
 export async function testConnection(connection: Sequelize, logger?: Logger): Promise<boolean> {
 	try {
@@ -37,5 +36,3 @@ export async function syncConnection(connection: Sequelize, logger?: Logger) {
 	}
 	catch (error) { }
 }
-
-export default connection;

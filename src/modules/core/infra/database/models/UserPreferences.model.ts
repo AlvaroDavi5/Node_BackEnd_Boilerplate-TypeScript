@@ -1,6 +1,6 @@
 import { Model, DataTypes, Association, HasOneGetAssociationMixin, HasManyHasAssociationMixin } from 'sequelize';
 import UsersModel from './Users.model';
-import connection from '@core/infra/database/connection';
+import { connection } from '@core/infra/database/connection';
 
 
 class UserPreferencesModel extends Model {
@@ -45,7 +45,7 @@ export const userPreferenceAttributes = {
 export const userPreferenceOptions = {
 	modelName: 'UserPreferences',
 	tableName: 'UserPreferences',
-	sequelize: connection
+	sequelize: connection,
 };
 
 UserPreferencesModel.init(userPreferenceAttributes, userPreferenceOptions);

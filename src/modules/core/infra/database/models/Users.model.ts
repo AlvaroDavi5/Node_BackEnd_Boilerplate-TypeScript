@@ -1,6 +1,6 @@
 import { Model, DataTypes, Association, HasOneGetAssociationMixin, HasManyHasAssociationMixin } from 'sequelize';
 import UserPreferencesModel from './UserPreferences.model';
-import connection from '@core/infra/database/connection';
+import { connection } from '@core/infra/database/connection';
 
 
 class UsersModel extends Model {
@@ -51,6 +51,7 @@ export const userAttributes = {
 	deletedAt: DataTypes.DATE,
 	deletedBy: DataTypes.STRING(256),
 };
+
 export const userOptions = {
 	modelName: 'Users',
 	tableName: 'Users',

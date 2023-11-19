@@ -1,8 +1,8 @@
 import { Injectable } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import { Message } from '@aws-sdk/client-sqs';
 import { Logger } from 'winston';
 import SubscriptionService from '@app/services/Subscription.service';
-import SubscriptionServiceAdapter from '@common/adapters/SubscriptionService.adapter';
 import MongoClient from '@core/infra/data/Mongo.client';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
@@ -18,13 +18,13 @@ export default class EventsQueueHandler {
 	private readonly logger: Logger;
 
 	constructor(
-		private readonly subscriptionServiceAdapter: SubscriptionServiceAdapter,
+		private readonly moduleRef: ModuleRef,
 		private readonly mongoClient: MongoClient,
 		private readonly schemaValidator: SchemaValidator<EventSchemaInterface>,
 		private readonly dataParserHelper: DataParserHelper,
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
-		this.subscriptionService = this.subscriptionServiceAdapter.getProvider();
+		this.subscriptionService = this.moduleRef.get(SubscriptionService, { strict: false });
 		this.logger = this.loggerGenerator.getLogger();
 	}
 

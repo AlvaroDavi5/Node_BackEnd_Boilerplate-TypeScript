@@ -4,11 +4,6 @@ import SchemaValidator from '@common/utils/validators/SchemaValidator.validator'
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
-import UserOperationAdapter from '@common/adapters/UserOperation.adapter';
-import SubscriptionServiceAdapter from '@common/adapters/SubscriptionService.adapter';
-import EventsQueueProducerAdapter from '@common/adapters/EventsQueueProducer.adapter';
-import WebSocketServerAdapter from '@common/adapters/WebSocketServer.adapter';
-import WebSocketClientAdapter from '@common/adapters/WebSocketClient.adapter';
 import AppModule from '@app/app.module';
 import EventsModule from '@events/events.module';
 
@@ -26,11 +21,6 @@ import EventsModule from '@events/events.module';
 		DataParserHelper,
 		CacheAccessHelper,
 		FileReaderHelper,
-		UserOperationAdapter,
-		SubscriptionServiceAdapter,
-		EventsQueueProducerAdapter,
-		WebSocketServerAdapter,
-		WebSocketClientAdapter,
 	],
 	exports: [
 		RegExConstants,
@@ -38,11 +28,6 @@ import EventsModule from '@events/events.module';
 		DataParserHelper,
 		CacheAccessHelper,
 		FileReaderHelper,
-		UserOperationAdapter,
-		SubscriptionServiceAdapter,
-		EventsQueueProducerAdapter,
-		WebSocketServerAdapter,
-		WebSocketClientAdapter,
 	],
 })
 export default class CommonModule { }

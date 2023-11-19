@@ -1,10 +1,9 @@
 import { Injectable, OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown } from '@nestjs/common';
+import { HttpAdapterHost, ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { HttpAdapterHost } from '@nestjs/core';
 import { Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
-import WebSocketServerAdapter from '@common/adapters/WebSocketServer.adapter';
 import SyncCronJob from '@core/infra/cron/jobs/SyncCron.job';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
@@ -24,9 +23,9 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 	private readonly appConfigs: ConfigsInterface['application'];
 
 	constructor(
-		private readonly configService: ConfigService,
 		private readonly httpAdapterHost: HttpAdapterHost,
-		private readonly webSocketServerAdapter: WebSocketServerAdapter,
+		private readonly moduleRef: ModuleRef,
+		private readonly configService: ConfigService,
 		private readonly syncCronJob: SyncCronJob,
 		private readonly mongoClient: MongoClient,
 		private readonly redisClient: RedisClient,
@@ -36,7 +35,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 		private readonly s3Client: S3Client,
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
-		this.webSocketServer = this.webSocketServerAdapter.getProvider();
+		this.webSocketServer = this.moduleRef.get(WebSocketServer, { strict: false });
 		this.logger = this.loggerGenerator.getLogger();
 		this.appConfigs = this.configService.get<any>('application');
 	}

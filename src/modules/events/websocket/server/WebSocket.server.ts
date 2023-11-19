@@ -1,3 +1,4 @@
+import { ModuleRef } from '@nestjs/core';
 import {
 	WebSocketGateway, SubscribeMessage, MessageBody,
 	WebSocketServer as Server, ConnectedSocket,
@@ -9,7 +10,6 @@ import { EventsEnum } from '@app/domain/enums/events.enum';
 import { WebSocketEventsEnum, WebSocketRoomsEnum } from '@app/domain/enums/webSocketEvents.enum';
 import SubscriptionService from '@app/services/Subscription.service';
 import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
-import EventsQueueProducerAdapter from '@common/adapters/EventsQueueProducer.adapter';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
@@ -29,12 +29,12 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 	private readonly logger: Logger;
 
 	constructor(
+		private readonly moduleRef: ModuleRef,
 		private readonly subscriptionService: SubscriptionService,
-		private readonly eventsQueueProducerAdapter: EventsQueueProducerAdapter,
 		private readonly loggerGenerator: LoggerGenerator,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
-		this.eventsQueueProducer = this.eventsQueueProducerAdapter.getProvider();
+		this.eventsQueueProducer = this.moduleRef.get(EventsQueueProducer, { strict: false });
 		this.logger = this.loggerGenerator.getLogger();
 	}
 

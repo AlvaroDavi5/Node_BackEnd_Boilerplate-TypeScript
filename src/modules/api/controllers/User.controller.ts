@@ -3,11 +3,11 @@ import {
 	Param, Query, Body,
 	Get, Post, Patch, Delete,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
+import { ModuleRef } from '@nestjs/core';
+import { ApiOperation, ApiTags, ApiProduces, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import UserEntity, { UserEntityList } from '@app/domain/entities/User.entity';
 import UserOperation from '@app/operations/User.operation';
-import UserOperationAdapter from '@common/adapters/UserOperation.adapter';
 import { ListQueryPipeModel, ListQueryPipeValidator } from '@api/pipes/QueryValidator.pipe';
 import { CreateUserPipeModel, CreateUserPipeValidator, UpdateUserPipeModel, UpdateUserPipeValidator } from '@api/pipes/UserValidator.pipe';
 import { PaginationInterface } from 'src/types/_listPaginationInterface';
@@ -21,9 +21,9 @@ export default class UserController {
 	private readonly userOperation: UserOperation;
 
 	constructor(
-		private readonly userOperationAdapter: UserOperationAdapter,
+		private readonly moduleRef: ModuleRef,
 	) {
-		this.userOperation = this.userOperationAdapter.getProvider();
+		this.userOperation = this.moduleRef.get(UserOperation, { strict: false });
 	}
 
 	@ApiOperation({ summary: 'List Users' })
@@ -33,6 +33,7 @@ export default class UserController {
 			example: (new UserEntityList()),
 		}
 	})
+	@ApiProduces('application/json')
 	public async listUsers(
 		@Query(ListQueryPipeValidator) query: ListQueryPipeModel,
 	): Promise<PaginationInterface<UserEntity> | unknown> {
@@ -47,6 +48,7 @@ export default class UserController {
 	@ApiOperation({ summary: 'Create User' })
 	@Post()
 	@ApiCreatedResponse({ type: UserEntity })
+	@ApiProduces('application/json')
 	public async createUser(
 		@Request() request: RequestInterface,
 		@Body(CreateUserPipeValidator) body: CreateUserPipeModel,
@@ -64,6 +66,7 @@ export default class UserController {
 	@ApiOperation({ summary: 'Get User' })
 	@Get('/:userId')
 	@ApiOkResponse({ type: UserEntity })
+	@ApiProduces('application/json')
 	public async getUser(
 		@Request() request: RequestInterface,
 		@Param('userId') userId: number,
@@ -81,6 +84,7 @@ export default class UserController {
 	@ApiOperation({ summary: 'Update User' })
 	@Patch('/:userId')
 	@ApiOkResponse({ type: UserEntity })
+	@ApiProduces('application/json')
 	public async updateUser(
 		@Request() request: RequestInterface,
 		@Param('userId', ParseIntPipe) userId: number,
@@ -98,7 +102,8 @@ export default class UserController {
 
 	@ApiOperation({ summary: 'Delete User' })
 	@Delete('/:userId')
-	@ApiOkResponse({ type: Boolean, schema: { example: true } })
+	@ApiOkResponse({ schema: { example: { result: true } } })
+	@ApiProduces('application/json')
 	public async deleteUser(
 		@Request() request: RequestInterface,
 		@Param('userId') userId: number,
@@ -107,7 +112,7 @@ export default class UserController {
 			const { user } = request;
 
 			const result = await this.userOperation.deleteUser(userId, user);
-			return result;
+			return { result };
 		} catch (error) {
 			return error;
 		}

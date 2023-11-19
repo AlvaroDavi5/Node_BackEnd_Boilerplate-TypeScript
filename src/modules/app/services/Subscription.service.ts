@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'mongodb';
 import { Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import WebSocketClient from '@events/websocket/client/WebSocket.client';
-import WebSocketClientAdapter from '@common/adapters/WebSocketClient.adapter';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
@@ -20,14 +20,14 @@ export default class SubscriptionService {
 	public readonly expirationTime: number;
 
 	constructor(
+		private readonly moduleRef: ModuleRef,
 		private readonly configService: ConfigService,
-		private readonly webSocketClientAdapter: WebSocketClientAdapter,
 		private readonly mongoClient: MongoClient,
 		private readonly redisClient: RedisClient,
 		private readonly loggerGenerator: LoggerGenerator,
 		private readonly cacheAccessHelper: CacheAccessHelper,
 	) {
-		this.webSocketClient = this.webSocketClientAdapter.getProvider();
+		this.webSocketClient = this.moduleRef.get(WebSocketClient, { strict: false });
 		this.logger = this.loggerGenerator.getLogger();
 		const subscriptionsExpirationTime: ConfigsInterface['cache']['expirationTime']['subscriptions'] = this.configService.get<any>('cache.expirationTime.subscriptions');
 		this.expirationTime = subscriptionsExpirationTime;

@@ -29,11 +29,6 @@ import SchemaValidator from '@common/utils/validators/SchemaValidator.validator'
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
-import UserOperationAdapter from '@common/adapters/UserOperation.adapter';
-import SubscriptionServiceAdapter from '@common/adapters/SubscriptionService.adapter';
-import EventsQueueProducerAdapter from '@common/adapters/EventsQueueProducer.adapter';
-import WebSocketServerAdapter from '@common/adapters/WebSocketServer.adapter';
-import WebSocketClientAdapter from '@common/adapters/WebSocketClient.adapter';
 import UserStrategy from '@app/strategies/User.strategy';
 import UserOperation from '@app/operations/User.operation';
 import UserService from '@app/services/User.service';
@@ -48,6 +43,7 @@ import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
 import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
 import MockedSqsClient from 'src/dev/localstack/queues/SqsClient';
 import HttpConstants from '@api/constants/Http.constants';
+import ContentTypeConstants from '@api/constants/ContentType.constants';
 import LoggerMiddleware from '@api/middlewares/Logger.middleware';
 import JwtDecodeMiddleware from '@api/middlewares/JwtDecode.middleware';
 import DefaultController from '@api/controllers/Default.controller';
@@ -109,11 +105,6 @@ import UserController from '@api/controllers/User.controller';
 		DataParserHelper,
 		CacheAccessHelper,
 		FileReaderHelper,
-		UserOperationAdapter,
-		SubscriptionServiceAdapter,
-		EventsQueueProducerAdapter,
-		WebSocketServerAdapter,
-		WebSocketClientAdapter,
 		// * app
 		UserStrategy,
 		UserOperation,
@@ -130,6 +121,7 @@ import UserController from '@api/controllers/User.controller';
 		WebSocketClient,
 		// * api
 		HttpConstants,
+		ContentTypeConstants,
 	],
 	exports: [],
 })

@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import { Logger } from 'winston';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
-import WebSocketServerAdapter from '@common/adapters/WebSocketServer.adapter';
 import WebSocketClient from '@events/websocket/client/WebSocket.client';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import { connection, testConnection, syncConnection } from '@core/infra/database/connection';
@@ -18,12 +18,12 @@ export default class SyncCronTask {
 	constructor(
 		private readonly mongoClient: MongoClient,
 		private readonly redisClient: RedisClient,
-		private readonly webSocketServerAdapter: WebSocketServerAdapter,
+		private readonly moduleRef: ModuleRef,
 		private readonly webSocketClient: WebSocketClient,
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
 		this.name = SyncCronTask.name;
-		this.webSocketServer = this.webSocketServerAdapter.getProvider();
+		this.webSocketServer = this.moduleRef.get(WebSocketServer, { strict: false });
 		this.logger = this.loggerGenerator.getLogger();
 	}
 

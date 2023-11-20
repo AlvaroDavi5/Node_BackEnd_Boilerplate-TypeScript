@@ -1,11 +1,14 @@
 
 FROM node:alpine as build
-LABEL Description="Docker Image for NodeJS"
+LABEL name="Node Back-End Boilerplate Image"
+LABEL description="Docker Image for Node.js Back-End Boilerplate"
+LABEL maintainer="Alvaro alvaro.davsa@gmail.com"
 #MAINTAINER Alvaro alvaro.davsa@gmail.com
 LABEL org.opencontainers.image.authors="alvaro.davsa@gmail.com"
-ENV Version="1.0.0"
+LABEL version="1.0"
 
-ENV IS_ON_DOCKER="TRUE"
+ENV buildTag="1.0"
+ENV IS_ON_CONTAINER="TRUE"
 ENV NODE_PATH=.
 ENV NODE_ENV=${NODE_ENV:-"prod"}
 ENV APP_PORT=3000

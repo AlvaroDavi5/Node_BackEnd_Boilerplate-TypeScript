@@ -1,7 +1,8 @@
-import { Injectable } from '@nestjs/common';
-import { Association } from 'sequelize';
+import { Injectable, Inject } from '@nestjs/common';
+import { Sequelize, Association } from 'sequelize';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import Exceptions from '@core/infra/errors/Exceptions';
+import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import AbstractRepository from '@core/infra/database/repositories/AbstractRepository.repository';
 import UsersModel, { userAttributes, userOptions } from '@core/infra/database/models/Users.model';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
@@ -18,9 +19,12 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 	};
 
 	constructor(
-		exceptions: Exceptions,
-		loggerGenerator: LoggerGenerator,
+		@Inject(DATABASE_CONNECTION_PROVIDER)
+			connection: Sequelize,
+			exceptions: Exceptions,
+			loggerGenerator: LoggerGenerator,
 	) {
+		userOptions.sequelize = connection;
 		super({
 			DomainEntity: UserEntity,
 			ResourceModel: UsersModel,

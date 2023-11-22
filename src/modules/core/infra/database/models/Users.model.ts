@@ -1,4 +1,4 @@
-import { Model, DataTypes, Association, HasOneGetAssociationMixin, HasManyHasAssociationMixin } from 'sequelize';
+import { Model, DataTypes, Association, HasOneGetAssociationMixin, HasManyHasAssociationMixin, ModelAttributes, InitOptions } from 'sequelize';
 import UserPreferencesModel from './UserPreferences.model';
 import { connection } from '@core/infra/database/connection';
 
@@ -38,7 +38,7 @@ class UsersModel extends Model {
 	public hasPreference!: HasManyHasAssociationMixin<UserPreferencesModel, number>;
 }
 
-export const userAttributes = {
+export const userAttributes: ModelAttributes = {
 	fullName: DataTypes.STRING(100),
 	email: DataTypes.STRING(70),
 	password: DataTypes.STRING(60),
@@ -52,7 +52,7 @@ export const userAttributes = {
 	deletedBy: DataTypes.STRING(256),
 };
 
-export const userOptions = {
+export const userOptions: InitOptions = {
 	modelName: 'Users',
 	tableName: 'Users',
 	scopes: {

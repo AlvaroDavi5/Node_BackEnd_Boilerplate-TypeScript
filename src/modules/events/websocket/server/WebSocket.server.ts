@@ -25,6 +25,7 @@ import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 export default class WebSocketServer implements OnModuleInit, OnGatewayInit<SocketIoServer>, OnGatewayConnection<Socket>, OnGatewayDisconnect<Socket> {
 	@Server()
 	private server: SocketIoServer | undefined;
+
 	private eventsQueueProducer!: EventsQueueProducer;
 	private readonly logger: Logger;
 

@@ -1,17 +1,18 @@
-import { Injectable, OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown } from '@nestjs/common';
+import { Injectable, Inject, OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown } from '@nestjs/common';
 import { HttpAdapterHost, ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
+import { Sequelize } from 'sequelize';
 import { Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
-import SyncCronJob from '@core/infra/cron/jobs/SyncCron.job';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CognitoClient from '@core/infra/integration/aws/Cognito.client';
 import SnsClient from '@core/infra/integration/aws/Sns.client';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import S3Client from '@core/infra/integration/aws/S3.client';
-import { connection } from '@core/infra/database/connection';
+import SyncCronJob from '@core/infra/cron/jobs/SyncCron.job';
+import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import { ProcessExitStatusEnum } from './processEvents.enum';
 
@@ -26,13 +27,15 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 		private readonly httpAdapterHost: HttpAdapterHost,
 		private readonly moduleRef: ModuleRef,
 		private readonly configService: ConfigService,
-		private readonly syncCronJob: SyncCronJob,
+		@Inject(DATABASE_CONNECTION_PROVIDER)
+		private readonly connection: Sequelize,
 		private readonly mongoClient: MongoClient,
 		private readonly redisClient: RedisClient,
 		private readonly cognitoClient: CognitoClient,
 		private readonly snsClient: SnsClient,
 		private readonly sqsClient: SqsClient,
 		private readonly s3Client: S3Client,
+		private readonly syncCronJob: SyncCronJob,
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
 		this.logger = this.loggerGenerator.getLogger();
@@ -81,7 +84,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 			}
 
 		try {
-			await connection.close();
+			await this.connection.close();
 		} catch (error) {
 			this.logger.error(error);
 		}

@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { Message } from '@aws-sdk/client-sqs';
 import { Logger } from 'winston';
@@ -13,8 +13,8 @@ import { WebSocketRoomsEnum } from '@app/domain/enums/webSocketEvents.enum';
 
 
 @Injectable()
-export default class EventsQueueHandler {
-	private readonly subscriptionService: SubscriptionService;
+export default class EventsQueueHandler implements OnModuleInit {
+	private subscriptionService!: SubscriptionService;
 	private readonly logger: Logger;
 
 	constructor(
@@ -24,8 +24,11 @@ export default class EventsQueueHandler {
 		private readonly dataParserHelper: DataParserHelper,
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
-		this.subscriptionService = this.moduleRef.get(SubscriptionService, { strict: false });
 		this.logger = this.loggerGenerator.getLogger();
+	}
+
+	public onModuleInit(): void {
+		this.subscriptionService = this.moduleRef.get(SubscriptionService, { strict: false });
 	}
 
 	public async execute(message: Message): Promise<boolean> {

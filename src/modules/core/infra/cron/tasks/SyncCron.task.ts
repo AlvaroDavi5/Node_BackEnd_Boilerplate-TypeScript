@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { Logger } from 'winston';
 import MongoClient from '@core/infra/data/Mongo.client';
@@ -10,9 +10,9 @@ import { connection, testConnection, syncConnection } from '@core/infra/database
 
 
 @Injectable()
-export default class SyncCronTask {
+export default class SyncCronTask implements OnModuleInit {
 	public readonly name: string;
-	private readonly webSocketServer: WebSocketServer;
+	private webSocketServer!: WebSocketServer;
 	private readonly logger: Logger;
 
 	constructor(
@@ -23,8 +23,11 @@ export default class SyncCronTask {
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
 		this.name = SyncCronTask.name;
-		this.webSocketServer = this.moduleRef.get(WebSocketServer, { strict: false });
 		this.logger = this.loggerGenerator.getLogger();
+	}
+
+	public onModuleInit(): void {
+		this.webSocketServer = this.moduleRef.get(WebSocketServer, { strict: false });
 	}
 
 	public async execute(): Promise<void> {

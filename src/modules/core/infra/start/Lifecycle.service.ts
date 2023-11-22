@@ -19,7 +19,7 @@ import { ProcessExitStatusEnum } from './processEvents.enum';
 @Injectable()
 export default class LifecycleService implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown {
 	private readonly logger: Logger;
-	private readonly webSocketServer: WebSocketServer;
+	private webSocketServer!: WebSocketServer;
 	private readonly appConfigs: ConfigsInterface['application'];
 
 	constructor(
@@ -35,12 +35,12 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 		private readonly s3Client: S3Client,
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
-		this.webSocketServer = this.moduleRef.get(WebSocketServer, { strict: false });
 		this.logger = this.loggerGenerator.getLogger();
 		this.appConfigs = this.configService.get<any>('application');
 	}
 
 	public onModuleInit(): void {
+		this.webSocketServer = this.moduleRef.get(WebSocketServer, { strict: false });
 		this.logger.debug('Builded host module');
 	}
 

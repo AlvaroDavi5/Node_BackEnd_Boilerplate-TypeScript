@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'mongodb';
@@ -14,8 +14,8 @@ import { WebSocketEventsEnum } from '@app/domain/enums/webSocketEvents.enum';
 
 
 @Injectable()
-export default class SubscriptionService {
-	private readonly webSocketClient: WebSocketClient;
+export default class SubscriptionService implements OnModuleInit {
+	private webSocketClient!: WebSocketClient;
 	private readonly logger: Logger;
 	public readonly expirationTime: number;
 
@@ -27,10 +27,13 @@ export default class SubscriptionService {
 		private readonly loggerGenerator: LoggerGenerator,
 		private readonly cacheAccessHelper: CacheAccessHelper,
 	) {
-		this.webSocketClient = this.moduleRef.get(WebSocketClient, { strict: false });
 		this.logger = this.loggerGenerator.getLogger();
 		const subscriptionsExpirationTime: ConfigsInterface['cache']['expirationTime']['subscriptions'] = this.configService.get<any>('cache.expirationTime.subscriptions');
 		this.expirationTime = subscriptionsExpirationTime;
+	}
+
+	public onModuleInit(): void {
+		this.webSocketClient = this.moduleRef.get(WebSocketClient, { strict: false });
 	}
 
 	public async get(id: string): Promise<any> {

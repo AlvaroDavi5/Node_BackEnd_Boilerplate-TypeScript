@@ -1,3 +1,4 @@
+import { OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import {
 	WebSocketGateway, SubscribeMessage, MessageBody,
@@ -21,11 +22,10 @@ import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 	}
 })
-export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, OnGatewayConnection<Socket>, OnGatewayDisconnect<Socket> {
+export default class WebSocketServer implements OnModuleInit, OnGatewayInit<SocketIoServer>, OnGatewayConnection<Socket>, OnGatewayDisconnect<Socket> {
 	@Server()
 	private server: SocketIoServer | undefined;
-
-	private readonly eventsQueueProducer: EventsQueueProducer;
+	private eventsQueueProducer!: EventsQueueProducer;
 	private readonly logger: Logger;
 
 	constructor(
@@ -34,8 +34,11 @@ export default class WebSocketServer implements OnGatewayInit<SocketIoServer>, O
 		private readonly loggerGenerator: LoggerGenerator,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
-		this.eventsQueueProducer = this.moduleRef.get(EventsQueueProducer, { strict: false });
 		this.logger = this.loggerGenerator.getLogger();
+	}
+
+	public onModuleInit(): void {
+		this.eventsQueueProducer = this.moduleRef.get(EventsQueueProducer, { strict: false });
 	}
 
 	private formatMessageAfterReceiveHelper(message: string): object | string | null {

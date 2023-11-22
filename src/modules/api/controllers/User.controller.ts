@@ -2,6 +2,7 @@ import {
 	Controller, Request, ParseIntPipe,
 	Param, Query, Body,
 	Get, Post, Patch, Delete,
+	OnModuleInit,
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { ApiOperation, ApiTags, ApiProduces, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
@@ -17,12 +18,14 @@ import { RequestInterface } from 'src/types/_endpointInterface';
 @ApiTags('Users')
 @Controller('/users')
 @authSwaggerDecorator()
-export default class UserController {
-	private readonly userOperation: UserOperation;
+export default class UserController implements OnModuleInit {
+	private userOperation!: UserOperation;
 
 	constructor(
 		private readonly moduleRef: ModuleRef,
-	) {
+	) { }
+
+	public onModuleInit(): void {
 		this.userOperation = this.moduleRef.get(UserOperation, { strict: false });
 	}
 

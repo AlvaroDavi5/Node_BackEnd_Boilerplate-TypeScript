@@ -1,7 +1,8 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { HttpAdapterHost } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { HttpAdapterHost, ModuleRef } from '@nestjs/core';
 import LifecycleService from '../../../../../../src/modules/core/infra/start/Lifecycle.service';
+import { DATABASE_CONNECTION_PROVIDER } from '../../../../../../src/modules/core/infra/database/connection';
 import SyncCronJob from '../../../../../../src/modules/core/infra/cron/jobs/SyncCron.job';
 import MongoClient from '../../../../../../src/modules/core/infra/data/Mongo.client';
 import RedisClient from '../../../../../../src/modules/core/infra/cache/Redis.client';
@@ -27,6 +28,9 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 				return configs();
 		},
 	};
+	const databaseConnectionMock = {
+		close: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
+	};
 	const httpAdapterHostMock = {
 		httpAdapter: {
 			close: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
@@ -35,13 +39,6 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 	const webSocketServerMock = {
 		disconnect: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
 		disconnectAllSockets: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
-	};
-	const moduleRefMock: any = {
-		get: (typeOrToken: any, options?: any): any => {
-			if (typeOrToken === WebSocketServer)
-				return webSocketServerMock;
-			return undefined;
-		},
 	};
 	const syncCronJobMock = {
 		stopCron: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
@@ -68,9 +65,10 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 	beforeAll(async () => {
 		nestTestingModule = await Test.createTestingModule({
 			providers: [
+				{ provide: DATABASE_CONNECTION_PROVIDER, useValue: databaseConnectionMock },
 				{ provide: ConfigService, useValue: configServiceMock },
 				{ provide: HttpAdapterHost, useValue: httpAdapterHostMock },
-				{ provide: ModuleRef, useValue: moduleRefMock },
+				{ provide: WebSocketServer, useValue: webSocketServerMock },
 				{ provide: SyncCronJob, useValue: syncCronJobMock },
 				{ provide: MongoClient, useValue: mongoClientMock },
 				{ provide: RedisClient, useValue: redisClientMock },
@@ -87,8 +85,10 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 	describe('# Build and Close Application', () => {
 
 		test('Should destroy, finish and close the app successfully', async () => {
+			await nestTestingModule.init();
 			await nestTestingModule.close();
 
+			expect(mockObservable.call).toHaveBeenCalledWith(['Builded host module']);
 			expect(mockObservable.call).toHaveBeenCalledWith(['Closing HTTP server, disconnecting websocket clients, stopping crons and destroying cloud integrations']);
 			expect(httpAdapterHostMock.httpAdapter.close).toHaveBeenCalledTimes(1);
 			expect(webSocketServerMock.disconnectAllSockets).toHaveBeenCalledTimes(1);
@@ -97,9 +97,10 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 			expect(mockObservable.call).toHaveBeenCalledWith(['Closing cache and database connections']);
 			expect(mongoClientMock.disconnect).toHaveBeenCalledTimes(1);
 			expect(redisClientMock.disconnect).toHaveBeenCalledTimes(1);
+			expect(databaseConnectionMock.close).toHaveBeenCalledTimes(1);
 			expect(awsClientMock.destroy).toHaveBeenCalledTimes(4);
 			expect(mockObservable.call).toHaveBeenCalledWith(['Exiting Application']);
-			expect(mockObservable.call).toHaveBeenCalledTimes(3);
+			expect(mockObservable.call).toHaveBeenCalledTimes(5);
 		});
 	});
 });

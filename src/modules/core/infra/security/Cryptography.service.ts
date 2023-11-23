@@ -22,7 +22,7 @@ export default class CryptographyService {
 		return Buffer.from(data, encoding).toString(decoding);
 	}
 
-	public encodeJwt(payload: any, inputEncoding: BufferEncoding, expiration = '30d'): string {
+	public encodeJwt(payload: any, inputEncoding: BufferEncoding, expiration = '7d'): string {
 		return sign(payload,
 			null,
 			{

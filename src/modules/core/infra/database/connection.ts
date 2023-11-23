@@ -1,4 +1,4 @@
-import { Provider } from '@nestjs/common';
+import { Provider, Scope } from '@nestjs/common';
 import { Sequelize } from 'sequelize';
 import { Logger } from 'winston';
 import { config as DBConfig } from './db.config';
@@ -41,6 +41,9 @@ export const DATABASE_CONNECTION_PROVIDER = 'DATABASE_CONNECTION';
 
 const databaseConnectionProvider: Provider = {
 	provide: DATABASE_CONNECTION_PROVIDER,
+	scope: Scope.DEFAULT,
+
+	inject: [],
 	useFactory: async (...args: unknown[]): Promise<Sequelize> => {
 		const connection = new Sequelize(DBConfig);
 
@@ -48,6 +51,15 @@ const databaseConnectionProvider: Provider = {
 
 		return connection;
 	},
+	/*
+			? Provider Use Options
+		* useClass
+		* useFactory
+		* useValue
+		* useExisting
+	*/
+
+	durable: false,
 };
 
 export default databaseConnectionProvider;

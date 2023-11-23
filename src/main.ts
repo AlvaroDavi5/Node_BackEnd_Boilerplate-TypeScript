@@ -13,8 +13,8 @@ import { ErrorInterface } from 'src/types/_errorInterface';
 
 async function startNestApplication() {
 	const nestApp = await NestFactory.create(CoreModule, {
+		snapshot: true,
 		preview: false,
-		snapshot: false,
 	});
 	nestApp.setGlobalPrefix('api');
 	nestApp.useGlobalPipes(
@@ -25,12 +25,15 @@ async function startNestApplication() {
 		}),
 	);
 
+	nestApp.enableShutdownHooks();
+
 	nestApp.use(compression());
 	nestApp.enableCors({
 		origin: '*',
 		allowedHeaders: '*',
 		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 	});
+	nestApp.useWebSocketAdapter(new IoAdapter(nestApp)); // WsAdapter
 
 	const config = new DocumentBuilder()
 		.setTitle('Node Back-End Boilerplate')
@@ -52,11 +55,7 @@ async function startNestApplication() {
 		},
 	});
 
-	nestApp.enableShutdownHooks();
-
 	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application'] | undefined>('application');
-
-	nestApp.useWebSocketAdapter(new IoAdapter(nestApp)); // WsAdapter
 	await nestApp.listen(Number(appConfigs?.port)).catch((error: ErrorInterface) => {
 		const knowExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
 

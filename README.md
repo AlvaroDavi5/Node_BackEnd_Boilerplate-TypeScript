@@ -106,7 +106,8 @@ yarn run send-message # send event message to queue
   * `/` - WebSocket Root Endpoint
   * `/api` - API Root Endpoint
   	- `/api/docs` - Swagger API Documentation (Page)
-  	- `/api/docs-json` - Swagger API Documentation (JSON)
+  	- `/api/docs.json` - Swagger API Documentation (JSON)
+  	- `/api/docs.yml` - Swagger API Documentation (YAML)
 - [localhost:4000](`http://localhost:4000/`) - Mocked Service Page  
 - [localhost:8000](`http://localhost:8000/`) - Nest.js DevTools Page  
 - [localhost:8080](`http://localhost:8080/`) - Adminer Page  

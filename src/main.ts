@@ -38,8 +38,10 @@ async function startNestApplication() {
 	const config = new DocumentBuilder()
 		.setTitle('Node Back-End Boilerplate')
 		.setVersion('1.0.0')
-		.setDescription('API Boilerplate created by Nest.js')
+		.setDescription('API Boilerplate created with Nest.js')
 		.setContact('Álvaro Davi Santos Alves', 'https://github.com/AlvaroDavi5', 'alvaro.davisa@gmail.com')
+		.addServer('http://localhost:3000', 'Main Server', {})
+		.addServer('http://localhost:4000', 'Mocked Server', {})
 		.addBearerAuth({
 			type: 'http',
 			scheme: 'bearer',
@@ -49,12 +51,16 @@ async function startNestApplication() {
 			description: 'Enter JWT token',
 		}, 'Authorization')
 		.build();
-	const document = SwaggerModule.createDocument(nestApp, config);
+	const document = SwaggerModule.createDocument(nestApp, config, {
+		ignoreGlobalPrefix: false,
+	});
 	SwaggerModule.setup('/api/docs', nestApp, document, {
 		customSiteTitle: 'Boilerplate API',
 		swaggerOptions: {
 			docExpansion: 'none',
 		},
+		jsonDocumentUrl: '/api/docs.json',
+		yamlDocumentUrl: '/api/docs.yml',
 	});
 
 	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application'] | undefined>('application');

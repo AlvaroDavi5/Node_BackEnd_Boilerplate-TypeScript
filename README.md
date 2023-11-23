@@ -117,22 +117,15 @@ ___
 ### TO DO
 
 - **Nest.js**
-	- Fundamentals
-		- [Async Providers](https://docs.nestjs.com/fundamentals/async-providers)
-		- [Dynamic Modules](https://docs.nestjs.com/fundamentals/dynamic-modules)
-		- [Injection Scopes](https://docs.nestjs.com/fundamentals/injection-scopes)
-		- [Lazy Loading Modules](https://docs.nestjs.com/fundamentals/lazy-loading-modules)
-		- [Platform Agnosticism](https://docs.nestjs.com/fundamentals/platform-agnosticism)
-	- Others
-		- [API Versioning](https://docs.nestjs.com/techniques/versioning)
-		- [File Upload](https://docs.nestjs.com/techniques/file-upload)
-		- [Authorization](https://docs.nestjs.com/security/authorization)
-		- [WebSockets Pipes](https://docs.nestjs.com/websockets/pipes)
-		- [GraphQL](https://docs.nestjs.com/graphql/quick-start)
-		- [kafka](https://docs.nestjs.com/microservices/kafka)
-		- [Serverless](https://docs.nestjs.com/faq/serverless)
-		- [OpenAPI](https://docs.nestjs.com/openapi/introduction)
-		- [DevTools](https://docs.nestjs.com/devtools/overview)
+	- [API Versioning](https://docs.nestjs.com/techniques/versioning)
+	- [File Upload](https://docs.nestjs.com/techniques/file-upload)
+	- [Authorization](https://docs.nestjs.com/security/authorization)
+	- [WebSockets Pipes](https://docs.nestjs.com/websockets/pipes)
+	- [GraphQL](https://docs.nestjs.com/graphql/quick-start)
+	- [kafka](https://docs.nestjs.com/microservices/kafka)
+	- [Serverless](https://docs.nestjs.com/faq/serverless)
+	- [OpenAPI](https://docs.nestjs.com/openapi/introduction)
+	- [DevTools](https://docs.nestjs.com/devtools/overview)
 - **Jest and Sonarqube**
 	- [ ] Unify Coverage
 		- [Reference](https://stackoverflow.com/questions/52419132/is-it-possible-to-merge-test-coverage-on-sonarqube-level)
@@ -144,6 +137,9 @@ ___
 		> dbRes = salt + hash(salt + password)
 	- [ ] Auth InfoSec
 	- [ ] OAuth
+- **Integrations**
+	- [ ] Webhooks
+	- [ ] Serverless
 - **Tests**
 	* _Unit_
 		- Modules
@@ -158,8 +154,8 @@ ___
 					- [ ] Cron Tasks
 					- [ ] Logging
 			- API
-				- [x] Pipes
-				- [x] Schemas
+				- [ ] Pipes
+				- [ ] Schemas
 			- Events
 				- [ ] Queue Handler
 					- [ ] Handlers Schemas
@@ -199,7 +195,7 @@ ___
 	- [ ] Rancher
 	- [ ] Grafana
 	- [ ] Log Streams
-- [ ] Kafka Integration
 - **AWS Integration**
 	- [ ] Lambda
+- [ ] Kafka Integration
 - [ ] Manual SQL

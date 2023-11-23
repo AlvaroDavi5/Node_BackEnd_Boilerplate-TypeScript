@@ -42,6 +42,9 @@
 			"@core/*": [
 				"src/modules/core/*",
 			],
+			"@common/*": [
+				"src/modules/common/*",
+			],
 			"@app/*": [
 				"src/modules/app/*",
 			],
@@ -51,8 +54,8 @@
 			"@events/*": [
 				"src/modules/events/*",
 			],
-			"@common/*": [
-				"src/modules/common/*",
+			"@serverless/*": [
+				"src/modules/serverless/*",
 			],
 		},
 		"rootDirs": [

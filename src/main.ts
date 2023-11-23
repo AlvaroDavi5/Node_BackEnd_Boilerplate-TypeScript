@@ -38,6 +38,8 @@ async function startNestApplication() {
 	const config = new DocumentBuilder()
 		.setTitle('Node Back-End Boilerplate')
 		.setVersion('1.0.0')
+		.setDescription('API Boilerplate created by Nest.js')
+		.setContact('Álvaro Davi Santos Alves', 'https://github.com/AlvaroDavi5', 'alvaro.davisa@gmail.com')
 		.addBearerAuth({
 			type: 'http',
 			scheme: 'bearer',

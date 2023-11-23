@@ -2540,6 +2540,14 @@
     path-to-regexp "3.2.0"
     tslib "2.6.2"
 
+"@nestjs/devtools-integration@^0.1.5":
+  version "0.1.5"
+  resolved "https://registry.yarnpkg.com/@nestjs/devtools-integration/-/devtools-integration-0.1.5.tgz#373aebe93632dd0f1bc46b714c6720951f35f87b"
+  integrity sha512-iwxvfxa3kzOulG/Fje82Ww80OVsA8rzYR+UAEKrdGExRRGQRGQ0+bHfG0XLlPG3XIuM5J2MRMo7x1bN8ZIs9Gg==
+  dependencies:
+    chalk "^4.1.2"
+    node-fetch "^2.6.9"
+
 "@nestjs/event-emitter@^2.0.3":
   version "2.0.3"
   resolved "https://registry.yarnpkg.com/@nestjs/event-emitter/-/event-emitter-2.0.3.tgz#3bfcb7b580f98b2dee3c44c567b45a506767f559"
@@ -9844,7 +9852,7 @@ node-emoji@1.11.0, node-emoji@^1.11.0:
   dependencies:
     lodash "^4.17.21"
 
-node-fetch@^2.6.1, node-fetch@^2.6.7:
+node-fetch@^2.6.1, node-fetch@^2.6.7, node-fetch@^2.6.9:
   version "2.7.0"
   resolved "https://registry.yarnpkg.com/node-fetch/-/node-fetch-2.7.0.tgz#d0f0fa6e3e2dc1d27efcd8ad99d550bda94d187d"
   integrity sha512-c4FRfUm/dbcWZ7U+1Wq0AwCyFL+3nt2bEw05wfxSz+DWpWsitgmSgYmy2dQdWyKC1694ELPqMs/YzUSNozLt8A==

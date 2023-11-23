@@ -1,7 +1,8 @@
 import { Module, Global } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
-import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { DevtoolsModule } from '@nestjs/devtools-integration';
 import configs from '@core/configs/configs.config';
 import LifecycleService from '@core/infra/start/Lifecycle.service';
 import Exceptions from '@core/infra/errors/Exceptions';
@@ -30,11 +31,15 @@ import ApiModule from '@api/api.module';
 			isGlobal: true,
 			load: [configs],
 		}),
+		ScheduleModule.forRoot(),
 		EventEmitterModule.forRoot({
 			maxListeners: 10,
 			verboseMemoryLeak: true,
 		}),
-		ScheduleModule.forRoot(),
+		DevtoolsModule.register({
+			http: process.env.NODE_ENV !== 'prod',
+			port: 8000,
+		}),
 		CommonModule,
 		AppModule,
 		EventsModule,

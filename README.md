@@ -107,6 +107,8 @@ yarn run send-message # send event message to queue
   * `/api` - API Root Endpoint
   	- `/api/docs` - Swagger API Documentation (Page)
   	- `/api/docs-json` - Swagger API Documentation (JSON)
+- [localhost:4000](`http://localhost:4000/`) - Mocked Service Page  
+- [localhost:8000](`http://localhost:8000/`) - Nest.js DevTools Page  
 - [localhost:8080](`http://localhost:8080/`) - Adminer Page  
 - [localhost:8081](`http://localhost:8081/`) - Mongo Express Page  
 - [localhost:8082](`http://localhost:8082/`) - Redis Commander Page  

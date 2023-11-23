@@ -1,5 +1,5 @@
 import { Injectable, Inject, OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown } from '@nestjs/common';
-import { HttpAdapterHost, ModuleRef } from '@nestjs/core';
+import { HttpAdapterHost, ModuleRef, LazyModuleLoader } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { Sequelize } from 'sequelize';
 import { Logger } from 'winston';
@@ -14,6 +14,7 @@ import S3Client from '@core/infra/integration/aws/S3.client';
 import SyncCronJob from '@core/infra/cron/jobs/SyncCron.job';
 import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import ServerlessModule from '@serverless/serverless.module';
 import { ProcessExitStatusEnum } from './processEvents.enum';
 
 
@@ -26,6 +27,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 	constructor(
 		private readonly httpAdapterHost: HttpAdapterHost,
 		private readonly moduleRef: ModuleRef,
+		private readonly lazyModuleLoader: LazyModuleLoader,
 		private readonly configService: ConfigService,
 		@Inject(DATABASE_CONNECTION_PROVIDER)
 		private readonly connection: Sequelize,
@@ -49,6 +51,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 
 	public onApplicationBootstrap(): void {
 		this.logger.debug(`\n\n\tApp started with PID: ${process.pid} on URL: ${this.appConfigs?.url}\n`);
+		this.lazyModuleLoader.load(() => ServerlessModule);
 	}
 
 	public onModuleDestroy(): void {

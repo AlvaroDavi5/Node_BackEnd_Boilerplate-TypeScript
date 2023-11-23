@@ -1,11 +1,12 @@
-import { NestFactory } from '@nestjs/core';
+import { NestFactory, SerializedGraph, PartialGraphHost } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { writeFileSync } from 'fs';
 import compression from 'compression';
 import CoreModule from '@core/core.module';
-import { ProcessEventsEnum, ProcessSignalsEnum } from '@core/infra/start/processEvents.enum';
+import { ProcessEventsEnum, ProcessSignalsEnum, ProcessExitStatusEnum } from '@core/infra/start/processEvents.enum';
 import { ExceptionsEnum } from '@core/infra/errors/exceptions.enum';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import { ErrorInterface } from 'src/types/_errorInterface';
@@ -13,6 +14,7 @@ import { ErrorInterface } from 'src/types/_errorInterface';
 
 async function startNestApplication() {
 	const nestApp = await NestFactory.create(CoreModule, {
+		abortOnError: false,
 		snapshot: true,
 		preview: false,
 	});
@@ -64,19 +66,27 @@ async function startNestApplication() {
 	});
 
 	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application'] | undefined>('application');
-	await nestApp.listen(Number(appConfigs?.port)).catch((error: ErrorInterface) => {
+	await nestApp.listen(Number(appConfigs?.port)).catch((error: ErrorInterface | Error) => {
 		const knowExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
 
-		if (error?.name && !knowExceptions.includes(error?.name)) {
+		if (error?.name && !knowExceptions.includes(error.name)) {
 			const err = new Error(String(error.message));
-			err.name = error.name || err.name;
+			err.name = error.name;
 			err.stack = error.stack;
 			throw err;
 		}
 	});
 
-	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error, origin) => {
+	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error: Error, origin: string) => {
 		console.error(`\nApp received ${origin}: ${error}\n`);
+		await nestApp.close();
+	});
+	process.on(ProcessEventsEnum.UNHANDLED_REJECTION, async (reason: unknown, promise: Promise<unknown>) => {
+		console.error(`\nApp received ${ProcessEventsEnum.UNHANDLED_REJECTION}: \npromise: ${promise} \nreason: ${reason}\n`);
+		await nestApp.close();
+	});
+	process.on(ProcessEventsEnum.MULTIPLE_RESOLVES, async (type: 'resolve' | 'reject', promise: Promise<unknown>, value: unknown) => {
+		console.error(`\nApp received ${ProcessEventsEnum.MULTIPLE_RESOLVES}: \ntype: ${type} \npromise: ${promise} \nreason: ${value}\n`);
 		await nestApp.close();
 	});
 
@@ -84,9 +94,15 @@ async function startNestApplication() {
 		console.error(`\nApp received signal: ${signal}\n`);
 		await nestApp.close();
 	}));
+
+	writeFileSync('./docs/nestGraph.json', nestApp.get(SerializedGraph).toString());
 }
 
-startNestApplication();
+startNestApplication().catch((error: Error) => {
+	console.error(error);
+	writeFileSync('./docs/nestGraph.json', PartialGraphHost.toString() ?? '');
+	process.exit(ProcessExitStatusEnum.FAILURE);
+});
 
 // Better Comments:
 // normal

@@ -54,6 +54,7 @@ module.exports = {
 		'src/modules/events/queue/consumers/',
 		'src/modules/events/queue/producers/',
 		'src/modules/common/',
+		'src/modules/serverless/',
 		'.d.ts',
 		'.module.ts',
 		'src/main.ts',

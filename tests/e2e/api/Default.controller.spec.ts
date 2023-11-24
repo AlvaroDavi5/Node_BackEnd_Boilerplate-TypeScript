@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { NestGlobalModule, startNestApplication } from '../support/mocks/nestGlobal.module';
+import { TestModule, startNestApplication } from '../support/mocks/nestGlobal.module';
 
 
 jest.setTimeout(5000);
@@ -12,12 +12,13 @@ describe('API :: DefaultController', () => {
 	// ? build test app
 	beforeAll(async () => {
 		nestTestingModule = await Test.createTestingModule({
-			imports: [NestGlobalModule]
+			imports: [TestModule]
 		}).compile();
 
 		nestTestApp = nestTestingModule.createNestApplication({
-			preview: false,
+			abortOnError: false,
 			snapshot: false,
+			preview: false,
 		});
 		await startNestApplication(nestTestApp);
 		await nestTestApp.init();

@@ -1,4 +1,5 @@
 import dotenv from 'dotenv';
+import compression from 'compression';
 import {
 	INestApplication, Module, NestModule,
 	MiddlewareConsumer, ValidationPipe
@@ -8,13 +9,15 @@ import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
 import { SqsModule } from '@ssut/nestjs-sqs';
-import configs from '@core/configs/configs.config';
+import configs, { ConfigsInterface } from '@core/configs/configs.config';
 import LifecycleService from '@core/infra/start/Lifecycle.service';
 import { ProcessEventsEnum, ProcessSignalsEnum } from '@core/infra/start/processEvents.enum';
 import Exceptions from '@core/infra/errors/Exceptions';
 import { ExceptionsEnum } from '@core/infra/errors/exceptions.enum';
+import { ErrorInterface } from 'src/types/_errorInterface';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import CryptographyService from '@core/infra/security/Cryptography.service';
+import databaseConnectionProvider from '@core/infra/database/connection';
 import RedisClient from '@core/infra/cache/Redis.client';
 import MongoClient from '@core/infra/data/Mongo.client';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
@@ -56,11 +59,11 @@ import UserController from '@api/controllers/User.controller';
 			isGlobal: true,
 			load: [configs],
 		}),
+		ScheduleModule.forRoot(),
 		EventEmitterModule.forRoot({
 			maxListeners: 10,
 			verboseMemoryLeak: true,
 		}),
-		ScheduleModule.forRoot(),
 		SqsModule.register({
 			consumers: [
 				{
@@ -90,6 +93,7 @@ import UserController from '@api/controllers/User.controller';
 		Exceptions,
 		LoggerGenerator,
 		CryptographyService,
+		databaseConnectionProvider,
 		RedisClient,
 		MongoClient,
 		SqsClient,
@@ -125,7 +129,7 @@ import UserController from '@api/controllers/User.controller';
 	],
 	exports: [],
 })
-export class NestGlobalModule implements NestModule {
+export class TestModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
 		consumer
 			.apply(LoggerMiddleware)
@@ -147,30 +151,38 @@ export async function startNestApplication(nestApp: INestApplication<any>) {
 		}),
 	);
 
+	nestApp.enableShutdownHooks();
+
+	nestApp.use(compression());
 	nestApp.enableCors({
 		origin: '*',
 		allowedHeaders: '*',
 		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 	});
-
-	nestApp.enableShutdownHooks();
-
-	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<any>('application');
-
 	nestApp.useWebSocketAdapter(new IoAdapter(nestApp)); // WsAdapter
-	await nestApp.listen(Number(appConfigs?.port)).catch((error: Error) => {
+
+	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application'] | undefined>('application');
+	await nestApp.listen(Number(appConfigs?.port)).catch((error: ErrorInterface | Error) => {
 		const knowExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
 
-		if (error?.name && !knowExceptions.includes(error?.name)) {
+		if (error?.name && !knowExceptions.includes(error.name)) {
 			const err = new Error(String(error.message));
-			err.name = error.name || err.name;
+			err.name = error.name;
 			err.stack = error.stack;
 			throw err;
 		}
 	});
 
-	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error, origin) => {
+	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error: Error, origin: string) => {
 		console.error(`\nApp received ${origin}: ${error}\n`);
+		await nestApp.close();
+	});
+	process.on(ProcessEventsEnum.UNHANDLED_REJECTION, async (reason: unknown, promise: Promise<unknown>) => {
+		console.error(`\nApp received ${ProcessEventsEnum.UNHANDLED_REJECTION}: \npromise: ${promise} \nreason: ${reason}\n`);
+		await nestApp.close();
+	});
+	process.on(ProcessEventsEnum.MULTIPLE_RESOLVES, async (type: 'resolve' | 'reject', promise: Promise<unknown>, value: unknown) => {
+		console.error(`\nApp received ${ProcessEventsEnum.MULTIPLE_RESOLVES}: \ntype: ${type} \npromise: ${promise} \nreason: ${value}\n`);
 		await nestApp.close();
 	});
 

@@ -1,5 +1,5 @@
 import { Injectable, Inject, OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown } from '@nestjs/common';
-import { HttpAdapterHost, ModuleRef, LazyModuleLoader } from '@nestjs/core';
+import { HttpAdapterHost, LazyModuleLoader } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { Sequelize } from 'sequelize';
 import { Logger } from 'winston';
@@ -21,12 +21,10 @@ import { ProcessExitStatusEnum } from './processEvents.enum';
 @Injectable()
 export default class LifecycleService implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown {
 	private readonly logger: Logger;
-	private webSocketServer!: WebSocketServer;
 	private readonly appConfigs: ConfigsInterface['application'];
 
 	constructor(
 		private readonly httpAdapterHost: HttpAdapterHost,
-		private readonly moduleRef: ModuleRef,
 		private readonly lazyModuleLoader: LazyModuleLoader,
 		private readonly configService: ConfigService,
 		@Inject(DATABASE_CONNECTION_PROVIDER)
@@ -37,6 +35,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 		private readonly snsClient: SnsClient,
 		private readonly sqsClient: SqsClient,
 		private readonly s3Client: S3Client,
+		private readonly webSocketServer: WebSocketServer,
 		private readonly syncCronJob: SyncCronJob,
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
@@ -45,7 +44,6 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 	}
 
 	public onModuleInit(): void {
-		this.webSocketServer = this.moduleRef.get(WebSocketServer, { strict: false });
 		this.logger.debug('Builded host module');
 	}
 

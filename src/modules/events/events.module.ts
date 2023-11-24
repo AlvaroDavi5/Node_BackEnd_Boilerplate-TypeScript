@@ -40,7 +40,6 @@ import SqsClient from '@dev/localstack/queues/SqsClient';
 		WebSocketClient,
 	],
 	exports: [
-		EventsQueueProducer,
 		WebSocketServer,
 		WebSocketClient,
 	],

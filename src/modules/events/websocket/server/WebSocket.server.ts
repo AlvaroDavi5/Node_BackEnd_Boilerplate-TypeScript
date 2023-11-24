@@ -26,12 +26,12 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 	@Server()
 	private server: SocketIoServer | undefined;
 
-	private eventsQueueProducer!: EventsQueueProducer;
+	private subscriptionService!: SubscriptionService;
 	private readonly logger: Logger;
 
 	constructor(
 		private readonly moduleRef: ModuleRef,
-		private readonly subscriptionService: SubscriptionService,
+		private readonly eventsQueueProducer: EventsQueueProducer,
 		private readonly loggerGenerator: LoggerGenerator,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
@@ -39,7 +39,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 	}
 
 	public onModuleInit(): void {
-		this.eventsQueueProducer = this.moduleRef.get(EventsQueueProducer, { strict: false });
+		this.subscriptionService = this.moduleRef.get(SubscriptionService, { strict: false });
 	}
 
 	private formatMessageAfterReceiveHelper(message: string): object | string | null {

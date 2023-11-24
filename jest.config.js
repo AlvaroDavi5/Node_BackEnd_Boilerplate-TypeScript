@@ -52,6 +52,7 @@ module.exports = {
 		'src/modules/app/repositories/',
 		'src/modules/app/services/',
 		'src/modules/events/',
+		'src/modules/serverless/',
 		'.d.ts',
 		'.module.ts',
 		'src/main.ts',

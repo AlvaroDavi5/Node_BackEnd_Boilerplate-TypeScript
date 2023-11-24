@@ -1,12 +1,12 @@
 import Joi from 'joi';
+import { ListQueryInterface } from 'src/types/_listPaginationInterface';
 
 
 export default Joi.object().keys({
-	size: Joi.number(),
-	page: Joi.number(),
 	limit: Joi.number(),
+	page: Joi.number(),
 	order: Joi.string().valid('ASC', 'DESC'),
-	sort: Joi.string().valid('createdAt', 'updatedAt', 'deletedAt'),
-	selectSoftDeleted: Joi.boolean(),
+	sortBy: Joi.string().valid('createdAt', 'updatedAt', 'deletedAt'),
 	searchTerm: Joi.string(),
-}).unknown(true);
+	selectSoftDeleted: Joi.boolean(),
+}).unknown(true) as Joi.Schema<ListQueryInterface>;

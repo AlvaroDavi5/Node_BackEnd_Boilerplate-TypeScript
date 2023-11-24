@@ -2,12 +2,14 @@ import { Injectable } from '@nestjs/common';
 import { Logger } from 'winston';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
-import SyncCronTask from '../tasks/SyncCron.task';
+import SyncCronTask from '@core/infra/cron/tasks/SyncCron.task';
+import { CronJobsEnum } from '../cronJobs.enum';
 
 
 @Injectable()
 export default class SyncCronJob {
 	public readonly name: string;
+	public readonly cronName: string;
 	public readonly cronExpression: CronExpression;
 	private readonly logger: Logger;
 
@@ -17,6 +19,7 @@ export default class SyncCronJob {
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
 		this.name = SyncCronJob.name;
+		this.cronName = CronJobsEnum.SyncCron;
 		this.cronExpression = CronExpression.EVERY_5_MINUTES;
 		this.logger = this.loggerGenerator.getLogger();
 		this.logger.debug(`Created ${this.name}`);
@@ -32,7 +35,7 @@ export default class SyncCronJob {
 	*/
 	@Cron('0 */5 * * * *', {
 		// // every 5 minutes
-		name: 'SyncCronJob',
+		name: CronJobsEnum.SyncCron,
 		timeZone: 'America/Sao_Paulo',
 		disabled: false,
 		unrefTimeout: false,
@@ -42,12 +45,12 @@ export default class SyncCronJob {
 	}
 
 	public stopCron(): void {
-		const job = this.schedulerRegistry.getCronJob(this.name);
+		const job = this.schedulerRegistry.getCronJob(this.cronName);
 		job.stop();
 	}
 
 	public getLastJobDate(): Date {
-		const job = this.schedulerRegistry.getCronJob(this.name);
+		const job = this.schedulerRegistry.getCronJob(this.cronName);
 		return job.lastDate();
 	}
 }

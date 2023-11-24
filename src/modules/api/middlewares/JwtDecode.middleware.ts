@@ -1,9 +1,10 @@
 import { Injectable, NestMiddleware } from '@nestjs/common';
 import { Logger } from 'winston';
-import jwt from 'jsonwebtoken';
+import CryptographyService from '@core/infra/security/Cryptography.service';
 import Exceptions from '@core/infra/errors/Exceptions';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import { RequestInterface, ResponseInterface, NextFunctionInterface } from 'src/types/_endpointInterface';
+import { decodedFieldType } from 'src/types/_userAuthInterface';
 
 
 @Injectable()
@@ -11,6 +12,7 @@ export default class JwtDecodeMiddleware implements NestMiddleware {
 	private readonly logger: Logger;
 
 	constructor(
+		private readonly cryptographyService: CryptographyService,
 		private readonly exceptions: Exceptions,
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
@@ -28,7 +30,7 @@ export default class JwtDecodeMiddleware implements NestMiddleware {
 		}
 
 		const token = authorization.replace('Bearer ', '');
-		const decoded = jwt.decode(token);
+		const decoded = this.cryptographyService.decodeJwt(token);
 		if (!decoded) {
 			this.logger.warn('Request with invalid authorization token');
 			throw this.exceptions.unauthorized({
@@ -36,8 +38,8 @@ export default class JwtDecodeMiddleware implements NestMiddleware {
 			});
 		}
 
-		let username = null, clientId = null;
-		if (typeof (decoded) !== 'string') {
+		let username: decodedFieldType = null, clientId: decodedFieldType = null;
+		if (typeof decoded !== 'string') {
 			username = decoded?.username || decoded['cognito:username'];
 			clientId = decoded?.clientId || decoded?.client_id;
 		}

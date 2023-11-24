@@ -30,10 +30,6 @@ test-report.xml
 *.pem
 # dotenv files
 .env*
-.env.local*
-.env.test*
-.env.development*
-.env.production*
 /envs
 # files extensions
 *.docx
@@ -47,7 +43,8 @@ test-report.xml
 /.vscode/*
 .tool-versions
 # others
-TODO*
+docs/nestGraph.json
+TODO.txt
 *.tsbuildinfo
 .idea
 

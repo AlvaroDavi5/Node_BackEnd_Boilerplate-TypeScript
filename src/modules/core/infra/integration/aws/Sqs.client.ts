@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from 'winston';
 import { v4 as uuidV4 } from 'uuid';
-import { AWSError } from 'aws-sdk';
 import {
 	SQSClient, SQSClientConfig, Message,
 	ListQueuesCommand, CreateQueueCommand, DeleteQueueCommand,
@@ -52,7 +51,7 @@ export default class SqsClient {
 
 
 	private formatMessageBeforeSend(message: any = {}): string {
-		return this.dataParserHelper.toString(message);
+		return this.dataParserHelper.toString(message) || '{}';
 	}
 
 	private createParams(queueName: string): CreateQueueCommandInput {
@@ -96,7 +95,7 @@ export default class SqsClient {
 		return {
 			QueueUrl: queueUrl,
 			AttributeNames: [
-				'SentTimestamp'
+				'CreatedTimestamp'
 			],
 			MaxNumberOfMessages: 10,
 			MessageAttributeNames: [

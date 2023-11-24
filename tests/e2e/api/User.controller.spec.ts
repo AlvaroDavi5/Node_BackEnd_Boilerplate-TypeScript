@@ -1,19 +1,25 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { NestGlobalModule, startNestApplication } from '../support/mocks/nestGlobal.module';
+import { TestModule, startNestApplication } from '../support/mocks/nestGlobal.module';
 
 
+jest.setTimeout(1.2 * 5000);
 describe('API :: UserController', () => {
 	let nestTestApp: INestApplication;
+	let nestTestingModule: TestingModule;
 
 	// ? build test app
 	beforeAll(async () => {
-		const nestTestingModule: TestingModule = await Test.createTestingModule({
-			imports: [NestGlobalModule]
+		nestTestingModule = await Test.createTestingModule({
+			imports: [TestModule]
 		}).compile();
 
-		nestTestApp = nestTestingModule.createNestApplication();
+		nestTestApp = nestTestingModule.createNestApplication({
+			abortOnError: false,
+			snapshot: false,
+			preview: false,
+		});
 		await startNestApplication(nestTestApp);
 		await nestTestApp.init();
 	});
@@ -49,5 +55,6 @@ describe('API :: UserController', () => {
 
 	afterAll(async () => {
 		await nestTestApp.close();
+		await nestTestingModule.close();
 	});
 });

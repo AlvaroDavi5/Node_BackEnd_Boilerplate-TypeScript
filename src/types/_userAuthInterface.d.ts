@@ -1,5 +1,7 @@
 
+export type decodedFieldType = string | null | undefined
+
 export interface UserAuthInterface {
-	username: string | null | undefined,
-	clientId: string | null | undefined,
+	username: decodedFieldType,
+	clientId: decodedFieldType,
 }

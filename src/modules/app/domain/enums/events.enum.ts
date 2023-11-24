@@ -1,4 +1,5 @@
 
 export enum EventsEnum {
-	CREATE = 'CREATE',
+	INVALID = 'INVALID',
+	NEW_CONNECTION = 'NEW_CONNECTION',
 }

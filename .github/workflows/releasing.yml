@@ -44,6 +44,9 @@ jobs:
       # - name: Testing All
       #   run: yarn run test:e2e
 
+      - name: Checking Type
+        run: yarn run typecheck
+
       - name: Building
         run: yarn run build
 

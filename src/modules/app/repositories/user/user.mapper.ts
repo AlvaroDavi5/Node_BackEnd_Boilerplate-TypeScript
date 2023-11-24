@@ -1,18 +1,21 @@
 import UserEntity from '@app/domain/entities/User.entity';
-import userPreferenceMapper from '../userPreference/userPreference.mapper';
+import UsersModel from '@core/infra/database/models/Users.model';
+import userPreferenceMapper from '@app/repositories/userPreference/userPreference.mapper';
 
 
-const toEntity = ({ dataValues }: any): UserEntity => {
-	const preference = {
-		...dataValues?.preference?.toJSON(),
-		userId: dataValues?.id,
+const toEntity = ({ dataValues }: UsersModel): UserEntity => {
+	const preferenceDataValues: any =
+	{
+		dataValues: {
+			...dataValues?.preference?.toJSON(),
+			userId: dataValues?.id,
+		}
 	};
 
-	const userPreference = userPreferenceMapper.toEntity({ dataValues: preference });
+	const userPreference = userPreferenceMapper.toEntity(preferenceDataValues);
 	dataValues.preference = userPreference;
 
-	const user = new UserEntity(dataValues);
-	return user;
+	return new UserEntity(dataValues);
 };
 
 const toDatabase = (entity: UserEntity): any => {

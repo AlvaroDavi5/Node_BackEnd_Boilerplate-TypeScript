@@ -1,7 +1,7 @@
 {
 	"name": "node_backend_boilerplate",
 	"description": "Node.js Boilerplate for Back-End using TypeScript",
-	"version": "2.2.0",
+	"version": "3.0.0",
 	"license": "MIT",
 	"author": "Álvaro Davi Santos Alves <alvaro.davisa@gmail.com>",
 	"contributors": [
@@ -20,7 +20,8 @@
 		"win32"
 	],
 	"engines": {
-		"node": "f>=18.00.x <18.6.0"
+		"node": "f>=18.00.x <18.6.0",
+		"yarn": "f>=1.22.x <3.x.x"
 	},
 	"keywords": [
 		"boilerplate",
@@ -30,13 +31,14 @@
 		"nestjs"
 	],
 	"scripts": {
+		"typecheck": "tsc --project tsconfig.json --noEmit",
 		"start": "cross-env NODE_PATH=. nest start",
 		"build": "rm -rf build && nest build",
 		"start:prod": "node build/src/main.js",
 		"start:dev": "cross-env NODE_PATH=. NODE_ENV=dev nodemon --config nodemon.json",
 		"start:debug": "cross-env NODE_PATH=. NODE_ENV=dev nodemon --config nodemon-debug.json",
-		"webpack": "webpack --config webpack.config.js",
-		"start:webpack": "node build/src/wp.js",
+		"build:webpack": "yarn build && webpack --config webpack.config.js",
+		"start:webpack": "node build/webpack.js",
 		"security-check": "node ./scripts/security-check.js",
 		"mock-dependencies": "ts-node ./scripts/mock-dependencies.ts",
 		"receive-messages": "cross-env NODE_PATH=. ts-node scripts/receive-messages.ts",
@@ -49,18 +51,18 @@
 		"seed:undo": "yarn sequelize-cli db:seed:undo:all",
 		"seed:create": "yarn sequelize-cli seed:create --name ",
 		"test": "yarn test:unit && yarn test:integration && yarn test:e2e",
-		"test:unit": "jest -c jest.config.js",
-		"test:unit:#it": "jest -t=#it -c jest.config.js --verbose",
-		"test:unit:coverage": "jest -c jest.config.js --coverage --collectCoverage",
-		"test:unit:watch": "jest -c jest.config.js --watch --verbose --detectOpenHandles",
-		"test:integration": "jest -c jest.integration.config.js --setupFiles dotenv/config --runInBand",
-		"test:integration:#it": "jest -t=#it -c jest.integration.config.js --verbose --setupFiles dotenv/config --runInBand",
-		"test:integration:coverage": "jest -c jest.integration.config.js --setupFiles dotenv/config --runInBand --coverage --collectCoverage",
-		"test:integration:watch": "jest -c jest.integration.config.js --watch --verbose --detectOpenHandles",
-		"test:e2e": "jest -c jest.e2e.config.js --setupFiles dotenv/config --runInBand",
-		"test:e2e:#it": "jest -t=#it -c jest.e2e.config.js --verbose --setupFiles dotenv/config --runInBand",
-		"test:e2e:coverage": "jest -c jest.e2e.config.js --setupFiles dotenv/config --runInBand --coverage --collectCoverage",
-		"test:e2e:watch": "jest -c jest.e2e.config.js --watch --verbose --detectOpenHandles",
+		"test:unit": "cross-env NODE_ENV=test jest -c jest.config.js",
+		"test:unit:#it": "cross-env NODE_ENV=test jest -t=#it -c jest.config.js --verbose",
+		"test:unit:coverage": "cross-env NODE_ENV=test jest -c jest.config.js --coverage --collectCoverage",
+		"test:unit:watch": "cross-env NODE_ENV=test jest -c jest.config.js --watch --verbose --detectOpenHandles",
+		"test:integration": "cross-env NODE_ENV=test jest -c jest.integration.config.js --runInBand",
+		"test:integration:#it": "cross-env NODE_ENV=test jest -t=#it -c jest.integration.config.js --verbose --runInBand",
+		"test:integration:coverage": "cross-env NODE_ENV=test jest -c jest.integration.config.js --runInBand --coverage --collectCoverage",
+		"test:integration:watch": "cross-env NODE_ENV=test jest -c jest.integration.config.js --watch --verbose --detectOpenHandles",
+		"test:e2e": "cross-env NODE_ENV=test jest -c jest.e2e.config.js --runInBand",
+		"test:e2e:#it": "cross-env NODE_ENV=test jest -t=#it -c jest.e2e.config.js --verbose --runInBand",
+		"test:e2e:coverage": "cross-env NODE_ENV=test jest -c jest.e2e.config.js --runInBand --coverage --collectCoverage",
+		"test:e2e:watch": "cross-env NODE_ENV=test jest -c jest.e2e.config.js --watch --verbose --detectOpenHandles",
 		"sonar:unit": "yarn test:unit:coverage && cp -r coverage/unit/* coverage/ && yarn sonar-scanner",
 		"sonar:integration": "yarn test:integration:coverage && cp -r coverage/integration/* coverage/ && yarn sonar-scanner",
 		"sonar:e2e": "yarn test:e2e:coverage && cp -r coverage/e2e/* coverage/ && yarn sonar-scanner",
@@ -73,7 +75,7 @@
 		"versioning": "semantic-release",
 		"postinstall": "husky install",
 		"clean": "rm -rf ./build ./dist ./coverage ./.scannerwork test-report.xml",
-		"clean:all": "rm -rf ./build ./dist ./coverage ./.scannerwork test-report.xml node_modules .tool-versions .env"
+		"clean:all": "rm -rf ./build ./dist ./coverage ./.scannerwork test-report.xml ./node_modules .tool-versions .env*"
 	},
 	"husky": {
 		"hooks": {
@@ -95,6 +97,8 @@
 		"@nestjs/common": "^10.0.5",
 		"@nestjs/config": "^3.0.0",
 		"@nestjs/core": "^10.0.5",
+		"@nestjs/devtools-integration": "^0.1.5",
+		"@nestjs/event-emitter": "^2.0.3",
 		"@nestjs/passport": "^10.0.0",
 		"@nestjs/platform-express": "^10.0.5",
 		"@nestjs/platform-socket.io": "^10.0.5",
@@ -113,7 +117,6 @@
 		"compression": "^1.7.4",
 		"cors": "^2.8.5",
 		"cross-env": "^7.0.3",
-		"crypto-js": "^4.1.1",
 		"dotenv": "^16.3.1",
 		"ejs": "^3.1.9",
 		"express": "^4.18.2",
@@ -150,6 +153,7 @@
 		"@semantic-release/github": "^9.0.4",
 		"@semantic-release/release-notes-generator": "^11.0.4",
 		"@types/bcrypt": "^5.0.0",
+		"@types/compression": "^1.7.5",
 		"@types/cron": "^2.0.1",
 		"@types/dotenv": "^8.2.0",
 		"@types/ejs": "^3.1.2",
@@ -181,6 +185,7 @@
 		"eslint-plugin-node": "^11.1.0",
 		"eslint-plugin-prettier": "^4.2.1",
 		"eslint-plugin-promise": "^6.1.1",
+		"eslint-plugin-security": "^1.7.1",
 		"eslint-plugin-standard": "^5.0.0",
 		"husky": "^8.0.3",
 		"ioredis-mock": "^8.7.0",

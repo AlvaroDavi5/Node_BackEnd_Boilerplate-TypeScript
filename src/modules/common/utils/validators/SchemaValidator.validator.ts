@@ -8,20 +8,21 @@ export default class SchemaValidator<S> {
 
 	constructor(
 		private readonly exceptions: Exceptions,
-	) { }
+	) {
+	}
 
-	public validate(data: any, schema: Schema<S>): S {
+	public validate(data: unknown, schema: Schema<S>): S {
 		const { value, error } = schema.validate(
 			data,
 			{ stripUnknown: false },
 		);
 
 		if (error) {
-			const errorMessages = error.details.map((e) => e.message).join();
+			const errorMessages = error.details.map((e) => e.message).join(', ');
 			throw this.exceptions.contract({
 				message: `${error.name}: ${errorMessages}`,
 				stack: error.stack,
-				details: errorMessages,
+				details: error.details,
 			});
 		}
 

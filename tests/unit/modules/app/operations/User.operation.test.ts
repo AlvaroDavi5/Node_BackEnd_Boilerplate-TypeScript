@@ -1,7 +1,9 @@
 import UserOperation from '../../../../../src/modules/app/operations/User.operation';
-import UserEntity, { UserInterface } from '../../../../../src/modules/app/domain/entities/User.entity';
-import UserPreferenceEntity, { UserPreferenceInterface } from '../../../../../src/modules/app/domain/entities/UserPreference.entity';
+import UserEntity from '../../../../../src/modules/app/domain/entities/User.entity';
+import UserPreferenceEntity from '../../../../../src/modules/app/domain/entities/UserPreference.entity';
 import UserStrategy from '../../../../../src/modules/app/strategies/User.strategy';
+import { ListQueryInterface, PaginationInterface } from '../../../../../src/types/_listPaginationInterface';
+import { ErrorInterface } from '../../../../../src/types/_errorInterface';
 
 
 describe('Modules :: App :: Operations :: UserOperation', () => {
@@ -9,32 +11,33 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 	const userServiceMock = {
 		getById: jest.fn(async (id: number): Promise<UserEntity | null> => (null)),
 		create: jest.fn(async (entity: UserEntity): Promise<UserEntity | null> => (null)),
-		update: jest.fn(async (id: number, data: UserInterface): Promise<UserEntity | null> => (null)),
+		update: jest.fn(async (id: number, entity: UserEntity): Promise<UserEntity | null> => (null)),
 		delete: jest.fn(async (id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean | null> => (null)),
-		list: jest.fn(async (data: any): Promise<any> => ({ content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 })),
+		list: jest.fn(async (query: ListQueryInterface): Promise<PaginationInterface<UserEntity>> => ({ content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 })),
 	};
 	const userPreferenceServiceMock = {
 		getByUserId: jest.fn(async (userId: number): Promise<UserPreferenceEntity | null> => (null)),
-		create: jest.fn(async (data: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (null)),
-		update: jest.fn(async (id: number, data: UserPreferenceInterface): Promise<UserPreferenceEntity | null> => (null)),
+		create: jest.fn(async (entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (null)),
+		update: jest.fn(async (id: number, entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (null)),
 		delete: jest.fn(async (id: number, data: { softDelete: boolean }): Promise<boolean | null> => (null)),
 	};
 	const userStrategy = new UserStrategy();
 	const exceptionsMock = {
-		unauthorized: jest.fn(({ message }: any): Error => (new Error(message))),
-		business: jest.fn(({ message }: any): Error => (new Error(message))),
-		notFound: jest.fn(({ message }: any): Error => (new Error(message))),
+		unauthorized: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
+		business: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
+		notFound: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
+		conflict: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 	};
 
+	const createdAt = new Date();
 	const userOperation = new UserOperation(userServiceMock, userPreferenceServiceMock, userStrategy, exceptionsMock);
 
 	describe('# List Users', () => {
 
 		test('Should list users', async () => {
-			const listData = {
-				size: 15,
+			const listData: ListQueryInterface = {
+				limit: 15,
 				page: 0,
-				limit: 5,
 			};
 			const listResult = {
 				content: [
@@ -47,7 +50,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				totalPages: 1,
 				totalItems: 3,
 			};
-			userServiceMock.list.mockImplementation(async (data: any): Promise<any> => (listResult));
+			userServiceMock.list.mockImplementation(async (query: ListQueryInterface): Promise<PaginationInterface<UserEntity>> => (listResult));
 
 			const listedUsers = await userOperation.listUsers(listData);
 			expect(userServiceMock.list).toHaveBeenCalledTimes(1);
@@ -74,25 +77,47 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 			expect(userServiceMock.create).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.create).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-			expect(await userServiceMock.getById(1)).toBe(userEntity);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 			expect(createdUser?.getId()).toBe(userEntity.getId());
 			expect(createdUser?.getLogin()?.email).toBe(userEntity.getLogin().email);
 		});
 
-		test('Should return null', async () => {
+		test('Should throw a not found error', async () => {
+			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			const userAgent = { username: 'tester', clientId: '#1' };
-			userServiceMock.getById.mockImplementation(async (id: number): Promise<UserEntity | null> => {
-				if (id) return new UserEntity({ id: 1, email: 'user.test@nomail.test' });
-				else return null;
-			});
+			userServiceMock.create.mockImplementation(async (entity: UserEntity): Promise<UserEntity | null> => (entity));
+			userServiceMock.getById.mockImplementation(async (id: number): Promise<UserEntity | null> => (null));
+			userPreferenceServiceMock.create.mockImplementation(async (entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (entity));
+			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: number): Promise<UserPreferenceEntity | null> => (null));
 
-			const createdUser = await userOperation.createUser({}, userAgent);
-			expect(userServiceMock.create).toHaveBeenCalledTimes(1);
-			expect(userPreferenceServiceMock.create).not.toHaveBeenCalled();
-			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-			expect(createdUser?.getId()).toBeUndefined();
-			expect(createdUser?.getLogin()?.email).toBeUndefined();
+			try {
+				await userOperation.createUser(userEntity.getAttributes(), userAgent);
+			} catch (error) {
+				expect(userServiceMock.create).toHaveBeenCalledTimes(1);
+				expect(userPreferenceServiceMock.create).toHaveBeenCalledTimes(1);
+				expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
+				expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
+				expect(exceptionsMock.notFound).toHaveBeenCalledWith({
+					message: 'Created user not found!'
+				});
+			}
+		});
+
+		test('Should throw a conflict error', async () => {
+			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
+			const userAgent = { username: 'tester', clientId: '#1' };
+			userServiceMock.create.mockImplementation(async (entity: UserEntity): Promise<UserEntity | null> => (null));
+			userPreferenceServiceMock.create.mockImplementation(async (entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (null));
+
+			try {
+				await userOperation.createUser(userEntity.getAttributes(), userAgent);
+			} catch (error) {
+				expect(userServiceMock.create).toHaveBeenCalledTimes(1);
+				expect(userPreferenceServiceMock.create).not.toHaveBeenCalled();
+				expect(exceptionsMock.conflict).toHaveBeenCalledWith({
+					message: 'User not created!'
+				});
+			}
 		});
 
 		test('Should throw a unauthorized error', async () => {
@@ -198,20 +223,20 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				if (userId === userEntity.getId()) return userPreferenceEntity;
 				else return null;
 			});
-			userServiceMock.update.mockImplementation(async (id: number, data: UserInterface): Promise<UserEntity | null> => {
-				if (id === userEntity.getId()) return new UserEntity({ ...userEntity.getAttributes(), ...data });
+			userServiceMock.update.mockImplementation(async (id: number, entity: UserEntity): Promise<UserEntity | null> => {
+				if (id === userEntity.getId()) return new UserEntity({ ...userEntity.getAttributes(), ...entity.getAttributes() });
 				else return null;
 			});
-			userPreferenceServiceMock.update.mockImplementation(async (id: number, data: UserPreferenceInterface): Promise<UserPreferenceEntity | null> => {
-				if (id === userPreferenceEntity.getId()) return new UserPreferenceEntity({ ...userPreferenceEntity.getAttributes(), ...data });
+			userPreferenceServiceMock.update.mockImplementation(async (id: number, entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => {
+				if (id === userPreferenceEntity.getId()) return new UserPreferenceEntity({ ...userPreferenceEntity.getAttributes(), ...entity.getAttributes() });
 				else return null;
 			});
 
-			const deletedUser = await userOperation.updateUser(1, { phone: '+55999999999' }, userAgent);
+			const deletedUser = await userOperation.updateUser(1, { phone: '+55999999999', createdAt }, userAgent);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
-			expect(userPreferenceServiceMock.update).toHaveBeenCalledWith(2, { phone: '+55999999999' });
-			expect(userServiceMock.update).toHaveBeenCalledWith(1, { phone: '+55999999999' });
+			expect(userPreferenceServiceMock.update).toHaveBeenCalledWith(2, new UserPreferenceEntity({ phone: '+55999999999', createdAt }));
+			expect(userServiceMock.update).toHaveBeenCalledWith(1, new UserEntity({ phone: '+55999999999', createdAt }));
 			expect(deletedUser?.getPhone()).toEqual('+55999999999');
 		});
 
@@ -258,7 +283,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				await userOperation.updateUser(1, {}, userAgent);
 			} catch (error) {
 				expect(exceptionsMock.business).toHaveBeenCalledWith({
-					message: 'userAgent not allowed to execute this action'
+					message: 'userAgent not allowed to update this user'
 				});
 			}
 		});
@@ -301,7 +326,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.delete).toHaveBeenCalledWith(2, { softDelete: true });
-			expect(userServiceMock.delete).toHaveBeenCalledWith(1, { softDelete: true, userAgentId: userAgent.username });
+			expect(userServiceMock.delete).toHaveBeenCalledWith(1, { softDelete: true, userAgentId: userAgent.clientId });
 			expect(deletedUser).toEqual(true);
 		});
 

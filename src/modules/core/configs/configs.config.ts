@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
-// import path from 'path';
-// dotenv.config({ path: __dirname + "/../.env.development.local" });
-dotenv.config();
 
+
+// dotenv.config({ path: (process.cwd() + '/envs/.env.development.local') });
+dotenv.config();
 
 export interface ConfigsInterface {
 	// ! Application Service
@@ -126,8 +126,7 @@ export interface ConfigsInterface {
 	},
 	// ? Cryptography and Security
 	security: {
-		cryptoAlgorithm: string | undefined, // cryptography algorithm
-		secretKey: string | undefined, // JWT secret key
+		secretKey: string | undefined,
 	}
 }
 
@@ -242,7 +241,6 @@ export default (): ConfigsInterface => ({
 		},
 	},
 	security: {
-		cryptoAlgorithm: process.env.CRYPTO_ALGORITHM,
-		secretKey: process.env.CRYPTO_KEY,
+		secretKey: process.env.SECRET,
 	},
 });

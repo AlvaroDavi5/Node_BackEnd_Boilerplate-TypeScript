@@ -1,4 +1,4 @@
-import path from 'path';
+import { resolve } from 'path';
 import FileReaderHelper from '../../../../../../src/modules/common/utils/helpers/FileReader.helper';
 
 
@@ -23,7 +23,7 @@ describe('Modules :: Utils :: Helpers :: FileReaderHelper', () => {
 
 	describe('# Valid File Path', () => {
 		test('Should return the content string', async () => {
-			const filePath = path.resolve(__dirname, '../../../../../../LICENSE.txt');
+			const filePath = resolve('src/dev/templates/LICENSE.txt');
 			const content = await fileReaderHelper.read(filePath);
 			expect(warnLoggerMock).not.toHaveBeenCalled();
 			expect(content).toContain('MIT License');

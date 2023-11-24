@@ -1,29 +1,34 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import { Message } from '@aws-sdk/client-sqs';
 import { Logger } from 'winston';
 import SubscriptionService from '@app/services/Subscription.service';
-import SubscriptionServiceAdapter from '@common/adapters/SubscriptionService.adapter';
 import MongoClient from '@core/infra/data/Mongo.client';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import eventSchema, { EventSchemaInterface } from './schemas/event.schema';
+import { EventsEnum } from '@app/domain/enums/events.enum';
+import { WebSocketRoomsEnum } from '@app/domain/enums/webSocketEvents.enum';
 
 
 @Injectable()
-export default class EventsQueueHandler {
-	private readonly subscriptionService: SubscriptionService;
+export default class EventsQueueHandler implements OnModuleInit {
+	private subscriptionService!: SubscriptionService;
 	private readonly logger: Logger;
 
 	constructor(
-		private readonly subscriptionServiceAdapter: SubscriptionServiceAdapter,
+		private readonly moduleRef: ModuleRef,
 		private readonly mongoClient: MongoClient,
 		private readonly schemaValidator: SchemaValidator<EventSchemaInterface>,
 		private readonly dataParserHelper: DataParserHelper,
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
-		this.subscriptionService = this.subscriptionServiceAdapter.getProvider();
 		this.logger = this.loggerGenerator.getLogger();
+	}
+
+	public onModuleInit(): void {
+		this.subscriptionService = this.moduleRef.get(SubscriptionService, { strict: false });
 	}
 
 	public async execute(message: Message): Promise<boolean> {
@@ -32,7 +37,10 @@ export default class EventsQueueHandler {
 				const data = this.dataParserHelper.toObject(message.Body);
 				const value = this.schemaValidator.validate(data, eventSchema);
 
-				this.subscriptionService.broadcast(value);
+				if (value.payload.event === EventsEnum.NEW_CONNECTION)
+					this.subscriptionService.emit(value, WebSocketRoomsEnum.NEW_CONNECTIONS);
+				else
+					this.subscriptionService.broadcast(value);
 
 				return true;
 			}

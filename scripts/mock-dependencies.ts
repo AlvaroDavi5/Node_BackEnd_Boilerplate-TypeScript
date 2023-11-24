@@ -3,10 +3,8 @@ import MockedExternalServers from '../src/dev/mockedExternalServers/index';
 import configs from '../src/modules/core/configs/configs.config';
 
 
-const logger = console;
-
 function mockServiceDependencies() {
-	logger.info(
+	console.info(
 		'\n # Mocking service dependencies... \n # Update your projects env file \n'
 	);
 
@@ -14,7 +12,7 @@ function mockServiceDependencies() {
 	externalServices.start();
 
 	createEventsQueue({
-		logger,
+		logger: console,
 		configs: configs(),
 	});
 }

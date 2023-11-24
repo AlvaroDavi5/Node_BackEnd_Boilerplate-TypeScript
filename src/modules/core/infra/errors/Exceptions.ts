@@ -11,97 +11,95 @@ import { ErrorInterface } from 'src/types/_errorInterface';
 
 @Injectable()
 export default class Exceptions {
+	private readonly showStack: boolean = false;
+
 	constructor(
 		private readonly configService: ConfigService,
-	) { }
-
-	private showStack(): boolean {
+	) {
 		const stackErrorVisible: ConfigsInterface['application']['stackErrorVisible'] = this.configService.get<any>('application.stackErrorVisible');
-		if (stackErrorVisible === 'true')
-			return true;
-		return false;
+		this.showStack = (stackErrorVisible === 'true');
 	}
 
-	public [ExceptionsEnum.CONTRACT](err: ErrorInterface) {
-		const exception = new BadRequestException(err.message);
+	public [ExceptionsEnum.CONTRACT](error: ErrorInterface) {
+		const exception = new BadRequestException(error.message);
 
 		exception.name = ExceptionsEnum.CONTRACT;
-		exception.message = err.message;
-		exception.cause = err.details;
-		if (this.showStack())
-			exception.stack = err.stack;
+		exception.message = error.message;
+		exception.cause = error.details;
+		if (this.showStack)
+			exception.stack = error.stack;
 
 		return exception;
 	}
 
-	public [ExceptionsEnum.BUSINESS](err: ErrorInterface) {
-		const exception = new ForbiddenException(err.message);
+	public [ExceptionsEnum.BUSINESS](error: ErrorInterface) {
+		const exception = new ForbiddenException(error.message);
 
 		exception.name = ExceptionsEnum.BUSINESS;
-		exception.message = err.message;
-		exception.cause = err.details;
-		if (this.showStack())
-			exception.stack = err.stack;
+		exception.message = error.message;
+		exception.cause = error.details;
+		if (this.showStack)
+			exception.stack = error.stack;
 
 		return exception;
 	}
 
-	public [ExceptionsEnum.UNAUTHORIZED](err: ErrorInterface) {
-		const exception = new UnauthorizedException(err.message);
+	public [ExceptionsEnum.UNAUTHORIZED](error: ErrorInterface) {
+		const exception = new UnauthorizedException(error.message);
 
 		exception.name = ExceptionsEnum.UNAUTHORIZED;
-		exception.message = err.message;
-		exception.cause = err.details;
-		if (this.showStack())
-			exception.stack = err.stack;
+		exception.message = error.message;
+		exception.cause = error.details;
+		if (this.showStack)
+			exception.stack = error.stack;
 
 		return exception;
 	}
 
-	public [ExceptionsEnum.CONFLICT](err: ErrorInterface) {
-		const exception = new ConflictException(err.message);
+	public [ExceptionsEnum.CONFLICT](error: ErrorInterface) {
+		const exception = new ConflictException(error.message);
 
 		exception.name = ExceptionsEnum.CONFLICT;
-		exception.message = err.message;
-		exception.cause = err.details;
-		if (this.showStack())
-			exception.stack = err.stack;
+		exception.message = error.message;
+		exception.cause = error.details;
+		if (this.showStack)
+			exception.stack = error.stack;
 
 		return exception;
 	}
 
-	public [ExceptionsEnum.NOT_FOUND](err: ErrorInterface) {
-		const exception = new NotFoundException(err.message);
+	public [ExceptionsEnum.NOT_FOUND](error: ErrorInterface) {
+		const exception = new NotFoundException(error.message);
 
 		exception.name = ExceptionsEnum.NOT_FOUND;
-		exception.message = err.message;
-		exception.cause = err.details;
-		if (this.showStack())
-			exception.stack = err.stack;
+		exception.message = error.message;
+		exception.cause = error.details;
+		if (this.showStack)
+			exception.stack = error.stack;
 
 		return exception;
 	}
 
-	public [ExceptionsEnum.INTEGRATION](err: ErrorInterface) {
-		const exception = new ServiceUnavailableException(err.message);
+	public [ExceptionsEnum.INTEGRATION](error: ErrorInterface) {
+		const exception = new ServiceUnavailableException(error.message);
 
 		exception.name = ExceptionsEnum.INTEGRATION;
-		exception.message = err.message;
-		exception.cause = err.details;
-		if (this.showStack())
-			exception.stack = err.stack;
+		exception.message = error.message;
+		exception.cause = error.details;
+		if (this.showStack)
+			exception.stack = error.stack;
 
 		return exception;
 	}
 
-	public [ExceptionsEnum.INTERNAL](err: ErrorInterface) {
-		const exception = new InternalServerErrorException(err.message);
+	public [ExceptionsEnum.INTERNAL](error: ErrorInterface) {
+		const exception = new InternalServerErrorException(error.message);
 
 		exception.name = ExceptionsEnum.INTERNAL;
-		exception.message = err.message;
-		exception.cause = err.details;
-		if (this.showStack())
-			exception.stack = err.stack;
+		exception.message = error.message;
+		exception.cause = error.details;
+		if (this.showStack)
+			exception.stack = error.stack;
 
 		return exception;
 	}

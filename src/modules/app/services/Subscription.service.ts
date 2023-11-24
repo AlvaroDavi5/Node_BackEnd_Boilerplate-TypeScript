@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ObjectId } from 'mongodb';
 import { Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import WebSocketClient from '@events/websocket/client/WebSocket.client';
-import WebSocketClientAdapter from '@common/adapters/WebSocketClient.adapter';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
@@ -14,23 +14,26 @@ import { WebSocketEventsEnum } from '@app/domain/enums/webSocketEvents.enum';
 
 
 @Injectable()
-export default class SubscriptionService {
-	private readonly webSocketClient: WebSocketClient;
+export default class SubscriptionService implements OnModuleInit {
+	private webSocketClient!: WebSocketClient;
 	private readonly logger: Logger;
 	public readonly expirationTime: number;
 
 	constructor(
+		private readonly moduleRef: ModuleRef,
 		private readonly configService: ConfigService,
-		private readonly webSocketClientAdapter: WebSocketClientAdapter,
 		private readonly mongoClient: MongoClient,
 		private readonly redisClient: RedisClient,
 		private readonly loggerGenerator: LoggerGenerator,
 		private readonly cacheAccessHelper: CacheAccessHelper,
 	) {
-		this.webSocketClient = this.webSocketClientAdapter.getProvider();
 		this.logger = this.loggerGenerator.getLogger();
 		const subscriptionsExpirationTime: ConfigsInterface['cache']['expirationTime']['subscriptions'] = this.configService.get<any>('cache.expirationTime.subscriptions');
 		this.expirationTime = subscriptionsExpirationTime;
+	}
+
+	public onModuleInit(): void {
+		this.webSocketClient = this.moduleRef.get(WebSocketClient, { strict: false });
 	}
 
 	public async get(id: string): Promise<any> {
@@ -90,12 +93,15 @@ export default class SubscriptionService {
 		return deletedSubscription;
 	}
 
-	public emit(msg: any): void {
+	public emit(msg: unknown, socketIdsOrRooms: string | string[]): void {
 		this.logger.info('Emiting event');
-		this.webSocketClient.send(WebSocketEventsEnum.EMIT_PRIVATE, msg);
+		this.webSocketClient.send(WebSocketEventsEnum.EMIT_PRIVATE, {
+			...msg as any,
+			socketIdsOrRooms,
+		});
 	}
 
-	public broadcast(msg: any): void {
+	public broadcast(msg: unknown): void {
 		this.logger.info('Broadcasting event');
 		this.webSocketClient.send(WebSocketEventsEnum.BROADCAST, msg);
 	}

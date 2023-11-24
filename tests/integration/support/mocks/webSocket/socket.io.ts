@@ -2,70 +2,68 @@
 export class Server {
 	httpServer: any;
 	options!: any;
-	private _emit: (event: string, msg: string) => void;
-	private _on: (event: string, callback: () => void) => void;
+	public readonly sockets: { fetchSockets: () => any[] };
 
 	constructor(httpServer?: any, options?: any) {
 		this.httpServer = httpServer || null;
 		this.options = options || {};
 
-		this._emit = (event = '', msg = '') => {
-			console.log('New event:', event);
-		};
-		this._on = (event = '', callback: any) => {
-			const socket = {
-				id: 'mockedSocket',
-				on: this._on,
-				broadcast: {
-					emit: this._emit,
-				},
-			};
-			const msg = {
-				connectionId: socket.id,
-				token: 'xxx',
-				dataValues: {
-					connectionId: socket.id,
-					clientId: 'mockedClient',
-					userId: 0,
-					createdAt: new Date(),
-				},
-				targetSocketId: 'mockedTargetSocket',
-				payload: {},
-			};
-
-			if (event === 'connection')
-				callback(socket);
-			else
-				callback(JSON.stringify(msg));
+		this.sockets = {
+			fetchSockets: () => ([
+				{ id: '#1' },
+				{ id: '#2' },
+			]),
 		};
 	}
 
-	on(event: string, callback: any) {
-		console.log('New event:', event);
+	public setMaxListeners(listenersNumber: number): this {
+		return this;
 	}
 
-	to(socketId: string) {
+	public on(ev: string, listener?: ((...args: any[]) => void)): this {
+		return this;
+	}
+
+	public to(socketIdsOrRooms: string | string[]) {
 		return {
-			emit: (event: string, msg: string) => {
-				console.log('New event:', event);
+			emit: (ev: string, ...args: any[]): boolean => {
+				return true;
 			},
 		};
 	}
 
-	disconnectSockets: () => null;
-	sockets: {
-		fetchSockets: () => [
-			{ id: 1 },
-			{ id: 2 },
-		]
-	};
+	public disconnectSockets(): void {
+		console.log('All Disconnected!');
+	}
 }
 
-let server: Server;
+export class ServerSocket {
+	public readonly id: string;
+	public connected: boolean;
+	public broadcast: { emit: (ev: string, ...args: any[]) => boolean; };
 
-export function getServerInstance() {
-	if (!server) {
-		server = new Server();
+	constructor() {
+		this.id = 'mockedSocket';
+		this.connected = true;
+		this.broadcast = {
+			emit: this.emit,
+		};
 	}
-	return server;
+
+	public on(ev: string, listener?: ((...args: any[]) => void)): this {
+		return this;
+	}
+
+	public off(eventName: string | symbol, listener: (...args: any[]) => void): this {
+		return this;
+	}
+
+	public emit(ev: string, ...args: any[]): boolean {
+		return true;
+	}
+
+	public disconnect(): this {
+		this.connected = false;
+		return this;
+	}
 }

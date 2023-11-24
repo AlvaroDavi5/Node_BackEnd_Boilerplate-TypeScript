@@ -1,13 +1,14 @@
-import { Injectable } from '@nestjs/common';
-import { Association } from 'sequelize';
+import { Injectable, Inject } from '@nestjs/common';
+import { Sequelize, Association } from 'sequelize';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import Exceptions from '@core/infra/errors/Exceptions';
+import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import AbstractRepository from '@core/infra/database/repositories/AbstractRepository.repository';
 import UsersModel, { userAttributes, userOptions } from '@core/infra/database/models/Users.model';
+import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 import UserEntity from '@app/domain/entities/User.entity';
 import userMapper from './user.mapper';
 import { userQueryParamsBuilder, userQueryOptions } from './user.query';
-import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 import { ListQueryInterface, PaginationInterface } from 'src/types/_listPaginationInterface';
 
 
@@ -18,9 +19,12 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 	};
 
 	constructor(
-		exceptions: Exceptions,
-		loggerGenerator: LoggerGenerator,
+		@Inject(DATABASE_CONNECTION_PROVIDER)
+			connection: Sequelize,
+			exceptions: Exceptions,
+			loggerGenerator: LoggerGenerator,
 	) {
+		userOptions.sequelize = connection;
 		super({
 			DomainEntity: UserEntity,
 			ResourceModel: UsersModel,
@@ -65,25 +69,24 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 
 		const { rows, count } = await userModel.findAndCountAll(buildedQuery);
 
-		const totalPages = Math.ceil(count / (query?.size || 1)) || 1;
+		const totalItems = count;
+		const totalPages = Math.ceil(totalItems / (query?.limit || 1)) || 1;
 		const pageNumber = query?.page || 0;
-		const pageSize = query?.limit || count;
+		const pageSize = rows.length;
 
 		let content: UserEntity[] = [];
-		if (count > 0) {
-			content = rows.map((item) =>
-				this.resourceMapper.toEntity(item)
+		if (rows.length) {
+			content = rows.map((register) =>
+				this.resourceMapper.toEntity(register)
 			);
 		}
 
-		const list = {
+		return {
 			content,
 			pageNumber,
 			pageSize,
 			totalPages,
-			totalItems: count,
+			totalItems,
 		};
-
-		return list;
 	}
 }

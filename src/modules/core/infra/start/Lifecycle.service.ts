@@ -1,42 +1,44 @@
-import { Injectable, OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown } from '@nestjs/common';
+import { Injectable, Inject, OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown } from '@nestjs/common';
+import { HttpAdapterHost, LazyModuleLoader } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { HttpAdapterHost } from '@nestjs/core';
+import { Sequelize } from 'sequelize';
 import { Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
-import WebSocketServerAdapter from '@common/adapters/WebSocketServer.adapter';
-import SyncCronJob from '@core/infra/cron/jobs/SyncCron.job';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CognitoClient from '@core/infra/integration/aws/Cognito.client';
 import SnsClient from '@core/infra/integration/aws/Sns.client';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import S3Client from '@core/infra/integration/aws/S3.client';
-import connection from '@core/infra/database/connection';
+import SyncCronJob from '@core/infra/cron/jobs/SyncCron.job';
+import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import ServerlessModule from '@serverless/serverless.module';
 import { ProcessExitStatusEnum } from './processEvents.enum';
 
 
 @Injectable()
 export default class LifecycleService implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown {
 	private readonly logger: Logger;
-	private readonly webSocketServer: WebSocketServer;
 	private readonly appConfigs: ConfigsInterface['application'];
 
 	constructor(
-		private readonly configService: ConfigService,
 		private readonly httpAdapterHost: HttpAdapterHost,
-		private readonly webSocketServerAdapter: WebSocketServerAdapter,
-		private readonly syncCronJob: SyncCronJob,
+		private readonly lazyModuleLoader: LazyModuleLoader,
+		private readonly configService: ConfigService,
+		@Inject(DATABASE_CONNECTION_PROVIDER)
+		private readonly connection: Sequelize,
 		private readonly mongoClient: MongoClient,
 		private readonly redisClient: RedisClient,
 		private readonly cognitoClient: CognitoClient,
 		private readonly snsClient: SnsClient,
 		private readonly sqsClient: SqsClient,
 		private readonly s3Client: S3Client,
+		private readonly webSocketServer: WebSocketServer,
+		private readonly syncCronJob: SyncCronJob,
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
-		this.webSocketServer = this.webSocketServerAdapter.getProvider();
 		this.logger = this.loggerGenerator.getLogger();
 		this.appConfigs = this.configService.get<any>('application');
 	}
@@ -47,6 +49,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 
 	public onApplicationBootstrap(): void {
 		this.logger.debug(`\n\n\tApp started with PID: ${process.pid} on URL: ${this.appConfigs?.url}\n`);
+		this.lazyModuleLoader.load(() => ServerlessModule);
 	}
 
 	public onModuleDestroy(): void {
@@ -54,6 +57,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 		try {
 			this.httpAdapterHost.httpAdapter.close();
 			this.webSocketServer.disconnectAllSockets();
+			this.webSocketServer.disconnect();
 			this.syncCronJob.stopCron();
 			this.cognitoClient.destroy();
 			this.snsClient.destroy();
@@ -81,7 +85,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 			}
 
 		try {
-			await connection.close();
+			await this.connection.close();
 		} catch (error) {
 			this.logger.error(error);
 		}
@@ -89,6 +93,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 
 	public onApplicationShutdown(): void {
 		this.logger.warn('Exiting Application');
-		process.exit(ProcessExitStatusEnum.SUCCESS);
+		if (this.appConfigs.environment !== 'test')
+			process.exit(ProcessExitStatusEnum.SUCCESS);
 	}
 }

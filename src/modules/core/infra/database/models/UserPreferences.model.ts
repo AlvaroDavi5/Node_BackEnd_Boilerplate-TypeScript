@@ -1,9 +1,9 @@
-import { Model, DataTypes, Association, HasOneGetAssociationMixin, HasManyHasAssociationMixin } from 'sequelize';
-import Users from './Users.model';
-import connection from '@core/infra/database/connection';
+import { Model, DataTypes, Association, HasOneGetAssociationMixin, HasManyHasAssociationMixin, ModelAttributes, InitOptions } from 'sequelize';
+import UsersModel from './Users.model';
+import { connection } from '@core/infra/database/connection';
 
 
-class UserPreferences extends Model {
+class UserPreferencesModel extends Model {
 	protected id!: number;
 	protected userId!: number;
 	protected imagePath!: string;
@@ -14,7 +14,7 @@ class UserPreferences extends Model {
 
 	static associate() {
 		this.belongsTo(
-			Users,
+			UsersModel,
 			{
 				constraints: true,
 				foreignKeyConstraint: true,
@@ -26,14 +26,14 @@ class UserPreferences extends Model {
 	}
 
 	public static associations: {
-		user: Association<Users>
+		user: Association<UsersModel>
 	};
 
-	public getUser!: HasOneGetAssociationMixin<Users>;
-	public hasUser!: HasManyHasAssociationMixin<Users, number>;
+	public getUser!: HasOneGetAssociationMixin<UsersModel>;
+	public hasUser!: HasManyHasAssociationMixin<UsersModel, number>;
 }
 
-export const userPreferenceAttributes = {
+export const userPreferenceAttributes: ModelAttributes = {
 	userId: DataTypes.INTEGER,
 	imagePath: DataTypes.STRING(255),
 	defaultTheme: DataTypes.STRING(20),
@@ -42,12 +42,12 @@ export const userPreferenceAttributes = {
 	deletedAt: DataTypes.DATE,
 };
 
-export const userPreferenceOptions = {
+export const userPreferenceOptions: InitOptions = {
 	modelName: 'UserPreferences',
 	tableName: 'UserPreferences',
-	sequelize: connection
+	sequelize: connection,
 };
 
-UserPreferences.init(userPreferenceAttributes, userPreferenceOptions);
+UserPreferencesModel.init(userPreferenceAttributes, userPreferenceOptions);
 
-export default UserPreferences;
+export default UserPreferencesModel;

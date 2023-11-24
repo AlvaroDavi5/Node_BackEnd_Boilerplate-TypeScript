@@ -1,4 +1,4 @@
-import { Model, Op, QueryTypes, ModelAttributes, InitOptions } from 'sequelize';
+import { Model, Op, QueryTypes, ModelAttributes, Includeable, InitOptions, FindAndCountOptions, Attributes } from 'sequelize';
 import { Logger } from 'winston';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import Exceptions from '@core/infra/errors/Exceptions';
@@ -14,15 +14,15 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 	protected DomainEntity: TypeConstructor<E>;
 	protected ResourceModel: ModelType<M>;
 	protected resourceMapper: {
+		toEntity: ({ dataValues }: M) => E,
 		toDatabase: (entity: E) => any,
-		toEntity: ({ dataValues }: any) => E,
 	};
 
 	protected queryParamsBuilder: {
-		buildParams: (data: any) => any,
+		buildParams: (data: any) => Omit<FindAndCountOptions<Attributes<M>>, 'group'>,
 	};
 
-	protected queryOptions: any;
+	protected queryOptions: { include: Includeable[] };
 	protected exceptions: Exceptions;
 	protected logger: Logger;
 
@@ -46,8 +46,8 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 		resourceAttributes: ModelAttributes,
 		resourceOptions: InitOptions,
 		resourceMapper: {
+			toEntity: ({ dataValues }: M) => E,
 			toDatabase: (entity: E) => any,
-			toEntity: ({ dataValues }: any) => E,
 		},
 		queryParamsBuilder: {
 			buildParams: (data: any) => any,
@@ -90,16 +90,16 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 
 		if (!valid) {
 			throw this.exceptions.contract({
-				message: 'ValidationError',
+				message: `ValidationError: ${error?.name}`,
 				details: error?.message,
 				stack: error?.stack,
 			});
 		}
 	}
 
-	public async create(data: any): Promise<E | null> {
+	public async create(entity: E): Promise<E | null> {
 		const result = await this.ResourceModel.create(
-			this.resourceMapper.toDatabase(data)
+			this.resourceMapper.toDatabase(entity)
 		);
 		if (!result) return null;
 
@@ -136,11 +136,11 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 		return result.map(this.resourceMapper.toEntity);
 	}
 
-	public async update(id: number, data: any): Promise<E | null> {
+	public async update(id: number, entity: E): Promise<E | null> {
 		const where: any = {
 			id: Number(id),
 		};
-		await this.ResourceModel.update(data, { where });
+		await this.ResourceModel.update(entity, { where });
 		const result = await this.ResourceModel.findByPk(id);
 		if (!result) return null;
 
@@ -148,40 +148,34 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 	}
 
 	public async list(query?: ListQueryInterface): Promise<PaginationInterface<E>> {
-		const buildedQuery = this.queryParamsBuilder?.buildParams(query);
+		const buildedQuery = this.queryParamsBuilder.buildParams(query);
 		const { rows, count } = await this.ResourceModel.findAndCountAll(buildedQuery);
 
-		const totalPages = Math.ceil(count / (query?.size || 1)) || 1;
+		const totalItems = count;
+		const totalPages = Math.ceil(totalItems / (query?.limit || 1)) || 1;
 		const pageNumber = query?.page || 0;
-		const pageSize = query?.limit || count;
+		const pageSize = rows.length;
 
 		let content: E[] = [];
-		if (count > 0) {
-			content = rows.map((item: any) =>
-				this.resourceMapper.toEntity(item)
+		if (rows.length) {
+			content = rows.map((register) =>
+				this.resourceMapper.toEntity(register)
 			);
 		}
 
-		const list = {
+		return {
 			content,
 			pageNumber,
 			pageSize,
 			totalPages,
-			totalItems: count,
+			totalItems,
 		};
-
-		return list;
 	}
 
 	public async count(query: any): Promise<number> {
-		const resource = await this.ResourceModel.count({
+		const counter = await this.ResourceModel.count({
 			where: query,
 			...this.queryOptions,
-		});
-
-		let counter = 0;
-		resource.forEach(group => {
-			counter += group.count;
 		});
 
 		return counter;

@@ -1,10 +1,14 @@
 import { Module, Global } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { DevtoolsModule } from '@nestjs/devtools-integration';
 import configs from '@core/configs/configs.config';
 import LifecycleService from '@core/infra/start/Lifecycle.service';
 import Exceptions from '@core/infra/errors/Exceptions';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import CryptographyService from '@core/infra/security/Cryptography.service';
+import DatabaseConnectionProvider from '@core/infra/database/connection';
 import RedisClient from '@core/infra/cache/Redis.client';
 import MongoClient from '@core/infra/data/Mongo.client';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
@@ -23,8 +27,19 @@ import ApiModule from '@api/api.module';
 @Global()
 @Module({
 	imports: [
-		ConfigModule.forRoot({ isGlobal: true, load: [configs] }),
+		ConfigModule.forRoot({
+			isGlobal: true,
+			load: [configs],
+		}),
 		ScheduleModule.forRoot(),
+		EventEmitterModule.forRoot({
+			maxListeners: 10,
+			verboseMemoryLeak: true,
+		}),
+		DevtoolsModule.register({
+			http: process.env.NODE_ENV !== 'prod',
+			port: 8000,
+		}),
 		CommonModule,
 		AppModule,
 		EventsModule,
@@ -35,6 +50,8 @@ import ApiModule from '@api/api.module';
 		LifecycleService,
 		Exceptions,
 		LoggerGenerator,
+		CryptographyService,
+		DatabaseConnectionProvider,
 		RedisClient,
 		MongoClient,
 		SqsClient,
@@ -48,6 +65,8 @@ import ApiModule from '@api/api.module';
 	exports: [
 		Exceptions,
 		LoggerGenerator,
+		CryptographyService,
+		DatabaseConnectionProvider,
 		RedisClient,
 		MongoClient,
 		SqsClient,

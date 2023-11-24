@@ -40,6 +40,7 @@ module.exports = {
 		'src/modules/core/infra/cron/tasks/',
 		'src/modules/core/infra/errors/',
 		'src/modules/core/infra/logging/',
+		'src/modules/core/infra/security/',
 		'src/modules/api/constants/',
 		'src/modules/api/decorators/',
 		'src/modules/api/middlewares/',
@@ -110,13 +111,14 @@ module.exports = {
 
 	// A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
 	moduleNameMapper: {
-		'~/(.*)': '<rootDir>/src/$1',
+		'~/(.*)': '<rootDir>/$1',
 		'@dev/(.*)': '<rootDir>/src/dev/$1',
 		'@core/(.*)': '<rootDir>/src/modules/core/$1',
+		'@common/(.*)': '<rootDir>/src/modules/common/$1',
 		'@app/(.*)': '<rootDir>/src/modules/app/$1',
 		'@api/(.*)': '<rootDir>/src/modules/api/$1',
 		'@events/(.*)': '<rootDir>/src/modules/events/$1',
-		'@common/(.*)': '<rootDir>/src/modules/common/$1',
+		'@serverless/(.*)': '<rootDir>/src/modules/serverless/$1',
 	},
 
 	// An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -211,7 +213,7 @@ module.exports = {
 			'ts-jest',
 			{
 				diagnostics: false,
-				tsconfig: 'tsconfig.jest.json',
+				tsconfig: 'tsconfig.test.json',
 			},
 		],
 	},

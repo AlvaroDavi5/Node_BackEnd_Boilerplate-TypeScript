@@ -13,9 +13,9 @@ describe('Modules :: App :: Services :: UserPreferenceService', () => {
 	// // mocks
 	const userPreferenceRepositoryMock = {
 		findOne: jest.fn(async (query: any): Promise<UserPreferenceEntity | null> => (null)),
-		create: jest.fn(async (data: any): Promise<UserPreferenceEntity | null> => (null)),
-		update: jest.fn(async (id: number, data: any): Promise<UserPreferenceEntity | null> => (null)),
-		deleteOne: jest.fn(async (id: number, softDelete?: boolean, agentId?: string | number | null): Promise<boolean> => (false)),
+		create: jest.fn(async (entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (null)),
+		update: jest.fn(async (id: number, entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (null)),
+		deleteOne: jest.fn(async (id: number, softDelete = true, agentId: number | string | null = null): Promise<boolean> => (false)),
 	};
 	const configServiceMock: any = {
 		get: (propertyPath?: string) => {
@@ -30,10 +30,10 @@ describe('Modules :: App :: Services :: UserPreferenceService', () => {
 	beforeAll(async () => {
 		nestTestingModule = await Test.createTestingModule({
 			providers: [
-				UserPreferenceService,
-				{ provide: UserPreferenceRepository, useValue: userPreferenceRepositoryMock },
-				Exceptions,
 				{ provide: ConfigService, useValue: configServiceMock },
+				Exceptions,
+				{ provide: UserPreferenceRepository, useValue: userPreferenceRepositoryMock },
+				UserPreferenceService,
 			]
 		}).compile();
 
@@ -44,24 +44,24 @@ describe('Modules :: App :: Services :: UserPreferenceService', () => {
 	describe('# Create User Preference', () => {
 
 		test('Should create a user preference successfully', async () => {
-			userPreferenceRepositoryMock.create.mockImplementation(async (data: any): Promise<UserPreferenceEntity | null> => (new UserPreferenceEntity(data)));
+			userPreferenceRepositoryMock.create.mockImplementation(async (entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (new UserPreferenceEntity(entity.getAttributes())));
 
-			const createdUserPreference = await userPreferenceService.create({
+			const createdUserPreference = await userPreferenceService.create(new UserPreferenceEntity({
 				userId: 1,
 				defaultTheme: 'DARK',
-			});
+			}));
 			expect(userPreferenceRepositoryMock.create).toHaveBeenCalledTimes(1);
 			expect(createdUserPreference?.getUserId()).toBe(1);
 			expect(createdUserPreference?.getDefaultTheme()).toBe('DARK');
 		});
 
 		test('Should not create a user preference', async () => {
-			userPreferenceRepositoryMock.create.mockImplementation(async (data: any): Promise<UserPreferenceEntity | null> => (null));
+			userPreferenceRepositoryMock.create.mockImplementation(async (entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (null));
 
-			const createdUserPreference = await userPreferenceService.create({
+			const createdUserPreference = await userPreferenceService.create(new UserPreferenceEntity({
 				userId: 1,
 				defaultTheme: 'DARK',
-			});
+			}));
 			expect(userPreferenceRepositoryMock.create).toHaveBeenCalledTimes(1);
 			expect(createdUserPreference).toBeNull();
 		});
@@ -94,25 +94,25 @@ describe('Modules :: App :: Services :: UserPreferenceService', () => {
 
 		test('Should update a user preference successfully', async () => {
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 1, userId: 1, defaultTheme: 'DEFAULT' });
-			userPreferenceRepositoryMock.update.mockImplementation(async (id: number, data: any): Promise<UserPreferenceEntity | null> => {
+			userPreferenceRepositoryMock.update.mockImplementation(async (id: number, entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => {
 				if (id !== userPreferenceEntity.getId()) return null;
-				if (data?.defaultTheme) userPreferenceEntity.setDefaultTheme(data.defaultTheme);
+				if (entity?.defaultTheme) userPreferenceEntity.setDefaultTheme(entity.defaultTheme);
 				return userPreferenceEntity;
 			});
 
-			const updatedUserPreference = await userPreferenceService.update(1, {
+			const updatedUserPreference = await userPreferenceService.update(1, new UserPreferenceEntity({
 				defaultTheme: 'DARK',
-			});
+			}));
 			expect(userPreferenceRepositoryMock.update).toHaveBeenCalledTimes(1);
 			expect(updatedUserPreference?.getDefaultTheme()).toBe('DARK');
 		});
 
 		test('Should not update a user preference', async () => {
-			userPreferenceRepositoryMock.update.mockImplementation(async (id: number, data: any): Promise<UserPreferenceEntity | null> => (null));
+			userPreferenceRepositoryMock.update.mockImplementation(async (id: number, entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (null));
 
-			const updatedUserPreference = await userPreferenceService.update(1, {
+			const updatedUserPreference = await userPreferenceService.update(1, new UserPreferenceEntity({
 				defaultTheme: 'DARK',
-			});
+			}));
 			expect(userPreferenceRepositoryMock.update).toHaveBeenCalledTimes(1);
 			expect(updatedUserPreference).toBeNull();
 		});

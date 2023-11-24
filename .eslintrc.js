@@ -167,6 +167,7 @@ module.exports = {
 				'plugin:@typescript-eslint/recommended',
 				'plugin:@typescript-eslint/eslint-recommended',
 				'plugin:import/typescript',
+				'plugin:security/recommended',
 			],
 			plugins: [
 				'eslint-plugin-import',

@@ -1,5 +1,6 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import HttpConstants from '@api/constants/Http.constants';
+import ContentTypeConstants from './constants/ContentType.constants';
 import LoggerMiddleware from '@api/middlewares/Logger.middleware';
 import JwtDecodeMiddleware from '@api/middlewares/JwtDecode.middleware';
 import DefaultController from '@api/controllers/Default.controller';
@@ -14,6 +15,7 @@ import UserController from '@api/controllers/User.controller';
 	],
 	providers: [
 		HttpConstants,
+		ContentTypeConstants,
 	],
 	exports: [],
 })

@@ -1,25 +1,32 @@
+import { Injectable } from '@nestjs/common';
+import { MockObservableInterface } from '../mockObservable';
 
+
+@Injectable()
 export default class LoggerGenerator {
 	showLogs: boolean;
 
-	constructor() {
+	constructor(
+		private readonly mockObservable: MockObservableInterface,
+	) {
 		this.showLogs = Boolean(process.env.SHOW_LOGS);
 	}
 
 	public getLogger(): any {
-		const commomLogger = (value: any) => console.log(value?.message || value);
-		let errorLogger = (value: any) => console.error(value?.message || value);
-
-		if (this.showLogs) {
-			errorLogger = (value: any) => console.error(value?.message || value);
-		}
+		const justCallMockObservable = (...args: unknown[]): void => {
+			this.mockObservable.call(args);
+		};
+		const logAndCallMockObservable = (...args: unknown[]): void => {
+			this.mockObservable.call(args);
+			console.log(args);
+		};
 
 		return {
-			error: this.showLogs ? errorLogger : commomLogger,
-			warn: this.showLogs ? errorLogger : commomLogger,
-			info: commomLogger,
-			debug: commomLogger,
-			log: commomLogger,
+			error: this.showLogs ? logAndCallMockObservable : justCallMockObservable,
+			warn: this.showLogs ? logAndCallMockObservable : justCallMockObservable,
+			info: this.showLogs ? logAndCallMockObservable : justCallMockObservable,
+			debug: justCallMockObservable,
+			log: justCallMockObservable,
 		};
 	}
 }

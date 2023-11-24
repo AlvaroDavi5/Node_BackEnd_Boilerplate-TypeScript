@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import UserPreferenceRepository from '@app/repositories/userPreference/UserPreference.repository';
-import UserPreferenceEntity, { UserPreferenceInterface } from '@app/domain/entities/UserPreference.entity';
+import UserPreferenceEntity from '@app/domain/entities/UserPreference.entity';
 
 
 @Injectable()
@@ -27,9 +27,9 @@ export default class UserPreferenceService {
 		}
 	}
 
-	public async update(id: number, data: UserPreferenceInterface): Promise<UserPreferenceEntity | null> {
+	public async update(id: number, entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> {
 		try {
-			const result = await this.userPreferenceRepository.update(id, data);
+			const result = await this.userPreferenceRepository.update(id, entity);
 			return result;
 		} catch (error) {
 			return null;

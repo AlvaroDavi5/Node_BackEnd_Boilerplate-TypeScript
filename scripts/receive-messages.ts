@@ -3,9 +3,7 @@ import { WebSocketEventsEnum } from '../src/modules/app/domain/enums/webSocketEv
 import configs from '../src/modules/core/configs/configs.config';
 
 
-const logger = console;
-
-function formatMessageAfterReceiveHelper(message: string) {
+function formatMessageAfterReceiveHelper(message: any) {
 	let msg = '';
 	try {
 		msg = JSON.parse(message);
@@ -17,22 +15,25 @@ function formatMessageAfterReceiveHelper(message: string) {
 }
 
 function createSocketClient() {
-	logger.info(
+	console.info(
 		'\n # Creating socket client \n'
 	);
 
 	const webSocketClient = createWebSocketClient({
-		logger,
+		logger: console,
 		configs: configs(),
 	});
 	webSocketClient.send(WebSocketEventsEnum.RECONNECT, {
 		dataValues: {
 			clientId: 'localDev#1',
 		},
+		listen: {
+			newConnections: true,
+		},
 	});
-	webSocketClient.listen(WebSocketEventsEnum.EMIT, (msg: string) => {
-		msg = formatMessageAfterReceiveHelper(msg);
-		logger.info(msg);
+	webSocketClient.listen(WebSocketEventsEnum.EMIT, (...args: unknown[]) => {
+		const msg = formatMessageAfterReceiveHelper(args[0]);
+		console.info(msg);
 	});
 }
 

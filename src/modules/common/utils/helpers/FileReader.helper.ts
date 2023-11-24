@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import fs from 'fs';
+import { readFile } from 'fs';
 import { Logger } from 'winston';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 
@@ -18,7 +18,7 @@ export default class CacheAccessHelper {
 		let content: string | null = null;
 
 		const readPromise = new Promise<string>((resolve, reject) => {
-			fs.readFile(filePath, { encoding: 'utf8' }, (error, data) => {
+			readFile(filePath, { encoding: 'utf8' }, (error, data) => {
 				if (error) {
 					this.logger.warn('File read error:', error.message);
 					reject(error);

@@ -1,37 +1,38 @@
 import { ApiProperty } from '@nestjs/swagger';
 import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity';
+import { ThemesEnum } from '../enums/themes.enum';
 
 
 export interface UserPreferenceInterface {
-	id?: number,
-	userId: number,
-	imagePath: string,
-	defaultTheme: string,
-	readonly createdAt: Date,
-	updatedAt: Date | null,
-	deletedAt: Date | null,
+	id: number | undefined,
+	userId: number | undefined,
+	imagePath: string | undefined,
+	defaultTheme: ThemesEnum | undefined,
+	readonly createdAt: Date | undefined,
+	updatedAt: Date | undefined,
+	deletedAt: Date | undefined,
 }
 
 export default class UserPreferenceEntity extends AbstractEntity {
-	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false })
+	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, required: false })
 	private id = 0;
 
-	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false })
+	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, required: true })
 	private userId = 0;
 
-	@ApiProperty({ type: String, example: './image.png', default: null, nullable: true })
+	@ApiProperty({ type: String, example: './image.png', default: null, nullable: true, required: true })
 	private imagePath: string | null = null;
 
-	@ApiProperty({ type: String, example: 'DEFAULT', default: null, nullable: true })
-	public defaultTheme: string | null = null;
+	@ApiProperty({ type: String, example: ThemesEnum.DEFAULT, default: null, nullable: true, required: true })
+	public defaultTheme: ThemesEnum | null = null;
 
-	@ApiProperty({ type: Date, example: (new Date()), default: (new Date()), nullable: false })
+	@ApiProperty({ type: Date, example: (new Date()), default: (new Date()), nullable: false, required: false })
 	public readonly createdAt: Date;
 
-	@ApiProperty({ type: Date, example: null, default: null, nullable: true })
+	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: true })
 	public updatedAt: Date | null = null;
 
-	@ApiProperty({ type: Date, example: null, default: null, nullable: true })
+	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: true })
 	public deletedAt: Date | null = null;
 
 	constructor(dataValues: any) {
@@ -42,18 +43,18 @@ export default class UserPreferenceEntity extends AbstractEntity {
 		if (this.exists(dataValues?.defaultTheme)) this.defaultTheme = dataValues.defaultTheme;
 		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
 		if (this.exists(dataValues?.deletedAt)) this.deletedAt = dataValues.deletedAt;
-		this.createdAt = new Date();
+		this.createdAt = this.exists(dataValues?.createdAt) ? dataValues.createdAt : new Date();
 	}
 
-	public getAttributes() {
+	public getAttributes(): UserPreferenceInterface {
 		return {
-			id: this.id,
-			userId: this.userId,
-			imagePath: this.imagePath,
-			defaultTheme: this.defaultTheme,
-			createdAt: this.createdAt,
-			updatedAt: this.updatedAt,
-			deletedAt: this.deletedAt,
+			id: this.id || undefined,
+			userId: this.userId || undefined,
+			imagePath: this.imagePath || undefined,
+			defaultTheme: this.defaultTheme || undefined,
+			createdAt: this.createdAt || undefined,
+			updatedAt: this.updatedAt || undefined,
+			deletedAt: this.deletedAt || undefined,
 		};
 	}
 
@@ -63,9 +64,11 @@ export default class UserPreferenceEntity extends AbstractEntity {
 	public getUserId(): number { return this.userId; }
 	public setUserId(userId: number): void { this.userId = userId; }
 
-	public getDefaultTheme(): string | null { return this.defaultTheme; }
+	public getDefaultTheme(): ThemesEnum | null { return this.defaultTheme; }
 	public setDefaultTheme(theme: string): void {
-		this.defaultTheme = theme;
+		if (!Object.values(ThemesEnum).includes(theme as any))
+			return;
+		this.defaultTheme = theme as ThemesEnum;
 		this.updatedAt = new Date();
 	}
 

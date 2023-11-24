@@ -6,7 +6,7 @@ import EventsQueueConsumer from '@events/queue/consumers/EventsQueue.consumer';
 import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
 import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
 import configs from '@core/configs/configs.config';
-import SqsClient from 'src/dev/localstack/queues/SqsClient';
+import SqsClient from '@dev/localstack/queues/SqsClient';
 
 
 @Global()
@@ -40,7 +40,6 @@ import SqsClient from 'src/dev/localstack/queues/SqsClient';
 		WebSocketClient,
 	],
 	exports: [
-		EventsQueueProducer,
 		WebSocketServer,
 		WebSocketClient,
 	],

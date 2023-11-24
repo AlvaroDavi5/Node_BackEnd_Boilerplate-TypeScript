@@ -31,7 +31,7 @@ services:
       - database
       - data
 
-  # DataBase
+  # Relational DataBase
   database:
     container_name: DataBase_PostgreSQL
     image: postgres:latest
@@ -47,7 +47,7 @@ services:
     volumes:
       # host_path:container_path
       - db_volume:/var/lib/postgresql/
-  # DataBase Admin
+  # Relational DataBase Admin
   database_admin:
     container_name: DataBaseAdmin_Adminer
     image: adminer:latest
@@ -58,7 +58,7 @@ services:
     depends_on:
       - database
 
-  # Data
+  # Non-Relational Database
   data:
     container_name: Data_MongoDB
     image: mongo:latest
@@ -70,7 +70,7 @@ services:
       - 27017:27017
     networks:
       - default_network
-  # Data Admin
+  # NoSQL Admin
   data_admin:
     container_name: DataAdmin_MongoExpress
     image: mongo-express:latest
@@ -108,7 +108,7 @@ services:
     depends_on:
       - cache
 
-  # Cloud Services
+  # AWS Cloud Services
   cloud:
     container_name: Cloud_LocalStack
     image: localstack/localstack:latest
@@ -124,7 +124,7 @@ services:
       - ${TMPDIR:-/tmp/localstack}:/var/lib/localstack
       - /var/run/docker.sock:/var/run/docker.sock
 
-  # Quality
+  # Code Quality
   quality:
     container_name: Quality_SonarQube
     image: sonarqube:latest

@@ -183,6 +183,7 @@ ___
 				- [ ] Queue Consumer
 				- [ ] Queue Producer
 				- [ ] Websocket Gateway
+			- [Serverless](#to-do)
 - **CI/CD**
 	- [x] GitHub Actions
 	- [ ] Jenkins

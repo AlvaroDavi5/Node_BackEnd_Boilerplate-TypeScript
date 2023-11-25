@@ -128,8 +128,9 @@ ___
 	- [kafka](https://docs.nestjs.com/microservices/kafka)
 	- [Serverless](https://docs.nestjs.com/faq/serverless)
 - **Jest and Sonarqube**
-	- [ ] Unify Coverage
+	- [x] Unify Coverage
 		- [Reference](https://stackoverflow.com/questions/52419132/is-it-possible-to-merge-test-coverage-on-sonarqube-level)
+	- [x] Ignore Integration and End-to-End Tests
 - **Build Versioning**
 	- [ ] DockerHub
 	- [ ] Container Images

@@ -9,8 +9,8 @@ import { ApiOperation, ApiTags, ApiProduces, ApiOkResponse, ApiCreatedResponse }
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import UserEntity, { UserEntityList } from '@app/domain/entities/User.entity';
 import UserOperation from '@app/operations/User.operation';
-import { ListQueryPipeModel, ListQueryPipeValidator } from '@api/pipes/QueryValidator.pipe';
-import { CreateUserPipeModel, CreateUserPipeValidator, UpdateUserPipeModel, UpdateUserPipeValidator } from '@api/pipes/UserValidator.pipe';
+import { ListQueryPipeDto, ListQueryPipeValidator } from '@api/pipes/QueryValidator.pipe';
+import { CreateUserPipeDto, CreateUserPipeValidator, UpdateUserPipeDto, UpdateUserPipeValidator } from '@api/pipes/UserValidator.pipe';
 import { PaginationInterface } from 'src/types/_listPaginationInterface';
 import { RequestInterface } from 'src/types/_endpointInterface';
 
@@ -38,7 +38,7 @@ export default class UserController implements OnModuleInit {
 	})
 	@ApiProduces('application/json')
 	public async listUsers(
-		@Query(ListQueryPipeValidator) query: ListQueryPipeModel,
+		@Query(ListQueryPipeValidator) query: ListQueryPipeDto,
 	): Promise<PaginationInterface<UserEntity> | unknown> {
 		try {
 			const result = await this.userOperation.listUsers(query);
@@ -54,7 +54,7 @@ export default class UserController implements OnModuleInit {
 	@ApiProduces('application/json')
 	public async createUser(
 		@Request() request: RequestInterface,
-		@Body(CreateUserPipeValidator) body: CreateUserPipeModel,
+		@Body(CreateUserPipeValidator) body: CreateUserPipeDto,
 	): Promise<UserEntity | unknown> {
 		try {
 			const { user } = request;
@@ -91,7 +91,7 @@ export default class UserController implements OnModuleInit {
 	public async updateUser(
 		@Request() request: RequestInterface,
 		@Param('userId', ParseIntPipe) userId: number,
-		@Body(UpdateUserPipeValidator) body: UpdateUserPipeModel,
+		@Body(UpdateUserPipeValidator) body: UpdateUserPipeDto,
 	): Promise<UserEntity | unknown> {
 		try {
 			const { user } = request;

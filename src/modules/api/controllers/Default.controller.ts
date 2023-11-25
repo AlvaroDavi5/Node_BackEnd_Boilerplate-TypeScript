@@ -52,7 +52,7 @@ export default class DefaultController {
 		method: string, params: { [key: string]: unknown },
 		query: unknown, body: unknown,
 	} {
-		// [METHOD]:{STATUS_CODE} http://url/:param1/:param2?query1=X&query2=Y { "body": {} }
+		// [METHOD]:{STATUS_CODE} http://url/:param1/:param2?query1=X&query2=Y { 'body': {} }
 
 		return {
 			baseUrl: request?.baseUrl,
@@ -67,7 +67,7 @@ export default class DefaultController {
 	}
 
 	@ApiTags('Files')
-	@ApiOperation({ summary: 'Get License' })
+	@ApiOperation({ summary: 'Download License' })
 	@Get('/license')
 	@ApiOkResponse({
 		schema: {

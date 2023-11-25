@@ -127,7 +127,6 @@ ___
 	- [GraphQL](https://docs.nestjs.com/graphql/quick-start)
 	- [kafka](https://docs.nestjs.com/microservices/kafka)
 	- [Serverless](https://docs.nestjs.com/faq/serverless)
-	- [OpenAPI](https://docs.nestjs.com/openapi/introduction)
 - **Jest and Sonarqube**
 	- [ ] Unify Coverage
 		- [Reference](https://stackoverflow.com/questions/52419132/is-it-possible-to-merge-test-coverage-on-sonarqube-level)

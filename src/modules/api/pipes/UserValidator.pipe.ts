@@ -9,21 +9,18 @@ import updateUserSchema, { UpdateUserSchemaInterface } from '@api/schemas/user/u
 import { ThemesEnum } from '@app/domain/enums/themes.enum';
 
 
-export abstract class CreateUserPipeModel implements CreateUserSchemaInterface {
+export abstract class CreateUserPipeDto implements CreateUserSchemaInterface {
 	@ApiProperty({ type: String, example: 'User Default', default: '', nullable: false, required: true })
-	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
 	public fullName = '';
 
 	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: '', nullable: false, required: true })
-	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
-	public email = 'null';
+	public email = '';
 
 	@ApiProperty({ type: String, example: 'pass123', default: '', nullable: false, required: true })
-	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
-	public password = 'null';
+	public password = '';
 
 	@ApiProperty({ type: String, example: '+0000000000000', default: undefined, nullable: true, required: false })
 	@ValidateIf((object, value) => (value !== undefined))
@@ -56,7 +53,7 @@ export abstract class CreateUserPipeModel implements CreateUserSchemaInterface {
 	public defaultTheme: string | undefined = undefined;
 }
 
-export abstract class UpdateUserPipeModel implements UpdateUserSchemaInterface {
+export abstract class UpdateUserPipeDto implements UpdateUserSchemaInterface {
 	@ApiProperty({ type: String, example: 'User Default', default: undefined, nullable: true, required: false })
 	@ValidateIf((object, value) => (value !== undefined))
 	@IsString()
@@ -103,7 +100,7 @@ export abstract class UpdateUserPipeModel implements UpdateUserSchemaInterface {
 	public defaultTheme: string | undefined = undefined;
 }
 
-export class CreateUserPipeValidator implements PipeTransform<CreateUserPipeModel, CreateUserSchemaInterface> {
+export class CreateUserPipeValidator implements PipeTransform<CreateUserPipeDto, CreateUserSchemaInterface> {
 	private readonly schemaValidator: SchemaValidator<CreateUserSchemaInterface>;
 
 	constructor() {
@@ -120,13 +117,13 @@ export class CreateUserPipeValidator implements PipeTransform<CreateUserPipeMode
 		this.schemaValidator = new SchemaValidator<CreateUserSchemaInterface>(new Exceptions(configServiceMock));
 	}
 
-	public transform(value: CreateUserPipeModel, metadata: ArgumentMetadata): CreateUserSchemaInterface {
+	public transform(value: CreateUserPipeDto, metadata: ArgumentMetadata): CreateUserSchemaInterface {
 		console.log(`Validating '${metadata.type}' received as '${metadata.metatype?.name}'`);
 		return this.schemaValidator.validate(value, createUserSchema);
 	}
 }
 
-export class UpdateUserPipeValidator implements PipeTransform<UpdateUserPipeModel, UpdateUserSchemaInterface> {
+export class UpdateUserPipeValidator implements PipeTransform<UpdateUserPipeDto, UpdateUserSchemaInterface> {
 	private readonly schemaValidator: SchemaValidator<UpdateUserSchemaInterface>;
 
 	constructor() {
@@ -143,7 +140,7 @@ export class UpdateUserPipeValidator implements PipeTransform<UpdateUserPipeMode
 		this.schemaValidator = new SchemaValidator<UpdateUserSchemaInterface>(new Exceptions(configServiceMock));
 	}
 
-	public transform(value: UpdateUserPipeModel, metadata: ArgumentMetadata): UpdateUserSchemaInterface {
+	public transform(value: UpdateUserPipeDto, metadata: ArgumentMetadata): UpdateUserSchemaInterface {
 		console.log(`Validating '${metadata.type}' received as '${metadata.metatype?.name}'`);
 		return this.schemaValidator.validate(value, updateUserSchema);
 	}

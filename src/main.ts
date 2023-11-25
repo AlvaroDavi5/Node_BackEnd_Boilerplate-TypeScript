@@ -18,7 +18,6 @@ async function startNestApplication() {
 		snapshot: true,
 		preview: false,
 	});
-	nestApp.setGlobalPrefix('api');
 	nestApp.useGlobalPipes(
 		new ValidationPipe({
 			whitelist: true,
@@ -26,9 +25,9 @@ async function startNestApplication() {
 			transform: true,
 		}),
 	);
-
 	nestApp.enableShutdownHooks();
 
+	nestApp.setGlobalPrefix('api');
 	nestApp.use(compression());
 	nestApp.enableCors({
 		origin: '*',

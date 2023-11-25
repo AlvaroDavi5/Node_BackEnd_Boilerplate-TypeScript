@@ -44,16 +44,12 @@ export default class DataParserHelper {
 		return result;
 	}
 
-	public toObject(data: string): object | string | null {
-		let result = data;
-
+	public toObject(data: string): object | null {
 		try {
-			result = JSON.parse(data);
+			return JSON.parse(data);
 		} catch (error) {
 			this.logger.warn('String:Object parse error');
 			return null;
 		}
-
-		return result;
 	}
 }

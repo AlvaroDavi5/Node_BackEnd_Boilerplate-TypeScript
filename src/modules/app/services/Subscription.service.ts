@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { ObjectId } from 'mongodb';
+import { Collection, Db, Document as MongoDocument, ObjectId, WithId } from 'mongodb';
 import { Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import WebSocketClient from '@events/websocket/client/WebSocket.client';
@@ -18,6 +18,8 @@ export default class SubscriptionService implements OnModuleInit {
 	private webSocketClient!: WebSocketClient;
 	private readonly logger: Logger;
 	public readonly expirationTime: number;
+	public readonly datalakeDatabase: Db;
+	public readonly subscriptionsCollection: Collection;
 
 	constructor(
 		private readonly moduleRef: ModuleRef,
@@ -27,6 +29,10 @@ export default class SubscriptionService implements OnModuleInit {
 		private readonly loggerGenerator: LoggerGenerator,
 		private readonly cacheAccessHelper: CacheAccessHelper,
 	) {
+		const { datalake: { db, collections: { subscriptions } } } = this.mongoClient.databases;
+		this.datalakeDatabase = db;
+		this.subscriptionsCollection = this.mongoClient.getCollection(this.datalakeDatabase, subscriptions);
+
 		this.logger = this.loggerGenerator.getLogger();
 		const subscriptionsExpirationTime: ConfigsInterface['cache']['expirationTime']['subscriptions'] = this.configService.get<any>('cache.expirationTime.subscriptions');
 		this.expirationTime = subscriptionsExpirationTime;
@@ -37,12 +43,9 @@ export default class SubscriptionService implements OnModuleInit {
 	}
 
 	public async get(id: string): Promise<any> {
-		const datalake = this.mongoClient.databases.datalake;
-		const subscriptionsCollection = this.mongoClient.getCollection(datalake.db, datalake.collections.subscriptions);
-
 		let subscription: any = await this.getFromCache(id);
 		if (!subscription) {
-			const findedSubscription = await this.mongoClient.findOne(subscriptionsCollection, {
+			const findedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
 				subscriptionId: id,
 			});
 			subscription = findedSubscription;
@@ -53,23 +56,20 @@ export default class SubscriptionService implements OnModuleInit {
 	}
 
 	public async save(id: string, data: any): Promise<any> {
-		const datalake = this.mongoClient.databases.datalake;
-		const subscriptionsCollection = this.mongoClient.getCollection(datalake.db, datalake.collections.subscriptions);
-
-		let findedSubscription = await this.mongoClient.findOne(subscriptionsCollection, {
+		let findedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
 			subscriptionId: id,
 		});
 		let findedSubscriptionId: ObjectId | null | undefined = findedSubscription?._id;
 
 		if (!findedSubscriptionId) {
-			const savedSubscription = await this.mongoClient.insertOne(subscriptionsCollection, data);
+			const savedSubscription = await this.mongoClient.insertOne(this.subscriptionsCollection, data);
 			findedSubscriptionId = savedSubscription.insertedId;
 		}
 		else
-			await this.mongoClient.updateOne(subscriptionsCollection, findedSubscriptionId, data);
+			await this.mongoClient.updateOne(this.subscriptionsCollection, findedSubscriptionId, data);
 
 		if (findedSubscriptionId) {
-			findedSubscription = await this.mongoClient.get(subscriptionsCollection, findedSubscriptionId);
+			findedSubscription = await this.mongoClient.get(this.subscriptionsCollection, findedSubscriptionId);
 			await this.saveOnCache(id, findedSubscription);
 		}
 
@@ -77,20 +77,23 @@ export default class SubscriptionService implements OnModuleInit {
 	}
 
 	public async delete(id: string): Promise<boolean> {
-		const datalake = this.mongoClient.databases.datalake;
-		const subscriptionsCollection = this.mongoClient.getCollection(datalake.db, datalake.collections.subscriptions);
-
 		let deletedSubscription = false;
-		const findedSubscription = await this.mongoClient.findOne(subscriptionsCollection, {
+		const findedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
 			subscriptionId: id,
 		});
 
 		if (findedSubscription?._id) {
 			await this.deleteFromCache(id);
-			deletedSubscription = (await this.mongoClient.deleteOne(subscriptionsCollection, findedSubscription._id)).deletedCount > 0;
+			deletedSubscription = (await this.mongoClient.deleteOne(this.subscriptionsCollection, findedSubscription._id)).deletedCount > 0;
 		}
 
 		return deletedSubscription;
+	}
+
+	public async list(): Promise<WithId<MongoDocument>[]> {
+		const findedSubscriptions = await this.mongoClient.findMany(this.subscriptionsCollection, {});
+
+		return findedSubscriptions;
 	}
 
 	public emit(msg: unknown, socketIdsOrRooms: string | string[]): void {

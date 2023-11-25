@@ -8,7 +8,7 @@ export interface UserPreferenceInterface {
 	userId: number | undefined,
 	imagePath: string | undefined,
 	defaultTheme: ThemesEnum | undefined,
-	readonly createdAt: Date | undefined,
+	readonly createdAt: Date,
 	updatedAt: Date | undefined,
 	deletedAt: Date | undefined,
 }
@@ -43,26 +43,32 @@ export default class UserPreferenceEntity extends AbstractEntity {
 		if (this.exists(dataValues?.defaultTheme)) this.defaultTheme = dataValues.defaultTheme;
 		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
 		if (this.exists(dataValues?.deletedAt)) this.deletedAt = dataValues.deletedAt;
-		this.createdAt = this.exists(dataValues?.createdAt) ? dataValues.createdAt : new Date();
+		this.createdAt = this.exists(dataValues?.createdAt) ? new Date(dataValues.createdAt) : new Date();
 	}
 
 	public getAttributes(): UserPreferenceInterface {
 		return {
-			id: this.id || undefined,
-			userId: this.userId || undefined,
-			imagePath: this.imagePath || undefined,
-			defaultTheme: this.defaultTheme || undefined,
-			createdAt: this.createdAt || undefined,
-			updatedAt: this.updatedAt || undefined,
-			deletedAt: this.deletedAt || undefined,
+			id: this.id,
+			userId: this.userId,
+			imagePath: this.imagePath ?? undefined,
+			defaultTheme: this.defaultTheme ?? undefined,
+			createdAt: this.createdAt,
+			updatedAt: this.updatedAt ?? undefined,
+			deletedAt: this.deletedAt ?? undefined,
 		};
 	}
 
 	public getId(): number { return this.id; }
-	public setId(id: number): void { this.id = id; }
+	public setId(id: number): void {
+		if (id > 0)
+			this.id = id;
+	}
 
 	public getUserId(): number { return this.userId; }
-	public setUserId(userId: number): void { this.userId = userId; }
+	public setUserId(userId: number): void {
+		if (userId > 0)
+			this.userId = userId;
+	}
 
 	public getDefaultTheme(): ThemesEnum | null { return this.defaultTheme; }
 	public setDefaultTheme(theme: string): void {

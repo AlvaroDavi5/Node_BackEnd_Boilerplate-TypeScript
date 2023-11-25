@@ -14,7 +14,7 @@ export interface UserInterface {
 	document: string | undefined,
 	fu: string | undefined,
 	preference: UserPreferenceEntity | undefined,
-	readonly createdAt: Date | undefined,
+	readonly createdAt: Date,
 	updatedAt: Date | undefined,
 	deletedAt: Date | undefined,
 	deletedBy: string | undefined,
@@ -75,29 +75,32 @@ export default class UserEntity extends AbstractEntity {
 		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
 		if (this.exists(dataValues?.deletedAt)) this.deletedAt = dataValues.deletedAt;
 		if (this.exists(dataValues?.deletedBy)) this.deletedBy = dataValues.deletedBy;
-		this.createdAt = this.exists(dataValues?.createdAt) ? dataValues.createdAt : new Date();
+		this.createdAt = this.exists(dataValues?.createdAt) ? new Date(dataValues.createdAt) : new Date();
 	}
 
 	public getAttributes(): UserInterface {
 		return {
-			id: this.id || undefined,
-			fullName: this.fullName || undefined,
-			email: this.email || undefined,
-			password: this.password || undefined,
-			phone: this.phone || undefined,
-			docType: this.docType || undefined,
-			document: this.document || undefined,
-			fu: this.fu || undefined,
-			preference: this.preference || undefined,
-			createdAt: this.createdAt || undefined,
-			updatedAt: this.updatedAt || undefined,
-			deletedAt: this.deletedAt || undefined,
-			deletedBy: this.deletedBy || undefined,
+			id: this.id,
+			fullName: this.fullName ?? undefined,
+			email: this.email ?? undefined,
+			password: this.password ?? undefined,
+			phone: this.phone ?? undefined,
+			docType: this.docType ?? undefined,
+			document: this.document ?? undefined,
+			fu: this.fu ?? undefined,
+			preference: this.preference ?? undefined,
+			createdAt: this.createdAt,
+			updatedAt: this.updatedAt ?? undefined,
+			deletedAt: this.deletedAt ?? undefined,
+			deletedBy: this.deletedBy ?? undefined,
 		};
 	}
 
 	public getId(): number { return this.id; }
-	public setId(id: number): void { this.id = id; }
+	public setId(id: number): void {
+		if (id > 0)
+			this.id = id;
+	}
 
 	public getLogin(): { fullName: string | null, email: string | null } {
 		return {

@@ -1,7 +1,7 @@
 import CacheAccessHelper from '../../../../../../src/modules/common/utils/helpers/CacheAccess.helper';
 
 
-describe('Modules :: Utils :: Helpers :: CacheAccessHelper', () => {
+describe('Modules :: Common :: Utils :: Helpers :: CacheAccessHelper', () => {
 	const cacheAccessHelper = new CacheAccessHelper();
 
 	describe('# Key-ID', () => {

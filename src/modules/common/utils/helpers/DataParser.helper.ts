@@ -31,7 +31,7 @@ export default class DataParserHelper {
 			result = data;
 			break;
 		case 'object':
-			result = JSON.stringify(data) || data?.toString() || '';
+			result = (JSON.stringify(data) || data?.toString()) ?? '';
 			break;
 		case 'symbol':
 			result = data.toString();

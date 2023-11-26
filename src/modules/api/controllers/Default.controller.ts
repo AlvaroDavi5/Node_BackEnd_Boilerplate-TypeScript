@@ -2,20 +2,29 @@ import {
 	Controller, Req, Res,
 	Get, Param, Query, Body,
 	StreamableFile,
+	OnModuleInit,
 } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import { ApiOperation, ApiTags, ApiProduces, ApiOkResponse } from '@nestjs/swagger';
 import { Request, Response } from 'express';
-import { createReadStream } from 'fs';
-import { join } from 'path';
+import { ReadStream } from 'fs';
 import ContentTypeConstants from '@api/constants/ContentType.constants';
+import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
 
 
 @Controller()
-export default class DefaultController {
+export default class DefaultController implements OnModuleInit {
+	private fileReaderHelper!: FileReaderHelper;
 	private readonly contentTypeConstants: ContentTypeConstants;
 
-	constructor() {
+	constructor(
+		private readonly moduleRef: ModuleRef,
+	) {
 		this.contentTypeConstants = new ContentTypeConstants();
+	}
+
+	public onModuleInit(): void {
+		this.fileReaderHelper = this.moduleRef.get(FileReaderHelper, { strict: false });
 	}
 
 	@ApiTags('HealthCheck')
@@ -85,15 +94,15 @@ export default class DefaultController {
 		const expectedContentType = request.headers.accept || '';
 
 		try {
-			const file = join(process.cwd(), 'src/dev/templates/LICENSE.txt');
-			const readStream = createReadStream(file);
+			const readStream = this.fileReaderHelper.readStream('src/dev/templates/LICENSE.txt');
 
-			response.set({
-				'Content-Type': acceptableContentType.includes(expectedContentType) ? expectedContentType : plainTextContentType,
-				'Content-Disposition': 'attachment; filename="LICENSE.txt"',
-			});
+			if (readStream)
+				response.set({
+					'Content-Type': acceptableContentType.includes(expectedContentType) ? expectedContentType : plainTextContentType,
+					'Content-Disposition': 'attachment; filename="LICENSE.txt"',
+				});
 
-			return new StreamableFile(readStream);
+			return new StreamableFile(readStream as ReadStream);
 		} catch (error) {
 			return error;
 		}

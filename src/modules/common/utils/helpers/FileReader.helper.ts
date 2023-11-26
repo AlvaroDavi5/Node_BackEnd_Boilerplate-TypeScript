@@ -1,11 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import { readFile } from 'fs';
+import { readFileSync, createReadStream, ReadStream } from 'fs';
+import { join } from 'path';
 import { Logger } from 'winston';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 
 
 @Injectable()
-export default class CacheAccessHelper {
+export default class FileReaderHelper {
 	private readonly logger: Logger;
 
 	constructor(
@@ -14,24 +15,27 @@ export default class CacheAccessHelper {
 		this.logger = this.loggerGenerator.getLogger();
 	}
 
-	public async read(filePath: string): Promise<string | null> {
-		let content: string | null = null;
-
-		const readPromise = new Promise<string>((resolve, reject) => {
-			readFile(filePath, { encoding: 'utf8' }, (error, data) => {
-				if (error) {
-					this.logger.warn('File read error:', error.message);
-					reject(error);
-				} else {
-					resolve(data);
-				}
-			});
-		});
+	public readFile(filePath: string): string | undefined {
+		let content: string | undefined = undefined;
 
 		try {
-			content = await readPromise;
-		} catch (error) { }
+			content = readFileSync(join(process.cwd(), filePath), { encoding: 'utf8' });
+		} catch (error) {
+			this.logger.warn('File read error:', error);
+		}
 
 		return content;
+	}
+
+	public readStream(filePath: string): ReadStream | undefined {
+		let readStream: ReadStream | undefined = undefined;
+
+		try {
+			readStream = createReadStream(join(process.cwd(), filePath), { encoding: 'utf8' });
+		} catch (error) {
+			this.logger.warn('File read stream error:', error);
+		}
+
+		return readStream;
 	}
 }

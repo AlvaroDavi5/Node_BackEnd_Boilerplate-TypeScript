@@ -95,15 +95,17 @@ export default class CryptographyService {
 		}
 	}
 
-	public symmetricAESEncrypt(data: string, inputEncoding: BufferEncoding, keyContent: string, outputEncoding: BufferEncoding): { encrypted: string | null, iv: string } {
+	public symmetricAESEncrypt(data: string, inputEncoding: BufferEncoding, keyContent: string, outputEncoding: BufferEncoding, iv?: string): { encrypted: string | null, iv: string } {
+		const defIV = iv || this.IV;
+
 		try {
-			const cipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(keyContent, 'hex'), Buffer.from(this.IV, 'hex'));
+			const cipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(keyContent, 'hex'), Buffer.from(defIV, 'hex'));
 			const hexEncrypted = cipher.update(data, inputEncoding, 'hex') + cipher.final('hex');
 			const encrypted = Buffer.from(hexEncrypted, 'hex').toString(outputEncoding);
 
-			return { encrypted, iv: this.IV };
+			return { encrypted, iv: defIV };
 		} catch (error) {
-			return { encrypted: null, iv: this.IV };
+			return { encrypted: null, iv: defIV };
 		}
 	}
 
@@ -124,8 +126,7 @@ export default class CryptographyService {
 			const dataBuffer = Buffer.from(data, inputEncoding);
 			const key: crypto.RsaPrivateKey | crypto.RsaPublicKey = {
 				key: keyContent,
-				padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-				oaepHash: 'sha256',
+				padding: (keyType === 'private') ? crypto.constants.RSA_PKCS1_PADDING : crypto.constants.RSA_PKCS1_OAEP_PADDING,
 			};
 			const encryptedBuffer = (keyType === 'private') ? crypto.privateEncrypt(key, dataBuffer) : crypto.publicEncrypt(key, dataBuffer);
 
@@ -140,8 +141,7 @@ export default class CryptographyService {
 			const dataBuffer = Buffer.from(data, inputEncoding);
 			const key: crypto.RsaPrivateKey | crypto.RsaPublicKey = {
 				key: keyContent,
-				padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-				oaepHash: 'sha256',
+				padding: (keyType === 'private') ? crypto.constants.RSA_PKCS1_OAEP_PADDING : crypto.constants.RSA_PKCS1_PADDING,
 			};
 			const decryptedBuffer = (keyType === 'private') ? crypto.privateDecrypt(key, dataBuffer) : crypto.publicDecrypt(key, dataBuffer);
 

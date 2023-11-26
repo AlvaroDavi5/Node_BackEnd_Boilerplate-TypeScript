@@ -83,7 +83,6 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 	});
 
 	describe('# Build and Close Application', () => {
-
 		test('Should destroy, finish and close the app successfully', async () => {
 			await nestTestingModule.init();
 			await nestTestingModule.close();

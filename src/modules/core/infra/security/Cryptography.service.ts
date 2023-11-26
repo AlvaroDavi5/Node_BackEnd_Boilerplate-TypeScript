@@ -12,7 +12,7 @@ export default class CryptographyService {
 	private readonly IV: string;
 
 	constructor() {
-		this.IV = Buffer.alloc(16, 0, 'utf8').toString();
+		this.IV = crypto.randomBytes(12).toString('hex');
 	}
 
 	public changeBufferEncoding(data: string, encoding: BufferEncoding, decoding: BufferEncoding): string {
@@ -95,23 +95,27 @@ export default class CryptographyService {
 		}
 	}
 
-	public symmetricAESEncrypt(data: string, inputEncoding: BufferEncoding, keyContent: string, outputEncoding: BufferEncoding): string | null {
+	public symmetricAESEncrypt(data: string, inputEncoding: BufferEncoding, keyContent: string, outputEncoding: BufferEncoding): { encrypted: string | null, iv: string } {
 		try {
-			const cipher = crypto.createCipheriv('aes-256-cbc', keyContent.substring(0, 32), this.IV.substring(0, 16));
-			const hexEncripted = cipher.update(data, inputEncoding, 'hex') + cipher.final('hex');
-			return Buffer.from(hexEncripted, 'hex').toString(outputEncoding);
+			const cipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(keyContent, 'hex'), Buffer.from(this.IV, 'hex'));
+			const hexEncrypted = cipher.update(data, inputEncoding, 'hex') + cipher.final('hex');
+			const encrypted = Buffer.from(hexEncrypted, 'hex').toString(outputEncoding);
+
+			return { encrypted, iv: this.IV };
 		} catch (error) {
-			return null;
+			return { encrypted: null, iv: this.IV };
 		}
 	}
 
-	public symmetricAESDecrypt(data: string, inputEncoding: BufferEncoding, keyContent: string, outputEncoding: BufferEncoding): string | null {
+	public symmetricAESDecrypt(data: string, inputEncoding: BufferEncoding, keyContent: string, iv: string, outputEncoding: BufferEncoding): { decrypted: string | null, iv: string } {
 		try {
-			const decipher = crypto.createDecipheriv('aes-256-cbc', keyContent.substring(0, 32), this.IV.substring(0, 16));
-			const hexEncripted = decipher.update(data, inputEncoding, 'hex') + decipher.final('hex');
-			return Buffer.from(hexEncripted, 'hex').toString(outputEncoding);
+			const decipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(keyContent, 'hex'), Buffer.from(iv, 'hex'));
+			const hexDecrypted = decipher.update(data, inputEncoding, 'hex') + decipher.final('hex');
+			const decrypted = Buffer.from(hexDecrypted, 'hex').toString(outputEncoding);
+
+			return { decrypted, iv };
 		} catch (error) {
-			return null;
+			return { decrypted: null, iv };
 		}
 	}
 

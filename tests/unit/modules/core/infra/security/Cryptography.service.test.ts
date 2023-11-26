@@ -1,8 +1,19 @@
 import CryptographyService from '../../../../../../src/modules/core/infra/security/Cryptography.service';
+import configs from '../../../../../../src/modules/core/configs/configs.config';
 
 
 describe('Modules :: Core :: Infra :: Security :: CryptographyService', () => {
-	const cryptographyService = new CryptographyService();
+	// // mocks
+	const configServiceMock: any = {
+		get: (propertyPath?: string) => {
+			if (propertyPath)
+				return configs()[propertyPath];
+			else
+				return configs();
+		},
+	};
+
+	const cryptographyService = new CryptographyService(configServiceMock);
 
 	describe('# Encoding and Hashing', () => {
 		test('Should change encoding from UTF-8 to other encodings', () => {
@@ -16,7 +27,7 @@ describe('Modules :: Core :: Infra :: Security :: CryptographyService', () => {
 			const data = { name: 'Alvaro' };
 			const token = cryptographyService.encodeJwt(data, 'utf8');
 
-			expect(token.length).toBe(105);
+			expect(token.length).toBe(149);
 			expect(cryptographyService.decodeJwt(token)).toMatchObject(data);
 		});
 

@@ -1,17 +1,24 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import crypto from 'crypto';
 import { genSaltSync } from 'bcrypt';
 import { sign, decode, JwtPayload } from 'jsonwebtoken';
 import { v4 as uuidV4 } from 'uuid';
+import { ConfigsInterface } from '@core/configs/configs.config';
 
 
 type hashAlgorithmType = 'md5' | 'sha256' | 'sha512'
 
 @Injectable()
 export default class CryptographyService {
+	private readonly secret: string;
 	private readonly IV: string;
 
-	constructor() {
+	constructor(
+		private readonly configService: ConfigService,
+	) {
+		const { secretKey }: ConfigsInterface['security'] = this.configService.get<any>('security');
+		this.secret = secretKey ?? 'secret';
 		this.IV = crypto.randomBytes(12).toString('hex');
 	}
 
@@ -21,9 +28,9 @@ export default class CryptographyService {
 
 	public encodeJwt(payload: any, inputEncoding: BufferEncoding, expiration = '7d'): string {
 		return sign(payload,
-			null,
+			this.secret,
 			{
-				algorithm: 'none',
+				algorithm: 'HS256',
 				encoding: inputEncoding,
 				expiresIn: expiration,
 			}
@@ -96,7 +103,7 @@ export default class CryptographyService {
 	}
 
 	public symmetricAESEncrypt(data: string, inputEncoding: BufferEncoding, keyContent: string, outputEncoding: BufferEncoding, iv?: string): { encrypted: string | null, iv: string } {
-		const defIV = iv || this.IV;
+		const defIV = iv ?? this.IV;
 
 		try {
 			const cipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(keyContent, 'hex'), Buffer.from(defIV, 'hex'));

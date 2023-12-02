@@ -11,9 +11,9 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import configs, { ConfigsInterface } from '@core/configs/configs.config';
 import LifecycleService from '@core/infra/start/Lifecycle.service';
-import { ProcessEventsEnum, ProcessSignalsEnum } from '@core/infra/start/processEvents.enum';
+import { ProcessEventsEnum, ProcessSignalsEnum } from '@common/enums/processEvents.enum';
 import Exceptions from '@core/infra/errors/Exceptions';
-import { ExceptionsEnum } from '@core/infra/errors/exceptions.enum';
+import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { ErrorInterface } from 'src/types/_errorInterface';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import CryptographyService from '@core/infra/security/Cryptography.service';
@@ -54,6 +54,7 @@ import UserController from '@api/controllers/User.controller';
 import SubscriptionsController from '@api/controllers/Subscriptions.controller';
 
 
+const appConfigs = configs();
 @Module({
 	imports: [
 		ConfigModule.forRoot({
@@ -70,15 +71,16 @@ import SubscriptionsController from '@api/controllers/Subscriptions.controller';
 				{
 					sqs: new MockedSqsClient({
 						logger: console,
-						configs: configs(),
+						configs: appConfigs,
 					}).getClient(),
-					name: process.env.AWS_SQS_EVENTS_QUEUE_NAME || 'eventsQueue.fifo',
-					queueUrl: process.env.AWS_SQS_EVENTS_QUEUE_URL || 'http://localhost:4566/000000000000/eventsQueue.fifo',
-					region: process.env.AWS_REGION || 'us-east-1',
+					name: appConfigs.integration.aws.sqs.eventsQueue.queueName || 'eventsQueue.fifo',
+					queueUrl: appConfigs.integration.aws.sqs.eventsQueue.queueUrl || 'http://localhost:4566/000000000000/eventsQueue.fifo',
+					region: appConfigs.integration.aws.credentials.region || 'us-east-1',
 					batchSize: 10,
 					shouldDeleteMessages: false,
 					handleMessageTimeout: 1000,
 					waitTimeSeconds: 20,
+					authenticationErrorTimeout: 10000,
 				},
 			],
 			producers: [],
@@ -168,10 +170,11 @@ export async function startNestApplication(nestApp: INestApplication<any>) {
 		const knowExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
 
 		if (error?.name && !knowExceptions.includes(error.name)) {
-			const err = new Error(String(error.message));
-			err.name = error.name;
-			err.stack = error.stack;
-			throw err;
+			const newError = new Error(error.message);
+			newError.name = error.name;
+			newError.stack = error.stack;
+
+			throw newError;
 		}
 	});
 

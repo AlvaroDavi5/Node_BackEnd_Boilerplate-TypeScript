@@ -24,6 +24,7 @@ import EventsModule from '@events/events.module';
 import ApiModule from '@api/api.module';
 
 
+const appConfigs = configs();
 @Global()
 @Module({
 	imports: [
@@ -37,7 +38,7 @@ import ApiModule from '@api/api.module';
 			verboseMemoryLeak: true,
 		}),
 		DevtoolsModule.register({
-			http: process.env.NODE_ENV !== 'prod',
+			http: appConfigs.application.environment !== 'prod',
 			port: 8000,
 		}),
 		CommonModule,

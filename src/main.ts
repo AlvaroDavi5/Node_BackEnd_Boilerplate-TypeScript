@@ -6,8 +6,8 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { writeFileSync } from 'fs';
 import compression from 'compression';
 import CoreModule from '@core/core.module';
-import { ProcessEventsEnum, ProcessSignalsEnum, ProcessExitStatusEnum } from '@core/infra/start/processEvents.enum';
-import { ExceptionsEnum } from '@core/infra/errors/exceptions.enum';
+import { ProcessEventsEnum, ProcessSignalsEnum, ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
+import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import { ErrorInterface } from 'src/types/_errorInterface';
 
@@ -66,13 +66,14 @@ async function startNestApplication() {
 
 	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application'] | undefined>('application');
 	await nestApp.listen(Number(appConfigs?.port)).catch((error: ErrorInterface | Error) => {
-		const knowExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
+		const knownExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
 
-		if (error?.name && !knowExceptions.includes(error.name)) {
-			const err = new Error(String(error.message));
-			err.name = error.name;
-			err.stack = error.stack;
-			throw err;
+		if (error?.name && !knownExceptions.includes(error.name)) {
+			const newError = new Error(error.message);
+			newError.name = error.name;
+			newError.stack = error.stack;
+
+			throw newError;
 		}
 	});
 

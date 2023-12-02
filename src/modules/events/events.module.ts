@@ -9,6 +9,7 @@ import configs from '@core/configs/configs.config';
 import SqsClient from '@dev/localstack/queues/SqsClient';
 
 
+const appConfigs = configs();
 @Global()
 @Module({
 	imports: [
@@ -17,15 +18,16 @@ import SqsClient from '@dev/localstack/queues/SqsClient';
 				{
 					sqs: new SqsClient({
 						logger: console,
-						configs: configs(),
+						configs: appConfigs,
 					}).getClient(),
-					name: process.env.AWS_SQS_EVENTS_QUEUE_NAME || 'eventsQueue.fifo',
-					queueUrl: process.env.AWS_SQS_EVENTS_QUEUE_URL || 'http://localhost:4566/000000000000/eventsQueue.fifo',
-					region: process.env.AWS_REGION || 'us-east-1',
+					name: appConfigs.integration.aws.sqs.eventsQueue.queueName || 'eventsQueue.fifo',
+					queueUrl: appConfigs.integration.aws.sqs.eventsQueue.queueUrl || 'http://localhost:4566/000000000000/eventsQueue.fifo',
+					region: appConfigs.integration.aws.credentials.region || 'us-east-1',
 					batchSize: 10,
 					shouldDeleteMessages: false,
 					handleMessageTimeout: 1000,
 					waitTimeSeconds: 20,
+					authenticationErrorTimeout: 10000,
 				},
 			],
 			producers: [],

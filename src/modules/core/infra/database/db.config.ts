@@ -1,8 +1,9 @@
 import { Options, BuildOptions, Dialect } from 'sequelize/types';
+import configs from '@core/configs/configs.config';
 
 
-function getDialect(dialect: string): Dialect {
-	switch (dialect.toLowerCase()) {
+function getDialect(dialect: string | undefined): Dialect {
+	switch (dialect?.toLowerCase()) {
 	case 'mysql':
 		return 'mysql';
 	case 'postgres':
@@ -46,25 +47,16 @@ export interface DatabaseConfigInterface {
 	buildOptions?: BuildOptions | undefined,
 }
 
+const { application: app, database: db } = configs();
 export const config: DatabaseConfigInterface = {
-	database: process.env.DB_NAME || 'db_postgres',
-	username: process.env.DB_USERNAME || 'postgres',
-	password: process.env.DB_PASSWORD || 'pass',
-	host: process.env.DB_HOST || 'localhost',
-	charset: 'utf8',
-	dialect: getDialect(process.env.DB_DBMS_NAME || 'postgres'),
-	port: parseInt(process.env.DB_PORT || '5432'),
-	define: {
-		underscored: false,
-		timestamps: true,
-		paranoid: true,
-		freezeTableName: false,
-	},
-	pool: {
-		min: 0,
-		max: 5,
-		acquire: 20000,
-		idle: 20000,
-	},
-	logging: process.env.SHOW_LOGS === 'true' ? console.log : false,
+	database: db.database || 'db_postgres',
+	username: db.username || 'postgres',
+	password: db.password || 'pass',
+	host: db.host || 'localhost',
+	charset: db.charset || 'utf8',
+	dialect: getDialect(db.dialect),
+	port: parseInt(db.port || '5432'),
+	define: { ...db.define },
+	pool: { ...db.pool },
+	logging: app.logging === 'true' ? console.log : false,
 };

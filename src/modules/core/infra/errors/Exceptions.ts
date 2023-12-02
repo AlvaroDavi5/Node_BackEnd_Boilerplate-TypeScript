@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import { ExceptionsEnum } from './exceptions.enum';
+import { ExceptionsEnum } from '../../../common/enums/exceptions.enum';
 import { ErrorInterface } from 'src/types/_errorInterface';
 
 
@@ -20,7 +20,7 @@ export default class Exceptions {
 		this.showStack = (stackErrorVisible === 'true');
 	}
 
-	public [ExceptionsEnum.CONTRACT](error: ErrorInterface) {
+	public [ExceptionsEnum.CONTRACT](error: ErrorInterface): BadRequestException {
 		const exception = new BadRequestException(error.message);
 
 		exception.name = ExceptionsEnum.CONTRACT;
@@ -32,7 +32,7 @@ export default class Exceptions {
 		return exception;
 	}
 
-	public [ExceptionsEnum.BUSINESS](error: ErrorInterface) {
+	public [ExceptionsEnum.BUSINESS](error: ErrorInterface): ForbiddenException {
 		const exception = new ForbiddenException(error.message);
 
 		exception.name = ExceptionsEnum.BUSINESS;
@@ -44,7 +44,7 @@ export default class Exceptions {
 		return exception;
 	}
 
-	public [ExceptionsEnum.UNAUTHORIZED](error: ErrorInterface) {
+	public [ExceptionsEnum.UNAUTHORIZED](error: ErrorInterface): UnauthorizedException {
 		const exception = new UnauthorizedException(error.message);
 
 		exception.name = ExceptionsEnum.UNAUTHORIZED;
@@ -56,7 +56,7 @@ export default class Exceptions {
 		return exception;
 	}
 
-	public [ExceptionsEnum.CONFLICT](error: ErrorInterface) {
+	public [ExceptionsEnum.CONFLICT](error: ErrorInterface): ConflictException {
 		const exception = new ConflictException(error.message);
 
 		exception.name = ExceptionsEnum.CONFLICT;
@@ -68,7 +68,7 @@ export default class Exceptions {
 		return exception;
 	}
 
-	public [ExceptionsEnum.NOT_FOUND](error: ErrorInterface) {
+	public [ExceptionsEnum.NOT_FOUND](error: ErrorInterface): NotFoundException {
 		const exception = new NotFoundException(error.message);
 
 		exception.name = ExceptionsEnum.NOT_FOUND;
@@ -80,7 +80,7 @@ export default class Exceptions {
 		return exception;
 	}
 
-	public [ExceptionsEnum.INTEGRATION](error: ErrorInterface) {
+	public [ExceptionsEnum.INTEGRATION](error: ErrorInterface): ServiceUnavailableException {
 		const exception = new ServiceUnavailableException(error.message);
 
 		exception.name = ExceptionsEnum.INTEGRATION;
@@ -92,7 +92,7 @@ export default class Exceptions {
 		return exception;
 	}
 
-	public [ExceptionsEnum.INTERNAL](error: ErrorInterface) {
+	public [ExceptionsEnum.INTERNAL](error: ErrorInterface): InternalServerErrorException {
 		const exception = new InternalServerErrorException(error.message);
 
 		exception.name = ExceptionsEnum.INTERNAL;

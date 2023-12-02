@@ -15,7 +15,8 @@ import SyncCronJob from '@core/infra/cron/jobs/SyncCron.job';
 import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import ServerlessModule from '@serverless/serverless.module';
-import { ProcessExitStatusEnum } from './processEvents.enum';
+import { EnvironmentsEnum } from '@common/enums/environments.enum';
+import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 
 
 @Injectable()
@@ -93,7 +94,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 
 	public onApplicationShutdown(): void {
 		this.logger.warn('Exiting Application');
-		if (this.appConfigs.environment !== 'test')
+		if (this.appConfigs.environment !== EnvironmentsEnum.TEST)
 			process.exit(ProcessExitStatusEnum.SUCCESS);
 	}
 }

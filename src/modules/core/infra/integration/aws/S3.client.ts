@@ -1,14 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { basename } from 'path';
-import { createReadStream, writeFile } from 'fs';
-import uuid from 'uuid';
+import { ReadStream, createReadStream, writeFile } from 'fs';
 import { Logger } from 'winston';
 import {
-	S3Client as S3AWSClient, S3ClientConfig, Bucket, NotificationConfiguration,
-	ListBucketsCommand, CreateBucketCommand, DeleteBucketCommand, PutBucketNotificationConfigurationCommand, UploadPartCommand, GetObjectCommand, DeleteObjectCommand,
-	UploadPartCommandInput, GetObjectCommandInput, DeleteObjectCommandInput, BucketLocationConstraint,
+	S3Client as S3AWSClient, S3ClientConfig, NotificationConfiguration,
+	ListBucketsCommand, CreateBucketCommand, DeleteBucketCommand, PutBucketNotificationConfigurationCommand, PutObjectCommand, GetObjectCommand, DeleteObjectCommand,
+	PutObjectCommandInput, GetObjectCommandInput, DeleteObjectCommandInput,
 } from '@aws-sdk/client-s3';
+import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 
@@ -19,6 +19,7 @@ export default class S3Client {
 	private readonly region: string;
 	private readonly s3Client: S3AWSClient;
 	private readonly logger: Logger;
+	private readonly filesExpiration: number;
 
 	constructor(
 		private readonly configService: ConfigService,
@@ -31,7 +32,8 @@ export default class S3Client {
 			region, sessionToken,
 			accessKeyId, secretAccessKey,
 		} = awsConfigs.credentials;
-		const { endpoint, apiVersion } = awsConfigs.s3;
+		const { filesExpiration, endpoint, apiVersion } = awsConfigs.s3;
+		this.filesExpiration = filesExpiration || (5 * 60);
 
 		this.awsConfig = {
 			endpoint,
@@ -49,21 +51,17 @@ export default class S3Client {
 	}
 
 
-	private uploadParams(bucketName: string, filePath: string): UploadPartCommandInput {
+	private uploadParams(bucketName: string, fileName: string, fileStreamOrPath: ReadStream | string): PutObjectCommandInput {
+		const fileBaseName = basename(fileName);
 
-		const params: UploadPartCommandInput = {
+		const params: PutObjectCommandInput = {
 			Bucket: bucketName,
-			Key: '',
-			Body: '',
-			PartNumber: 0,
-			UploadId: uuid.v4(),
+			Key: fileBaseName,
 		};
 
 		try {
-			const fileBaseName = basename(filePath);
-			const fileStream = createReadStream(filePath);
+			const fileStream = (typeof fileStreamOrPath === 'string') ? createReadStream(fileStreamOrPath) : fileStreamOrPath;
 
-			params.Key = fileBaseName;
 			params.Body = fileStream;
 		}
 		catch (error) {
@@ -78,7 +76,6 @@ export default class S3Client {
 		const params: GetObjectCommandInput | DeleteObjectCommandInput = {
 			Bucket: bucketName,
 			Key: objectKey,
-			PartNumber: 0,
 		};
 
 		return params;
@@ -92,13 +89,16 @@ export default class S3Client {
 		this.s3Client.destroy();
 	}
 
-	public async listBuckets(): Promise<Bucket[]> {
-		let list: Bucket[] = [];
+	public async listBuckets(): Promise<string[]> {
+		let list: string[] = [];
 
 		try {
 			const result = await this.s3Client.send(new ListBucketsCommand({}));
-			if (result?.Buckets)
-				list = result?.Buckets;
+			if (result.Buckets?.length)
+				result?.Buckets.map((bucket) => {
+					if (bucket.Name)
+						list.push(bucket.Name);
+				});
 		} catch (error) {
 			this.logger.error('List Error:', error);
 		}
@@ -112,9 +112,7 @@ export default class S3Client {
 		try {
 			const result = await this.s3Client.send(new CreateBucketCommand({
 				Bucket: bucketName,
-				CreateBucketConfiguration: {
-					LocationConstraint: location,
-				},
+				GrantRead: '',
 			}));
 			if (result?.Location)
 				location = result?.Location;
@@ -158,11 +156,11 @@ export default class S3Client {
 		return httpStatusCode;
 	}
 
-	public async uploadFile(bucketName: string, filePath: string): Promise<string> {
+	public async uploadFile(bucketName: string, fileName: string, fileStreamOrPath: ReadStream | string): Promise<string> {
 		let key = '';
 
 		try {
-			const result = await this.s3Client.send(new UploadPartCommand(this.uploadParams(bucketName, filePath)));
+			const result = await this.s3Client.send(new PutObjectCommand(this.uploadParams(bucketName, fileName, fileStreamOrPath)));
 			if (result?.SSEKMSKeyId)
 				key = result.SSEKMSKeyId;
 		} catch (error) {
@@ -178,7 +176,7 @@ export default class S3Client {
 		try {
 			const result = await this.s3Client.send(new GetObjectCommand(this.getObjectParams(bucketName, objectKey)));
 			if (result?.Body) {
-				writeFile(`./${objectKey}`, `${result?.Body}`, err => {
+				writeFile(`./temp/${objectKey}`, `${result.Body}`, err => {
 					if (err) {
 						this.logger.error('Save Error:', err);
 					}
@@ -192,6 +190,22 @@ export default class S3Client {
 		}
 
 		return contentLength;
+	}
+
+	public async getFileLink(bucketName: string, objectKey: string): Promise<string> {
+		let link = '';
+
+		try {
+			const signedUrl = await getSignedUrl(this.s3Client as any, new GetObjectCommand(
+				this.getObjectParams(bucketName, objectKey)
+			) as any, { expiresIn: this.filesExpiration });
+
+			link = signedUrl;
+		} catch (error) {
+			this.logger.error('Delete Error:', error);
+		}
+
+		return link;
 	}
 
 	public async deleteFile(bucketName: string, objectKey: string): Promise<boolean> {

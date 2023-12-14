@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { v4 as uuidV4 } from 'uuid';
 import { Logger } from 'winston';
 import {
 	SNSClient, SNSClientConfig, Topic,
@@ -9,6 +8,7 @@ import {
 	CreateTopicCommandInput, SubscribeCommandInput, PublishCommandInput,
 } from '@aws-sdk/client-sns';
 import { ConfigsInterface } from '@core/configs/configs.config';
+import CryptographyService from '@core/infra/security/Cryptography.service';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
@@ -27,6 +27,7 @@ export default class SnsClient {
 
 	constructor(
 		private readonly configService: ConfigService,
+		private readonly cryptographyService: CryptographyService,
 		private readonly loggerGenerator: LoggerGenerator,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
@@ -90,21 +91,21 @@ export default class SnsClient {
 		const publishData: PublishCommandInput = {
 			TopicArn: topicArn,
 			Message: messageBody,
-			MessageDeduplicationId: isFifoTopic ? uuidV4() : undefined,
+			MessageDeduplicationId: isFifoTopic ? this.cryptographyService.generateUuid() : undefined,
 			MessageGroupId: isFifoTopic ? this.messageGroupId : undefined, // Required for FIFO topics
 		};
 
 		switch (protocol) {
-		case 'email':
-			publishData.Subject = subject;
-			break;
-		case 'sms':
-			publishData.PhoneNumber = phoneNumber;
-			break;
-		default: // application | sqs | lambda | http(s)
-			publishData.TopicArn = topicArn;
-			publishData.TargetArn = topicArn;
-			break;
+			case 'email':
+				publishData.Subject = subject;
+				break;
+			case 'sms':
+				publishData.PhoneNumber = phoneNumber;
+				break;
+			default: // application | sqs | lambda | http(s)
+				publishData.TopicArn = topicArn;
+				publishData.TargetArn = topicArn;
+				break;
 		}
 
 		return publishData;

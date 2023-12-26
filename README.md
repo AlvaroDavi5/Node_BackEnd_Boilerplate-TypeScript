@@ -121,12 +121,12 @@ ___
 
 - **Nest.js**
 	- [API Versioning](https://docs.nestjs.com/techniques/versioning)
-	- [File Upload](https://docs.nestjs.com/techniques/file-upload)
 	- [Authorization](https://docs.nestjs.com/security/authorization)
 	- [WebSockets Pipes](https://docs.nestjs.com/websockets/pipes)
-	- [GraphQL](https://docs.nestjs.com/graphql/quick-start)
 	- [kafka](https://docs.nestjs.com/microservices/kafka)
+	- [openAPI](https://docs.nestjs.com/openapi/introduction)
 	- [Serverless](https://docs.nestjs.com/faq/serverless)
+	- [Hybrid Application](https://docs.nestjs.com/faq/hybrid-application)
 - **Build Versioning**
 	- [ ] DockerHub
 	- [ ] Container Images

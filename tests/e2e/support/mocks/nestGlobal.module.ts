@@ -17,7 +17,7 @@ import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { ErrorInterface } from 'src/types/_errorInterface';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import CryptographyService from '@core/infra/security/Cryptography.service';
-import databaseConnectionProvider from '@core/infra/database/connection';
+import DatabaseConnectionProvider from '@core/infra/database/connection';
 import RedisClient from '@core/infra/cache/Redis.client';
 import MongoClient from '@core/infra/data/Mongo.client';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
@@ -56,6 +56,7 @@ import SubscriptionsController from '@api/controllers/Subscriptions.controller';
 
 
 const appConfigs = configs();
+
 @Module({
 	imports: [
 		ConfigModule.forRoot({
@@ -98,7 +99,7 @@ const appConfigs = configs();
 		Exceptions,
 		LoggerGenerator,
 		CryptographyService,
-		databaseConnectionProvider,
+		DatabaseConnectionProvider,
 		RedisClient,
 		MongoClient,
 		SqsClient,
@@ -148,7 +149,6 @@ export class TestModule implements NestModule {
 export async function startNestApplication(nestApp: INestApplication<any>) {
 	dotenv.config({ path: '.env.test' });
 
-	nestApp.setGlobalPrefix('api');
 	nestApp.useGlobalPipes(
 		new ValidationPipe({
 			whitelist: true,
@@ -156,9 +156,9 @@ export async function startNestApplication(nestApp: INestApplication<any>) {
 			transform: true,
 		}),
 	);
-
 	nestApp.enableShutdownHooks();
 
+	nestApp.setGlobalPrefix('api');
 	nestApp.use(compression());
 	nestApp.enableCors({
 		origin: '*',
@@ -169,9 +169,9 @@ export async function startNestApplication(nestApp: INestApplication<any>) {
 
 	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application'] | undefined>('application');
 	await nestApp.listen(Number(appConfigs?.port)).catch((error: ErrorInterface | Error) => {
-		const knowExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
+		const knownExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
 
-		if (error?.name && !knowExceptions.includes(error.name)) {
+		if (error?.name && !knownExceptions.includes(error.name)) {
 			const newError = new Error(error.message);
 			newError.name = error.name;
 			newError.stack = error.stack;

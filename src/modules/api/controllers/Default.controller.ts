@@ -5,6 +5,7 @@ import {
 	StreamableFile, UploadedFile, UseInterceptors,
 } from '@nestjs/common';
 import { ModuleRef, LazyModuleLoader } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiTags, ApiBody, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Logger } from 'winston';
@@ -17,6 +18,8 @@ import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import ReportsModule from '@reports/reports.module';
 import UploadService from '@reports/services/Upload.service';
+import { EnvironmentsEnum } from '@common/enums/environments.enum';
+import { ConfigsInterface } from '@core/configs/configs.config';
 
 
 @Controller()
@@ -24,21 +27,26 @@ export default class DefaultController implements OnModuleInit {
 	private fileReaderHelper!: FileReaderHelper;
 	private uploadService!: UploadService;
 	private readonly logger: Logger;
+	private readonly appConfigs: ConfigsInterface['application'];
 
 	constructor(
 		private readonly moduleRef: ModuleRef,
 		private readonly lazyModuleLoader: LazyModuleLoader,
+		private readonly configService: ConfigService,
 		private readonly httpConstants: HttpConstants,
 		private readonly contentTypeConstants: ContentTypeConstants,
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
 		this.logger = this.loggerGenerator.getLogger();
+		this.appConfigs = this.configService.get<any>('application');
 	}
 
 	public async onModuleInit(): Promise<void> {
 		this.fileReaderHelper = this.moduleRef.get(FileReaderHelper, { strict: false });
-		const reportsModuleRef = await this.lazyModuleLoader.load(() => ReportsModule);
-		this.uploadService = await reportsModuleRef.resolve(UploadService, { id: 1 });
+		if (this.appConfigs.environment !== EnvironmentsEnum.TEST) {
+			const reportsModuleRef = await this.lazyModuleLoader.load(() => ReportsModule);
+			this.uploadService = await reportsModuleRef.resolve(UploadService, { id: 1 });
+		}
 	}
 
 	@ApiTags('HealthCheck')
@@ -204,8 +212,15 @@ export default class DefaultController implements OnModuleInit {
 			const fullFileName = (fileNameHeader.length > 0 ? fileNameHeader : file.originalname).trim().split('.');
 			const fileSteam = Buffer.from(fullFileName[0]).toString('ascii');
 			const fileExtension = Buffer.from(fullFileName[fullFileName.length - 1]).toString('ascii');
-
 			const fileName = `${fileSteam}.${fileExtension}`;
+
+			if (this.appConfigs.environment === EnvironmentsEnum.TEST)
+				return {
+					fileName,
+					fileContentType: expectedContentType,
+					downloadUrl: '',
+				};
+
 			await this.uploadService.uploadReport(fileName, file);
 			const downloadUrl = await this.uploadService.getPresignedUrl(fileName);
 

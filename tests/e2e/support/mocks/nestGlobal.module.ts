@@ -32,6 +32,7 @@ import SchemaValidator from '@common/utils/validators/SchemaValidator.validator'
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
+import FileStrategy from '@app/strategies/File.strategy';
 import UserStrategy from '@app/strategies/User.strategy';
 import UserOperation from '@app/operations/User.operation';
 import UserService from '@app/services/User.service';
@@ -114,6 +115,7 @@ const appConfigs = configs();
 		CacheAccessHelper,
 		FileReaderHelper,
 		// * app
+		FileStrategy,
 		UserStrategy,
 		UserOperation,
 		UserService,

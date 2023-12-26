@@ -1,5 +1,5 @@
 import { Injectable, Inject, OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown } from '@nestjs/common';
-import { HttpAdapterHost, LazyModuleLoader } from '@nestjs/core';
+import { HttpAdapterHost } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { Sequelize } from 'sequelize';
 import { Logger } from 'winston';
@@ -14,7 +14,6 @@ import S3Client from '@core/infra/integration/aws/S3.client';
 import SyncCronJob from '@core/infra/cron/jobs/SyncCron.job';
 import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
-import ServerlessModule from '@serverless/serverless.module';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 
@@ -23,10 +22,10 @@ import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 export default class LifecycleService implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown {
 	private readonly logger: Logger;
 	private readonly appConfigs: ConfigsInterface['application'];
+	private readonly uploadBucket: string;
 
 	constructor(
 		private readonly httpAdapterHost: HttpAdapterHost,
-		private readonly lazyModuleLoader: LazyModuleLoader,
 		private readonly configService: ConfigService,
 		@Inject(DATABASE_CONNECTION_PROVIDER)
 		private readonly connection: Sequelize,
@@ -42,15 +41,24 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 	) {
 		this.logger = this.loggerGenerator.getLogger();
 		this.appConfigs = this.configService.get<any>('application');
+		this.uploadBucket = this.configService.get<any>('integration.aws.s3.bucketName') || 'defaultbucket';
 	}
 
-	public onModuleInit(): void {
+	public async onModuleInit(): Promise<void> {
+		const bucketList = await this.s3Client.listBuckets();
+
+		if (!bucketList.includes(this.uploadBucket))
+			try {
+				this.s3Client.createBucket(this.uploadBucket);
+			} catch (error) {
+				this.logger.error(error);
+			}
+
 		this.logger.debug('Builded host module');
 	}
 
 	public onApplicationBootstrap(): void {
 		this.logger.debug(`\n\n\tApp started with PID: ${process.pid} on URL: ${this.appConfigs?.url}\n`);
-		this.lazyModuleLoader.load(() => ServerlessModule);
 	}
 
 	public onModuleDestroy(): void {

@@ -8,6 +8,7 @@ import compression from 'compression';
 import CoreModule from '@core/core.module';
 import { ProcessEventsEnum, ProcessSignalsEnum, ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
+import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import { ErrorInterface } from 'src/types/_errorInterface';
 
@@ -17,6 +18,13 @@ async function startNestApplication() {
 		abortOnError: false,
 		snapshot: true,
 		preview: false,
+		forceCloseConnections: true,
+		/*
+		httpsOptions: {
+			key: '',
+			cert: '',
+		},
+		*/
 	});
 	nestApp.useGlobalPipes(
 		new ValidationPipe({
@@ -95,12 +103,14 @@ async function startNestApplication() {
 		await nestApp.close();
 	}));
 
-	writeFileSync('./docs/nestGraph.json', nestApp.get(SerializedGraph).toString());
+	if (appConfigs?.environment === EnvironmentsEnum.DEVELOPMENT)
+		writeFileSync('./docs/nestGraph.json', nestApp.get(SerializedGraph).toString());
 }
 
 startNestApplication().catch((error: Error) => {
 	console.error(error);
-	writeFileSync('./docs/nestGraph.json', PartialGraphHost.toString() ?? '');
+	if (process.env.NODE_ENV === EnvironmentsEnum.DEVELOPMENT)
+		writeFileSync('./docs/nestGraph.json', PartialGraphHost.toString() ?? '');
 	process.exit(ProcessExitStatusEnum.FAILURE);
 });
 
@@ -110,7 +120,7 @@ startNestApplication().catch((error: Error) => {
 // * document
 // ? topic
 // ! alert
-// todo to do
+// todo
 /**
 @brief
 @param param

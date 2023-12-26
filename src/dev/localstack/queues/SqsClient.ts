@@ -1,4 +1,3 @@
-import { Injectable } from '@nestjs/common';
 import { Logger } from 'winston';
 import { v4 as uuidV4 } from 'uuid';
 import {
@@ -10,13 +9,11 @@ import {
 import { ConfigsInterface } from '@core/configs/configs.config';
 
 
-@Injectable()
 export default class SqsClient {
 	private readonly awsConfig: SQSClientConfig;
 	private readonly messageGroupId: string;
-	private readonly sqs: SQSClient;
+	private readonly sqsClient: SQSClient;
 	private readonly logger: Logger;
-
 
 	constructor({
 		configs,
@@ -43,12 +40,12 @@ export default class SqsClient {
 			logger: logging === 'true' ? this.logger : undefined,
 		};
 		this.messageGroupId = 'DefaultGroup';
-		this.sqs = new SQSClient(this.awsConfig);
+		this.sqsClient = new SQSClient(this.awsConfig);
 	}
 
 
-	private formatMessageBeforeSend(data: any = {}): string {
-		let result = '';
+	private formatMessageBeforeSend(data: unknown = {}): string {
+		let result = null;
 
 		switch (typeof data) {
 		case 'bigint':
@@ -64,12 +61,7 @@ export default class SqsClient {
 			result = data;
 			break;
 		case 'object':
-			try {
-				result = JSON.stringify(data);
-			} catch (error) {
-				result = '{}';
-				this.logger.warn('Object:String parse error');
-			}
+			result = (JSON.stringify(data) || data?.toString()) ?? '';
 			break;
 		case 'symbol':
 			result = data.toString();
@@ -135,18 +127,18 @@ export default class SqsClient {
 	}
 
 	public getClient(): SQSClient {
-		return this.sqs;
+		return this.sqsClient;
 	}
 
 	public destroy(): void {
-		this.sqs.destroy();
+		this.sqsClient.destroy();
 	}
 
 	public async listQueues(): Promise<string[]> {
 		let list: string[] = [];
 
 		try {
-			const result = await this.sqs.send(new ListQueuesCommand({
+			const result = await this.sqsClient.send(new ListQueuesCommand({
 				MaxResults: 200,
 			}));
 			if (result?.QueueUrls)
@@ -162,7 +154,7 @@ export default class SqsClient {
 		let queueUrl = '';
 
 		try {
-			const result = await this.sqs.send(new CreateQueueCommand(
+			const result = await this.sqsClient.send(new CreateQueueCommand(
 				this.createParams(queueName)
 			));
 			if (result?.QueueUrl)
@@ -178,7 +170,7 @@ export default class SqsClient {
 		let isDeleted = false;
 
 		try {
-			const result = await this.sqs.send(new DeleteQueueCommand({
+			const result = await this.sqsClient.send(new DeleteQueueCommand({
 				QueueUrl: queueUrl,
 			}));
 			if (result.$metadata?.httpStatusCode && String(result.$metadata?.httpStatusCode)[2] === '2')
@@ -194,7 +186,7 @@ export default class SqsClient {
 		let messageId = '';
 
 		try {
-			const result = await this.sqs.send(new SendMessageCommand(
+			const result = await this.sqsClient.send(new SendMessageCommand(
 				this.msgParams(queueUrl, message, title, author)
 			));
 			if (result?.MessageId)
@@ -210,7 +202,7 @@ export default class SqsClient {
 		const messages: Array<Message> = [];
 
 		try {
-			const result = await this.sqs.send(new ReceiveMessageCommand(
+			const result = await this.sqsClient.send(new ReceiveMessageCommand(
 				this.receiveParam(queueUrl)
 			));
 			if (result?.Messages) {
@@ -230,7 +222,7 @@ export default class SqsClient {
 		let isDeleted = false;
 
 		try {
-			const result = await this.sqs.send(new DeleteMessageCommand({
+			const result = await this.sqsClient.send(new DeleteMessageCommand({
 				QueueUrl: queueUrl,
 				ReceiptHandle: `${message?.ReceiptHandle}`,
 			}));

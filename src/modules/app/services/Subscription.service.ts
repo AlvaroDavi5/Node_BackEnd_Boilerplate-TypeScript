@@ -9,6 +9,7 @@ import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import SubscriptionEntity, { SubscriptionInterface } from '@app/domain/entities/Subscription.entity';
 import { CacheEnum } from '@app/domain/enums/cache.enum';
 import { WebSocketEventsEnum } from '@app/domain/enums/webSocketEvents.enum';
 
@@ -42,58 +43,67 @@ export default class SubscriptionService implements OnModuleInit {
 		this.webSocketClient = this.moduleRef.get(WebSocketClient, { strict: false });
 	}
 
-	public async get(id: string): Promise<any> {
-		let subscription: any = await this.getFromCache(id);
+	public async get(subscriptionId: string): Promise<SubscriptionEntity | null> {
+		let subscription: any = await this.getFromCache(subscriptionId);
 		if (!subscription) {
 			const findedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
-				subscriptionId: id,
+				subscriptionId,
 			});
 			subscription = findedSubscription;
 		}
-		await this.saveOnCache(id, subscription);
+		if (!subscription)
+			return null;
 
-		return subscription;
+		await this.saveOnCache(subscriptionId, subscription);
+
+		return new SubscriptionEntity(subscription);
 	}
 
-	public async save(id: string, data: any): Promise<any> {
+	public async save(subscriptionId: string, data: SubscriptionInterface): Promise<SubscriptionEntity | null> {
 		let findedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
-			subscriptionId: id,
+			subscriptionId,
 		});
-		let findedSubscriptionId: ObjectId | null | undefined = findedSubscription?._id;
+		let subscriptionDatabaseId: ObjectId | null | undefined = findedSubscription?._id;
 
-		if (!findedSubscriptionId) {
+		if (!subscriptionDatabaseId) {
+			// ? create
 			const savedSubscription = await this.mongoClient.insertOne(this.subscriptionsCollection, data);
-			findedSubscriptionId = savedSubscription.insertedId;
+			subscriptionDatabaseId = savedSubscription.insertedId;
 		}
 		else
-			await this.mongoClient.updateOne(this.subscriptionsCollection, findedSubscriptionId, data);
+			// ? update
+			await this.mongoClient.updateOne(this.subscriptionsCollection, subscriptionDatabaseId, data);
 
-		if (findedSubscriptionId) {
-			findedSubscription = await this.mongoClient.get(this.subscriptionsCollection, findedSubscriptionId);
-			await this.saveOnCache(id, findedSubscription);
+		if (subscriptionDatabaseId) {
+			findedSubscription = await this.mongoClient.get(this.subscriptionsCollection, subscriptionDatabaseId);
+			await this.saveOnCache(subscriptionId, findedSubscription);
 		}
+		else
+			return null;
 
-		return findedSubscription;
+		return new SubscriptionEntity(findedSubscription);
 	}
 
-	public async delete(id: string): Promise<boolean> {
+	public async delete(subscriptionId: string): Promise<boolean> {
 		let deletedSubscription = false;
 		const findedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
-			subscriptionId: id,
+			subscriptionId,
 		});
 
 		if (findedSubscription?._id) {
-			await this.deleteFromCache(id);
+			await this.deleteFromCache(subscriptionId);
 			deletedSubscription = (await this.mongoClient.deleteOne(this.subscriptionsCollection, findedSubscription._id)).deletedCount > 0;
 		}
 
 		return deletedSubscription;
 	}
 
-	public async list(): Promise<WithId<MongoDocument>[]> {
+	public async list(): Promise<SubscriptionEntity[]> {
 		const findedSubscriptions = await this.mongoClient.findMany(this.subscriptionsCollection, {});
 
-		return findedSubscriptions;
+		return findedSubscriptions.map((subscription: WithId<MongoDocument>) => {
+			return new SubscriptionEntity(subscription);
+		});
 	}
 
 	public emit(msg: unknown, socketIdsOrRooms: string | string[]): void {
@@ -109,18 +119,18 @@ export default class SubscriptionService implements OnModuleInit {
 		this.webSocketClient.send(WebSocketEventsEnum.BROADCAST, msg);
 	}
 
-	private async getFromCache(id: string): Promise<any> {
-		const key = this.cacheAccessHelper.generateKey(id, CacheEnum.SUBSCRIPTIONS);
+	private async getFromCache(subscriptionId: string): Promise<any> {
+		const key = this.cacheAccessHelper.generateKey(subscriptionId, CacheEnum.SUBSCRIPTIONS);
 		return await this.redisClient.get(key);
 	}
 
-	private async saveOnCache(id: string, data: any): Promise<string> {
-		const key = this.cacheAccessHelper.generateKey(id, CacheEnum.SUBSCRIPTIONS);
+	private async saveOnCache(subscriptionId: string, data: any): Promise<string> {
+		const key = this.cacheAccessHelper.generateKey(subscriptionId, CacheEnum.SUBSCRIPTIONS);
 		return await this.redisClient.set(key, data, this.expirationTime);
 	}
 
-	private async deleteFromCache(id: string): Promise<number> {
-		const key = this.cacheAccessHelper.generateKey(id, CacheEnum.SUBSCRIPTIONS);
+	private async deleteFromCache(subscriptionId: string): Promise<number> {
+		const key = this.cacheAccessHelper.generateKey(subscriptionId, CacheEnum.SUBSCRIPTIONS);
 		return await this.redisClient.delete(key);
 	}
 }

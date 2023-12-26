@@ -3,7 +3,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ValidateIf, IsString, IsNumberString, IsBooleanString } from 'class-validator';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import Exceptions from '@core/infra/errors/Exceptions';
-import configs from '@core/configs/configs.config';
 import listQuerySchema from '@api/schemas/listQuery.schema';
 import { ListQueryInterface } from 'src/types/_listPaginationInterface';
 
@@ -44,17 +43,7 @@ export class ListQueryPipeValidator implements PipeTransform<ListQueryPipeDto, L
 	private readonly schemaValidator: SchemaValidator<ListQueryInterface>;
 
 	constructor() {
-		const appConfigs: any = configs();
-		const configServiceMock: any = {
-			get: (propertyPath?: string) => {
-				if (propertyPath)
-					return appConfigs[propertyPath];
-				else
-					return appConfigs;
-			},
-		};
-
-		this.schemaValidator = new SchemaValidator<ListQueryInterface>(new Exceptions(configServiceMock));
+		this.schemaValidator = new SchemaValidator<ListQueryInterface>(new Exceptions());
 	}
 
 	public transform(value: ListQueryPipeDto, metadata: ArgumentMetadata): ListQueryInterface {

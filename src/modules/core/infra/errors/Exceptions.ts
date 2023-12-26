@@ -3,31 +3,19 @@ import {
 	BadRequestException, UnauthorizedException, ForbiddenException, NotFoundException,
 	ConflictException, InternalServerErrorException, ServiceUnavailableException,
 } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { ConfigsInterface } from '@core/configs/configs.config';
 import { ExceptionsEnum } from '../../../common/enums/exceptions.enum';
 import { ErrorInterface } from 'src/types/_errorInterface';
 
 
 @Injectable()
 export default class Exceptions {
-	private readonly showStack: boolean = false;
-
-	constructor(
-		private readonly configService: ConfigService,
-	) {
-		const stackErrorVisible: ConfigsInterface['application']['stackErrorVisible'] = this.configService.get<any>('application.stackErrorVisible');
-		this.showStack = (stackErrorVisible === 'true');
-	}
 
 	public [ExceptionsEnum.CONTRACT](error: ErrorInterface): BadRequestException {
 		const exception = new BadRequestException(error.message);
 
 		exception.name = ExceptionsEnum.CONTRACT;
 		exception.message = error.message;
-		exception.cause = error.details;
-		if (this.showStack)
-			exception.stack = error.stack;
+		exception.cause = error.details || error.stack;
 
 		return exception;
 	}
@@ -37,9 +25,7 @@ export default class Exceptions {
 
 		exception.name = ExceptionsEnum.BUSINESS;
 		exception.message = error.message;
-		exception.cause = error.details;
-		if (this.showStack)
-			exception.stack = error.stack;
+		exception.cause = error.details || error.stack;
 
 		return exception;
 	}
@@ -49,9 +35,7 @@ export default class Exceptions {
 
 		exception.name = ExceptionsEnum.UNAUTHORIZED;
 		exception.message = error.message;
-		exception.cause = error.details;
-		if (this.showStack)
-			exception.stack = error.stack;
+		exception.cause = error.details || error.stack;
 
 		return exception;
 	}
@@ -61,9 +45,7 @@ export default class Exceptions {
 
 		exception.name = ExceptionsEnum.CONFLICT;
 		exception.message = error.message;
-		exception.cause = error.details;
-		if (this.showStack)
-			exception.stack = error.stack;
+		exception.cause = error.details || error.stack;
 
 		return exception;
 	}
@@ -73,9 +55,7 @@ export default class Exceptions {
 
 		exception.name = ExceptionsEnum.NOT_FOUND;
 		exception.message = error.message;
-		exception.cause = error.details;
-		if (this.showStack)
-			exception.stack = error.stack;
+		exception.cause = error.details || error.stack;
 
 		return exception;
 	}
@@ -85,9 +65,7 @@ export default class Exceptions {
 
 		exception.name = ExceptionsEnum.INTEGRATION;
 		exception.message = error.message;
-		exception.cause = error.details;
-		if (this.showStack)
-			exception.stack = error.stack;
+		exception.cause = error.details || error.stack;
 
 		return exception;
 	}
@@ -97,9 +75,7 @@ export default class Exceptions {
 
 		exception.name = ExceptionsEnum.INTERNAL;
 		exception.message = error.message;
-		exception.cause = error.details;
-		if (this.showStack)
-			exception.stack = error.stack;
+		exception.cause = error.details || error.stack;
 
 		return exception;
 	}

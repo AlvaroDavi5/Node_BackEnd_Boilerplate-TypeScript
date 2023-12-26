@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { v4 as uuidV4 } from 'uuid';
 import { Logger } from 'winston';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import { ConfigsInterface } from '@core/configs/configs.config';
+import CryptographyService from '@core/infra/security/Cryptography.service';
 import { EventSchemaInterface } from '@events/queue/handlers/schemas/event.schema';
 
 
@@ -29,6 +29,7 @@ export default class EventsQueueProducer {
 
 	constructor(
 		private readonly configService: ConfigService,
+		private readonly cryptographyService: CryptographyService,
 		private readonly sqsClient: SqsClient,
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
@@ -44,7 +45,7 @@ export default class EventsQueueProducer {
 
 	private _buildMessageBody({ payload, schema }: { payload: any, schema?: string }): EventSchemaInterface {
 		return {
-			id: uuidV4(),
+			id: this.cryptographyService.generateUuid(),
 			schema: schema || 'EVENTS',
 			schemaVersion: 1.0,
 			payload,

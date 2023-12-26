@@ -15,11 +15,11 @@ export default class FileReaderHelper {
 		this.logger = this.loggerGenerator.getLogger();
 	}
 
-	public readFile(filePath: string): string | undefined {
+	public readFile(filePath: string, encoding?: BufferEncoding): string | undefined {
 		let content: string | undefined = undefined;
 
 		try {
-			content = readFileSync(join(process.cwd(), filePath), { encoding: 'utf8' });
+			content = readFileSync(join(process.cwd(), filePath), { encoding: encoding || 'utf8' });
 		} catch (error) {
 			this.logger.warn('File read error:', error);
 		}
@@ -27,11 +27,11 @@ export default class FileReaderHelper {
 		return content;
 	}
 
-	public readStream(filePath: string): ReadStream | undefined {
+	public readStream(filePath: string, encoding?: BufferEncoding): ReadStream | undefined {
 		let readStream: ReadStream | undefined = undefined;
 
 		try {
-			readStream = createReadStream(join(process.cwd(), filePath), { encoding: 'utf8' });
+			readStream = createReadStream(join(process.cwd(), filePath), { encoding: encoding || 'utf8' });
 		} catch (error) {
 			this.logger.warn('File read stream error:', error);
 		}

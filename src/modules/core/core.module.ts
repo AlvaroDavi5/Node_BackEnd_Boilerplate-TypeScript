@@ -38,7 +38,7 @@ const appConfigs = configs();
 			verboseMemoryLeak: true,
 		}),
 		DevtoolsModule.register({
-			http: appConfigs.application.environment !== 'prod',
+			http: appConfigs.application.environment === 'dev',
 			port: 8000,
 		}),
 		CommonModule,

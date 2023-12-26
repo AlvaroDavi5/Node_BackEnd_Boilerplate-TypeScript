@@ -4,13 +4,13 @@ import { ThemesEnum } from '../enums/themes.enum';
 
 
 export interface UserPreferenceInterface {
-	id: number | undefined,
-	userId: number | undefined,
-	imagePath: string | undefined,
-	defaultTheme: ThemesEnum | undefined,
+	id?: number,
+	userId?: number,
+	imagePath?: string,
+	defaultTheme?: ThemesEnum,
 	readonly createdAt: Date,
-	updatedAt: Date | undefined,
-	deletedAt: Date | undefined,
+	updatedAt?: Date,
+	deletedAt?: Date,
 }
 
 export default class UserPreferenceEntity extends AbstractEntity {

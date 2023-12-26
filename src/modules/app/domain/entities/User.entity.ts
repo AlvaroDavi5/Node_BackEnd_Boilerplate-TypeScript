@@ -5,19 +5,19 @@ import UserPreferenceEntity from './UserPreference.entity';
 
 
 export interface UserInterface {
-	id: number | undefined,
-	fullName: string | undefined,
-	email: string | undefined,
-	password: string | undefined,
-	phone: string | undefined,
-	docType: string | undefined,
-	document: string | undefined,
-	fu: string | undefined,
-	preference: UserPreferenceEntity | undefined,
+	id?: number,
+	fullName?: string,
+	email?: string,
+	password?: string,
+	phone?: string,
+	docType?: string,
+	document?: string,
+	fu?: string,
+	preference?: UserPreferenceEntity,
 	readonly createdAt: Date,
-	updatedAt: Date | undefined,
-	deletedAt: Date | undefined,
-	deletedBy: string | undefined,
+	updatedAt?: Date,
+	deletedAt?: Date,
+	deletedBy?: string,
 }
 
 export default class UserEntity extends AbstractEntity {

@@ -16,7 +16,7 @@ export enum ProcessSignalsEnum {
 	SIGQUIT = 'SIGQUIT',
 	SIGABRT = 'SIGABRT',
 	SIGTERM = 'SIGTERM',
-	SIGKILL = 'SIGKILL',
+	// // SIGKILL = 'SIGKILL',
 }
 
 export enum ProcessExitStatusEnum {

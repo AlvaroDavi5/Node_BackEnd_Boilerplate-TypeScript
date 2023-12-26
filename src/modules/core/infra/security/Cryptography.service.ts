@@ -41,12 +41,8 @@ export default class CryptographyService {
 		return decode(token);
 	}
 
-	public generateUuid(): string | null {
-		try {
-			return uuidV4();
-		} catch (error) {
-			return null;
-		}
+	public generateUuid(): string {
+		return uuidV4();
 	}
 
 	public generateSalt(rounds = 10, minor: 'a' | 'b' = 'b'): string | null {

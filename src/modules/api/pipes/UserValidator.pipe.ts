@@ -3,7 +3,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { ValidateIf, IsString } from 'class-validator';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import Exceptions from '@core/infra/errors/Exceptions';
-import configs from '@core/configs/configs.config';
 import createUserSchema, { CreateUserSchemaInterface } from '@api/schemas/user/createUser.schema';
 import updateUserSchema, { UpdateUserSchemaInterface } from '@api/schemas/user/updateUser.schema';
 import { ThemesEnum } from '@app/domain/enums/themes.enum';
@@ -104,17 +103,7 @@ export class CreateUserPipeValidator implements PipeTransform<CreateUserPipeDto,
 	private readonly schemaValidator: SchemaValidator<CreateUserSchemaInterface>;
 
 	constructor() {
-		const appConfigs: any = configs();
-		const configServiceMock: any = {
-			get: (propertyPath?: string) => {
-				if (propertyPath)
-					return appConfigs[propertyPath];
-				else
-					return appConfigs;
-			},
-		};
-
-		this.schemaValidator = new SchemaValidator<CreateUserSchemaInterface>(new Exceptions(configServiceMock));
+		this.schemaValidator = new SchemaValidator<CreateUserSchemaInterface>(new Exceptions());
 	}
 
 	public transform(value: CreateUserPipeDto, metadata: ArgumentMetadata): CreateUserSchemaInterface {
@@ -127,17 +116,7 @@ export class UpdateUserPipeValidator implements PipeTransform<UpdateUserPipeDto,
 	private readonly schemaValidator: SchemaValidator<UpdateUserSchemaInterface>;
 
 	constructor() {
-		const appConfigs: any = configs();
-		const configServiceMock: any = {
-			get: (propertyPath?: string) => {
-				if (propertyPath)
-					return appConfigs[propertyPath];
-				else
-					return appConfigs;
-			},
-		};
-
-		this.schemaValidator = new SchemaValidator<UpdateUserSchemaInterface>(new Exceptions(configServiceMock));
+		this.schemaValidator = new SchemaValidator<UpdateUserSchemaInterface>(new Exceptions());
 	}
 
 	public transform(value: UpdateUserPipeDto, metadata: ArgumentMetadata): UpdateUserSchemaInterface {

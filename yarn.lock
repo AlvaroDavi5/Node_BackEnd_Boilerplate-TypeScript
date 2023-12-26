@@ -3388,9 +3388,9 @@
     url-join "^5.0.0"
 
 "@semantic-release/github@^9.0.4":
-  version "9.2.5"
-  resolved "https://registry.yarnpkg.com/@semantic-release/github/-/github-9.2.5.tgz#69fd50759a2bb80dc1c38fded7f79e524a32c546"
-  integrity sha512-XWumFEOHiWllekymZjeVgkQCJ4YnD8020ZspAHYIIBNX8O4d/1ldeU5iNXu6NGkKlOCokyXh13KwVP0UEMm5kw==
+  version "9.2.6"
+  resolved "https://registry.yarnpkg.com/@semantic-release/github/-/github-9.2.6.tgz#0b0b00ab3ab0486cd3aecb4ae2f9f9cf2edd8eae"
+  integrity sha512-shi+Lrf6exeNZF+sBhK+P011LSbhmIAoUEgEY6SsxF8irJ+J2stwI5jkyDQ+4gzYyDImzV6LCKdYB9FXnQRWKA==
   dependencies:
     "@octokit/core" "^5.0.0"
     "@octokit/plugin-paginate-rest" "^9.0.0"
@@ -3406,7 +3406,7 @@
     issue-parser "^6.0.0"
     lodash-es "^4.17.21"
     mime "^4.0.0"
-    p-filter "^3.0.0"
+    p-filter "^4.0.0"
     url-join "^5.0.0"
 
 "@semantic-release/npm@^10.0.2":
@@ -5072,9 +5072,9 @@ available-typed-arrays@^1.0.5:
   integrity sha512-DMD0KiN46eipeziST1LPP/STfDU0sufISXmjSgvVsoU2tqxctQeASejWcfNtxYKqETM1UxQ8sp2OrSBWpHY6sw==
 
 aws-sdk@^2.1413.0:
-  version "2.1524.0"
-  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1524.0.tgz#d0b60ba5276420f9e26895ffdf424e8156126226"
-  integrity sha512-nJQ7q6ykflHWkyYaobgSYkKMrqkQLKObCLPN+FfePl9Y4ZCsRVBut59wbZiYmQw1K4QitSwuBjuMdH4ES8vOpg==
+  version "2.1525.0"
+  resolved "https://registry.yarnpkg.com/aws-sdk/-/aws-sdk-2.1525.0.tgz#2d55fa7bbc110c96bb2e10a30af6b0d64a7d422b"
+  integrity sha512-M6wNOrq9HliJoWgmgHeRzMHHrgK6UY20RL2tUhNqq45ETZnj1ihrqG5vSt5ywLrV9WUyI/lUQAVmCP/2PYjpQw==
   dependencies:
     buffer "4.9.2"
     events "1.1.1"
@@ -10941,6 +10941,13 @@ p-filter@^3.0.0:
   dependencies:
     p-map "^5.1.0"
 
+p-filter@^4.0.0:
+  version "4.0.0"
+  resolved "https://registry.yarnpkg.com/p-filter/-/p-filter-4.0.0.tgz#10d55bf804712a1301a9bfb1588d5ec641cce754"
+  integrity sha512-3gxOrNadcyxj+YKFyRmRIEuCMGayNNJoXL7Zf1dqfdfoDsVB190bHfFfhqfcNEDFLfQP1q2uir2cBgIqnIT+cQ==
+  dependencies:
+    p-map "^7.0.0"
+
 p-is-promise@^3.0.0:
   version "3.0.0"
   resolved "https://registry.yarnpkg.com/p-is-promise/-/p-is-promise-3.0.0.tgz#58e78c7dfe2e163cf2a04ff869e7c1dba64a5971"
@@ -11022,6 +11029,11 @@ p-map@^5.1.0:
   integrity sha512-VFqfGDHlx87K66yZrNdI4YGtD70IRyd+zSvgks6mzHPRNkoKy+9EKP4SFC77/vTTQYmRmti7dvqC+m5jBrBAcg==
   dependencies:
     aggregate-error "^4.0.0"
+
+p-map@^7.0.0:
+  version "7.0.0"
+  resolved "https://registry.yarnpkg.com/p-map/-/p-map-7.0.0.tgz#757a189703986134d5d34ef7c16cf2f824d19ebe"
+  integrity sha512-EZl03dLKv3RypkrjlevZoNwQMSy4bAblWcR18zhonktnN4fUs3asFQKSe0awn982omGxamvbejqQKQYDJYHCEg==
 
 p-reduce@^2.0.0:
   version "2.1.0"

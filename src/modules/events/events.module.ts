@@ -1,4 +1,4 @@
-import { Module, Global } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import WebSocketClient from '@events/websocket/client/WebSocket.client';
@@ -10,7 +10,7 @@ import SqsClient from '@dev/localstack/queues/SqsClient';
 
 
 const appConfigs = configs();
-@Global()
+
 @Module({
 	imports: [
 		SqsModule.register({

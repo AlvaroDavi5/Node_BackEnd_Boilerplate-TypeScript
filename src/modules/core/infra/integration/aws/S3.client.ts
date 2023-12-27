@@ -18,7 +18,6 @@ export type s3FileContentType = string | Uint8Array | Buffer | Readable | Readab
 @Injectable()
 export default class S3Client {
 	private readonly awsConfig: S3ClientConfig;
-	private readonly region: string;
 	private readonly s3Client: S3AWSClient;
 	private readonly logger: Logger;
 	private readonly filesExpiration: number;
@@ -39,7 +38,7 @@ export default class S3Client {
 
 		this.awsConfig = {
 			endpoint,
-			region,
+			region: region ?? 'us-east-1',
 			apiVersion,
 			credentials: {
 				accessKeyId: String(accessKeyId),
@@ -49,7 +48,6 @@ export default class S3Client {
 			forcePathStyle: true,
 			logger: logging === 'true' ? this.logger : undefined,
 		};
-		this.region = region || 'us-east-1';
 		this.s3Client = new S3AWSClient(this.awsConfig);
 	}
 

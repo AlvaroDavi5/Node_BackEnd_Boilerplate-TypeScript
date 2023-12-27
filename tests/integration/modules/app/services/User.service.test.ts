@@ -4,8 +4,8 @@ import configs from '../../../../../src/modules/core/configs/configs.config';
 import UserService from '../../../../../src/modules/app/services/User.service';
 import UserRepository from '../../../../../src/modules/app/repositories/user/User.repository';
 import Exceptions from '../../../../../src/modules/core/infra/errors/Exceptions';
+import CryptographyService from '../../../../../src/modules/core/infra/security/Cryptography.service';
 import UserEntity from '../../../../../src/modules/app/domain/entities/User.entity';
-
 
 describe('Modules :: App :: Services :: UserService', () => {
 	let nestTestingModule: TestingModule;
@@ -33,6 +33,7 @@ describe('Modules :: App :: Services :: UserService', () => {
 				{ provide: ConfigService, useValue: configServiceMock },
 				Exceptions,
 				{ provide: UserRepository, useValue: userRepositoryMock },
+				CryptographyService,
 				UserService,
 			]
 		}).compile();
@@ -48,6 +49,7 @@ describe('Modules :: App :: Services :: UserService', () => {
 			const createdUser = await userService.create(new UserEntity({
 				id: 1,
 				email: 'user.test@nomail.dev',
+				password: 'pas123',
 			}));
 			expect(userRepositoryMock.create).toHaveBeenCalledTimes(1);
 			expect(createdUser?.getId()).toBe(1);
@@ -60,6 +62,7 @@ describe('Modules :: App :: Services :: UserService', () => {
 			const createdUser = await userService.create(new UserEntity({
 				id: 1,
 				email: 'user.test@nomail.dev',
+				password: 'pas123',
 			}));
 			expect(userRepositoryMock.create).toHaveBeenCalledTimes(1);
 			expect(createdUser).toBeNull();

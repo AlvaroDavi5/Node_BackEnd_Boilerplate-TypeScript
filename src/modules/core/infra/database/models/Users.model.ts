@@ -41,7 +41,7 @@ class UsersModel extends Model {
 export const userAttributes: ModelAttributes = {
 	fullName: DataTypes.STRING(100),
 	email: DataTypes.STRING(70),
-	password: DataTypes.STRING(60),
+	password: DataTypes.STRING(550),
 	phone: DataTypes.STRING(16),
 	docType: DataTypes.STRING(10),
 	document: DataTypes.STRING(18),

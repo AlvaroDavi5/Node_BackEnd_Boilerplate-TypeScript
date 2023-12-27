@@ -65,8 +65,8 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 
 	public async list(query?: ListQueryInterface, restrictData = true): Promise<PaginationInterface<UserEntity>> {
 		const userModel = (restrictData) ? this.ResourceModel.scope('withoutSensibleData') : this.ResourceModel;
-		const buildedQuery = this.queryParamsBuilder?.buildParams(query);
 
+		const buildedQuery = this.queryParamsBuilder?.buildParams(query);
 		const { rows, count } = await userModel.findAndCountAll(buildedQuery);
 
 		const totalItems = count;

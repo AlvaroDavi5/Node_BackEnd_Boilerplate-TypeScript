@@ -3,7 +3,6 @@ import { HttpAdapterHost } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { Sequelize } from 'sequelize';
 import { Logger } from 'winston';
-import { ConfigsInterface } from '@core/configs/configs.config';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
@@ -14,6 +13,7 @@ import S3Client from '@core/infra/integration/aws/S3.client';
 import SyncCronJob from '@core/infra/cron/jobs/SyncCron.job';
 import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { ConfigsInterface } from '@core/configs/configs.config';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 

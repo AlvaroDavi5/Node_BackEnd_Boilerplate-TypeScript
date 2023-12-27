@@ -1,7 +1,7 @@
 import {
 	Controller, Req, ParseIntPipe,
 	Param, Query, Body,
-	Get, Post, Patch, Delete,
+	Get, Post, Put, Patch, Delete,
 	OnModuleInit,
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
@@ -11,7 +11,7 @@ import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import UserEntity, { UserEntityList } from '@app/domain/entities/User.entity';
 import UserOperation from '@app/operations/User.operation';
 import { ListQueryPipeDto, ListQueryPipeValidator } from '@api/pipes/QueryValidator.pipe';
-import { CreateUserPipeDto, CreateUserPipeValidator, UpdateUserPipeDto, UpdateUserPipeValidator } from '@api/pipes/UserValidator.pipe';
+import { CreateUserPipeDto, CreateUserPipeValidator, UpdateUserPipeDto, UpdateUserPipeValidator, LoginUserPipeValidator, LoginUserPipeDto } from '@api/pipes/UserValidator.pipe';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import { PaginationInterface } from 'src/types/_listPaginationInterface';
 import { RequestInterface } from 'src/types/_endpointInterface';
@@ -89,6 +89,26 @@ export default class UserController implements OnModuleInit {
 			const { user } = request;
 
 			const result = await this.userOperation.getUser(userId, user);
+
+			return result;
+		} catch (error) {
+			this.logger.error(error);
+			throw error;
+		}
+	}
+
+	@ApiOperation({ summary: 'Login User' })
+	@Put()
+	@ApiOkResponse({ type: UserEntity })
+	@ApiProduces('application/json')
+	public async loginUser(
+		@Req() request: RequestInterface,
+		@Body(LoginUserPipeValidator) body: LoginUserPipeDto,
+	): Promise<UserEntity | unknown> {
+		try {
+			const { user } = request;
+
+			const result = await this.userOperation.loginUser(body, user);
 
 			return result;
 		} catch (error) {

@@ -5,6 +5,7 @@ import SchemaValidator from '@common/utils/validators/SchemaValidator.validator'
 import Exceptions from '@core/infra/errors/Exceptions';
 import createUserSchema, { CreateUserSchemaInterface } from '@api/schemas/user/createUser.schema';
 import updateUserSchema, { UpdateUserSchemaInterface } from '@api/schemas/user/updateUser.schema';
+import loginUserSchema, { LoginUserSchemaInterface } from '@api/schemas/user/loginUser.schema';
 import { ThemesEnum } from '@app/domain/enums/themes.enum';
 
 
@@ -99,6 +100,16 @@ export abstract class UpdateUserPipeDto implements UpdateUserSchemaInterface {
 	public defaultTheme: string | undefined = undefined;
 }
 
+export abstract class LoginUserPipeDto implements LoginUserSchemaInterface {
+	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: '', nullable: false, required: true })
+	@IsString()
+	public email = '';
+
+	@ApiProperty({ type: String, example: 'pass123', default: '', nullable: false, required: true })
+	@IsString()
+	public password = '';
+}
+
 export class CreateUserPipeValidator implements PipeTransform<CreateUserPipeDto, CreateUserSchemaInterface> {
 	private readonly schemaValidator: SchemaValidator<CreateUserSchemaInterface>;
 
@@ -122,5 +133,18 @@ export class UpdateUserPipeValidator implements PipeTransform<UpdateUserPipeDto,
 	public transform(value: UpdateUserPipeDto, metadata: ArgumentMetadata): UpdateUserSchemaInterface {
 		console.log(`Validating '${metadata.type}' received as '${metadata.metatype?.name}'`);
 		return this.schemaValidator.validate(value, updateUserSchema);
+	}
+}
+
+export class LoginUserPipeValidator implements PipeTransform<LoginUserPipeDto, LoginUserSchemaInterface> {
+	private readonly schemaValidator: SchemaValidator<LoginUserSchemaInterface>;
+
+	constructor() {
+		this.schemaValidator = new SchemaValidator<LoginUserSchemaInterface>(new Exceptions());
+	}
+
+	public transform(value: LoginUserPipeDto, metadata: ArgumentMetadata): LoginUserSchemaInterface {
+		console.log(`Validating '${metadata.type}' received as '${metadata.metatype?.name}'`);
+		return this.schemaValidator.validate(value, loginUserSchema);
 	}
 }

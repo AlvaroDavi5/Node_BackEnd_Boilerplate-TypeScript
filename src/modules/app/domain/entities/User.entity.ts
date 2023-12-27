@@ -116,8 +116,8 @@ export default class UserEntity extends AbstractEntity {
 	}
 
 	public getPassword(): string | null { return this.password; }
-	public setPassword(passwd: string): void {
-		this.password = passwd;
+	public setPassword(password: string): void {
+		this.password = password;
 		this.updatedAt = new Date();
 	}
 

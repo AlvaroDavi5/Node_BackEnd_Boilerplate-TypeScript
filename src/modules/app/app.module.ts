@@ -1,4 +1,5 @@
 import { Module, Global } from '@nestjs/common';
+import FileStrategy from '@app/strategies/File.strategy';
 import UserStrategy from '@app/strategies/User.strategy';
 import UserOperation from '@app/operations/User.operation';
 import UserService from '@app/services/User.service';
@@ -13,6 +14,7 @@ import UserPreferenceRepository from '@app/repositories/userPreference/UserPrefe
 	imports: [],
 	controllers: [],
 	providers: [
+		FileStrategy,
 		UserStrategy,
 		UserOperation,
 		UserService,
@@ -22,6 +24,7 @@ import UserPreferenceRepository from '@app/repositories/userPreference/UserPrefe
 		UserPreferenceRepository,
 	],
 	exports: [
+		FileStrategy,
 		UserOperation,
 		SubscriptionService,
 	],

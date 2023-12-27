@@ -22,8 +22,10 @@ import CommonModule from '@common/common.module';
 import AppModule from '@app/app.module';
 import EventsModule from '@events/events.module';
 import ApiModule from '@api/api.module';
+import { EnvironmentsEnum } from '@common/enums/environments.enum';
 
 
+const appConfigs = configs();
 @Global()
 @Module({
 	imports: [
@@ -37,7 +39,7 @@ import ApiModule from '@api/api.module';
 			verboseMemoryLeak: true,
 		}),
 		DevtoolsModule.register({
-			http: process.env.NODE_ENV !== 'prod',
+			http: appConfigs.application.environment === EnvironmentsEnum.DEVELOPMENT,
 			port: 8000,
 		}),
 		CommonModule,

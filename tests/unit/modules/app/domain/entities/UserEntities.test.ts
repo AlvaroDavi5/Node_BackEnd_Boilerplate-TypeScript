@@ -38,5 +38,34 @@ describe('Modules :: App :: Domain :: Entities :: UserEntities', () => {
 			expect(userEntity.getPreference()?.getDefaultTheme()).toBe('DEFAULT');
 			expect(userEntity.getPreference()?.createdAt).toBeDefined();
 		});
+
+		test('Validate all attributes', () => {
+			expect(userEntity.getAttributes()).toMatchObject({
+				id: 0,
+				fullName: 'Test User',
+				email: 'user.test@nomail.test',
+				docType: 'CPF',
+				document: '12312312312',
+				password: 'admin',
+				phone: '+5527999999999',
+				fu: 'ES',
+				preference: {
+					id: 0,
+					userId: 0,
+					defaultTheme: 'DEFAULT',
+					imagePath: './image.png',
+					deletedAt: null,
+				},
+				deletedBy: 'test',
+			});
+
+			expect(userEntity.getPreference()?.getAttributes()).toMatchObject({
+				id: 0,
+				userId: 0,
+				defaultTheme: 'DEFAULT',
+				imagePath: './image.png',
+				deletedAt: undefined,
+			});
+		});
 	});
 });

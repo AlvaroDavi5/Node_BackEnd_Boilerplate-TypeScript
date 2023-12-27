@@ -19,14 +19,17 @@ export default class RedisClient {
 		private readonly dataParserHelper: DataParserHelper,
 	) {
 		const { host, port }: ConfigsInterface['cache']['redis'] = this.configService.get<any>('cache.redis');
+		const logging: ConfigsInterface['application']['logging'] = this.configService.get<any>('application.logging');
 
 		this.redisClient = new IORedis({
 			host: String(host),
 			port: Number(port),
-			showFriendlyErrorStack: true,
+			showFriendlyErrorStack: logging === 'true',
+			maxRetriesPerRequest: 3,
 		});
 
-		if (!this.redisClient) {
+		const connectingStatus = ['wait', 'reconnecting', 'connecting', 'connect', 'ready'];
+		if (!connectingStatus.includes(this.redisClient.status)) {
 			throw this.exceptions.internal({
 				message: 'Error to instance redis client',
 			});
@@ -40,9 +43,11 @@ export default class RedisClient {
 	}
 
 	public async connect(): Promise<boolean> {
+		const connectedStatus = ['connect', 'ready'];
+
 		try {
 			await this.redisClient.connect();
-			this.isConnected = this.redisClient?.status === 'ready';
+			this.isConnected = connectedStatus.includes(this.redisClient.status);
 		} catch (error) {
 			this.isConnected = false;
 			throw this.exceptions.integration({
@@ -53,8 +58,10 @@ export default class RedisClient {
 	}
 
 	public async disconnect(): Promise<boolean> {
+		const disconnectedStatus = ['wait', 'close', 'end'];
+
 		try {
-			const wasClosed = await this.redisClient.quit() === 'OK';
+			const wasClosed = await this.redisClient.quit() === 'OK' || disconnectedStatus.includes(this.redisClient.status);
 
 			if (wasClosed)
 				this.isConnected = false;

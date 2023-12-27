@@ -19,6 +19,7 @@ describe('API :: DefaultController', () => {
 			abortOnError: false,
 			snapshot: false,
 			preview: false,
+			forceCloseConnections: true,
 		});
 		await startNestApplication(nestTestApp);
 		await nestTestApp.init();
@@ -33,8 +34,12 @@ describe('API :: DefaultController', () => {
 			expect(response.body).toEqual({
 				baseUrl: '',
 				method: 'GET',
+				headers: {
+					connection: 'close',
+					host: '127.0.0.1:3000',
+				},
 				statusCode: 200,
-				statusMessage: 'OK',
+				statusMessage: 'Endpoint finded successfully',
 				params: {},
 				query: {},
 				body: {},

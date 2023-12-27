@@ -33,7 +33,6 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 	const userOperation = new UserOperation(userServiceMock, userPreferenceServiceMock, userStrategy, exceptionsMock);
 
 	describe('# List Users', () => {
-
 		test('Should list users', async () => {
 			const listData: ListQueryInterface = {
 				limit: 15,
@@ -61,7 +60,6 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 	});
 
 	describe('# Create User', () => {
-
 		test('Should return created user', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			const userAgent = { username: 'tester', clientId: '#1' };
@@ -132,7 +130,6 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 	});
 
 	describe('# Get User', () => {
-
 		test('Should return finded user', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ userId: userEntity.getId() });
@@ -210,7 +207,6 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 	});
 
 	describe('# Update User', () => {
-
 		test('Should return updated user', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 2, userId: userEntity.getId() });
@@ -300,7 +296,6 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 	});
 
 	describe('# Delete User', () => {
-
 		test('Should return deleted user', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 2, userId: userEntity.getId() });

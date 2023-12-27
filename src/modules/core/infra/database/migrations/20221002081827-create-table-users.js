@@ -20,7 +20,7 @@ module.exports = {
 				unique: true,
 			},
 			password: {
-				type: Sequelize.STRING(60),
+				type: Sequelize.STRING(550),
 				allowNull: false,
 			},
 			phone: {

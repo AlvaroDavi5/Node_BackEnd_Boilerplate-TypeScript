@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from 'winston';
-import { v4 as uuidV4 } from 'uuid';
 import {
 	SQSClient, SQSClientConfig, Message,
 	ListQueuesCommand, CreateQueueCommand, DeleteQueueCommand,
@@ -9,6 +8,7 @@ import {
 	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput, DeleteMessageCommandInput,
 } from '@aws-sdk/client-sqs';
 import { ConfigsInterface } from '@core/configs/configs.config';
+import CryptographyService from '@core/infra/security/Cryptography.service';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
@@ -22,6 +22,7 @@ export default class SqsClient {
 
 	constructor(
 		private readonly configService: ConfigService,
+		private readonly cryptographyService: CryptographyService,
 		private readonly loggerGenerator: LoggerGenerator,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
@@ -86,7 +87,7 @@ export default class SqsClient {
 					StringValue: String(author)
 				},
 			},
-			MessageDeduplicationId: isFifoQueue ? uuidV4() : undefined,
+			MessageDeduplicationId: isFifoQueue ? this.cryptographyService.generateUuid() : undefined,
 			MessageGroupId: isFifoQueue ? this.messageGroupId : undefined, // Required for FIFO queues
 		};
 	}

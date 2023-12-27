@@ -10,7 +10,7 @@ Table Users as USR {
 	id int [increment, not null, unique, primary key]
 	fullName varchar(100) [not null]
 	email varchar(70) [not null]
-	password varchar(60) [not null]
+	password varchar(550) [not null]
 	phone varchar(16)
 	docType varchar(10)
 	document varchar(18)

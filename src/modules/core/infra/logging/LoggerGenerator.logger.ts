@@ -3,6 +3,7 @@ import { createLogger, transports, format, Logger } from 'winston';
 import { ConfigService } from '@nestjs/config';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import { EnvironmentsEnum } from '@common/enums/environments.enum';
 
 
 @Injectable()
@@ -41,7 +42,7 @@ export default class LoggerGenerator {
 		),
 		defaultMeta: {
 			service: this.applicationConfigs?.name || 'Node Boilerplate',
-			env: this.applicationConfigs?.environment || 'dev',
+			env: this.applicationConfigs?.environment || EnvironmentsEnum.DEVELOPMENT,
 		},
 		transports: [
 			new transports.Console({

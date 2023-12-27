@@ -47,6 +47,7 @@ docs/nestGraph.json
 TODO.txt
 *.tsbuildinfo
 .idea
+temp/
 
 # --------- except ---------
 

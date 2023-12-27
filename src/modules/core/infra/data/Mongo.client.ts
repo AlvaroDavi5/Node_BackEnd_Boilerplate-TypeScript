@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
-	MongoClient as MongoDBClient, FindCursor, WithId, ServerApiVersion,
+	MongoClient as MongoDBClient, WithId, ServerApiVersion,
 	Db, Document, Collection, ObjectId,
 	InsertOneResult, InsertManyResult, UpdateResult, DeleteResult,
 } from 'mongodb';
@@ -143,8 +143,8 @@ export default class MongoClient {
 		return await collection.findOne(filterData);
 	}
 
-	public findMany(collection: Collection<Document>, filterData: documentObjectType): FindCursor<WithId<Document>> {
-		return collection.find(filterData);
+	public async findMany(collection: Collection<Document>, filterData: documentObjectType): Promise<WithId<Document>[]> {
+		return collection.find(filterData).toArray();
 	}
 
 	public async updateOne(collection: Collection<Document>, id: ObjectId, newData: documentObjectType): Promise<UpdateResult<Document>> {

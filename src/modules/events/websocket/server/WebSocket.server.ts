@@ -104,13 +104,12 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 
 		const message = this.formatMessageAfterReceiveHelper(msg);
 		if (message && typeof message === 'object') {
-			await this.subscriptionService.save(socket.id, {
+			const subscription = await this.subscriptionService.save(socket.id, {
 				...message,
 				subscriptionId: socket.id,
 			});
 
-			const { listen } = message as any;
-			if (listen?.newConnections === true)
+			if (subscription?.newConnectionsListen === true)
 				await socket.join(WebSocketRoomsEnum.NEW_CONNECTIONS);
 		}
 	}

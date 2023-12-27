@@ -121,27 +121,19 @@ ___
 
 - **Nest.js**
 	- [API Versioning](https://docs.nestjs.com/techniques/versioning)
-	- [File Upload](https://docs.nestjs.com/techniques/file-upload)
 	- [Authorization](https://docs.nestjs.com/security/authorization)
 	- [WebSockets Pipes](https://docs.nestjs.com/websockets/pipes)
-	- [GraphQL](https://docs.nestjs.com/graphql/quick-start)
 	- [kafka](https://docs.nestjs.com/microservices/kafka)
-	- [Serverless](https://docs.nestjs.com/faq/serverless)
-	- [OpenAPI](https://docs.nestjs.com/openapi/introduction)
-- **Jest and Sonarqube**
-	- [ ] Unify Coverage
-		- [Reference](https://stackoverflow.com/questions/52419132/is-it-possible-to-merge-test-coverage-on-sonarqube-level)
+	- [openAPI](https://docs.nestjs.com/openapi/introduction)
+	- [Hybrid Application](https://docs.nestjs.com/faq/hybrid-application)
 - **Build Versioning**
 	- [ ] DockerHub
 	- [ ] Container Images
 - **Security**
-	- [ ] Database InfoSec
-		> dbRes = salt + hash(salt + password)
 	- [ ] Auth InfoSec
 	- [ ] OAuth
 - **Integrations**
 	- [ ] Webhooks
-	- [ ] Serverless
 - **Tests**
 	* _Unit_
 		- Modules

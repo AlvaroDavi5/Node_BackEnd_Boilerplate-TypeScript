@@ -6,8 +6,9 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import { writeFileSync } from 'fs';
 import compression from 'compression';
 import CoreModule from '@core/core.module';
-import { ProcessEventsEnum, ProcessSignalsEnum, ProcessExitStatusEnum } from '@core/infra/start/processEvents.enum';
-import { ExceptionsEnum } from '@core/infra/errors/exceptions.enum';
+import { ProcessEventsEnum, ProcessSignalsEnum, ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
+import { ExceptionsEnum } from '@common/enums/exceptions.enum';
+import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import { ErrorInterface } from 'src/types/_errorInterface';
 
@@ -17,8 +18,14 @@ async function startNestApplication() {
 		abortOnError: false,
 		snapshot: true,
 		preview: false,
+		forceCloseConnections: true,
+		/*
+		httpsOptions: {
+			key: '',
+			cert: '',
+		},
+		*/
 	});
-	nestApp.setGlobalPrefix('api');
 	nestApp.useGlobalPipes(
 		new ValidationPipe({
 			whitelist: true,
@@ -26,9 +33,9 @@ async function startNestApplication() {
 			transform: true,
 		}),
 	);
-
 	nestApp.enableShutdownHooks();
 
+	nestApp.setGlobalPrefix('api');
 	nestApp.use(compression());
 	nestApp.enableCors({
 		origin: '*',
@@ -67,13 +74,14 @@ async function startNestApplication() {
 
 	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application'] | undefined>('application');
 	await nestApp.listen(Number(appConfigs?.port)).catch((error: ErrorInterface | Error) => {
-		const knowExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
+		const knownExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
 
-		if (error?.name && !knowExceptions.includes(error.name)) {
-			const err = new Error(String(error.message));
-			err.name = error.name;
-			err.stack = error.stack;
-			throw err;
+		if (error?.name && !knownExceptions.includes(error.name)) {
+			const newError = new Error(error.message);
+			newError.name = error.name;
+			newError.stack = error.stack;
+
+			throw newError;
 		}
 	});
 
@@ -95,12 +103,14 @@ async function startNestApplication() {
 		await nestApp.close();
 	}));
 
-	writeFileSync('./docs/nestGraph.json', nestApp.get(SerializedGraph).toString());
+	if (appConfigs?.environment === EnvironmentsEnum.DEVELOPMENT)
+		writeFileSync('./docs/nestGraph.json', nestApp.get(SerializedGraph).toString());
 }
 
 startNestApplication().catch((error: Error) => {
 	console.error(error);
-	writeFileSync('./docs/nestGraph.json', PartialGraphHost.toString() ?? '');
+	if (process.env.NODE_ENV === EnvironmentsEnum.DEVELOPMENT)
+		writeFileSync('./docs/nestGraph.json', PartialGraphHost.toString() ?? '');
 	process.exit(ProcessExitStatusEnum.FAILURE);
 });
 
@@ -110,7 +120,7 @@ startNestApplication().catch((error: Error) => {
 // * document
 // ? topic
 // ! alert
-// todo to do
+// todo
 /**
 @brief
 @param param

@@ -57,6 +57,12 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 			redisClientMock.isConnected = false;
 		}),
 	};
+	const s3ClientMock = {
+		listBuckets: jest.fn(async (): Promise<string[]> => { return []; }),
+		createBucket: jest.fn(async (bucketName: string): Promise<string> => { return `/${bucketName}/`; }),
+		destroy: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
+	};
+
 	const awsClientMock = {
 		destroy: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
 	};
@@ -75,7 +81,7 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 				{ provide: CognitoClient, useValue: awsClientMock },
 				{ provide: SnsClient, useValue: awsClientMock },
 				{ provide: SqsClient, useValue: awsClientMock },
-				{ provide: S3Client, useValue: awsClientMock },
+				{ provide: S3Client, useValue: s3ClientMock },
 				{ provide: LoggerGenerator, useValue: new LoggerGeneratorMock(mockObservable) },
 				LifecycleService,
 			]
@@ -83,7 +89,6 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 	});
 
 	describe('# Build and Close Application', () => {
-
 		test('Should destroy, finish and close the app successfully', async () => {
 			await nestTestingModule.init();
 			await nestTestingModule.close();
@@ -98,7 +103,8 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 			expect(mongoClientMock.disconnect).toHaveBeenCalledTimes(1);
 			expect(redisClientMock.disconnect).toHaveBeenCalledTimes(1);
 			expect(databaseConnectionMock.close).toHaveBeenCalledTimes(1);
-			expect(awsClientMock.destroy).toHaveBeenCalledTimes(4);
+			expect(awsClientMock.destroy).toHaveBeenCalledTimes(3);
+			expect(s3ClientMock.destroy).toHaveBeenCalledTimes(1);
 			expect(mockObservable.call).toHaveBeenCalledWith(['Exiting Application']);
 			expect(mockObservable.call).toHaveBeenCalledTimes(5);
 		});

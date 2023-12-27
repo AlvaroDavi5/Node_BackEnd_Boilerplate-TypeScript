@@ -42,7 +42,6 @@ describe('Modules :: App :: Services :: UserPreferenceService', () => {
 	});
 
 	describe('# Create User Preference', () => {
-
 		test('Should create a user preference successfully', async () => {
 			userPreferenceRepositoryMock.create.mockImplementation(async (entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (new UserPreferenceEntity(entity.getAttributes())));
 
@@ -68,7 +67,6 @@ describe('Modules :: App :: Services :: UserPreferenceService', () => {
 	});
 
 	describe('# Get User Preference', () => {
-
 		test('Should find a user preference successfully', async () => {
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 1, userId: 1 });
 			userPreferenceRepositoryMock.findOne.mockImplementation(async (query: any): Promise<UserPreferenceEntity | null> => {
@@ -91,7 +89,6 @@ describe('Modules :: App :: Services :: UserPreferenceService', () => {
 	});
 
 	describe('# Update User Preference', () => {
-
 		test('Should update a user preference successfully', async () => {
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 1, userId: 1, defaultTheme: 'DEFAULT' });
 			userPreferenceRepositoryMock.update.mockImplementation(async (id: number, entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => {
@@ -119,7 +116,6 @@ describe('Modules :: App :: Services :: UserPreferenceService', () => {
 	});
 
 	describe('# Delete User Preference', () => {
-
 		test('Should delete a user preference successfully', async () => {
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 1, userId: 1 });
 			userPreferenceRepositoryMock.deleteOne.mockImplementation(async (id: number, softDelete?: boolean, agentId?: string | number | null): Promise<boolean> => {

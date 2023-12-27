@@ -19,7 +19,7 @@
 		],
 		"types": [
 			"node",
-			"jest",
+			"jest"
 		],
 		"jsx": "preserve",
 		"experimentalDecorators": true,
@@ -32,8 +32,8 @@
 		// "useDefineForClassFields": true,
 		/* Modules */
 		"module": "CommonJS",
-		"rootDir": "./",
 		"moduleResolution": "node",
+		"rootDir": "./",
 		"baseUrl": "./",
 		"paths": {
 			"@dev/*": [
@@ -54,8 +54,8 @@
 			"@events/*": [
 				"src/modules/events/*",
 			],
-			"@serverless/*": [
-				"src/modules/serverless/*",
+			"@reports/*": [
+				"src/modules/reports/*",
 			],
 		},
 		"rootDirs": [

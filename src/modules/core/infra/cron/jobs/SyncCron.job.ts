@@ -44,6 +44,11 @@ export default class SyncCronJob {
 		await this.syncCronTask.execute();
 	}
 
+	public startCron(): void {
+		const job = this.schedulerRegistry.getCronJob(this.cronName);
+		job.start();
+	}
+
 	public stopCron(): void {
 		const job = this.schedulerRegistry.getCronJob(this.cronName);
 		job.stop();

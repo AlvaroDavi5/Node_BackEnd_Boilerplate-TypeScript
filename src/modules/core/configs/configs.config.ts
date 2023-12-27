@@ -67,7 +67,7 @@ export interface ConfigsInterface {
 			host: string | undefined, // cache host
 		},
 		expirationTime: {
-			subscriptions: number // 12h
+			subscriptions: number // expiration in seconds
 		},
 	},
 	// ? Third-Party Services
@@ -113,6 +113,7 @@ export interface ConfigsInterface {
 				bucketName: string | undefined,
 				bucketUrl: string | undefined,
 				endpoint: string | undefined,
+				filesExpiration: number, // files expiration in seconds
 				apiVersion: string | undefined,
 			}
 		},
@@ -163,8 +164,8 @@ export default (): ConfigsInterface => ({
 		pool: {
 			min: 0,
 			max: 5,
-			acquire: 20000,
-			idle: 20000,
+			acquire: (2 * 1000),
+			idle: (2 * 1000),
 		},
 	},
 	data: {
@@ -189,7 +190,7 @@ export default (): ConfigsInterface => ({
 			port: process.env.REDIS_PORT,
 		},
 		expirationTime: {
-			subscriptions: 43200,
+			subscriptions: (12 * 60 * 60),
 		},
 	},
 	integration: {
@@ -229,6 +230,7 @@ export default (): ConfigsInterface => ({
 			s3: {
 				bucketName: process.env.AWS_S3_BUCKET_NAME,
 				bucketUrl: process.env.LOCALSTACK_URL,
+				filesExpiration: (15 * 60),
 				endpoint: process.env.AWS_ENDPOINT_URL,
 				apiVersion: process.env.AWS_API_VERSION,
 			}

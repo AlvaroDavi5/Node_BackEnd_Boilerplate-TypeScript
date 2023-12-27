@@ -7,10 +7,17 @@
 	"editor.fontWeight": "400",
 	"editor.tabSize": 2,
 	"editor.insertSpaces": false,
+	"editor.formatOnSave": true,
+	"editor.wordWrap": "off",
 	"editor.bracketPairColorization.enabled": true,
 	"editor.guides.bracketPairs": "active",
 	"editor.pasteAs.enabled": false,
 	"editor.pasteAs.showPasteSelector": "never",
+	"editor.autoClosingBrackets": "always",
+	// "editor.defaultFormatter": "vscode.typescript-language-features",
+	"editor.codeActionsOnSave": {
+		"source.fixAll.eslint": "never"
+	},
 	"explorer.autoReveal": true,
 	"explorer.confirmDragAndDrop": false,
 	"scm.defaultViewMode": "tree",
@@ -21,6 +28,7 @@
 	"workbench.iconTheme": "material-icon-theme",
 	"workbench.editor.restoreViewState": true,
 	"terminal.integrated.defaultProfile.linux": "zsh",
+	"terminal.integrated.defaultProfile.windows": "Ubuntu-20.04 (WSL)",
 	"security.workspace.trust.untrustedFiles": "open",
 	"extensions.closeExtensionDetailsOnViewChange": false,
 	"extensions.ignoreRecommendations": true,
@@ -31,10 +39,23 @@
 	"sync.autoUpload": true,
 	"sync.autoDownload": true,
 	"bracket-pair-colorizer-2.depreciation-notice": false,
+	"bookmarks.saveBookmarksInProject": false,
+	"powermode.enabled": true,
+	"powermode.presets": "flames",
+	"powermode.combo.location": "editor",
+	"powermode.shake.enabled": false,
 	"material-icon-theme.activeIconPack": "nest",
 	"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+	"vsintellicode.features.python.deepLearning": "enabled",
 	"editorconfig.generateAuto": true,
 	"editorconfig.template": "default",
+	"eslint.format.enable": true,
+	"eslint.validate": [
+		"javascript",
+		"javascriptreact",
+		"typescript",
+		"typescriptreact"
+	],
 	"cSpell.language": "pt,pt-BR,en",
 	"cSpell.enableFiletypes": [
 		"!jade",
@@ -56,11 +77,11 @@
 	"git.autofetch": true,
 	"git.enableSmartCommit": true,
 	"git.openRepositoryInParentFolders": "always",
+	"git-graph.repository.commits.fetchAvatars": true,
 	"gitlens.defaultDateFormat": null,
 	"gitlens.views.remotes.branches.layout": "list",
 	"gitlens.views.tags.branches.layout": "list",
 	"gitlens.views.branches.branches.layout": "list",
-	"git-graph.repository.commits.fetchAvatars": true,
 	"gitlens.plusFeatures.enabled": true,
 	"gitlens.menus": {
 		"editor": {
@@ -124,8 +145,13 @@
 	"problems.showCurrentInStatus": true,
 	"javascript.updateImportsOnFileMove.enabled": "always",
 	"typescript.updateImportsOnFileMove.enabled": "always",
+	"javascript.suggest.autoImports": true,
+	"javascript.suggestionActions.enabled": true,
+	"typescript.suggest.autoImports": true,
+	"typescript.suggestionActions.enabled": true,
 	"typescript.enablePromptUseWorkspaceTsdk": true,
 	"typescript.tsserver.maxTsServerMemory": 1536,
+	"typescript.tsserver.watchOptions": {},
 	"github.copilot.enable": {
 		"*": true,
 		"yaml": true,
@@ -141,11 +167,6 @@
 	"color-highlight.languages": [
 		"*"
 	],
-	"powermode.enabled": true,
-	"powermode.presets": "flames",
-	"powermode.combo.location": "editor",
-	"powermode.shake.enabled": false,
-	"bookmarks.saveBookmarksInProject": true,
 	"better-comments.multilineComments": true,
 	"better-comments.highlightPlainText": false,
 	"better-comments.tags": [

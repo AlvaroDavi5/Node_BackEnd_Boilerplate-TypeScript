@@ -1,21 +1,25 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import crypto from 'crypto';
 import { genSaltSync } from 'bcrypt';
 import { sign, decode, JwtPayload } from 'jsonwebtoken';
-import { Logger } from 'winston';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { v4 as uuidV4 } from 'uuid';
+import { ConfigsInterface } from '@core/configs/configs.config';
 
 
 type hashAlgorithmType = 'md5' | 'sha256' | 'sha512'
 
 @Injectable()
 export default class CryptographyService {
-	private readonly logger: Logger;
+	private readonly secret: string;
+	private readonly IV: string;
 
 	constructor(
-		private readonly loggerGenerator: LoggerGenerator,
+		private readonly configService: ConfigService,
 	) {
-		this.logger = this.loggerGenerator.getLogger();
+		const { secretKey }: ConfigsInterface['security'] = this.configService.get<any>('security');
+		this.secret = secretKey ?? 'secret';
+		this.IV = crypto.randomBytes(12).toString('hex');
 	}
 
 	public changeBufferEncoding(data: string, encoding: BufferEncoding, decoding: BufferEncoding): string {
@@ -24,9 +28,9 @@ export default class CryptographyService {
 
 	public encodeJwt(payload: any, inputEncoding: BufferEncoding, expiration = '7d'): string {
 		return sign(payload,
-			null,
+			this.secret,
 			{
-				algorithm: 'none',
+				algorithm: 'HS256',
 				encoding: inputEncoding,
 				expiresIn: expiration,
 			}
@@ -37,11 +41,14 @@ export default class CryptographyService {
 		return decode(token);
 	}
 
+	public generateUuid(): string {
+		return uuidV4();
+	}
+
 	public generateSalt(rounds = 10, minor: 'a' | 'b' = 'b'): string | null {
 		try {
 			return genSaltSync(rounds, minor);
 		} catch (error) {
-			this.logger.error('Error to generate salt', error);
 			return null;
 		}
 	}
@@ -77,7 +84,6 @@ export default class CryptographyService {
 			const hash = crypto.createHash(algorithm);
 			return hash.update(data, inputEncoding).digest(outputFormat);
 		} catch (error) {
-			this.logger.error('Error to hashing', error);
 			return null;
 		}
 	}
@@ -88,30 +94,33 @@ export default class CryptographyService {
 			sign.update(data, inputEncoding);
 			return sign.sign(privateKeyContent, outputFormat);
 		} catch (error) {
-			this.logger.error('Error to sign', error);
 			return null;
 		}
 	}
 
-	public symmetricAESEncrypt(data: string, inputEncoding: BufferEncoding, keyContent: string, iv: string, outputEncoding: BufferEncoding): string | null {
+	public symmetricAESEncrypt(data: string, inputEncoding: BufferEncoding, keyContent: string, outputEncoding: BufferEncoding, iv?: string): { encrypted: string | null, iv: string } {
+		const defIV = iv ?? this.IV;
+
 		try {
-			const cipher = crypto.createCipheriv('aes-256-cbc', keyContent.substring(0, 32), iv.substring(0, 16));
-			const hexEncripted = cipher.update(data, inputEncoding, 'hex') + cipher.final('hex');
-			return Buffer.from(hexEncripted, 'hex').toString(outputEncoding);
+			const cipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(keyContent, 'hex'), Buffer.from(defIV, 'hex'));
+			const hexEncrypted = cipher.update(data, inputEncoding, 'hex') + cipher.final('hex');
+			const encrypted = Buffer.from(hexEncrypted, 'hex').toString(outputEncoding);
+
+			return { encrypted, iv: defIV };
 		} catch (error) {
-			this.logger.error('Error to encrypt', error);
-			return null;
+			return { encrypted: null, iv: defIV };
 		}
 	}
 
-	public symmetricAESDecrypt(data: string, inputEncoding: BufferEncoding, keyContent: string, iv: string, outputEncoding: BufferEncoding): string | null {
+	public symmetricAESDecrypt(data: string, inputEncoding: BufferEncoding, keyContent: string, iv: string, outputEncoding: BufferEncoding): { decrypted: string | null, iv: string } {
 		try {
-			const decipher = crypto.createDecipheriv('aes-256-cbc', keyContent.substring(0, 32), iv.substring(0, 16));
-			const hexEncripted = decipher.update(data, inputEncoding, 'hex') + decipher.final('hex');
-			return Buffer.from(hexEncripted, 'hex').toString(outputEncoding);
+			const decipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(keyContent, 'hex'), Buffer.from(iv, 'hex'));
+			const hexDecrypted = decipher.update(data, inputEncoding, 'hex') + decipher.final('hex');
+			const decrypted = Buffer.from(hexDecrypted, 'hex').toString(outputEncoding);
+
+			return { decrypted, iv };
 		} catch (error) {
-			this.logger.error('Error to decrypt', error);
-			return null;
+			return { decrypted: null, iv };
 		}
 	}
 
@@ -120,14 +129,12 @@ export default class CryptographyService {
 			const dataBuffer = Buffer.from(data, inputEncoding);
 			const key: crypto.RsaPrivateKey | crypto.RsaPublicKey = {
 				key: keyContent,
-				padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-				oaepHash: 'sha256',
+				padding: (keyType === 'private') ? crypto.constants.RSA_PKCS1_PADDING : crypto.constants.RSA_PKCS1_OAEP_PADDING,
 			};
 			const encryptedBuffer = (keyType === 'private') ? crypto.privateEncrypt(key, dataBuffer) : crypto.publicEncrypt(key, dataBuffer);
 
 			return encryptedBuffer.toString(outputEncoding);
 		} catch (error) {
-			this.logger.error('Error to encrypt', error);
 			return null;
 		}
 	}
@@ -137,14 +144,12 @@ export default class CryptographyService {
 			const dataBuffer = Buffer.from(data, inputEncoding);
 			const key: crypto.RsaPrivateKey | crypto.RsaPublicKey = {
 				key: keyContent,
-				padding: crypto.constants.RSA_PKCS1_OAEP_PADDING,
-				oaepHash: 'sha256',
+				padding: (keyType === 'private') ? crypto.constants.RSA_PKCS1_OAEP_PADDING : crypto.constants.RSA_PKCS1_PADDING,
 			};
 			const decryptedBuffer = (keyType === 'private') ? crypto.privateDecrypt(key, dataBuffer) : crypto.publicDecrypt(key, dataBuffer);
 
 			return decryptedBuffer.toString(outputEncoding);
 		} catch (error) {
-			this.logger.error('Error to decrypt', error);
 			return null;
 		}
 	}

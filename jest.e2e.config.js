@@ -118,7 +118,7 @@ module.exports = {
 		'@app/(.*)': '<rootDir>/src/modules/app/$1',
 		'@api/(.*)': '<rootDir>/src/modules/api/$1',
 		'@events/(.*)': '<rootDir>/src/modules/events/$1',
-		'@serverless/(.*)': '<rootDir>/src/modules/serverless/$1',
+		'@reports/(.*)': '<rootDir>/src/modules/reports/$1',
 	},
 
 	// An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader
@@ -161,7 +161,7 @@ module.exports = {
 	// projects: undefined,
 
 	// Use this configuration option to add custom reporters to Jest
-	// reporters: undefined,
+	reporters: undefined,
 
 	// A path to a custom resolver
 	// resolver: undefined,

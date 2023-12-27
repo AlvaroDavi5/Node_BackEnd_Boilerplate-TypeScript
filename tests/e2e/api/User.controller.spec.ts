@@ -19,6 +19,7 @@ describe('API :: UserController', () => {
 			abortOnError: false,
 			snapshot: false,
 			preview: false,
+			forceCloseConnections: true,
 		});
 		await startNestApplication(nestTestApp);
 		await nestTestApp.init();

@@ -4,8 +4,8 @@ import configs from '../../../../../src/modules/core/configs/configs.config';
 import UserService from '../../../../../src/modules/app/services/User.service';
 import UserRepository from '../../../../../src/modules/app/repositories/user/User.repository';
 import Exceptions from '../../../../../src/modules/core/infra/errors/Exceptions';
+import CryptographyService from '../../../../../src/modules/core/infra/security/Cryptography.service';
 import UserEntity from '../../../../../src/modules/app/domain/entities/User.entity';
-
 
 describe('Modules :: App :: Services :: UserService', () => {
 	let nestTestingModule: TestingModule;
@@ -33,6 +33,7 @@ describe('Modules :: App :: Services :: UserService', () => {
 				{ provide: ConfigService, useValue: configServiceMock },
 				Exceptions,
 				{ provide: UserRepository, useValue: userRepositoryMock },
+				CryptographyService,
 				UserService,
 			]
 		}).compile();
@@ -42,13 +43,13 @@ describe('Modules :: App :: Services :: UserService', () => {
 	});
 
 	describe('# Create User', () => {
-
 		test('Should create a user successfully', async () => {
 			userRepositoryMock.create.mockImplementation(async (entity: UserEntity): Promise<UserEntity | null> => (new UserEntity(entity.getAttributes())));
 
 			const createdUser = await userService.create(new UserEntity({
 				id: 1,
 				email: 'user.test@nomail.dev',
+				password: 'pas123',
 			}));
 			expect(userRepositoryMock.create).toHaveBeenCalledTimes(1);
 			expect(createdUser?.getId()).toBe(1);
@@ -61,6 +62,7 @@ describe('Modules :: App :: Services :: UserService', () => {
 			const createdUser = await userService.create(new UserEntity({
 				id: 1,
 				email: 'user.test@nomail.dev',
+				password: 'pas123',
 			}));
 			expect(userRepositoryMock.create).toHaveBeenCalledTimes(1);
 			expect(createdUser).toBeNull();
@@ -68,7 +70,6 @@ describe('Modules :: App :: Services :: UserService', () => {
 	});
 
 	describe('# Get User', () => {
-
 		test('Should find a user successfully', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			userRepositoryMock.getById.mockImplementation(async (id: number, restrictData = true): Promise<UserEntity | null> => {
@@ -91,7 +92,6 @@ describe('Modules :: App :: Services :: UserService', () => {
 	});
 
 	describe('# Update User', () => {
-
 		test('Should update a user successfully', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			userRepositoryMock.update.mockImplementation(async (id: number, entity: UserEntity): Promise<UserEntity | null> => {
@@ -120,7 +120,6 @@ describe('Modules :: App :: Services :: UserService', () => {
 	});
 
 	describe('# Delete User', () => {
-
 		test('Should delete a user successfully', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			userRepositoryMock.deleteOne.mockImplementation(async (id: number, softDelete = true, agentId: number | string | null = null): Promise<boolean> => {

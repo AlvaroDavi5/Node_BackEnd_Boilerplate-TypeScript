@@ -1,7 +1,7 @@
 import DataParserHelper from '../../../../../../src/modules/common/utils/helpers/DataParser.helper';
 
 
-describe('Modules :: Utils :: Helpers :: DataParserHelper', () => {
+describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 	// // mocks
 	const warnLoggerMock = jest.fn();
 	const loggerGeneratorMock = {

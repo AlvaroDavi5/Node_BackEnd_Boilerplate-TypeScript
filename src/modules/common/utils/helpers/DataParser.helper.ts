@@ -31,7 +31,7 @@ export default class DataParserHelper {
 			result = data;
 			break;
 		case 'object':
-			result = JSON.stringify(data) || data?.toString() || '';
+			result = (JSON.stringify(data) || data?.toString()) ?? '';
 			break;
 		case 'symbol':
 			result = data.toString();
@@ -44,16 +44,12 @@ export default class DataParserHelper {
 		return result;
 	}
 
-	public toObject(data: string): object | string | null {
-		let result = data;
-
+	public toObject(data: string): object | null {
 		try {
-			result = JSON.parse(data);
+			return JSON.parse(data);
 		} catch (error) {
 			this.logger.warn('String:Object parse error');
 			return null;
 		}
-
-		return result;
 	}
 }

@@ -11,13 +11,13 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import configs, { ConfigsInterface } from '@core/configs/configs.config';
 import LifecycleService from '@core/infra/start/Lifecycle.service';
-import { ProcessEventsEnum, ProcessSignalsEnum } from '@core/infra/start/processEvents.enum';
+import { ProcessEventsEnum, ProcessSignalsEnum } from '@common/enums/processEvents.enum';
 import Exceptions from '@core/infra/errors/Exceptions';
-import { ExceptionsEnum } from '@core/infra/errors/exceptions.enum';
+import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { ErrorInterface } from 'src/types/_errorInterface';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import CryptographyService from '@core/infra/security/Cryptography.service';
-import databaseConnectionProvider from '@core/infra/database/connection';
+import DatabaseConnectionProvider from '@core/infra/database/connection';
 import RedisClient from '@core/infra/cache/Redis.client';
 import MongoClient from '@core/infra/data/Mongo.client';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
@@ -32,6 +32,7 @@ import SchemaValidator from '@common/utils/validators/SchemaValidator.validator'
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
+import FileStrategy from '@app/strategies/File.strategy';
 import UserStrategy from '@app/strategies/User.strategy';
 import UserOperation from '@app/operations/User.operation';
 import UserService from '@app/services/User.service';
@@ -51,7 +52,10 @@ import LoggerMiddleware from '@api/middlewares/Logger.middleware';
 import JwtDecodeMiddleware from '@api/middlewares/JwtDecode.middleware';
 import DefaultController from '@api/controllers/Default.controller';
 import UserController from '@api/controllers/User.controller';
+import SubscriptionsController from '@api/controllers/Subscriptions.controller';
 
+
+const appConfigs = configs();
 
 @Module({
 	imports: [
@@ -69,15 +73,16 @@ import UserController from '@api/controllers/User.controller';
 				{
 					sqs: new MockedSqsClient({
 						logger: console,
-						configs: configs(),
+						configs: appConfigs,
 					}).getClient(),
-					name: process.env.AWS_SQS_EVENTS_QUEUE_NAME || 'eventsQueue.fifo',
-					queueUrl: process.env.AWS_SQS_EVENTS_QUEUE_URL || 'http://localhost:4566/000000000000/eventsQueue.fifo',
-					region: process.env.AWS_REGION || 'us-east-1',
+					name: appConfigs.integration.aws.sqs.eventsQueue.queueName || 'eventsQueue.fifo',
+					queueUrl: appConfigs.integration.aws.sqs.eventsQueue.queueUrl || 'http://localhost:4566/000000000000/eventsQueue.fifo',
+					region: appConfigs.integration.aws.credentials.region || 'us-east-1',
 					batchSize: 10,
 					shouldDeleteMessages: false,
 					handleMessageTimeout: 1000,
 					waitTimeSeconds: 20,
+					authenticationErrorTimeout: 10000,
 				},
 			],
 			producers: [],
@@ -86,6 +91,7 @@ import UserController from '@api/controllers/User.controller';
 	controllers: [
 		DefaultController,
 		UserController,
+		SubscriptionsController,
 	],
 	providers: [
 		// * core
@@ -93,7 +99,7 @@ import UserController from '@api/controllers/User.controller';
 		Exceptions,
 		LoggerGenerator,
 		CryptographyService,
-		databaseConnectionProvider,
+		DatabaseConnectionProvider,
 		RedisClient,
 		MongoClient,
 		SqsClient,
@@ -110,6 +116,7 @@ import UserController from '@api/controllers/User.controller';
 		CacheAccessHelper,
 		FileReaderHelper,
 		// * app
+		FileStrategy,
 		UserStrategy,
 		UserOperation,
 		UserService,
@@ -133,16 +140,15 @@ export class TestModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
 		consumer
 			.apply(LoggerMiddleware)
-			.forRoutes(DefaultController, UserController)
+			.forRoutes(DefaultController, UserController, SubscriptionsController)
 			.apply(JwtDecodeMiddleware)
-			.forRoutes(UserController);
+			.forRoutes(UserController, SubscriptionsController);
 	}
 }
 
 export async function startNestApplication(nestApp: INestApplication<any>) {
 	dotenv.config({ path: '.env.test' });
 
-	nestApp.setGlobalPrefix('api');
 	nestApp.useGlobalPipes(
 		new ValidationPipe({
 			whitelist: true,
@@ -150,9 +156,9 @@ export async function startNestApplication(nestApp: INestApplication<any>) {
 			transform: true,
 		}),
 	);
-
 	nestApp.enableShutdownHooks();
 
+	nestApp.setGlobalPrefix('api');
 	nestApp.use(compression());
 	nestApp.enableCors({
 		origin: '*',
@@ -163,13 +169,14 @@ export async function startNestApplication(nestApp: INestApplication<any>) {
 
 	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application'] | undefined>('application');
 	await nestApp.listen(Number(appConfigs?.port)).catch((error: ErrorInterface | Error) => {
-		const knowExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
+		const knownExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
 
-		if (error?.name && !knowExceptions.includes(error.name)) {
-			const err = new Error(String(error.message));
-			err.name = error.name;
-			err.stack = error.stack;
-			throw err;
+		if (error?.name && !knownExceptions.includes(error.name)) {
+			const newError = new Error(error.message);
+			newError.name = error.name;
+			newError.stack = error.stack;
+
+			throw newError;
 		}
 	});
 

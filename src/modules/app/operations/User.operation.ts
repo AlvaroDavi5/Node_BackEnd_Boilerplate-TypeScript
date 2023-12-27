@@ -18,6 +18,34 @@ export default class UserOperation {
 		private readonly exceptions: Exceptions,
 	) { }
 
+	public async loginUser(data: { email: string, password: string }, userAgent?: UserAuthInterface): Promise<UserEntity> {
+		if (!userAgent?.clientId)
+			throw this.exceptions.unauthorized({
+				message: 'Invalid userAgent'
+			});
+
+		const foundedUser = await this.userService.getByEmail(data.email);
+		if (!foundedUser)
+			throw this.exceptions.notFound({
+				message: 'User not found!'
+			});
+
+		await this.userService.validatePassword(foundedUser, data.password);
+
+		const foundedPreference = await this.userPreferenceService.getByUserId(foundedUser.getId());
+
+		if (!foundedUser)
+			throw this.exceptions.notFound({
+				message: 'User not found!'
+			});
+
+		if (foundedPreference)
+			foundedUser.setPreference(foundedPreference);
+
+		foundedUser.setPassword('');
+		return foundedUser;
+	}
+
 	public async listUsers(query: ListQueryInterface): Promise<PaginationInterface<UserEntity>> {
 		const usersList = await this.userService.list(query);
 

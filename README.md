@@ -125,19 +125,15 @@ ___
 	- [WebSockets Pipes](https://docs.nestjs.com/websockets/pipes)
 	- [kafka](https://docs.nestjs.com/microservices/kafka)
 	- [openAPI](https://docs.nestjs.com/openapi/introduction)
-	- [Serverless](https://docs.nestjs.com/faq/serverless)
 	- [Hybrid Application](https://docs.nestjs.com/faq/hybrid-application)
 - **Build Versioning**
 	- [ ] DockerHub
 	- [ ] Container Images
 - **Security**
-	- [ ] Database InfoSec
-		> dbRes = salt + hash(salt + password)
 	- [ ] Auth InfoSec
 	- [ ] OAuth
 - **Integrations**
 	- [ ] Webhooks
-	- [ ] Serverless
 - **Tests**
 	* _Unit_
 		- Modules

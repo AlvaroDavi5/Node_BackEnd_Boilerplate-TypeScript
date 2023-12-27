@@ -22,6 +22,7 @@ import CommonModule from '@common/common.module';
 import AppModule from '@app/app.module';
 import EventsModule from '@events/events.module';
 import ApiModule from '@api/api.module';
+import { EnvironmentsEnum } from '@common/enums/environments.enum';
 
 
 const appConfigs = configs();
@@ -38,7 +39,7 @@ const appConfigs = configs();
 			verboseMemoryLeak: true,
 		}),
 		DevtoolsModule.register({
-			http: appConfigs.application.environment === 'dev',
+			http: appConfigs.application.environment === EnvironmentsEnum.DEVELOPMENT,
 			port: 8000,
 		}),
 		CommonModule,

@@ -152,8 +152,8 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 		const { rows, count } = await this.ResourceModel.findAndCountAll(buildedQuery);
 
 		const totalItems = count;
-		const totalPages = Math.ceil(totalItems / (query?.limit || 1)) || 1;
-		const pageNumber = query?.page || 0;
+		const totalPages = Math.ceil(totalItems / (query?.limit ?? 1)) || 1;
+		const pageNumber = query?.page ?? 0;
 		const pageSize = rows.length;
 
 		let content: E[] = [];

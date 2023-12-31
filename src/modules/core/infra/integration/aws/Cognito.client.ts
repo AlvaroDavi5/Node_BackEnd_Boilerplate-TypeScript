@@ -13,8 +13,8 @@ import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 @Injectable()
 export default class CognitoClient {
 	private readonly awsConfig: CognitoIdentityProviderClientConfig;
-	private readonly userPoolName: string;
-	private readonly userPoolId: string;
+	public readonly userPoolName: string;
+	public readonly userPoolId: string;
 	private readonly clientId: string;
 	private readonly cognitoClient: CognitoIdentityProviderClient;
 	private readonly logger: Logger;
@@ -44,9 +44,9 @@ export default class CognitoClient {
 			},
 			logger: logging === 'true' ? this.logger : undefined,
 		};
-		this.userPoolName = userPoolName || 'defaultPool';
-		this.userPoolId = userPoolId || '';
-		this.clientId = clientId || '';
+		this.userPoolName = userPoolName;
+		this.userPoolId = userPoolId;
+		this.clientId = clientId;
 		this.cognitoClient = new CognitoIdentityProviderClient(this.awsConfig);
 	}
 
@@ -89,12 +89,12 @@ export default class CognitoClient {
 		return list;
 	}
 
-	public async createUserPool(userPoolName: string | null): Promise<string> {
+	public async createUserPool(userPoolName: string): Promise<string> {
 		let userPoolId = '';
 
 		try {
 			const result = await this.cognitoClient.send(new CreateUserPoolCommand({
-				PoolName: userPoolName || this.userPoolName,
+				PoolName: userPoolName,
 			}));
 			if (result?.UserPool?.Id)
 				userPoolId = result.UserPool.Id;
@@ -105,12 +105,12 @@ export default class CognitoClient {
 		return userPoolId;
 	}
 
-	public async deleteUserPool(userPoolId: string | null): Promise<number> {
+	public async deleteUserPool(userPoolId: string): Promise<number> {
 		let httpStatusCode = 0;
 
 		try {
 			const result = await this.cognitoClient.send(new DeleteUserPoolCommand({
-				UserPoolId: userPoolId || this.userPoolId,
+				UserPoolId: userPoolId,
 			}));
 			if (result?.$metadata?.httpStatusCode)
 				httpStatusCode = result.$metadata.httpStatusCode;
@@ -121,13 +121,13 @@ export default class CognitoClient {
 		return httpStatusCode;
 	}
 
-	public async createClient(userPoolName: string | null, userPoolId: string | null): Promise<string> {
+	public async createClient(userPoolName: string, userPoolId: string): Promise<string> {
 		let clientId = '';
 
 		try {
 			const result = await this.cognitoClient.send(new CreateUserPoolClientCommand({
-				ClientName: userPoolName || this.userPoolName,
-				UserPoolId: userPoolId || this.userPoolId,
+				ClientName: userPoolName,
+				UserPoolId: userPoolId,
 			}));
 			if (result?.UserPoolClient?.ClientId)
 				clientId = result.UserPoolClient.ClientId;
@@ -138,13 +138,13 @@ export default class CognitoClient {
 		return clientId;
 	}
 
-	public async deleteClient(clientId: string | null, userPoolId: string | null): Promise<number> {
+	public async deleteClient(clientId: string, userPoolId: string): Promise<number> {
 		let httpStatusCode = 0;
 
 		try {
 			const result = await this.cognitoClient.send(new DeleteUserPoolClientCommand({
-				ClientId: clientId || this.clientId,
-				UserPoolId: userPoolId || this.userPoolId,
+				ClientId: clientId,
+				UserPoolId: userPoolId,
 			}));
 			if (result?.$metadata?.httpStatusCode)
 				httpStatusCode = result.$metadata.httpStatusCode;
@@ -155,13 +155,13 @@ export default class CognitoClient {
 		return httpStatusCode;
 	}
 
-	public async createUser(userName: string, userPoolId: string | null): Promise<string> {
+	public async createUser(userName: string, userPoolId: string): Promise<string> {
 		let userStatus = '';
 
 		try {
 			const result = await this.cognitoClient.send(new AdminCreateUserCommand({
 				Username: userName,
-				UserPoolId: userPoolId || this.userPoolId,
+				UserPoolId: userPoolId,
 			}));
 			if (result?.User?.UserStatus)
 				userStatus = result.User.UserStatus;
@@ -172,13 +172,13 @@ export default class CognitoClient {
 		return userStatus;
 	}
 
-	public async getUser(userName: string, userPoolId: string | null): Promise<boolean> {
+	public async getUser(userName: string, userPoolId: string): Promise<boolean> {
 		let userEnabled = false;
 
 		try {
 			const result = await this.cognitoClient.send(new AdminGetUserCommand({
 				Username: userName,
-				UserPoolId: userPoolId || this.userPoolId,
+				UserPoolId: userPoolId,
 			}));
 			if (result?.Enabled)
 				userEnabled = result.Enabled;
@@ -189,13 +189,13 @@ export default class CognitoClient {
 		return userEnabled;
 	}
 
-	public async deleteUser(userName: string, userPoolId: string | null): Promise<number> {
+	public async deleteUser(userName: string, userPoolId: string): Promise<number> {
 		let httpStatusCode = 0;
 
 		try {
 			const result = await this.cognitoClient.send(new AdminDeleteUserCommand({
 				Username: userName,
-				UserPoolId: userPoolId || this.userPoolId,
+				UserPoolId: userPoolId,
 			}));
 			if (result?.$metadata?.httpStatusCode)
 				httpStatusCode = result.$metadata.httpStatusCode;
@@ -220,13 +220,13 @@ export default class CognitoClient {
 		return userConfirmed;
 	}
 
-	public async confirmSignUp(userName: string, userPoolId: string | null): Promise<number> {
+	public async confirmSignUp(userName: string, userPoolId: string): Promise<number> {
 		let httpStatusCode = 0;
 
 		try {
 			const result = await this.cognitoClient.send(new AdminConfirmSignUpCommand({
 				Username: userName,
-				UserPoolId: userPoolId || this.userPoolId,
+				UserPoolId: userPoolId,
 			}));
 			if (result.$metadata.httpStatusCode)
 				httpStatusCode = result.$metadata.httpStatusCode;

@@ -19,7 +19,7 @@ export default class UserService {
 		private readonly exceptions: Exceptions,
 	) {
 		const { secretKey }: ConfigsInterface['security'] = this.configService.get<any>('security');
-		this.secret = secretKey ?? 'secret';
+		this.secret = secretKey;
 	}
 
 	public async getById(id: number): Promise<UserEntity | null> {
@@ -47,12 +47,20 @@ export default class UserService {
 		return await this.userRepository.update(id, entity);
 	}
 
-	public async delete(id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean> {
-		return await this.userRepository.deleteOne(id, Boolean(data.softDelete), String(data.userAgentId));
+	public async delete(id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean | null> {
+		try {
+			return await this.userRepository.deleteOne(id, Boolean(data.softDelete), String(data.userAgentId));
+		} catch (error) {
+			return null;
+		}
 	}
 
-	public async list(query: ListQueryInterface): Promise<PaginationInterface<UserEntity>> {
-		return await this.userRepository.list(query);
+	public async list(query: ListQueryInterface): Promise<PaginationInterface<UserEntity> | null> {
+		try {
+			return await this.userRepository.list(query);
+		} catch (error) {
+			return null;
+		}
 	}
 
 	private protectPassword(password: string): string {
@@ -76,7 +84,7 @@ export default class UserService {
 		return result;
 	}
 
-	public async validatePassword(entity: UserEntity, passwordToValidate: string): Promise<void> {
+	public validatePassword(entity: UserEntity, passwordToValidate: string): void {
 		const userPassword = entity.getPassword();
 		if (!userPassword?.length)
 			throw this.exceptions.business({

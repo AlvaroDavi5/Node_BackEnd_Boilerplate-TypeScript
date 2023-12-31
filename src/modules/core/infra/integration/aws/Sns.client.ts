@@ -57,7 +57,7 @@ export default class SnsClient {
 
 
 	private formatMessageBeforeSend(message: any = {}): string {
-		return this.dataParserHelper.toString(message) || '{}';
+		return this.dataParserHelper.toString(message) ?? '{}';
 	}
 
 	private createParams(topicName: string): CreateTopicCommandInput {

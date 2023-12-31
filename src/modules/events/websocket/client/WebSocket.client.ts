@@ -18,8 +18,8 @@ export default class WebSocketClient {
 		private readonly dataParserHelper: DataParserHelper,
 	) {
 		const configs: ConfigsInterface['application'] = this.configService.get<any>('application');
-		const socketUrl = configs.url || 'http://localhost:3000';
-		const isSocketEnvEnabled = configs?.socketEnv === 'enabled';
+		const socketUrl = configs.url;
+		const isSocketEnvEnabled = configs.socketEnv === 'enabled';
 
 		this.logger = this.loggerGenerator.getLogger();
 		if (isSocketEnvEnabled) {
@@ -34,7 +34,7 @@ export default class WebSocketClient {
 	}
 
 	private formatMessageBeforeSend(message: unknown): string {
-		return this.dataParserHelper.toString(message) || '{}';
+		return this.dataParserHelper.toString(message) ?? '{}';
 	}
 
 	// send message to server

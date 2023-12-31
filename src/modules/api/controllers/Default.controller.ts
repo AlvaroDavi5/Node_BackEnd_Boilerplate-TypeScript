@@ -104,7 +104,7 @@ export default class DefaultController implements OnModuleInit {
 			query: query,
 			body: body,
 			statusCode: response.statusCode,
-			statusMessage: response?.statusMessage || this.httpConstants.messages.found('Endpoint'),
+			statusMessage: response.statusMessage ?? this.httpConstants.messages.found('Endpoint'),
 		};
 	}
 
@@ -129,7 +129,7 @@ export default class DefaultController implements OnModuleInit {
 		} = this.contentTypeConstants;
 
 		const acceptableContentTypes = [streamContentType, plainTextContentType];
-		const expectedContentType = headers.accept || '';
+		const expectedContentType = headers.accept ?? '';
 
 		try {
 			const readStream = this.fileReaderHelper.readStream('src/dev/templates/LICENSE.txt');
@@ -205,7 +205,7 @@ export default class DefaultController implements OnModuleInit {
 			mpegAudioContentType, wavAudioContentType,
 			mpegVideoContentType, mp4ContentType, webmContentType,
 		];
-		const responseAcceptHeader = headers.accept || file.mimetype;
+		const responseAcceptHeader = headers.accept ?? file.mimetype;
 		const expectedContentType = acceptableContentTypes.includes(responseAcceptHeader) ? responseAcceptHeader : plainTextContentType;
 
 		try {

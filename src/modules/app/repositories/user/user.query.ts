@@ -31,8 +31,8 @@ const _buildPaginationParams = ({ limit, page, order, sortBy }: ListQueryInterfa
 	}
 
 	if (sortBy || order) {
-		const listOrder = order || 'ASC';
-		const sortOrder = sortBy || 'createdAt';
+		const listOrder = order ?? 'ASC';
+		const sortOrder = sortBy ?? 'createdAt';
 
 		paginationParams.order = [[sortOrder, listOrder]];
 	}

@@ -4,15 +4,14 @@ import userPreferenceMapper from '@app/repositories/userPreference/userPreferenc
 
 
 const toEntity = ({ dataValues }: UsersModel): UserEntity => {
-	const preferenceDataValues: any =
-	{
+	const preferenceDataValues = {
 		dataValues: {
 			...dataValues?.preference?.toJSON(),
 			userId: dataValues?.id,
 		}
 	};
 
-	const userPreference = userPreferenceMapper.toEntity(preferenceDataValues);
+	const userPreference = userPreferenceMapper.toEntity(preferenceDataValues as any);
 	dataValues.preference = userPreference;
 
 	return new UserEntity(dataValues);

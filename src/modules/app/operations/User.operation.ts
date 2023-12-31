@@ -30,14 +30,9 @@ export default class UserOperation {
 				message: 'User not found!'
 			});
 
-		await this.userService.validatePassword(foundedUser, data.password);
+		this.userService.validatePassword(foundedUser, data.password);
 
 		const foundedPreference = await this.userPreferenceService.getByUserId(foundedUser.getId());
-
-		if (!foundedUser)
-			throw this.exceptions.notFound({
-				message: 'User not found!'
-			});
 
 		if (foundedPreference)
 			foundedUser.setPreference(foundedPreference);

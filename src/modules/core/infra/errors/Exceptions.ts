@@ -15,7 +15,7 @@ export default class Exceptions {
 
 		exception.name = ExceptionsEnum.CONTRACT;
 		exception.message = error.message;
-		exception.cause = error.details || error.stack;
+		exception.cause = error.details ?? error.stack;
 
 		return exception;
 	}
@@ -25,7 +25,7 @@ export default class Exceptions {
 
 		exception.name = ExceptionsEnum.BUSINESS;
 		exception.message = error.message;
-		exception.cause = error.details || error.stack;
+		exception.cause = error.details ?? error.stack;
 
 		return exception;
 	}
@@ -35,7 +35,7 @@ export default class Exceptions {
 
 		exception.name = ExceptionsEnum.UNAUTHORIZED;
 		exception.message = error.message;
-		exception.cause = error.details || error.stack;
+		exception.cause = error.details ?? error.stack;
 
 		return exception;
 	}
@@ -45,7 +45,7 @@ export default class Exceptions {
 
 		exception.name = ExceptionsEnum.CONFLICT;
 		exception.message = error.message;
-		exception.cause = error.details || error.stack;
+		exception.cause = error.details ?? error.stack;
 
 		return exception;
 	}
@@ -55,7 +55,7 @@ export default class Exceptions {
 
 		exception.name = ExceptionsEnum.NOT_FOUND;
 		exception.message = error.message;
-		exception.cause = error.details || error.stack;
+		exception.cause = error.details ?? error.stack;
 
 		return exception;
 	}
@@ -65,7 +65,7 @@ export default class Exceptions {
 
 		exception.name = ExceptionsEnum.INTEGRATION;
 		exception.message = error.message;
-		exception.cause = error.details || error.stack;
+		exception.cause = error.details ?? error.stack;
 
 		return exception;
 	}
@@ -75,7 +75,7 @@ export default class Exceptions {
 
 		exception.name = ExceptionsEnum.INTERNAL;
 		exception.message = error.message;
-		exception.cause = error.details || error.stack;
+		exception.cause = error.details ?? error.stack;
 
 		return exception;
 	}

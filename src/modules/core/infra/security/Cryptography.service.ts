@@ -18,7 +18,7 @@ export default class CryptographyService {
 		private readonly configService: ConfigService,
 	) {
 		const { secretKey }: ConfigsInterface['security'] = this.configService.get<any>('security');
-		this.secret = secretKey ?? 'secret';
+		this.secret = secretKey;
 		this.IV = crypto.randomBytes(12).toString('hex');
 	}
 
@@ -45,12 +45,8 @@ export default class CryptographyService {
 		return uuidV4();
 	}
 
-	public generateSalt(rounds = 10, minor: 'a' | 'b' = 'b'): string | null {
-		try {
-			return genSaltSync(rounds, minor);
-		} catch (error) {
-			return null;
-		}
+	public generateSalt(rounds = 10, minor: 'a' | 'b' = 'b'): string {
+		return genSaltSync(rounds, minor);
 	}
 
 	public generateRSAKeyPair(keySize: 1024 | 2048): crypto.KeyPairSyncResult<string, string> {

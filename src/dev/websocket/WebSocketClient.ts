@@ -12,8 +12,8 @@ export default class WebSocketClient {
 		logger,
 	}: any) {
 		const appConfigs: ConfigsInterface['application'] = configs.application;
-		const socketUrl = appConfigs.url || 'http://localhost:3000';
-		const isSocketEnvEnabled = appConfigs?.socketEnv === 'enabled';
+		const socketUrl = appConfigs.url;
+		const isSocketEnvEnabled = appConfigs.socketEnv === 'enabled';
 
 		this.logger = logger;
 		if (isSocketEnvEnabled) {
@@ -44,7 +44,7 @@ export default class WebSocketClient {
 			result = data;
 			break;
 		case 'object':
-			result = JSON.stringify(data) || data?.toString() || '';
+			result = (JSON.stringify(data) || data?.toString()) ?? '';
 			break;
 		case 'symbol':
 			result = data.toString();

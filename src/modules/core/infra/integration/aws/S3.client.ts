@@ -20,6 +20,7 @@ export default class S3Client {
 	private readonly awsConfig: S3ClientConfig;
 	private readonly s3Client: S3AWSClient;
 	private readonly logger: Logger;
+	public readonly bucketName: string;
 	private readonly filesExpiration: number;
 
 	constructor(
@@ -33,12 +34,12 @@ export default class S3Client {
 			region, sessionToken,
 			accessKeyId, secretAccessKey,
 		} = awsConfigs.credentials;
-		const { filesExpiration, endpoint, apiVersion } = awsConfigs.s3;
-		this.filesExpiration = filesExpiration || (5 * 60);
+		const { bucketName, filesExpiration, endpoint, apiVersion } = awsConfigs.s3;
+		this.filesExpiration = filesExpiration;
 
 		this.awsConfig = {
 			endpoint,
-			region: region ?? 'us-east-1',
+			region,
 			apiVersion,
 			credentials: {
 				accessKeyId: String(accessKeyId),
@@ -48,6 +49,7 @@ export default class S3Client {
 			forcePathStyle: true,
 			logger: logging === 'true' ? this.logger : undefined,
 		};
+		this.bucketName = bucketName;
 		this.s3Client = new S3AWSClient(this.awsConfig);
 	}
 

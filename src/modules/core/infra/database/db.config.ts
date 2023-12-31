@@ -48,14 +48,15 @@ export interface DatabaseConfigInterface {
 }
 
 const { application: app, database: db } = configs();
+
 export const config: DatabaseConfigInterface = {
-	database: db.database || 'db_postgres',
-	username: db.username || 'postgres',
-	password: db.password || 'pass',
-	host: db.host || 'localhost',
-	charset: db.charset || 'utf8',
+	database: db.database,
+	username: db.username,
+	password: db.password,
+	host: db.host,
+	charset: db.charset,
 	dialect: getDialect(db.dialect),
-	port: parseInt(db.port || '5432'),
+	port: parseInt(db.port),
 	define: { ...db.define },
 	pool: { ...db.pool },
 	logging: app.logging === 'true' ? console.log : false,

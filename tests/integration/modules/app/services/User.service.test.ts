@@ -7,6 +7,7 @@ import Exceptions from '../../../../../src/modules/core/infra/errors/Exceptions'
 import CryptographyService from '../../../../../src/modules/core/infra/security/Cryptography.service';
 import UserEntity from '../../../../../src/modules/app/domain/entities/User.entity';
 
+
 describe('Modules :: App :: Services :: UserService', () => {
 	let nestTestingModule: TestingModule;
 	let userService: UserService;

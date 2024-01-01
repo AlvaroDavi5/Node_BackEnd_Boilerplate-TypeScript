@@ -22,6 +22,7 @@ Node.js Domain-Driven Design Boilerplate with TypeScript for Back-End.
 <br>
 <a href='https://dbdiagram.io/d/6338e5857b3d2034ff03a8c4'>
 <img src='./docs/database.png' alt='db diagram' height='300hv' width='500wv'>
+<br>
 DataBase Diagram
 </a>
 </div>

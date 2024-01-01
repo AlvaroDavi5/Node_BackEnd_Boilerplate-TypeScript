@@ -88,7 +88,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 
 	public async getSocketsIds(): Promise<string[]> {
 		const socketsList = await this.server?.sockets.fetchSockets();
-		return socketsList?.map(socket => socket?.id) ?? [];
+		return socketsList?.map((socket) => socket?.id) ?? [];
 	}
 
 	public disconnectAllSockets(): void {

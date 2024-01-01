@@ -15,7 +15,7 @@ export default class LoggerGenerator {
 
 	private readonly applicationConfigs: ConfigsInterface['application'] = this.configService.get<any>('application');
 
-	private readonly defaultMessageFormatter = format.printf(msg => {
+	private readonly defaultMessageFormatter = format.printf((msg) => {
 		const { level, timestamp, message, stack } = msg;
 		let log = typeof message === 'object'
 			? this.dataParserHelper.toString(msg.message)

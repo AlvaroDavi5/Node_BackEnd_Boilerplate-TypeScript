@@ -28,7 +28,7 @@ export default class FileStrategy {
 			else if (binariesContents.includes(contentType))
 				return 'binary';
 			else
-				if (binariesExtensions.some(extension => fileExtension.includes(extension)))
+				if (binariesExtensions.some((extension) => fileExtension.includes(extension)))
 					return 'binary';
 		return 'utf8';
 	}

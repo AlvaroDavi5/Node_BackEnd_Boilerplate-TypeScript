@@ -170,7 +170,7 @@ export default class S3Client {
 		try {
 			const result = await this.s3Client.send(new GetObjectCommand(this.getObjectParams(bucketName, objectKey)));
 			if (result?.Body) {
-				writeFile(`./temp/${objectKey}`, `${result.Body}`, err => {
+				writeFile(`./temp/${objectKey}`, `${result.Body}`, (err) => {
 					if (err) {
 						this.logger.error('Save Error:', err);
 					}

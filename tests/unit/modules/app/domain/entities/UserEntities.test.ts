@@ -81,7 +81,7 @@ describe('Modules :: App :: Domain :: Entities :: UserEntities', () => {
 					userId: 0,
 					defaultTheme: 'DEFAULT',
 					imagePath: './image.png',
-					deletedAt: null,
+					deletedAt: undefined,
 				},
 				deletedBy: 'test',
 			});

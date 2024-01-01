@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import AbstractEntity, { AbstractEntityList } from '@core/infra/database/entities/AbstractEntity.entity';
-import UserPreferenceEntity from './UserPreference.entity';
+import UserPreferenceEntity, { UserPreferenceInterface } from './UserPreference.entity';
 
 
 export interface UserInterface {
@@ -13,7 +13,7 @@ export interface UserInterface {
 	docType?: string,
 	document?: string,
 	fu?: string,
-	preference?: UserPreferenceEntity,
+	preference?: UserPreferenceInterface,
 	readonly createdAt: Date,
 	updatedAt?: Date,
 	deletedAt?: Date,
@@ -88,7 +88,7 @@ export default class UserEntity extends AbstractEntity {
 			docType: this.docType ?? undefined,
 			document: this.document ?? undefined,
 			fu: this.fu ?? undefined,
-			preference: this.preference ?? undefined,
+			preference: this.preference?.getAttributes() ?? undefined,
 			createdAt: this.createdAt,
 			updatedAt: this.updatedAt ?? undefined,
 			deletedAt: this.deletedAt ?? undefined,
@@ -160,7 +160,23 @@ export default class UserEntity extends AbstractEntity {
 }
 
 export class UserEntityList extends AbstractEntityList<UserEntity> {
-	@ApiProperty({ type: UserEntity, isArray: true, example: ([new UserEntity({})]), default: [], nullable: false })
+	@ApiProperty({
+		type: UserEntity,
+		isArray: true,
+		example: ([
+			new UserEntity({
+				fullName: 'User Default',
+				docType: 'INVALID',
+				fu: 'UF',
+				imagePath: './image.png',
+				defaultTheme: 'DEFAULT',
+				createdAt: new Date('2023-12-31T18:27:25.685Z'),
+				updatedAt: new Date('2024-01-01T18:27:25.685Z'),
+			}),
+		]),
+		default: [],
+		nullable: false,
+	})
 	@Type(() => Array<UserEntity>)
 	public content: UserEntity[] = [];
 }

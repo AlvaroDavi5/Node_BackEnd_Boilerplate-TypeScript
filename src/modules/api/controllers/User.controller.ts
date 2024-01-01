@@ -8,7 +8,7 @@ import { ModuleRef } from '@nestjs/core';
 import { ApiOperation, ApiTags, ApiProduces, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { Logger } from 'winston';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
-import UserEntity, { UserEntityList } from '@app/domain/entities/User.entity';
+import UserEntity, { UserEntityList, UserInterface } from '@app/domain/entities/User.entity';
 import UserOperation from '@app/operations/User.operation';
 import { ListQueryPipeDto, ListQueryPipeValidator } from '@api/pipes/QueryValidator.pipe';
 import { CreateUserPipeDto, CreateUserPipeValidator, UpdateUserPipeDto, UpdateUserPipeValidator, LoginUserPipeValidator, LoginUserPipeDto } from '@api/pipes/UserValidator.pipe';
@@ -46,11 +46,15 @@ export default class UserController implements OnModuleInit {
 	@ApiProduces('application/json')
 	public async listUsers(
 		@Query(ListQueryPipeValidator) query: ListQueryPipeDto,
-	): Promise<PaginationInterface<UserEntity> | unknown> {
+	): Promise<PaginationInterface<UserInterface>> {
 		try {
-			const result = await this.userOperation.listUsers(query);
+			const list = await this.userOperation.listUsers(query);
+			const content = list.content.map((entity) => entity.getAttributes());
 
-			return result;
+			return {
+				...list,
+				content,
+			};
 		} catch (error) {
 			this.logger.error(error);
 			throw error;
@@ -64,13 +68,13 @@ export default class UserController implements OnModuleInit {
 	public async createUser(
 		@Req() request: RequestInterface,
 		@Body(CreateUserPipeValidator) body: CreateUserPipeDto,
-	): Promise<UserEntity | unknown> {
+	): Promise<UserInterface> {
 		try {
 			const { user } = request;
 
 			const result = await this.userOperation.createUser(body, user);
 
-			return result;
+			return result.getAttributes();
 		} catch (error) {
 			this.logger.error(error);
 			throw error;
@@ -84,13 +88,13 @@ export default class UserController implements OnModuleInit {
 	public async getUser(
 		@Req() request: RequestInterface,
 		@Param('userId') userId: number,
-	): Promise<UserEntity | unknown> {
+	): Promise<UserInterface> {
 		try {
 			const { user } = request;
 
 			const result = await this.userOperation.getUser(userId, user);
 
-			return result;
+			return result.getAttributes();
 		} catch (error) {
 			this.logger.error(error);
 			throw error;
@@ -104,13 +108,13 @@ export default class UserController implements OnModuleInit {
 	public async loginUser(
 		@Req() request: RequestInterface,
 		@Body(LoginUserPipeValidator) body: LoginUserPipeDto,
-	): Promise<UserEntity | unknown> {
+	): Promise<UserInterface> {
 		try {
 			const { user } = request;
 
 			const result = await this.userOperation.loginUser(body, user);
 
-			return result;
+			return result.getAttributes();
 		} catch (error) {
 			this.logger.error(error);
 			throw error;
@@ -125,13 +129,13 @@ export default class UserController implements OnModuleInit {
 		@Req() request: RequestInterface,
 		@Param('userId', ParseIntPipe) userId: number,
 		@Body(UpdateUserPipeValidator) body: UpdateUserPipeDto,
-	): Promise<UserEntity | unknown> {
+	): Promise<UserInterface> {
 		try {
 			const { user } = request;
 
 			const result = await this.userOperation.updateUser(userId, body, user);
 
-			return result;
+			return result.getAttributes();
 		} catch (error) {
 			this.logger.error(error);
 			throw error;

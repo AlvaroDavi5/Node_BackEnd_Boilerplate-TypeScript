@@ -5,7 +5,7 @@ export interface ListQueryInterface {
 	order?: 'ASC' | 'DESC',
 	sortBy?: 'createdAt' | 'updatedAt' | 'deletedAt',
 	searchTerm?: string,
-	selectSoftDeleted?: boolean,
+	selectSoftDeleted?: boolean, // filter just softDeleted registers
 }
 
 export interface PaginationInterface<T> {

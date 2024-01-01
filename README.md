@@ -9,15 +9,30 @@ Node.js Domain-Driven Design Boilerplate with TypeScript for Back-End.
 #### What to do if the service goes down
 
 - Check the logs;
-- Identify the problem;
 - Test the dependencies and execution locally;
+- Run automated tests;
 - If necessary, merge with a hotfix on git;
 - Rebuild the project and restart the service;
 
 ## Architecture
 
-[Back-End Architecture](google.com.br)  
-[DataBase Diagram](https://dbdiagram.io/d/6338e5857b3d2034ff03a8c4)  
+[Back-End Architecture](google.com)  
+
+<div align='center'>
+<br>
+<a href='https://dbdiagram.io/d/6338e5857b3d2034ff03a8c4'>
+<img src='./docs/database.png' alt='db diagram' height='300hv' width='500wv'>
+DataBase Diagram
+</a>
+</div>
+
+<div align='center'>
+<br>
+<b>Nest Modules Graph and Classes</b>
+</div>
+
+![Nest Modules Graph](./docs/graph.png)  
+![Nest Classes](./docs/classes.png)  
 
 ## Main technologies
 
@@ -122,6 +137,8 @@ ___
 - **Nest.js**
 	- [API Versioning](https://docs.nestjs.com/techniques/versioning)
 	- [Authorization](https://docs.nestjs.com/security/authorization)
+	- [Rate Limiting](https://docs.nestjs.com/security/rate-limiting)
+	- [GraphQL](https://docs.nestjs.com/graphql/quick-start)
 	- [WebSockets Pipes](https://docs.nestjs.com/websockets/pipes)
 	- [kafka](https://docs.nestjs.com/microservices/kafka)
 	- [openAPI](https://docs.nestjs.com/openapi/introduction)

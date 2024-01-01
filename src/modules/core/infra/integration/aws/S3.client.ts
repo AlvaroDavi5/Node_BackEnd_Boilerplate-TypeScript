@@ -18,9 +18,9 @@ export type s3FileContentType = string | Uint8Array | Buffer | Readable | Readab
 @Injectable()
 export default class S3Client {
 	private readonly awsConfig: S3ClientConfig;
-	private readonly region: string;
 	private readonly s3Client: S3AWSClient;
 	private readonly logger: Logger;
+	public readonly bucketName: string;
 	private readonly filesExpiration: number;
 
 	constructor(
@@ -34,8 +34,8 @@ export default class S3Client {
 			region, sessionToken,
 			accessKeyId, secretAccessKey,
 		} = awsConfigs.credentials;
-		const { filesExpiration, endpoint, apiVersion } = awsConfigs.s3;
-		this.filesExpiration = filesExpiration || (5 * 60);
+		const { bucketName, filesExpiration, endpoint, apiVersion } = awsConfigs.s3;
+		this.filesExpiration = filesExpiration;
 
 		this.awsConfig = {
 			endpoint,
@@ -49,7 +49,7 @@ export default class S3Client {
 			forcePathStyle: true,
 			logger: logging === 'true' ? this.logger : undefined,
 		};
-		this.region = region || 'us-east-1';
+		this.bucketName = bucketName;
 		this.s3Client = new S3AWSClient(this.awsConfig);
 	}
 
@@ -170,7 +170,7 @@ export default class S3Client {
 		try {
 			const result = await this.s3Client.send(new GetObjectCommand(this.getObjectParams(bucketName, objectKey)));
 			if (result?.Body) {
-				writeFile(`./temp/${objectKey}`, `${result.Body}`, err => {
+				writeFile(`./temp/${objectKey}`, `${result.Body}`, (err) => {
 					if (err) {
 						this.logger.error('Save Error:', err);
 					}

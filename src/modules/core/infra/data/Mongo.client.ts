@@ -95,7 +95,7 @@ export default class MongoClient {
 			});
 		}
 		const collectionList = await database.listCollections().toArray();
-		const collectionNames: string[] = collectionList.map(collection => collection.name);
+		const collectionNames: string[] = collectionList.map((collection) => collection.name);
 
 		return collectionNames;
 	}

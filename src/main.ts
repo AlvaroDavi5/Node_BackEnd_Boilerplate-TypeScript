@@ -74,7 +74,7 @@ async function startNestApplication() {
 
 	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application'] | undefined>('application');
 	await nestApp.listen(Number(appConfigs?.port)).catch((error: ErrorInterface | Error) => {
-		const knownExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
+		const knownExceptions = Object.values(ExceptionsEnum).map((exception) => exception.toString());
 
 		if (error?.name && !knownExceptions.includes(error.name)) {
 			const newError = new Error(error.message);

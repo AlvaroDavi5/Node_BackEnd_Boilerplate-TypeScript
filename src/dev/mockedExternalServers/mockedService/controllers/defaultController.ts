@@ -19,7 +19,7 @@ export default {
 
 		const data = {
 			url: req?.url,
-			statusCode: req?.statusCode || 200,
+			statusCode: req?.statusCode ?? 200,
 			method: req?.method,
 			query: req?.query,
 			params: req?.params,

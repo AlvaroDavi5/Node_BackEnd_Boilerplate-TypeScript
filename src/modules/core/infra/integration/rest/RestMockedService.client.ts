@@ -21,7 +21,7 @@ export default class RestMockedServiceClient {
 		const mockedServiceConfigs: ConfigsInterface['integration']['rest']['mockedService'] = this.configService.get<any>('integration.rest.mockedService');
 		const { baseUrl, serviceName } = mockedServiceConfigs;
 
-		this.serviceName = serviceName || 'mockedService';
+		this.serviceName = serviceName;
 		this.client = axios.create({
 			baseURL: baseUrl,
 			timeout: 1000, // 1s

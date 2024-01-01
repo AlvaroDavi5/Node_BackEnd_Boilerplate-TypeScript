@@ -1,4 +1,4 @@
-import { Module, Global } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import WebSocketClient from '@events/websocket/client/WebSocket.client';
@@ -10,7 +10,7 @@ import SqsClient from '@dev/localstack/queues/SqsClient';
 
 
 const appConfigs = configs();
-@Global()
+
 @Module({
 	imports: [
 		SqsModule.register({
@@ -20,9 +20,9 @@ const appConfigs = configs();
 						logger: console,
 						configs: appConfigs,
 					}).getClient(),
-					name: appConfigs.integration.aws.sqs.eventsQueue.queueName || 'eventsQueue.fifo',
-					queueUrl: appConfigs.integration.aws.sqs.eventsQueue.queueUrl || 'http://localhost:4566/000000000000/eventsQueue.fifo',
-					region: appConfigs.integration.aws.credentials.region || 'us-east-1',
+					name: appConfigs.integration.aws.sqs.eventsQueue.queueName,
+					queueUrl: appConfigs.integration.aws.sqs.eventsQueue.queueUrl,
+					region: appConfigs.integration.aws.credentials.region,
 					batchSize: 10,
 					shouldDeleteMessages: false,
 					handleMessageTimeout: 1000,

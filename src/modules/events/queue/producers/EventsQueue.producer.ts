@@ -36,8 +36,8 @@ export default class EventsQueueProducer {
 		this.logger = this.loggerGenerator.getLogger();
 		const { queueName, queueUrl }: ConfigsInterface['integration']['aws']['sqs']['eventsQueue'] = this.configService.get<any>('integration.aws.sqs.eventsQueue');
 		this.credentials = {
-			queueName: queueName || 'eventsQueue.fifo',
-			queueUrl: queueUrl || 'http://localhost:4566/000000000000/eventsQueue.fifo',
+			queueName,
+			queueUrl,
 		};
 		const appName: ConfigsInterface['application']['name'] = this.configService.get<any>('application.name');
 		this.applicationName = String(appName);

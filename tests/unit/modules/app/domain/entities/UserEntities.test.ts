@@ -4,6 +4,7 @@ import UserPreferenceEntity from '../../../../../../src/modules/app/domain/entit
 
 describe('Modules :: App :: Domain :: Entities :: UserEntities', () => {
 
+	const currentDate = new Date();
 	describe('# Instances', () => {
 		const userEntity = new UserEntity({
 			fullName: 'Test User',
@@ -16,6 +17,24 @@ describe('Modules :: App :: Domain :: Entities :: UserEntities', () => {
 			userId: userEntity.getId(),
 			imagePath: './',
 			defaultTheme: 'DEFAULT',
+		}));
+
+
+		const otherUserEntity = new UserEntity({
+			fullName: 'Test User',
+			email: 'user.test@nomail.test',
+			password: undefined,
+			phone: '+5527999999999',
+			preference: undefined,
+			createdAt: currentDate,
+			updatedAt: currentDate,
+			deletedAt: currentDate,
+		});
+		otherUserEntity.setPreference(new UserPreferenceEntity({
+			userId: userEntity.getId(),
+			createdAt: currentDate,
+			updatedAt: currentDate,
+			deletedAt: currentDate,
 		}));
 
 		test('Validate fields', () => {
@@ -36,7 +55,15 @@ describe('Modules :: App :: Domain :: Entities :: UserEntities', () => {
 			userEntity.getPreference()?.setImagePath('./image.png');
 			expect(userEntity.getPreference()?.getImagePath()).toBe('./image.png');
 			expect(userEntity.getPreference()?.getDefaultTheme()).toBe('DEFAULT');
-			expect(userEntity.getPreference()?.createdAt).toBeDefined();
+			expect(userEntity.getPreference()?.createdAt).not.toBeNull();
+
+			expect(otherUserEntity.createdAt).not.toBeNull();
+			expect(otherUserEntity.updatedAt).not.toBeNull();
+			expect(otherUserEntity.getDeletedBy()).toBeNull();
+			expect(otherUserEntity.deletedAt).not.toBeNull();
+			expect(otherUserEntity.getPreference()?.createdAt).not.toBeNull();
+			expect(otherUserEntity.getPreference()?.updatedAt).not.toBeNull();
+			expect(otherUserEntity.getPreference()?.deletedAt).not.toBeNull();
 		});
 
 		test('Validate all attributes', () => {
@@ -54,7 +81,7 @@ describe('Modules :: App :: Domain :: Entities :: UserEntities', () => {
 					userId: 0,
 					defaultTheme: 'DEFAULT',
 					imagePath: './image.png',
-					deletedAt: null,
+					deletedAt: undefined,
 				},
 				deletedBy: 'test',
 			});

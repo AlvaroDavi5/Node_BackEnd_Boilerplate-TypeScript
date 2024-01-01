@@ -3,7 +3,6 @@ import { createLogger, transports, format, Logger } from 'winston';
 import { ConfigService } from '@nestjs/config';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import { EnvironmentsEnum } from '@common/enums/environments.enum';
 
 
 @Injectable()
@@ -16,7 +15,7 @@ export default class LoggerGenerator {
 
 	private readonly applicationConfigs: ConfigsInterface['application'] = this.configService.get<any>('application');
 
-	private readonly defaultMessageFormatter = format.printf(msg => {
+	private readonly defaultMessageFormatter = format.printf((msg) => {
 		const { level, timestamp, message, stack } = msg;
 		let log = typeof message === 'object'
 			? this.dataParserHelper.toString(msg.message)
@@ -31,7 +30,7 @@ export default class LoggerGenerator {
 
 	private readonly defaultFormat = format.combine(
 		format.timestamp(),
-		format.errors({ stack: this.applicationConfigs?.stackErrorVisible || false }),
+		format.errors({ stack: this.applicationConfigs.stackErrorVisible === 'true' }),
 		this.defaultMessageFormatter,
 	);
 
@@ -41,8 +40,8 @@ export default class LoggerGenerator {
 			format.json(),
 		),
 		defaultMeta: {
-			service: this.applicationConfigs?.name || 'Node Boilerplate',
-			env: this.applicationConfigs?.environment || EnvironmentsEnum.DEVELOPMENT,
+			service: this.applicationConfigs.name,
+			env: this.applicationConfigs.environment,
 		},
 		transports: [
 			new transports.Console({
@@ -54,7 +53,7 @@ export default class LoggerGenerator {
 			}),
 			new transports.File({
 				level: 'info',
-				filename: this.applicationConfigs?.logsPath || './logs/logs.log'
+				filename: this.applicationConfigs.logsPath
 			}),
 		],
 		exitOnError: false,

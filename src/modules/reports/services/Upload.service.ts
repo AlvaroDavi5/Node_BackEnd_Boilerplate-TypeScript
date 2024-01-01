@@ -18,7 +18,7 @@ export default class UploadService {
 		private readonly fileReaderHelper: FileReaderHelper,
 	) {
 		const s3Configs: ConfigsInterface['integration']['aws']['s3'] = this.configService.get<any>('integration.aws.s3');
-		this.uploadBucket = s3Configs.bucketName || 'defaultbucket';
+		this.uploadBucket = s3Configs.bucketName;
 	}
 
 	public async uploadReport(fileName: string, file: Express.Multer.File): Promise<string> {

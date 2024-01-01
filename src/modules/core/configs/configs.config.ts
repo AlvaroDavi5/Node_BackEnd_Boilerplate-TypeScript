@@ -7,23 +7,23 @@ dotenv.config();
 export interface ConfigsInterface {
 	// ! Application Service
 	application: {
-		name: string | undefined, // app name
-		environment: string | undefined, // app env
-		port: string | undefined, // app port
-		url: string | undefined, // app url
-		socketEnv: string | undefined, // enable websocket
-		stackErrorVisible: string | undefined, // enable app error stack
-		logsPath: string | undefined, // logs file path
-		logging: string | undefined, // enable third-party and backing services logging
+		name: string, // app name
+		environment: string, // app env
+		port: string, // app port
+		url: string, // app url
+		socketEnv: string, // enable websocket
+		stackErrorVisible: string, // enable app error stack
+		logsPath: string, // logs file path
+		logging: string, // enable third-party and backing services logging
 	},
 	// ? DataBase Backing-Service
 	database: {
-		database: string | undefined, // database name
-		username: string | undefined, // database username
-		password: string | undefined, // database password
-		host: string | undefined, // database host
-		port: string | undefined, // database port
-		dialect: string | undefined, // database DBMS
+		database: string, // database name
+		username: string, // database username
+		password: string, // database password
+		host: string, // database host
+		port: string, // database port
+		dialect: string, // database DBMS
 		dialectOptions?: {
 			ssl?: {
 				rejectUnauthorized?: boolean, // to use SSL protocol (in production)
@@ -46,13 +46,13 @@ export interface ConfigsInterface {
 	// ? Data Backing-Service
 	data: {
 		mongo: {
-			uri: string | undefined, // connection URI
+			uri: string, // connection URI
 			maxConnecting: number, // maximum number of connections concurrently the pool
 			maxPoolSize: number, // maximum number of connections in pool
 		},
 		databases: {
 			datalake: {
-				name: string | undefined,
+				name: string,
 				collections: {
 					subscriptions: string,
 					unprocessedMessages: string,
@@ -63,8 +63,8 @@ export interface ConfigsInterface {
 	// ? Caching Backing-Service
 	cache: {
 		redis: {
-			port: string | undefined, // cache port
-			host: string | undefined, // cache host
+			port: string, // cache port
+			host: string, // cache host
 		},
 		expirationTime: {
 			subscriptions: number // expiration in seconds
@@ -74,87 +74,88 @@ export interface ConfigsInterface {
 	integration: {
 		aws: {
 			credentials: {
-				region: string | undefined, // service region
-				accessKeyId: string | undefined,
-				secretAccessKey: string | undefined,
-				sessionToken: string | undefined,
-				apiVersion: string | undefined,
+				region: string, // service region
+				accessKeyId: string,
+				secretAccessKey: string,
+				sessionToken: string,
+				apiVersion: string,
 			},
 			// * Authentication Service
 			congito: {
-				userPoolName: string | undefined,
-				userPoolId: string | undefined,
-				clientName: string | undefined,
-				clientId: string | undefined,
-				endpoint: string | undefined,
-				apiVersion: string | undefined,
+				userPoolName: string,
+				userPoolId: string,
+				clientName: string,
+				clientId: string,
+				endpoint: string,
+				apiVersion: string,
 			},
 			// * Message Queues Service
 			sqs: {
 				eventsQueue: {
-					queueName: string | undefined,
-					queueUrl: string | undefined,
+					queueName: string,
+					queueUrl: string,
 				},
-				endpoint: string | undefined,
-				apiVersion: string | undefined,
+				endpoint: string,
+				apiVersion: string,
 			},
 			// * Notification Topics Service
 			sns: {
 				defaultTopic: {
-					topicName: string | undefined,
-					topicArn: string | undefined,
-					topicProtocol: string | undefined,
+					topicName: string,
+					topicArn: string,
+					topicProtocol: string,
 				},
-				endpoint: string | undefined,
-				apiVersion: string | undefined,
+				endpoint: string,
+				apiVersion: string,
 			},
 			// * Storage Service
 			s3: {
-				bucketName: string | undefined,
-				bucketUrl: string | undefined,
-				endpoint: string | undefined,
+				bucketName: string,
+				bucketUrl: string,
+				endpoint: string,
 				filesExpiration: number, // files expiration in seconds
-				apiVersion: string | undefined,
+				apiVersion: string,
 			}
 		},
 		rest: {
 			// * Another Service
 			mockedService: {
-				serviceName: string | undefined,
-				baseUrl: string | undefined,
+				serviceName: string,
+				baseUrl: string,
+				port: string,
 			},
 		},
 	},
 	// ? Cryptography and Security
 	security: {
-		secretKey: string | undefined,
+		secretKey: string,
 	}
 }
 
 export default (): ConfigsInterface => ({
 	application: {
-		name: process.env.APP_NAME,
-		environment: process.env.NODE_ENV,
-		port: process.env.APP_PORT,
-		url: process.env.APP_URL,
-		socketEnv: process.env.SOCKET_ENV,
-		stackErrorVisible: process.env.SHOW_ERROR_STACK,
-		logsPath: process.env.APP_LOGS_PATH,
-		logging: process.env.SHOW_LOGS,
+		name: process.env.APP_NAME ?? 'Node Boilerplate',
+		environment: process.env.NODE_ENV ?? 'dev',
+		port: process.env.APP_PORT ?? '3000',
+		url: process.env.APP_URL ?? 'http://localhost:3000/',
+		socketEnv: process.env.SOCKET_ENV ?? 'enabled',
+		stackErrorVisible: process.env.SHOW_ERROR_STACK ?? 'true',
+		logsPath: process.env.APP_LOGS_PATH ?? './logs/logs.log',
+		logging: process.env.SHOW_LOGS ?? 'false',
 	},
 	database: {
-		database: process.env.DB_NAME,
-		username: process.env.DB_USERNAME,
-		password: process.env.DB_PASSWORD,
-		host: process.env.DB_HOST,
+		database: process.env.DB_NAME ?? 'db_postgres',
+		username: process.env.DB_USERNAME ?? 'postgres',
+		password: process.env.DB_PASSWORD ?? 'pass',
+		host: process.env.DB_HOST ?? 'database',
 		charset: 'utf8',
-		dialect: process.env.DB_DBMS_NAME,
+		dialect: process.env.DB_DBMS_NAME ?? 'postgres',
 		dialectOptions: {
 			ssl: {
 				rejectUnauthorized: false,
 			}
 		},
-		port: process.env.DB_PORT,
+		port: process.env.DB_PORT ?? '5432',
 		define: {
 			underscored: false,
 			timestamps: true,
@@ -170,13 +171,13 @@ export default (): ConfigsInterface => ({
 	},
 	data: {
 		mongo: {
-			uri: process.env.MONGO_URI,
+			uri: process.env.MONGO_URI ?? 'mongodb://admin:pass@data:27017/?authSource=admin',
 			maxConnecting: 2,
 			maxPoolSize: 5,
 		},
 		databases: {
 			datalake: {
-				name: process.env.MONGO_DB_NAME_DATALAKE,
+				name: process.env.MONGO_DB_NAME_DATALAKE ?? 'datalake',
 				collections: {
 					subscriptions: 'subscriptions',
 					unprocessedMessages: 'unprocessedMessages',
@@ -186,8 +187,8 @@ export default (): ConfigsInterface => ({
 	},
 	cache: {
 		redis: {
-			host: process.env.REDIS_HOST,
-			port: process.env.REDIS_PORT,
+			host: process.env.REDIS_HOST ?? 'cache',
+			port: process.env.REDIS_PORT ?? '6379',
 		},
 		expirationTime: {
 			subscriptions: (12 * 60 * 60),
@@ -196,53 +197,54 @@ export default (): ConfigsInterface => ({
 	integration: {
 		aws: {
 			credentials: {
-				region: process.env.AWS_REGION,
-				accessKeyId: process.env.AWS_ACCESS_KEY_ID,
-				secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY,
-				sessionToken: process.env.AWS_SESSION_TOKEN,
-				apiVersion: process.env.AWS_API_VERSION,
+				region: process.env.AWS_REGION ?? 'us-east-1',
+				accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? 'mock',
+				secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? 'mock',
+				sessionToken: process.env.AWS_SESSION_TOKEN ?? 'mock',
+				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
 			},
 			congito: {
-				userPoolName: process.env.AWS_COGNITO_USER_POOL_NAME,
-				userPoolId: process.env.AWS_COGNITO_USER_POOL_ID,
-				clientName: process.env.AWS_COGNITO_USER_POOL_CLIENT_NAME,
-				clientId: process.env.AWS_COGNITO_USER_POOL_CLIENT_ID,
-				endpoint: process.env.AWS_ENDPOINT_URL,
-				apiVersion: process.env.AWS_API_VERSION,
+				userPoolName: process.env.AWS_COGNITO_USER_POOL_NAME ?? 'defaultPool',
+				userPoolId: process.env.AWS_COGNITO_USER_POOL_ID ?? 'xxx',
+				clientName: process.env.AWS_COGNITO_USER_POOL_CLIENT_NAME ?? 'defaultClient',
+				clientId: process.env.AWS_COGNITO_USER_POOL_CLIENT_ID ?? 'xxx',
+				endpoint: process.env.AWS_ENDPOINT_URL ?? 'http://Cloud_LocalStack:4566/',
+				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
 			},
 			sqs: {
 				eventsQueue: {
-					queueName: process.env.AWS_SQS_EVENTS_QUEUE_NAME,
-					queueUrl: process.env.AWS_SQS_EVENTS_QUEUE_URL,
+					queueName: process.env.AWS_SQS_EVENTS_QUEUE_NAME ?? 'eventsQueue.fifo',
+					queueUrl: process.env.AWS_SQS_EVENTS_QUEUE_URL ?? 'http://Cloud_LocalStack:4566/000000000000/eventsQueue.fifo',
 				},
-				endpoint: process.env.AWS_ENDPOINT_URL,
-				apiVersion: process.env.AWS_API_VERSION,
+				endpoint: process.env.AWS_ENDPOINT_URL ?? 'http://Cloud_LocalStack:4566/',
+				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
 			},
 			sns: {
 				defaultTopic: {
-					topicName: process.env.AWS_SNS_DEFAULT_TOPIC_NAME,
-					topicArn: process.env.AWS_SNS_DEFAULT_TOPIC_ARN,
-					topicProtocol: process.env.AWS_TOPIC_PROTOCOL,
+					topicName: process.env.AWS_SNS_DEFAULT_TOPIC_NAME ?? 'defaultTopic',
+					topicArn: process.env.AWS_SNS_DEFAULT_TOPIC_ARN ?? 'arn:aws:sns:us-east-1:000000000000:defaultTopic',
+					topicProtocol: process.env.AWS_TOPIC_PROTOCOL ?? 'email',
 				},
-				endpoint: process.env.AWS_ENDPOINT_URL,
-				apiVersion: process.env.AWS_API_VERSION,
+				endpoint: process.env.AWS_ENDPOINT_URL ?? 'http://Cloud_LocalStack:4566/',
+				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
 			},
 			s3: {
-				bucketName: process.env.AWS_S3_BUCKET_NAME,
-				bucketUrl: process.env.LOCALSTACK_URL,
-				filesExpiration: (15 * 60),
-				endpoint: process.env.AWS_ENDPOINT_URL,
-				apiVersion: process.env.AWS_API_VERSION,
+				bucketName: process.env.AWS_S3_BUCKET_NAME ?? 'defaultbucket',
+				bucketUrl: process.env.LOCALSTACK_URL ?? 'http://Cloud_LocalStack:4566',
+				filesExpiration: (5 * 60),
+				endpoint: process.env.AWS_ENDPOINT_URL ?? 'http://Cloud_LocalStack:4566/',
+				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
 			}
 		},
 		rest: {
 			mockedService: {
-				serviceName: process.env.MOCKED_SERVICE_NAME,
-				baseUrl: process.env.MOCKED_SERVICE_URL,
+				serviceName: process.env.MOCKED_SERVICE_NAME ?? 'Mocked Service',
+				baseUrl: process.env.MOCKED_SERVICE_URL ?? 'http://localhost:4000/',
+				port: process.env.MOCKED_SERVERS_APP_PORT ?? '4000',
 			}
 		},
 	},
 	security: {
-		secretKey: process.env.SECRET,
+		secretKey: process.env.SECRET ?? 'pass_phrase',
 	},
 });

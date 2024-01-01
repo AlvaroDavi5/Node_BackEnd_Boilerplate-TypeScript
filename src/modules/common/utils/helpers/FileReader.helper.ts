@@ -19,7 +19,7 @@ export default class FileReaderHelper {
 		let content: string | undefined = undefined;
 
 		try {
-			content = readFileSync(join(process.cwd(), filePath), { encoding: encoding || 'utf8' });
+			content = readFileSync(join(process.cwd(), filePath), { encoding: encoding ?? 'utf8' });
 		} catch (error) {
 			this.logger.warn('File read error:', error);
 		}
@@ -31,7 +31,7 @@ export default class FileReaderHelper {
 		let readStream: ReadStream | undefined = undefined;
 
 		try {
-			readStream = createReadStream(join(process.cwd(), filePath), { encoding: encoding || 'utf8' });
+			readStream = createReadStream(join(process.cwd(), filePath), { encoding: encoding ?? 'utf8' });
 		} catch (error) {
 			this.logger.warn('File read stream error:', error);
 		}

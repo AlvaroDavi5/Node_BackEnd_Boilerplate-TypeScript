@@ -40,8 +40,8 @@ export default class JwtDecodeMiddleware implements NestMiddleware {
 
 		let username: decodedFieldType = null, clientId: decodedFieldType = null;
 		if (typeof decoded !== 'string') {
-			username = decoded?.username || decoded['cognito:username'];
-			clientId = decoded?.clientId || decoded?.client_id;
+			username = decoded?.username ?? decoded['cognito:username'];
+			clientId = decoded?.clientId ?? decoded?.client_id;
 		}
 
 		request.user = {

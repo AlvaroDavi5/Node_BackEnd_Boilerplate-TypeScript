@@ -41,7 +41,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 	) {
 		this.logger = this.loggerGenerator.getLogger();
 		this.appConfigs = this.configService.get<any>('application');
-		this.uploadBucket = this.configService.get<any>('integration.aws.s3.bucketName') || 'defaultbucket';
+		this.uploadBucket = this.configService.get<any>('integration.aws.s3.bucketName');
 	}
 
 	public async onModuleInit(): Promise<void> {
@@ -58,7 +58,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 	}
 
 	public onApplicationBootstrap(): void {
-		this.logger.debug(`\n\n\tApp started with PID: ${process.pid} on URL: ${this.appConfigs?.url}\n`);
+		this.logger.debug(`\n\n\tApp started with PID: ${process.pid} on URL: ${this.appConfigs.url}\n`);
 	}
 
 	public onModuleDestroy(): void {

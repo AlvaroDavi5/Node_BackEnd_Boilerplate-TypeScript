@@ -11,8 +11,9 @@ import configs from '@core/configs/configs.config';
 
 
 const appConfigs = configs();
-const eventsQueueName = appConfigs.integration.aws.sqs.eventsQueue.queueName || 'eventsQueue.fifo';
-const eventsQueueUrl = appConfigs.integration.aws.sqs.eventsQueue.queueUrl || 'http://localhost:4566/000000000000/eventsQueue.fifo';
+const eventsQueueName = appConfigs.integration.aws.sqs.eventsQueue.queueName;
+const eventsQueueUrl = appConfigs.integration.aws.sqs.eventsQueue.queueUrl;
+
 @Injectable()
 export default class EventsQueueConsumer {
 	private readonly name: string;

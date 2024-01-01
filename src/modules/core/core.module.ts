@@ -26,6 +26,7 @@ import { EnvironmentsEnum } from '@common/enums/environments.enum';
 
 
 const appConfigs = configs();
+
 @Global()
 @Module({
 	imports: [

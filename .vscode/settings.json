@@ -154,9 +154,9 @@
 	"typescript.tsserver.watchOptions": {},
 	"github.copilot.enable": {
 		"*": true,
-		"yaml": true,
+		"yaml": false,
 		"plaintext": false,
-		"markdown": true
+		"markdown": false
 	},
 	"files.exclude": {
 		"**/.classpath": true,
@@ -262,8 +262,8 @@
 		}
 	},
 	"files.associations": {
-		"*.dbml": "dbml",
 		"*.apib": "apiblueprint",
+		"*.dbml": "dbml",
 		"*.rmd": "markdown"
 	},
 	"json.schemas": [

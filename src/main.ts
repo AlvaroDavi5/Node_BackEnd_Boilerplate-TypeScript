@@ -10,7 +10,7 @@ import { ProcessEventsEnum, ProcessSignalsEnum, ProcessExitStatusEnum } from '@c
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import { ErrorInterface } from 'src/types/_errorInterface';
+import { ErrorInterface } from 'src/types/errorInterface';
 
 
 async function startNestApplication() {

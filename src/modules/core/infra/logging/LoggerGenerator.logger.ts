@@ -3,15 +3,20 @@ import { createLogger, transports, format, Logger } from 'winston';
 import { ConfigService } from '@nestjs/config';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import { wrapperType } from 'src/types/constructorType';
 
 
 @Injectable()
 export default class LoggerGenerator {
+	private readonly logger: Logger;
+
 	constructor(
 		private readonly configService: ConfigService,
-		@Inject(forwardRef(() => DataParserHelper)) // resolve circular dependency
-		private readonly dataParserHelper: DataParserHelper,
-	) { }
+		@Inject(forwardRef(() => DataParserHelper)) // ? resolve circular dependency
+		private readonly dataParserHelper: wrapperType<DataParserHelper>, // * wrapperType to transpile in SWC
+	) {
+		this.logger = createLogger(this.loggerOptions);
+	}
 
 	private readonly applicationConfigs: ConfigsInterface['application'] = this.configService.get<any>('application');
 
@@ -60,6 +65,6 @@ export default class LoggerGenerator {
 	};
 
 	public getLogger(): Logger {
-		return createLogger(this.loggerOptions);
+		return this.logger;
 	}
 }

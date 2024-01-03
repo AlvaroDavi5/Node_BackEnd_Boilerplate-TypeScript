@@ -13,8 +13,8 @@ import UserOperation from '@app/operations/User.operation';
 import { ListQueryPipeDto, ListQueryPipeValidator } from '@api/pipes/QueryValidator.pipe';
 import { CreateUserPipeDto, CreateUserPipeValidator, UpdateUserPipeDto, UpdateUserPipeValidator, LoginUserPipeValidator, LoginUserPipeDto } from '@api/pipes/UserValidator.pipe';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
-import { PaginationInterface } from 'src/types/_listPaginationInterface';
-import { RequestInterface } from 'src/types/_endpointInterface';
+import { PaginationInterface } from 'src/types/listPaginationInterface';
+import { RequestInterface } from 'src/types/endpointInterface';
 
 
 @ApiTags('Users')

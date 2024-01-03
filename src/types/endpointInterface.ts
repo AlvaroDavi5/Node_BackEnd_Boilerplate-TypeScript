@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { UserAuthInterface } from './_userAuthInterface';
+import { UserAuthInterface } from './userAuthInterface';
 
 
 export interface RequestInterface extends Request {

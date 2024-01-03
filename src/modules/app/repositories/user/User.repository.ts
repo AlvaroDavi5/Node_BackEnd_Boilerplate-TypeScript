@@ -9,7 +9,7 @@ import UserPreferencesModel from '@core/infra/database/models/UserPreferences.mo
 import UserEntity from '@app/domain/entities/User.entity';
 import userMapper from './user.mapper';
 import { userQueryParamsBuilder, userQueryOptions } from './user.query';
-import { ListQueryInterface, PaginationInterface } from 'src/types/_listPaginationInterface';
+import { ListQueryInterface, PaginationInterface } from 'src/types/listPaginationInterface';
 
 
 @Injectable()

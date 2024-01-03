@@ -3,8 +3,8 @@ import { Logger } from 'winston';
 import CryptographyService from '@core/infra/security/Cryptography.service';
 import Exceptions from '@core/infra/errors/Exceptions';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
-import { RequestInterface, ResponseInterface, NextFunctionInterface } from 'src/types/_endpointInterface';
-import { decodedFieldType } from 'src/types/_userAuthInterface';
+import { RequestInterface, ResponseInterface, NextFunctionInterface } from 'src/types/endpointInterface';
+import { decodedFieldType } from 'src/types/userAuthInterface';
 
 
 @Injectable()

@@ -14,7 +14,7 @@ import LifecycleService from '@core/infra/start/Lifecycle.service';
 import { ProcessEventsEnum, ProcessSignalsEnum } from '@common/enums/processEvents.enum';
 import Exceptions from '@core/infra/errors/Exceptions';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
-import { ErrorInterface } from 'src/types/_errorInterface';
+import { ErrorInterface } from 'src/types/errorInterface';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import CryptographyService from '@core/infra/security/Cryptography.service';
 import DatabaseConnectionProvider from '@core/infra/database/connection';

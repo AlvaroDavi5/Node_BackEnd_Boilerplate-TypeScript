@@ -4,7 +4,7 @@ import {
 	ConflictException, InternalServerErrorException, ServiceUnavailableException,
 } from '@nestjs/common';
 import { ExceptionsEnum } from '../../../common/enums/exceptions.enum';
-import { ErrorInterface } from 'src/types/_errorInterface';
+import { ErrorInterface } from 'src/types/errorInterface';
 
 
 @Injectable()

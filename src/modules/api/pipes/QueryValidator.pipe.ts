@@ -4,7 +4,7 @@ import { ValidateIf, IsString, IsNumberString, IsBooleanString } from 'class-val
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import Exceptions from '@core/infra/errors/Exceptions';
 import listQuerySchema from '@api/schemas/listQuery.schema';
-import { ListQueryInterface } from 'src/types/_listPaginationInterface';
+import { ListQueryInterface } from 'src/types/listPaginationInterface';
 
 
 export abstract class ListQueryPipeDto implements ListQueryInterface {

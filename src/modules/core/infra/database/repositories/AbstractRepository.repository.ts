@@ -3,15 +3,15 @@ import { Logger } from 'winston';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import Exceptions from '@core/infra/errors/Exceptions';
 import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity';
-import { TypeConstructor } from 'src/types/_typeConstructor';
-import { ListQueryInterface, PaginationInterface } from 'src/types/_listPaginationInterface';
+import { ListQueryInterface, PaginationInterface } from 'src/types/listPaginationInterface';
+import { constructorType } from 'src/types/constructorType';
 
 
-type ModelType<T extends Model<T>> = TypeConstructor<T> & typeof Model;
+type ModelType<T extends Model<T>> = constructorType<T> & typeof Model;
 
 export default abstract class AbstractRepository<M extends Model, E extends AbstractEntity> {
 	// * ------ Attributes ------
-	protected DomainEntity: TypeConstructor<E>;
+	protected DomainEntity: constructorType<E>;
 	protected ResourceModel: ModelType<M>;
 	protected resourceMapper: {
 		toEntity: ({ dataValues }: M) => E,
@@ -41,7 +41,7 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 		exceptions,
 		loggerGenerator,
 	}: {
-		DomainEntity: TypeConstructor<E>,
+		DomainEntity: constructorType<E>,
 		ResourceModel: ModelType<M>,
 		resourceAttributes: ModelAttributes,
 		resourceOptions: InitOptions,

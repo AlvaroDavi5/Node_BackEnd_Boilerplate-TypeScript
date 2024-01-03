@@ -53,6 +53,7 @@ module.exports = {
 		'src/modules/events/queue/handlers/',
 		'src/modules/events/websocket/client/',
 		'src/modules/common/',
+		'src/types/',
 		'.d.ts',
 		'.module.ts',
 		'src/main.ts',
@@ -210,11 +211,13 @@ module.exports = {
 	// A map from regular expressions to paths to transformers
 	transform: {
 		'^.+\\.(t|j)s$': [
-			'ts-jest',
+			'@swc/jest', // 'ts-jest'
+			/*
 			{
 				diagnostics: false,
 				tsconfig: 'tsconfig.test.json',
 			},
+			*/
 		],
 	},
 

@@ -1,5 +1,4 @@
 import { ReadStream } from 'fs';
-import { StreamableFile } from '@nestjs/common';
 import FileReaderHelper from '../../../../../../src/modules/common/utils/helpers/FileReader.helper';
 
 

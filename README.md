@@ -152,6 +152,7 @@ ___
 	- [ ] OAuth
 - **Integrations**
 	- [ ] Webhooks
+	- [GraphQL](#to-do)
 - **Tests**
 	* _Unit_
 		- Modules
@@ -193,7 +194,8 @@ ___
 				- [ ] Queue Consumer
 				- [ ] Queue Producer
 				- [ ] Websocket Gateway
-			- [Serverless](#to-do)
+			- Reports
+				- [ ] Services
 - **CI/CD**
 	- [x] GitHub Actions
 	- [ ] Jenkins

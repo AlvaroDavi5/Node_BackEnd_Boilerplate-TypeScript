@@ -5,8 +5,8 @@ import UserService from '@app/services/User.service';
 import UserPreferenceService from '@app/services/UserPreference.service';
 import UserStrategy from '@app/strategies/User.strategy';
 import Exceptions from '@core/infra/errors/Exceptions';
-import { UserAuthInterface } from 'src/types/_userAuthInterface';
-import { ListQueryInterface, PaginationInterface } from 'src/types/_listPaginationInterface';
+import { UserAuthInterface } from 'src/types/userAuthInterface';
+import { ListQueryInterface, PaginationInterface } from 'src/types/listPaginationInterface';
 
 
 @Injectable()

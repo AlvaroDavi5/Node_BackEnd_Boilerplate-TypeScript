@@ -1,19 +1,8 @@
 import Exceptions from '../../../../../../src/modules/core/infra/errors/Exceptions';
-import configs from '../../../../../../src/modules/core/configs/configs.config';
 
 
 describe('Infra :: Errors :: Exceptions', () => {
-	// // mocks
-	const configServiceMock: any = {
-		get: (propertyPath?: string) => {
-			if (propertyPath)
-				return configs()[propertyPath];
-			else
-				return configs();
-		},
-	};
-
-	const exceptions = new Exceptions(configServiceMock);
+	const exceptions = new Exceptions();
 
 	describe('# All Exceptions', () => {
 		test('Should return a Contract exception', () => {

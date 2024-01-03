@@ -32,12 +32,25 @@ describe('API :: UserController', () => {
 				.set('Authorization', 'Bearer ' + process.env.MOCKED_SERVICE_TOKEN);
 
 			expect(response.statusCode).toBe(200);
-			expect(response.body).toEqual({
-				content: [],
+			expect(response.body).toMatchObject({
+				content: [
+					{
+						id: 1,
+						fullName: 'Tester',
+						fu: 'BA',
+						docType: 'invalid',
+						preference: {
+							id: 1,
+							userId: 1,
+							defaultTheme: 'DARK',
+							imagePath: './generic.png',
+						},
+					},
+				],
 				pageNumber: 0,
-				pageSize: 0,
-				totalPages: 0,
-				totalItems: 0,
+				pageSize: 1,
+				totalPages: 1,
+				totalItems: 1,
 			});
 		});
 

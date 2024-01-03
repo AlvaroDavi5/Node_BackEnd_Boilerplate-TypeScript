@@ -35,7 +35,7 @@
 		"build": "nest build",
 		"build:webpack": "yarn build && webpack --config webpack.config.js",
 		"start": "cross-env NODE_PATH=. nest start",
-		"start:prod": "node build/src/main.js",
+		"start:prod": "node build/main.js",
 		"start:webpack": "node build/webpack.js",
 		"start:dev": "cross-env NODE_PATH=. NODE_ENV=dev nodemon --config nodemon.json",
 		"start:debug": "cross-env NODE_PATH=. NODE_ENV=dev nodemon --config nodemon-debug.json",

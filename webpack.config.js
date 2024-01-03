@@ -4,7 +4,7 @@ const nodeExternals = require('webpack-node-externals');
 
 
 module.exports = {
-	entry: ['webpack/hot/poll?1000', './build/src/main.js'],
+	entry: ['webpack/hot/poll?1000', './build/main.js'],
 	watch: false,
 	target: 'node',
 	externals: [

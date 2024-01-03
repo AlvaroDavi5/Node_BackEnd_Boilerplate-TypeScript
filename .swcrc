@@ -12,10 +12,15 @@
 			"decoratorMetadata": true,
 			"legacyDecorator": true
 		},
+		"baseUrl": "./",
+		"paths": {
+			"src/types/*": [
+				"src/types/*"
+			]
+		},
 		"keepClassNames": true,
 		"externalHelpers": true,
-		"loose": false,
-		"baseUrl": "./"
+		"loose": false
 	},
 	"module": {
 		"type": "commonjs",

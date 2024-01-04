@@ -4,15 +4,13 @@ import { MockObservableInterface } from '../mockObservable';
 
 @Injectable()
 export default class LoggerGenerator {
-	showLogs: boolean;
+	private readonly logger: any;
 
 	constructor(
 		private readonly mockObservable: MockObservableInterface,
 	) {
-		this.showLogs = Boolean(process.env.SHOW_LOGS);
-	}
+		const showLogs = Boolean(process.env.SHOW_LOGS);
 
-	public getLogger(): any {
 		const justCallMockObservable = (...args: unknown[]): void => {
 			this.mockObservable.call(args);
 		};
@@ -21,12 +19,16 @@ export default class LoggerGenerator {
 			console.log(args);
 		};
 
-		return {
-			error: this.showLogs ? logAndCallMockObservable : justCallMockObservable,
-			warn: this.showLogs ? logAndCallMockObservable : justCallMockObservable,
-			info: this.showLogs ? logAndCallMockObservable : justCallMockObservable,
+		this.logger = {
+			error: showLogs ? logAndCallMockObservable : justCallMockObservable,
+			warn: showLogs ? logAndCallMockObservable : justCallMockObservable,
+			info: showLogs ? logAndCallMockObservable : justCallMockObservable,
 			debug: justCallMockObservable,
 			log: justCallMockObservable,
 		};
+	}
+
+	public getLogger(): any {
+		return this.logger;
 	}
 }

@@ -4,5 +4,5 @@ export interface MockObservableInterface {
 }
 
 export const mockObservable: MockObservableInterface = {
-	call: jest.fn((...args: unknown[]): void => { console.log(args); }),
+	call: jest.fn((...args: unknown[]): void => { return undefined; }),
 };

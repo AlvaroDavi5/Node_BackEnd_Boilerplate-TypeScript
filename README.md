@@ -147,18 +147,12 @@ ___
 - **Build Versioning**
 	- [ ] DockerHub
 	- [ ] Container Images
-- **Security**
-	- [ ] Auth InfoSec
-	- [ ] OAuth
 - **Integrations**
 	- [ ] Webhooks
 	- [GraphQL](#to-do)
+	- [Kafka](#to-do)
+	- [ ] OAuth
 - **Tests**
-	* _Unit_
-		- Modules
-			- Core
-				- Infra
-					- [ ] Security
 	* _Integration_
 		- [ ] Configs
 		- Modules
@@ -201,7 +195,7 @@ ___
 	- [ ] Jenkins
 - **Deployment**
 	- [ ] Heroku
-	- [ ] AWS
+	- [x] AWS
 - **Clustering**
 	- [ ] Kubernetes
 	- [ ] Clusters
@@ -210,7 +204,4 @@ ___
 	- [ ] Rancher
 	- [ ] Grafana
 	- [ ] Log Streams
-- **AWS Integration**
-	- [ ] Lambda
-- [ ] Kafka Integration
 - [ ] Manual SQL

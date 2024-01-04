@@ -24,6 +24,9 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref }}
 
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3
@@ -41,7 +44,7 @@ jobs:
         run: yarn run test:unit
       - name: Testing Integration
         run: yarn run test:integration
-      # - name: Testing All
+      # - name: Testing API
       #   run: yarn run test:e2e
 
       - name: Checking Type
@@ -69,6 +72,9 @@ jobs:
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref }}
 
       - name: Setup Node.js ${{ matrix.node-version }}
         uses: actions/setup-node@v3

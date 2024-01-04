@@ -222,7 +222,7 @@ export default class DefaultController implements OnModuleInit {
 				};
 
 			await this.uploadService.uploadReport(fileName, file);
-			const downloadUrl = await this.uploadService.getPresignedUrl(fileName);
+			const downloadUrl = await this.uploadService.getFileLink(fileName);
 
 			return {
 				fileName,

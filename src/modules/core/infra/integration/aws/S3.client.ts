@@ -186,7 +186,7 @@ export default class S3Client {
 		return contentLength;
 	}
 
-	public async getFileLink(bucketName: string, objectKey: string): Promise<string> {
+	public async getFileSignedUrl(bucketName: string, objectKey: string): Promise<string> {
 		let link = '';
 
 		try {

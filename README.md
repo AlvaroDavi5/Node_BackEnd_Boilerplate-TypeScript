@@ -137,9 +137,6 @@ ___
 ### TO DO
 
 - **Nest.js**
-	- [API Versioning](https://docs.nestjs.com/techniques/versioning)
-	- [Authorization](https://docs.nestjs.com/security/authorization)
-	- [Rate Limiting](https://docs.nestjs.com/security/rate-limiting)
 	- [GraphQL](https://docs.nestjs.com/graphql/quick-start)
 	- [WebSockets Pipes](https://docs.nestjs.com/websockets/pipes)
 	- [kafka](https://docs.nestjs.com/microservices/kafka)

@@ -5,7 +5,7 @@ import {
 	OnModuleInit,
 } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
-import { ApiOperation, ApiTags, ApiProduces, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { Logger } from 'winston';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import UserEntity, { UserEntityList, UserInterface } from '@app/domain/entities/User.entity';
@@ -43,17 +43,18 @@ export default class UserController implements OnModuleInit {
 			example: (new UserEntityList()),
 		},
 	})
+	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async listUsers(
 		@Query(ListQueryPipeValidator) query: ListQueryPipeDto,
 	): Promise<PaginationInterface<UserInterface>> {
 		try {
-			const list = await this.userOperation.listUsers(query);
-			const content = list.content.map((entity) => entity.getAttributes());
+			const { content, ...listInfo } = await this.userOperation.listUsers(query);
+			const mappedContent = content.map((entity) => entity.getAttributes());
 
 			return {
-				...list,
-				content,
+				content: mappedContent,
+				...listInfo,
 			};
 		} catch (error) {
 			this.logger.error(error);
@@ -64,6 +65,7 @@ export default class UserController implements OnModuleInit {
 	@ApiOperation({ summary: 'Create User' })
 	@Post()
 	@ApiCreatedResponse({ type: UserEntity })
+	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async createUser(
 		@Req() request: RequestInterface,
@@ -84,6 +86,7 @@ export default class UserController implements OnModuleInit {
 	@ApiOperation({ summary: 'Get User' })
 	@Get('/:userId')
 	@ApiOkResponse({ type: UserEntity })
+	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async getUser(
 		@Req() request: RequestInterface,
@@ -104,6 +107,7 @@ export default class UserController implements OnModuleInit {
 	@ApiOperation({ summary: 'Login User' })
 	@Put()
 	@ApiOkResponse({ type: UserEntity })
+	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async loginUser(
 		@Req() request: RequestInterface,
@@ -124,6 +128,7 @@ export default class UserController implements OnModuleInit {
 	@ApiOperation({ summary: 'Update User' })
 	@Patch('/:userId')
 	@ApiOkResponse({ type: UserEntity })
+	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async updateUser(
 		@Req() request: RequestInterface,
@@ -145,6 +150,7 @@ export default class UserController implements OnModuleInit {
 	@ApiOperation({ summary: 'Delete User' })
 	@Delete('/:userId')
 	@ApiOkResponse({ schema: { example: { result: true } } })
+	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async deleteUser(
 		@Req() request: RequestInterface,

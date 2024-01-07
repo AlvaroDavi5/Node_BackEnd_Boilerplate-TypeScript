@@ -12,6 +12,7 @@ import { Logger } from 'winston';
 import { Request, Response } from 'express';
 import { Multer } from 'multer';
 import { ReadStream } from 'fs';
+import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import HttpConstants from '@api/constants/Http.constants';
 import ContentTypeConstants from '@api/constants/ContentType.constants';
 import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
@@ -75,6 +76,7 @@ export default class DefaultController implements OnModuleInit {
 			},
 		}
 	})
+	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public healthCheck(
 		@Req() request: Request,
@@ -109,6 +111,7 @@ export default class DefaultController implements OnModuleInit {
 	}
 
 	@ApiTags('Files')
+	@authSwaggerDecorator()
 	@ApiOperation({ summary: 'Download License' })
 	@Get('/license')
 	@ApiOkResponse({
@@ -122,7 +125,7 @@ export default class DefaultController implements OnModuleInit {
 	public getLicense(
 		@Headers() headers: { [key: string]: string | undefined },
 		@Res({ passthrough: true }) response: Response,
-	): StreamableFile | unknown {
+	): StreamableFile {
 		const {
 			application: { OCTET_STREAM: streamContentType },
 			text: { PLAIN: plainTextContentType },
@@ -130,15 +133,17 @@ export default class DefaultController implements OnModuleInit {
 
 		const acceptableContentTypes = [streamContentType, plainTextContentType];
 		const expectedContentType = headers.accept ?? '';
+		const contentType = acceptableContentTypes.includes(expectedContentType) ? expectedContentType : streamContentType;
 
 		try {
-			const readStream = this.fileReaderHelper.readStream('src/dev/templates/LICENSE.txt');
+			const fileName = 'LICENSE.txt';
+			const filePath = 'src/dev/templates/LICENSE.txt';
+			const readStream = this.fileReaderHelper.readStream(filePath);
 
-			if (readStream)
-				response.set({
-					'Content-Type': acceptableContentTypes.includes(expectedContentType) ? expectedContentType : plainTextContentType,
-					'Content-Disposition': 'attachment; filename="LICENSE.txt"',
-				});
+			response.set({
+				'Content-Type': contentType,
+				'Content-Disposition': `attachment; filename="${fileName}"`,
+			});
 
 			return new StreamableFile(readStream as ReadStream);
 		} catch (error) {
@@ -148,6 +153,7 @@ export default class DefaultController implements OnModuleInit {
 	}
 
 	@ApiTags('Files')
+	@authSwaggerDecorator()
 	@ApiOperation({ summary: 'Upload File' })
 	@Post('/upload')
 	@ApiCreatedResponse({
@@ -161,13 +167,7 @@ export default class DefaultController implements OnModuleInit {
 		description: 'Uploaded File',
 	})
 	@ApiConsumes('multipart/form-data')
-	@ApiProduces(
-		'text/plain', 'text/csv', 'text/xml',
-		'application/pdf', 'application/json', 'application/zip',
-		'image/gif', 'image/jpeg', 'image/png', 'image/svg+xml',
-		'audio/mpeg', 'audio/x-wav',
-		'video/mpeg', 'video/mp4', 'video/webm',
-	)
+	@ApiProduces('application/json')
 	@ApiBody({
 		required: true,
 		schema: {
@@ -189,13 +189,14 @@ export default class DefaultController implements OnModuleInit {
 		fileName: string,
 		fileContentType: string,
 		downloadUrl: string,
-	} | unknown> {
+	}> {
 		const {
 			text: { PLAIN: plainTextContentType, CSV: csvContentType, XML: xmlContentType },
 			application: { PDF: pdfContentType, JSON: jsonContentType, ZIP: zipContentType },
 			image: { GIF: gifContentType, JPEG: jpegContentType, PNG: pngContentType, SVG_XML: svgContentType },
 			audio: { MPEG: mpegAudioContentType, X_WAV: wavAudioContentType },
-			video: { MPEG: mpegVideoContentType, MP4: mp4ContentType, WEBM: webmContentType }
+			video: { MPEG: mpegVideoContentType, MP4: mp4ContentType, WEBM: webmContentType },
+			multipart: { FORM_DATA: formDataContentType },
 		} = this.contentTypeConstants;
 
 		const acceptableContentTypes = [
@@ -204,9 +205,10 @@ export default class DefaultController implements OnModuleInit {
 			gifContentType, jpegContentType, pngContentType, svgContentType,
 			mpegAudioContentType, wavAudioContentType,
 			mpegVideoContentType, mp4ContentType, webmContentType,
+			formDataContentType,
 		];
-		const responseAcceptHeader = headers.accept ?? file.mimetype;
-		const expectedContentType = acceptableContentTypes.includes(responseAcceptHeader) ? responseAcceptHeader : plainTextContentType;
+		const expectedContentType = headers.accept ?? file.mimetype;
+		const fileContentType = acceptableContentTypes.includes(expectedContentType) ? expectedContentType : plainTextContentType;
 
 		try {
 			const fullFileName = (fileNameHeader.length > 0 ? fileNameHeader : file.originalname).trim().split('.');
@@ -217,7 +219,7 @@ export default class DefaultController implements OnModuleInit {
 			if (this.appConfigs.environment === EnvironmentsEnum.TEST)
 				return {
 					fileName,
-					fileContentType: expectedContentType,
+					fileContentType,
 					downloadUrl: '',
 				};
 
@@ -226,7 +228,7 @@ export default class DefaultController implements OnModuleInit {
 
 			return {
 				fileName,
-				fileContentType: expectedContentType,
+				fileContentType,
 				downloadUrl,
 			};
 		} catch (error) {

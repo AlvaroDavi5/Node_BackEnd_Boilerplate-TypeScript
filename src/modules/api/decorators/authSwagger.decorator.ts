@@ -15,30 +15,37 @@ export default () =>
 		ApiBearerAuth('Authorization'),
 		ApiBadRequestResponse({
 			description: 'Invalid request format (body, query, params...).',
-			type: BadRequestException,
+			// type: BadRequestException,
+			schema: { example: new BadRequestException() }
 		}),
 		ApiUnauthorizedResponse({
 			description: 'Token does not match or is invalid (Authorization).',
-			type: UnauthorizedException,
+			// type: UnauthorizedException,
+			schema: { example: new UnauthorizedException() },
 		}),
 		ApiForbiddenResponse({
 			description: 'Operation not allowed due business rules.',
-			type: ForbiddenException,
+			// type: ForbiddenException,
+			schema: { example: new ForbiddenException() },
 		}),
 		ApiNotFoundResponse({
 			description: 'Resource not founded.',
-			type: NotFoundException,
+			// type: NotFoundException,
+			schema: { example: new NotFoundException() },
 		}),
 		ApiConflictResponse({
 			description: 'Operation not allowed due conflicts.',
-			type: ConflictException,
+			// type: ConflictException,
+			schema: { example: new ConflictException() },
 		}),
 		ApiServiceUnavailableResponse({
 			description: 'Service temporarily unavailable.',
-			type: ServiceUnavailableException,
+			// type: ServiceUnavailableException,
+			schema: { example: new ServiceUnavailableException() },
 		}),
 		ApiInternalServerErrorResponse({
 			description: 'Internal unhandled situation.',
-			type: InternalServerErrorException,
+			// type: InternalServerErrorException,
+			schema: { example: new InternalServerErrorException() },
 		}),
 	);

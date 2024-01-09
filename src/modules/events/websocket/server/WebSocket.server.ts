@@ -1,16 +1,17 @@
-import { OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
+import { OnModuleInit, UseGuards } from '@nestjs/common';
 import {
 	WebSocketGateway, SubscribeMessage, MessageBody,
 	WebSocketServer as Server, ConnectedSocket,
 	OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect,
 } from '@nestjs/websockets';
-import { Server as SocketIoServer, Socket } from 'socket.io';
+import { Server as SocketIoServer, Socket as ServerSocket } from 'socket.io';
 import { Logger } from 'winston';
 import { EventsEnum } from '@app/domain/enums/events.enum';
 import { WebSocketEventsEnum, WebSocketRoomsEnum } from '@app/domain/enums/webSocketEvents.enum';
 import SubscriptionService from '@app/services/Subscription.service';
 import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
+import EventsGuard from '@events/websocket/guards/Events.guard';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
@@ -22,9 +23,10 @@ import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
 	}
 })
-export default class WebSocketServer implements OnModuleInit, OnGatewayInit<SocketIoServer>, OnGatewayConnection<Socket>, OnGatewayDisconnect<Socket> {
+@UseGuards(EventsGuard)
+export default class WebSocketServer implements OnModuleInit, OnGatewayInit<SocketIoServer>, OnGatewayConnection<ServerSocket>, OnGatewayDisconnect<ServerSocket> {
 	@Server()
-	private server: SocketIoServer | undefined;
+	private server!: SocketIoServer;
 
 	private subscriptionService!: SubscriptionService;
 	private readonly logger: Logger;
@@ -43,7 +45,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 	}
 
 	private formatMessageAfterReceiveHelper(message: string): object | string | null {
-		return this.dataParserHelper.toObject(message);
+		return this.dataParserHelper.toObject(message) ?? message;
 	}
 
 	private formatMessageBeforeSendHelper(message: unknown): string {
@@ -51,15 +53,15 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 	}
 
 	public afterInit(server: SocketIoServer): void {
-		server.setMaxListeners(10);
+		server.setMaxListeners(5);
 		if (!this.server)
 			this.server = server;
-		this.server.setMaxListeners(10);
+		this.server.setMaxListeners(5);
 		this.logger.debug('Started Websocket Server');
 	}
 
 	// listen 'connection' event from client
-	public async handleConnection(socket: Socket, ...args: unknown[]): Promise<void> {
+	public async handleConnection(socket: ServerSocket, ...args: unknown[]): Promise<void> {
 		this.logger.info(`Client connected: ${socket.id} - ${args}`);
 		await this.subscriptionService.save(socket.id, {
 			subscriptionId: socket.id,
@@ -76,7 +78,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 	}
 
 	// listen 'disconnect' event from client
-	public async handleDisconnect(socket: Socket): Promise<void> {
+	public async handleDisconnect(socket: ServerSocket): Promise<void> {
 		this.logger.info(`Client disconnected: ${socket.id}`);
 		await socket.leave(WebSocketRoomsEnum.NEW_CONNECTIONS);
 		await this.subscriptionService.delete(socket.id);
@@ -97,7 +99,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 
 	@SubscribeMessage(WebSocketEventsEnum.RECONNECT)
 	public async handleReconnect(
-		@ConnectedSocket() socket: Socket,
+		@ConnectedSocket() socket: ServerSocket,
 		@MessageBody() msg: string,
 	): Promise<void> { // listen reconnect event from client
 		this.logger.info(`Client reconnected: ${socket.id}`);
@@ -116,7 +118,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 
 	@SubscribeMessage(WebSocketEventsEnum.BROADCAST)
 	public broadcast(
-		@ConnectedSocket() socket: Socket,
+		@ConnectedSocket() socket: ServerSocket,
 		@MessageBody() msg: string,
 	): void { // listen 'broadcast' event from client
 		this.logger.info('Emiting message to all clients');
@@ -125,7 +127,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 
 	@SubscribeMessage(WebSocketEventsEnum.EMIT_PRIVATE)
 	public emitPrivate(
-		@ConnectedSocket() socket: Socket,
+		@ConnectedSocket() socket: ServerSocket,
 		@MessageBody() msg: string,
 	): void { // listen 'emit_private' order event from client
 		const { socketIdsOrRooms, ...message }: { [key: string]: any, socketIdsOrRooms?: string | string[] } = this.formatMessageAfterReceiveHelper(msg) as any;

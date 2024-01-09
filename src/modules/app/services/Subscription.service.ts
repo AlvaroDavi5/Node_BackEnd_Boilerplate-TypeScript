@@ -66,12 +66,12 @@ export default class SubscriptionService implements OnModuleInit {
 		let subscriptionDatabaseId: ObjectId | null | undefined = findedSubscription?._id;
 
 		if (!subscriptionDatabaseId) {
-			// ? create
+			// * create
 			const savedSubscription = await this.mongoClient.insertOne(this.subscriptionsCollection, data);
 			subscriptionDatabaseId = savedSubscription.insertedId;
 		}
 		else
-			// ? update
+			// * update
 			await this.mongoClient.updateOne(this.subscriptionsCollection, subscriptionDatabaseId, data);
 
 		if (subscriptionDatabaseId) {

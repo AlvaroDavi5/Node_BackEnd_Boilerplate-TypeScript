@@ -3,7 +3,8 @@ import {
 	BadRequestException, UnauthorizedException, ForbiddenException, NotFoundException,
 	ConflictException, InternalServerErrorException, ServiceUnavailableException,
 } from '@nestjs/common';
-import { ExceptionsEnum } from '../../../common/enums/exceptions.enum';
+import { ThrottlerException } from '@nestjs/throttler';
+import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { ErrorInterface } from 'src/types/errorInterface';
 
 
@@ -34,6 +35,16 @@ export default class Exceptions {
 		const exception = new UnauthorizedException(error.message);
 
 		exception.name = ExceptionsEnum.UNAUTHORIZED;
+		exception.message = error.message;
+		exception.cause = error.details ?? error.stack;
+
+		return exception;
+	}
+
+	public [ExceptionsEnum.TOO_MANY_REQUESTS](error: ErrorInterface): ThrottlerException {
+		const exception = new ThrottlerException(error.message);
+
+		exception.name = ExceptionsEnum.TOO_MANY_REQUESTS;
 		exception.message = error.message;
 		exception.cause = error.details ?? error.stack;
 

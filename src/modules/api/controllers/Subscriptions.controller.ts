@@ -1,8 +1,10 @@
-import { Controller, Get, OnModuleInit } from '@nestjs/common';
+import { Controller, Get, OnModuleInit, UseGuards } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { ApiOperation, ApiTags, ApiOkResponse, ApiProduces, ApiConsumes } from '@nestjs/swagger';
 import { Logger } from 'winston';
+import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
+import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import SubscriptionService from '@app/services/Subscription.service';
 import SubscriptionEntity, { SubscriptionInterface } from '@app/domain/entities/Subscription.entity';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
@@ -10,6 +12,7 @@ import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 
 @ApiTags('Subscriptions')
 @Controller('/subscriptions')
+@UseGuards(CustomThrottlerGuard)
 @authSwaggerDecorator()
 export default class SubscriptionsController implements OnModuleInit {
 	private subscriptionService!: SubscriptionService;
@@ -45,6 +48,7 @@ export default class SubscriptionsController implements OnModuleInit {
 			default: [],
 		},
 	})
+	@exceptionsResponseDecorator()
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async listSubscriptions(

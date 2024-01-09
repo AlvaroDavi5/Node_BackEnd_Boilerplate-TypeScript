@@ -1,6 +1,5 @@
-import { APP_GUARD } from '@nestjs/core';
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import { ThrottlerModule, ThrottlerGuard } from '@nestjs/throttler';
+import { ThrottlerModule } from '@nestjs/throttler';
 import HttpConstants from '@api/constants/Http.constants';
 import ContentTypeConstants from './constants/ContentType.constants';
 import RequestRateConstants from './constants/RequestRate.constants';
@@ -27,10 +26,6 @@ const requestRateConstants = new RequestRateConstants();
 		SubscriptionsController,
 	],
 	providers: [
-		{
-			provide: APP_GUARD,
-			useClass: ThrottlerGuard,
-		},
 		HttpConstants,
 		ContentTypeConstants,
 		RequestRateConstants,

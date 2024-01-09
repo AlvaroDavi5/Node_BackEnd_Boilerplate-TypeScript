@@ -38,6 +38,8 @@ export default class SubscriptionEntity extends AbstractEntity {
 
 	constructor(dataValues: any) {
 		super();
+
+		dataValues = { ...dataValues, ...dataValues?.dataValues, ...dataValues?.listen };
 		if (this.exists(dataValues?._id)) this.id = dataValues._id;
 		if (this.exists(dataValues?.id)) this.id = dataValues.id;
 		if (this.exists(dataValues?.subscriptionId)) this.subscriptionId = dataValues.subscriptionId;

@@ -2,7 +2,7 @@ import {
 	OnModuleInit,
 	Controller, Req, Res,
 	Get, Post, Headers, Param, Query, Body,
-	StreamableFile, UploadedFile, UseInterceptors,
+	StreamableFile, UploadedFile, UseInterceptors, UseGuards,
 } from '@nestjs/common';
 import { ModuleRef, LazyModuleLoader } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
@@ -13,8 +13,10 @@ import { Request, Response } from 'express';
 import { Multer } from 'multer';
 import { ReadStream } from 'fs';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
+import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import HttpConstants from '@api/constants/Http.constants';
 import ContentTypeConstants from '@api/constants/ContentType.constants';
+import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import ReportsModule from '@reports/reports.module';
@@ -24,6 +26,7 @@ import { ConfigsInterface } from '@core/configs/configs.config';
 
 
 @Controller()
+@UseGuards(CustomThrottlerGuard)
 export default class DefaultController implements OnModuleInit {
 	private fileReaderHelper!: FileReaderHelper;
 	private uploadService!: UploadService;
@@ -76,6 +79,7 @@ export default class DefaultController implements OnModuleInit {
 			},
 		}
 	})
+	@exceptionsResponseDecorator()
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public healthCheck(
@@ -111,7 +115,6 @@ export default class DefaultController implements OnModuleInit {
 	}
 
 	@ApiTags('Files')
-	@authSwaggerDecorator()
 	@ApiOperation({ summary: 'Download License' })
 	@Get('/license')
 	@ApiOkResponse({
@@ -120,6 +123,8 @@ export default class DefaultController implements OnModuleInit {
 		},
 		description: 'Downloadable file',
 	})
+	@exceptionsResponseDecorator()
+	@authSwaggerDecorator()
 	@ApiConsumes('application/json')
 	@ApiProduces('application/octet-stream', 'text/plain')
 	public getLicense(
@@ -153,7 +158,6 @@ export default class DefaultController implements OnModuleInit {
 	}
 
 	@ApiTags('Files')
-	@authSwaggerDecorator()
 	@ApiOperation({ summary: 'Upload File' })
 	@Post('/upload')
 	@ApiCreatedResponse({
@@ -166,6 +170,8 @@ export default class DefaultController implements OnModuleInit {
 		},
 		description: 'Uploaded File',
 	})
+	@exceptionsResponseDecorator()
+	@authSwaggerDecorator()
 	@ApiConsumes('multipart/form-data')
 	@ApiProduces('application/json')
 	@ApiBody({

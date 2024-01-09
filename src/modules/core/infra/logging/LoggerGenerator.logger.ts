@@ -64,7 +64,9 @@ export default class LoggerGenerator {
 		exitOnError: false,
 	};
 
-	public getLogger(): Logger {
+	public getLogger(recreate = false): Logger {
+		if (recreate)
+			return createLogger(this.loggerOptions);
 		return this.logger;
 	}
 }

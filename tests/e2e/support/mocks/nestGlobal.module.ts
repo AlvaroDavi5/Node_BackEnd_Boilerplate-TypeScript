@@ -8,6 +8,7 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import configs, { ConfigsInterface } from '@core/configs/configs.config';
 import LifecycleService from '@core/infra/start/Lifecycle.service';
@@ -48,6 +49,7 @@ import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
 import MockedSqsClient from 'src/dev/localstack/queues/SqsClient';
 import HttpConstants from '@api/constants/Http.constants';
 import ContentTypeConstants from '@api/constants/ContentType.constants';
+import RequestRateConstants from '@api/constants/RequestRate.constants';
 import LoggerMiddleware from '@api/middlewares/Logger.middleware';
 import JwtDecodeMiddleware from '@api/middlewares/JwtDecode.middleware';
 import DefaultController from '@api/controllers/Default.controller';
@@ -56,6 +58,7 @@ import SubscriptionsController from '@api/controllers/Subscriptions.controller';
 
 
 const appConfigs = configs();
+const requestRateConstants = new RequestRateConstants();
 
 @Module({
 	imports: [
@@ -68,6 +71,11 @@ const appConfigs = configs();
 			maxListeners: 10,
 			verboseMemoryLeak: true,
 		}),
+		ThrottlerModule.forRoot([
+			requestRateConstants.short,
+			requestRateConstants.medium,
+			requestRateConstants.long,
+		]),
 		SqsModule.register({
 			consumers: [
 				{
@@ -133,6 +141,7 @@ const appConfigs = configs();
 		// * api
 		HttpConstants,
 		ContentTypeConstants,
+		RequestRateConstants,
 	],
 	exports: [],
 })
@@ -169,7 +178,7 @@ export async function startNestApplication(nestApp: INestApplication<any>) {
 
 	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application'] | undefined>('application');
 	await nestApp.listen(Number(appConfigs?.port)).catch((error: ErrorInterface | Error) => {
-		const knownExceptions = Object.values(ExceptionsEnum).map(exception => exception.toString());
+		const knownExceptions = Object.values(ExceptionsEnum).map((exception) => exception.toString());
 
 		if (error?.name && !knownExceptions.includes(error.name)) {
 			const newError = new Error(error.message);

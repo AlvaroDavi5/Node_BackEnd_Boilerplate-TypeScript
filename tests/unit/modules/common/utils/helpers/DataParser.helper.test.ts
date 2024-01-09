@@ -58,7 +58,7 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 		test('Should return the same data', () => {
 			const parsedUser = dataParserHelper.toObject('{user:{id:1}}');
 			expect(parsedUser).toEqual(null);
-			expect(warnLoggerMock).toHaveBeenCalledWith('String:Object parse error');
+			expect(warnLoggerMock).toHaveBeenCalledWith('String->Object parse error');
 		});
 	});
 });

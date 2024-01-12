@@ -138,18 +138,30 @@ ___
 
 - **Nest.js**
 	- [GraphQL](https://docs.nestjs.com/graphql/quick-start)
-	- [WebSockets Pipes](https://docs.nestjs.com/websockets/pipes)
 	- [kafka](https://docs.nestjs.com/microservices/kafka)
-	- [openAPI](https://docs.nestjs.com/openapi/introduction)
 	- [Hybrid Application](https://docs.nestjs.com/faq/hybrid-application)
-- **Build Versioning**
-	- [ ] DockerHub
-	- [ ] Container Images
 - **Integrations**
 	- [ ] Webhooks
 	- [GraphQL](#to-do)
 	- [Kafka](#to-do)
 	- [ ] OAuth
+- **Build Versioning**
+	- [ ] DockerHub
+	- [ ] Container Images
+- **CI/CD**
+	- [ ] Jenkins
+	- [x] GitHub Actions
+- **Deployment**
+	- [ ] Heroku
+	- [x] AWS
+- **Clustering**
+	- [ ] Clusters
+		- [ ] Kubernetes
+	- [ ] Load Balancing
+- **Monitoring**
+	- [ ] Log Streams
+		- [ ] Rancher
+	- [ ] Grafana
 - **Tests**
 	* _Integration_
 		- [ ] Configs
@@ -159,11 +171,13 @@ ___
 					- [ ] Cron Tasks
 					- [ ] Logging
 			- API
+				- [ ] Guards
 				- [ ] Pipes
 				- [ ] Schemas
 			- Events
 				- [ ] Queue Handler
 					- [ ] Handlers Schemas
+				- [ ] Websocket Guards
 				- [ ] Websocket Server
 				- [ ] Websocket Client
 	* _End-to-End_
@@ -188,18 +202,4 @@ ___
 				- [ ] Websocket Gateway
 			- Reports
 				- [ ] Services
-- **CI/CD**
-	- [x] GitHub Actions
-	- [ ] Jenkins
-- **Deployment**
-	- [ ] Heroku
-	- [x] AWS
-- **Clustering**
-	- [ ] Kubernetes
-	- [ ] Clusters
-	- [ ] Load Balancing
-- **Monitoring**
-	- [ ] Rancher
-	- [ ] Grafana
-	- [ ] Log Streams
 - [ ] Manual SQL

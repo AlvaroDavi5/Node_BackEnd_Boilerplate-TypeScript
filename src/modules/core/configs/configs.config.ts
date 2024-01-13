@@ -111,7 +111,6 @@ export interface ConfigsInterface {
 			// * Storage Service
 			s3: {
 				bucketName: string,
-				bucketUrl: string,
 				endpoint: string,
 				filesExpiration: number, // files expiration in seconds
 				apiVersion: string,
@@ -230,7 +229,6 @@ export default (): ConfigsInterface => ({
 			},
 			s3: {
 				bucketName: process.env.AWS_S3_BUCKET_NAME ?? 'defaultbucket',
-				bucketUrl: process.env.LOCALSTACK_URL ?? 'http://Cloud_LocalStack:4566',
 				filesExpiration: (5 * 60),
 				endpoint: process.env.AWS_ENDPOINT_URL ?? 'http://Cloud_LocalStack:4566/',
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',

@@ -4,7 +4,7 @@ import {
 	ConflictException, InternalServerErrorException, ServiceUnavailableException,
 } from '@nestjs/common';
 import { ThrottlerException } from '@nestjs/throttler';
-import { ExceptionsEnum } from '@common/enums/exceptions.enum';
+import { ExceptionsEnum } from '../../../common/enums/exceptions.enum';
 import { ErrorInterface } from 'src/types/errorInterface';
 
 

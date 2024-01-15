@@ -12,8 +12,10 @@ import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.deco
 import UserEntity, { UserEntityList, UserInterface } from '@app/domain/entities/User.entity';
 import UserOperation from '@app/operations/User.operation';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
-import { ListQueryPipeDto, ListQueryPipeValidator } from '@api/pipes/QueryValidator.pipe';
-import { CreateUserPipeDto, CreateUserPipeValidator, UpdateUserPipeDto, UpdateUserPipeValidator, LoginUserPipeValidator, LoginUserPipeDto } from '@api/pipes/UserValidator.pipe';
+import { ListQueryPipeValidator } from '@api/pipes/QueryValidator.pipe';
+import { ListQueryInputDto } from '@api/pipes/dto/QueryInput.dto';
+import { CreateUserPipeValidator, UpdateUserPipeValidator, LoginUserPipeValidator } from '@api/pipes/UserValidator.pipe';
+import { CreateUserInputDto, UpdateUserInputDto, LoginUserInputDto } from '@api/pipes/dto/UserInput.dto';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import { PaginationInterface } from 'src/types/listPaginationInterface';
 import { RequestInterface } from 'src/types/endpointInterface';
@@ -50,7 +52,7 @@ export default class UserController implements OnModuleInit {
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async listUsers(
-		@Query(ListQueryPipeValidator) query: ListQueryPipeDto,
+		@Query(ListQueryPipeValidator) query: ListQueryInputDto,
 	): Promise<PaginationInterface<UserInterface>> {
 		try {
 			const { content, ...listInfo } = await this.userOperation.listUsers(query);
@@ -74,7 +76,7 @@ export default class UserController implements OnModuleInit {
 	@ApiProduces('application/json')
 	public async createUser(
 		@Req() request: RequestInterface,
-		@Body(CreateUserPipeValidator) body: CreateUserPipeDto,
+		@Body(CreateUserPipeValidator) body: CreateUserInputDto,
 	): Promise<UserInterface> {
 		try {
 			const { user } = request;
@@ -118,7 +120,7 @@ export default class UserController implements OnModuleInit {
 	@ApiProduces('application/json')
 	public async loginUser(
 		@Req() request: RequestInterface,
-		@Body(LoginUserPipeValidator) body: LoginUserPipeDto,
+		@Body(LoginUserPipeValidator) body: LoginUserInputDto,
 	): Promise<UserInterface> {
 		try {
 			const { user } = request;
@@ -141,7 +143,7 @@ export default class UserController implements OnModuleInit {
 	public async updateUser(
 		@Req() request: RequestInterface,
 		@Param('userId', ParseIntPipe) userId: number,
-		@Body(UpdateUserPipeValidator) body: UpdateUserPipeDto,
+		@Body(UpdateUserPipeValidator) body: UpdateUserInputDto,
 	): Promise<UserInterface> {
 		try {
 			const { user } = request;

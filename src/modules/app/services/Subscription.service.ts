@@ -1,7 +1,7 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { Collection, Db, Document as MongoDocument, ObjectId, WithId } from 'mongodb';
+import { Collection, Db, ObjectId } from 'mongodb';
 import { Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import WebSocketClient from '@events/websocket/client/WebSocket.client';
@@ -44,7 +44,7 @@ export default class SubscriptionService implements OnModuleInit {
 	}
 
 	public async get(subscriptionId: string): Promise<SubscriptionEntity | null> {
-		let subscription: any = await this.getFromCache(subscriptionId);
+		let subscription = await this.getFromCache(subscriptionId);
 		if (!subscription) {
 			const findedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
 				subscriptionId,
@@ -99,9 +99,12 @@ export default class SubscriptionService implements OnModuleInit {
 	}
 
 	public async list(): Promise<SubscriptionEntity[]> {
-		const findedSubscriptions = await this.mongoClient.findMany(this.subscriptionsCollection, {});
+		let findedSubscriptions = await this.listFromCache();
 
-		return findedSubscriptions.map((subscription: WithId<MongoDocument>) => {
+		if (!findedSubscriptions.length)
+			findedSubscriptions = await this.mongoClient.findMany(this.subscriptionsCollection, {});
+
+		return findedSubscriptions.map((subscription: any) => {
 			return new SubscriptionEntity(subscription);
 		});
 	}
@@ -117,6 +120,11 @@ export default class SubscriptionService implements OnModuleInit {
 	public broadcast(msg: unknown): void {
 		this.logger.info('Broadcasting event');
 		this.webSocketClient.send(WebSocketEventsEnum.BROADCAST, msg);
+	}
+
+	private async listFromCache(): Promise<any[]> {
+		const pattern = `${CacheEnum.SUBSCRIPTIONS}:`;
+		return await this.redisClient.getByKeyPattern(pattern);
 	}
 
 	private async getFromCache(subscriptionId: string): Promise<any> {

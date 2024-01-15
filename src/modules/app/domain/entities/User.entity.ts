@@ -1,7 +1,10 @@
+import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber, IsString, IsDate } from 'class-validator';
 import { Type } from 'class-transformer';
 import AbstractEntity, { AbstractEntityList } from '@core/infra/database/entities/AbstractEntity.entity';
 import UserPreferenceEntity, { UserPreferenceInterface } from './UserPreference.entity';
+import { returingNumber, returingString, returingDate } from 'src/types/returnTypeFunc';
 
 
 export interface UserInterface {
@@ -20,45 +23,73 @@ export interface UserInterface {
 	deletedBy?: string,
 }
 
+export const returingUserPreferenceEntity = () => UserPreferenceEntity;
+
+@ObjectType()
 export default class UserEntity extends AbstractEntity {
-	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, required: false })
+	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, required: false, description: 'Database register ID' })
+	@Field(returingNumber, { defaultValue: 0, nullable: false, description: 'Database register ID' })
+	@IsNumber()
 	private id = 0;
 
-	@ApiProperty({ type: String, example: 'User Default', default: null, nullable: true, required: true })
+	@ApiProperty({ type: String, example: 'User Default', default: null, nullable: true, required: true, description: 'User name' })
+	@Field(returingString, { defaultValue: null, nullable: true, description: 'User name' })
+	@IsString()
 	public fullName: string | null = null;
 
-	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: null, nullable: true, required: true })
+	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: null, nullable: true, required: true, description: 'User email' })
+	@Field(returingString, { defaultValue: null, nullable: true, description: 'User email' })
+	@IsString()
 	private email: string | null = null;
 
-	@ApiProperty({ type: String, example: 'cGFzczEyMw==', default: null, nullable: true, required: true })
+	@ApiProperty({ type: String, example: 'cGFzczEyMw==', default: null, nullable: true, required: true, description: 'User password' })
+	@Field(returingString, { defaultValue: null, nullable: true, description: 'User password' })
+	@IsString()
 	private password: string | null = null;
 
-	@ApiProperty({ type: String, example: '+0000000000000', default: null, nullable: true, required: true })
+	@ApiProperty({ type: String, example: '+0000000000000', default: null, nullable: true, required: true, description: 'User phone number' })
+	@Field(returingString, { defaultValue: null, nullable: true, description: 'User phone number' })
+	@IsString()
 	private phone: string | null = null;
 
-	@ApiProperty({ type: String, example: 'INVALID', default: null, nullable: true, required: true })
+	@ApiProperty({ type: String, example: 'INVALID', default: null, nullable: true, required: true, description: 'Document type' })
+	@Field(returingString, { defaultValue: null, nullable: true, description: 'Document type' })
+	@IsString()
 	public docType: string | null = null;
 
-	@ApiProperty({ type: String, example: '00000000000', default: null, nullable: true, required: true })
+	@ApiProperty({ type: String, example: '00000000000', default: null, nullable: true, required: true, description: 'Document code' })
+	@Field(returingString, { defaultValue: null, nullable: true, description: 'Document code' })
+	@IsString()
 	private document: string | null = null;
 
-	@ApiProperty({ type: String, example: 'UF', default: null, nullable: true, required: true })
+	@ApiProperty({ type: String, example: 'UF', default: null, nullable: true, required: true, description: 'Brazilian Federative Unity' })
+	@Field(returingString, { defaultValue: null, nullable: true, description: 'Brazilian Federative Unity' })
+	@IsString()
 	public fu: string | null = null;
 
-	@ApiProperty({ type: UserPreferenceEntity, example: (new UserPreferenceEntity({})), default: null, nullable: true, required: true })
-	@Type(() => UserPreferenceEntity)
+	@ApiProperty({ type: UserPreferenceEntity, example: (new UserPreferenceEntity({})), default: null, nullable: true, required: true, description: 'User preference' })
+	@Field(returingUserPreferenceEntity, { defaultValue: null, nullable: true, description: 'User preference' })
+	@Type(returingUserPreferenceEntity)
 	private preference: UserPreferenceEntity | null = null;
 
-	@ApiProperty({ type: Date, example: (new Date()), default: (new Date()), nullable: false, required: false })
+	@ApiProperty({ type: Date, example: (new Date()), default: (new Date()), nullable: false, required: false, description: 'User creation timestamp' })
+	@Field(returingDate, { defaultValue: (new Date()), nullable: false, description: 'User creation timestamp' })
+	@IsDate()
 	public readonly createdAt: Date;
 
-	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: true })
+	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: true, description: 'User updated timestamp' })
+	@Field(returingDate, { defaultValue: null, nullable: true, description: 'User updated timestamp' })
+	@IsDate()
 	public updatedAt: Date | null = null;
 
-	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: true })
+	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: true, description: 'User deleted timestamp' })
+	@Field(returingDate, { defaultValue: null, nullable: true, description: 'User deleted timestamp' })
+	@IsDate()
 	public deletedAt: Date | null = null;
 
-	@ApiProperty({ type: String, example: null, default: null, nullable: true, required: true })
+	@ApiProperty({ type: String, example: null, default: null, nullable: true, required: true, description: 'Delete userAgent' })
+	@Field(returingString, { defaultValue: null, nullable: true, description: 'Delete userAgent' })
+	@IsString()
 	private deletedBy: string | null = null;
 
 	constructor(dataValues: any) {
@@ -98,8 +129,12 @@ export default class UserEntity extends AbstractEntity {
 
 	public getId(): number { return this.id; }
 	public setId(id: number): void {
-		if (id > 0)
-			this.id = id;
+		if (id <= 0)
+			return;
+
+		this.id = id;
+		this.preference?.setUserId(id);
+		this.updatedAt = new Date();
 	}
 
 	public getLogin(): { fullName: string | null, email: string | null } {
@@ -159,6 +194,8 @@ export default class UserEntity extends AbstractEntity {
 	}
 }
 
+export const returingUserEntityArray = () => Array<UserEntity>;
+
 export class UserEntityList extends AbstractEntityList<UserEntity> {
 	@ApiProperty({
 		type: UserEntity,
@@ -176,7 +213,9 @@ export class UserEntityList extends AbstractEntityList<UserEntity> {
 		]),
 		default: [],
 		nullable: false,
+		description: 'User list content',
 	})
-	@Type(() => Array<UserEntity>)
+	@Field(returingUserEntityArray, { defaultValue: [], nullable: false, description: 'User list content' })
+	@Type(returingUserEntityArray)
 	public content: UserEntity[] = [];
 }

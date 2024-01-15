@@ -125,6 +125,7 @@ module.exports = {
 		'@common/(.*)': '<rootDir>/src/modules/common/$1',
 		'@app/(.*)': '<rootDir>/src/modules/app/$1',
 		'@api/(.*)': '<rootDir>/src/modules/api/$1',
+		'@graphql/(.*)': '<rootDir>/src/modules/graphql/$1',
 		'@events/(.*)': '<rootDir>/src/modules/events/$1',
 		'@reports/(.*)': '<rootDir>/src/modules/reports/$1',
 	},

@@ -118,12 +118,13 @@ yarn run send-message # send event message to queue
 
 ## Interface
 
-- [localhost:3000](`http://localhost:3000/`) - Node Application  
+- [localhost:3000](`http://localhost:3000/`) - Application Interface (API)  
   * `/` - WebSocket Root Endpoint
-  * `/api` - API Root Endpoint
+  * `/api` - REST Root Endpoint
   	- `/api/docs` - Swagger API Documentation (Page)
   	- `/api/docs.json` - Swagger API Documentation (JSON)
   	- `/api/docs.yml` - Swagger API Documentation (YAML)
+  * `/graphql` - GraphQL Endpoint
 - [localhost:4000](`http://localhost:4000/`) - Mocked Service Page  
 - [localhost:8000](`http://localhost:8000/`) - Nest.js DevTools Page  
 - [localhost:8080](`http://localhost:8080/`) - Adminer Page  
@@ -137,12 +138,10 @@ ___
 ### TO DO
 
 - **Nest.js**
-	- [GraphQL](https://docs.nestjs.com/graphql/quick-start)
 	- [kafka](https://docs.nestjs.com/microservices/kafka)
 	- [Hybrid Application](https://docs.nestjs.com/faq/hybrid-application)
 - **Integrations**
 	- [ ] Webhooks
-	- [GraphQL](#to-do)
 	- [Kafka](#to-do)
 	- [ ] OAuth
 - **Build Versioning**

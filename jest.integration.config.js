@@ -47,6 +47,7 @@ module.exports = {
 		'src/modules/api/controllers/',
 		'src/modules/api/decorators/',
 		'src/modules/api/middlewares/',
+		'src/modules/graphql/',
 		'src/modules/app/domain/',
 		'src/modules/app/operations/',
 		'src/modules/app/repositories/',

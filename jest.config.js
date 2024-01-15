@@ -49,6 +49,7 @@ module.exports = {
 		'src/modules/api/middlewares/',
 		'src/modules/api/pipes/',
 		'src/modules/api/schemas/',
+		'src/modules/graphql/',
 		'src/modules/app/repositories/',
 		'src/modules/app/services/',
 		'src/modules/events/',

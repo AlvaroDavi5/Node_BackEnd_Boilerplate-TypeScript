@@ -1,13 +1,16 @@
 import dotenv from 'dotenv';
 import compression from 'compression';
+import { GraphQLFormattedError } from 'graphql';
 import {
 	INestApplication, Module, NestModule,
 	MiddlewareConsumer, ValidationPipe
 } from '@nestjs/common';
-import { IoAdapter } from '@nestjs/platform-socket.io';
 import { ConfigModule, ConfigService } from '@nestjs/config';
-import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ScheduleModule } from '@nestjs/schedule';
+import { EventEmitterModule } from '@nestjs/event-emitter';
+import { IoAdapter } from '@nestjs/platform-socket.io';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import configs, { ConfigsInterface } from '@core/configs/configs.config';
@@ -55,6 +58,7 @@ import JwtDecodeMiddleware from '@api/middlewares/JwtDecode.middleware';
 import DefaultController from '@api/controllers/Default.controller';
 import UserController from '@api/controllers/User.controller';
 import SubscriptionsController from '@api/controllers/Subscriptions.controller';
+import GraphQlModule from '@graphql/graphql.module';
 
 
 const appConfigs = configs();
@@ -71,6 +75,26 @@ const requestRateConstants = new RequestRateConstants();
 			maxListeners: 10,
 			verboseMemoryLeak: true,
 		}),
+		GraphQLModule.forRoot<ApolloDriverConfig>({
+			driver: ApolloDriver,
+			playground: false,
+			autoSchemaFile: false,
+			formatError: (formattedError, error: any) => {
+				const extensions = formattedError.extensions as any;
+
+				const graphQLFormattedError: GraphQLFormattedError = {
+					message: formattedError.message ?? error?.message,
+					path: formattedError.path ?? error?.path,
+					extensions: {
+						code: extensions?.code,
+						originalError: extensions?.originalError,
+					},
+				};
+
+				return graphQLFormattedError;
+			},
+			include: [],
+		}),
 		ThrottlerModule.forRoot([
 			requestRateConstants.short,
 			requestRateConstants.medium,
@@ -83,9 +107,9 @@ const requestRateConstants = new RequestRateConstants();
 						logger: console,
 						configs: appConfigs,
 					}).getClient(),
-					name: appConfigs.integration.aws.sqs.eventsQueue.queueName || 'eventsQueue.fifo',
-					queueUrl: appConfigs.integration.aws.sqs.eventsQueue.queueUrl || 'http://localhost:4566/000000000000/eventsQueue.fifo',
-					region: appConfigs.integration.aws.credentials.region || 'us-east-1',
+					name: appConfigs.integration.aws.sqs.eventsQueue.queueName,
+					queueUrl: appConfigs.integration.aws.sqs.eventsQueue.queueUrl,
+					region: appConfigs.integration.aws.credentials.region,
 					batchSize: 10,
 					shouldDeleteMessages: false,
 					handleMessageTimeout: 1000,
@@ -95,6 +119,7 @@ const requestRateConstants = new RequestRateConstants();
 			],
 			producers: [],
 		}),
+		GraphQlModule,
 	],
 	controllers: [
 		DefaultController,
@@ -160,9 +185,10 @@ export async function startNestApplication(nestApp: INestApplication<any>) {
 
 	nestApp.useGlobalPipes(
 		new ValidationPipe({
+			transform: true,
 			whitelist: true,
 			forbidNonWhitelisted: true,
-			transform: true,
+			disableErrorMessages: false,
 		}),
 	);
 	nestApp.enableShutdownHooks();
@@ -176,8 +202,8 @@ export async function startNestApplication(nestApp: INestApplication<any>) {
 	});
 	nestApp.useWebSocketAdapter(new IoAdapter(nestApp)); // WsAdapter
 
-	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application'] | undefined>('application');
-	await nestApp.listen(Number(appConfigs?.port)).catch((error: ErrorInterface | Error) => {
+	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application']>('application');
+	await nestApp.listen(Number(appConfigs?.appPort)).catch((error: ErrorInterface | Error) => {
 		const knownExceptions = Object.values(ExceptionsEnum).map((exception) => exception.toString());
 
 		if (error?.name && !knownExceptions.includes(error.name)) {

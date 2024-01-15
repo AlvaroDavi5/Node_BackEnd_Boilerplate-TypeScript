@@ -56,6 +56,23 @@ describe('Infra :: Errors :: Exceptions', () => {
 			expect(exception.getResponse()).toEqual({ error: 'Unauthorized', message: 'New Unauthorized Exception', statusCode: 401 });
 		});
 
+		test('Should return a TooManyRequests exception', () => {
+			const exception = exceptions.manyRequests({
+				message: 'New TooManyRequests Exception',
+				stack: 'error1, error2, error3',
+				details: {
+					info: 'A error occurred',
+				},
+			});
+
+			expect(exception.name).toBe('manyRequests');
+			expect(exception.message).toBe('New TooManyRequests Exception');
+			expect(exception.stack).not.toBeNull();
+			expect(exception.cause).toEqual({ info: 'A error occurred' });
+			expect(exception.getStatus()).toBe(429);
+			expect(exception.getResponse()).toEqual('New TooManyRequests Exception');
+		});
+
 		test('Should return a Conflict exception', () => {
 			const exception = exceptions.conflict({
 				message: 'New Conflict Exception',

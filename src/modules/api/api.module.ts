@@ -1,6 +1,8 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import { ThrottlerModule } from '@nestjs/throttler';
 import HttpConstants from '@api/constants/Http.constants';
 import ContentTypeConstants from './constants/ContentType.constants';
+import RequestRateConstants from './constants/RequestRate.constants';
 import LoggerMiddleware from '@api/middlewares/Logger.middleware';
 import JwtDecodeMiddleware from '@api/middlewares/JwtDecode.middleware';
 import DefaultController from '@api/controllers/Default.controller';
@@ -8,8 +10,16 @@ import UserController from '@api/controllers/User.controller';
 import SubscriptionsController from '@api/controllers/Subscriptions.controller';
 
 
+const requestRateConstants = new RequestRateConstants();
+
 @Module({
-	imports: [],
+	imports: [
+		ThrottlerModule.forRoot([
+			requestRateConstants.short,
+			requestRateConstants.medium,
+			requestRateConstants.long,
+		]),
+	],
 	controllers: [
 		DefaultController,
 		UserController,
@@ -18,6 +28,7 @@ import SubscriptionsController from '@api/controllers/Subscriptions.controller';
 	providers: [
 		HttpConstants,
 		ContentTypeConstants,
+		RequestRateConstants,
 	],
 	exports: [],
 })

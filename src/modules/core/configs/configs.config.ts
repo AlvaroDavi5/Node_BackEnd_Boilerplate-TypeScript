@@ -9,7 +9,8 @@ export interface ConfigsInterface {
 	application: {
 		name: string, // app name
 		environment: string, // app env
-		port: string, // app port
+		appPort: number, // app port
+		nestDevToolsPort: number, // dev tools port
 		url: string, // app url
 		socketEnv: string, // enable websocket
 		stackErrorVisible: string, // enable app error stack
@@ -111,7 +112,6 @@ export interface ConfigsInterface {
 			// * Storage Service
 			s3: {
 				bucketName: string,
-				bucketUrl: string,
 				endpoint: string,
 				filesExpiration: number, // files expiration in seconds
 				apiVersion: string,
@@ -136,7 +136,8 @@ export default (): ConfigsInterface => ({
 	application: {
 		name: process.env.APP_NAME ?? 'Node Boilerplate',
 		environment: process.env.NODE_ENV ?? 'dev',
-		port: process.env.APP_PORT ?? '3000',
+		appPort: parseInt(process.env.APP_PORT ?? '3000'),
+		nestDevToolsPort: parseInt(process.env.NESTDEV_PORT ?? '8000'),
 		url: process.env.APP_URL ?? 'http://localhost:3000/',
 		socketEnv: process.env.SOCKET_ENV ?? 'enabled',
 		stackErrorVisible: process.env.SHOW_ERROR_STACK ?? 'true',
@@ -230,7 +231,6 @@ export default (): ConfigsInterface => ({
 			},
 			s3: {
 				bucketName: process.env.AWS_S3_BUCKET_NAME ?? 'defaultbucket',
-				bucketUrl: process.env.LOCALSTACK_URL ?? 'http://Cloud_LocalStack:4566',
 				filesExpiration: (5 * 60),
 				endpoint: process.env.AWS_ENDPOINT_URL ?? 'http://Cloud_LocalStack:4566/',
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',

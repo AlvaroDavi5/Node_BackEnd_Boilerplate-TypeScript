@@ -2,7 +2,11 @@ import { Module, Global } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { GraphQLModule } from '@nestjs/graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
+import { GraphQLFormattedError } from 'graphql';
+import { join } from 'path';
 import configs from '@core/configs/configs.config';
 import LifecycleService from '@core/infra/start/Lifecycle.service';
 import Exceptions from '@core/infra/errors/Exceptions';
@@ -22,6 +26,7 @@ import CommonModule from '@common/common.module';
 import AppModule from '@app/app.module';
 import EventsModule from '@events/events.module';
 import ApiModule from '@api/api.module';
+import GraphQlModule from '@graphql/graphql.module';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 
 
@@ -39,14 +44,35 @@ const appConfigs = configs();
 			maxListeners: 10,
 			verboseMemoryLeak: true,
 		}),
+		GraphQLModule.forRoot<ApolloDriverConfig>({
+			driver: ApolloDriver,
+			playground: appConfigs.application.environment === EnvironmentsEnum.DEVELOPMENT,
+			autoSchemaFile: join(process.cwd(), 'src/modules/graphql/schemas/schema.gql'),
+			formatError: (formattedError, error: any) => {
+				const extensions = formattedError.extensions as any;
+
+				const graphQLFormattedError: GraphQLFormattedError = {
+					message: formattedError.message ?? error?.message,
+					path: formattedError.path ?? error?.path,
+					extensions: {
+						code: extensions?.code,
+						originalError: extensions?.originalError,
+					},
+				};
+
+				return graphQLFormattedError;
+			},
+			include: [],
+		}),
 		DevtoolsModule.register({
 			http: appConfigs.application.environment === EnvironmentsEnum.DEVELOPMENT,
-			port: 8000,
+			port: appConfigs.application.nestDevToolsPort,
 		}),
 		CommonModule,
 		AppModule,
 		EventsModule,
 		ApiModule,
+		GraphQlModule,
 	],
 	controllers: [],
 	providers: [

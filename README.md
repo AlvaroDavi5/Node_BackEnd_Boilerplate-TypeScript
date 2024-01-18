@@ -118,17 +118,19 @@ yarn run send-message # send event message to queue
 
 ## Interface
 
-- [localhost:3000](`http://localhost:3000/`) - Node Application  
+- [localhost:3000](`http://localhost:3000/`) - Application Interface (API)  
   * `/` - WebSocket Root Endpoint
-  * `/api` - API Root Endpoint
+  * `/api` - REST Root Endpoint
   	- `/api/docs` - Swagger API Documentation (Page)
   	- `/api/docs.json` - Swagger API Documentation (JSON)
   	- `/api/docs.yml` - Swagger API Documentation (YAML)
+  * `/graphql` - GraphQL Endpoint
 - [localhost:4000](`http://localhost:4000/`) - Mocked Service Page  
 - [localhost:8000](`http://localhost:8000/`) - Nest.js DevTools Page  
 - [localhost:8080](`http://localhost:8080/`) - Adminer Page  
 - [localhost:8081](`http://localhost:8081/`) - Mongo Express Page  
 - [localhost:8082](`http://localhost:8082/`) - Redis Commander Page  
+- [localhost:8083](`http://localhost:8083/`) - Jenkins Page  
 - [localhost:9000](`http://localhost:9000/`) - SonarQube Page  
 
 ___
@@ -136,29 +138,30 @@ ___
 ### TO DO
 
 - **Nest.js**
-	- [API Versioning](https://docs.nestjs.com/techniques/versioning)
-	- [Authorization](https://docs.nestjs.com/security/authorization)
-	- [Rate Limiting](https://docs.nestjs.com/security/rate-limiting)
-	- [GraphQL](https://docs.nestjs.com/graphql/quick-start)
-	- [WebSockets Pipes](https://docs.nestjs.com/websockets/pipes)
 	- [kafka](https://docs.nestjs.com/microservices/kafka)
-	- [openAPI](https://docs.nestjs.com/openapi/introduction)
 	- [Hybrid Application](https://docs.nestjs.com/faq/hybrid-application)
+- **Integrations**
+	- [ ] Webhooks
+	- [Kafka](#to-do)
+	- [ ] OAuth
 - **Build Versioning**
 	- [ ] DockerHub
 	- [ ] Container Images
-- **Security**
-	- [ ] Auth InfoSec
-	- [ ] OAuth
-- **Integrations**
-	- [ ] Webhooks
-	- [GraphQL](#to-do)
+- **CI/CD**
+	- [ ] Jenkins
+	- [x] GitHub Actions
+- **Deployment**
+	- [ ] Heroku
+	- [x] AWS
+- **Clustering**
+	- [ ] Clusters
+		- [ ] Kubernetes
+	- [ ] Load Balancing
+- **Monitoring**
+	- [ ] Log Streams
+		- [ ] Rancher
+	- [ ] Grafana
 - **Tests**
-	* _Unit_
-		- Modules
-			- Core
-				- Infra
-					- [ ] Security
 	* _Integration_
 		- [ ] Configs
 		- Modules
@@ -167,11 +170,13 @@ ___
 					- [ ] Cron Tasks
 					- [ ] Logging
 			- API
+				- [ ] Guards
 				- [ ] Pipes
 				- [ ] Schemas
 			- Events
 				- [ ] Queue Handler
 					- [ ] Handlers Schemas
+				- [ ] Websocket Guards
 				- [ ] Websocket Server
 				- [ ] Websocket Client
 	* _End-to-End_
@@ -196,21 +201,4 @@ ___
 				- [ ] Websocket Gateway
 			- Reports
 				- [ ] Services
-- **CI/CD**
-	- [x] GitHub Actions
-	- [ ] Jenkins
-- **Deployment**
-	- [ ] Heroku
-	- [ ] AWS
-- **Clustering**
-	- [ ] Kubernetes
-	- [ ] Clusters
-	- [ ] Load Balancing
-- **Monitoring**
-	- [ ] Rancher
-	- [ ] Grafana
-	- [ ] Log Streams
-- **AWS Integration**
-	- [ ] Lambda
-- [ ] Kafka Integration
 - [ ] Manual SQL

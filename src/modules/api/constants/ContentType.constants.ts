@@ -62,4 +62,11 @@ export default class ContentTypeConstants {
 		OPENXMLFORMATS_OFFICEDOCUMENT_WORDPROCESSINGML_DOCUMENT: 'application/vnd.openxmlformats-officedocument.wordprocessingml.document',
 		MOZILLA_XUL_XML: 'application/vnd.mozilla.xul+xml',
 	};
+
+	public readonly multipart = {
+		MIXED: 'multipart/mixed',
+		ALTERNATIVE: 'multipart/alternative',
+		RELATED: 'multipart/related',
+		FORM_DATA: 'multipart/form-data',
+	};
 }

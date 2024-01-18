@@ -34,7 +34,7 @@ export default class SyncCronJob {
 	? day of week (0 - 7)
 	*/
 	@Cron('0 */5 * * * *', {
-		// // every 5 minutes
+		// // first second every 5 minutes
 		name: CronJobsEnum.SyncCron,
 		timeZone: 'America/Sao_Paulo',
 		disabled: false,
@@ -47,11 +47,13 @@ export default class SyncCronJob {
 	public startCron(): void {
 		const job = this.schedulerRegistry.getCronJob(this.cronName);
 		job.start();
+		this.logger.info(`Started ${this.name}`);
 	}
 
 	public stopCron(): void {
 		const job = this.schedulerRegistry.getCronJob(this.cronName);
 		job.stop();
+		this.logger.warn(`Stopped ${this.name}`);
 	}
 
 	public getLastJobDate(): Date {

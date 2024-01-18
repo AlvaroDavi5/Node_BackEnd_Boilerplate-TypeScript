@@ -28,9 +28,10 @@ async function startNestApplication() {
 	});
 	nestApp.useGlobalPipes(
 		new ValidationPipe({
+			transform: true,
 			whitelist: true,
 			forbidNonWhitelisted: true,
-			transform: true,
+			disableErrorMessages: false,
 		}),
 	);
 	nestApp.enableShutdownHooks();
@@ -72,8 +73,8 @@ async function startNestApplication() {
 		yamlDocumentUrl: '/api/docs.yml',
 	});
 
-	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application'] | undefined>('application');
-	await nestApp.listen(Number(appConfigs?.port)).catch((error: ErrorInterface | Error) => {
+	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application']>('application');
+	await nestApp.listen(Number(appConfigs?.appPort)).catch((error: ErrorInterface | Error) => {
 		const knownExceptions = Object.values(ExceptionsEnum).map((exception) => exception.toString());
 
 		if (error?.name && !knownExceptions.includes(error.name)) {

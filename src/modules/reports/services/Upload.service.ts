@@ -32,7 +32,7 @@ export default class UploadService {
 		return tag;
 	}
 
-	public async getPresignedUrl(fileName: string): Promise<string> {
-		return await this.s3Client.getFileLink(this.uploadBucket, fileName);
+	public async getFileLink(fileName: string): Promise<string> {
+		return await this.s3Client.getFileSignedUrl(this.uploadBucket, fileName);
 	}
 }

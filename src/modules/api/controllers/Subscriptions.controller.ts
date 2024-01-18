@@ -1,16 +1,18 @@
-import { Controller, Get, OnModuleInit } from '@nestjs/common';
+import { Controller, Get, OnModuleInit, UseGuards } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
-import { ApiOperation, ApiTags, ApiOkResponse, ApiProduces } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiOkResponse, ApiProduces, ApiConsumes } from '@nestjs/swagger';
 import { Logger } from 'winston';
-import { Document, WithId } from 'mongodb';
+import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
+import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import SubscriptionService from '@app/services/Subscription.service';
-import SubscriptionEntity from '@app/domain/entities/Subscription.entity';
+import SubscriptionEntity, { SubscriptionInterface } from '@app/domain/entities/Subscription.entity';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 
 
 @ApiTags('Subscriptions')
 @Controller('/subscriptions')
+@UseGuards(CustomThrottlerGuard)
 @authSwaggerDecorator()
 export default class SubscriptionsController implements OnModuleInit {
 	private subscriptionService!: SubscriptionService;
@@ -30,7 +32,6 @@ export default class SubscriptionsController implements OnModuleInit {
 	@ApiOperation({ summary: 'List Subscriptions' })
 	@Get()
 	@ApiOkResponse({
-		type: Array<SubscriptionEntity>,
 		schema: {
 			example: [
 				new SubscriptionEntity({
@@ -44,15 +45,20 @@ export default class SubscriptionsController implements OnModuleInit {
 					newConnections: true,
 				}),
 			],
+			default: [],
 		},
 	})
+	@exceptionsResponseDecorator()
+	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async listSubscriptions(
-	): Promise<WithId<Document>[] | unknown> {
+	): Promise<SubscriptionInterface[]> {
 		try {
 			const result = await this.subscriptionService.list();
 
-			return result;
+			return result.map((subscription: SubscriptionEntity) => {
+				return subscription.getAttributes();
+			});
 		} catch (error) {
 			this.logger.error(error);
 			throw error;

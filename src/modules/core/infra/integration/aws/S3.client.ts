@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ReadStream, writeFile } from 'fs';
+import { writeFile } from 'fs';
 import { Readable } from 'stream';
 import { Logger } from 'winston';
 import {
@@ -186,7 +186,7 @@ export default class S3Client {
 		return contentLength;
 	}
 
-	public async getFileLink(bucketName: string, objectKey: string): Promise<string> {
+	public async getFileSignedUrl(bucketName: string, objectKey: string): Promise<string> {
 		let link = '';
 
 		try {

@@ -116,8 +116,10 @@ services:
       - AWS_DEFAULT_REGION=us-east-1
       - EDGE_PORT=4566
       - SERVICES=sqs,sns,s3,cognito
+      - SKIP_SSL_CERT_DOWNLOAD=1
     ports:
       - 4566:4566
+      - 4510-4559:4510-4559
     networks:
       - default_network
     volumes:
@@ -145,3 +147,5 @@ networks:
 volumes:
   db_volume:
     name: db_volume
+  ci_volume:
+    name: ci_volume

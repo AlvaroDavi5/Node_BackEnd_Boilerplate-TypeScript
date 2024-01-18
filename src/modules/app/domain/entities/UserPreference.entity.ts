@@ -1,6 +1,9 @@
+import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
+import { IsNumber, IsString, IsDate } from 'class-validator';
 import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity';
 import { ThemesEnum } from '../enums/themes.enum';
+import { returingNumber, returingString, returingDate } from 'src/types/returnTypeFunc';
 
 
 export interface UserPreferenceInterface {
@@ -13,26 +16,41 @@ export interface UserPreferenceInterface {
 	deletedAt?: Date,
 }
 
+@ObjectType()
 export default class UserPreferenceEntity extends AbstractEntity {
-	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, required: false })
+	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, required: false, description: 'Database register ID' })
+	@Field(returingNumber, { defaultValue: 0, nullable: false, description: 'Database register ID' })
+	@IsNumber()
 	private id = 0;
 
-	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, required: true })
+	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, required: true, description: 'User ID' })
+	@Field(returingNumber, { defaultValue: 0, nullable: false, description: 'User ID' })
+	@IsNumber()
 	private userId = 0;
 
-	@ApiProperty({ type: String, example: './image.png', default: null, nullable: true, required: true })
+	@ApiProperty({ type: String, example: './image.png', default: null, nullable: true, required: true, description: 'User profile image path' })
+	@Field(returingString, { defaultValue: null, nullable: true, description: 'User profile image path' })
+	@IsString()
 	private imagePath: string | null = null;
 
-	@ApiProperty({ type: String, example: ThemesEnum.DEFAULT, default: null, nullable: true, required: true })
+	@ApiProperty({ type: String, example: ThemesEnum.DEFAULT, default: null, nullable: true, required: true, description: 'User default theme' })
+	@Field(returingString, { defaultValue: null, nullable: true, description: 'User default theme' })
+	@IsString()
 	public defaultTheme: ThemesEnum | null = null;
 
-	@ApiProperty({ type: Date, example: (new Date()), default: (new Date()), nullable: false, required: false })
+	@ApiProperty({ type: Date, example: (new Date()), default: (new Date()), nullable: false, required: false, description: 'User creation timestamp' })
+	@Field(returingDate, { defaultValue: (new Date()), nullable: false, description: 'User creation timestamp' })
+	@IsDate()
 	public readonly createdAt: Date;
 
-	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: true })
+	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: true, description: 'User updated timestamp' })
+	@Field(returingDate, { defaultValue: null, nullable: true, description: 'User updated timestamp' })
+	@IsDate()
 	public updatedAt: Date | null = null;
 
-	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: true })
+	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: true, description: 'User deleted timestamp' })
+	@Field(returingDate, { defaultValue: null, nullable: true, description: 'User deleted timestamp' })
+	@IsDate()
 	public deletedAt: Date | null = null;
 
 	constructor(dataValues: any) {
@@ -60,20 +78,27 @@ export default class UserPreferenceEntity extends AbstractEntity {
 
 	public getId(): number { return this.id; }
 	public setId(id: number): void {
-		if (id > 0)
-			this.id = id;
+		if (id <= 0)
+			return;
+
+		this.id = id;
+		this.updatedAt = new Date();
 	}
 
 	public getUserId(): number { return this.userId; }
 	public setUserId(userId: number): void {
-		if (userId > 0)
-			this.userId = userId;
+		if (userId <= 0)
+			return;
+
+		this.userId = userId;
+		this.updatedAt = new Date();
 	}
 
 	public getDefaultTheme(): ThemesEnum | null { return this.defaultTheme; }
 	public setDefaultTheme(theme: string): void {
 		if (!Object.values(ThemesEnum).includes(theme as any))
 			return;
+
 		this.defaultTheme = theme as ThemesEnum;
 		this.updatedAt = new Date();
 	}

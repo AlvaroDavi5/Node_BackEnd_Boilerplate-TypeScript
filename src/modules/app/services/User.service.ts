@@ -87,7 +87,7 @@ export default class UserService {
 	public validatePassword(entity: UserEntity, passwordToValidate: string): void {
 		const userPassword = entity.getPassword();
 		if (!userPassword?.length)
-			throw this.exceptions.business({
+			throw this.exceptions.unauthorized({
 				message: 'Invalid password',
 			});
 

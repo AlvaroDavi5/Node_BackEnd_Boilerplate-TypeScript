@@ -2,7 +2,7 @@ import { Options, BuildOptions, Dialect } from 'sequelize/types';
 import configs from '@core/configs/configs.config';
 
 
-function getDialect(dialect: string | undefined): Dialect {
+function getDialect(dialect: string): Dialect {
 	switch (dialect?.toLowerCase()) {
 	case 'mysql':
 		return 'mysql';
@@ -43,8 +43,8 @@ export interface DatabaseConfigInterface {
 		idle?: number,
 	},
 	logging?: boolean | ((msg: string) => void),
-	options?: Options | undefined,
-	buildOptions?: BuildOptions | undefined,
+	options?: Options,
+	buildOptions?: BuildOptions,
 }
 
 const { application: app, database: db } = configs();

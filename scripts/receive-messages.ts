@@ -23,6 +23,11 @@ function createSocketClient() {
 		logger: console,
 		configs: configs(),
 	});
+
+	webSocketClient.listen(WebSocketEventsEnum.EMIT, (msg: unknown, ...args: unknown[]) => {
+		const message = formatMessageAfterReceiveHelper(msg);
+		console.info(message);
+	});
 	webSocketClient.send(WebSocketEventsEnum.RECONNECT, {
 		dataValues: {
 			clientId: 'localDev#1',
@@ -30,10 +35,6 @@ function createSocketClient() {
 		listen: {
 			newConnections: true,
 		},
-	});
-	webSocketClient.listen(WebSocketEventsEnum.EMIT, (...args: unknown[]) => {
-		const msg = formatMessageAfterReceiveHelper(args[0]);
-		console.info(msg);
 	});
 }
 

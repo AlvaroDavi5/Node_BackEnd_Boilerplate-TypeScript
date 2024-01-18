@@ -1,11 +1,10 @@
-import { io, Socket } from 'socket.io-client';
-import { Logger } from 'winston';
+import { io, Socket as ClientSocket } from 'socket.io-client';
 import { ConfigsInterface } from '@core/configs/configs.config';
 
 
 export default class WebSocketClient {
-	private readonly clientSocket!: Socket;
-	private readonly logger: Logger;
+	private readonly clientSocket!: ClientSocket;
+	private readonly logger: Console;
 
 	constructor({
 		configs,
@@ -21,7 +20,7 @@ export default class WebSocketClient {
 				autoConnect: true,
 				closeOnBeforeunload: true,
 				reconnectionAttempts: 3,
-				timeout: 1000,
+				timeout: (1 * 1000),
 				ackTimeout: (2 * 1000),
 			});
 		}

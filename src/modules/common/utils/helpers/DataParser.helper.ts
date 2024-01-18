@@ -12,7 +12,7 @@ export default class DataParserHelper {
 		@Inject(forwardRef(() => LoggerGenerator)) // ? resolve circular dependency
 		private readonly loggerGenerator: wrapperType<LoggerGenerator>, // * wrapperType to transpile in SWC
 	) {
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerGenerator.getLogger(true);
 	}
 
 	public toString(data: unknown): string | null {
@@ -49,7 +49,7 @@ export default class DataParserHelper {
 		try {
 			return JSON.parse(data);
 		} catch (error) {
-			this.logger.warn('String:Object parse error');
+			this.logger.warn('String->Object parse error');
 			return null;
 		}
 	}

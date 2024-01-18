@@ -31,14 +31,15 @@ describe('Modules :: App :: Domain :: Entities :: UserEntities', () => {
 			deletedAt: currentDate,
 		});
 		otherUserEntity.setPreference(new UserPreferenceEntity({
-			userId: userEntity.getId(),
+			userId: otherUserEntity.getId(),
 			createdAt: currentDate,
 			updatedAt: currentDate,
 			deletedAt: currentDate,
 		}));
 
 		test('Validate fields', () => {
-			expect(userEntity.getId()).toBe(0);
+			userEntity.setId(1);
+			expect(userEntity.getId()).toBe(1);
 			userEntity.setDocInfos('12312312312', 'CPF', 'ES');
 			expect(userEntity.getPhone()).toBe('+5527999999999');
 			userEntity.setLogin('user.test@nomail.test', 'Test User');
@@ -50,13 +51,17 @@ describe('Modules :: App :: Domain :: Entities :: UserEntities', () => {
 			userEntity.setDeletedBy('test');
 			expect(userEntity.getDeletedBy()).toBe('test');
 			expect(userEntity.deletedAt).not.toBeNull();
-			expect(userEntity.getPreference()?.getAttributes().userId).toBe(userEntity.getAttributes().id);
+			expect(userEntity.getPreference()?.getUserId()).toBe(userEntity.getId());
 			expect(userEntity.getPreference()?.getId()).toBe(0);
 			userEntity.getPreference()?.setImagePath('./image.png');
 			expect(userEntity.getPreference()?.getImagePath()).toBe('./image.png');
-			expect(userEntity.getPreference()?.getDefaultTheme()).toBe('DEFAULT');
+			userEntity.getPreference()?.setDefaultTheme('DARK');
+			expect(userEntity.getPreference()?.getDefaultTheme()).toBe('DARK');
 			expect(userEntity.getPreference()?.createdAt).not.toBeNull();
 
+			expect(otherUserEntity.getId()).toBe(0);
+			otherUserEntity.getPreference()?.setDefaultTheme('INVALID');
+			expect(otherUserEntity.getPreference()?.getDefaultTheme()).toBeNull();
 			expect(otherUserEntity.createdAt).not.toBeNull();
 			expect(otherUserEntity.updatedAt).not.toBeNull();
 			expect(otherUserEntity.getDeletedBy()).toBeNull();
@@ -68,7 +73,7 @@ describe('Modules :: App :: Domain :: Entities :: UserEntities', () => {
 
 		test('Validate all attributes', () => {
 			expect(userEntity.getAttributes()).toMatchObject({
-				id: 0,
+				id: 1,
 				fullName: 'Test User',
 				email: 'user.test@nomail.test',
 				docType: 'CPF',
@@ -78,8 +83,8 @@ describe('Modules :: App :: Domain :: Entities :: UserEntities', () => {
 				fu: 'ES',
 				preference: {
 					id: 0,
-					userId: 0,
-					defaultTheme: 'DEFAULT',
+					userId: 1,
+					defaultTheme: 'DARK',
 					imagePath: './image.png',
 					deletedAt: undefined,
 				},
@@ -88,8 +93,8 @@ describe('Modules :: App :: Domain :: Entities :: UserEntities', () => {
 
 			expect(userEntity.getPreference()?.getAttributes()).toMatchObject({
 				id: 0,
-				userId: 0,
-				defaultTheme: 'DEFAULT',
+				userId: 1,
+				defaultTheme: 'DARK',
 				imagePath: './image.png',
 				deletedAt: undefined,
 			});

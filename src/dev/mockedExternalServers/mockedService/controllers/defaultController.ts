@@ -14,7 +14,7 @@ export default {
 		toggle++;
 		if (toggle >= 3) {
 			toggle = 0;
-			return res.status(500).send();
+			return res.status(500).send('service unavailable');
 		}
 
 		const data = {

@@ -3,9 +3,9 @@ name: Development
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ develop ]
   pull_request:
-    branches: [ dev ]
+    branches: [ develop ]
   schedule:
     - cron: '0 0 */3 * *' # every 3 days
 

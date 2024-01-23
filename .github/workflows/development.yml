@@ -79,11 +79,11 @@ jobs:
       - name: Checking Dependencies Security
         run: yarn run security-check
 
-      - name: Testing Modules
-        run: yarn run test:unit
-
       - name: Checking Type
         run: yarn run typecheck
 
       - name: Building
         run: yarn run build
+
+      - name: Testing Modules
+        run: yarn run test:unit

@@ -1,0 +1,7 @@
+[default]
+region = us-east-1
+output = json
+
+[profile corporative]
+region = us-east-1
+output = table

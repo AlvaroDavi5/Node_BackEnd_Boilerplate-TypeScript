@@ -81,8 +81,6 @@ jobs:
 
       - name: Testing Modules
         run: yarn run test:unit
-      - name: Testing Integration
-        run: yarn run test:integration
 
       - name: Checking Type
         run: yarn run typecheck

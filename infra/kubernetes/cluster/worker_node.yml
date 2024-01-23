@@ -1,0 +1,13 @@
+apiVersion: v1
+
+kind: ConfigMap
+metadata:
+  name: kubeadm-config
+  namespace: kube-system
+data:
+  kubeadm.conf: |
+    apiServer:
+      certSANs:
+      - "worker-node"
+    networking:
+      dnsDomain: "cluster.local"

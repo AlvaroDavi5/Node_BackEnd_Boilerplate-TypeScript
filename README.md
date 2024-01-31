@@ -138,9 +138,9 @@ ___
 ### TO DO
 
 - **Clustering**
-	- [ ] Clusters
-		- [ ] Kubernetes
-			- [ ] Container Images
+	- [x] Clusters
+		- [x] Kubernetes
+			- [x] Container Images
 			- [ ] Load Balancing
 - **CI/CD**
 	- [ ] Jenkins

@@ -215,7 +215,7 @@ export default (): ConfigsInterface => ({
 			sqs: {
 				eventsQueue: {
 					queueName: process.env.AWS_SQS_EVENTS_QUEUE_NAME ?? 'eventsQueue.fifo',
-					queueUrl: process.env.AWS_SQS_EVENTS_QUEUE_URL ?? 'http://Cloud_LocalStack:4566/000000000000/eventsQueue.fifo',
+					queueUrl: process.env.AWS_SQS_EVENTS_QUEUE_URL ?? 'http://sqs.us-east-1.Cloud_LocalStack.localstack.cloud:4566/000000000000/eventsQueue.fifo',
 				},
 				endpoint: process.env.AWS_ENDPOINT_URL ?? 'http://Cloud_LocalStack:4566/',
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',

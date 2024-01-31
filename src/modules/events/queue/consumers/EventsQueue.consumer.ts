@@ -11,8 +11,7 @@ import configs from '@core/configs/configs.config';
 
 
 const appConfigs = configs();
-const eventsQueueName = appConfigs.integration.aws.sqs.eventsQueue.queueName;
-const eventsQueueUrl = appConfigs.integration.aws.sqs.eventsQueue.queueUrl;
+const { queueName: eventsQueueName, queueUrl: eventsQueueUrl } = appConfigs.integration.aws.sqs.eventsQueue;
 
 @Injectable()
 export default class EventsQueueConsumer {

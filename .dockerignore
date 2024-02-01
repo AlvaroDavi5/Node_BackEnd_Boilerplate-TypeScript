@@ -1,22 +1,75 @@
 
-.git
-/node_modules
-/build
+# --------- ignore ---------
+
+# git and git hooks
+.git/
+.github/
+.husky/
+.gitignore
+# dependencies
+node_modules/
+package-lock.json
+.pnp/
+.pnp.js
+# production
+build/
+dist/
+# debug and logs
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-/logs/access.log*
-/coverage
+lerna-debug.log*
+**/npm-debug.log
+logs/
+*.log
+# testing
+coverage/
+tests/database.sqlite/
+# sonar
+test-report.xml
+.scannerwork/
+sonar-project.properties
+# vercel
+.vercel
+# misc
 .DS_Store
 *.pem
+# dotenv files
+.env*
+envs/
+# files extensions
+*.docx
+*.xlsx
+# test files
 *.test.js.snap
 **/__snapshots__
-/.docker/
-/.vscode/*
-TODO*
-.idea
-docs
+# Docker files
+.docker/
+.dockerignore
+Dockerfile
+docker-compose.yml
+# VS Code, ASDF and editor settings
+.vscode/
+.tool-versions
+.editorconfig
+commitlint.config.js
+.eslintignore
+.eslintrc.json
+.prettierrc
+# infra and docs
+/docs
+/infra
+/envs
+CHANGELOG.md
 README.md
-LICENSE.txt
+# others
+/temp
+Procfile
+Jenkinsfile
+TODO*.txt
+*.tsbuildinfo
+.idea
+
+# --------- except ---------
 
 !docs/swagger.yaml

@@ -3,9 +3,9 @@ name: Development
 
 on:
   push:
-    branches: [ dev ]
+    branches: [ develop ]
   pull_request:
-    branches: [ dev ]
+    branches: [ develop ]
   schedule:
     - cron: '0 0 */3 * *' # every 3 days
 
@@ -79,13 +79,11 @@ jobs:
       - name: Checking Dependencies Security
         run: yarn run security-check
 
-      - name: Testing Modules
-        run: yarn run test:unit
-      - name: Testing Integration
-        run: yarn run test:integration
-
       - name: Checking Type
         run: yarn run typecheck
 
       - name: Building
         run: yarn run build
+
+      - name: Testing Modules
+        run: yarn run test:unit

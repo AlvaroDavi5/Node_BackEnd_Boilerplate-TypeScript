@@ -40,18 +40,18 @@ jobs:
       - name: Checking Dependencies Security
         run: yarn run security-check
 
+      - name: Checking Type
+        run: yarn run typecheck
+
+      - name: Building
+        run: yarn run build
+
       - name: Testing Modules
         run: yarn run test:unit
       - name: Testing Integration
         run: yarn run test:integration
       # - name: Testing API
       #   run: yarn run test:e2e
-
-      - name: Checking Type
-        run: yarn run typecheck
-
-      - name: Building
-        run: yarn run build
 
   semantic_release:
     name: Semantic Versioning Release

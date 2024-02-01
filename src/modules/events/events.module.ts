@@ -10,6 +10,8 @@ import SqsClient from '@dev/localstack/queues/SqsClient';
 
 
 const appConfigs = configs();
+const { region: awsRegion } = appConfigs.integration.aws.credentials;
+const { queueName: eventsQueueName, queueUrl: eventsQueueUrl } = appConfigs.integration.aws.sqs.eventsQueue;
 
 @Module({
 	imports: [
@@ -20,9 +22,9 @@ const appConfigs = configs();
 						logger: console,
 						configs: appConfigs,
 					}).getClient(),
-					name: appConfigs.integration.aws.sqs.eventsQueue.queueName,
-					queueUrl: appConfigs.integration.aws.sqs.eventsQueue.queueUrl,
-					region: appConfigs.integration.aws.credentials.region,
+					name: eventsQueueName,
+					queueUrl: eventsQueueUrl,
+					region: awsRegion,
 					batchSize: 10,
 					shouldDeleteMessages: false,
 					handleMessageTimeout: 1000,

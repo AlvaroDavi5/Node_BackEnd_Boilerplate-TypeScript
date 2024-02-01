@@ -137,30 +137,27 @@ ___
 
 ### TO DO
 
-- **Nest.js**
-	- [kafka](https://docs.nestjs.com/microservices/kafka)
-	- [Hybrid Application](https://docs.nestjs.com/faq/hybrid-application)
-- **Build Versioning**
-	- [ ] DockerHub
-	- [ ] Container Images
+- **Clustering**
+	- [x] Clusters
+		- [x] Kubernetes
+			- [x] Container Images
+			- [ ] Load Balancing
 - **CI/CD**
 	- [ ] Jenkins
 	- [x] GitHub Actions
-- **Clustering**
-	- [ ] Clusters
-		- [ ] Kubernetes
-	- [ ] Load Balancing
-- **Deployment**
-	- [x] Heroku
-	- [x] AWS
 - **Monitoring**
 	- [ ] Log Streams
 		- [ ] Rancher
 	- [ ] Grafana
+- **Deployment**
+	- [ ] Heroku
+- **Nest.js**
+	- [Hybrid Application](https://docs.nestjs.com/faq/hybrid-application)
+	- [kafka](https://docs.nestjs.com/microservices/kafka)
 - **Integrations**
 	- [ ] Webhooks
-	- [Kafka](#to-do)
 	- [ ] OAuth
+	- [Kafka](#to-do)
 - **Tests**
 	* _Integration_
 		- [ ] Configs
@@ -202,3 +199,5 @@ ___
 			- Reports
 				- [ ] Services
 - [ ] Manual SQL
+	- [ ] Index
+	- [ ] Transactions

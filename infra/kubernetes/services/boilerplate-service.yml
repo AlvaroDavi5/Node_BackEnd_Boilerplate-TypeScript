@@ -9,7 +9,7 @@ metadata:
 spec:
   selector:
     app: boilerplate-deploy
-  type: LoadBalancer # ClusterIP NodePort LoadBalancer ExternalName
+  type: LoadBalancer # ClusterIP, NodePort, LoadBalancer, ExternalName
   ports:
     - name: app
       protocol: TCP

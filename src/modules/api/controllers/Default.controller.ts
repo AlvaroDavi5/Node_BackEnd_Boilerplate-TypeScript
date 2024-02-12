@@ -1,7 +1,7 @@
 import {
 	OnModuleInit,
 	Controller, Req, Res,
-	Get, Post, Headers, Param, Query, Body,
+	Get, Post, Put, Headers, Param, Query, Body,
 	StreamableFile, UploadedFile, UseInterceptors, UseGuards,
 } from '@nestjs/common';
 import { ModuleRef, LazyModuleLoader } from '@nestjs/core';
@@ -17,7 +17,10 @@ import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.deco
 import HttpConstants from '@api/constants/Http.constants';
 import ContentTypeConstants from '@api/constants/ContentType.constants';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
+import { RegisterHookEventPipeValidator } from '@api/pipes/HookValidator.pipe';
+import { RegisterHookEventInputDto } from '@api/pipes/dto/HookInput.dto';
 import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
+import WebhookService from '@app/services/Webhook.service';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import ReportsModule from '@reports/reports.module';
 import UploadService from '@reports/services/Upload.service';
@@ -39,6 +42,7 @@ export default class DefaultController implements OnModuleInit {
 		private readonly configService: ConfigService,
 		private readonly httpConstants: HttpConstants,
 		private readonly contentTypeConstants: ContentTypeConstants,
+		private readonly webHookService: WebhookService,
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
 		this.logger = this.loggerGenerator.getLogger();
@@ -75,7 +79,7 @@ export default class DefaultController implements OnModuleInit {
 				},
 				body: {},
 				statusCode: 200,
-				statusMessage: 'Endpoint finded successfully',
+				statusMessage: 'Endpoint finded successfully.',
 			},
 		}
 	})
@@ -111,6 +115,33 @@ export default class DefaultController implements OnModuleInit {
 			body: body,
 			statusCode: response.statusCode,
 			statusMessage: response.statusMessage ?? this.httpConstants.messages.found('Endpoint'),
+		};
+	}
+
+	@ApiTags('Webhook')
+	@ApiOperation({ summary: 'Register Hook Event' })
+	@Put('/hook')
+	@ApiOkResponse({
+		schema: {
+			example: {
+				statusMessage: 'Hook event register created successfully.',
+			},
+		}
+	})
+	@exceptionsResponseDecorator()
+	@authSwaggerDecorator()
+	@ApiConsumes('application/json')
+	@ApiProduces('application/json')
+	public async registerHookEvent(
+		@Query(RegisterHookEventPipeValidator) query: RegisterHookEventInputDto,
+		@Res({ passthrough: true }) response: Response,
+	): Promise<{ statusMessage: string }> {
+
+		if (query.responseSchema)
+			await this.webHookService.save(query.responseSchema, query);
+
+		return {
+			statusMessage: response.statusMessage ?? this.httpConstants.messages.created('Hook event register'),
 		};
 	}
 

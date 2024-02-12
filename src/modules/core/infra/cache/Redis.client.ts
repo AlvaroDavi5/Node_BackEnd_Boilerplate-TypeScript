@@ -92,7 +92,10 @@ export default class RedisClient {
 		return result;
 	}
 
-	public async getByKeyPattern(pattern: string): Promise<PromiseSettledResult<any>[]> {
+	public async getByKeyPattern(pattern: string): Promise<PromiseSettledResult<{
+		key: string,
+		value: object | null,
+	}>[]> {
 		const keys = await this.redisClient.keys(pattern);
 		const getByKeyPromises = keys.map(
 			async (key: string) => {

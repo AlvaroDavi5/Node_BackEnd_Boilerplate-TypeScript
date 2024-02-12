@@ -98,7 +98,7 @@ export default class UserController implements OnModuleInit {
 	@ApiProduces('application/json')
 	public async getUser(
 		@Req() request: RequestInterface,
-		@Param('userId') userId: number,
+		@Param('userId', ParseIntPipe) userId: number,
 	): Promise<UserInterface> {
 		try {
 			const { user } = request;
@@ -165,7 +165,7 @@ export default class UserController implements OnModuleInit {
 	@ApiProduces('application/json')
 	public async deleteUser(
 		@Req() request: RequestInterface,
-		@Param('userId') userId: number,
+		@Param('userId', ParseIntPipe) userId: number,
 	): Promise<[affectedCount: number] | unknown> {
 		try {
 			const { user } = request;

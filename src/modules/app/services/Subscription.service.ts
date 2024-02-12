@@ -18,7 +18,7 @@ import { WebSocketEventsEnum } from '@app/domain/enums/webSocketEvents.enum';
 export default class SubscriptionService implements OnModuleInit {
 	private webSocketClient!: WebSocketClient;
 	private readonly logger: Logger;
-	public readonly expirationTime: number;
+	public readonly subscriptionsTimeToLive: number;
 	public readonly datalakeDatabase: Db;
 	public readonly subscriptionsCollection: Collection;
 
@@ -36,7 +36,7 @@ export default class SubscriptionService implements OnModuleInit {
 
 		this.logger = this.loggerGenerator.getLogger();
 		const subscriptionsExpirationTime: ConfigsInterface['cache']['expirationTime']['subscriptions'] = this.configService.get<any>('cache.expirationTime.subscriptions');
-		this.expirationTime = subscriptionsExpirationTime;
+		this.subscriptionsTimeToLive = subscriptionsExpirationTime;
 	}
 
 	public onModuleInit(): void {
@@ -134,7 +134,7 @@ export default class SubscriptionService implements OnModuleInit {
 
 	private async saveOnCache(subscriptionId: string, data: any): Promise<string> {
 		const key = this.cacheAccessHelper.generateKey(subscriptionId, CacheEnum.SUBSCRIPTIONS);
-		return await this.redisClient.set(key, data, this.expirationTime);
+		return await this.redisClient.set(key, data, this.subscriptionsTimeToLive);
 	}
 
 	private async deleteFromCache(subscriptionId: string): Promise<number> {

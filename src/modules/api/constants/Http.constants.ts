@@ -61,7 +61,7 @@ export default class HttpConstants {
 	};
 
 	public readonly messages = {
-		found: (element: string) => `${element} finded successfully`,
+		found: (element: string) => `${element} finded successfully.`,
 		notFound: (element: string) => `${element} not found!`,
 		created: (element: string) => `${element} created successfully.`,
 		notCreated: (element: string) => `Error to create ${element}!`,

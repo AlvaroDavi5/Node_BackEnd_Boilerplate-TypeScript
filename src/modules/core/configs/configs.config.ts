@@ -68,7 +68,8 @@ export interface ConfigsInterface {
 			host: string, // cache host
 		},
 		expirationTime: {
-			subscriptions: number // expiration in seconds
+			subscriptions: number, // expiration in seconds
+			hooks: number,
 		},
 	},
 	// ? Third-Party Services
@@ -193,6 +194,7 @@ export default (): ConfigsInterface => ({
 		},
 		expirationTime: {
 			subscriptions: (12 * 60 * 60),
+			hooks: (5 * 60),
 		},
 	},
 	integration: {

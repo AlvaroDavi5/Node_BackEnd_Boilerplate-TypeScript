@@ -42,8 +42,8 @@ export default class WebhookService {
 		return !!deleted;
 	}
 
-	public async list(): Promise<any[]> {
-		const pattern = `${CacheEnum.HOOKS}:`;
+	public async list(additionalPattern = ''): Promise<any[]> {
+		const pattern = `${CacheEnum.HOOKS}:${additionalPattern}*`;
 		return await this.redisClient.getByKeyPattern(pattern);
 	}
 }

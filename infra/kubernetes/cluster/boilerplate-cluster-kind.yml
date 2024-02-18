@@ -7,3 +7,4 @@ nodes:
   - role: worker
   - role: worker
   - role: worker
+# to load Docker image on cluster run: "kind load docker-image -n boilerplate-cluster boilerplate-image:1.0"

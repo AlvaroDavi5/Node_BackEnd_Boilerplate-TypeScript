@@ -34,6 +34,7 @@ import SyncCronTask from '@core/infra/cron/tasks/SyncCron.task';
 import RegExConstants from '@common/constants/Regex.constants';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
 import FileStrategy from '@app/strategies/File.strategy';
@@ -56,8 +57,10 @@ import RequestRateConstants from '@api/constants/RequestRate.constants';
 import LoggerMiddleware from '@api/middlewares/Logger.middleware';
 import JwtDecodeMiddleware from '@api/middlewares/JwtDecode.middleware';
 import DefaultController from '@api/controllers/Default.controller';
+import FileController from '@api/controllers/File.controller';
 import UserController from '@api/controllers/User.controller';
-import SubscriptionsController from '@api/controllers/Subscriptions.controller';
+import SubscriptionController from '@api/controllers/Subscription.controller';
+import HookController from '@api/controllers/Hook.controller';
 import GraphQlModule from '@graphql/graphql.module';
 
 
@@ -123,8 +126,10 @@ const requestRateConstants = new RequestRateConstants();
 	],
 	controllers: [
 		DefaultController,
+		FileController,
 		UserController,
-		SubscriptionsController,
+		SubscriptionController,
+		HookController,
 	],
 	providers: [
 		// * core
@@ -146,6 +151,7 @@ const requestRateConstants = new RequestRateConstants();
 		RegExConstants,
 		SchemaValidator,
 		DataParserHelper,
+		DateGeneratorHelper,
 		CacheAccessHelper,
 		FileReaderHelper,
 		// * app
@@ -174,9 +180,20 @@ export class TestModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
 		consumer
 			.apply(LoggerMiddleware)
-			.forRoutes(DefaultController, UserController, SubscriptionsController)
+			.forRoutes(
+				DefaultController,
+				FileController,
+				UserController,
+				SubscriptionController,
+				HookController,
+			)
 			.apply(JwtDecodeMiddleware)
-			.forRoutes(UserController, SubscriptionsController);
+			.forRoutes(
+				FileController,
+				UserController,
+				SubscriptionController,
+				HookController,
+			);
 	}
 }
 

@@ -92,10 +92,10 @@ export default class RedisClient {
 		return result;
 	}
 
-	public async getByKeyPattern(pattern: string): Promise<PromiseSettledResult<{
+	public async getByKeyPattern(pattern: string): Promise<{
 		key: string,
 		value: object | null,
-	}>[]> {
+	}[]> {
 		const keys = await this.redisClient.keys(pattern);
 		const getByKeyPromises = keys.map(
 			async (key: string) => {
@@ -107,8 +107,9 @@ export default class RedisClient {
 				};
 			}
 		);
+		const result = await Promise.allSettled(getByKeyPromises);
 
-		return Promise.allSettled(getByKeyPromises);
+		return result.map(({ status, ...args }) => ({ ...((args as any)?.value ?? {}) }));
 	}
 
 	public async getValuesByKeyPattern(key: string): Promise<any[]> {

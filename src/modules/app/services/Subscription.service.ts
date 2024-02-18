@@ -123,7 +123,7 @@ export default class SubscriptionService implements OnModuleInit {
 	}
 
 	private async listFromCache(): Promise<any[]> {
-		const pattern = `${CacheEnum.SUBSCRIPTIONS}:`;
+		const pattern = `${CacheEnum.SUBSCRIPTIONS}:*`;
 		return await this.redisClient.getByKeyPattern(pattern);
 	}
 

@@ -37,8 +37,8 @@ export default class SubscriptionEntity extends AbstractEntity {
 	@IsString()
 	private clientId: string | null = null;
 
-	@ApiProperty({ type: Date, example: (new Date()), default: (new Date()), nullable: false, required: false, description: 'User creation timestamp' })
-	@Field(returingDate, { defaultValue: (new Date()), nullable: false, description: 'User creation timestamp' })
+	@ApiProperty({ type: Date, example: (new Date('2024-02-28T09:35:31.820')), default: (new Date('2024-02-28T09:35:31.820')), nullable: false, required: false, description: 'User creation timestamp' })
+	@Field(returingDate, { defaultValue: (new Date('2024-02-28T09:35:31.820')), nullable: false, description: 'User creation timestamp' })
 	@IsDate()
 	public readonly createdAt: Date;
 
@@ -63,7 +63,7 @@ export default class SubscriptionEntity extends AbstractEntity {
 		if (this.exists(dataValues?.newConnections)) this.newConnectionsListen = dataValues.newConnections;
 		if (this.exists(dataValues?.newConnectionsListen)) this.newConnectionsListen = dataValues.newConnectionsListen;
 		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
-		this.createdAt = this.exists(dataValues?.createdAt) ? new Date(dataValues.createdAt) : new Date();
+		this.createdAt = this.exists(dataValues?.createdAt) ? new Date(dataValues.createdAt) : this.getDate();
 	}
 
 	public getAttributes(): SubscriptionInterface {
@@ -91,23 +91,23 @@ export default class SubscriptionEntity extends AbstractEntity {
 	public setSubscriptionId(subscriptionId: string): void {
 		if (subscriptionId.length > 0)
 			this.subscriptionId = subscriptionId;
-		this.updatedAt = new Date();
+		this.updatedAt = this.getDate();
 	}
 
 	public getClientId(): string | null { return this.clientId; }
 	public setClientId(clientId: string): void {
 		if (clientId.length > 0)
 			this.clientId = clientId;
-		this.updatedAt = new Date();
+		this.updatedAt = this.getDate();
 	}
 
 	public listenNewConnections(): void {
 		this.newConnectionsListen = true;
-		this.updatedAt = new Date();
+		this.updatedAt = this.getDate();
 	}
 
 	public ignoreNewConnections(): void {
 		this.newConnectionsListen = false;
-		this.updatedAt = new Date();
+		this.updatedAt = this.getDate();
 	}
 }

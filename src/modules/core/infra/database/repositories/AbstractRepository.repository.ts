@@ -1,5 +1,6 @@
 import { Model, Op, QueryTypes, ModelAttributes, Includeable, InitOptions, FindAndCountOptions, Attributes } from 'sequelize';
 import { Logger } from 'winston';
+import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import Exceptions from '@core/infra/errors/Exceptions';
 import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity';
@@ -24,6 +25,7 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 
 	protected queryOptions: { include: Includeable[] };
 	protected exceptions: Exceptions;
+	protected dateGeneratorHelper: DateGeneratorHelper;
 	protected logger: Logger;
 
 	// // ------ Associations Attribute ------
@@ -40,6 +42,7 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 		queryOptions,
 		exceptions,
 		loggerGenerator,
+		dateGeneratorHelper,
 	}: {
 		DomainEntity: constructorType<E>,
 		ResourceModel: ModelType<M>,
@@ -55,6 +58,7 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 		queryOptions: any,
 		exceptions: Exceptions,
 		loggerGenerator: LoggerGenerator,
+		dateGeneratorHelper: DateGeneratorHelper,
 	}) {
 		this.DomainEntity = DomainEntity;
 		this.ResourceModel = ResourceModel;
@@ -63,6 +67,7 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 		this.queryOptions = queryOptions;
 		this.exceptions = exceptions;
 		this.logger = loggerGenerator.getLogger();
+		this.dateGeneratorHelper = dateGeneratorHelper;
 
 		this.ResourceModel.init(resourceAttributes, resourceOptions);
 		this.associate();
@@ -188,7 +193,7 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 
 		let result = null;
 		if (softDelete) {
-			const timestamp = new Date();
+			const timestamp = this.dateGeneratorHelper.getDate(true);
 			result = await this.ResourceModel.update({
 				deletedAt: timestamp,
 				deletedBy: agentId,
@@ -212,7 +217,7 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 
 		let result = null;
 		if (softDelete) {
-			const timestamp = new Date();
+			const timestamp = this.dateGeneratorHelper.getDate(true);
 			result = await this.ResourceModel.update(
 				{
 					deletedAt: timestamp,

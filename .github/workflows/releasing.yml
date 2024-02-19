@@ -2,9 +2,9 @@ name: Releasing
 
 on:
   push:
-    branches: [release, main]
+    branches: [release]
   pull_request:
-    branches: [release, main]
+    branches: [release]
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

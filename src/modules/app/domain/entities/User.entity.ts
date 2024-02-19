@@ -72,8 +72,8 @@ export default class UserEntity extends AbstractEntity {
 	@Type(returingUserPreferenceEntity)
 	private preference: UserPreferenceEntity | null = null;
 
-	@ApiProperty({ type: Date, example: (new Date()), default: (new Date()), nullable: false, required: false, description: 'User creation timestamp' })
-	@Field(returingDate, { defaultValue: (new Date()), nullable: false, description: 'User creation timestamp' })
+	@ApiProperty({ type: Date, example: (new Date('2024-02-28T09:35:31.820')), default: (new Date('2024-02-28T09:35:31.820')), nullable: false, required: false, description: 'User creation timestamp' })
+	@Field(returingDate, { defaultValue: (new Date('2024-02-28T09:35:31.820')), nullable: false, description: 'User creation timestamp' })
 	@IsDate()
 	public readonly createdAt: Date;
 
@@ -106,7 +106,7 @@ export default class UserEntity extends AbstractEntity {
 		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
 		if (this.exists(dataValues?.deletedAt)) this.deletedAt = dataValues.deletedAt;
 		if (this.exists(dataValues?.deletedBy)) this.deletedBy = dataValues.deletedBy;
-		this.createdAt = this.exists(dataValues?.createdAt) ? new Date(dataValues.createdAt) : new Date();
+		this.createdAt = this.exists(dataValues?.createdAt) ? new Date(dataValues.createdAt) : this.getDate();
 	}
 
 	public getAttributes(): UserInterface {
@@ -134,7 +134,7 @@ export default class UserEntity extends AbstractEntity {
 
 		this.id = id;
 		this.preference?.setUserId(id);
-		this.updatedAt = new Date();
+		this.updatedAt = this.getDate();
 	}
 
 	public getLogin(): { fullName: string | null, email: string | null } {
@@ -147,19 +147,19 @@ export default class UserEntity extends AbstractEntity {
 	public setLogin(email: string, fullName: string): void {
 		this.fullName = fullName;
 		this.email = email;
-		this.updatedAt = new Date();
+		this.updatedAt = this.getDate();
 	}
 
 	public getPassword(): string | null { return this.password; }
 	public setPassword(password: string): void {
 		this.password = password;
-		this.updatedAt = new Date();
+		this.updatedAt = this.getDate();
 	}
 
 	public getPhone(): string | null { return this.phone; }
 	public setPhone(phone: string): void {
 		this.phone = phone;
-		this.updatedAt = new Date();
+		this.updatedAt = this.getDate();
 	}
 
 	public getDocInfos(): { document: string | null, docType: string | null, fu: string | null } {
@@ -174,15 +174,15 @@ export default class UserEntity extends AbstractEntity {
 		this.document = docValue;
 		this.docType = docType;
 		this.fu = fu;
-		this.updatedAt = new Date();
+		this.updatedAt = this.getDate();
 	}
 
 	public getDeletedBy(): string | null { return this.deletedBy; }
 
 	public setDeletedBy(agentId: string): void {
 		this.deletedBy = agentId;
-		this.deletedAt = new Date();
-		this.updatedAt = new Date();
+		this.deletedAt = this.getDate();
+		this.updatedAt = this.getDate();
 	}
 
 	public getPreference(): UserPreferenceEntity | null {

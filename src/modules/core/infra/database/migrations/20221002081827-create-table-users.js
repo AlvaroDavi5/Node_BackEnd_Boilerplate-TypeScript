@@ -38,12 +38,12 @@ module.exports = {
 			createdAt: {
 				type: Sequelize.DATE,
 				allowNull: false,
-				defaultValue: new Date(),
+				defaultValue: new Date('2024-02-28T09:35:31.820'),
 			},
 			updatedAt: {
 				type: Sequelize.DATE,
 				allowNull: false,
-				defaultValue: new Date(),
+				defaultValue: new Date('2024-02-28T09:35:31.820'),
 			},
 			deletedAt: {
 				type: Sequelize.DATE,

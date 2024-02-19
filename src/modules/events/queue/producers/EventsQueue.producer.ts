@@ -1,10 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from 'winston';
+import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
-import { ConfigsInterface } from '@core/configs/configs.config';
 import CryptographyService from '@core/infra/security/Cryptography.service';
+import { ConfigsInterface } from '@core/configs/configs.config';
 import { EventSchemaInterface } from '@events/queue/handlers/schemas/event.schema';
 
 
@@ -32,6 +33,7 @@ export default class EventsQueueProducer {
 		private readonly cryptographyService: CryptographyService,
 		private readonly sqsClient: SqsClient,
 		private readonly loggerGenerator: LoggerGenerator,
+		private readonly dateGeneratorHelper: DateGeneratorHelper,
 	) {
 		this.logger = this.loggerGenerator.getLogger();
 		const { queueName, queueUrl }: ConfigsInterface['integration']['aws']['sqs']['eventsQueue'] = this.configService.get<any>('integration.aws.sqs.eventsQueue');
@@ -50,7 +52,7 @@ export default class EventsQueueProducer {
 			schemaVersion: 1.0,
 			payload,
 			source: 'BOILERPLATE',
-			timestamp: new Date(),
+			timestamp: this.dateGeneratorHelper.getDate(),
 		};
 	}
 

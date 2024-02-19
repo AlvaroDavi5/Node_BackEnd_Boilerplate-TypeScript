@@ -6,8 +6,10 @@ import RequestRateConstants from './constants/RequestRate.constants';
 import LoggerMiddleware from '@api/middlewares/Logger.middleware';
 import JwtDecodeMiddleware from '@api/middlewares/JwtDecode.middleware';
 import DefaultController from '@api/controllers/Default.controller';
+import FileController from '@api/controllers/File.controller';
 import UserController from '@api/controllers/User.controller';
-import SubscriptionsController from '@api/controllers/Subscriptions.controller';
+import SubscriptionController from '@api/controllers/Subscription.controller';
+import HookController from '@api/controllers/Hook.controller';
 
 
 const requestRateConstants = new RequestRateConstants();
@@ -22,8 +24,10 @@ const requestRateConstants = new RequestRateConstants();
 	],
 	controllers: [
 		DefaultController,
+		FileController,
 		UserController,
-		SubscriptionsController,
+		SubscriptionController,
+		HookController,
 	],
 	providers: [
 		HttpConstants,
@@ -36,8 +40,19 @@ export default class ApiModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
 		consumer
 			.apply(LoggerMiddleware)
-			.forRoutes(DefaultController, UserController, SubscriptionsController)
+			.forRoutes(
+				DefaultController,
+				FileController,
+				UserController,
+				SubscriptionController,
+				HookController,
+			)
 			.apply(JwtDecodeMiddleware)
-			.forRoutes(UserController, SubscriptionsController);
+			.forRoutes(
+				FileController,
+				UserController,
+				SubscriptionController,
+				HookController,
+			);
 	}
 }

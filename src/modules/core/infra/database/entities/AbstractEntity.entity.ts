@@ -1,10 +1,13 @@
 import { Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
+import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { returingNumber } from 'src/types/returnTypeFunc';
 
 
 export default abstract class AbstractEntity {
+	private readonly dateGeneratorHelper: DateGeneratorHelper = new DateGeneratorHelper();
+
 	public validate(): { value: any, valid: boolean, error: Error | null } {
 		let value: any = null;
 		let valid = false;
@@ -23,6 +26,10 @@ export default abstract class AbstractEntity {
 
 	public exists(value: unknown): boolean {
 		return (value !== undefined && value !== null);
+	}
+
+	public getDate(dateStr?: string): Date {
+		return this.dateGeneratorHelper.getDate(true, dateStr);
 	}
 
 	public getAttributes(): any {

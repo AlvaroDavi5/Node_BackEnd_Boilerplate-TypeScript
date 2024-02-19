@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Sequelize, Association } from 'sequelize';
+import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import Exceptions from '@core/infra/errors/Exceptions';
 import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
@@ -23,6 +24,7 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 			connection: Sequelize,
 			exceptions: Exceptions,
 			loggerGenerator: LoggerGenerator,
+			dateGeneratorHelper: DateGeneratorHelper,
 	) {
 		userOptions.sequelize = connection;
 		super({
@@ -35,6 +37,7 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 			queryOptions: userQueryOptions,
 			exceptions: exceptions,
 			loggerGenerator: loggerGenerator,
+			dateGeneratorHelper: dateGeneratorHelper,
 		});
 	}
 

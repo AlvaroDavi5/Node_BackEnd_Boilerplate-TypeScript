@@ -144,18 +144,15 @@ ___
 - **CI/CD**
 	- [ ] Jenkins
 	- [x] GitHub Actions
-- **Monitoring**
-	- [ ] Log Streams
-		- [ ] Rancher
-	- [ ] Grafana
 - **Deployment**
 	- [ ] Heroku
 - **Nest.js**
 	- [Hybrid Application](https://docs.nestjs.com/faq/hybrid-application)
 	- [kafka](https://docs.nestjs.com/microservices/kafka)
 - **Integrations**
-	- [ ] Webhooks
+	- [x] Webhooks
 	- [ ] OAuth
+	- [ ] PIX
 	- [Kafka](#to-do)
 - **Tests**
 	* _Integration_

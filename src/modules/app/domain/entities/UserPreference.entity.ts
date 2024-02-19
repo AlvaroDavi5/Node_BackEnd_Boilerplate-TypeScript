@@ -38,8 +38,8 @@ export default class UserPreferenceEntity extends AbstractEntity {
 	@IsString()
 	public defaultTheme: ThemesEnum | null = null;
 
-	@ApiProperty({ type: Date, example: (new Date()), default: (new Date()), nullable: false, required: false, description: 'User creation timestamp' })
-	@Field(returingDate, { defaultValue: (new Date()), nullable: false, description: 'User creation timestamp' })
+	@ApiProperty({ type: Date, example: (new Date('2024-02-28T09:35:31.820')), default: (new Date('2024-02-28T09:35:31.820')), nullable: false, required: false, description: 'User creation timestamp' })
+	@Field(returingDate, { defaultValue: (new Date('2024-02-28T09:35:31.820')), nullable: false, description: 'User creation timestamp' })
 	@IsDate()
 	public readonly createdAt: Date;
 
@@ -61,7 +61,7 @@ export default class UserPreferenceEntity extends AbstractEntity {
 		if (this.exists(dataValues?.defaultTheme)) this.defaultTheme = dataValues.defaultTheme;
 		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
 		if (this.exists(dataValues?.deletedAt)) this.deletedAt = dataValues.deletedAt;
-		this.createdAt = this.exists(dataValues?.createdAt) ? new Date(dataValues.createdAt) : new Date();
+		this.createdAt = this.exists(dataValues?.createdAt) ? new Date(dataValues.createdAt) : this.getDate();
 	}
 
 	public getAttributes(): UserPreferenceInterface {
@@ -82,7 +82,7 @@ export default class UserPreferenceEntity extends AbstractEntity {
 			return;
 
 		this.id = id;
-		this.updatedAt = new Date();
+		this.updatedAt = this.getDate();
 	}
 
 	public getUserId(): number { return this.userId; }
@@ -91,7 +91,7 @@ export default class UserPreferenceEntity extends AbstractEntity {
 			return;
 
 		this.userId = userId;
-		this.updatedAt = new Date();
+		this.updatedAt = this.getDate();
 	}
 
 	public getDefaultTheme(): ThemesEnum | null { return this.defaultTheme; }
@@ -100,12 +100,12 @@ export default class UserPreferenceEntity extends AbstractEntity {
 			return;
 
 		this.defaultTheme = theme as ThemesEnum;
-		this.updatedAt = new Date();
+		this.updatedAt = this.getDate();
 	}
 
 	public getImagePath(): string | null { return this.imagePath; }
 	public setImagePath(path: string): void {
 		this.imagePath = path;
-		this.updatedAt = new Date();
+		this.updatedAt = this.getDate();
 	}
 }

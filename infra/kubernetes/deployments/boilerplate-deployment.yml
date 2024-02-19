@@ -18,7 +18,7 @@ spec:
     spec:
       containers:
         - name: boilerplate-container
-          image: boilerplate-image:latest
+          image: boilerplate-image:1.0
           imagePullPolicy: Never
           resources:
             limits:
@@ -31,4 +31,3 @@ spec:
             - secretRef:
                 name: boilerplate-secrets
       hostNetwork: true
-# to create development secrets run: "kubectl create secret generic -n boilerplate-namespace boilerplate-secrets --from-env-file=envs/.env.production.local"

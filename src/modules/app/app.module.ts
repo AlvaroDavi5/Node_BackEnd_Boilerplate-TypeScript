@@ -5,6 +5,7 @@ import UserOperation from '@app/operations/User.operation';
 import UserService from '@app/services/User.service';
 import UserPreferenceService from '@app/services/UserPreference.service';
 import SubscriptionService from '@app/services/Subscription.service';
+import WebhookService from '@app/services/Webhook.service';
 import UserRepository from '@app/repositories/user/User.repository';
 import UserPreferenceRepository from '@app/repositories/userPreference/UserPreference.repository';
 
@@ -20,6 +21,7 @@ import UserPreferenceRepository from '@app/repositories/userPreference/UserPrefe
 		UserService,
 		UserPreferenceService,
 		SubscriptionService,
+		WebhookService,
 		UserRepository,
 		UserPreferenceRepository,
 	],
@@ -27,6 +29,7 @@ import UserPreferenceRepository from '@app/repositories/userPreference/UserPrefe
 		FileStrategy,
 		UserOperation,
 		SubscriptionService,
+		WebhookService,
 	],
 })
 export default class AppModule { }

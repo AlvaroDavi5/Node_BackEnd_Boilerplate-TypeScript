@@ -37,29 +37,29 @@ DataBase Diagram
 
 ## Main technologies
 
-- JavaScript: Web programming laguage;
-- TypeScript: JavaScript superset for typing;
-- Node.js: JavaScript runtime;
-- Nest.js: TypeScript Framework for Back-End;
-- Express: Robust tooling for HTTP servers;
-- Socket.io: WebSocket library;
-- AWS-SDK: A Node.js SDK to access AWS resources, such as:
-  * SQS: Queue management service;
-  * SNS: Topic notification service;
-  * S3: Files storage service;
-  * Cognito: Users authenticator service;
-- Sequelize: ORM for relational databases;
-- PostgreSQL: Relational (SQL) database;
-- MongoDB: Schematic and document-oriented NoSQL database;
-- Redis: Cache and in-memory key-value NoSQL database;
-- Docker: Services isolation and process resources management with containers;
-- SonarQube: Test coverage and code quality analyzer;
-- Winston: Custom logger with transports;
-- Joi: Schema validator library;
-- EsLint: JavaScript/TypeScript linter;
-- Prettier: JavaScript/TypeScript formatter;
-- Jest: Testing Framework;
-- Huksy: Git hook-listenner used to check tests, format the code and the commits;
+- **JavaScript**: Web programming laguage;
+- **TypeScript**: JavaScript superset for typing;
+- **Node.js**: JavaScript runtime;
+- **Nest.js**: TypeScript Framework for Back-End;
+- **Express**: Robust tooling for HTTP servers;
+- **Socket.io**: WebSocket library;
+- **AWS-SDK**: A Node.js SDK to access AWS resources, such as:
+  * _SQS_: Queue management service;
+  * _SNS_: Topic notification service;
+  * _S3_: Files storage service;
+  * _Cognito_: Users authenticator service;
+- **Sequelize**: ORM for relational databases;
+- **PostgreSQL**: Relational (SQL) database;
+- **MongoDB**: Schematic and document-oriented NoSQL database;
+- **Redis**: Cache and in-memory key-value NoSQL database;
+- **Docker**: Services isolation and process resources management with containers;
+- **SonarQube**: Test coverage and code quality analyzer;
+- **Winston**: Custom logger with transports;
+- **Joi**: Schema validator library;
+- **EsLint**: JavaScript/TypeScript linter;
+- **Prettier**: JavaScript/TypeScript formatter;
+- **Jest**: Testing Framework;
+- **Huksy**: Git hook-listenner used to check tests, format the code and the commits;
 
 ---
 
@@ -87,7 +87,7 @@ $ aws configure
 1. Start Docker containers;
 1. Mock external services;
 1. Creat database entities and populat registers;
-1. Start HTTP REST API;
+1. Start HTTP REST API & GraphQl API;
 1. Start TCP WebSocket;
 1. Send message to Queue;
 1. Receive message from Queue;
@@ -137,30 +137,23 @@ ___
 
 ### TO DO
 
-- **Nest.js**
-	- [kafka](https://docs.nestjs.com/microservices/kafka)
-	- [Hybrid Application](https://docs.nestjs.com/faq/hybrid-application)
-- **Build Versioning**
-	- [ ] DockerHub
-	- [ ] Container Images
+- **Clustering**
+	- [x] Clusters
+		- [x] Kubernetes
+			- [ ] Load Balancing
 - **CI/CD**
 	- [ ] Jenkins
 	- [x] GitHub Actions
-- **Clustering**
-	- [ ] Clusters
-		- [ ] Kubernetes
-	- [ ] Load Balancing
 - **Deployment**
-	- [x] Heroku
-	- [x] AWS
-- **Monitoring**
-	- [ ] Log Streams
-		- [ ] Rancher
-	- [ ] Grafana
+	- [ ] Heroku
+- **Nest.js**
+	- [Hybrid Application](https://docs.nestjs.com/faq/hybrid-application)
+	- [kafka](https://docs.nestjs.com/microservices/kafka)
 - **Integrations**
-	- [ ] Webhooks
-	- [Kafka](#to-do)
+	- [x] Webhooks
 	- [ ] OAuth
+	- [ ] PIX
+	- [Kafka](#to-do)
 - **Tests**
 	* _Integration_
 		- [ ] Configs
@@ -202,3 +195,5 @@ ___
 			- Reports
 				- [ ] Services
 - [ ] Manual SQL
+	- [ ] Index
+	- [ ] Transactions

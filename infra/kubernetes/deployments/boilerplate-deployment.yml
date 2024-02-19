@@ -1,0 +1,33 @@
+apiVersion: apps/v1
+
+kind: Deployment
+metadata:
+  name: boilerplate-deployment
+  namespace: boilerplate-namespace
+  labels:
+    name: boilerplate
+spec:
+  replicas: 3
+  selector:
+    matchLabels:
+      app: boilerplate-deploy
+  template:
+    metadata:
+      labels:
+        app: boilerplate-deploy
+    spec:
+      containers:
+        - name: boilerplate-container
+          image: boilerplate-image:1.0
+          imagePullPolicy: Never
+          resources:
+            limits:
+              cpu: "1000m" # 1 CPU cores
+              memory: "1012Mi" # 1012 megabytes
+            requests:
+              cpu: "1000m" # 1 CPU cores
+              memory: "1012Mi" # 1012 megabytes
+          envFrom:
+            - secretRef:
+                name: boilerplate-secrets
+      hostNetwork: true

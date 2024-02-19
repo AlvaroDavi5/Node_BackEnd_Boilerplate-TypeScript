@@ -14,7 +14,7 @@ import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 @Controller('/subscriptions')
 @UseGuards(CustomThrottlerGuard)
 @authSwaggerDecorator()
-export default class SubscriptionsController implements OnModuleInit {
+export default class SubscriptionController implements OnModuleInit {
 	private subscriptionService!: SubscriptionService;
 	private readonly logger: Logger;
 

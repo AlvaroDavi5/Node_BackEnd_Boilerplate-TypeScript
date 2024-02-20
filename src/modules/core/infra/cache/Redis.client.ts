@@ -81,9 +81,11 @@ export default class RedisClient {
 		return result;
 	}
 
-	public async get(key: string): Promise<any> {
+	public async get<VT = any>(key: string): Promise<any> {
 		const value = await this.redisClient.get(String(key));
-		return value ? this.dataParserHelper.toObject(value) : null;
+		const result = value ? this.dataParserHelper.toObject(value) : null;
+
+		return result as (VT | null);
 	}
 
 	public async set(key: string, value: object, ttl = 30): Promise<string> {
@@ -92,14 +94,14 @@ export default class RedisClient {
 		return result;
 	}
 
-	public async getByKeyPattern(pattern: string): Promise<{
+	public async getByKeyPattern<VT = any>(pattern: string): Promise<{
 		key: string,
-		value: object | null,
+		value: VT | null,
 	}[]> {
 		const keys = await this.redisClient.keys(pattern);
 		const getByKeyPromises = keys.map(
 			async (key: string) => {
-				const value = this.dataParserHelper.toObject(String(await this.redisClient.get(key)));
+				const value = this.dataParserHelper.toObject(String(await this.redisClient.get(key))) as (VT | null);
 
 				return {
 					key,
@@ -112,7 +114,7 @@ export default class RedisClient {
 		return result.map(({ status, ...args }) => ({ ...((args as any)?.value ?? {}) }));
 	}
 
-	public async getValuesByKeyPattern(key: string): Promise<any[]> {
+	public async getValuesByKeyPattern<VT = any>(key: string): Promise<(VT | null)[]> {
 		const keys = await this.redisClient.keys(key);
 
 		if (!keys || keys?.length < 1) {
@@ -122,7 +124,7 @@ export default class RedisClient {
 		const caches = await this.redisClient.mget(keys);
 
 		return caches.map((cache) => {
-			return this.dataParserHelper.toObject(String(cache));
+			return this.dataParserHelper.toObject(String(cache)) as (VT | null);
 		});
 	}
 

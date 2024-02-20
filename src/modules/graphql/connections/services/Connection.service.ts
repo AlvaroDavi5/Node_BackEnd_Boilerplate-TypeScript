@@ -7,7 +7,6 @@ import Exceptions from '@core/infra/errors/Exceptions';
 
 @Injectable()
 export default class ConnectionService {
-
 	constructor(
 		private readonly subscriptionService: SubscriptionService,
 		private readonly exceptions: Exceptions,

@@ -9,10 +9,10 @@ export abstract class RegisterHookEventInputDto implements RegisterHookEventInte
 	@IsOptional()
 	public responseEndpoint?: string;
 
-	@ApiProperty({ type: String, example: 'POST', default: undefined, nullable: false, required: false })
+	@ApiProperty({ type: String, enum: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'], example: 'POST', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
-	public responseMethod?: string;
+	public responseMethod?: 'GET' | 'POST' | 'PUT' | 'PATCH' | 'DELETE';
 
 	@ApiProperty({ type: String, example: 'INVALID', default: undefined, nullable: false, required: false })
 	@IsString()

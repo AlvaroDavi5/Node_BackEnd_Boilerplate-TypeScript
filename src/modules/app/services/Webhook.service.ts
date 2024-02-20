@@ -2,8 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import CryptographyService from '@core/infra/security/Cryptography.service';
+import RestMockedServiceClient, { requestMethodType } from '@core/infra/integration/rest/RestMockedService.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
+import { RegisterHookEventInputDto } from '@api/pipes/dto/HookInput.dto';
 import { CacheEnum } from '@app/domain/enums/cache.enum';
 
 
@@ -14,11 +16,23 @@ export default class WebhookService {
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly cryptographyService: CryptographyService,
+		private readonly restMockedServiceClient: RestMockedServiceClient,
 		private readonly redisClient: RedisClient,
 		private readonly cacheAccessHelper: CacheAccessHelper,
 	) {
 		const hooksExpirationTime: ConfigsInterface['cache']['expirationTime']['hooks'] = this.configService.get<any>('cache.expirationTime.hooks');
 		this.hooksTimeToLive = hooksExpirationTime;
+	}
+
+	public async pullHook(hookSchema: string, data: unknown): Promise<any> {
+		const hookSchemaList = await this.list(hookSchema);
+
+		hookSchemaList.forEach(async ({ key, value }) => {
+			const responseEndpoint = value?.responseEndpoint ?? this.configService.get<any>('integration.rest.mockedService.baseUrl');
+			const responseMethod = value?.responseMethod?.toLowerCase() as requestMethodType;
+
+			await this.restMockedServiceClient.requestHook(responseEndpoint, responseMethod, data);
+		});
 	}
 
 	public async get(hookId: string, hookSchema: string): Promise<any> {
@@ -42,8 +56,11 @@ export default class WebhookService {
 		return !!deleted;
 	}
 
-	public async list(additionalPattern = ''): Promise<any[]> {
+	public async list(additionalPattern = ''): Promise<{
+		key: string;
+		value: RegisterHookEventInputDto | null;
+	}[]> {
 		const pattern = `${CacheEnum.HOOKS}:${additionalPattern}*`;
-		return await this.redisClient.getByKeyPattern(pattern);
+		return await this.redisClient.getByKeyPattern<RegisterHookEventInputDto>(pattern);
 	}
 }

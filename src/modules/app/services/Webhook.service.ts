@@ -27,7 +27,7 @@ export default class WebhookService {
 	public async pullHook(hookSchema: string, data: unknown): Promise<any> {
 		const hookSchemaList = await this.list(hookSchema);
 
-		hookSchemaList.forEach(async ({ key, value }) => {
+		hookSchemaList.forEach(async ({ value }) => {
 			const responseEndpoint = value?.responseEndpoint ?? this.configService.get<any>('integration.rest.mockedService.baseUrl');
 			const responseMethod = value?.responseMethod?.toLowerCase() as requestMethodType;
 

@@ -39,7 +39,7 @@ describe('API :: DefaultController', () => {
 					host: '127.0.0.1:3000',
 				},
 				statusCode: 200,
-				statusMessage: 'Endpoint finded successfully',
+				statusMessage: 'Endpoint finded successfully.',
 				params: {},
 				query: {},
 				body: {},

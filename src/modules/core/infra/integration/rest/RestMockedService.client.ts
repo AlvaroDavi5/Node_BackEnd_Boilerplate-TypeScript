@@ -7,6 +7,13 @@ import { ConfigsInterface } from '@core/configs/configs.config';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 
 
+export type requestMethodType = 'get' | 'post' | 'put' | 'patch' | 'delete';
+
+interface ResponseInterface {
+	status: number,
+	data: unknown,
+}
+
 @Injectable()
 export default class RestMockedServiceClient {
 	private serviceName: string;
@@ -36,14 +43,27 @@ export default class RestMockedServiceClient {
 		});
 	}
 
-	public async test(): Promise<any> {
+	public async healthcheck(): Promise<ResponseInterface> {
 		try {
 			this.logger.info(`Requesting ${this.serviceName} to healthcheck`);
-			const { data } = await this.client.get('mockedService/api/check');
-			return data;
+			const { data, status } = await this.client.get('mockedService/api/check');
+			return { data, status };
 		} catch (error) {
 			this.logger.error(error);
-			return null;
+			return { data: null, status: 0 };
+		}
+	}
+
+	public async requestHook(requestEndpoint: string, requestMethod: requestMethodType, body: any, ...args: any[]): Promise<ResponseInterface> {
+		const requestFunction = this.client[requestMethod];
+
+		try {
+			this.logger.info(`Requesting [${requestMethod.toUpperCase()}] '${requestEndpoint}' to pull hook`);
+			const { data, status } = await requestFunction(requestEndpoint, body, ...args);
+			return { data, status };
+		} catch (error) {
+			this.logger.error(error);
+			return { data: null, status: 0 };
 		}
 	}
 }

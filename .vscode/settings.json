@@ -13,6 +13,7 @@
 	"editor.guides.bracketPairs": "active",
 	"editor.pasteAs.enabled": false,
 	"editor.pasteAs.showPasteSelector": "never",
+	"editor.stickyScroll.enabled": false,
 	"editor.autoClosingBrackets": "always",
 	// "editor.defaultFormatter": "vscode.typescript-language-features",
 	"editor.codeActionsOnSave": {

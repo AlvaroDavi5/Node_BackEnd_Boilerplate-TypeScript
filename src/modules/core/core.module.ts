@@ -48,7 +48,7 @@ const appConfigs = configs();
 			driver: ApolloDriver,
 			playground: appConfigs.application.environment === EnvironmentsEnum.DEVELOPMENT,
 			autoSchemaFile: join(process.cwd(), 'src/modules/graphql/schemas/schema.gql'),
-			formatError: (formattedError, error: any) => {
+			formatError: (formattedError: GraphQLFormattedError, error: any) => {
 				const extensions = formattedError.extensions as any;
 
 				const graphQLFormattedError: GraphQLFormattedError = {

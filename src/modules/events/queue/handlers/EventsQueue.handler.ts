@@ -3,6 +3,7 @@ import { ModuleRef } from '@nestjs/core';
 import { Message } from '@aws-sdk/client-sqs';
 import { Logger } from 'winston';
 import SubscriptionService from '@app/services/Subscription.service';
+import WebhookService from '@app/services/Webhook.service';
 import MongoClient from '@core/infra/data/Mongo.client';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
@@ -15,6 +16,7 @@ import { WebSocketRoomsEnum } from '@app/domain/enums/webSocketEvents.enum';
 @Injectable()
 export default class EventsQueueHandler implements OnModuleInit {
 	private subscriptionService!: SubscriptionService;
+	private webhookService!: WebhookService;
 	private readonly logger: Logger;
 
 	constructor(
@@ -29,6 +31,7 @@ export default class EventsQueueHandler implements OnModuleInit {
 
 	public onModuleInit(): void {
 		this.subscriptionService = this.moduleRef.get(SubscriptionService, { strict: false });
+		this.webhookService = this.moduleRef.get(WebhookService, { strict: false });
 	}
 
 	public async execute(message: Message): Promise<boolean> {
@@ -37,8 +40,10 @@ export default class EventsQueueHandler implements OnModuleInit {
 				const data = this.dataParserHelper.toObject(message.Body);
 				const value = this.schemaValidator.validate(data, eventSchema);
 
-				if (value.payload.event === EventsEnum.NEW_CONNECTION)
+				if (value.payload.event === EventsEnum.NEW_CONNECTION) {
 					this.subscriptionService.emit(value, WebSocketRoomsEnum.NEW_CONNECTIONS);
+					await this.webhookService.pullHook(value.payload.event, value.payload);
+				}
 				else
 					this.subscriptionService.broadcast(value);
 

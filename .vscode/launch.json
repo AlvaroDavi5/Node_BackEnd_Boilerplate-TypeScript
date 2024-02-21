@@ -20,11 +20,27 @@
 			]
 		},
 		{
+			"name": "Node.js: Launch Current TypeScript File",
+			"type": "node",
+			"request": "launch",
+			"skipFiles": [
+				"<node_internals>/**"
+			],
+			"program": "${file}",
+			"preLaunchTask": "tsc: build - tsconfig.json",
+			"outFiles": [
+				"${workspaceFolder}/dist/**/*.js"
+			],
+			"internalConsoleOptions": "openOnSessionStart",
+			"sourceMaps": true,
+			"smartStep": true
+		},
+		{
 			"name": "Chrome: Launch against localhost",
 			"type": "chrome",
 			"request": "launch",
 			"webRoot": "${workspaceFolder}",
-			"url": "http://localhost:8080/"
+			"url": "http://localhost:3000/"
 		}
 	]
 }

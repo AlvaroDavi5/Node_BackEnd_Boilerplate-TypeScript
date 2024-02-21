@@ -150,7 +150,6 @@ ___
 	- [Hybrid Application](https://docs.nestjs.com/faq/hybrid-application)
 	- [kafka](https://docs.nestjs.com/microservices/kafka)
 - **Integrations**
-	- [x] Webhooks
 	- [ ] OAuth
 	- [ ] PIX
 	- [Kafka](#to-do)

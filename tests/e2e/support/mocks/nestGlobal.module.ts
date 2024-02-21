@@ -1,16 +1,15 @@
 import dotenv from 'dotenv';
+import { json, urlencoded } from 'express';
 import compression from 'compression';
 import { GraphQLFormattedError } from 'graphql';
 import {
 	INestApplication, Module, NestModule,
-	MiddlewareConsumer, ValidationPipe
+	MiddlewareConsumer, ValidationPipe,
 } from '@nestjs/common';
 import { ConfigModule, ConfigService } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { IoAdapter } from '@nestjs/platform-socket.io';
-import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import configs, { ConfigsInterface } from '@core/configs/configs.config';
@@ -43,6 +42,7 @@ import UserOperation from '@app/operations/User.operation';
 import UserService from '@app/services/User.service';
 import UserPreferenceService from '@app/services/UserPreference.service';
 import SubscriptionService from '@app/services/Subscription.service';
+import WebhookService from '@app/services/Webhook.service';
 import UserRepository from '@app/repositories/user/User.repository';
 import UserPreferenceRepository from '@app/repositories/userPreference/UserPreference.repository';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
@@ -61,7 +61,6 @@ import FileController from '@api/controllers/File.controller';
 import UserController from '@api/controllers/User.controller';
 import SubscriptionController from '@api/controllers/Subscription.controller';
 import HookController from '@api/controllers/Hook.controller';
-import GraphQlModule from '@graphql/graphql.module';
 
 
 const appConfigs = configs();
@@ -77,26 +76,6 @@ const requestRateConstants = new RequestRateConstants();
 		EventEmitterModule.forRoot({
 			maxListeners: 10,
 			verboseMemoryLeak: true,
-		}),
-		GraphQLModule.forRoot<ApolloDriverConfig>({
-			driver: ApolloDriver,
-			playground: false,
-			autoSchemaFile: false,
-			formatError: (formattedError, error: any) => {
-				const extensions = formattedError.extensions as any;
-
-				const graphQLFormattedError: GraphQLFormattedError = {
-					message: formattedError.message ?? error?.message,
-					path: formattedError.path ?? error?.path,
-					extensions: {
-						code: extensions?.code,
-						originalError: extensions?.originalError,
-					},
-				};
-
-				return graphQLFormattedError;
-			},
-			include: [],
 		}),
 		ThrottlerModule.forRoot([
 			requestRateConstants.short,
@@ -122,7 +101,6 @@ const requestRateConstants = new RequestRateConstants();
 			],
 			producers: [],
 		}),
-		GraphQlModule,
 	],
 	controllers: [
 		DefaultController,
@@ -161,6 +139,7 @@ const requestRateConstants = new RequestRateConstants();
 		UserService,
 		UserPreferenceService,
 		SubscriptionService,
+		WebhookService,
 		UserRepository,
 		UserPreferenceRepository,
 		// * events
@@ -211,6 +190,8 @@ export async function startNestApplication(nestApp: INestApplication<any>) {
 	nestApp.enableShutdownHooks();
 
 	nestApp.setGlobalPrefix('api');
+	nestApp.use(json({ limit: '10mb' }));
+	nestApp.use(urlencoded({ extended: true }));
 	nestApp.use(compression());
 	nestApp.enableCors({
 		origin: '*',

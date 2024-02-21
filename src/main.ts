@@ -2,13 +2,14 @@ import { NestFactory, SerializedGraph, PartialGraphHost } from '@nestjs/core';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IoAdapter } from '@nestjs/platform-socket.io';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { json, urlencoded } from 'express';
 import { writeFileSync } from 'fs';
 import compression from 'compression';
 import CoreModule from '@core/core.module';
 import { ProcessEventsEnum, ProcessSignalsEnum, ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
+import swaggerSetupConfig from '@core/configs/swaggerSetup.config';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import { ErrorInterface } from 'src/types/errorInterface';
 
@@ -37,6 +38,8 @@ async function startNestApplication() {
 	nestApp.enableShutdownHooks();
 
 	nestApp.setGlobalPrefix('api');
+	nestApp.use(json({ limit: '10mb' }));
+	nestApp.use(urlencoded({ extended: true }));
 	nestApp.use(compression());
 	nestApp.enableCors({
 		origin: '*',
@@ -45,33 +48,7 @@ async function startNestApplication() {
 	});
 	nestApp.useWebSocketAdapter(new IoAdapter(nestApp)); // WsAdapter
 
-	const config = new DocumentBuilder()
-		.setTitle('Node Back-End Boilerplate')
-		.setVersion('1.0.0')
-		.setDescription('API Boilerplate created with Nest.js')
-		.setContact('Álvaro Davi Santos Alves', 'https://github.com/AlvaroDavi5', 'alvaro.davisa@gmail.com')
-		.addServer('http://localhost:3000', 'Main Server', {})
-		.addServer('http://localhost:4000', 'Mocked Server', {})
-		.addBearerAuth({
-			type: 'http',
-			scheme: 'bearer',
-			in: 'header',
-			bearerFormat: 'JWT',
-			name: 'JWT',
-			description: 'Enter JWT token',
-		}, 'Authorization')
-		.build();
-	const document = SwaggerModule.createDocument(nestApp, config, {
-		ignoreGlobalPrefix: false,
-	});
-	SwaggerModule.setup('/api/docs', nestApp, document, {
-		customSiteTitle: 'Boilerplate API',
-		swaggerOptions: {
-			docExpansion: 'none',
-		},
-		jsonDocumentUrl: '/api/docs.json',
-		yamlDocumentUrl: '/api/docs.yml',
-	});
+	swaggerSetupConfig(nestApp);
 
 	const appConfigs = nestApp.get<ConfigService>(ConfigService).get<ConfigsInterface['application']>('application');
 	await nestApp.listen(Number(appConfigs?.appPort)).catch((error: ErrorInterface | Error) => {

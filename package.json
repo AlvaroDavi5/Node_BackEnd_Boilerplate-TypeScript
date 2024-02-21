@@ -2,7 +2,7 @@
 	"$schema": "https://json.schemastore.org/package",
 	"name": "node_backend_boilerplate",
 	"description": "Node.js Boilerplate for Back-End using TypeScript",
-	"version": "2.7.2",
+	"version": "3.0.0",
 	"license": "MIT",
 	"author": "Álvaro Davi Santos Alves <alvaro.davisa@gmail.com>",
 	"contributors": [

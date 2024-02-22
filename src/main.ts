@@ -8,6 +8,7 @@ import compression from 'compression';
 import CoreModule from '@core/core.module';
 import { ProcessEventsEnum, ProcessSignalsEnum, ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
+import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import swaggerSetupConfig from '@core/configs/swaggerSetup.config';
 import { ConfigsInterface } from '@core/configs/configs.config';
@@ -44,7 +45,7 @@ async function startNestApplication() {
 	nestApp.enableCors({
 		origin: '*',
 		allowedHeaders: '*',
-		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+		methods: Object.values(HttpMethodsEnum),
 	});
 	nestApp.useWebSocketAdapter(new IoAdapter(nestApp)); // WsAdapter
 

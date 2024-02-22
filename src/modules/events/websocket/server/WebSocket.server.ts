@@ -14,13 +14,14 @@ import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
 import EventsGuard from '@events/websocket/guards/Events.guard';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 
 
 @WebSocketGateway({
 	cors: {
 		origin: '*',
 		allowedHeaders: '*',
-		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+		methods: Object.values(HttpMethodsEnum),
 	}
 })
 @UseGuards(EventsGuard)

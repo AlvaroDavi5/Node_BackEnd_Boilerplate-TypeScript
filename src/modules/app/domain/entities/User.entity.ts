@@ -67,7 +67,9 @@ export default class UserEntity extends AbstractEntity {
 	@IsString()
 	public fu: string | null = null;
 
-	@ApiProperty({ type: UserPreferenceEntity, example: (new UserPreferenceEntity({})), default: null, nullable: true, required: true, description: 'User preference' })
+	@ApiProperty({
+		type: UserPreferenceEntity, example: (new UserPreferenceEntity({ imagePath: './image.png', defaultTheme: 'DEFAULT' })), default: null, nullable: true, required: true, description: 'User preference'
+	})
 	@Field(returingUserPreferenceEntity, { defaultValue: null, nullable: true, description: 'User preference' })
 	@Type(returingUserPreferenceEntity)
 	private preference: UserPreferenceEntity | null = null;
@@ -205,8 +207,10 @@ export class UserEntityList extends AbstractEntityList<UserEntity> {
 				fullName: 'User Default',
 				docType: 'INVALID',
 				fu: 'UF',
-				imagePath: './image.png',
-				defaultTheme: 'DEFAULT',
+				preference: new UserPreferenceEntity({
+					imagePath: './image.png',
+					defaultTheme: 'DEFAULT',
+				}),
 				createdAt: new Date('2023-12-31T18:27:25.685Z'),
 				updatedAt: new Date('2024-01-01T18:27:25.685Z'),
 			}),

@@ -1,12 +1,16 @@
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import readPackageInfo from '@common/utils/PackageInfoReader.util';
 
 
 export default (nestApp: INestApplication<any>): void => {
+	const { description, version } = readPackageInfo();
+	const apiDescription = description ? `${description} - API` : undefined;
+
 	const config = new DocumentBuilder()
 		.setTitle('Node Back-End Boilerplate')
-		.setVersion('1.0.0')
-		.setDescription('API Boilerplate created with Nest.js')
+		.setDescription(apiDescription ?? 'API Boilerplate created with Nest.js')
+		.setVersion(version ?? '1.0.0')
 		.setContact('Álvaro Alves', 'https://github.com/AlvaroDavi5', 'alvaro.davisa@gmail.com')
 		.addServer('http://localhost:3000', 'Main Server', {})
 		.addServer('http://localhost:4000', 'Mocked Server', {})

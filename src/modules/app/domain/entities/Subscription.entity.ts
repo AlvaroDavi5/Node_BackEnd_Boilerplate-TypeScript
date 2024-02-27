@@ -21,7 +21,7 @@ export interface SubscriptionInterface {
 }
 
 @ObjectType()
-export default class SubscriptionEntity extends AbstractEntity {
+export default class SubscriptionEntity extends AbstractEntity<SubscriptionInterface> {
 	@ApiProperty({ type: String, example: 'xxx', default: '', nullable: false, required: false, description: 'Database register ID' })
 	@Field(returingString, { defaultValue: '', nullable: false, description: 'Database register ID' })
 	@IsString()

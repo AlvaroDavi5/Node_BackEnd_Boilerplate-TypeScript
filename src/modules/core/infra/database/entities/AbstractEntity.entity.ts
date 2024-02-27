@@ -5,7 +5,7 @@ import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { returingNumber } from 'src/types/returnTypeFunc';
 
 
-export default abstract class AbstractEntity {
+export default abstract class AbstractEntity<I = any> {
 	private readonly dateGeneratorHelper: DateGeneratorHelper = new DateGeneratorHelper();
 
 	public validate(): { value: any, valid: boolean, error: Error | null } {
@@ -32,8 +32,8 @@ export default abstract class AbstractEntity {
 		return this.dateGeneratorHelper.getDate(true, dateStr);
 	}
 
-	public getAttributes(): any {
-		return {};
+	public getAttributes(): I {
+		return {} as any;
 	}
 }
 

@@ -26,7 +26,7 @@ export interface UserInterface {
 export const returingUserPreferenceEntity = () => UserPreferenceEntity;
 
 @ObjectType()
-export default class UserEntity extends AbstractEntity {
+export default class UserEntity extends AbstractEntity<UserInterface> {
 	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, required: false, description: 'Database register ID' })
 	@Field(returingNumber, { defaultValue: 0, nullable: false, description: 'Database register ID' })
 	@IsNumber()

@@ -1,6 +1,6 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { IsOptional, IsString, IsBoolean } from 'class-validator';
-import { returingString, returingBoolean } from 'src/types/returnTypeFunc';
+import { returingString, returingBoolean } from '@shared/types/returnTypeFunc';
 
 
 @InputType()

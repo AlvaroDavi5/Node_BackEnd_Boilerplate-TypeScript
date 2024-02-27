@@ -5,7 +5,7 @@ import CryptographyService from '@core/infra/security/Cryptography.service';
 import RestMockedServiceClient, { requestMethodType } from '@core/infra/integration/rest/RestMockedService.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
-import { RegisterHookEventInputDto } from '@api/pipes/dto/HookInput.dto';
+import { RegisterEventHookInputDto } from '@api/pipes/dto/HookInput.dto';
 import { CacheEnum } from '@app/domain/enums/cache.enum';
 
 
@@ -58,9 +58,9 @@ export default class WebhookService {
 
 	public async list(additionalPattern = ''): Promise<{
 		key: string;
-		value: RegisterHookEventInputDto | null;
+		value: RegisterEventHookInputDto | null;
 	}[]> {
 		const pattern = `${CacheEnum.HOOKS}:${additionalPattern}*`;
-		return await this.redisClient.getByKeyPattern<RegisterHookEventInputDto>(pattern);
+		return await this.redisClient.getByKeyPattern<RegisterEventHookInputDto>(pattern);
 	}
 }

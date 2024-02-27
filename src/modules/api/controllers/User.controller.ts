@@ -12,18 +12,21 @@ import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.deco
 import UserEntity, { UserEntityList, UserInterface } from '@app/domain/entities/User.entity';
 import UserOperation from '@app/operations/User.operation';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
+import AuthGuard from '@api/guards/Auth.guard';
 import { ListQueryPipeValidator } from '@api/pipes/QueryValidator.pipe';
 import { ListQueryInputDto } from '@api/pipes/dto/QueryInput.dto';
 import { CreateUserPipeValidator, UpdateUserPipeValidator, LoginUserPipeValidator } from '@api/pipes/UserValidator.pipe';
 import { CreateUserInputDto, UpdateUserInputDto, LoginUserInputDto } from '@api/pipes/dto/UserInput.dto';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
-import { PaginationInterface } from 'src/types/listPaginationInterface';
-import { RequestInterface } from 'src/types/endpointInterface';
+import CryptographyService from '@core/infra/security/Cryptography.service';
+import { RequestInterface } from '@shared/interfaces/endpointInterface';
+import { PaginationInterface } from '@shared/interfaces/listPaginationInterface';
+import { UserAuthInterface } from '@shared/interfaces/userAuthInterface';
 
 
 @ApiTags('Users')
 @Controller('/users')
-@UseGuards(CustomThrottlerGuard)
+@UseGuards(CustomThrottlerGuard, AuthGuard)
 @authSwaggerDecorator()
 export default class UserController implements OnModuleInit {
 	private userOperation!: UserOperation;
@@ -31,6 +34,7 @@ export default class UserController implements OnModuleInit {
 
 	constructor(
 		private readonly moduleRef: ModuleRef,
+		private readonly cryptographyService: CryptographyService,
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
 		this.logger = this.loggerGenerator.getLogger();
@@ -40,8 +44,12 @@ export default class UserController implements OnModuleInit {
 		this.userOperation = this.moduleRef.get(UserOperation, { strict: false });
 	}
 
-	@ApiOperation({ summary: 'List Users' })
-	@Get()
+	@ApiOperation({
+		summary: 'List Users',
+		description: 'List all users from cache or database',
+		deprecated: false,
+	})
+	@Get('/')
 	@ApiOkResponse({
 		type: UserEntityList,
 		schema: {
@@ -69,7 +77,12 @@ export default class UserController implements OnModuleInit {
 	}
 
 	@ApiOperation({ summary: 'Create User' })
-	@Post()
+	@ApiOperation({
+		summary: 'Create User',
+		description: 'Create a new user',
+		deprecated: false,
+	})
+	@Post('/')
 	@ApiCreatedResponse({ type: UserEntity })
 	@exceptionsResponseDecorator()
 	@ApiConsumes('application/json')
@@ -90,7 +103,11 @@ export default class UserController implements OnModuleInit {
 		}
 	}
 
-	@ApiOperation({ summary: 'Get User' })
+	@ApiOperation({
+		summary: 'Get User',
+		description: 'Get user by ID',
+		deprecated: false,
+	})
 	@Get('/:userId')
 	@ApiOkResponse({ type: UserEntity })
 	@exceptionsResponseDecorator()
@@ -112,8 +129,12 @@ export default class UserController implements OnModuleInit {
 		}
 	}
 
-	@ApiOperation({ summary: 'Login User' })
-	@Put()
+	@ApiOperation({
+		summary: 'Login User',
+		description: 'Login user and get user authorization token (1d)',
+		deprecated: false,
+	})
+	@Put('/')
 	@ApiOkResponse({ type: UserEntity })
 	@exceptionsResponseDecorator()
 	@ApiConsumes('application/json')
@@ -121,20 +142,30 @@ export default class UserController implements OnModuleInit {
 	public async loginUser(
 		@Req() request: RequestInterface,
 		@Body(LoginUserPipeValidator) body: LoginUserInputDto,
-	): Promise<UserInterface> {
+	): Promise<UserInterface & { token: string }> {
 		try {
 			const { user } = request;
 
 			const result = await this.userOperation.loginUser(body, user);
 
-			return result.getAttributes();
+			const resultToEncode: UserAuthInterface = {
+				username: result.getLogin().email,
+				clientId: result.getId().toString(),
+			};
+			const token = this.cryptographyService.encodeJwt(resultToEncode, 'utf8', '1d');
+
+			return { ...result.getAttributes(), token };
 		} catch (error) {
 			this.logger.error(error);
 			throw error;
 		}
 	}
 
-	@ApiOperation({ summary: 'Update User' })
+	@ApiOperation({
+		summary: 'Update User',
+		description: 'Update registered user',
+		deprecated: false,
+	})
 	@Patch('/:userId')
 	@ApiOkResponse({ type: UserEntity })
 	@exceptionsResponseDecorator()
@@ -157,7 +188,11 @@ export default class UserController implements OnModuleInit {
 		}
 	}
 
-	@ApiOperation({ summary: 'Delete User' })
+	@ApiOperation({
+		summary: 'Delete User',
+		description: 'Delete a user',
+		deprecated: false,
+	})
 	@Delete('/:userId')
 	@ApiOkResponse({ schema: { example: { result: true } } })
 	@exceptionsResponseDecorator()

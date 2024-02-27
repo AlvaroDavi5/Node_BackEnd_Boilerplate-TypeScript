@@ -3,6 +3,7 @@ import { ModuleRef } from '@nestjs/core';
 import { ApiOperation, ApiTags, ApiOkResponse, ApiProduces, ApiConsumes } from '@nestjs/swagger';
 import { Logger } from 'winston';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
+import AuthGuard from '@api/guards/Auth.guard';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import SubscriptionService from '@app/services/Subscription.service';
@@ -12,7 +13,7 @@ import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 
 @ApiTags('Subscriptions')
 @Controller('/subscriptions')
-@UseGuards(CustomThrottlerGuard)
+@UseGuards(CustomThrottlerGuard, AuthGuard)
 @authSwaggerDecorator()
 export default class SubscriptionController implements OnModuleInit {
 	private subscriptionService!: SubscriptionService;
@@ -29,8 +30,12 @@ export default class SubscriptionController implements OnModuleInit {
 		this.subscriptionService = this.moduleRef.get(SubscriptionService, { strict: false });
 	}
 
-	@ApiOperation({ summary: 'List Subscriptions' })
-	@Get()
+	@ApiOperation({
+		summary: 'List Subscriptions',
+		description: 'List websockets subscriptions',
+		deprecated: false,
+	})
+	@Get('/')
 	@ApiOkResponse({
 		schema: {
 			example: [

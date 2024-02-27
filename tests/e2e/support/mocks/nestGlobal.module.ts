@@ -17,7 +17,7 @@ import LifecycleService from '@core/infra/start/Lifecycle.service';
 import { ProcessEventsEnum, ProcessSignalsEnum } from '@common/enums/processEvents.enum';
 import Exceptions from '@core/infra/errors/Exceptions';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
-import { ErrorInterface } from 'src/types/errorInterface';
+import { ErrorInterface } from '@shared/interfaces/errorInterface';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import CryptographyService from '@core/infra/security/Cryptography.service';
 import DatabaseConnectionProvider from '@core/infra/database/connection';
@@ -55,7 +55,6 @@ import HttpConstants from '@api/constants/Http.constants';
 import ContentTypeConstants from '@api/constants/ContentType.constants';
 import RequestRateConstants from '@api/constants/RequestRate.constants';
 import LoggerMiddleware from '@api/middlewares/Logger.middleware';
-import JwtDecodeMiddleware from '@api/middlewares/JwtDecode.middleware';
 import DefaultController from '@api/controllers/Default.controller';
 import FileController from '@api/controllers/File.controller';
 import UserController from '@api/controllers/User.controller';
@@ -161,13 +160,6 @@ export class TestModule implements NestModule {
 			.apply(LoggerMiddleware)
 			.forRoutes(
 				DefaultController,
-				FileController,
-				UserController,
-				SubscriptionController,
-				HookController,
-			)
-			.apply(JwtDecodeMiddleware)
-			.forRoutes(
 				FileController,
 				UserController,
 				SubscriptionController,

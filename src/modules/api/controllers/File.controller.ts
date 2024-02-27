@@ -15,6 +15,7 @@ import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import ContentTypeConstants from '@api/constants/ContentType.constants';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
+import AuthGuard from '@api/guards/Auth.guard';
 import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import ReportsModule from '@reports/reports.module';
@@ -23,8 +24,10 @@ import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ConfigsInterface } from '@core/configs/configs.config';
 
 
-@Controller()
-@UseGuards(CustomThrottlerGuard)
+@ApiTags('Files')
+@Controller('/files')
+@UseGuards(CustomThrottlerGuard, AuthGuard)
+@authSwaggerDecorator()
 export default class FileController implements OnModuleInit {
 	private fileReaderHelper!: FileReaderHelper;
 	private uploadService!: UploadService;
@@ -50,8 +53,11 @@ export default class FileController implements OnModuleInit {
 		}
 	}
 
-	@ApiTags('Files')
-	@ApiOperation({ summary: 'Download License' })
+	@ApiOperation({
+		summary: 'Download License',
+		description: 'Download MIT License',
+		deprecated: false,
+	})
 	@Get('/license')
 	@ApiOkResponse({
 		schema: {
@@ -60,7 +66,6 @@ export default class FileController implements OnModuleInit {
 		description: 'Downloadable file',
 	})
 	@exceptionsResponseDecorator()
-	@authSwaggerDecorator()
 	@ApiConsumes('application/json')
 	@ApiProduces('application/octet-stream', 'text/plain')
 	public getLicense(
@@ -93,8 +98,11 @@ export default class FileController implements OnModuleInit {
 		}
 	}
 
-	@ApiTags('Files')
-	@ApiOperation({ summary: 'Upload File' })
+	@ApiOperation({
+		summary: 'Upload File',
+		description: 'Upload any file to S3',
+		deprecated: false,
+	})
 	@Post('/upload')
 	@ApiCreatedResponse({
 		schema: {
@@ -107,7 +115,6 @@ export default class FileController implements OnModuleInit {
 		description: 'Uploaded File',
 	})
 	@exceptionsResponseDecorator()
-	@authSwaggerDecorator()
 	@ApiConsumes('multipart/form-data')
 	@ApiProduces('application/json')
 	@ApiBody({

@@ -10,7 +10,7 @@ import UserPreferencesModel from '@core/infra/database/models/UserPreferences.mo
 import UserEntity from '@app/domain/entities/User.entity';
 import userMapper from './user.mapper';
 import { userQueryParamsBuilder, userQueryOptions } from './user.query';
-import { ListQueryInterface, PaginationInterface } from 'src/types/listPaginationInterface';
+import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
 
 
 @Injectable()
@@ -21,10 +21,10 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER)
-			connection: Sequelize,
-			exceptions: Exceptions,
-			loggerGenerator: LoggerGenerator,
-			dateGeneratorHelper: DateGeneratorHelper,
+		connection: Sequelize,
+		exceptions: Exceptions,
+		loggerGenerator: LoggerGenerator,
+		dateGeneratorHelper: DateGeneratorHelper,
 	) {
 		userOptions.sequelize = connection;
 		super({

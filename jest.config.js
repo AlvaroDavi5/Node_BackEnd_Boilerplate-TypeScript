@@ -54,7 +54,7 @@ module.exports = {
 		'src/modules/app/services/',
 		'src/modules/events/',
 		'src/modules/reports/',
-		'src/types/',
+		'src/shared/',
 		'.d.ts',
 		'.module.ts',
 		'src/main.ts',
@@ -129,6 +129,7 @@ module.exports = {
 		'@graphql/(.*)': '<rootDir>/src/modules/graphql/$1',
 		'@events/(.*)': '<rootDir>/src/modules/events/$1',
 		'@reports/(.*)': '<rootDir>/src/modules/reports/$1',
+		'@shared/(.*)': '<rootDir>/src/shared/$1',
 	},
 
 	// An array of regexp pattern strings, matched against all module paths before considered 'visible' to the module loader

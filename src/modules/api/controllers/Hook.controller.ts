@@ -9,35 +9,40 @@ import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import HttpConstants from '@api/constants/Http.constants';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
-import { RegisterHookEventPipeValidator } from '@api/pipes/HookValidator.pipe';
-import { RegisterHookEventInputDto } from '@api/pipes/dto/HookInput.dto';
+import AuthGuard from '@api/guards/Auth.guard';
+import { RegisterEventHookPipeValidator } from '@api/pipes/HookValidator.pipe';
+import { RegisterEventHookInputDto } from '@api/pipes/dto/HookInput.dto';
 import WebhookService from '@app/services/Webhook.service';
 
 
-@Controller()
-@UseGuards(CustomThrottlerGuard)
+@ApiTags('Webhook')
+@Controller('/hook')
+@UseGuards(CustomThrottlerGuard, AuthGuard)
+@authSwaggerDecorator()
 export default class HookController {
 	constructor(
 		private readonly httpConstants: HttpConstants,
 		private readonly webHookService: WebhookService,
 	) { }
 
-	@ApiTags('Webhook')
-	@ApiOperation({ summary: 'Register Hook Event' })
-	@Put('/hook')
+	@ApiOperation({
+		summary: 'Register Event Hook',
+		description: 'Create a new event register for hook',
+		deprecated: false,
+	})
+	@Put('/')
 	@ApiOkResponse({
 		schema: {
 			example: {
-				statusMessage: 'Hook event register created successfully.',
+				statusMessage: 'Event hook register created successfully.',
 			},
 		}
 	})
 	@exceptionsResponseDecorator()
-	@authSwaggerDecorator()
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
-	public async registerHookEvent(
-		@Query(RegisterHookEventPipeValidator) query: RegisterHookEventInputDto,
+	public async registerEventHook(
+		@Query(RegisterEventHookPipeValidator) query: RegisterEventHookInputDto,
 		@Res({ passthrough: true }) response: Response,
 	): Promise<{ statusMessage: string }> {
 		if (query.responseSchema)

@@ -4,7 +4,7 @@ import { IsNumber, IsString, IsDate } from 'class-validator';
 import { Type } from 'class-transformer';
 import AbstractEntity, { AbstractEntityList } from '@core/infra/database/entities/AbstractEntity.entity';
 import UserPreferenceEntity, { UserPreferenceInterface } from './UserPreference.entity';
-import { returingNumber, returingString, returingDate } from 'src/types/returnTypeFunc';
+import { returingNumber, returingString, returingDate } from '@shared/types/returnTypeFunc';
 
 
 export interface UserInterface {

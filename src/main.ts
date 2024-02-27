@@ -12,7 +12,7 @@ import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import swaggerSetupConfig from '@core/configs/swaggerSetup.config';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import { ErrorInterface } from 'src/types/errorInterface';
+import { ErrorInterface } from '@shared/interfaces/errorInterface';
 
 
 async function startNestApplication() {

@@ -1,19 +1,19 @@
 import { PipeTransform, ArgumentMetadata } from '@nestjs/common';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import Exceptions from '@core/infra/errors/Exceptions';
-import registerHookEventSchema, { RegisterHookEventInterface } from '@api/schemas/registerHookEvent.schema';
-import { RegisterHookEventInputDto } from './dto/HookInput.dto';
+import registerEventHookSchema, { RegisterEventHookInterface } from '@api/schemas/registerEventHook.schema';
+import { RegisterEventHookInputDto } from './dto/HookInput.dto';
 
 
-export class RegisterHookEventPipeValidator implements PipeTransform<RegisterHookEventInputDto, RegisterHookEventInterface> {
-	private readonly schemaValidator: SchemaValidator<RegisterHookEventInterface>;
+export class RegisterEventHookPipeValidator implements PipeTransform<RegisterEventHookInputDto, RegisterEventHookInterface> {
+	private readonly schemaValidator: SchemaValidator<RegisterEventHookInterface>;
 
 	constructor() {
-		this.schemaValidator = new SchemaValidator<RegisterHookEventInterface>(new Exceptions());
+		this.schemaValidator = new SchemaValidator<RegisterEventHookInterface>(new Exceptions());
 	}
 
-	public transform(value: RegisterHookEventInputDto, metadata: ArgumentMetadata): RegisterHookEventInterface {
+	public transform(value: RegisterEventHookInputDto, metadata: ArgumentMetadata): RegisterEventHookInterface {
 		console.log(`Validating '${metadata.type}' received as '${metadata.metatype?.name}'`);
-		return this.schemaValidator.validate(value, registerHookEventSchema);
+		return this.schemaValidator.validate(value, registerEventHookSchema);
 	}
 }

@@ -1,14 +1,13 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Logger } from 'winston';
-import CryptographyService from '@core/infra/security/Cryptography.service';
 import Exceptions from '@core/infra/errors/Exceptions';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
-import { RequestInterface, ResponseInterface, NextFunctionInterface } from 'src/types/endpointInterface';
-import { decodedFieldType } from 'src/types/userAuthInterface';
+import CryptographyService from '@core/infra/security/Cryptography.service';
+import { RequestInterface } from '@shared/interfaces/endpointInterface';
 
 
 @Injectable()
-export default class JwtDecodeMiddleware implements NestMiddleware {
+export default class AuthGuard implements CanActivate {
 	private readonly logger: Logger;
 
 	constructor(
@@ -19,7 +18,10 @@ export default class JwtDecodeMiddleware implements NestMiddleware {
 		this.logger = this.loggerGenerator.getLogger();
 	}
 
-	public use(request: RequestInterface, response: ResponseInterface, next: NextFunctionInterface) {
+	public canActivate(context: ExecutionContext): boolean {
+		this.logger.debug(`Running guard '${AuthGuard.name}' in '${context.getType()}' context`);
+
+		const request = context.switchToHttp().getRequest<RequestInterface>();
 		const authorization = request?.headers?.authorization;
 
 		if (!authorization) {
@@ -38,7 +40,7 @@ export default class JwtDecodeMiddleware implements NestMiddleware {
 			});
 		}
 
-		let username: decodedFieldType = null, clientId: decodedFieldType = null;
+		let username: string | null = null, clientId: string | null = null;
 		if (typeof decoded !== 'string') {
 			username = decoded?.username ?? decoded['cognito:username'];
 			clientId = decoded?.clientId ?? decoded?.client_id;
@@ -49,6 +51,6 @@ export default class JwtDecodeMiddleware implements NestMiddleware {
 			clientId,
 		};
 
-		next();
+		return true;
 	}
 }

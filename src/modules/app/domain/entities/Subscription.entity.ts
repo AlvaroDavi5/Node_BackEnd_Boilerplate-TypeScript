@@ -2,7 +2,7 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsBoolean, IsDate } from 'class-validator';
 import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity';
-import { returingString, returingBoolean, returingDate } from 'src/types/returnTypeFunc';
+import { returingString, returingBoolean, returingDate } from '@shared/types/returnTypeFunc';
 
 
 export interface SubscriptionInterface {

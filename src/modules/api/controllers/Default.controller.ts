@@ -18,7 +18,11 @@ export default class DefaultController {
 	) { }
 
 	@ApiTags('HealthCheck')
-	@ApiOperation({ summary: 'Check API' })
+	@ApiOperation({
+		summary: 'Check API',
+		description: 'Check if API is working',
+		deprecated: false,
+	})
 	@Get('/check')
 	@ApiOkResponse({
 		schema: {

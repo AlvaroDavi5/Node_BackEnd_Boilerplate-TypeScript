@@ -4,7 +4,7 @@ import UserEntity from '@app/domain/entities/User.entity';
 import CryptographyService from '@core/infra/security/Cryptography.service';
 import UserRepository from '@app/repositories/user/User.repository';
 import Exceptions from '@core/infra/errors/Exceptions';
-import { ListQueryInterface, PaginationInterface } from 'src/types/listPaginationInterface';
+import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
 import { ConfigsInterface } from '@core/configs/configs.config';
 
 

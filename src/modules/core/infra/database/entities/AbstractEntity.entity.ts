@@ -2,7 +2,7 @@ import { Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
-import { returingNumber } from 'src/types/returnTypeFunc';
+import { returingNumber } from '@shared/types/returnTypeFunc';
 
 
 export default abstract class AbstractEntity<I = any> {

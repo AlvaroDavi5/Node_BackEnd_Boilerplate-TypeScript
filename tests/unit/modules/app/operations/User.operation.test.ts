@@ -2,8 +2,8 @@ import UserOperation from '../../../../../src/modules/app/operations/User.operat
 import UserEntity from '../../../../../src/modules/app/domain/entities/User.entity';
 import UserPreferenceEntity from '../../../../../src/modules/app/domain/entities/UserPreference.entity';
 import UserStrategy from '../../../../../src/modules/app/strategies/User.strategy';
-import { ListQueryInterface, PaginationInterface } from '../../../../../src/types/_listPaginationInterface';
-import { ErrorInterface } from '../../../../../src/types/_errorInterface';
+import { ListQueryInterface, PaginationInterface } from '../../../../../src/shared/interfaces/listPaginationInterface';
+import { ErrorInterface } from '../../../../../src/shared/interfaces/errorInterface';
 
 
 describe('Modules :: App :: Operations :: UserOperation', () => {

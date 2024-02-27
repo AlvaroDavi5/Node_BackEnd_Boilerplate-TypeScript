@@ -5,7 +5,7 @@ import {
 } from '@nestjs/common';
 import { ThrottlerException } from '@nestjs/throttler';
 import { ExceptionsEnum } from '../../../common/enums/exceptions.enum';
-import { ErrorInterface } from 'src/types/errorInterface';
+import { ErrorInterface } from '@shared/interfaces/errorInterface';
 
 
 @Injectable()

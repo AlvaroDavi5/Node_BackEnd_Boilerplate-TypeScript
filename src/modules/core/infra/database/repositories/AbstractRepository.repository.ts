@@ -4,8 +4,8 @@ import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import Exceptions from '@core/infra/errors/Exceptions';
 import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity';
-import { ListQueryInterface, PaginationInterface } from 'src/types/listPaginationInterface';
-import { constructorType } from 'src/types/constructorType';
+import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
+import { constructorType } from '@shared/types/constructorType';
 
 
 type ModelType<T extends Model<T>> = constructorType<T> & typeof Model;

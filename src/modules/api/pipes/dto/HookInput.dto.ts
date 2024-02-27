@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString } from 'class-validator';
-import { RegisterHookEventInterface } from '@api/schemas/registerHookEvent.schema';
+import { RegisterEventHookInterface } from '@api/schemas/registerEventHook.schema';
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 
 
-export abstract class RegisterHookEventInputDto implements RegisterHookEventInterface {
+export abstract class RegisterEventHookInputDto implements RegisterEventHookInterface {
 	@ApiProperty({ type: String, example: 'http://localhost:4000/api/hook', default: '', nullable: false, required: true })
 	@IsString()
 	public responseEndpoint!: string;

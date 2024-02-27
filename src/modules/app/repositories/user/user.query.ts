@@ -3,7 +3,7 @@ import UsersModel from '@core/infra/database/models/Users.model';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 import { ThemesEnum } from '@app/domain/enums/themes.enum';
 import { UserInterface } from '@app/domain/entities/User.entity';
-import { ListQueryInterface } from 'src/types/listPaginationInterface';
+import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
 
 
 export const userQueryOptions: { include: Includeable[] } = {

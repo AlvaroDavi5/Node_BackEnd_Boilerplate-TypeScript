@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, IsNumberString, IsBooleanString } from 'class-validator';
-import { ListQueryInterface } from 'src/types/listPaginationInterface';
+import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
 
 
 export abstract class ListQueryInputDto implements ListQueryInterface {

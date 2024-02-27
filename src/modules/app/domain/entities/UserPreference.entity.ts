@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString, IsDate } from 'class-validator';
 import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity';
 import { ThemesEnum } from '../enums/themes.enum';
-import { returingNumber, returingString, returingDate } from 'src/types/returnTypeFunc';
+import { returingNumber, returingString, returingDate } from '@shared/types/returnTypeFunc';
 
 
 export interface UserPreferenceInterface {

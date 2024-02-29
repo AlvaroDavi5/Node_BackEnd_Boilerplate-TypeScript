@@ -103,6 +103,8 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 	}
 
 	public async create(entity: E): Promise<E | null> {
+		this.validatePayload(entity);
+
 		const result = await this.ResourceModel.create(
 			this.resourceMapper.toDatabase(entity)
 		);
@@ -142,10 +144,12 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 	}
 
 	public async update(id: number, entity: E): Promise<E | null> {
+		this.validatePayload(entity);
+
 		const where: any = {
 			id: Number(id),
 		};
-		await this.ResourceModel.update(entity, { where });
+		await this.ResourceModel.update(this.resourceMapper.toDatabase(entity), { where });
 		const result = await this.ResourceModel.findByPk(id);
 		if (!result) return null;
 

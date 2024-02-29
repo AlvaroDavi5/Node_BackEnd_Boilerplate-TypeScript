@@ -7,6 +7,7 @@ import UserStrategy from '@app/strategies/User.strategy';
 import Exceptions from '@core/infra/errors/Exceptions';
 import { UserAuthInterface } from '@shared/interfaces/userAuthInterface';
 import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
+import CryptographyService from '@core/infra/security/Cryptography.service';
 
 
 @Injectable()
@@ -14,16 +15,12 @@ export default class UserOperation {
 	constructor(
 		private readonly userService: UserService,
 		private readonly userPreferenceService: UserPreferenceService,
+		private readonly cryptographyService: CryptographyService,
 		private readonly userStrategy: UserStrategy,
 		private readonly exceptions: Exceptions,
 	) { }
 
-	public async loginUser(data: { email: string, password: string }, userAgent?: UserAuthInterface): Promise<UserEntity> {
-		if (!userAgent?.clientId)
-			throw this.exceptions.unauthorized({
-				message: 'Invalid userAgent'
-			});
-
+	public async loginUser(data: { email: string, password: string }): Promise<{ user: UserEntity, token: string }> {
 		const foundedUser = await this.userService.getByEmail(data.email);
 		if (!foundedUser)
 			throw this.exceptions.notFound({
@@ -36,9 +33,15 @@ export default class UserOperation {
 
 		if (foundedPreference)
 			foundedUser.setPreference(foundedPreference);
-
 		foundedUser.setPassword('');
-		return foundedUser;
+
+		const userAuthToEncode: UserAuthInterface = {
+			username: foundedUser.getLogin().email,
+			clientId: foundedUser.getId().toString(),
+		};
+		const token = this.cryptographyService.encodeJwt(userAuthToEncode, 'utf8', '1d');
+
+		return { user: foundedUser, token };
 	}
 
 	public async listUsers(query: ListQueryInterface): Promise<PaginationInterface<UserEntity>> {
@@ -105,7 +108,7 @@ export default class UserOperation {
 		return foundedUser;
 	}
 
-	public async updateUser(id: number, data: unknown, userAgent?: UserAuthInterface): Promise<UserEntity> {
+	public async updateUser(id: number, data: any, userAgent?: UserAuthInterface): Promise<UserEntity> {
 		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
@@ -125,6 +128,15 @@ export default class UserOperation {
 				message: 'userAgent not allowed to update this user'
 			});
 
+		const attributesToUpdate = Object.keys({
+			...user.getAttributes(),
+			...preference.getAttributes(),
+		});
+		attributesToUpdate.forEach((attributeName) => {
+			if (attributeName !== 'id')
+				data[attributeName] = data[attributeName] ?? (user as any)[attributeName] ?? (preference as any)[attributeName];
+		});
+
 		const updatedPreference = await this.userPreferenceService.update(preference.getId(), new UserPreferenceEntity(data));
 		const updatedUser = await this.userService.update(user.getId(), new UserEntity(data));
 
@@ -135,6 +147,7 @@ export default class UserOperation {
 
 		if (updatedPreference)
 			updatedUser.setPreference(updatedPreference);
+		updatedUser.setPassword('');
 
 		return updatedUser;
 	}

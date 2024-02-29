@@ -1,4 +1,4 @@
-import UserEntity from '@app/domain/entities/User.entity';
+import UserEntity, { UserInterface } from '@app/domain/entities/User.entity';
 import UsersModel from '@core/infra/database/models/Users.model';
 import userPreferenceMapper from '@app/repositories/userPreference/userPreference.mapper';
 
@@ -17,20 +17,13 @@ const toEntity = ({ dataValues }: UsersModel): UserEntity => {
 	return new UserEntity(dataValues);
 };
 
-const toDatabase = (entity: UserEntity): any => {
+const toDatabase = (entity: UserEntity): UserInterface | null => {
 	if (!(entity.validate().valid))
 		return null;
 
-	return {
-		...entity.getLogin(),
-		password: entity.getPassword(),
-		phone: entity.getPhone(),
-		...entity.getDocInfos(),
-		createdAt: entity.createdAt,
-		updatedAt: entity.updatedAt,
-		deletedAt: entity.deletedAt,
-		deletedBy: entity.getDeletedBy(),
-	};
+	const { id, preference, ...userAttributes } = entity.getAttributes();
+
+	return userAttributes;
 };
 
 export default {

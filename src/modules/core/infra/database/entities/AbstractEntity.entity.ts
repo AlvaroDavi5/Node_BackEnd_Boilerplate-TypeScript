@@ -6,7 +6,6 @@ import { returingNumber } from '@shared/types/returnTypeFunc';
 
 
 export default abstract class AbstractEntity<I = any> {
-	private readonly dateGeneratorHelper: DateGeneratorHelper = new DateGeneratorHelper();
 
 	public validate(): { value: any, valid: boolean, error: Error | null } {
 		let value: any = null;
@@ -29,7 +28,8 @@ export default abstract class AbstractEntity<I = any> {
 	}
 
 	public getDate(dateStr?: string): Date {
-		return this.dateGeneratorHelper.getDate(true, dateStr);
+		const dateGeneratorHelper: DateGeneratorHelper = new DateGeneratorHelper();
+		return dateGeneratorHelper.getDate(true, dateStr);
 	}
 
 	public getAttributes(): I {

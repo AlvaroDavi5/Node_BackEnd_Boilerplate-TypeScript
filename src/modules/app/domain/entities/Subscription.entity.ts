@@ -54,7 +54,6 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 
 	constructor(dataValues: any) {
 		super();
-
 		dataValues = { ...dataValues, ...dataValues?.dataValues, ...dataValues?.listen };
 		if (this.exists(dataValues?._id)) this.databaseId = dataValues._id;
 		if (this.exists(dataValues?.id)) this.databaseId = dataValues.id;
@@ -63,7 +62,7 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 		if (this.exists(dataValues?.newConnections)) this.newConnectionsListen = dataValues.newConnections;
 		if (this.exists(dataValues?.newConnectionsListen)) this.newConnectionsListen = dataValues.newConnectionsListen;
 		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
-		this.createdAt = this.exists(dataValues?.createdAt) ? new Date(dataValues.createdAt) : this.getDate();
+		this.createdAt = this.exists(dataValues?.createdAt) ? this.getDate(dataValues.createdAt) : this.getDate();
 	}
 
 	public getAttributes(): SubscriptionInterface {

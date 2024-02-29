@@ -1,4 +1,4 @@
-import UserPreferenceEntity from '@app/domain/entities/UserPreference.entity';
+import UserPreferenceEntity, { UserPreferenceInterface } from '@app/domain/entities/UserPreference.entity';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 
 
@@ -6,18 +6,13 @@ const toEntity = ({ dataValues }: UserPreferencesModel): UserPreferenceEntity =>
 	return new UserPreferenceEntity(dataValues);
 };
 
-const toDatabase = (entity: UserPreferenceEntity): any => {
+const toDatabase = (entity: UserPreferenceEntity): UserPreferenceInterface | null => {
 	if (!(entity.validate().valid))
 		return null;
 
-	return {
-		userId: entity.getUserId(),
-		imagePath: entity.getImagePath(),
-		defaultTheme: entity.defaultTheme,
-		createdAt: entity.createdAt,
-		updatedAt: entity.updatedAt,
-		deletedAt: entity.deletedAt,
-	};
+	const { id, ...userPreferenceAttributes } = entity.getAttributes();
+
+	return userPreferenceAttributes;
 };
 
 export default {

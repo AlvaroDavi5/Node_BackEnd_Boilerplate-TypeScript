@@ -23,35 +23,69 @@ export default class UserService {
 	}
 
 	public async getById(id: number): Promise<UserEntity | null> {
-		return await this.userRepository.getById(id);
+		try {
+			return await this.userRepository.getById(id);
+		} catch (error) {
+			throw this.exceptions.internal({
+				message: 'Error to comunicate with database',
+				details: `${(error as any)?.original}`,
+			});
+		}
 	}
 
 	public async getByEmail(email: string): Promise<UserEntity | null> {
-		return await this.userRepository.findOne({ email: email });
+		try {
+			return await this.userRepository.findOne({ email: email });
+		} catch (error) {
+			throw this.exceptions.internal({
+				message: 'Error to comunicate with database',
+				details: `${(error as any)?.original}`,
+			});
+		}
 	}
 
 	public async create(entity: UserEntity): Promise<UserEntity | null> {
-		const userPassword = entity.getPassword();
-		if (!userPassword?.length)
-			throw this.exceptions.business({
-				message: 'Invalid password',
+		try {
+			const userPassword = entity.getPassword();
+			if (!userPassword?.length)
+				throw this.exceptions.business({
+					message: 'Invalid password',
+				});
+
+			entity.setPassword(this.protectPassword(userPassword));
+
+			return await this.userRepository.create(entity);
+		} catch (error) {
+			throw this.exceptions.internal({
+				message: 'Error to comunicate with database',
+				details: `${(error as any)?.original}`,
 			});
-
-		entity.setPassword(this.protectPassword(userPassword));
-
-		const result = await this.userRepository.create(entity);
-		return result;
+		}
 	}
 
 	public async update(id: number, entity: UserEntity): Promise<UserEntity | null> {
-		return await this.userRepository.update(id, entity);
+		try {
+			const userPassword = entity.getPassword();
+			if (userPassword?.length)
+				entity.setPassword(this.protectPassword(userPassword));
+
+			return await this.userRepository.update(id, entity);
+		} catch (error) {
+			throw this.exceptions.internal({
+				message: 'Error to comunicate with database',
+				details: `${(error as any)?.original}`,
+			});
+		}
 	}
 
 	public async delete(id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean | null> {
 		try {
 			return await this.userRepository.deleteOne(id, Boolean(data.softDelete), String(data.userAgentId));
 		} catch (error) {
-			return null;
+			throw this.exceptions.internal({
+				message: 'Error to comunicate with database',
+				details: `${(error as any)?.original}`,
+			});
 		}
 	}
 
@@ -59,7 +93,10 @@ export default class UserService {
 		try {
 			return await this.userRepository.list(query);
 		} catch (error) {
-			return null;
+			throw this.exceptions.internal({
+				message: 'Error to comunicate with database',
+				details: `${(error as any)?.original}`,
+			});
 		}
 	}
 

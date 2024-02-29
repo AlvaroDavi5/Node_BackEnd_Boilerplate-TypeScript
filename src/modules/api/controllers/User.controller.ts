@@ -18,23 +18,21 @@ import { ListQueryInputDto } from '@api/pipes/dto/QueryInput.dto';
 import { CreateUserPipeValidator, UpdateUserPipeValidator, LoginUserPipeValidator } from '@api/pipes/UserValidator.pipe';
 import { CreateUserInputDto, UpdateUserInputDto, LoginUserInputDto } from '@api/pipes/dto/UserInput.dto';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
-import CryptographyService from '@core/infra/security/Cryptography.service';
 import { RequestInterface } from '@shared/interfaces/endpointInterface';
 import { PaginationInterface } from '@shared/interfaces/listPaginationInterface';
-import { UserAuthInterface } from '@shared/interfaces/userAuthInterface';
 
 
 @ApiTags('Users')
 @Controller('/users')
 @UseGuards(CustomThrottlerGuard, AuthGuard)
 @authSwaggerDecorator()
+@exceptionsResponseDecorator()
 export default class UserController implements OnModuleInit {
 	private userOperation!: UserOperation;
 	private readonly logger: Logger;
 
 	constructor(
 		private readonly moduleRef: ModuleRef,
-		private readonly cryptographyService: CryptographyService,
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
 		this.logger = this.loggerGenerator.getLogger();
@@ -56,7 +54,6 @@ export default class UserController implements OnModuleInit {
 			example: (new UserEntityList()),
 		},
 	})
-	@exceptionsResponseDecorator()
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async listUsers(
@@ -84,7 +81,6 @@ export default class UserController implements OnModuleInit {
 	})
 	@Post('/')
 	@ApiCreatedResponse({ type: UserEntity })
-	@exceptionsResponseDecorator()
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async createUser(
@@ -110,7 +106,6 @@ export default class UserController implements OnModuleInit {
 	})
 	@Get('/:userId')
 	@ApiOkResponse({ type: UserEntity })
-	@exceptionsResponseDecorator()
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async getUser(
@@ -136,25 +131,15 @@ export default class UserController implements OnModuleInit {
 	})
 	@Put('/')
 	@ApiOkResponse({ type: UserEntity })
-	@exceptionsResponseDecorator()
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async loginUser(
-		@Req() request: RequestInterface,
 		@Body(LoginUserPipeValidator) body: LoginUserInputDto,
 	): Promise<UserInterface & { token: string }> {
 		try {
-			const { user } = request;
+			const { user, token } = await this.userOperation.loginUser(body);
 
-			const result = await this.userOperation.loginUser(body, user);
-
-			const resultToEncode: UserAuthInterface = {
-				username: result.getLogin().email,
-				clientId: result.getId().toString(),
-			};
-			const token = this.cryptographyService.encodeJwt(resultToEncode, 'utf8', '1d');
-
-			return { ...result.getAttributes(), token };
+			return { ...user.getAttributes(), token };
 		} catch (error) {
 			this.logger.error(error);
 			throw error;
@@ -168,7 +153,6 @@ export default class UserController implements OnModuleInit {
 	})
 	@Patch('/:userId')
 	@ApiOkResponse({ type: UserEntity })
-	@exceptionsResponseDecorator()
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async updateUser(
@@ -195,7 +179,6 @@ export default class UserController implements OnModuleInit {
 	})
 	@Delete('/:userId')
 	@ApiOkResponse({ schema: { example: { result: true } } })
-	@exceptionsResponseDecorator()
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async deleteUser(

@@ -12,6 +12,7 @@ import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 
 @Controller()
 @UseGuards(CustomThrottlerGuard)
+@exceptionsResponseDecorator()
 export default class DefaultController {
 	constructor(
 		private readonly httpConstants: HttpConstants,
@@ -47,7 +48,6 @@ export default class DefaultController {
 			},
 		}
 	})
-	@exceptionsResponseDecorator()
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public healthCheck(

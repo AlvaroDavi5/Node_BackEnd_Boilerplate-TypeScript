@@ -19,7 +19,7 @@ const passwordPattern = regExConstants.passwordPattern;
 
 export default Joi.object().keys({
 	fullName: Joi.string().trim().max(100),
-	password: Joi.string().regex(passwordPattern.regex, { name: passwordPattern.name }).message(passwordPattern.message('password')).required(),
+	password: Joi.string().regex(passwordPattern.regex, { name: passwordPattern.name }).message(passwordPattern.message('password')),
 	phone: Joi.string().empty('').max(16).trim(),
 	docType: Joi.string().empty('').max(10).trim(),
 	document: Joi.string().empty('').max(18).trim(),

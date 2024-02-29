@@ -28,6 +28,7 @@ import { ConfigsInterface } from '@core/configs/configs.config';
 @Controller('/files')
 @UseGuards(CustomThrottlerGuard, AuthGuard)
 @authSwaggerDecorator()
+@exceptionsResponseDecorator()
 export default class FileController implements OnModuleInit {
 	private fileReaderHelper!: FileReaderHelper;
 	private uploadService!: UploadService;
@@ -65,7 +66,6 @@ export default class FileController implements OnModuleInit {
 		},
 		description: 'Downloadable file',
 	})
-	@exceptionsResponseDecorator()
 	@ApiConsumes('application/json')
 	@ApiProduces('application/octet-stream', 'text/plain')
 	public getLicense(
@@ -114,7 +114,6 @@ export default class FileController implements OnModuleInit {
 		},
 		description: 'Uploaded File',
 	})
-	@exceptionsResponseDecorator()
 	@ApiConsumes('multipart/form-data')
 	@ApiProduces('application/json')
 	@ApiBody({

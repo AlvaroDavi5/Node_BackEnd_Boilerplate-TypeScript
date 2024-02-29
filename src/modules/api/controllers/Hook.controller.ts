@@ -19,6 +19,7 @@ import WebhookService from '@app/services/Webhook.service';
 @Controller('/hook')
 @UseGuards(CustomThrottlerGuard, AuthGuard)
 @authSwaggerDecorator()
+@exceptionsResponseDecorator()
 export default class HookController {
 	constructor(
 		private readonly httpConstants: HttpConstants,
@@ -38,7 +39,6 @@ export default class HookController {
 			},
 		}
 	})
-	@exceptionsResponseDecorator()
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async registerEventHook(

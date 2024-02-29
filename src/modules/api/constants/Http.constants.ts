@@ -50,6 +50,7 @@ export default class HttpConstants {
 		LOCKED: 423,
 		FAILED_DEPENDENCY: 424,
 		UPGRADE_REQUIRED: 426,
+		TOO_MANY_REQUESTS: 429,
 
 		// Server Errors
 		INTERNAL_SERVER_ERROR: 500,

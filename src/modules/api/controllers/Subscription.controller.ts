@@ -15,6 +15,7 @@ import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 @Controller('/subscriptions')
 @UseGuards(CustomThrottlerGuard, AuthGuard)
 @authSwaggerDecorator()
+@exceptionsResponseDecorator()
 export default class SubscriptionController implements OnModuleInit {
 	private subscriptionService!: SubscriptionService;
 	private readonly logger: Logger;
@@ -53,7 +54,6 @@ export default class SubscriptionController implements OnModuleInit {
 			default: [],
 		},
 	})
-	@exceptionsResponseDecorator()
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async listSubscriptions(

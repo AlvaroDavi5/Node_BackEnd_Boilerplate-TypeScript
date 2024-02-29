@@ -20,10 +20,10 @@ export default class UserRepository extends AbstractRepository<UserPreferencesMo
 
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER)
-		connection: Sequelize,
-		exceptions: Exceptions,
-		loggerGenerator: LoggerGenerator,
-		dateGeneratorHelper: DateGeneratorHelper,
+			connection: Sequelize,
+			exceptions: Exceptions,
+			loggerGenerator: LoggerGenerator,
+			dateGeneratorHelper: DateGeneratorHelper,
 	) {
 		userPreferenceOptions.sequelize = connection;
 		super({

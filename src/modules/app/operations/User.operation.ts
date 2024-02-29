@@ -79,6 +79,7 @@ export default class UserOperation {
 		const foundedPreference = await this.userPreferenceService.getByUserId(createdUser.getId());
 		if (foundedPreference)
 			foundedUser?.setPreference(foundedPreference);
+		foundedUser?.setPassword('');
 
 		if (!foundedUser)
 			throw this.exceptions.notFound({

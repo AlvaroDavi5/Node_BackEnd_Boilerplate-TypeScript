@@ -2,6 +2,8 @@ import UserOperation from '../../../../../src/modules/app/operations/User.operat
 import UserEntity from '../../../../../src/modules/app/domain/entities/User.entity';
 import UserPreferenceEntity from '../../../../../src/modules/app/domain/entities/UserPreference.entity';
 import UserStrategy from '../../../../../src/modules/app/strategies/User.strategy';
+import CryptographyService from '../../../../../src/modules/core/infra/security/Cryptography.service';
+import configs from '../../../../../src/modules/core/configs/configs.config';
 import { ListQueryInterface, PaginationInterface } from '../../../../../src/shared/interfaces/listPaginationInterface';
 import { ErrorInterface } from '../../../../../src/shared/interfaces/errorInterface';
 
@@ -32,10 +34,18 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		notFound: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 		conflict: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 	};
+	const configServiceMock: any = {
+		get: (propertyPath?: string) => {
+			if (propertyPath)
+				return configs()[propertyPath];
+			else
+				return configs();
+		},
+	};
 
 	const createdAt = new Date();
 	const userAgent = { username: 'user.test@nomail.test', clientId: '#1' };
-	const userOperation = new UserOperation(userServiceMock, userPreferenceServiceMock, userStrategy, exceptionsMock);
+	const userOperation = new UserOperation(userServiceMock, userPreferenceServiceMock, new CryptographyService(configServiceMock), userStrategy, exceptionsMock);
 
 	describe('# User Login', () => {
 		test('Should validate password', async () => {
@@ -56,12 +66,12 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 			});
 			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: number): Promise<UserPreferenceEntity | null> => (new UserPreferenceEntity({ userId })));
 
-			const loggedUser = await userOperation.loginUser({ email: 'user.test@nomail.test', password: 'admin' }, userAgent);
+			const loggedUser = await userOperation.loginUser({ email: 'user.test@nomail.test', password: 'admin' });
 			expect(userServiceMock.getByEmail).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.validatePassword).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
-			expect(loggedUser.getLogin().email).toBe('user.test@nomail.test');
-			expect(loggedUser.getPassword()).toBe('');
+			expect(loggedUser.user.getLogin().email).toBe('user.test@nomail.test');
+			expect(loggedUser.user.getPassword()).toBe('');
 		});
 
 		test('Should not validate password', async () => {
@@ -83,7 +93,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: number): Promise<UserPreferenceEntity | null> => (new UserPreferenceEntity({ userId })));
 
 			try {
-				await userOperation.loginUser({ email: 'user.test@nomail.test', password: 'test' }, userAgent);
+				await userOperation.loginUser({ email: 'user.test@nomail.test', password: 'test' });
 			} catch (error) {
 				expect(userServiceMock.getByEmail).toHaveBeenCalledTimes(1);
 				expect(userServiceMock.validatePassword).toHaveBeenCalledWith(userEntity, 'test');
@@ -94,24 +104,11 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 			}
 		});
 
-		test('Should throw a unauthorized error', async () => {
-			try {
-				await userOperation.loginUser({ email: 'user.test@nomail.test', password: 'admin' }, null);
-			} catch (error) {
-				expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
-					message: 'Invalid userAgent'
-				});
-				expect(userServiceMock.getByEmail).not.toHaveBeenCalled();
-				expect(userServiceMock.validatePassword).not.toHaveBeenCalled();
-				expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
-			}
-		});
-
 		test('Should throw a not found error', async () => {
 			userServiceMock.getByEmail.mockImplementation(async (email: string): Promise<UserEntity | null> => (null));
 
 			try {
-				await userOperation.loginUser({ email: 'user.test@nomail.test', password: 'admin' }, userAgent);
+				await userOperation.loginUser({ email: 'user.test@nomail.test', password: 'admin' });
 			} catch (error) {
 				expect(userServiceMock.getByEmail).toHaveBeenCalledTimes(1);
 				expect(exceptionsMock.notFound).toHaveBeenCalledWith({
@@ -186,6 +183,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 			expect(createdUser?.getId()).toBe(userEntity.getId());
 			expect(createdUser?.getLogin()?.email).toBe(userEntity.getLogin().email);
+			expect(createdUser?.getPassword()).toBe('');
 		});
 
 		test('Should throw a not found error', async () => {
@@ -330,12 +328,13 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				else return null;
 			});
 
-			const deletedUser = await userOperation.updateUser(1, { phone: '+55999999999', createdAt }, userAgent);
+			const updatedUser = await userOperation.updateUser(1, { phone: '+55999999999', createdAt }, userAgent);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
-			expect(userPreferenceServiceMock.update).toHaveBeenCalledWith(2, new UserPreferenceEntity({ phone: '+55999999999', createdAt }));
-			expect(userServiceMock.update).toHaveBeenCalledWith(1, new UserEntity({ phone: '+55999999999', createdAt }));
-			expect(deletedUser?.getPhone()).toEqual('+55999999999');
+			expect(userPreferenceServiceMock.update).toHaveBeenCalledWith(2, new UserPreferenceEntity({ userId: 1, phone: '+55999999999', createdAt }));
+			expect(userServiceMock.update).toHaveBeenCalledWith(1, new UserEntity({ email: 'user.test@nomail.test', phone: '+55999999999', createdAt }));
+			expect(updatedUser?.getPhone()).toEqual('+55999999999');
+			expect(updatedUser?.getPassword()).toBe('');
 		});
 
 		test('Should throw a conflict error', async () => {

@@ -1,7 +1,7 @@
-import UserOperation from '../../../../../src/modules/app/operations/User.operation';
-import UserEntity from '../../../../../src/modules/app/domain/entities/User.entity';
-import UserPreferenceEntity from '../../../../../src/modules/app/domain/entities/UserPreference.entity';
-import UserStrategy from '../../../../../src/modules/app/strategies/User.strategy';
+import UserOperation from '../../../../../src/modules/app/user/operations/User.operation';
+import UserEntity from '../../../../../src/modules/domain/entities/User.entity';
+import UserPreferenceEntity from '../../../../../src/modules/domain/entities/UserPreference.entity';
+import UserStrategy from '../../../../../src/modules/app/user/strategies/User.strategy';
 import CryptographyService from '../../../../../src/modules/core/infra/security/Cryptography.service';
 import configs from '../../../../../src/modules/core/configs/configs.config';
 import { ListQueryInterface, PaginationInterface } from '../../../../../src/shared/interfaces/listPaginationInterface';

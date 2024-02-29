@@ -2,15 +2,15 @@ import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { Message } from '@aws-sdk/client-sqs';
 import { Logger } from 'winston';
-import SubscriptionService from '@app/services/Subscription.service';
-import WebhookService from '@app/services/Webhook.service';
+import SubscriptionService from '@app/subscription/services/Subscription.service';
+import WebhookService from '@app/hook/services/Webhook.service';
 import MongoClient from '@core/infra/data/Mongo.client';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import eventSchema, { EventSchemaInterface } from './schemas/event.schema';
-import { EventsEnum } from '@app/domain/enums/events.enum';
-import { WebSocketRoomsEnum } from '@app/domain/enums/webSocketEvents.enum';
+import { EventsEnum } from '@domain/enums/events.enum';
+import { WebSocketRoomsEnum } from '@domain/enums/webSocketEvents.enum';
 
 
 @Injectable()

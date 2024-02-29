@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { EventsEnum } from '@app/domain/enums/events.enum';
+import { EventsEnum } from '@domain/enums/events.enum';
 
 
 export interface EventSchemaInterface {

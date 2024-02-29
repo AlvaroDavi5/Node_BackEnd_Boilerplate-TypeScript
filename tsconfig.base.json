@@ -46,6 +46,9 @@
 			"@common/*": [
 				"src/modules/common/*",
 			],
+			"@domain/*": [
+				"src/modules/domain/*",
+			],
 			"@app/*": [
 				"src/modules/app/*",
 			],
@@ -57,9 +60,6 @@
 			],
 			"@events/*": [
 				"src/modules/events/*",
-			],
-			"@reports/*": [
-				"src/modules/reports/*",
 			],
 			"@shared/*": [
 				"src/shared/*",

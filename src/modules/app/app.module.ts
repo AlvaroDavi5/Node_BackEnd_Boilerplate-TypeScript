@@ -1,35 +1,31 @@
-import { Module, Global } from '@nestjs/common';
-import FileStrategy from '@app/strategies/File.strategy';
-import UserStrategy from '@app/strategies/User.strategy';
-import UserOperation from '@app/operations/User.operation';
-import UserService from '@app/services/User.service';
-import UserPreferenceService from '@app/services/UserPreference.service';
-import SubscriptionService from '@app/services/Subscription.service';
-import WebhookService from '@app/services/Webhook.service';
-import UserRepository from '@app/repositories/user/User.repository';
-import UserPreferenceRepository from '@app/repositories/userPreference/UserPreference.repository';
+import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
+import LoggerMiddleware from '@api/middlewares/Logger.middleware';
+import DefaultController from '@api/controllers/Default.controller';
+import UserModule from './user/user.module';
+import SubscriptionModule from './subscription/subscription.module';
+import HookModule from './hook/hook.module';
+import FileModule from './file/file.module';
 
 
-@Global()
 @Module({
-	imports: [],
-	controllers: [],
-	providers: [
-		FileStrategy,
-		UserStrategy,
-		UserOperation,
-		UserService,
-		UserPreferenceService,
-		SubscriptionService,
-		WebhookService,
-		UserRepository,
-		UserPreferenceRepository,
+	imports: [
+		UserModule,
+		SubscriptionModule,
+		HookModule,
+		FileModule,
 	],
-	exports: [
-		FileStrategy,
-		UserOperation,
-		SubscriptionService,
-		WebhookService,
+	controllers: [
+		DefaultController,
 	],
+	providers: [],
+	exports: [],
 })
-export default class AppModule { }
+export default class AppModule implements NestModule {
+	configure(consumer: MiddlewareConsumer) {
+		consumer
+			.apply(LoggerMiddleware)
+			.forRoutes(
+				DefaultController,
+			);
+	}
+}

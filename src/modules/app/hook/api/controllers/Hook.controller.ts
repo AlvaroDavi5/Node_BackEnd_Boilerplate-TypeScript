@@ -15,7 +15,7 @@ import { RegisterEventHookInputDto } from '@app/hook/api/dto/HookInput.dto';
 import WebhookService from '@app/hook/services/Webhook.service';
 
 
-@ApiTags('Webhook')
+@ApiTags('Webhooks')
 @Controller('/hook')
 @UseGuards(CustomThrottlerGuard, AuthGuard)
 @authSwaggerDecorator()

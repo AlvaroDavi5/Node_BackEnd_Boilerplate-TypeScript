@@ -11,8 +11,8 @@ import FileModule from './file/file.module';
 	imports: [
 		UserModule,
 		SubscriptionModule,
-		HookModule,
 		FileModule,
+		HookModule,
 	],
 	controllers: [
 		DefaultController,

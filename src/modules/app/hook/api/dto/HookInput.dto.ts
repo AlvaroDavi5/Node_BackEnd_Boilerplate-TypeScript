@@ -9,7 +9,7 @@ export abstract class RegisterEventHookInputDto implements RegisterEventHookInte
 	@IsString()
 	public responseEndpoint!: string;
 
-	@ApiProperty({ type: String, enum: Object.values(HttpMethodsEnum), example: 'POST', default: '', nullable: false, required: true })
+	@ApiProperty({ type: HttpMethodsEnum, enum: Object.values(HttpMethodsEnum), example: 'POST', default: '', nullable: false, required: true })
 	@IsString()
 	public responseMethod!: HttpMethodsEnum;
 

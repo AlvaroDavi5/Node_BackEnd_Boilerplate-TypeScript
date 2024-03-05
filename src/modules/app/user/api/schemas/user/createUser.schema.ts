@@ -12,7 +12,7 @@ export interface CreateUserSchemaInterface {
 	document?: string,
 	fu?: string,
 	imagePath?: string,
-	defaultTheme?: string,
+	defaultTheme?: ThemesEnum,
 }
 
 const regExConstants = new RegExConstants();

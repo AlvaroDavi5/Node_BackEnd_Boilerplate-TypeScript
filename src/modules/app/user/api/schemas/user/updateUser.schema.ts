@@ -11,7 +11,7 @@ export interface UpdateUserSchemaInterface {
 	document?: string,
 	fu?: string,
 	imagePath?: string,
-	defaultTheme?: string,
+	defaultTheme?: ThemesEnum,
 }
 
 const regExConstants = new RegExConstants();

@@ -3,6 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { returingNumber } from '@shared/types/returnTypeFunc';
+import { PaginationInterface } from '@shared/interfaces/listPaginationInterface';
 
 
 export default abstract class AbstractEntity<I = any> {
@@ -37,11 +38,11 @@ export default abstract class AbstractEntity<I = any> {
 	}
 }
 
-export abstract class AbstractEntityList<T> {
+export abstract class AbstractEntityList<T> implements PaginationInterface<T> {
 	public content: T[] = [];
 
-	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, description: 'Page number' })
-	@Field(returingNumber, { defaultValue: 0, nullable: false, description: 'Page number' })
+	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, description: 'Page index' })
+	@Field(returingNumber, { defaultValue: 0, nullable: false, description: 'Page index' })
 	@IsNumber()
 	public pageNumber = 0;
 
@@ -50,13 +51,13 @@ export abstract class AbstractEntityList<T> {
 	@IsNumber()
 	public pageSize = 0;
 
-	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, description: 'Amount of pages' })
-	@Field(returingNumber, { defaultValue: 0, nullable: false, description: 'Amount of pages' })
+	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, description: 'Pages amount' })
+	@Field(returingNumber, { defaultValue: 0, nullable: false, description: 'Pages amount' })
 	@IsNumber()
 	public totalPages = 0;
 
-	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, description: 'Amount of items' })
-	@Field(returingNumber, { defaultValue: 0, nullable: false, description: 'Amount of items' })
+	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, description: 'All results amount' })
+	@Field(returingNumber, { defaultValue: 0, nullable: false, description: 'All results amount' })
 	@IsNumber()
 	public totalItems = 0;
 }

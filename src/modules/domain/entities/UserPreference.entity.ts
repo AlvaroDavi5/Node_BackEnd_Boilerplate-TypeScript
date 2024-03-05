@@ -33,7 +33,7 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 	@IsString()
 	private imagePath: string | null = null;
 
-	@ApiProperty({ type: String, example: ThemesEnum.DEFAULT, default: null, nullable: true, required: true, description: 'User default theme' })
+	@ApiProperty({ type: String, enum: Object.values(ThemesEnum), example: ThemesEnum.DEFAULT, default: null, nullable: true, required: true, description: 'User default theme' })
 	@Field(returingString, { defaultValue: null, nullable: true, description: 'User default theme' })
 	@IsString()
 	public defaultTheme: ThemesEnum | null = null;

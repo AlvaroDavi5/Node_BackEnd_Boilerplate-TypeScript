@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
-import UserEntity from '@domain/entities/User.entity';
+import UserEntity, { UserEntityList } from '@domain/entities/User.entity';
 import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
 import UserService from '@app/user/services/User.service';
 import UserPreferenceService from '@app/user/services/UserPreference.service';
 import UserStrategy from '@app/user/strategies/User.strategy';
 import Exceptions from '@core/infra/errors/Exceptions';
 import { UserAuthInterface } from '@shared/interfaces/userAuthInterface';
-import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
+import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
 import CryptographyService from '@core/infra/security/Cryptography.service';
 
 
@@ -44,14 +44,8 @@ export default class UserOperation {
 		return { user: foundedUser, token };
 	}
 
-	public async listUsers(query: ListQueryInterface): Promise<PaginationInterface<UserEntity>> {
+	public async listUsers(query: ListQueryInterface): Promise<UserEntityList> {
 		const usersList = await this.userService.list(query);
-
-		if (!usersList)
-			throw this.exceptions.integration({
-				message: 'Error to connect database',
-			});
-
 		return usersList;
 	}
 

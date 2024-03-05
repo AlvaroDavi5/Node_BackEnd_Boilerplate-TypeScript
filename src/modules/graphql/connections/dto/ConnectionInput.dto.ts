@@ -9,7 +9,7 @@ export abstract class CreateConnectionInputDto {
 	@IsString()
 	public subscriptionId!: string;
 
-	@Field(returingString, { defaultValue: null, nullable: true, description: 'CLient machine ID' })
+	@Field(returingString, { defaultValue: null, nullable: true, description: 'Client machine ID' })
 	@IsString()
 	@IsOptional()
 	public clientId?: string | null;

@@ -44,10 +44,10 @@ export abstract class CreateUserInputDto implements CreateUserSchemaInterface {
 	@IsOptional()
 	public imagePath?: string;
 
-	@ApiProperty({ type: String, example: ThemesEnum.DEFAULT, default: undefined, nullable: true, required: false })
+	@ApiProperty({ type: ThemesEnum, enum: Object.values(ThemesEnum), example: ThemesEnum.DEFAULT, default: undefined, nullable: true, required: false })
 	@IsString()
 	@IsOptional()
-	public defaultTheme?: string;
+	public defaultTheme?: ThemesEnum;
 }
 
 export abstract class UpdateUserInputDto implements UpdateUserSchemaInterface {
@@ -91,10 +91,10 @@ export abstract class UpdateUserInputDto implements UpdateUserSchemaInterface {
 	@IsOptional()
 	public imagePath?: string;
 
-	@ApiProperty({ type: String, example: ThemesEnum.DEFAULT, default: undefined, nullable: true, required: false })
+	@ApiProperty({ type: ThemesEnum, enum: Object.values(ThemesEnum), example: ThemesEnum.DEFAULT, default: undefined, nullable: true, required: false })
 	@IsString()
 	@IsOptional()
-	public defaultTheme?: string;
+	public defaultTheme?: ThemesEnum;
 }
 
 export abstract class LoginUserInputDto implements LoginUserSchemaInterface {

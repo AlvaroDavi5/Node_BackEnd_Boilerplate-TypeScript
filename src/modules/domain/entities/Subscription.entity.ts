@@ -33,7 +33,7 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 	private subscriptionId = '';
 
 	@ApiProperty({ type: String, example: 'localDev#0', default: null, nullable: true, required: true, description: 'CLient machine ID' })
-	@Field(returingString, { defaultValue: null, nullable: true, description: 'CLient machine ID' })
+	@Field(returingString, { defaultValue: null, nullable: true, description: 'Client machine ID' })
 	@IsString()
 	private clientId: string | null = null;
 

@@ -67,7 +67,6 @@ export default class UserController {
 		}
 	}
 
-	@ApiOperation({ summary: 'Create User' })
 	@ApiOperation({
 		summary: 'Create User',
 		description: 'Create a new user',

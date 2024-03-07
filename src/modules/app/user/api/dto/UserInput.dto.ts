@@ -19,79 +19,79 @@ export abstract class CreateUserInputDto implements CreateUserSchemaInterface {
 	@IsString()
 	public password!: string;
 
-	@ApiProperty({ type: String, example: '+0000000000000', default: undefined, nullable: true, required: false })
+	@ApiProperty({ type: String, example: '+0000000000000', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
 	public phone?: string;
 
-	@ApiProperty({ type: String, example: 'INVALID', default: undefined, nullable: true, required: false })
+	@ApiProperty({ type: String, example: 'INVALID', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
 	public docType?: string;
 
-	@ApiProperty({ type: String, example: '00000000000', default: undefined, nullable: true, required: false })
+	@ApiProperty({ type: String, example: '00000000000', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
 	public document?: string;
 
-	@ApiProperty({ type: String, example: 'UF', default: undefined, nullable: true, required: false })
+	@ApiProperty({ type: String, example: 'UF', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
 	public fu?: string;
 
-	@ApiProperty({ type: String, example: './image.png', default: undefined, nullable: true, required: false })
+	@ApiProperty({ type: String, example: './image.png', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
 	public imagePath?: string;
 
-	@ApiProperty({ type: ThemesEnum, enum: Object.values(ThemesEnum), example: ThemesEnum.DEFAULT, default: undefined, nullable: true, required: false })
+	@ApiProperty({ type: ThemesEnum, enum: Object.values(ThemesEnum), example: ThemesEnum.DEFAULT, default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
 	public defaultTheme?: ThemesEnum;
 }
 
 export abstract class UpdateUserInputDto implements UpdateUserSchemaInterface {
-	@ApiProperty({ type: String, example: 'User Default', default: undefined, nullable: true, required: false })
+	@ApiProperty({ type: String, example: 'User Default', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
 	public fullName?: string;
 
-	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: undefined, nullable: true, required: false })
+	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
 	public email?: string;
 
-	@ApiProperty({ type: String, example: 'pass123', default: undefined, nullable: true, required: false })
+	@ApiProperty({ type: String, example: 'pass123', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
 	public password?: string;
 
-	@ApiProperty({ type: String, example: '+0000000000000', default: undefined, nullable: true, required: false })
+	@ApiProperty({ type: String, example: '+0000000000000', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
 	public phone?: string;
 
-	@ApiProperty({ type: String, example: 'INVALID', default: undefined, nullable: true, required: false })
+	@ApiProperty({ type: String, example: 'INVALID', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
 	public docType?: string;
 
-	@ApiProperty({ type: String, example: '00000000000', default: undefined, nullable: true, required: false })
+	@ApiProperty({ type: String, example: '00000000000', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
 	public document?: string;
 
-	@ApiProperty({ type: String, example: 'UF', default: undefined, nullable: true, required: false })
+	@ApiProperty({ type: String, example: 'UF', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
 	public fu?: string;
 
-	@ApiProperty({ type: String, example: './image.png', default: undefined, nullable: true, required: false })
+	@ApiProperty({ type: String, example: './image.png', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
 	public imagePath?: string;
 
-	@ApiProperty({ type: ThemesEnum, enum: Object.values(ThemesEnum), example: ThemesEnum.DEFAULT, default: undefined, nullable: true, required: false })
+	@ApiProperty({ type: ThemesEnum, enum: Object.values(ThemesEnum), example: ThemesEnum.DEFAULT, default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
 	public defaultTheme?: ThemesEnum;

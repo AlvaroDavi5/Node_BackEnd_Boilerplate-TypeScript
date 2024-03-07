@@ -70,8 +70,8 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	@ApiProperty({
 		type: UserPreferenceEntity, example: (new UserPreferenceEntity({ imagePath: './image.png', defaultTheme: 'DEFAULT' })), default: null, nullable: true, required: true, description: 'User preference'
 	})
-	@Field(returingUserPreferenceEntity, { defaultValue: null, nullable: true, description: 'User preference' })
 	@Type(returingUserPreferenceEntity)
+	@Field(returingUserPreferenceEntity, { defaultValue: null, nullable: true, description: 'User preference' })
 	private preference: UserPreferenceEntity | null = null;
 
 	@ApiProperty({ type: Date, example: (new Date('2024-02-28T09:35:31.820')), default: (new Date('2024-02-28T09:35:31.820')), nullable: false, required: false, description: 'User creation timestamp' })
@@ -219,7 +219,7 @@ export class UserEntityList extends AbstractEntityList<UserEntity> {
 		nullable: false,
 		description: 'User list content',
 	})
-	@Field(returingUserEntityArray, { defaultValue: [], nullable: false, description: 'User list content' })
 	@Type(returingUserEntityArray)
+	@Field(returingUserEntityArray, { defaultValue: [], nullable: false, description: 'User list content' })
 	public content: UserEntity[] = [];
 }

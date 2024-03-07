@@ -1,6 +1,6 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString, IsDate } from 'class-validator';
+import { IsNumber, IsString, IsDate, IsEnum } from 'class-validator';
 import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 import { returingNumber, returingString, returingDate } from '@shared/types/returnTypeFunc';
@@ -35,7 +35,7 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 
 	@ApiProperty({ type: String, enum: Object.values(ThemesEnum), example: ThemesEnum.DEFAULT, default: null, nullable: true, required: true, description: 'User default theme' })
 	@Field(returingString, { defaultValue: null, nullable: true, description: 'User default theme' })
-	@IsString()
+	@IsEnum(ThemesEnum)
 	public defaultTheme: ThemesEnum | null = null;
 
 	@ApiProperty({ type: Date, example: (new Date('2024-02-28T09:35:31.820')), default: (new Date('2024-02-28T09:35:31.820')), nullable: false, required: false, description: 'User creation timestamp' })

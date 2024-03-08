@@ -17,7 +17,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20.8.x]
 
     steps:
       - name: Checkout Repository
@@ -58,7 +58,7 @@ jobs:
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [20.8.x]
 
     permissions:
       contents: write

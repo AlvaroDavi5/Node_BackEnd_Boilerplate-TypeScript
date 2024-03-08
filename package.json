@@ -1,5 +1,5 @@
 {
-	"$schema": "https://json.schemastore.org/package",
+	"$schema": "https://json.schemastore.org/package.json",
 	"name": "node_backend_boilerplate",
 	"description": "Node.js Boilerplate for Back-End using TypeScript",
 	"version": "3.0.0",
@@ -21,9 +21,10 @@
 		"win32"
 	],
 	"engines": {
-		"node": "f>=18.00.x <18.6.0",
+		"node": "f>=18.6.x <=20.10.0",
 		"yarn": "f>=1.22.x <3.x.x"
 	},
+	"engineStrict": true,
 	"keywords": [
 		"boilerplate",
 		"node",

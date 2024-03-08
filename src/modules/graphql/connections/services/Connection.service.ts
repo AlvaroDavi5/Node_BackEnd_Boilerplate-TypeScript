@@ -1,16 +1,23 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
+import { ModuleRef } from '@nestjs/core';
 import { CreateConnectionInputDto, UpdateConnectionInputDto } from '../dto/ConnectionInput.dto';
-import SubscriptionEntity from '@app/domain/entities/Subscription.entity';
-import SubscriptionService from '@app/services/Subscription.service';
+import SubscriptionEntity from '@domain/entities/Subscription.entity';
+import SubscriptionService from '@app/subscription/services/Subscription.service';
 import Exceptions from '@core/infra/errors/Exceptions';
 
 
 @Injectable()
-export default class ConnectionService {
+export default class ConnectionService implements OnModuleInit {
+	private subscriptionService!: SubscriptionService;
+
 	constructor(
-		private readonly subscriptionService: SubscriptionService,
+		private readonly moduleRef: ModuleRef,
 		private readonly exceptions: Exceptions,
 	) { }
+
+	public onModuleInit(): void {
+		this.subscriptionService = this.moduleRef.get(SubscriptionService, { strict: false });
+	}
 
 	public async findAll(): Promise<SubscriptionEntity[]> {
 		return await this.subscriptionService.list();

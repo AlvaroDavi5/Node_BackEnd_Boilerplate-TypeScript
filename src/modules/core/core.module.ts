@@ -2,6 +2,7 @@ import { Module, Global } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
+import { ThrottlerModule } from '@nestjs/throttler';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
@@ -25,12 +26,13 @@ import SyncCronTask from '@core/infra/cron/tasks/SyncCron.task';
 import CommonModule from '@common/common.module';
 import AppModule from '@app/app.module';
 import EventsModule from '@events/events.module';
-import ApiModule from '@api/api.module';
 import GraphQlModule from '@graphql/graphql.module';
+import RequestRateConstants from '@common/constants/RequestRate.constants';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 
 
-const appConfigs = configs();
+const { application: appConfigs } = configs();
+const requestRateConstants = new RequestRateConstants();
 
 @Global()
 @Module({
@@ -44,9 +46,14 @@ const appConfigs = configs();
 			maxListeners: 10,
 			verboseMemoryLeak: true,
 		}),
+		ThrottlerModule.forRoot([
+			requestRateConstants.short,
+			requestRateConstants.medium,
+			requestRateConstants.long,
+		]),
 		GraphQLModule.forRoot<ApolloDriverConfig>({
 			driver: ApolloDriver,
-			playground: appConfigs.application.environment === EnvironmentsEnum.DEVELOPMENT,
+			playground: appConfigs.environment === EnvironmentsEnum.DEVELOPMENT,
 			autoSchemaFile: join(process.cwd(), 'src/modules/graphql/schemas/schema.gql'),
 			formatError: (formattedError: GraphQLFormattedError, error: any) => {
 				const extensions = formattedError.extensions as any;
@@ -65,13 +72,12 @@ const appConfigs = configs();
 			include: [],
 		}),
 		DevtoolsModule.register({
-			http: appConfigs.application.environment === EnvironmentsEnum.DEVELOPMENT,
-			port: appConfigs.application.nestDevToolsPort,
+			http: appConfigs.environment === EnvironmentsEnum.DEVELOPMENT,
+			port: appConfigs.nestDevToolsPort,
 		}),
 		CommonModule,
 		AppModule,
 		EventsModule,
-		ApiModule,
 		GraphQlModule,
 	],
 	controllers: [],

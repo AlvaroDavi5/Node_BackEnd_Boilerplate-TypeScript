@@ -3,7 +3,7 @@ import { createLogger, transports, format, Logger } from 'winston';
 import { ConfigService } from '@nestjs/config';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import { wrapperType } from 'src/types/constructorType';
+import { wrapperType } from '@shared/types/constructorType';
 
 
 @Injectable()

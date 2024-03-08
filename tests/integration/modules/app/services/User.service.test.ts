@@ -1,11 +1,11 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import configs from '../../../../../src/modules/core/configs/configs.config';
-import UserService from '../../../../../src/modules/app/services/User.service';
-import UserRepository from '../../../../../src/modules/app/repositories/user/User.repository';
+import UserService from '../../../../../src/modules/app/user/services/User.service';
+import UserRepository from '../../../../../src/modules/app/user/repositories/user/User.repository';
 import Exceptions from '../../../../../src/modules/core/infra/errors/Exceptions';
 import CryptographyService from '../../../../../src/modules/core/infra/security/Cryptography.service';
-import UserEntity from '../../../../../src/modules/app/domain/entities/User.entity';
+import UserEntity from '../../../../../src/modules/domain/entities/User.entity';
 
 
 describe('Modules :: App :: Services :: UserService', () => {

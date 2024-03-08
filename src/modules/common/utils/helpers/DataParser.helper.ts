@@ -1,7 +1,7 @@
 import { Inject, Injectable, forwardRef } from '@nestjs/common';
 import { Logger } from 'winston';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
-import { wrapperType } from 'src/types/constructorType';
+import { wrapperType } from '@shared/types/constructorType';
 
 
 @Injectable()

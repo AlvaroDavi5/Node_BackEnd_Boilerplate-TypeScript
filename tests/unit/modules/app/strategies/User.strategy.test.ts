@@ -1,5 +1,5 @@
-import UserStrategy from '../../../../../src/modules/app/strategies/User.strategy';
-import UserEntity from '../../../../../src/modules/app/domain/entities/User.entity';
+import UserStrategy from '../../../../../src/modules/app/user/strategies/User.strategy';
+import UserEntity from '../../../../../src/modules/domain/entities/User.entity';
 
 
 describe('Modules :: App :: Strategies :: UserStrategy', () => {

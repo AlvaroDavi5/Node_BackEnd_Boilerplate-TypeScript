@@ -8,6 +8,7 @@ import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import { ProcessEventsEnum } from '@common/enums/processEvents.enum';
 import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
 import configs from '@core/configs/configs.config';
+import Exceptions from '@core/infra/errors/Exceptions';
 
 
 const appConfigs = configs();
@@ -23,6 +24,7 @@ export default class EventsQueueConsumer {
 		private readonly sqsClient: SqsClient,
 		private readonly mongoClient: MongoClient,
 		private readonly eventsQueueHandler: EventsQueueHandler,
+		private readonly exceptions: Exceptions,
 		private readonly loggerGenerator: LoggerGenerator,
 	) {
 		this.name = EventsQueueConsumer.name;
@@ -45,9 +47,12 @@ export default class EventsQueueConsumer {
 		if (this.errorsCount < 20)
 			return;
 
-		const newError = new Error(error.message);
-		newError.name = 'QueueError';
-		newError.stack = error.stack;
+		const newError = this.exceptions.integration({
+			name: error.name,
+			message: error.message,
+			stack: error.stack,
+		});
+		newError.name = `${newError.name}.QueueError`;
 
 		throw newError;
 	}

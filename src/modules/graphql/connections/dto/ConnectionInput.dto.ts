@@ -1,6 +1,6 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { IsOptional, IsString, IsBoolean } from 'class-validator';
-import { returingString, returingBoolean } from 'src/types/returnTypeFunc';
+import { returingString, returingBoolean } from '@shared/types/returnTypeFunc';
 
 
 @InputType()
@@ -9,7 +9,7 @@ export abstract class CreateConnectionInputDto {
 	@IsString()
 	public subscriptionId!: string;
 
-	@Field(returingString, { defaultValue: null, nullable: true, description: 'CLient machine ID' })
+	@Field(returingString, { defaultValue: null, nullable: true, description: 'Client machine ID' })
 	@IsString()
 	@IsOptional()
 	public clientId?: string | null;

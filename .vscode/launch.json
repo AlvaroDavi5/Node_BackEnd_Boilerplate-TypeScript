@@ -2,19 +2,16 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"name": "Node.js: Debug with YARN",
+			"command": "yarn start:debug",
+			"request": "launch",
+			"type": "node-terminal"
+		},
+		{
 			"name": "Node.js: Launch Current File",
 			"type": "node",
 			"request": "launch",
 			"program": "${fileDirname}/${file}",
-			"skipFiles": [
-				"<node_internals>/**"
-			]
-		},
-		{
-			"name": "Node.js: Attach by Process ID",
-			"type": "node",
-			"request": "attach",
-			"processId": "${command:PickProcess}",
 			"skipFiles": [
 				"<node_internals>/**"
 			]
@@ -34,6 +31,15 @@
 			"internalConsoleOptions": "openOnSessionStart",
 			"sourceMaps": true,
 			"smartStep": true
+		},
+		{
+			"name": "Node.js: Attach by Process ID",
+			"type": "node",
+			"request": "attach",
+			"processId": "${command:PickProcess}",
+			"skipFiles": [
+				"<node_internals>/**"
+			]
 		},
 		{
 			"name": "Chrome: Launch against localhost",

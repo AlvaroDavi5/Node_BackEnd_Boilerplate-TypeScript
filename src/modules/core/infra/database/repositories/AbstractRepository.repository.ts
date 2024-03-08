@@ -4,8 +4,8 @@ import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import Exceptions from '@core/infra/errors/Exceptions';
 import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity';
-import { ListQueryInterface, PaginationInterface } from 'src/types/listPaginationInterface';
-import { constructorType } from 'src/types/constructorType';
+import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
+import { constructorType } from '@shared/types/constructorType';
 
 
 type ModelType<T extends Model<T>> = constructorType<T> & typeof Model;
@@ -103,6 +103,8 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 	}
 
 	public async create(entity: E): Promise<E | null> {
+		this.validatePayload(entity);
+
 		const result = await this.ResourceModel.create(
 			this.resourceMapper.toDatabase(entity)
 		);
@@ -142,10 +144,12 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 	}
 
 	public async update(id: number, entity: E): Promise<E | null> {
+		this.validatePayload(entity);
+
 		const where: any = {
 			id: Number(id),
 		};
-		await this.ResourceModel.update(entity, { where });
+		await this.ResourceModel.update(this.resourceMapper.toDatabase(entity), { where });
 		const result = await this.ResourceModel.findByPk(id);
 		if (!result) return null;
 

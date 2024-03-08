@@ -2,7 +2,7 @@ import { PipeTransform, ArgumentMetadata } from '@nestjs/common';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import Exceptions from '@core/infra/errors/Exceptions';
 import listQuerySchema from '@api/schemas/listQuery.schema';
-import { ListQueryInterface } from 'src/types/listPaginationInterface';
+import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
 import { ListQueryInputDto } from './dto/QueryInput.dto';
 
 

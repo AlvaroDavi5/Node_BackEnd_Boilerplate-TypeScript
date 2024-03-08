@@ -9,7 +9,7 @@ type SubscriptionEntity {
   """WebSocket ID"""
   subscriptionId: String!
 
-  """CLient machine ID"""
+  """Client machine ID"""
   clientId: String
 
   """User creation timestamp"""
@@ -65,7 +65,7 @@ input CreateConnectionInputDto {
   """WebSocket ID"""
   subscriptionId: String! = ""
 
-  """CLient machine ID"""
+  """Client machine ID"""
   clientId: String = null
 
   """Listen new connections flag"""
@@ -76,7 +76,7 @@ input UpdateConnectionInputDto {
   """WebSocket ID"""
   subscriptionId: String! = ""
 
-  """CLient machine ID"""
+  """Client machine ID"""
   clientId: String = null
 
   """Listen new connections flag"""

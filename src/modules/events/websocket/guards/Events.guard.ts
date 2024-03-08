@@ -2,7 +2,7 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { Observable } from 'rxjs';
 import { Socket as ServerSocket } from 'socket.io';
-import { WebSocketEventsEnum } from '@app/domain/enums/webSocketEvents.enum';
+import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
 import Exceptions from '@core/infra/errors/Exceptions';
 
 

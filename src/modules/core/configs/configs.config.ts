@@ -28,7 +28,7 @@ export interface ConfigsInterface {
 		dialectOptions?: {
 			ssl?: {
 				rejectUnauthorized?: boolean, // to use SSL protocol (in production)
-			}
+			},
 		},
 		charset: string, // database charset encoding
 		define: {
@@ -116,7 +116,7 @@ export interface ConfigsInterface {
 				endpoint: string,
 				filesExpiration: number, // files expiration in seconds
 				apiVersion: string,
-			}
+			},
 		},
 		rest: {
 			// * Another Service
@@ -130,7 +130,7 @@ export interface ConfigsInterface {
 	// ? Cryptography and Security
 	security: {
 		secretKey: string,
-	}
+	},
 }
 
 export default (): ConfigsInterface => ({
@@ -155,7 +155,7 @@ export default (): ConfigsInterface => ({
 		dialectOptions: {
 			ssl: {
 				rejectUnauthorized: false,
-			}
+			},
 		},
 		port: process.env.DB_PORT ?? '5432',
 		define: {
@@ -236,14 +236,14 @@ export default (): ConfigsInterface => ({
 				filesExpiration: (5 * 60),
 				endpoint: process.env.AWS_ENDPOINT_URL ?? 'http://Cloud_LocalStack:4566/',
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
-			}
+			},
 		},
 		rest: {
 			mockedService: {
 				serviceName: process.env.MOCKED_SERVICE_NAME ?? 'Mocked Service',
 				baseUrl: process.env.MOCKED_SERVICE_URL ?? 'http://localhost:4000/',
 				port: process.env.MOCKED_SERVERS_APP_PORT ?? '4000',
-			}
+			},
 		},
 	},
 	security: {

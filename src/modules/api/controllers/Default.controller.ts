@@ -6,19 +6,24 @@ import {
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
-import HttpConstants from '@api/constants/Http.constants';
+import HttpConstants from '@common/constants/Http.constants';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 
 
 @Controller()
 @UseGuards(CustomThrottlerGuard)
+@exceptionsResponseDecorator()
 export default class DefaultController {
 	constructor(
 		private readonly httpConstants: HttpConstants,
 	) { }
 
 	@ApiTags('HealthCheck')
-	@ApiOperation({ summary: 'Check API' })
+	@ApiOperation({
+		summary: 'Check API',
+		description: 'Check if API is working',
+		deprecated: false,
+	})
 	@Get('/check')
 	@ApiOkResponse({
 		schema: {
@@ -43,7 +48,6 @@ export default class DefaultController {
 			},
 		}
 	})
-	@exceptionsResponseDecorator()
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public healthCheck(

@@ -63,6 +63,7 @@ export default class MongoClient {
 			this.isConnected = false;
 			throw this.exceptions.integration({
 				message: 'Error to connect mongo client',
+				details: (error as any)?.message,
 			});
 		}
 		return this.isConnected;

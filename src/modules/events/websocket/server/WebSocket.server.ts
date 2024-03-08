@@ -7,20 +7,21 @@ import {
 } from '@nestjs/websockets';
 import { Server as SocketIoServer, Socket as ServerSocket } from 'socket.io';
 import { Logger } from 'winston';
-import { EventsEnum } from '@app/domain/enums/events.enum';
-import { WebSocketEventsEnum, WebSocketRoomsEnum } from '@app/domain/enums/webSocketEvents.enum';
-import SubscriptionService from '@app/services/Subscription.service';
+import { EventsEnum } from '@domain/enums/events.enum';
+import { WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/webSocketEvents.enum';
+import SubscriptionService from '@app/subscription/services/Subscription.service';
 import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
 import EventsGuard from '@events/websocket/guards/Events.guard';
 import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 
 
 @WebSocketGateway({
 	cors: {
 		origin: '*',
 		allowedHeaders: '*',
-		methods: ['GET', 'POST', 'PUT', 'PATCH', 'DELETE'],
+		methods: Object.values(HttpMethodsEnum),
 	}
 })
 @UseGuards(EventsGuard)

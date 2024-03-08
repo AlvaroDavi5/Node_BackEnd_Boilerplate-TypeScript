@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { ListQueryInterface } from 'src/types/listPaginationInterface';
+import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
 
 
 export default Joi.object().keys({

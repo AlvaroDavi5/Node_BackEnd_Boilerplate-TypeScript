@@ -165,7 +165,6 @@
 		"@swc/jest": "^0.2.36",
 		"@types/bcrypt": "^5.0.2",
 		"@types/compression": "^1.7.5",
-		"@types/cron": "^2.4.0",
 		"@types/dotenv": "^8.2.0",
 		"@types/ejs": "^3.1.5",
 		"@types/ioredis-mock": "^8.2.5",

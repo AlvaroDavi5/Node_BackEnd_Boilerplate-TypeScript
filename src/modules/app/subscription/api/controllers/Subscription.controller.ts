@@ -1,4 +1,4 @@
-import { Controller, Get, UseGuards } from '@nestjs/common';
+import { Controller, Get, ParseBoolPipe, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiOkResponse, ApiProduces, ApiConsumes } from '@nestjs/swagger';
 import { Logger } from 'winston';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
@@ -51,9 +51,10 @@ export default class SubscriptionController {
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async listSubscriptions(
+		@Query('useCache', ParseBoolPipe) useCache: boolean, // ? feature flag
 	): Promise<SubscriptionInterface[]> {
 		try {
-			const result = await this.subscriptionService.list();
+			const result = await this.subscriptionService.list(useCache);
 
 			return result.map((subscription: SubscriptionEntity) => {
 				return subscription.getAttributes();

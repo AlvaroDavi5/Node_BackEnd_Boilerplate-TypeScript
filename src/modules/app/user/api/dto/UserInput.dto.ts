@@ -1,5 +1,5 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsOptional, IsString } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
 import { CreateUserSchemaInterface } from '@app/user/api/schemas/user/createUser.schema';
 import { UpdateUserSchemaInterface } from '@app/user/api/schemas/user/updateUser.schema';
 import { LoginUserSchemaInterface } from '@app/user/api/schemas/user/loginUser.schema';
@@ -9,14 +9,17 @@ import { ThemesEnum } from '@domain/enums/themes.enum';
 export abstract class CreateUserInputDto implements CreateUserSchemaInterface {
 	@ApiProperty({ type: String, example: 'User Default', default: '', nullable: false, required: true })
 	@IsString()
+	@IsNotEmpty()
 	public fullName!: string;
 
 	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: '', nullable: false, required: true })
 	@IsString()
+	@IsNotEmpty()
 	public email!: string;
 
 	@ApiProperty({ type: String, example: 'pass123', default: '', nullable: false, required: true })
 	@IsString()
+	@IsNotEmpty()
 	public password!: string;
 
 	@ApiProperty({ type: String, example: '+0000000000000', default: undefined, nullable: false, required: false })
@@ -100,9 +103,11 @@ export abstract class UpdateUserInputDto implements UpdateUserSchemaInterface {
 export abstract class LoginUserInputDto implements LoginUserSchemaInterface {
 	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: '', nullable: false, required: true })
 	@IsString()
+	@IsNotEmpty()
 	public email!: string;
 
 	@ApiProperty({ type: String, example: 'pass123', default: '', nullable: false, required: true })
 	@IsString()
+	@IsNotEmpty()
 	public password!: string;
 }

@@ -21,7 +21,7 @@
 		"win32"
 	],
 	"engines": {
-		"node": "f>=18.6.x <=20.10.0",
+		"node": "f>=18.6.x <=20.x.x",
 		"yarn": "f>=1.22.x <3.x.x"
 	},
 	"engineStrict": true,

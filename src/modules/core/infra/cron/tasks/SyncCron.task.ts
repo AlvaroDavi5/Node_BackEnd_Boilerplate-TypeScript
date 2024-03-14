@@ -43,7 +43,7 @@ export default class SyncCronTask {
 
 			if (!isDatabaseActive) {
 				await syncConnection(this.connection, this.logger);
-				isDatabaseActive = await testConnection(this.connection);
+				isDatabaseActive = await testConnection(this.connection, this.logger);
 			}
 		} catch (error) {
 			this.logger.error(error);

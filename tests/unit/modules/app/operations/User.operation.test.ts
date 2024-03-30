@@ -44,7 +44,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 	};
 
 	const createdAt = new Date();
-	const userAgent = { username: 'user.test@nomail.test', clientId: '#1' };
+	const userAgent = { username: 'user.test@nomail.test', clientId: '1' };
 	const userOperation = new UserOperation(userServiceMock, userPreferenceServiceMock, new CryptographyService(configServiceMock), userStrategy, exceptionsMock);
 
 	describe('# User Login', () => {
@@ -365,7 +365,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		test('Should throw a business error', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 2, userId: userEntity.getId() });
-			const otherUserAgent = { username: 'test', clientId: '#1' };
+			const otherUserAgent = { username: 'test', clientId: '1' };
 			userServiceMock.getById.mockImplementation(async (id: number): Promise<UserEntity | null> => {
 				if (id === userEntity.getId()) return userEntity;
 				else return null;
@@ -401,7 +401,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				await userOperation.updateUser(1, {}, userAgent);
 			} catch (error) {
 				expect(exceptionsMock.conflict).toHaveBeenCalledWith({
-					message: 'User not updated!'
+					message: 'User or preference not updated!'
 				});
 			}
 		});
@@ -484,7 +484,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		test('Should throw a business error', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 2, userId: userEntity.getId() });
-			const otherUserAgent = { username: 'test', clientId: '#1' };
+			const otherUserAgent = { username: 'test', clientId: '1' };
 			userServiceMock.getById.mockImplementation(async (id: number): Promise<UserEntity | null> => {
 				if (id === userEntity.getId()) return userEntity;
 				else return null;

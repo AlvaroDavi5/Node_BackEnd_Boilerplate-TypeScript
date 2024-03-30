@@ -1,5 +1,5 @@
 import { NestFactory, SerializedGraph, PartialGraphHost } from '@nestjs/core';
-import { ValidationPipe } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { json, urlencoded } from 'express';
@@ -39,6 +39,11 @@ async function startNestApplication() {
 	nestApp.enableShutdownHooks();
 
 	nestApp.setGlobalPrefix('api');
+	nestApp.enableVersioning({
+		type: VersioningType.URI,
+		defaultVersion: '',
+		prefix: '',
+	});
 	nestApp.use(json({ limit: '10mb' }));
 	nestApp.use(urlencoded({ extended: true }));
 	nestApp.use(compression());

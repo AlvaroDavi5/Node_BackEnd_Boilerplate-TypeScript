@@ -127,17 +127,21 @@ export default class UserOperation {
 			...user.getAttributes(),
 			...preference.getAttributes(),
 		});
-		attributesToUpdate.forEach((attributeName) => {
-			if (attributeName !== 'id')
-				data[attributeName] = data[attributeName] ?? (user as any)[attributeName] ?? (preference as any)[attributeName];
+		attributesToUpdate.forEach((attributeKey) => {
+			if (attributeKey !== 'id') {
+				const userAttribute = (user as any)[attributeKey];
+				const preferenceAttribute = (preference as any)[attributeKey];
+				const currentAttribute = data[attributeKey];
+				data[attributeKey] = currentAttribute ?? userAttribute ?? preferenceAttribute;
+			}
 		});
 
 		const updatedPreference = await this.userPreferenceService.update(preference.getId(), new UserPreferenceEntity(data));
 		const updatedUser = await this.userService.update(user.getId(), new UserEntity(data));
 
-		if (!updatedUser)
+		if (!updatedUser || !updatedPreference)
 			throw this.exceptions.conflict({
-				message: 'User not updated!'
+				message: 'User or preference not updated!'
 			});
 
 		if (updatedPreference)

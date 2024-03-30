@@ -98,10 +98,10 @@ export default class SubscriptionService implements OnModuleInit {
 		return deletedSubscription;
 	}
 
-	public async list(): Promise<SubscriptionEntity[]> {
+	public async list(useCache = true): Promise<SubscriptionEntity[]> {
 		let findedSubscriptions = await this.listFromCache();
 
-		if (!findedSubscriptions.length)
+		if (!useCache || !findedSubscriptions.length)
 			findedSubscriptions = await this.mongoClient.findMany(this.subscriptionsCollection, {});
 
 		return findedSubscriptions.map((subscription: any) => {

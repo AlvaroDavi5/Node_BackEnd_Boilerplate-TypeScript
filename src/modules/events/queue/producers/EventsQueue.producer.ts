@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from 'winston';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 import CryptographyService from '@core/infra/security/Cryptography.service';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import { EventSchemaInterface } from '@events/queue/handlers/schemas/event.schema';
@@ -32,10 +32,11 @@ export default class EventsQueueProducer {
 		private readonly configService: ConfigService,
 		private readonly cryptographyService: CryptographyService,
 		private readonly sqsClient: SqsClient,
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 		private readonly dateGeneratorHelper: DateGeneratorHelper,
 	) {
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(EventsQueueProducer.name);
 		const { queueName, queueUrl }: ConfigsInterface['integration']['aws']['sqs']['eventsQueue'] = this.configService.get<any>('integration.aws.sqs.eventsQueue');
 		this.credentials = {
 			queueName,

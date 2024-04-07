@@ -12,7 +12,7 @@ import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import S3Client from '@core/infra/integration/aws/S3.client';
 import SyncCronJob from '@core/infra/cron/jobs/SyncCron.job';
 import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
@@ -37,9 +37,10 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 		private readonly s3Client: S3Client,
 		private readonly webSocketServer: WebSocketServer,
 		private readonly syncCronJob: SyncCronJob,
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 	) {
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(LifecycleService.name);
 		this.appConfigs = this.configService.get<any>('application');
 		this.uploadBucket = this.configService.get<any>('integration.aws.s3.bucketName');
 	}

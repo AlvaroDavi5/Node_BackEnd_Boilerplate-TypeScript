@@ -38,7 +38,7 @@ export async function syncConnection(connection: Sequelize, logger?: Logger): Pr
 	}
 }
 
-export const DATABASE_CONNECTION_PROVIDER = Symbol('DATABASE_CONNECTION');
+export const DATABASE_CONNECTION_PROVIDER = Symbol('DatabaseConnectionProvider');
 
 const databaseConnectionProvider: Provider = {
 	provide: DATABASE_CONNECTION_PROVIDER,

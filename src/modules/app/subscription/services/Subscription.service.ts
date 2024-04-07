@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { Collection, Db, ObjectId } from 'mongodb';
@@ -8,7 +8,7 @@ import WebSocketClient from '@events/websocket/client/WebSocket.client';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 import SubscriptionEntity, { SubscriptionInterface } from '@domain/entities/Subscription.entity';
 import { CacheEnum } from '@domain/enums/cache.enum';
 import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
@@ -27,14 +27,15 @@ export default class SubscriptionService implements OnModuleInit {
 		private readonly configService: ConfigService,
 		private readonly mongoClient: MongoClient,
 		private readonly redisClient: RedisClient,
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 		private readonly cacheAccessHelper: CacheAccessHelper,
 	) {
 		const { datalake: { db, collections: { subscriptions } } } = this.mongoClient.databases;
 		this.datalakeDatabase = db;
 		this.subscriptionsCollection = this.mongoClient.getCollection(this.datalakeDatabase, subscriptions);
 
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(SubscriptionService.name);
 		const subscriptionsExpirationTime: ConfigsInterface['cache']['expirationTime']['subscriptions'] = this.configService.get<any>('cache.expirationTime.subscriptions');
 		this.subscriptionsTimeToLive = subscriptionsExpirationTime;
 	}

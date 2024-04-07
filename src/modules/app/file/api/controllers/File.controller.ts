@@ -1,5 +1,5 @@
 import {
-	OnModuleInit,
+	OnModuleInit, Inject,
 	Controller, Res,
 	Get, Post, Headers,
 	StreamableFile, UploadedFile, UseInterceptors, UseGuards,
@@ -17,7 +17,7 @@ import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
 import ContentTypeConstants from '@common/constants/ContentType.constants';
 import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 import ReportsModule from '@app/reports/reports.module';
 import UploadService from '@app/reports/services/Upload.service';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
@@ -39,9 +39,10 @@ export default class FileController implements OnModuleInit {
 		private readonly configService: ConfigService,
 		private readonly contentTypeConstants: ContentTypeConstants,
 		private readonly fileReaderHelper: FileReaderHelper,
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 	) {
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(FileController.name);
 		this.appConfigs = this.configService.get<any>('application');
 	}
 

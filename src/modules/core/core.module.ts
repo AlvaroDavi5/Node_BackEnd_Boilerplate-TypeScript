@@ -11,7 +11,7 @@ import { join } from 'path';
 import configs from '@core/configs/configs.config';
 import LifecycleService from '@core/infra/start/Lifecycle.service';
 import Exceptions from '@core/infra/errors/Exceptions';
-import LoggerProvider from '@core/infra/logging/LoggerProvider.logger';
+import LoggerProvider from '@core/infra/logging/Logger.provider';
 import CryptographyService from '@core/infra/security/Cryptography.service';
 import DatabaseConnectionProvider from '@core/infra/database/connection';
 import RedisClient from '@core/infra/cache/Redis.client';

@@ -1,10 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
 import axiosRetry from 'axios-retry';
 import { Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 
 
 export type requestMethodType = 'get' | 'post' | 'put' | 'patch' | 'delete';
@@ -22,9 +22,10 @@ export default class RestMockedServiceClient {
 
 	constructor(
 		private readonly configService: ConfigService,
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 	) {
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(RestMockedServiceClient.name);
 		const mockedServiceConfigs: ConfigsInterface['integration']['rest']['mockedService'] = this.configService.get<any>('integration.rest.mockedService');
 		const { baseUrl, serviceName } = mockedServiceConfigs;
 

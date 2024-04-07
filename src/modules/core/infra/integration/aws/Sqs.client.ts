@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from 'winston';
 import {
@@ -9,7 +9,7 @@ import {
 } from '@aws-sdk/client-sqs';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import CryptographyService from '@core/infra/security/Cryptography.service';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
 
@@ -23,10 +23,11 @@ export default class SqsClient {
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly cryptographyService: CryptographyService,
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(SqsClient.name);
 		const awsConfigs: ConfigsInterface['integration']['aws'] = this.configService.get<any>('integration.aws');
 		const logging: ConfigsInterface['application']['logging'] = this.configService.get<any>('application.logging');
 		const {

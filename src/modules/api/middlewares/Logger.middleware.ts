@@ -1,6 +1,6 @@
-import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Injectable, Inject, NestMiddleware } from '@nestjs/common';
 import { Logger } from 'winston';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 import { RequestInterface, ResponseInterface, NextFunctionInterface } from '@shared/interfaces/endpointInterface';
 
 
@@ -9,9 +9,10 @@ export default class LoggerMiddleware implements NestMiddleware {
 	private readonly logger: Logger;
 
 	constructor(
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 	) {
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(LoggerMiddleware.name);
 	}
 
 	public use(request: RequestInterface, response: ResponseInterface, next: NextFunctionInterface) {

@@ -20,7 +20,7 @@ export default class AuthGuard implements CanActivate {
 	}
 
 	public canActivate(context: ExecutionContext): boolean {
-		this.logger.debug(`Running guard '${AuthGuard.name}' in '${context.getType()}' context`);
+		this.logger.debug(`Running guard in '${context.getType()}' context`);
 
 		const request = context.switchToHttp().getRequest<RequestInterface>();
 		const authorization = request?.headers?.authorization;

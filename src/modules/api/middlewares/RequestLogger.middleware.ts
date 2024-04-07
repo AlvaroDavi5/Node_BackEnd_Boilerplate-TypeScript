@@ -5,25 +5,24 @@ import { RequestInterface, ResponseInterface, NextFunctionInterface } from '@sha
 
 
 @Injectable()
-export default class LoggerMiddleware implements NestMiddleware {
+export default class RequestLoggerMiddleware implements NestMiddleware {
 	private readonly logger: Logger;
 
 	constructor(
 		@Inject(LOGGER_PROVIDER)
 		private readonly loggerProvider: LoggerProviderInterface,
 	) {
-		this.logger = this.loggerProvider.getLogger(LoggerMiddleware.name);
+		this.logger = this.loggerProvider.getLogger(RequestLoggerMiddleware.name);
 	}
 
 	public use(request: RequestInterface, response: ResponseInterface, next: NextFunctionInterface) {
 		const method = request.method;
-		const statusCode = request.statusCode;
 		const originalUrl = request.originalUrl;
 		const paramsKeys = Object.keys(request.params);
 		const queryKeys = Object.keys(request.query);
 		const bodyKeys = Object.keys(request.body);
 
-		this.logger.info(`REQUESTED - [${method}]:{${statusCode}} ${originalUrl} { "params": {${paramsKeys}} "query": {${queryKeys}} "body": {${bodyKeys}} }`);
+		this.logger.info(`REQUESTED - [${method}] ${originalUrl} { "params": {${paramsKeys}} "query": {${queryKeys}} "body": {${bodyKeys}} }`);
 		next();
 	}
 }

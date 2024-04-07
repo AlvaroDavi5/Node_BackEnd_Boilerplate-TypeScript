@@ -1,5 +1,5 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import LoggerMiddleware from '@api/middlewares/Logger.middleware';
+import RequestLoggerMiddleware from '@api/middlewares/RequestLogger.middleware';
 import FileController from './api/controllers/File.controller';
 import FileStrategy from './strategies/File.strategy';
 
@@ -19,7 +19,7 @@ import FileStrategy from './strategies/File.strategy';
 export default class FileModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
 		consumer
-			.apply(LoggerMiddleware)
+			.apply(RequestLoggerMiddleware)
 			.forRoutes(
 				FileController,
 			);

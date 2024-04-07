@@ -18,27 +18,27 @@ export default class DataParserHelper {
 		let result = null;
 
 		switch (typeof data) {
-			case 'bigint':
-				result = data.toString();
-				break;
-			case 'number':
-				result = data.toString();
-				break;
-			case 'boolean':
-				result = data.toString();
-				break;
-			case 'string':
-				result = data;
-				break;
-			case 'object':
-				result = (JSON.stringify(data) || data?.toString()) ?? '';
-				break;
-			case 'symbol':
-				result = data.toString();
-				break;
-			default:
-				result = '';
-				break;
+		case 'bigint':
+			result = data.toString();
+			break;
+		case 'number':
+			result = data.toString();
+			break;
+		case 'boolean':
+			result = data.toString();
+			break;
+		case 'string':
+			result = data;
+			break;
+		case 'object':
+			result = (JSON.stringify(data) || data?.toString()) ?? '';
+			break;
+		case 'symbol':
+			result = data.toString();
+			break;
+		default:
+			result = '';
+			break;
 		}
 
 		return result;

@@ -11,7 +11,7 @@ import { join } from 'path';
 import configs from '@core/configs/configs.config';
 import LifecycleService from '@core/infra/start/Lifecycle.service';
 import Exceptions from '@core/infra/errors/Exceptions';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import LoggerProvider from '@core/infra/logging/LoggerProvider.logger';
 import CryptographyService from '@core/infra/security/Cryptography.service';
 import DatabaseConnectionProvider from '@core/infra/database/connection';
 import RedisClient from '@core/infra/cache/Redis.client';
@@ -84,7 +84,7 @@ const requestRateConstants = new RequestRateConstants();
 	providers: [
 		LifecycleService,
 		Exceptions,
-		LoggerGenerator,
+		LoggerProvider,
 		CryptographyService,
 		DatabaseConnectionProvider,
 		RedisClient,
@@ -99,7 +99,7 @@ const requestRateConstants = new RequestRateConstants();
 	],
 	exports: [
 		Exceptions,
-		LoggerGenerator,
+		LoggerProvider,
 		CryptographyService,
 		DatabaseConnectionProvider,
 		RedisClient,

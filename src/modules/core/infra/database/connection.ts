@@ -27,7 +27,7 @@ export async function testConnection(connection: Sequelize, logger?: Logger): Pr
 
 export async function syncConnection(connection: Sequelize, logger?: Logger): Promise<void> {
 	try {
-		await connection.sync({ force: false, logging: logger?.debug }).then(
+		await connection.sync({ force: false, logging: false }).then(
 			(value: Sequelize) => {
 				logger?.info(`Database synced: ${value.config.database}`);
 			}

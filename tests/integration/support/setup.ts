@@ -8,8 +8,8 @@ import { ClientSocket } from './mocks/webSocket/socket.io-client';
 dotenv.config({ path: '.env.test' });
 
 // * backing services and dependencies mocks
-jest.mock('src/modules/core/infra/logging/LoggerGenerator.logger.ts', () =>
-	jest.requireActual('./mocks/logging/LoggerGenerator.logger')
+jest.mock('src/modules/core/infra/logging/Logger.provider.ts', () =>
+	jest.requireActual('./mocks/logging/Logger.provider')
 );
 
 jest.mock('src/modules/core/infra/integration/rest/RestMockedService.client.ts', () =>

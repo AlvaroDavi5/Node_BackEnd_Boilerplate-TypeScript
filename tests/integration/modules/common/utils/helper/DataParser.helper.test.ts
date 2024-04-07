@@ -1,16 +1,27 @@
+import { Test, TestingModule } from '@nestjs/testing';
 import DataParserHelper from '../../../../../../src/modules/common/utils/helpers/DataParser.helper';
+import LoggerProviderMock from '../../../../support/mocks/logging/Logger.provider';
+import { mockObservable } from '../../../../support/mocks/mockObservable';
 
 
 describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
+	let nestTestingModule: TestingModule;
+	let dataParserHelper: DataParserHelper;
 	// // mocks
-	const warnLoggerMock = jest.fn();
-	const loggerGeneratorMock = {
-		getLogger: () => ({
-			warn: warnLoggerMock,
-		}),
-	};
+	const loggerProviderMock = new LoggerProviderMock(mockObservable);
+	const dataParserHelperMock = new DataParserHelper(loggerProviderMock); // ! mock instanced outside testing module due TypeError
 
-	const dataParserHelper = new DataParserHelper(loggerGeneratorMock);
+	// ? build test app
+	beforeAll(async () => {
+		nestTestingModule = await Test.createTestingModule({
+			providers: [
+				{ provide: DataParserHelper, useValue: dataParserHelperMock },
+			]
+		}).compile();
+
+		// * get app provider
+		dataParserHelper = nestTestingModule.get<DataParserHelper>(DataParserHelper);
+	});
 
 	describe('# Valid Data To String', () => {
 		test('Should return the same string', () => {
@@ -58,7 +69,7 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 		test('Should return the same data', () => {
 			const parsedUser = dataParserHelper.toObject('{user:{id:1}}');
 			expect(parsedUser).toEqual(null);
-			expect(warnLoggerMock).toHaveBeenCalledWith('String->Object parse error');
+			expect(mockObservable.call).toHaveBeenCalledWith('String->Object parse error');
 		});
 	});
 });

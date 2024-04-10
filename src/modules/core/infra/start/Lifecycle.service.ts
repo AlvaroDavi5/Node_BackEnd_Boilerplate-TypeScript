@@ -22,7 +22,6 @@ import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 export default class LifecycleService implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown {
 	private readonly logger: Logger;
 	private readonly appConfigs: ConfigsInterface['application'];
-	private readonly uploadBucket: string;
 
 	constructor(
 		private readonly httpAdapterHost: HttpAdapterHost,
@@ -42,19 +41,9 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 	) {
 		this.logger = this.loggerProvider.getLogger(LifecycleService.name);
 		this.appConfigs = this.configService.get<any>('application');
-		this.uploadBucket = this.configService.get<any>('integration.aws.s3.bucketName');
 	}
 
 	public async onModuleInit(): Promise<void> {
-		const bucketList = await this.s3Client.listBuckets();
-
-		if (!bucketList.includes(this.uploadBucket))
-			try {
-				this.s3Client.createBucket(this.uploadBucket);
-			} catch (error) {
-				this.logger.error(error);
-			}
-
 		this.logger.debug('Builded host module');
 	}
 

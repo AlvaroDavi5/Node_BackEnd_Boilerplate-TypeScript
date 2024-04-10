@@ -165,7 +165,7 @@ export default class S3Client {
 		return tag;
 	}
 
-	public async downloadFile(bucketName: string, objectKey: string): Promise<number> {
+	public async downloadFile(bucketName: string, objectKey: string): Promise<{ objectKey: string; contentLength: number; }> {
 		let contentLength = 0;
 
 		try {
@@ -184,16 +184,19 @@ export default class S3Client {
 			this.logger.error('Download Error:', error);
 		}
 
-		return contentLength;
+		return {
+			objectKey,
+			contentLength,
+		};
 	}
 
 	public async getFileSignedUrl(bucketName: string, objectKey: string): Promise<string> {
 		let link = '';
 
 		try {
-			const signedUrl = await getSignedUrl(this.s3Client as any, new GetObjectCommand(
+			const signedUrl = await getSignedUrl(this.s3Client, new GetObjectCommand(
 				this.getObjectParams(bucketName, objectKey)
-			) as any, { expiresIn: this.filesExpiration });
+			), { expiresIn: this.filesExpiration });
 
 			link = signedUrl;
 		} catch (error) {

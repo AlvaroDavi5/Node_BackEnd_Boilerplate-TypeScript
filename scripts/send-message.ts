@@ -1,5 +1,11 @@
-import sendEventMessage from '../src/dev/localstack/queues/sendEventMessage';
-import configs from '../src/modules/core/configs/configs.config';
+import sendMessage from '../src/dev/localstack/queues/sendMessage';
+import eventPayload from '../src/dev/templates/payloads/EventPayload.json';
+import { configServiceMock } from '../src/dev/mocks/mockedModules';
 
 
-sendEventMessage({ logger: console, configs: configs() });
+const eventsQueue = configServiceMock.get('integration.aws.sqs.eventsQueue');
+
+sendMessage(
+	'Events Queue', eventsQueue.queueUrl,
+	eventPayload,
+	'mocked_message', 'backend');

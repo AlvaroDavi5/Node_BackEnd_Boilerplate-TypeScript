@@ -161,7 +161,7 @@ export default class S3Client {
 		return tag;
 	}
 
-	public async downloadFile(bucketName: string, objectKey: string): Promise<{ objectKey: string; contentLength: number; }> {
+	public async downloadFile(bucketName: string, objectKey: string): Promise<{ filePath: string; contentLength: number; }> {
 		let contentLength = 0;
 
 		try {
@@ -181,7 +181,7 @@ export default class S3Client {
 		}
 
 		return {
-			objectKey,
+			filePath: `./temp/${objectKey}`,
 			contentLength,
 		};
 	}

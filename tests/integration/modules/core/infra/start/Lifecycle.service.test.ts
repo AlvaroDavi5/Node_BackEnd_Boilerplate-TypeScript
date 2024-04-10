@@ -8,10 +8,21 @@ import { mockObservable } from '../../../../support/mocks/mockObservable';
 describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 	let nestTestingModule: TestingModule;
 	// // mocks
-	const configServiceMock: any = {
-		get: (propertyPath?: string) => {
-			if (propertyPath)
-				return configs()[propertyPath];
+	const configServiceMock = {
+		get: (propertyPath?: string): any => {
+			if (propertyPath) {
+				const splitedPaths = propertyPath.split('.');
+				let scopedProperty: any = configs();
+
+				for (let i = 0; i < splitedPaths.length; i++) {
+					const scopedPath = splitedPaths[i];
+
+					if (scopedPath.length)
+						scopedProperty = scopedProperty[scopedPath];
+				}
+
+				return scopedProperty;
+			}
 			else
 				return configs();
 		},
@@ -55,7 +66,7 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 	};
 	const loggerProviderMock = new LoggerProviderMock(mockObservable);
 	const lifecycleServiceMock = new LifecycleService(
-		httpAdapterHostMock as any, configServiceMock,
+		httpAdapterHostMock as any, configServiceMock as any,
 		databaseConnectionMock as any, mongoClientMock, redisClientMock,
 		awsClientMock, awsClientMock, awsClientMock, s3ClientMock,
 		webSocketServerMock, syncCronJobMock, loggerProviderMock); // ! mock instanced outside testing module due TypeError

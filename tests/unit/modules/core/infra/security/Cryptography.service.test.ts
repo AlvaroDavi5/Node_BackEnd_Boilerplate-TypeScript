@@ -4,16 +4,27 @@ import configs from '../../../../../../src/modules/core/configs/configs.config';
 
 describe('Modules :: Core :: Infra :: Security :: CryptographyService', () => {
 	// // mocks
-	const configServiceMock: any = {
-		get: (propertyPath?: string) => {
-			if (propertyPath)
-				return configs()[propertyPath];
+	const configServiceMock = {
+		get: (propertyPath?: string): any => {
+			if (propertyPath) {
+				const splitedPaths = propertyPath.split('.');
+				let scopedProperty: any = configs();
+
+				for (let i = 0; i < splitedPaths.length; i++) {
+					const scopedPath = splitedPaths[i];
+
+					if (scopedPath.length)
+						scopedProperty = scopedProperty[scopedPath];
+				}
+
+				return scopedProperty;
+			}
 			else
 				return configs();
 		},
 	};
 
-	const cryptographyService = new CryptographyService(configServiceMock);
+	const cryptographyService = new CryptographyService(configServiceMock as any);
 
 	describe('# Encoding and Hashing', () => {
 		test('Should change encoding from UTF-8 to other encodings', () => {

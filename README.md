@@ -103,14 +103,14 @@ source ./.env # load envs on shell session
 2. Initialize the composefile (`docker-compose.yml`) available on project root folder.
 
 ```shell
-docker-compose up -d # create and run all docker containers in background
+docker-compose up -d cloud database data cache # create and run all docker containers in background
 ```
 
 ## Running Locally
 
 ```shell
-yarn run mock-dependencies # create messages queue and start external services mock
 yarn run migrate && yarn run seed # create database entities and populate database registers
+yarn run mock-dependencies # create message queue and storager and start external services mock
 yarn run start:dev # start application in development mode
 yarn run receive-messages # create websocket client and start connection to receive events
 yarn run send-message # send event message to queue

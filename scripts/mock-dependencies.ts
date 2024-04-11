@@ -1,7 +1,11 @@
-import createEventsQueue from '../src/dev/localstack/queues/createEventsQueue';
+import createQueue from '../src/dev/localstack/queues/createQueue';
+import createBucket from '../src/dev/localstack/storage/createBucket';
 import MockedExternalServers from '../src/dev/mockedExternalServers/index';
-import configs from '../src/modules/core/configs/configs.config';
+import { configServiceMock } from '../src/dev/mocks/mockedModules';
 
+
+const eventsQueue = configServiceMock.get('integration.aws.sqs.eventsQueue');
+const uploadBucketName = configServiceMock.get('integration.aws.s3.bucketName');
 
 function mockServiceDependencies() {
 	console.info(
@@ -11,11 +15,8 @@ function mockServiceDependencies() {
 	const externalServices = new MockedExternalServers();
 	externalServices.start();
 
-	createEventsQueue({
-		logger: console,
-		configs: configs(),
-	});
+	createQueue(eventsQueue.queueName, eventsQueue.queueUrl);
+	createBucket(uploadBucketName);
 }
-
 
 mockServiceDependencies();

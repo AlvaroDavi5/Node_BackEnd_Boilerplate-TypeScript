@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { MockObservableInterface } from '../mockObservable';
+import { LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 
 
 @Injectable()
-export default class LoggerGenerator {
+export default class LoggerProvider implements LoggerProviderInterface {
 	private readonly logger: any;
 
 	constructor(
@@ -12,11 +13,13 @@ export default class LoggerGenerator {
 		const showLogs = Boolean(process.env.SHOW_LOGS);
 
 		const justCallMockObservable = (...args: unknown[]): void => {
-			this.mockObservable.call(args);
+			args.forEach((arg: unknown) => this.mockObservable.call(arg));
 		};
 		const logAndCallMockObservable = (...args: unknown[]): void => {
-			this.mockObservable.call(args);
-			console.log(args);
+			args.forEach((arg: unknown) => {
+				this.mockObservable.call(arg);
+				console.log(arg);
+			});
 		};
 
 		this.logger = {
@@ -28,7 +31,7 @@ export default class LoggerGenerator {
 		};
 	}
 
-	public getLogger(): any {
+	public getLogger(context: string): any {
 		return this.logger;
 	}
 }

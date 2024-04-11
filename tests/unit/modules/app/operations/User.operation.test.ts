@@ -34,10 +34,21 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		notFound: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 		conflict: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 	};
-	const configServiceMock: any = {
-		get: (propertyPath?: string) => {
-			if (propertyPath)
-				return configs()[propertyPath];
+	const configServiceMock = {
+		get: (propertyPath?: string): any => {
+			if (propertyPath) {
+				const splitedPaths = propertyPath.split('.');
+				let scopedProperty: any = configs();
+
+				for (let i = 0; i < splitedPaths.length; i++) {
+					const scopedPath = splitedPaths[i];
+
+					if (scopedPath.length)
+						scopedProperty = scopedProperty[scopedPath];
+				}
+
+				return scopedProperty;
+			}
 			else
 				return configs();
 		},
@@ -45,7 +56,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 
 	const createdAt = new Date();
 	const userAgent = { username: 'user.test@nomail.test', clientId: '1' };
-	const userOperation = new UserOperation(userServiceMock, userPreferenceServiceMock, new CryptographyService(configServiceMock), userStrategy, exceptionsMock);
+	const userOperation = new UserOperation(userServiceMock, userPreferenceServiceMock, new CryptographyService(configServiceMock as any), userStrategy, exceptionsMock);
 
 	describe('# User Login', () => {
 		test('Should validate password', async () => {

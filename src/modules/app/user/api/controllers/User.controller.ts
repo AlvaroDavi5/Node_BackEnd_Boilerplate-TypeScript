@@ -1,4 +1,5 @@
 import {
+	Inject,
 	Controller, Req, ParseIntPipe,
 	Param, Query, Body,
 	Get, Post, Put, Patch, Delete,
@@ -16,7 +17,7 @@ import { ListQueryPipeValidator } from '@api/pipes/QueryValidator.pipe';
 import { ListQueryInputDto } from '@api/pipes/dto/QueryInput.dto';
 import { CreateUserPipeValidator, UpdateUserPipeValidator, LoginUserPipeValidator } from '@app/user/api/pipes/UserValidator.pipe';
 import { CreateUserInputDto, UpdateUserInputDto, LoginUserInputDto } from '@app/user/api/dto/UserInput.dto';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 import { RequestInterface } from '@shared/interfaces/endpointInterface';
 import { PaginationInterface } from '@shared/interfaces/listPaginationInterface';
 
@@ -31,9 +32,10 @@ export default class UserController {
 
 	constructor(
 		private readonly userOperation: UserOperation,
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 	) {
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(UserController.name);
 	}
 
 	@ApiOperation({

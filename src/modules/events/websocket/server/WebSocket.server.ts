@@ -1,5 +1,5 @@
 import { ModuleRef } from '@nestjs/core';
-import { OnModuleInit, UseGuards } from '@nestjs/common';
+import { Inject, OnModuleInit, UseGuards } from '@nestjs/common';
 import {
 	WebSocketGateway, SubscribeMessage, MessageBody,
 	WebSocketServer as Server, ConnectedSocket,
@@ -12,7 +12,7 @@ import { WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/webSocket
 import SubscriptionService from '@app/subscription/services/Subscription.service';
 import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
 import EventsGuard from '@events/websocket/guards/Events.guard';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 
@@ -35,10 +35,11 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 	constructor(
 		private readonly moduleRef: ModuleRef,
 		private readonly eventsQueueProducer: EventsQueueProducer,
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(WebSocketServer.name);
 	}
 
 	public onModuleInit(): void {

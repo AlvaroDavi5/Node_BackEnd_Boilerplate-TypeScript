@@ -18,10 +18,21 @@ describe('Modules :: App :: Services :: UserService', () => {
 		update: jest.fn(async (id: number, entity: UserEntity): Promise<UserEntity | null> => (null)),
 		deleteOne: jest.fn(async (id: number, softDelete = true, agentId: number | string | null = null): Promise<boolean> => (false)),
 	};
-	const configServiceMock: any = {
-		get: (propertyPath?: string) => {
-			if (propertyPath)
-				return configs()[propertyPath];
+	const configServiceMock = {
+		get: (propertyPath?: string): any => {
+			if (propertyPath) {
+				const splitedPaths = propertyPath.split('.');
+				let scopedProperty: any = configs();
+
+				for (let i = 0; i < splitedPaths.length; i++) {
+					const scopedPath = splitedPaths[i];
+
+					if (scopedPath.length)
+						scopedProperty = scopedProperty[scopedPath];
+				}
+
+				return scopedProperty;
+			}
 			else
 				return configs();
 		},

@@ -1,4 +1,4 @@
-import { Injectable, OnModuleInit } from '@nestjs/common';
+import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { Message } from '@aws-sdk/client-sqs';
 import { Logger } from 'winston';
@@ -7,7 +7,7 @@ import WebhookService from '@app/hook/services/Webhook.service';
 import MongoClient from '@core/infra/data/Mongo.client';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 import eventSchema, { EventSchemaInterface } from './schemas/event.schema';
 import { EventsEnum } from '@domain/enums/events.enum';
 import { WebSocketRoomsEnum } from '@domain/enums/webSocketEvents.enum';
@@ -24,9 +24,10 @@ export default class EventsQueueHandler implements OnModuleInit {
 		private readonly mongoClient: MongoClient,
 		private readonly schemaValidator: SchemaValidator<EventSchemaInterface>,
 		private readonly dataParserHelper: DataParserHelper,
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 	) {
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(EventsQueueHandler.name);
 	}
 
 	public onModuleInit(): void {

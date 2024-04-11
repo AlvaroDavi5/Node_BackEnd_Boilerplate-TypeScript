@@ -5,13 +5,13 @@ import FileReaderHelper from '../../../../../../src/modules/common/utils/helpers
 describe('Modules :: Common :: Utils :: Helpers :: FileReaderHelper', () => {
 	// // mocks
 	const warnLoggerMock = jest.fn();
-	const loggerGeneratorMock = {
+	const loggerProviderMock = {
 		getLogger: () => ({
 			warn: warnLoggerMock,
 		}),
 	};
 
-	const fileReaderHelper = new FileReaderHelper(loggerGeneratorMock);
+	const fileReaderHelper = new FileReaderHelper(loggerProviderMock);
 
 	describe('# Invalid File Path', () => {
 		const filePath = './invalidFile.txt';

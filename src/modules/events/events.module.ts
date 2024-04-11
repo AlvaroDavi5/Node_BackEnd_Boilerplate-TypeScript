@@ -7,6 +7,7 @@ import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
 import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
 import configs from '@core/configs/configs.config';
 import SqsClient from '@dev/localstack/queues/SqsClient';
+import { configServiceMock, cryptographyServiceMock, dataParserHelperMock, loggerProviderMock } from '@dev/mocks/mockedModules';
 
 
 const appConfigs = configs();
@@ -18,10 +19,12 @@ const { queueName: eventsQueueName, queueUrl: eventsQueueUrl } = appConfigs.inte
 		SqsModule.register({
 			consumers: [
 				{
-					sqs: new SqsClient({
-						logger: console,
-						configs: appConfigs,
-					}).getClient(),
+					sqs: new SqsClient(
+						configServiceMock as any,
+						cryptographyServiceMock,
+						loggerProviderMock,
+						dataParserHelperMock,
+					).getClient(),
 					name: eventsQueueName,
 					queueUrl: eventsQueueUrl,
 					region: awsRegion,

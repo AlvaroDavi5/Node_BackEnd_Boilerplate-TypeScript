@@ -49,6 +49,7 @@ module.exports = {
 		'src/modules/app/(.*)/api/',
 		'src/modules/app/(.*)/repositories/',
 		'src/modules/app/(.*)/services/',
+		'src/modules/common/utils/helpers/DataParser.helper.ts',
 		'src/modules/events/',
 		'src/shared/',
 		'.d.ts',

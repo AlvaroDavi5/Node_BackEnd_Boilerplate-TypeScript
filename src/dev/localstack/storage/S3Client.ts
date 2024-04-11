@@ -1,4 +1,3 @@
-import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { writeFile } from 'fs';
 import { Readable } from 'stream';
@@ -10,12 +9,10 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 
 
 export type s3FileContentType = string | Uint8Array | Buffer | Readable | ReadableStream | Blob;
 
-@Injectable()
 export default class S3Client {
 	private readonly awsConfig: S3ClientConfig;
 	private readonly s3Client: S3AWSClient;
@@ -25,8 +22,7 @@ export default class S3Client {
 
 	constructor(
 		private readonly configService: ConfigService,
-		@Inject(LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
+		private readonly loggerProvider: any,
 	) {
 		this.logger = this.loggerProvider.getLogger(S3Client.name);
 		const awsConfigs: ConfigsInterface['integration']['aws'] = this.configService.get<any>('integration.aws');

@@ -1,4 +1,4 @@
-import { Controller, Get, ParseBoolPipe, Query, UseGuards } from '@nestjs/common';
+import { Inject, Controller, Get, ParseBoolPipe, Query, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiOkResponse, ApiProduces, ApiConsumes } from '@nestjs/swagger';
 import { Logger } from 'winston';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
@@ -7,7 +7,7 @@ import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
 import SubscriptionEntity, { SubscriptionInterface } from '@domain/entities/Subscription.entity';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 
 
 @ApiTags('Subscriptions')
@@ -20,9 +20,10 @@ export default class SubscriptionController {
 
 	constructor(
 		private readonly subscriptionService: SubscriptionService,
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 	) {
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(SubscriptionController.name);
 	}
 
 	@ApiOperation({

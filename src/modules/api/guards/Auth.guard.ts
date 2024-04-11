@@ -1,7 +1,7 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, Inject, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Logger } from 'winston';
 import Exceptions from '@core/infra/errors/Exceptions';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 import CryptographyService from '@core/infra/security/Cryptography.service';
 import { RequestInterface } from '@shared/interfaces/endpointInterface';
 
@@ -13,13 +13,14 @@ export default class AuthGuard implements CanActivate {
 	constructor(
 		private readonly cryptographyService: CryptographyService,
 		private readonly exceptions: Exceptions,
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 	) {
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(AuthGuard.name);
 	}
 
 	public canActivate(context: ExecutionContext): boolean {
-		this.logger.debug(`Running guard '${AuthGuard.name}' in '${context.getType()}' context`);
+		this.logger.debug(`Running guard in '${context.getType()}' context`);
 
 		const request = context.switchToHttp().getRequest<RequestInterface>();
 		const authorization = request?.headers?.authorization;

@@ -1,7 +1,6 @@
-import { Inject, Injectable, forwardRef } from '@nestjs/common';
+import { Injectable, Inject, forwardRef } from '@nestjs/common';
 import { Logger } from 'winston';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
-import { wrapperType } from '@shared/types/constructorType';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 
 
 @Injectable()
@@ -9,10 +8,10 @@ export default class DataParserHelper {
 	private readonly logger: Logger;
 
 	constructor(
-		@Inject(forwardRef(() => LoggerGenerator)) // ? resolve circular dependency
-		private readonly loggerGenerator: wrapperType<LoggerGenerator>, // * wrapperType to transpile in SWC
+		@Inject(forwardRef(() => LOGGER_PROVIDER)) // ? resolve circular dependency
+		private readonly loggerProvider: LoggerProviderInterface,
 	) {
-		this.logger = this.loggerGenerator.getLogger(true);
+		this.logger = this.loggerProvider.getLogger(DataParserHelper.name);
 	}
 
 	public toString(data: unknown): string | null {

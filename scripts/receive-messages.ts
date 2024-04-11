@@ -1,5 +1,5 @@
 import createWebSocketClient from '../src/dev/websocket/createWebSocketClient';
-import { WebSocketEventsEnum } from '../src/modules/app/domain/enums/webSocketEvents.enum';
+import { WebSocketEventsEnum } from '../src/modules/domain/enums/webSocketEvents.enum';
 import configs from '../src/modules/core/configs/configs.config';
 
 

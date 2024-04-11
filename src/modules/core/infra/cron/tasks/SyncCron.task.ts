@@ -5,7 +5,7 @@ import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import WebSocketClient from '@events/websocket/client/WebSocket.client';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 import { DATABASE_CONNECTION_PROVIDER, testConnection, syncConnection } from '@core/infra/database/connection';
 
 
@@ -21,10 +21,11 @@ export default class SyncCronTask {
 		private readonly redisClient: RedisClient,
 		private readonly webSocketServer: WebSocketServer,
 		private readonly webSocketClient: WebSocketClient,
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 	) {
 		this.name = SyncCronTask.name;
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(this.name);
 	}
 
 	public async execute(): Promise<void> {
@@ -43,7 +44,7 @@ export default class SyncCronTask {
 
 			if (!isDatabaseActive) {
 				await syncConnection(this.connection, this.logger);
-				isDatabaseActive = await testConnection(this.connection);
+				isDatabaseActive = await testConnection(this.connection, this.logger);
 			}
 		} catch (error) {
 			this.logger.error(error);

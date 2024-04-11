@@ -1,9 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { Logger } from 'winston';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 import SyncCronTask from '@core/infra/cron/tasks/SyncCron.task';
-import { CronJobsEnum } from '../cronJobs.enum';
+import { CronJobsEnum, TimeZonesEnum } from '../cronJobs.enum';
 
 
 @Injectable()
@@ -16,12 +16,13 @@ export default class SyncCronJob {
 	constructor(
 		private readonly schedulerRegistry: SchedulerRegistry,
 		private readonly syncCronTask: SyncCronTask,
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 	) {
 		this.name = SyncCronJob.name;
 		this.cronName = CronJobsEnum.SyncCron;
 		this.cronExpression = CronExpression.EVERY_5_MINUTES;
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(this.name);
 		this.logger.debug(`Created ${this.name}`);
 	}
 
@@ -36,7 +37,7 @@ export default class SyncCronJob {
 	@Cron('0 */5 * * * *', {
 		// // first second every 5 minutes
 		name: CronJobsEnum.SyncCron,
-		timeZone: 'America/Sao_Paulo',
+		timeZone: TimeZonesEnum.SaoPaulo,
 		disabled: false,
 		unrefTimeout: false,
 	})
@@ -56,7 +57,7 @@ export default class SyncCronJob {
 		this.logger.warn(`Stopped ${this.name}`);
 	}
 
-	public getLastJobDate(): Date {
+	public getLastJobDate(): Date | null {
 		const job = this.schedulerRegistry.getCronJob(this.cronName);
 		return job.lastDate();
 	}

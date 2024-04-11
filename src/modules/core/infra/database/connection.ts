@@ -21,30 +21,31 @@ export async function testConnection(connection: Sequelize, logger?: Logger): Pr
 	catch (error) {
 		logger?.warn('Unable to connect to the database:');
 		logger?.error(error);
-
 		return false;
 	}
 }
 
-export async function syncConnection(connection: Sequelize, logger?: Logger) {
+export async function syncConnection(connection: Sequelize, logger?: Logger): Promise<void> {
 	try {
 		await connection.sync({ force: false, logging: false }).then(
 			(value: Sequelize) => {
-				logger?.info('Database synced');
+				logger?.info(`Database synced: ${value.config.database}`);
 			}
 		);
 	}
-	catch (error) { }
+	catch (error) {
+		logger?.error(error);
+	}
 }
 
-export const DATABASE_CONNECTION_PROVIDER = 'DATABASE_CONNECTION';
+export const DATABASE_CONNECTION_PROVIDER = Symbol('DatabaseConnectionProvider');
 
 const databaseConnectionProvider: Provider = {
 	provide: DATABASE_CONNECTION_PROVIDER,
 	scope: Scope.DEFAULT,
 
 	inject: [],
-	useFactory: async (...args: unknown[]): Promise<Sequelize> => {
+	useFactory: async (...args: any[]): Promise<Sequelize> => {
 		const connection = new Sequelize(DBConfig);
 
 		await syncConnection(connection, console as any);

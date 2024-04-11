@@ -1,7 +1,8 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { TestModule, startNestApplication } from '../support/mocks/nestGlobal.module';
+import { createNestApplicationOptions, startNestApplication } from '../support/mocks/setupUtils';
+import CoreModule from '../../../src/modules/core/core.module';
 
 
 jest.setTimeout(5000);
@@ -12,15 +13,10 @@ describe('API :: DefaultController', () => {
 	// ? build test app
 	beforeAll(async () => {
 		nestTestingModule = await Test.createTestingModule({
-			imports: [TestModule]
+			imports: [CoreModule]
 		}).compile();
 
-		nestTestApp = nestTestingModule.createNestApplication({
-			abortOnError: false,
-			snapshot: false,
-			preview: false,
-			forceCloseConnections: true,
-		});
+		nestTestApp = nestTestingModule.createNestApplication(createNestApplicationOptions);
 		await startNestApplication(nestTestApp);
 		await nestTestApp.init();
 	});
@@ -39,7 +35,7 @@ describe('API :: DefaultController', () => {
 					host: '127.0.0.1:3000',
 				},
 				statusCode: 200,
-				statusMessage: 'Endpoint finded successfully',
+				statusMessage: 'Endpoint finded successfully.',
 				params: {},
 				query: {},
 				body: {},

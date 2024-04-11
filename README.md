@@ -16,7 +16,7 @@ Node.js Domain-Driven Design Boilerplate with TypeScript for Back-End.
 
 ## Architecture
 
-[Back-End Architecture](google.com)  
+[Back-End Architecture](https://google.com)  
 
 <div align='center'>
 <br>
@@ -109,7 +109,7 @@ docker-compose up -d # create and run all docker containers in background
 ## Running Locally
 
 ```shell
-yarn run mock-dependencies # create messages queue and started external services mock
+yarn run mock-dependencies # create messages queue and start external services mock
 yarn run migrate && yarn run seed # create database entities and populate database registers
 yarn run start:dev # start application in development mode
 yarn run receive-messages # create websocket client and start connection to receive events
@@ -137,6 +137,8 @@ ___
 
 ### TO DO
 
+- **Packaging**
+	- Infra Utils Lib Package
 - **Clustering**
 	- [x] Clusters
 		- [x] Kubernetes
@@ -150,7 +152,6 @@ ___
 	- [Hybrid Application](https://docs.nestjs.com/faq/hybrid-application)
 	- [kafka](https://docs.nestjs.com/microservices/kafka)
 - **Integrations**
-	- [x] Webhooks
 	- [ ] OAuth
 	- [ ] PIX
 	- [Kafka](#to-do)

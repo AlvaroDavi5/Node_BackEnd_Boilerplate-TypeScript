@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { writeFile } from 'fs';
 import { Readable } from 'stream';
@@ -10,7 +10,7 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 
 
 export type s3FileContentType = string | Uint8Array | Buffer | Readable | ReadableStream | Blob;
@@ -25,9 +25,10 @@ export default class S3Client {
 
 	constructor(
 		private readonly configService: ConfigService,
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 	) {
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(S3Client.name);
 		const awsConfigs: ConfigsInterface['integration']['aws'] = this.configService.get<any>('integration.aws');
 		const logging: ConfigsInterface['application']['logging'] = this.configService.get<any>('application.logging');
 		const {
@@ -164,7 +165,7 @@ export default class S3Client {
 		return tag;
 	}
 
-	public async downloadFile(bucketName: string, objectKey: string): Promise<number> {
+	public async downloadFile(bucketName: string, objectKey: string): Promise<{ filePath: string; contentLength: number; }> {
 		let contentLength = 0;
 
 		try {
@@ -183,16 +184,19 @@ export default class S3Client {
 			this.logger.error('Download Error:', error);
 		}
 
-		return contentLength;
+		return {
+			filePath: `./temp/${objectKey}`,
+			contentLength,
+		};
 	}
 
 	public async getFileSignedUrl(bucketName: string, objectKey: string): Promise<string> {
 		let link = '';
 
 		try {
-			const signedUrl = await getSignedUrl(this.s3Client as any, new GetObjectCommand(
+			const signedUrl = await getSignedUrl(this.s3Client, new GetObjectCommand(
 				this.getObjectParams(bucketName, objectKey)
-			) as any, { expiresIn: this.filesExpiration });
+			), { expiresIn: this.filesExpiration });
 
 			link = signedUrl;
 		} catch (error) {

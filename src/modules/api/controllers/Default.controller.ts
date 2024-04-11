@@ -1,25 +1,32 @@
 import {
-	Controller, Req, Res,
+	Controller, Req, Res, Version,
 	Get, Headers, Param, Query, Body,
 	UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
-import HttpConstants from '@api/constants/Http.constants';
+import HttpConstants from '@common/constants/Http.constants';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
+import { ApiVersionsEnum } from '@common/enums/apiVersions.enum';
 
 
 @Controller()
 @UseGuards(CustomThrottlerGuard)
+@exceptionsResponseDecorator()
 export default class DefaultController {
 	constructor(
 		private readonly httpConstants: HttpConstants,
 	) { }
 
 	@ApiTags('HealthCheck')
-	@ApiOperation({ summary: 'Check API' })
+	@ApiOperation({
+		summary: 'Check API',
+		description: 'Check if API is working',
+		deprecated: false,
+	})
 	@Get('/check')
+	@Version(ApiVersionsEnum.DEFAULT)
 	@ApiOkResponse({
 		schema: {
 			example: {
@@ -43,7 +50,6 @@ export default class DefaultController {
 			},
 		}
 	})
-	@exceptionsResponseDecorator()
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public healthCheck(
@@ -75,6 +81,39 @@ export default class DefaultController {
 			body: body,
 			statusCode: response.statusCode,
 			statusMessage: response.statusMessage ?? this.httpConstants.messages.found('Endpoint'),
+		};
+	}
+
+	@ApiTags('HealthCheck')
+	@ApiOperation({
+		summary: 'Check API',
+		description: 'Check if API is working (v1)',
+		deprecated: true,
+	})
+	@Get('/check')
+	@Version(ApiVersionsEnum.V1)
+	@ApiOkResponse({
+		schema: {
+			example: {
+				baseUrl: '/',
+				method: 'GET',
+				statusCode: 200,
+			},
+		}
+	})
+	@ApiConsumes('application/json')
+	@ApiProduces('application/json')
+	public healthCheckV1(
+		@Req() request: Request,
+		@Res({ passthrough: true }) response: Response,
+	): {
+		baseUrl: string, method: string,
+		statusCode: number,
+	} {
+		return {
+			baseUrl: request?.baseUrl,
+			method: request?.method,
+			statusCode: response.statusCode,
 		};
 	}
 }

@@ -1,11 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import axios, { AxiosInstance } from 'axios';
 import axiosRetry from 'axios-retry';
 import { Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 
+
+export type requestMethodType = 'get' | 'post' | 'put' | 'patch' | 'delete';
+
+interface ResponseInterface {
+	status: number,
+	data: unknown,
+}
 
 @Injectable()
 export default class RestMockedServiceClient {
@@ -15,9 +22,10 @@ export default class RestMockedServiceClient {
 
 	constructor(
 		private readonly configService: ConfigService,
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 	) {
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(RestMockedServiceClient.name);
 		const mockedServiceConfigs: ConfigsInterface['integration']['rest']['mockedService'] = this.configService.get<any>('integration.rest.mockedService');
 		const { baseUrl, serviceName } = mockedServiceConfigs;
 
@@ -36,14 +44,27 @@ export default class RestMockedServiceClient {
 		});
 	}
 
-	public async test(): Promise<any> {
+	public async healthcheck(): Promise<ResponseInterface> {
 		try {
 			this.logger.info(`Requesting ${this.serviceName} to healthcheck`);
-			const { data } = await this.client.get('mockedService/api/check');
-			return data;
+			const { data, status } = await this.client.get('mockedService/api/check');
+			return { data, status };
 		} catch (error) {
 			this.logger.error(error);
-			return null;
+			return { data: null, status: 0 };
+		}
+	}
+
+	public async requestHook(requestEndpoint: string, requestMethod: requestMethodType, body: any, ...args: any[]): Promise<ResponseInterface> {
+		const requestFunction = this.client[requestMethod];
+
+		try {
+			this.logger.info(`Requesting [${requestMethod.toUpperCase()}] '${requestEndpoint}' to pull hook`);
+			const { data, status } = await requestFunction(requestEndpoint, body, ...args);
+			return { data, status };
+		} catch (error) {
+			this.logger.error(error);
+			return { data: null, status: 0 };
 		}
 	}
 }

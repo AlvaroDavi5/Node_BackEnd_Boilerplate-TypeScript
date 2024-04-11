@@ -51,7 +51,8 @@ temp/
 
 # --------- except ---------
 
-.vscode/settings.json
-!/envs/.env.development.local
-!/envs/.env.production.local
+!.vscode/settings.json
+!.vscode/launch.json
+!envs/.env.development.local
+!envs/.env.production.local
 !TODO-example.txt

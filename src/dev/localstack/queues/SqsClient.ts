@@ -1,5 +1,5 @@
+import { ConfigService } from '@nestjs/config';
 import { Logger } from 'winston';
-import { v4 as uuidV4 } from 'uuid';
 import {
 	SQSClient, SQSClientConfig, Message,
 	ListQueuesCommand, CreateQueueCommand, DeleteQueueCommand,
@@ -15,13 +15,15 @@ export default class SqsClient {
 	private readonly sqsClient: SQSClient;
 	private readonly logger: Logger;
 
-	constructor({
-		configs,
-		logger,
-	}: any) {
-		this.logger = logger;
-		const awsConfigs: ConfigsInterface['integration']['aws'] = configs.integration.aws;
-		const logging: ConfigsInterface['application']['logging'] = configs.application.logging;
+	constructor(
+		private readonly configService: ConfigService,
+		private readonly cryptographyService: any,
+		private readonly loggerProvider: any,
+		private readonly dataParserHelper: any,
+	) {
+		this.logger = this.loggerProvider.getLogger(SqsClient.name);
+		const awsConfigs: ConfigsInterface['integration']['aws'] = this.configService.get<any>('integration.aws');
+		const logging: ConfigsInterface['application']['logging'] = this.configService.get<any>('application.logging');
 		const {
 			region, sessionToken,
 			accessKeyId, secretAccessKey,
@@ -44,34 +46,8 @@ export default class SqsClient {
 	}
 
 
-	private formatMessageBeforeSend(data: unknown = {}): string {
-		let result = null;
-
-		switch (typeof data) {
-		case 'bigint':
-			result = data.toString();
-			break;
-		case 'number':
-			result = data.toString();
-			break;
-		case 'boolean':
-			result = data.toString();
-			break;
-		case 'string':
-			result = data;
-			break;
-		case 'object':
-			result = (JSON.stringify(data) || data?.toString()) ?? '';
-			break;
-		case 'symbol':
-			result = data.toString();
-			break;
-		default:
-			result = '';
-			break;
-		}
-
-		return result;
+	private formatMessageBeforeSend(message: any = {}): string {
+		return this.dataParserHelper.toString(message) ?? '{}';
 	}
 
 	private createParams(queueName: string): CreateQueueCommandInput {
@@ -106,7 +82,7 @@ export default class SqsClient {
 					StringValue: String(author)
 				},
 			},
-			MessageDeduplicationId: isFifoQueue ? uuidV4() : undefined,
+			MessageDeduplicationId: isFifoQueue ? this.cryptographyService.generateUuid() : undefined,
 			MessageGroupId: isFifoQueue ? this.messageGroupId : undefined, // Required for FIFO queues
 		};
 	}

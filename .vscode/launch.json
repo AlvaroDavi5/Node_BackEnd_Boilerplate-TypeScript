@@ -2,6 +2,12 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
+			"name": "Node.js: Debug with YARN",
+			"command": "yarn start:debug",
+			"request": "launch",
+			"type": "node-terminal"
+		},
+		{
 			"name": "Node.js: Launch Current File",
 			"type": "node",
 			"request": "launch",
@@ -9,6 +15,22 @@
 			"skipFiles": [
 				"<node_internals>/**"
 			]
+		},
+		{
+			"name": "Node.js: Launch Current TypeScript File",
+			"type": "node",
+			"request": "launch",
+			"skipFiles": [
+				"<node_internals>/**"
+			],
+			"program": "${file}",
+			"preLaunchTask": "tsc: build - tsconfig.json",
+			"outFiles": [
+				"${workspaceFolder}/dist/**/*.js"
+			],
+			"internalConsoleOptions": "openOnSessionStart",
+			"sourceMaps": true,
+			"smartStep": true
 		},
 		{
 			"name": "Node.js: Attach by Process ID",
@@ -24,7 +46,7 @@
 			"type": "chrome",
 			"request": "launch",
 			"webRoot": "${workspaceFolder}",
-			"url": "http://localhost:8080/"
+			"url": "http://localhost:3000/"
 		}
 	]
 }

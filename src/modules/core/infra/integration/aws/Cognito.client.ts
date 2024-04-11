@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Logger } from 'winston';
 import {
@@ -7,7 +7,7 @@ import {
 	SignUpCommandInput,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 
 
 @Injectable()
@@ -21,9 +21,10 @@ export default class CognitoClient {
 
 	constructor(
 		private readonly configService: ConfigService,
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 	) {
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(CognitoClient.name);
 		const awsConfigs: ConfigsInterface['integration']['aws'] = this.configService.get<any>('integration.aws');
 		const logging: ConfigsInterface['application']['logging'] = this.configService.get<any>('application.logging');
 		const {

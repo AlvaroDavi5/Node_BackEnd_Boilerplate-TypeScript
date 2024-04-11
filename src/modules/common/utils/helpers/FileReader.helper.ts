@@ -1,8 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Inject } from '@nestjs/common';
 import { readFileSync, createReadStream, ReadStream } from 'fs';
 import { join } from 'path';
 import { Logger } from 'winston';
-import LoggerGenerator from '@core/infra/logging/LoggerGenerator.logger';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 
 
 @Injectable()
@@ -10,9 +10,10 @@ export default class FileReaderHelper {
 	private readonly logger: Logger;
 
 	constructor(
-		private readonly loggerGenerator: LoggerGenerator,
+		@Inject(LOGGER_PROVIDER)
+		private readonly loggerProvider: LoggerProviderInterface,
 	) {
-		this.logger = this.loggerGenerator.getLogger();
+		this.logger = this.loggerProvider.getLogger(FileReaderHelper.name);
 	}
 
 	public readFile(filePath: string, encoding?: BufferEncoding): string | undefined {

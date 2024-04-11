@@ -6,10 +6,10 @@ import {
 import Exceptions from '@core/infra/errors/Exceptions';
 
 
-const exceptions = new Exceptions();
+export default () => {
+	const exceptions = new Exceptions();
 
-export default () =>
-	applyDecorators(
+	return applyDecorators(
 		ApiBadRequestResponse({
 			description: 'Invalid request format (body, query, params...).',
 			// type: BadRequestException,
@@ -51,3 +51,4 @@ export default () =>
 			schema: { example: exceptions.internal({ message: 'Error Message' }) },
 		}),
 	);
+};

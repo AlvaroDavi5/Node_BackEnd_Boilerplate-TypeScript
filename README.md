@@ -139,6 +139,11 @@ ___
 
 - **Packaging**
 	- Infra Utils Lib Package
+- **SQL**
+	- [ ] UUID Fields
+	- [ ] Manual Queries
+	- [ ] Index
+	- [ ] Transactions
 - **Clustering**
 	- [x] Clusters
 		- [x] Kubernetes
@@ -195,6 +200,3 @@ ___
 				- [ ] Websocket Gateway
 			- Reports
 				- [ ] Services
-- [ ] Manual SQL
-	- [ ] Index
-	- [ ] Transactions

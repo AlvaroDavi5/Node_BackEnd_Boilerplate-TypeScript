@@ -1,7 +1,8 @@
-import { Provider, Scope } from '@nestjs/common';
+import { Inject, Provider, Scope } from '@nestjs/common';
 import { Sequelize } from 'sequelize';
 import { Logger } from 'winston';
 import { config as DBConfig } from './db.config';
+import LoggerProvider, { LOGGER_PROVIDER, LoggerProviderInterface } from '../logging/Logger.provider';
 
 
 /* connecting to a database */
@@ -29,7 +30,7 @@ export async function syncConnection(connection: Sequelize, logger?: Logger): Pr
 	try {
 		await connection.sync({ force: false, logging: false }).then(
 			(value: Sequelize) => {
-				logger?.info(`Database synced: ${value.config.database}`);
+				logger?.debug(`Database synced: ${value.config.database}`);
 			}
 		);
 	}
@@ -44,11 +45,16 @@ const databaseConnectionProvider: Provider = {
 	provide: DATABASE_CONNECTION_PROVIDER,
 	scope: Scope.DEFAULT,
 
-	inject: [],
-	useFactory: async (...args: any[]): Promise<Sequelize> => {
+	inject: [
+		LOGGER_PROVIDER,
+	],
+	useFactory: async (
+		loggerProvider: LoggerProviderInterface,
+		...args: any[]
+	): Promise<Sequelize> => {
 		const connection = new Sequelize(DBConfig);
 
-		await syncConnection(connection, console as any);
+		await syncConnection(connection, loggerProvider.getLogger('DatabaseConnectionProvider'));
 
 		return connection;
 	},

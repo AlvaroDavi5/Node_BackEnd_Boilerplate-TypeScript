@@ -200,7 +200,7 @@ export default class S3Client {
 
 			link = signedUrl;
 		} catch (error) {
-			this.logger.error('Delete Error:', error);
+			this.logger.error('Get URL Error:', error);
 		}
 
 		return link;

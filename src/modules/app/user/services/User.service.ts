@@ -22,9 +22,9 @@ export default class UserService {
 		this.secret = secretKey;
 	}
 
-	public async getById(id: number): Promise<UserEntity | null> {
+	public async getById(id: number, withoutPassword = true): Promise<UserEntity | null> {
 		try {
-			return await this.userRepository.getById(id);
+			return await this.userRepository.getById(id, withoutPassword);
 		} catch (error) {
 			throw this.exceptions.internal({
 				message: 'Error to comunicate with database',

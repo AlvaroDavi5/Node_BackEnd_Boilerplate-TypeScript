@@ -3,17 +3,17 @@ import SchemaValidator from '@common/utils/validators/SchemaValidator.validator'
 import Exceptions from '@core/infra/errors/Exceptions';
 import registerEventHookSchema, { RegisterEventHookInterface } from '@app/hook/api/schemas/registerEventHook.schema';
 import { RegisterEventHookInputDto } from '@app/hook/api/dto/HookInput.dto';
+import { generateLogger } from '@core/infra/logging/Logger.provider';
 
 
-export class RegisterEventHookPipeValidator implements PipeTransform<RegisterEventHookInputDto, RegisterEventHookInterface> {
+export class RegisterEventHookValidatorPipe implements PipeTransform<RegisterEventHookInputDto, RegisterEventHookInterface> {
 	private readonly schemaValidator: SchemaValidator<RegisterEventHookInterface>;
 
 	constructor() {
-		this.schemaValidator = new SchemaValidator<RegisterEventHookInterface>(new Exceptions());
+		this.schemaValidator = new SchemaValidator<RegisterEventHookInterface>(new Exceptions(), generateLogger(RegisterEventHookValidatorPipe.name));
 	}
 
 	public transform(value: RegisterEventHookInputDto, metadata: ArgumentMetadata): RegisterEventHookInterface {
-		console.log(`Validating '${metadata.type}' received as '${metadata.metatype?.name}'`);
-		return this.schemaValidator.validate(value, registerEventHookSchema);
+		return this.schemaValidator.validate(value, metadata, registerEventHookSchema);
 	}
 }

@@ -32,7 +32,7 @@ import { ConfigsInterface } from '@core/configs/configs.config';
 export default class FileController implements OnModuleInit {
 	private uploadService!: UploadService;
 	private readonly logger: Logger;
-	private readonly appConfigs: ConfigsInterface['application'];
+	private readonly isTestEnv: boolean; // ! lazy loads not works in test environment
 
 	constructor(
 		private readonly lazyModuleLoader: LazyModuleLoader,
@@ -43,11 +43,12 @@ export default class FileController implements OnModuleInit {
 		private readonly loggerProvider: LoggerProviderInterface,
 	) {
 		this.logger = this.loggerProvider.getLogger(FileController.name);
-		this.appConfigs = this.configService.get<any>('application');
+		const appConfigs: ConfigsInterface['application'] = this.configService.get<any>('application');
+		this.isTestEnv = appConfigs.environment === EnvironmentsEnum.TEST;
 	}
 
 	public async onModuleInit(): Promise<void> {
-		if (this.appConfigs.environment !== EnvironmentsEnum.TEST) {
+		if (!this.isTestEnv) {
 			const reportsModuleRef = await this.lazyModuleLoader.load(() => ReportsModule);
 			this.uploadService = await reportsModuleRef.resolve(UploadService, { id: 1 });
 		}
@@ -163,7 +164,7 @@ export default class FileController implements OnModuleInit {
 			const fileExtension = Buffer.from(fullFileName[fullFileName.length - 1]).toString('ascii');
 			const fileName = `${fileSteam}.${fileExtension}`;
 
-			if (this.appConfigs.environment === EnvironmentsEnum.TEST)
+			if (this.isTestEnv)
 				return {
 					fileName,
 					fileContentType,

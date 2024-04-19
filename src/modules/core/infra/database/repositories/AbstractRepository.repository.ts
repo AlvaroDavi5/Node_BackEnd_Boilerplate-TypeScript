@@ -11,7 +11,7 @@ import { constructorType } from '@shared/types/constructorType';
 type ModelType<T extends Model<T>> = constructorType<T> & typeof Model;
 
 export default abstract class AbstractRepository<M extends Model, E extends AbstractEntity> {
-	// * ------ Attributes ------
+	// ? ------ Attributes ------
 	protected DomainEntity: constructorType<E>;
 	protected ResourceModel: ModelType<M>;
 	protected resourceMapper: {
@@ -80,9 +80,9 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 	 * @hasMany - One-to-Many, target -> source
 	 * @belongsToMany - Many-to-Many, source -> target
 	**/
-	public associate(): void { console.log('Associated'); }
+	public associate(): void { this.logger.debug('Associating entities'); }
 
-	// ? ------ Methods ------
+	// * ------ Methods ------
 	public validatePayload(entity: E): void {
 		if (!(entity instanceof this.DomainEntity)) {
 			throw this.exceptions.contract({

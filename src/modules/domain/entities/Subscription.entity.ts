@@ -37,8 +37,8 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 	@IsString()
 	private clientId: string | null = null;
 
-	@ApiProperty({ type: Date, example: (new Date('2024-02-28T09:35:31.820')), default: (new Date('2024-02-28T09:35:31.820')), nullable: false, required: false, description: 'User creation timestamp' })
-	@Field(returingDate, { defaultValue: (new Date('2024-02-28T09:35:31.820')), nullable: false, description: 'User creation timestamp' })
+	@ApiProperty({ type: Date, example: (new Date('2024-04-17T17:36:48.666Z')), default: (new Date('2024-04-17T17:36:48.666Z')), nullable: false, required: false, description: 'User creation timestamp' })
+	@Field(returingDate, { defaultValue: (new Date('2024-04-17T17:36:48.666Z')), nullable: false, description: 'User creation timestamp' })
 	@IsDate()
 	public readonly createdAt: Date;
 

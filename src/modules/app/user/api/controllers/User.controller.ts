@@ -13,9 +13,9 @@ import UserEntity, { UserEntityList, UserInterface } from '@domain/entities/User
 import UserOperation from '@app/user/operations/User.operation';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
-import { ListQueryPipeValidator } from '@api/pipes/QueryValidator.pipe';
+import { ListQueryValidatorPipe } from '@api/pipes/QueryValidator.pipe';
 import { ListQueryInputDto } from '@api/pipes/dto/QueryInput.dto';
-import { CreateUserPipeValidator, UpdateUserPipeValidator, LoginUserPipeValidator } from '@app/user/api/pipes/UserValidator.pipe';
+import { CreateUserValidatorPipe, UpdateUserValidatorPipe, LoginUserValidatorPipe } from '@app/user/api/pipes/UserValidator.pipe';
 import { CreateUserInputDto, UpdateUserInputDto, LoginUserInputDto } from '@app/user/api/dto/UserInput.dto';
 import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 import { RequestInterface } from '@shared/interfaces/endpointInterface';
@@ -53,7 +53,7 @@ export default class UserController {
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async listUsers(
-		@Query(ListQueryPipeValidator) query: ListQueryInputDto,
+		@Query(ListQueryValidatorPipe) query: ListQueryInputDto,
 	): Promise<PaginationInterface<UserInterface>> {
 		try {
 			const { content, ...listInfo } = await this.userOperation.listUsers(query);
@@ -80,7 +80,7 @@ export default class UserController {
 	@ApiProduces('application/json')
 	public async createUser(
 		@Req() request: RequestInterface,
-		@Body(CreateUserPipeValidator) body: CreateUserInputDto,
+		@Body(CreateUserValidatorPipe) body: CreateUserInputDto,
 	): Promise<UserInterface> {
 		try {
 			const { user } = request;
@@ -129,7 +129,7 @@ export default class UserController {
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async loginUser(
-		@Body(LoginUserPipeValidator) body: LoginUserInputDto,
+		@Body(LoginUserValidatorPipe) body: LoginUserInputDto,
 	): Promise<UserInterface & { token: string }> {
 		try {
 			const { user, token } = await this.userOperation.loginUser(body);
@@ -153,7 +153,7 @@ export default class UserController {
 	public async updateUser(
 		@Req() request: RequestInterface,
 		@Param('userId', ParseIntPipe) userId: number,
-		@Body(UpdateUserPipeValidator) body: UpdateUserInputDto,
+		@Body(UpdateUserValidatorPipe) body: UpdateUserInputDto,
 	): Promise<UserInterface> {
 		try {
 			const { user } = request;

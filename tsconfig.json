@@ -11,12 +11,12 @@
 		"tests/**/*.ts",
 		"tests/**/*.tsx",
 		"tests/**/*.js",
-		"tests/**/*.jsx",
+		"tests/**/*.jsx"
 	],
 	"exclude": [
 		"node_modules",
 		"build",
 		"**/*.test.ts",
-		"**/*.spec.ts",
-	],
+		"**/*.spec.ts"
+	]
 }

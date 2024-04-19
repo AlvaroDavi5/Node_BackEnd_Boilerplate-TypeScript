@@ -3,7 +3,6 @@ import HttpConstants from '@common/constants/Http.constants';
 import RequestRateConstants from '@common/constants/RequestRate.constants';
 import ContentTypeConstants from '@common/constants/ContentType.constants';
 import RegExConstants from '@common/constants/Regex.constants';
-import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
@@ -19,7 +18,6 @@ import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
 		ContentTypeConstants,
 		RequestRateConstants,
 		RegExConstants,
-		SchemaValidator,
 		DataParserHelper,
 		DateGeneratorHelper,
 		CacheAccessHelper,
@@ -30,7 +28,6 @@ import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
 		ContentTypeConstants,
 		RequestRateConstants,
 		RegExConstants,
-		SchemaValidator,
 		DataParserHelper,
 		DateGeneratorHelper,
 		CacheAccessHelper,

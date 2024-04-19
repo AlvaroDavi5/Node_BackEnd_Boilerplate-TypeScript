@@ -74,8 +74,8 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	@Field(returingUserPreferenceEntity, { defaultValue: null, nullable: true, description: 'User preference' })
 	private preference: UserPreferenceEntity | null = null;
 
-	@ApiProperty({ type: Date, example: (new Date('2024-02-28T09:35:31.820')), default: (new Date('2024-02-28T09:35:31.820')), nullable: false, required: false, description: 'User creation timestamp' })
-	@Field(returingDate, { defaultValue: (new Date('2024-02-28T09:35:31.820')), nullable: false, description: 'User creation timestamp' })
+	@ApiProperty({ type: Date, example: (new Date('2024-04-17T17:36:48.666Z')), default: (new Date('2024-04-17T17:36:48.666Z')), nullable: false, required: false, description: 'User creation timestamp' })
+	@Field(returingDate, { defaultValue: (new Date('2024-04-17T17:36:48.666Z')), nullable: false, description: 'User creation timestamp' })
 	@IsDate()
 	public readonly createdAt: Date;
 
@@ -211,8 +211,8 @@ export class UserEntityList extends AbstractEntityList<UserEntity> {
 					imagePath: './image.png',
 					defaultTheme: 'DEFAULT',
 				}),
-				createdAt: new Date('2023-12-31T18:27:25.685Z'),
-				updatedAt: new Date('2024-01-01T18:27:25.685Z'),
+				createdAt: new Date('2024-04-17T17:36:48.666Z'),
+				updatedAt: new Date('2024-04-17T17:36:48.666Z'),
 			}),
 		]),
 		default: [],

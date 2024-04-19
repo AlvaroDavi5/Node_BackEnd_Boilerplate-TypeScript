@@ -8,7 +8,7 @@ export enum WebSocketEventsEnum {
 	RECONNECT = 'reconnect',
 	EMIT = 'emit',
 
-	// ! Internal Events
+	// ? Internal Events
 	EMIT_PRIVATE = 'emit_private',
 	BROADCAST = 'broadcast',
 }

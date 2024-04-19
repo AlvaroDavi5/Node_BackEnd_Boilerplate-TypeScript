@@ -5,7 +5,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 export interface ConfigsInterface {
-	// ! Application Service
+	// ? Application Service
 	application: {
 		name: string, // app name
 		environment: string, // app env

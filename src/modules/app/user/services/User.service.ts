@@ -18,7 +18,7 @@ export default class UserService {
 		private readonly userRepository: UserRepository,
 		private readonly exceptions: Exceptions,
 	) {
-		const { secretKey }: ConfigsInterface['security'] = this.configService.get<any>('security');
+		const { secretKey } = this.configService.get<ConfigsInterface['security']>('security')!;
 		this.secret = secretKey;
 	}
 

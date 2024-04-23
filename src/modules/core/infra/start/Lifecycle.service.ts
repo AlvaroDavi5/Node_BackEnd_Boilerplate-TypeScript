@@ -40,10 +40,10 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 		private readonly loggerProvider: LoggerProviderInterface,
 	) {
 		this.logger = this.loggerProvider.getLogger(LifecycleService.name);
-		this.appConfigs = this.configService.get<any>('application');
+		this.appConfigs = this.configService.get<ConfigsInterface['application']>('application')!;
 	}
 
-	public async onModuleInit(): Promise<void> {
+	public onModuleInit(): void {
 		this.logger.debug('Builded host module');
 	}
 
@@ -54,10 +54,10 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 	public onModuleDestroy(): void {
 		this.logger.warn('Closing HTTP server, disconnecting websocket clients, stopping crons and destroying cloud integrations');
 		try {
+			this.syncCronJob.stopCron();
 			this.httpAdapterHost.httpAdapter.close();
 			this.webSocketServer.disconnectAllSockets();
 			this.webSocketServer.disconnect();
-			this.syncCronJob.stopCron();
 			this.cognitoClient.destroy();
 			this.snsClient.destroy();
 			this.sqsClient.destroy();

@@ -17,7 +17,7 @@ export default class UploadService {
 		private readonly s3Client: S3Client,
 		private readonly fileReaderHelper: FileReaderHelper,
 	) {
-		const s3Configs: ConfigsInterface['integration']['aws']['s3'] = this.configService.get<any>('integration.aws.s3');
+		const s3Configs = this.configService.get<ConfigsInterface['integration']['aws']['s3']>('integration.aws.s3')!;
 		this.uploadBucket = s3Configs.bucketName;
 	}
 

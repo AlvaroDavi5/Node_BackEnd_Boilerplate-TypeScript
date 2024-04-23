@@ -37,12 +37,12 @@ export default class EventsQueueProducer {
 		private readonly dateGeneratorHelper: DateGeneratorHelper,
 	) {
 		this.logger = this.loggerProvider.getLogger(EventsQueueProducer.name);
-		const { queueName, queueUrl }: ConfigsInterface['integration']['aws']['sqs']['eventsQueue'] = this.configService.get<any>('integration.aws.sqs.eventsQueue');
+		const { queueName, queueUrl } = this.configService.get<ConfigsInterface['integration']['aws']['sqs']['eventsQueue']>('integration.aws.sqs.eventsQueue')!;
 		this.credentials = {
 			queueName,
 			queueUrl,
 		};
-		const appName: ConfigsInterface['application']['name'] = this.configService.get<any>('application.name');
+		const appName = this.configService.get<ConfigsInterface['application']['name']>('application.name')!;
 		this.applicationName = String(appName);
 	}
 
@@ -53,7 +53,7 @@ export default class EventsQueueProducer {
 			schemaVersion: 1.0,
 			payload,
 			source: 'BOILERPLATE',
-			timestamp: this.dateGeneratorHelper.getDate(),
+			timestamp: this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true),
 		};
 	}
 

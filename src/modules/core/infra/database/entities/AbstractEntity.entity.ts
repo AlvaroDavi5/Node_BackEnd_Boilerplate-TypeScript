@@ -28,9 +28,9 @@ export default abstract class AbstractEntity<I = any> {
 		return (value !== undefined && value !== null);
 	}
 
-	public getDate(dateStr?: string): Date {
+	public getDate(strDate?: string): Date {
 		const dateGeneratorHelper: DateGeneratorHelper = new DateGeneratorHelper();
-		return dateGeneratorHelper.getDate(true, dateStr);
+		return dateGeneratorHelper.getDate(strDate ?? new Date().toISOString(), 'iso-8601', true);
 	}
 
 	public getAttributes(): I {

@@ -43,7 +43,7 @@ export default class FileController implements OnModuleInit {
 		private readonly loggerProvider: LoggerProviderInterface,
 	) {
 		this.logger = this.loggerProvider.getLogger(FileController.name);
-		const appConfigs: ConfigsInterface['application'] = this.configService.get<any>('application');
+		const appConfigs = this.configService.get<ConfigsInterface['application']>('application')!;
 		this.isTestEnv = appConfigs.environment === EnvironmentsEnum.TEST;
 	}
 

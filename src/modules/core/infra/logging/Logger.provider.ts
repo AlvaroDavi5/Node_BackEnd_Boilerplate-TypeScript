@@ -75,7 +75,7 @@ const LoggerProvider: Provider = {
 		dataParserHelper: DataParserHelper,
 		...args: any[]
 	): LoggerProviderInterface => {
-		const applicationConfigs: ConfigsInterface['application'] = configService.get<any>('application');
+		const applicationConfigs = configService.get<ConfigsInterface['application']>('application')!;
 
 		return {
 			getLogger: (context: string): Logger => {

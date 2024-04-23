@@ -36,7 +36,7 @@ export default class SubscriptionService implements OnModuleInit {
 		this.subscriptionsCollection = this.mongoClient.getCollection(this.datalakeDatabase, subscriptions);
 
 		this.logger = this.loggerProvider.getLogger(SubscriptionService.name);
-		const subscriptionsExpirationTime: ConfigsInterface['cache']['expirationTime']['subscriptions'] = this.configService.get<any>('cache.expirationTime.subscriptions');
+		const subscriptionsExpirationTime = this.configService.get<ConfigsInterface['cache']['expirationTime']['subscriptions']>('cache.expirationTime.subscriptions')!;
 		this.subscriptionsTimeToLive = subscriptionsExpirationTime;
 	}
 

@@ -197,7 +197,7 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 
 		let result = null;
 		if (softDelete) {
-			const timestamp = this.dateGeneratorHelper.getDate(true);
+			const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
 			result = await this.ResourceModel.update({
 				deletedAt: timestamp,
 				deletedBy: agentId,
@@ -221,7 +221,7 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 
 		let result = null;
 		if (softDelete) {
-			const timestamp = this.dateGeneratorHelper.getDate(true);
+			const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
 			result = await this.ResourceModel.update(
 				{
 					deletedAt: timestamp,

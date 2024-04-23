@@ -18,8 +18,8 @@ export default class RedisClient {
 		private readonly exceptions: Exceptions,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
-		const { host, port }: ConfigsInterface['cache']['redis'] = this.configService.get<any>('cache.redis');
-		const logging: ConfigsInterface['application']['logging'] = this.configService.get<any>('application.logging');
+		const { host, port } = this.configService.get<ConfigsInterface['cache']['redis']>('cache.redis')!;
+		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
 
 		this.redisClient = new IORedis({
 			host: String(host),

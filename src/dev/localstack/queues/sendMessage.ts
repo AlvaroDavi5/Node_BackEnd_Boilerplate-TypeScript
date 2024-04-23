@@ -11,7 +11,7 @@ export default (queueName: string, queueUrl: string, payload: any, title: string
 		schemaVersion: 1,
 		payload: payload,
 		source: 'SCRIPT',
-		timestamp: new Date('2024-04-17T17:36:48.666Z').toISOString(),
+		timestamp: new Date('2024-06-10T03:52:50.885Z'),
 	};
 
 	sqsClient.sendMessage(

@@ -17,7 +17,7 @@ export default class CryptographyService {
 	constructor(
 		private readonly configService: ConfigService,
 	) {
-		const { secretKey }: ConfigsInterface['security'] = this.configService.get<any>('security');
+		const { secretKey } = this.configService.get<ConfigsInterface['security']>('security')!;
 		this.secret = secretKey;
 		this.IV = crypto.randomBytes(12).toString('hex');
 	}

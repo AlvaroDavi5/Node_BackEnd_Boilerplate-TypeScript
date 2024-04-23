@@ -123,7 +123,7 @@ export interface ConfigsInterface {
 			mockedService: {
 				serviceName: string,
 				baseUrl: string,
-				port: string,
+				timeout: number, // request timeout in milliseconds
 			},
 		},
 	},
@@ -242,7 +242,7 @@ export default (): ConfigsInterface => ({
 			mockedService: {
 				serviceName: process.env.MOCKED_SERVICE_NAME ?? 'Mocked Service',
 				baseUrl: process.env.MOCKED_SERVICE_URL ?? 'http://localhost:4000/',
-				port: process.env.MOCKED_SERVERS_APP_PORT ?? '4000',
+				timeout: 1000,
 			},
 		},
 	},

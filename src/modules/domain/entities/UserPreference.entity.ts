@@ -3,8 +3,13 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber, IsString, IsDate, IsEnum } from 'class-validator';
 import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity';
 import { ThemesEnum } from '@domain/enums/themes.enum';
+import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { returingNumber, returingString, returingDate } from '@shared/types/returnTypeFunc';
 
+
+const dateGeneratorHelper = new DateGeneratorHelper();
+const dateExample = dateGeneratorHelper.getDate('2024-06-10T03:52:50.885Z', 'iso-8601', true, TimeZonesEnum.SaoPaulo);
 
 export interface UserPreferenceInterface {
 	id?: number,
@@ -38,8 +43,8 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 	@IsEnum(ThemesEnum)
 	public defaultTheme: ThemesEnum | null = null;
 
-	@ApiProperty({ type: Date, example: (new Date('2024-04-17T17:36:48.666Z')), default: (new Date('2024-04-17T17:36:48.666Z')), nullable: false, required: false, description: 'User creation timestamp' })
-	@Field(returingDate, { defaultValue: (new Date('2024-04-17T17:36:48.666Z')), nullable: false, description: 'User creation timestamp' })
+	@ApiProperty({ type: Date, example: dateExample, default: dateExample, nullable: false, required: false, description: 'User creation timestamp' })
+	@Field(returingDate, { defaultValue: dateGeneratorHelper.getDate(new Date(), 'jsDate', true), nullable: false, description: 'User creation timestamp' })
 	@IsDate()
 	public readonly createdAt: Date;
 

@@ -48,7 +48,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 	}
 
 	public onApplicationBootstrap(): void {
-		this.logger.debug(`\n\n\tApp started with PID: ${process.pid} on URL: ${this.appConfigs.url}\n`);
+		this.logger.debug(`\tApp started with PID: ${process.pid} on URL: ${this.appConfigs.url}`);
 	}
 
 	public onModuleDestroy(): void {

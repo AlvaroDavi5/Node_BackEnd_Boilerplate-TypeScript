@@ -1,10 +1,23 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsNotEmpty, IsOptional } from 'class-validator';
+import { IsString, IsEnum, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
+import { Type } from 'class-transformer';
 import { CreateUserSchemaInterface } from '@app/user/api/schemas/user/createUser.schema';
-import { UpdateUserSchemaInterface } from '@app/user/api/schemas/user/updateUser.schema';
+import { UpdateUserSchemaInterface, UserPreferenceSchemaInterface } from '@app/user/api/schemas/user/updateUser.schema';
 import { LoginUserSchemaInterface } from '@app/user/api/schemas/user/loginUser.schema';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 
+
+abstract class UserPreferenceInputDto implements UserPreferenceSchemaInterface {
+	@ApiProperty({ type: String, example: './image.png', default: undefined, nullable: false, required: false })
+	@IsString()
+	@IsOptional()
+	public imagePath?: string;
+
+	@ApiProperty({ type: ThemesEnum, enum: ThemesEnum, example: ThemesEnum.DEFAULT, default: undefined, nullable: false, required: false })
+	@IsEnum(ThemesEnum)
+	@IsOptional()
+	public defaultTheme?: ThemesEnum;
+}
 
 export abstract class CreateUserInputDto implements CreateUserSchemaInterface {
 	@ApiProperty({ type: String, example: 'User Default', default: '', nullable: false, required: true })
@@ -42,15 +55,11 @@ export abstract class CreateUserInputDto implements CreateUserSchemaInterface {
 	@IsOptional()
 	public fu?: string;
 
-	@ApiProperty({ type: String, example: './image.png', default: undefined, nullable: false, required: false })
-	@IsString()
+	@ApiProperty({ type: UserPreferenceInputDto, example: UserPreferenceInputDto, default: undefined, nullable: false, required: false })
+	@Type(() => UserPreferenceInputDto)
+	@ValidateNested()
 	@IsOptional()
-	public imagePath?: string;
-
-	@ApiProperty({ type: ThemesEnum, enum: Object.values(ThemesEnum), example: ThemesEnum.DEFAULT, default: undefined, nullable: false, required: false })
-	@IsString()
-	@IsOptional()
-	public defaultTheme?: ThemesEnum;
+	preference?: UserPreferenceInputDto;
 }
 
 export abstract class UpdateUserInputDto implements UpdateUserSchemaInterface {
@@ -89,15 +98,11 @@ export abstract class UpdateUserInputDto implements UpdateUserSchemaInterface {
 	@IsOptional()
 	public fu?: string;
 
-	@ApiProperty({ type: String, example: './image.png', default: undefined, nullable: false, required: false })
-	@IsString()
+	@ApiProperty({ type: UserPreferenceInputDto, example: UserPreferenceInputDto, default: undefined, nullable: false, required: false })
+	@Type(() => UserPreferenceInputDto)
+	@ValidateNested()
 	@IsOptional()
-	public imagePath?: string;
-
-	@ApiProperty({ type: ThemesEnum, enum: Object.values(ThemesEnum), example: ThemesEnum.DEFAULT, default: undefined, nullable: false, required: false })
-	@IsString()
-	@IsOptional()
-	public defaultTheme?: ThemesEnum;
+	preference?: UserPreferenceInputDto;
 }
 
 export abstract class LoginUserInputDto implements LoginUserSchemaInterface {

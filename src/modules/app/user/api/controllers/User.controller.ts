@@ -95,6 +95,28 @@ export default class UserController {
 	}
 
 	@ApiOperation({
+		summary: 'Login User',
+		description: 'Login user and get user authorization token (1d)',
+		deprecated: false,
+	})
+	@Put('/')
+	@ApiOkResponse({ type: UserEntity })
+	@ApiConsumes('application/json')
+	@ApiProduces('application/json')
+	public async loginUser(
+		@Body(LoginUserValidatorPipe) body: LoginUserInputDto,
+	): Promise<UserInterface & { token: string }> {
+		try {
+			const { user, token } = await this.userOperation.loginUser(body);
+
+			return { ...user.getAttributes(), token };
+		} catch (error) {
+			this.logger.error(error);
+			throw error;
+		}
+	}
+
+	@ApiOperation({
 		summary: 'Get User',
 		description: 'Get user by ID',
 		deprecated: false,
@@ -113,28 +135,6 @@ export default class UserController {
 			const result = await this.userOperation.getUser(userId, user);
 
 			return result.getAttributes();
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
-	}
-
-	@ApiOperation({
-		summary: 'Login User',
-		description: 'Login user and get user authorization token (1d)',
-		deprecated: false,
-	})
-	@Put('/')
-	@ApiOkResponse({ type: UserEntity })
-	@ApiConsumes('application/json')
-	@ApiProduces('application/json')
-	public async loginUser(
-		@Body(LoginUserValidatorPipe) body: LoginUserInputDto,
-	): Promise<UserInterface & { token: string }> {
-		try {
-			const { user, token } = await this.userOperation.loginUser(body);
-
-			return { ...user.getAttributes(), token };
 		} catch (error) {
 			this.logger.error(error);
 			throw error;

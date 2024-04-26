@@ -59,7 +59,7 @@ export abstract class CreateUserInputDto implements CreateUserSchemaInterface {
 	@Type(() => UserPreferenceInputDto)
 	@ValidateNested()
 	@IsOptional()
-	preference?: UserPreferenceInputDto;
+		preference?: UserPreferenceInputDto;
 }
 
 export abstract class UpdateUserInputDto implements UpdateUserSchemaInterface {
@@ -102,7 +102,7 @@ export abstract class UpdateUserInputDto implements UpdateUserSchemaInterface {
 	@Type(() => UserPreferenceInputDto)
 	@ValidateNested()
 	@IsOptional()
-	preference?: UserPreferenceInputDto;
+		preference?: UserPreferenceInputDto;
 }
 
 export abstract class LoginUserInputDto implements LoginUserSchemaInterface {

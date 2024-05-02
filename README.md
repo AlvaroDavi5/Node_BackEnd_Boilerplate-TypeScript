@@ -137,8 +137,6 @@ ___
 
 ### TO DO
 
-- **Packaging**
-	- Infra Utils Lib Package
 - **SQL**
 	- [ ] UUID Fields
 	- [ ] Manual Queries
@@ -156,6 +154,8 @@ ___
 - **Nest.js**
 	- [Hybrid Application](https://docs.nestjs.com/faq/hybrid-application)
 	- [kafka](https://docs.nestjs.com/microservices/kafka)
+- **Packaging**
+	- Infra Utils Lib Package
 - **Integrations**
 	- [ ] OAuth
 	- [ ] PIX
@@ -166,12 +166,16 @@ ___
 		- Modules
 			- Core
 				- Infra
+					- [ ] Database
+					- [ ] Data
+					- [ ] Cache
 					- [ ] Cron Tasks
 					- [ ] Logging
-			- API
-				- [ ] Guards
-				- [ ] Pipes
-				- [ ] Schemas
+					- Integration
+						- [ ] AWS
+						- [ ] REST
+			- App
+				- [ ] Repositories
 			- Events
 				- [ ] Queue Handler
 					- [ ] Handlers Schemas
@@ -182,18 +186,18 @@ ___
 		- Modules
 			- Core
 				- Infra
-					- [ ] Database
-					- [ ] Data
-					- [ ] Cache
+					- [ ] Database Connection
+					- [ ] Data Connection
+					- [ ] Cache Connection
 					- Integration
-						- [ ] AWS
-						- [ ] REST
+						- [ ] AWS Connection
 					- [ ] Cron Jobs
 					- [ ] Start
 			- API
+				- [ ] Guards
+				- [ ] Pipes
+				- [ ] Schemas
 				- [x] Controllers
-			- App
-				- [ ] Repositories
 			- Events
 				- [ ] Queue Consumer
 				- [ ] Queue Producer

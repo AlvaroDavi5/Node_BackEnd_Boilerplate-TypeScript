@@ -1,4 +1,4 @@
-import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
+import { Injectable, Inject, OnModuleInit, ArgumentMetadata } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { Message } from '@aws-sdk/client-sqs';
 import { Logger } from 'winston';
@@ -8,6 +8,7 @@ import MongoClient from '@core/infra/data/Mongo.client';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import Exceptions from '@core/infra/errors/Exceptions';
 import eventSchema, { EventSchemaInterface } from './schemas/event.schema';
 import { EventsEnum } from '@domain/enums/events.enum';
 import { WebSocketRoomsEnum } from '@domain/enums/webSocketEvents.enum';
@@ -17,17 +18,19 @@ import { WebSocketRoomsEnum } from '@domain/enums/webSocketEvents.enum';
 export default class EventsQueueHandler implements OnModuleInit {
 	private subscriptionService!: SubscriptionService;
 	private webhookService!: WebhookService;
+	private readonly schemaValidator: SchemaValidator<EventSchemaInterface>;
 	private readonly logger: Logger;
 
 	constructor(
 		private readonly moduleRef: ModuleRef,
 		private readonly mongoClient: MongoClient,
-		private readonly schemaValidator: SchemaValidator<EventSchemaInterface>,
 		private readonly dataParserHelper: DataParserHelper,
 		@Inject(LOGGER_PROVIDER)
 		private readonly loggerProvider: LoggerProviderInterface,
+		private readonly exceptions: Exceptions,
 	) {
 		this.logger = this.loggerProvider.getLogger(EventsQueueHandler.name);
+		this.schemaValidator = new SchemaValidator<EventSchemaInterface>(this.exceptions, this.logger);
 	}
 
 	public onModuleInit(): void {
@@ -36,10 +39,12 @@ export default class EventsQueueHandler implements OnModuleInit {
 	}
 
 	public async execute(message: Message): Promise<boolean> {
+		const bodyMetadata: ArgumentMetadata = { type: 'custom', data: message.Body, metatype: String };
+
 		try {
 			if (message.Body) {
 				const data = this.dataParserHelper.toObject(message.Body);
-				const value = this.schemaValidator.validate(data, eventSchema);
+				const value = this.schemaValidator.validate(data, bodyMetadata, eventSchema);
 
 				if (value.payload.event === EventsEnum.NEW_CONNECTION) {
 					this.subscriptionService.emit(value, WebSocketRoomsEnum.NEW_CONNECTIONS);

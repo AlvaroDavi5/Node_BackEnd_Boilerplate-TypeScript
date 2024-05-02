@@ -1,5 +1,4 @@
 import { ConfigService } from '@nestjs/config';
-import { writeFile } from 'fs';
 import { Readable } from 'stream';
 import { Logger } from 'winston';
 import {
@@ -11,7 +10,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ConfigsInterface } from '@core/configs/configs.config';
 
 
-export type s3FileContentType = string | Uint8Array | Buffer | Readable | ReadableStream | Blob;
+type s3FileContentType = string | Uint8Array | Buffer | Readable | ReadableStream | Blob;
 
 export default class S3Client {
 	private readonly awsConfig: S3ClientConfig;
@@ -25,8 +24,8 @@ export default class S3Client {
 		private readonly loggerProvider: any,
 	) {
 		this.logger = this.loggerProvider.getLogger(S3Client.name);
-		const awsConfigs: ConfigsInterface['integration']['aws'] = this.configService.get<any>('integration.aws');
-		const logging: ConfigsInterface['application']['logging'] = this.configService.get<any>('application.logging');
+		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
+		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
 		const {
 			region, sessionToken,
 			accessKeyId, secretAccessKey,
@@ -161,19 +160,14 @@ export default class S3Client {
 		return tag;
 	}
 
-	public async downloadFile(bucketName: string, objectKey: string): Promise<{ filePath: string; contentLength: number; }> {
+	public async downloadFile(bucketName: string, objectKey: string): Promise<{ content: s3FileContentType | undefined, contentLength: number; }> {
+		let content: s3FileContentType | undefined = undefined;
 		let contentLength = 0;
 
 		try {
 			const result = await this.s3Client.send(new GetObjectCommand(this.getObjectParams(bucketName, objectKey)));
-			if (result?.Body) {
-				writeFile(`./temp/${objectKey}`, `${result.Body}`, (err) => {
-					if (err) {
-						this.logger.error('Save Error:', err);
-					}
-				});
-			}
 			if (result?.ContentLength) {
+				content = result.Body;
 				contentLength = result.ContentLength;
 			}
 		} catch (error) {
@@ -181,7 +175,7 @@ export default class S3Client {
 		}
 
 		return {
-			filePath: `./temp/${objectKey}`,
+			content,
 			contentLength,
 		};
 	}

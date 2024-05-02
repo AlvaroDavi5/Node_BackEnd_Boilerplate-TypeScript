@@ -16,7 +16,7 @@
 		"target": "ES2020",
 		"lib": [
 			"ES2020",
-			"DOM",
+			"DOM"
 		],
 		"types": [
 			"node",
@@ -38,37 +38,37 @@
 		"baseUrl": "./",
 		"paths": {
 			"@dev/*": [
-				"src/dev/*",
+				"src/dev/*"
 			],
 			"@core/*": [
-				"src/modules/core/*",
+				"src/modules/core/*"
 			],
 			"@common/*": [
-				"src/modules/common/*",
+				"src/modules/common/*"
 			],
 			"@domain/*": [
-				"src/modules/domain/*",
+				"src/modules/domain/*"
 			],
 			"@app/*": [
-				"src/modules/app/*",
+				"src/modules/app/*"
 			],
 			"@api/*": [
-				"src/modules/api/*",
+				"src/modules/api/*"
 			],
 			"@graphql/*": [
-				"src/modules/graphql/*",
+				"src/modules/graphql/*"
 			],
 			"@events/*": [
-				"src/modules/events/*",
+				"src/modules/events/*"
 			],
 			"@shared/*": [
-				"src/shared/*",
-			],
+				"src/shared/*"
+			]
 		},
 		"rootDirs": [
 			"src",
 			"scripts",
-			"tests",
+			"tests"
 		],
 		// "typeRoots": [],
 		// "types": [],
@@ -132,25 +132,25 @@
 		/* Completeness */
 		// "skipDefaultLibCheck": true,
 		"skipLibCheck": false,
-		"pretty": true,
+		"pretty": true
 	},
 	"include": [
 		"src/**/*.d.ts",
 		"src/**/*.ts",
 		"src/**/*.tsx",
 		"src/**/*.js",
-		"src/**/*.jsx",
+		"src/**/*.jsx"
 	],
 	"exclude": [
 		"node_modules",
 		"build",
 		"tests",
 		"**/*.test.ts",
-		"**/*.spec.ts",
+		"**/*.spec.ts"
 	],
 	"typeAcquisition": {
 		"include": [
-			"jest",
+			"jest"
 		]
-	},
+	}
 }

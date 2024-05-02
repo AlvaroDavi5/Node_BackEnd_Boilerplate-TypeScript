@@ -10,7 +10,7 @@ import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.deco
 import HttpConstants from '@common/constants/Http.constants';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
-import { RegisterEventHookPipeValidator } from '@app/hook/api/pipes/HookValidator.pipe';
+import { RegisterEventHookValidatorPipe } from '@app/hook/api/pipes/HookValidator.pipe';
 import { RegisterEventHookInputDto } from '@app/hook/api/dto/HookInput.dto';
 import WebhookService from '@app/hook/services/Webhook.service';
 
@@ -42,7 +42,7 @@ export default class HookController {
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async registerEventHook(
-		@Query(RegisterEventHookPipeValidator) query: RegisterEventHookInputDto,
+		@Query(RegisterEventHookValidatorPipe) query: RegisterEventHookInputDto,
 		@Res({ passthrough: true }) response: Response,
 	): Promise<{ statusMessage: string }> {
 		if (query.responseSchema.length) {

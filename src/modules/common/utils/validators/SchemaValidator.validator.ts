@@ -1,17 +1,18 @@
-import { Injectable } from '@nestjs/common';
+import { ArgumentMetadata } from '@nestjs/common';
 import { Schema } from 'joi';
+import { Logger } from 'winston';
 import Exceptions from '@core/infra/errors/Exceptions';
 
 
-@Injectable()
 export default class SchemaValidator<S> {
-
 	constructor(
 		private readonly exceptions: Exceptions,
-	) {
-	}
+		private readonly logger: Logger,
+	) { }
 
-	public validate(data: unknown, schema: Schema<S>): S {
+	public validate(data: unknown, metadata: ArgumentMetadata, schema: Schema<S>): S {
+		this.logger.debug(`Validating '${metadata.type}' received as '${metadata.metatype?.name}'`);
+
 		const { value, error } = schema.validate(
 			data,
 			{ stripUnknown: false },

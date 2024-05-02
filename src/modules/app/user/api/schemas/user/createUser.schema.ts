@@ -1,6 +1,7 @@
 import Joi from 'joi';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 import RegExConstants from '@common/constants/Regex.constants';
+import { UserPreferenceSchemaInterface } from './updateUser.schema';
 
 
 export interface CreateUserSchemaInterface {
@@ -11,12 +12,16 @@ export interface CreateUserSchemaInterface {
 	docType?: string,
 	document?: string,
 	fu?: string,
-	imagePath?: string,
-	defaultTheme?: ThemesEnum,
+	preference?: UserPreferenceSchemaInterface,
 }
 
 const regExConstants = new RegExConstants();
 const passwordPattern = regExConstants.passwordPattern;
+
+const preference = Joi.object().keys({
+	imagePath: Joi.string().empty('').max(255).trim(),
+	defaultTheme: Joi.string().valid(...Object.values(ThemesEnum)).default(ThemesEnum.DEFAULT).max(20),
+}).unknown(false) as Joi.Schema<UserPreferenceSchemaInterface>;
 
 export default Joi.object().keys({
 	fullName: Joi.string().trim().max(100).required(),
@@ -26,6 +31,5 @@ export default Joi.object().keys({
 	docType: Joi.string().empty('').max(10).trim(),
 	document: Joi.string().empty('').max(18).trim(),
 	fu: Joi.string().empty('').trim().min(2).max(2),
-	imagePath: Joi.string().empty('').max(255).trim(),
-	defaultTheme: Joi.string().valid(...Object.values(ThemesEnum)).default(ThemesEnum.DEFAULT).max(20),
+	preference,
 }).unknown(false).required() as Joi.Schema<CreateUserSchemaInterface>;

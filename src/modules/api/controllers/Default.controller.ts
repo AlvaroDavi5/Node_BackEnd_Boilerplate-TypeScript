@@ -55,14 +55,14 @@ export default class DefaultController {
 	public healthCheck(
 		@Req() request: Request,
 		@Headers() headers: { [key: string]: string | undefined },
-		@Param() params: { [key: string]: unknown },
-		@Query() query: unknown,
+		@Param() pathParams: { [key: string]: unknown },
+		@Query() queryParams: unknown,
 		@Body() body: unknown,
 		@Res({ passthrough: true }) response: Response,
 	): {
 		baseUrl: string, url: string, method: string,
-		headers: { [key: string]: string | undefined }, params: { [key: string]: unknown },
-		query: unknown, body: unknown,
+		headers: { [key: string]: string | undefined },
+		pathParams: { [key: string]: unknown }, queryParams: unknown, body: unknown,
 		statusCode: number, statusMessage: string,
 	} {
 		// [METHOD]:{STATUS_CODE} http://url/:param1/:param2?query1=X&query2=Y { 'body': {} }
@@ -76,8 +76,8 @@ export default class DefaultController {
 				connection: headers.connection,
 				accept: headers.accept,
 			},
-			params: params,
-			query: query,
+			pathParams: pathParams,
+			queryParams: queryParams,
 			body: body,
 			statusCode: response.statusCode,
 			statusMessage: response.statusMessage ?? this.httpConstants.messages.found('Endpoint'),

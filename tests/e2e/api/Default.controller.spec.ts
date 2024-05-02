@@ -36,8 +36,8 @@ describe('API :: DefaultController', () => {
 				},
 				statusCode: 200,
 				statusMessage: 'Endpoint finded successfully.',
-				params: {},
-				query: {},
+				pathParams: {},
+				queryParams: {},
 				body: {},
 				url: '/api/check'
 			});

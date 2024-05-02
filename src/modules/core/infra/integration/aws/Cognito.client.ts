@@ -25,8 +25,8 @@ export default class CognitoClient {
 		private readonly loggerProvider: LoggerProviderInterface,
 	) {
 		this.logger = this.loggerProvider.getLogger(CognitoClient.name);
-		const awsConfigs: ConfigsInterface['integration']['aws'] = this.configService.get<any>('integration.aws');
-		const logging: ConfigsInterface['application']['logging'] = this.configService.get<any>('application.logging');
+		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
+		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
 		const {
 			region, sessionToken,
 			accessKeyId, secretAccessKey,

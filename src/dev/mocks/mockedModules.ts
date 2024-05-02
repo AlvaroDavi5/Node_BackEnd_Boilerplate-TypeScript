@@ -1,6 +1,6 @@
 import { v4 as uuidV4 } from 'uuid';
 import configs from 'src/modules/core/configs/configs.config';
-import LoggerProvider from 'tests/integration/support/mocks/logging/Logger.provider';
+import { LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 
 
 export const configServiceMock = {
@@ -29,7 +29,17 @@ export const cryptographyServiceMock = {
 	}
 };
 
-export const loggerProviderMock = new LoggerProvider({ call: (...args: unknown[]) => { return undefined; } } as any);
+export const loggerProviderMock: LoggerProviderInterface = {
+	getLogger: (context: string): any => {
+		return {
+			error: console.error,
+			warn: console.warn,
+			info: console.info,
+			debug: console.debug,
+			log: console.log,
+		};
+	}
+};
 
 export const dataParserHelperMock = {
 	toString: (data: unknown = {}): string => {

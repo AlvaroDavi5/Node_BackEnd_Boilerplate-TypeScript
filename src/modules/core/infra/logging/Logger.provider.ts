@@ -75,7 +75,7 @@ const LoggerProvider: Provider = {
 		dataParserHelper: DataParserHelper,
 		...args: any[]
 	): LoggerProviderInterface => {
-		const applicationConfigs: ConfigsInterface['application'] = configService.get<any>('application');
+		const applicationConfigs = configService.get<ConfigsInterface['application']>('application')!;
 
 		return {
 			getLogger: (context: string): Logger => {
@@ -105,3 +105,30 @@ const LoggerProvider: Provider = {
 };
 
 export default LoggerProvider;
+
+export function generateLogger(context: string): Logger {
+	const messageFormatter = getMessageFormatter(
+		context,
+		(data: any) => {
+			try {
+				return JSON.stringify(data) ?? '';
+			} catch (error) {
+				return data?.toString() ?? '';
+			}
+		},
+	);
+
+	const defaultFormat = getDefaultFormat(
+		(process.env.SHOW_ERROR_STACK ?? 'true') === 'true',
+		messageFormatter,
+	);
+
+	const loggerOptions = getLoggerOptions(
+		(process.env.APP_NAME ?? 'Node Boilerplate'),
+		(process.env.NODE_ENV ?? 'dev'),
+		(process.env.APP_LOGS_PATH ?? './logs/logs.log'),
+		defaultFormat,
+	);
+
+	return createLogger(loggerOptions);
+}

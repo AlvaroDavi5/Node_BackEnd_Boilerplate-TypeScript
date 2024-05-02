@@ -4,8 +4,13 @@ import { IsNumber, IsString, IsDate } from 'class-validator';
 import { Type } from 'class-transformer';
 import AbstractEntity, { AbstractEntityList } from '@core/infra/database/entities/AbstractEntity.entity';
 import UserPreferenceEntity, { UserPreferenceInterface } from '@domain/entities/UserPreference.entity';
+import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { returingNumber, returingString, returingDate } from '@shared/types/returnTypeFunc';
 
+
+const dateGeneratorHelper = new DateGeneratorHelper();
+const dateExample = dateGeneratorHelper.getDate('2024-06-10T03:52:50.885Z', 'iso-8601', true, TimeZonesEnum.SaoPaulo);
 
 export interface UserInterface {
 	id?: number,
@@ -27,7 +32,7 @@ export const returingUserPreferenceEntity = () => UserPreferenceEntity;
 
 @ObjectType()
 export default class UserEntity extends AbstractEntity<UserInterface> {
-	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, required: false, description: 'Database register ID' })
+	@ApiProperty({ type: Number, nullable: false, required: false, default: 0, example: 0, description: 'Database register ID' })
 	@Field(returingNumber, { defaultValue: 0, nullable: false, description: 'Database register ID' })
 	@IsNumber()
 	private id = 0;
@@ -74,8 +79,8 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	@Field(returingUserPreferenceEntity, { defaultValue: null, nullable: true, description: 'User preference' })
 	private preference: UserPreferenceEntity | null = null;
 
-	@ApiProperty({ type: Date, example: (new Date('2024-02-28T09:35:31.820')), default: (new Date('2024-02-28T09:35:31.820')), nullable: false, required: false, description: 'User creation timestamp' })
-	@Field(returingDate, { defaultValue: (new Date('2024-02-28T09:35:31.820')), nullable: false, description: 'User creation timestamp' })
+	@ApiProperty({ type: Date, example: dateExample, default: dateExample, nullable: false, required: false, description: 'User creation timestamp' })
+	@Field(returingDate, { defaultValue: dateGeneratorHelper.getDate(new Date(), 'jsDate', true), nullable: false, description: 'User creation timestamp' })
 	@IsDate()
 	public readonly createdAt: Date;
 
@@ -211,8 +216,8 @@ export class UserEntityList extends AbstractEntityList<UserEntity> {
 					imagePath: './image.png',
 					defaultTheme: 'DEFAULT',
 				}),
-				createdAt: new Date('2023-12-31T18:27:25.685Z'),
-				updatedAt: new Date('2024-01-01T18:27:25.685Z'),
+				createdAt: dateExample,
+				updatedAt: dateExample,
 			}),
 		]),
 		default: [],

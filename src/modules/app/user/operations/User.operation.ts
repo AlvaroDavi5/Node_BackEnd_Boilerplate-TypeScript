@@ -69,11 +69,10 @@ export default class UserOperation {
 			await this.userPreferenceService.create(newPreference);
 		}
 
-		const foundedUser = await this.userService.getById(createdUser.getId());
+		const foundedUser = await this.userService.getById(createdUser.getId(), true);
 		const foundedPreference = await this.userPreferenceService.getByUserId(createdUser.getId());
 		if (foundedPreference)
 			foundedUser?.setPreference(foundedPreference);
-		foundedUser?.setPassword('');
 
 		if (!foundedUser)
 			throw this.exceptions.notFound({
@@ -89,7 +88,7 @@ export default class UserOperation {
 				message: 'Invalid userAgent'
 			});
 
-		const foundedUser = await this.userService.getById(id);
+		const foundedUser = await this.userService.getById(id, true);
 		const foundedPreference = await this.userPreferenceService.getByUserId(id);
 
 		if (!foundedUser)
@@ -109,7 +108,7 @@ export default class UserOperation {
 				message: 'Invalid userAgent'
 			});
 
-		const user = await this.userService.getById(id);
+		const user = await this.userService.getById(id, true);
 		const preference = await this.userPreferenceService.getByUserId(id);
 
 		if (!user || !preference)
@@ -120,7 +119,7 @@ export default class UserOperation {
 		const isAllowedToUpdateUser = this.userStrategy.isAllowedToManageUser(userAgent, user);
 		if (!isAllowedToUpdateUser)
 			throw this.exceptions.business({
-				message: 'userAgent not allowed to update this user'
+				message: 'userAgent not allowed to update this user!'
 			});
 
 		const attributesToUpdate = Object.keys({
@@ -136,19 +135,26 @@ export default class UserOperation {
 			}
 		});
 
-		const updatedPreference = await this.userPreferenceService.update(preference.getId(), new UserPreferenceEntity(data));
 		const updatedUser = await this.userService.update(user.getId(), new UserEntity(data));
+		const updatedPreference = await this.userPreferenceService.update(preference.getId(), new UserPreferenceEntity(data));
 
 		if (!updatedUser || !updatedPreference)
 			throw this.exceptions.conflict({
 				message: 'User or preference not updated!'
 			});
 
-		if (updatedPreference)
-			updatedUser.setPreference(updatedPreference);
-		updatedUser.setPassword('');
+		const foundedUser = await this.userService.getById(user.getId(), true);
+		const foundedPreference = await this.userPreferenceService.getByUserId(user.getId());
 
-		return updatedUser;
+		if (!foundedUser)
+			throw this.exceptions.notFound({
+				message: 'User not found!'
+			});
+
+		if (foundedPreference)
+			foundedUser.setPreference(foundedPreference);
+
+		return foundedUser;
 	}
 
 	public async deleteUser(id: number, userAgent?: UserAuthInterface): Promise<boolean> {
@@ -157,7 +163,7 @@ export default class UserOperation {
 				message: 'Invalid userAgent'
 			});
 
-		const user = await this.userService.getById(id);
+		const user = await this.userService.getById(id, true);
 		const preference = await this.userPreferenceService.getByUserId(id);
 
 		if (!user || !preference)
@@ -168,7 +174,7 @@ export default class UserOperation {
 		const isAllowedToDeleteUser = this.userStrategy.isAllowedToManageUser(userAgent, user);
 		if (!isAllowedToDeleteUser)
 			throw this.exceptions.business({
-				message: 'userAgent not allowed to delete this user'
+				message: 'userAgent not allowed to delete this user!'
 			});
 
 		await this.userPreferenceService.delete(preference.getId(), {

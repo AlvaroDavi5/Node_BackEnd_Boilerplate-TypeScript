@@ -1,8 +1,9 @@
 import { Injectable, Scope } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Multer } from 'multer';
-import S3Client from '@core/infra/integration/aws/S3.client';
+import { Readable } from 'stream';
+import S3Client, { s3FileContentType } from '@core/infra/integration/aws/S3.client';
 import { ConfigsInterface } from '@core/configs/configs.config';
+import Exceptions from '@core/infra/errors/Exceptions';
 import FileStrategy from '@app/file/strategies/File.strategy';
 import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
 
@@ -16,23 +17,60 @@ export default class UploadService {
 		private readonly configService: ConfigService,
 		private readonly s3Client: S3Client,
 		private readonly fileReaderHelper: FileReaderHelper,
+		private readonly exceptions: Exceptions,
 	) {
-		const s3Configs: ConfigsInterface['integration']['aws']['s3'] = this.configService.get<any>('integration.aws.s3');
+		const s3Configs = this.configService.get<ConfigsInterface['integration']['aws']['s3']>('integration.aws.s3')!;
 		this.uploadBucket = s3Configs.bucketName;
 	}
 
-	public async uploadReport(fileName: string, file: Express.Multer.File): Promise<string> {
-		let tag = '';
-		const fileContent = this.fileReaderHelper.readFile(
-			file.path, this.fileStrategy.defineEncoding(fileName));
-
-		if (fileContent && fileContent.length)
-			tag = await this.s3Client.uploadFile(this.uploadBucket, fileName, fileContent);
-
-		return tag;
+	private async parseToBuffer(content: s3FileContentType, inputEncoding: BufferEncoding): Promise<Buffer> {
+		if (Buffer.isBuffer(content)) {
+			return content;
+		}
+		else if (typeof content === 'string') {
+			return Buffer.from(content, inputEncoding);
+		}
+		else if (content instanceof Readable) {
+			const chunks: Uint8Array[] = [];
+			for await (const chunk of content) {
+				chunks.push(chunk);
+			}
+			return Buffer.concat(chunks);
+		}
+		else {
+			throw this.exceptions.internal({ message: 'Unsupported content type' });
+		}
 	}
 
-	public async getFileLink(fileName: string): Promise<string> {
-		return await this.s3Client.getFileSignedUrl(this.uploadBucket, fileName);
+	public async uploadReport(fileName: string, file: Express.Multer.File): Promise<{ filePath: string, uploadTag: string }> {
+		let uploadTag = '';
+		const fileEncoding = this.fileStrategy.defineEncoding(fileName, file.mimetype);
+		const fileContent = this.fileReaderHelper.readFile(file.path, fileEncoding) ?? '';
+		const fileBuffer = await this.parseToBuffer(fileContent, fileEncoding);
+		const filePath = `upload/reports/${fileName}`;
+
+		const isValidFile = fileBuffer?.length ?? fileContent?.length;
+		if (isValidFile)
+			uploadTag = await this.s3Client.uploadFile(this.uploadBucket, filePath, fileBuffer);
+
+		return { filePath, uploadTag };
+	}
+
+	public async getFile(filePath: string): Promise<Buffer> {
+		if (filePath.length <= 0)
+			throw this.exceptions.contract({
+				message: 'Invalid filePath',
+			});
+
+		const fileEncoding = this.fileStrategy.defineEncoding(filePath);
+		const { content } = await this.s3Client.downloadFile(this.uploadBucket, filePath);
+
+		if (!content)
+			throw this.exceptions.notFound({
+				message: 'File not founded!',
+			});
+
+		const fileContentBuffer = await this.parseToBuffer(content, fileEncoding);
+		return fileContentBuffer;
 	}
 }

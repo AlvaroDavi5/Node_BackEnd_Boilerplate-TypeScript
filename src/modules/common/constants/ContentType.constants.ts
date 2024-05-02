@@ -70,4 +70,6 @@ export default class ContentTypeConstants {
 		RELATED: 'multipart/related',
 		FORM_DATA: 'multipart/form-data',
 	};
+
+	public readonly binariesExtensions = ['gif', 'jpeg', 'jpg', 'png', 'svg', 'mp3', 'mp4', 'wav', 'mov', 'wmv'];
 }

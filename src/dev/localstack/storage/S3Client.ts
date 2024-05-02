@@ -10,7 +10,7 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ConfigsInterface } from '@core/configs/configs.config';
 
 
-export type s3FileContentType = string | Uint8Array | Buffer | Readable | ReadableStream | Blob;
+type s3FileContentType = string | Uint8Array | Buffer | Readable | ReadableStream | Blob;
 
 export default class S3Client {
 	private readonly awsConfig: S3ClientConfig;

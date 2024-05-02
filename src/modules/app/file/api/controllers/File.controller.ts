@@ -2,26 +2,28 @@ import {
 	OnModuleInit, Inject,
 	Controller, Res,
 	Get, Post, Headers,
-	StreamableFile, UploadedFile, UseInterceptors, UseGuards,
+	UseInterceptors, UseGuards,
+	UploadedFile, StreamableFile, ParseFilePipe,
 } from '@nestjs/common';
 import { LazyModuleLoader } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { ApiOperation, ApiTags, ApiBody, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiBody, ApiHeaders, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Logger } from 'winston';
+import { Multer } from 'multer';
 import { Response } from 'express';
-import { ReadStream } from 'fs';
+import { Readable } from 'stream';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
 import ContentTypeConstants from '@common/constants/ContentType.constants';
-import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
 import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 import ReportsModule from '@app/reports/reports.module';
 import UploadService from '@app/reports/services/Upload.service';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ConfigsInterface } from '@core/configs/configs.config';
+import CryptographyService from '@core/infra/security/Cryptography.service';
 
 
 @ApiTags('Files')
@@ -32,33 +34,34 @@ import { ConfigsInterface } from '@core/configs/configs.config';
 export default class FileController implements OnModuleInit {
 	private uploadService!: UploadService;
 	private readonly logger: Logger;
-	private readonly appConfigs: ConfigsInterface['application'];
+	private readonly isTestEnv: boolean; // ! lazy loads not works in test environment
 
 	constructor(
 		private readonly lazyModuleLoader: LazyModuleLoader,
 		private readonly configService: ConfigService,
+		private readonly cryptographyService: CryptographyService,
 		private readonly contentTypeConstants: ContentTypeConstants,
-		private readonly fileReaderHelper: FileReaderHelper,
 		@Inject(LOGGER_PROVIDER)
 		private readonly loggerProvider: LoggerProviderInterface,
 	) {
 		this.logger = this.loggerProvider.getLogger(FileController.name);
-		this.appConfigs = this.configService.get<any>('application');
+		const appConfigs = this.configService.get<ConfigsInterface['application']>('application')!;
+		this.isTestEnv = appConfigs.environment === EnvironmentsEnum.TEST;
 	}
 
 	public async onModuleInit(): Promise<void> {
-		if (this.appConfigs.environment !== EnvironmentsEnum.TEST) {
+		if (!this.isTestEnv) {
 			const reportsModuleRef = await this.lazyModuleLoader.load(() => ReportsModule);
 			this.uploadService = await reportsModuleRef.resolve(UploadService, { id: 1 });
 		}
 	}
 
 	@ApiOperation({
-		summary: 'Download License',
-		description: 'Download MIT License',
+		summary: 'Download File',
+		description: 'Download Uploaded File',
 		deprecated: false,
 	})
-	@Get('/license')
+	@Get('/download')
 	@ApiOkResponse({
 		schema: {
 			example: 'MIT License Copyright (c) 2022 Álvaro Alves <alvaro.davisa@gmail.com> ...',
@@ -67,10 +70,15 @@ export default class FileController implements OnModuleInit {
 	})
 	@ApiConsumes('application/json')
 	@ApiProduces('application/octet-stream', 'text/plain')
-	public getLicense(
+	@ApiHeaders([
+		{ name: 'accept', allowEmptyValue: true },
+	])
+	public async downloadFile(
 		@Headers() headers: { [key: string]: string | undefined },
+		@Headers('fileName') fileNameHeader: string,
+		@Headers('filePath') filePathHeader: string,
 		@Res({ passthrough: true }) response: Response,
-	): StreamableFile {
+	): Promise<Buffer | StreamableFile | string> {
 		const {
 			application: { OCTET_STREAM: streamContentType },
 			text: { PLAIN: plainTextContentType },
@@ -81,16 +89,21 @@ export default class FileController implements OnModuleInit {
 		const contentType = acceptableContentTypes.includes(expectedContentType) ? expectedContentType : streamContentType;
 
 		try {
-			const fileName = 'LICENSE.txt';
-			const filePath = 'src/dev/templates/LICENSE.txt';
-			const readStream = this.fileReaderHelper.readStream(filePath);
+			const fileName = fileNameHeader ?? 'file';
+			const filePath = filePathHeader ?? '';
 
 			response.set({
 				'Content-Type': contentType,
 				'Content-Disposition': `attachment; filename="${fileName}"`,
 			});
 
-			return new StreamableFile(readStream as ReadStream);
+			if (this.isTestEnv) {
+				const testBuffer = Buffer.from('TEST CONTENT', 'ascii');
+				return new StreamableFile(testBuffer, { length: testBuffer.length, type: contentType });
+			}
+
+			const fileBuffer = await this.uploadService.getFile(filePath);
+			return new StreamableFile(fileBuffer, { length: fileBuffer.length, type: contentType });
 		} catch (error) {
 			this.logger.error(error);
 			throw error;
@@ -106,15 +119,18 @@ export default class FileController implements OnModuleInit {
 	@ApiCreatedResponse({
 		schema: {
 			example: {
-				filename: 'file.txt',
+				filePath: 'upload/reports/file.txt',
 				fileContentType: 'text/plain',
-				downloadUrl: 'http://localhost:4566/defaultbucket/file.txt?Signature=XXX&Expires=000',
+				uploadTag: '"d41d8cd98f00b204e9801998ecf8427e"',
 			},
 		},
-		description: 'Uploaded File',
+		description: 'Uploaded File Info',
 	})
 	@ApiConsumes('multipart/form-data')
 	@ApiProduces('application/json')
+	@ApiHeaders([
+		{ name: 'accept', allowEmptyValue: true },
+	])
 	@ApiBody({
 		required: true,
 		schema: {
@@ -128,14 +144,14 @@ export default class FileController implements OnModuleInit {
 		},
 	})
 	@UseInterceptors(FileInterceptor('file', { dest: './temp', preservePath: true, limits: {} }))
-	public async sendFile(
+	public async uploadFile(
 		@Headers() headers: { [key: string]: string | undefined },
 		@Headers('fileName') fileNameHeader: string,
-		@UploadedFile() file: Express.Multer.File,
+		@UploadedFile(new ParseFilePipe()) file: Express.Multer.File,
 	): Promise<{
-		fileName: string,
+		filePath: string,
 		fileContentType: string,
-		downloadUrl: string,
+		uploadTag: string,
 	}> {
 		const {
 			text: { PLAIN: plainTextContentType, CSV: csvContentType, XML: xmlContentType },
@@ -154,29 +170,29 @@ export default class FileController implements OnModuleInit {
 			mpegVideoContentType, mp4ContentType, webmContentType,
 			formDataContentType,
 		];
-		const expectedContentType = headers.accept ?? file.mimetype;
+		const expectedContentType = file.mimetype ?? headers.accept;
 		const fileContentType = acceptableContentTypes.includes(expectedContentType) ? expectedContentType : plainTextContentType;
 
 		try {
-			const fullFileName = (fileNameHeader.length > 0 ? fileNameHeader : file.originalname).trim().split('.');
-			const fileSteam = Buffer.from(fullFileName[0]).toString('ascii');
-			const fileExtension = Buffer.from(fullFileName[fullFileName.length - 1]).toString('ascii');
-			const fileName = `${fileSteam}.${fileExtension}`;
+			const [fileSteam] = (fileNameHeader.length > 0 ? fileNameHeader : file.originalname).trim().split('.');
+			const originalName = file.originalname.trim().split('.');
+			const fileName = this.cryptographyService.changeBufferEncoding(fileSteam, 'utf8', 'ascii');
+			const fileExtension = this.cryptographyService.changeBufferEncoding(originalName[originalName.length - 1], 'utf8', 'ascii');
+			const fullFileName = `${fileName}.${fileExtension}`;
 
-			if (this.appConfigs.environment === EnvironmentsEnum.TEST)
+			if (this.isTestEnv)
 				return {
-					fileName,
+					filePath: `upload/reports/${fullFileName}`,
 					fileContentType,
-					downloadUrl: '',
+					uploadTag: '',
 				};
 
-			await this.uploadService.uploadReport(fileName, file);
-			const downloadUrl = await this.uploadService.getFileLink(fileName);
+			const { uploadTag, filePath } = await this.uploadService.uploadReport(fullFileName, file);
 
 			return {
-				fileName,
+				filePath,
 				fileContentType,
-				downloadUrl,
+				uploadTag,
 			};
 		} catch (error) {
 			this.logger.error(error);

@@ -2,11 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import CryptographyService from '@core/infra/security/Cryptography.service';
-import RestMockedServiceClient, { requestMethodType } from '@core/infra/integration/rest/RestMockedService.client';
+import RestMockedServiceClient from '@core/infra/integration/rest/RestMockedService.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 import { RegisterEventHookInputDto } from '@app/hook/api/dto/HookInput.dto';
 import { CacheEnum } from '@domain/enums/cache.enum';
+import { requestMethodType } from '@shared/types/restClientTypes';
 
 
 @Injectable()
@@ -20,15 +21,16 @@ export default class WebhookService {
 		private readonly redisClient: RedisClient,
 		private readonly cacheAccessHelper: CacheAccessHelper,
 	) {
-		const hooksExpirationTime: ConfigsInterface['cache']['expirationTime']['hooks'] = this.configService.get<any>('cache.expirationTime.hooks');
+		const hooksExpirationTime = this.configService.get<ConfigsInterface['cache']['expirationTime']['hooks']>('cache.expirationTime.hooks')!;
 		this.hooksTimeToLive = hooksExpirationTime;
 	}
 
 	public async pullHook(hookSchema: string, data: unknown): Promise<any> {
 		const hookSchemaList = await this.list(hookSchema);
 
+		const mockedServiceBaseUrl = this.configService.get<ConfigsInterface['integration']['rest']['mockedService']['baseUrl']>('integration.rest.mockedService.baseUrl')!;
 		hookSchemaList.forEach(async ({ value }) => {
-			const responseEndpoint = value?.responseEndpoint ?? this.configService.get<any>('integration.rest.mockedService.baseUrl');
+			const responseEndpoint = value?.responseEndpoint ?? mockedServiceBaseUrl;
 			const responseMethod = value?.responseMethod?.toLowerCase() as requestMethodType;
 
 			await this.restMockedServiceClient.requestHook(responseEndpoint, responseMethod, data);

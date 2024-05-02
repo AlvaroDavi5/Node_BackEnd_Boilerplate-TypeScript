@@ -13,7 +13,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "MongoClient",
-				"initTime": 62.916063010692596
+				"initTime": 55.82040601968765
 			}
 		},
 		"45723828": {
@@ -30,71 +30,7 @@
 				"exported": false,
 				"token": "ParseBoolPipe",
 				"subtype": "pipe",
-				"initTime": 11.29840099811554
-			}
-		},
-		"54141763": {
-			"id": "54141763",
-			"label": "RequestLoggerMiddleware",
-			"parent": "-1537098012",
-			"metadata": {
-				"type": "middleware",
-				"internal": false,
-				"sourceModuleName": "UserModule",
-				"durable": false,
-				"static": true,
-				"transient": false,
-				"exported": false,
-				"token": "RequestLoggerMiddleware",
-				"initTime": 1.9766820073127747
-			}
-		},
-		"54141764": {
-			"id": "54141764",
-			"label": "RequestLoggerMiddleware",
-			"parent": "222513590",
-			"metadata": {
-				"type": "middleware",
-				"internal": false,
-				"sourceModuleName": "SubscriptionModule",
-				"durable": false,
-				"static": true,
-				"transient": false,
-				"exported": false,
-				"token": "RequestLoggerMiddleware",
-				"initTime": 1.9532839953899384
-			}
-		},
-		"54141765": {
-			"id": "54141765",
-			"label": "RequestLoggerMiddleware",
-			"parent": "-1327562795",
-			"metadata": {
-				"type": "middleware",
-				"internal": false,
-				"sourceModuleName": "FileModule",
-				"durable": false,
-				"static": true,
-				"transient": false,
-				"exported": false,
-				"token": "RequestLoggerMiddleware",
-				"initTime": 1.9296770095825195
-			}
-		},
-		"54141766": {
-			"id": "54141766",
-			"label": "RequestLoggerMiddleware",
-			"parent": "-2011863492",
-			"metadata": {
-				"type": "middleware",
-				"internal": false,
-				"sourceModuleName": "HookModule",
-				"durable": false,
-				"static": true,
-				"transient": false,
-				"exported": false,
-				"token": "RequestLoggerMiddleware",
-				"initTime": 1.8962910175323486
+				"initTime": 10.737201988697052
 			}
 		},
 		"68986468": {
@@ -110,23 +46,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "MutationTypeFactory",
-				"initTime": 61.67373099923134
-			}
-		},
-		"92032840": {
-			"id": "92032840",
-			"label": "CONFIGURABLE_MODULE_OPTIONS[bb60e81ddbf5bd7e51a83]",
-			"parent": "-1033621697",
-			"metadata": {
-				"type": "provider",
-				"internal": false,
-				"sourceModuleName": "DevtoolsModule",
-				"durable": false,
-				"static": true,
-				"scope": 0,
-				"transient": false,
-				"exported": false,
-				"token": "CONFIGURABLE_MODULE_OPTIONS[bb60e81ddbf5bd7e51a83]"
+				"initTime": 54.46566700935364
 			}
 		},
 		"107841088": {
@@ -143,7 +63,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "EventEmitterModule",
-				"initTime": 26.368988007307053
+				"initTime": 9.355852961540222
 			}
 		},
 		"108579158": {
@@ -159,7 +79,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "LifecycleService",
-				"initTime": 258.6546159982681
+				"initTime": 171.55937999486923
 			}
 		},
 		"134159595": {
@@ -175,7 +95,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "SqsClient",
-				"initTime": 89.72793799638748
+				"initTime": 84.28557997941971
 			}
 		},
 		"139289120": {
@@ -192,7 +112,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "ConnectionsModule",
-				"initTime": 24.242138981819153
+				"initTime": 7.148823022842407
 			}
 		},
 		"170060673": {
@@ -219,7 +139,7 @@
 				"exported": false,
 				"token": "AuthGuard",
 				"subtype": "guard",
-				"initTime": 3.649399012327194
+				"initTime": 12.904702007770538
 			}
 		},
 		"183181629": {
@@ -235,7 +155,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "GraphQLAstExplorer",
-				"initTime": 26.003419995307922
+				"initTime": 8.988270998001099
 			}
 		},
 		"203550704": {
@@ -251,7 +171,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "ExternalContextCreator",
-				"initTime": 14.091360986232758
+				"initTime": 11.786659002304077
 			}
 		},
 		"206199259": {
@@ -267,7 +187,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "InterfaceDefinitionFactory",
-				"initTime": 35.79966500401497
+				"initTime": 32.37587797641754
 			}
 		},
 		"211572259": {
@@ -304,24 +224,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "InternalCoreModule",
-				"initTime": 15.41219899058342
-			}
-		},
-		"227927063": {
-			"id": "227927063",
-			"label": "UploadService",
-			"parent": "-416447202",
-			"metadata": {
-				"type": "provider",
-				"internal": false,
-				"sourceModuleName": "ReportsModule",
-				"durable": false,
-				"static": true,
-				"scope": 1,
-				"transient": true,
-				"exported": false,
-				"token": "UploadService",
-				"initTime": 0.3337189853191376
+				"initTime": 12.86524099111557
 			}
 		},
 		"257993354": {
@@ -337,7 +240,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "DateGeneratorHelper",
-				"initTime": 25.030619025230408
+				"initTime": 8.023324012756348
 			}
 		},
 		"271346830": {
@@ -356,6 +259,23 @@
 				"token": "ModuleRef"
 			}
 		},
+		"272390389": {
+			"id": "272390389",
+			"label": "RegisterEventHookValidatorPipe",
+			"parent": "-2011863492",
+			"metadata": {
+				"type": "injectable",
+				"internal": false,
+				"sourceModuleName": "HookModule",
+				"durable": false,
+				"static": true,
+				"transient": false,
+				"exported": false,
+				"token": "RegisterEventHookValidatorPipe",
+				"subtype": "pipe",
+				"initTime": 1.2814740538597107
+			}
+		},
 		"294423058": {
 			"id": "294423058",
 			"label": "GraphQLTypesLoader",
@@ -369,7 +289,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "GraphQLTypesLoader",
-				"initTime": 25.998808979988098
+				"initTime": 8.985406994819641
 			}
 		},
 		"303302557": {
@@ -411,7 +331,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "FileReaderHelper",
-				"initTime": 104.16552001237869
+				"initTime": 97.05827802419662
 			}
 		},
 		"345719894": {
@@ -428,7 +348,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "CoreModule",
-				"initTime": 14.029267996549606
+				"initTime": 11.881085991859436
 			}
 		},
 		"356386502": {
@@ -445,7 +365,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "ScheduleModule",
-				"initTime": 26.562947005033493
+				"initTime": 9.555951952934265
 			}
 		},
 		"357698659": {
@@ -477,7 +397,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "SandboxedCodeExecutor",
-				"initTime": 30.679470002651215
+				"initTime": 12.512674987316132
 			}
 		},
 		"398302343": {
@@ -493,7 +413,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "CognitoClient",
-				"initTime": 89.30998501181602
+				"initTime": 83.87860596179962
 			}
 		},
 		"400681591": {
@@ -509,7 +429,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "DiscoveryService",
-				"initTime": 32.07322600483894
+				"initTime": 13.893394947052002
 			}
 		},
 		"543894580": {
@@ -525,7 +445,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "GraphQLFactory",
-				"initTime": 119.2049569785595
+				"initTime": 110.6265560388565
 			}
 		},
 		"555176277": {
@@ -551,7 +471,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "EnumDefinitionFactory",
-				"initTime": 25.81427899003029
+				"initTime": 8.79124402999878
 			}
 		},
 		"579567951": {
@@ -615,24 +535,24 @@
 				"transient": false,
 				"exported": false,
 				"token": "TypeDefinitionsGenerator",
-				"initTime": 61.32736998796463
+				"initTime": 54.11826902627945
 			}
 		},
-		"630444767": {
-			"id": "630444767",
-			"label": "b60e81ddbf5bd7e51a838",
-			"parent": "-1327562795",
+		"617148675": {
+			"id": "617148675",
+			"label": "LoginUserValidatorPipe",
+			"parent": "-1537098012",
 			"metadata": {
 				"type": "injectable",
 				"internal": false,
-				"sourceModuleName": "FileModule",
+				"sourceModuleName": "UserModule",
 				"durable": false,
 				"static": true,
 				"transient": false,
 				"exported": false,
-				"token": "b60e81ddbf5bd7e51a838",
-				"subtype": "interceptor",
-				"initTime": 5.715133994817734
+				"token": "LoginUserValidatorPipe",
+				"subtype": "pipe",
+				"initTime": 4.518965005874634
 			}
 		},
 		"640772982": {
@@ -648,7 +568,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "S3Client",
-				"initTime": 89.2800920009613
+				"initTime": 83.84850400686264
 			}
 		},
 		"648447924": {
@@ -665,23 +585,7 @@
 				"exported": false,
 				"token": "AuthGuard",
 				"subtype": "guard",
-				"initTime": 4.075871974229813
-			}
-		},
-		"650907033": {
-			"id": "650907033",
-			"label": "ApplicationConfig",
-			"parent": "-416447202",
-			"metadata": {
-				"type": "provider",
-				"internal": true,
-				"sourceModuleName": "ReportsModule",
-				"durable": false,
-				"static": true,
-				"scope": 0,
-				"transient": false,
-				"exported": false,
-				"token": "ApplicationConfig"
+				"initTime": 7.01018500328064
 			}
 		},
 		"653699184": {
@@ -697,7 +601,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "SubscriptionTypeFactory",
-				"initTime": 61.393233984708786
+				"initTime": 54.18329203128815
 			}
 		},
 		"659485652": {
@@ -713,7 +617,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "CryptographyService",
-				"initTime": 63.09856799244881
+				"initTime": 56.01058804988861
 			}
 		},
 		"665205558": {
@@ -745,7 +649,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "Reflector",
-				"initTime": 15.141689002513885
+				"initTime": 12.596136033535004
 			}
 		},
 		"694349934": {
@@ -761,7 +665,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "RestMockedServiceClient",
-				"initTime": 89.27429500222206
+				"initTime": 83.84228801727295
 			}
 		},
 		"705219300": {
@@ -793,7 +697,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "EventSubscribersLoader",
-				"initTime": 35.89968201518059
+				"initTime": 32.080792009830475
 			}
 		},
 		"712454178": {
@@ -825,7 +729,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "CacheAccessHelper",
-				"initTime": 25.020909994840622
+				"initTime": 8.015570998191833
 			}
 		},
 		"822426632": {
@@ -841,7 +745,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "SchedulerOrchestrator",
-				"initTime": 30.594816982746124
+				"initTime": 12.622745990753174
 			}
 		},
 		"834527721": {
@@ -873,7 +777,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "MetadataScanner",
-				"initTime": 26.098897993564606
+				"initTime": 9.082417964935303
 			}
 		},
 		"857983141": {
@@ -890,7 +794,7 @@
 				"exported": false,
 				"token": "AuthGuard",
 				"subtype": "guard",
-				"initTime": 76.97033601999283
+				"initTime": 87.5310310125351
 			}
 		},
 		"889654164": {
@@ -906,7 +810,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "SchedulerMetadataAccessor",
-				"initTime": 32.1599740087986
+				"initTime": 13.979651987552643
 			}
 		},
 		"915774976": {
@@ -938,7 +842,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "Symbol(CONFIG_SERVICE)",
-				"initTime": 32.633870989084244
+				"initTime": 14.550056993961334
 			}
 		},
 		"935521824": {
@@ -955,7 +859,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "GraphQlModule",
-				"initTime": 24.249193012714386
+				"initTime": 7.155247986316681
 			}
 		},
 		"951215151": {
@@ -971,7 +875,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "Exceptions",
-				"initTime": 12.795736998319626
+				"initTime": 10.80697500705719
 			}
 		},
 		"951921130": {
@@ -1007,23 +911,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "GraphQLSchemaFactory",
-				"initTime": 105.97226998209953
-			}
-		},
-		"1034278248": {
-			"id": "1034278248",
-			"label": "SchemaValidator",
-			"parent": "1631380932",
-			"metadata": {
-				"type": "provider",
-				"internal": false,
-				"sourceModuleName": "CommonModule",
-				"durable": false,
-				"static": true,
-				"transient": false,
-				"exported": true,
-				"token": "SchemaValidator",
-				"initTime": 30.56408601999283
+				"initTime": 98.55584597587585
 			}
 		},
 		"1055037871": {
@@ -1055,7 +943,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "CONFIGURATION_TOKEN",
-				"initTime": 26.5917229950428
+				"initTime": 9.589546978473663
 			}
 		},
 		"1076848883": {
@@ -1071,7 +959,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "UserOperation",
-				"initTime": 254.35956999659538
+				"initTime": 167.5218409895897
 			}
 		},
 		"1136303662": {
@@ -1088,7 +976,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "CommonModule",
-				"initTime": 25.155431002378464
+				"initTime": 8.133884966373444
 			}
 		},
 		"1139971038": {
@@ -1120,7 +1008,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "EventsQueueProducer",
-				"initTime": 113.79378801584244
+				"initTime": 103.25430601835251
 			}
 		},
 		"1245285495": {
@@ -1136,7 +1024,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "WebSocketClient",
-				"initTime": 103.42530298233032
+				"initTime": 96.30718898773193
 			}
 		},
 		"1252421063": {
@@ -1168,7 +1056,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "ResolveTypeFactory",
-				"initTime": 29.378747016191483
+				"initTime": 11.407692015171051
 			}
 		},
 		"1296247762": {
@@ -1185,7 +1073,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "SubscriptionModule",
-				"initTime": 24.78727900981903
+				"initTime": 7.737945973873138
 			}
 		},
 		"1305401719": {
@@ -1202,7 +1090,7 @@
 				"exported": false,
 				"token": "CustomThrottlerGuard",
 				"subtype": "guard",
-				"initTime": 11.631491005420685
+				"initTime": 10.903568029403687
 			}
 		},
 		"1310883338": {
@@ -1218,7 +1106,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "CONFIGURATION_LOADER",
-				"initTime": 32.303016006946564
+				"initTime": 14.118847012519836
 			}
 		},
 		"1349506255": {
@@ -1251,24 +1139,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "FileModule",
-				"initTime": 24.726862996816635
-			}
-		},
-		"1398329223": {
-			"id": "1398329223",
-			"label": "UpdateUserPipeValidator",
-			"parent": "-1537098012",
-			"metadata": {
-				"type": "injectable",
-				"internal": false,
-				"sourceModuleName": "UserModule",
-				"durable": false,
-				"static": true,
-				"transient": false,
-				"exported": false,
-				"token": "UpdateUserPipeValidator",
-				"subtype": "pipe",
-				"initTime": 1.2252200245857239
+				"initTime": 7.666985988616943
 			}
 		},
 		"1399306624": {
@@ -1285,7 +1156,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "ThrottlerModule",
-				"initTime": 26.253533989191055
+				"initTime": 9.225176990032196
 			}
 		},
 		"1404798907": {
@@ -1301,7 +1172,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "ObjectTypeDefinitionFactory",
-				"initTime": 35.72946998476982
+				"initTime": 32.206649005413055
 			}
 		},
 		"1430257303": {
@@ -1334,7 +1205,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "Reflector",
-				"initTime": 34.39221799373627
+				"initTime": 16.01235395669937
 			}
 		},
 		"1479432515": {
@@ -1350,7 +1221,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "GraphQLSchemaHost",
-				"initTime": 25.904798984527588
+				"initTime": 8.889931976795197
 			}
 		},
 		"1482218087": {
@@ -1376,7 +1247,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "FileStrategy",
-				"initTime": 24.720227003097534
+				"initTime": 7.659932017326355
 			}
 		},
 		"1551182002": {
@@ -1424,7 +1295,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "FileController",
-				"initTime": 11.533428996801376,
+				"initTime": 9.959643006324768,
 				"enhancers": [
 					{
 						"id": "-877469546",
@@ -1435,20 +1306,7 @@
 						"subtype": "guard"
 					},
 					{
-						"id": "630444767",
-						"methodKey": "sendFile",
-						"subtype": "interceptor"
-					},
-					{
-						"id": "-877469546",
-						"subtype": "guard"
-					},
-					{
-						"id": "857983141",
-						"subtype": "guard"
-					},
-					{
-						"id": "630444767",
+						"id": "1790487810",
 						"methodKey": "sendFile",
 						"subtype": "interceptor"
 					}
@@ -1494,7 +1352,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "RootTypeFactory",
-				"initTime": 35.50338199734688
+				"initTime": 32.079463958740234
 			}
 		},
 		"1654975325": {
@@ -1510,7 +1368,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "ConnectionResolver",
-				"initTime": 32.85597798228264
+				"initTime": 26.57236498594284
 			}
 		},
 		"1678542466": {
@@ -1526,21 +1384,8 @@
 				"transient": false,
 				"exported": false,
 				"token": "SubscriptionController",
-				"initTime": 2.9028960168361664,
+				"initTime": 7.584081947803497,
 				"enhancers": [
-					{
-						"id": "1305401719",
-						"subtype": "guard"
-					},
-					{
-						"id": "-103136634",
-						"subtype": "guard"
-					},
-					{
-						"id": "45723828",
-						"methodKey": "listSubscriptions",
-						"subtype": "pipe"
-					},
 					{
 						"id": "1305401719",
 						"subtype": "guard"
@@ -1570,7 +1415,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "HttpConstants",
-				"initTime": 25.146212995052338
+				"initTime": 8.127599000930786
 			}
 		},
 		"1688619051": {
@@ -1586,7 +1431,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "DevtoolsHttpServerHost",
-				"initTime": 34.077637016773224
+				"initTime": 27.807464003562927
 			}
 		},
 		"1690574933": {
@@ -1634,7 +1479,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "EventsMetadataAccessor",
-				"initTime": 31.859569996595383
+				"initTime": 13.673460960388184
 			}
 		},
 		"1712628187": {
@@ -1660,7 +1505,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "ArgsFactory",
-				"initTime": 33.05189299583435
+				"initTime": 14.890609979629517
 			}
 		},
 		"1765779671": {
@@ -1676,7 +1521,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "GraphQLFederationFactory",
-				"initTime": 118.92585700750351
+				"initTime": 110.37016302347183
 			}
 		},
 		"1769319388": {
@@ -1693,7 +1538,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "ConfigModule",
-				"initTime": 26.47794598340988
+				"initTime": 9.6457000374794
 			}
 		},
 		"1787828844": {
@@ -1710,7 +1555,24 @@
 				"transient": false,
 				"exported": false,
 				"token": "ConfigHostModule",
-				"initTime": 26.575378984212875
+				"initTime": 9.570340037345886
+			}
+		},
+		"1790487810": {
+			"id": "1790487810",
+			"label": "f0d9508ae5cb8d1c7bd3d",
+			"parent": "-1327562795",
+			"metadata": {
+				"type": "injectable",
+				"internal": false,
+				"sourceModuleName": "FileModule",
+				"durable": false,
+				"static": true,
+				"transient": false,
+				"exported": false,
+				"token": "f0d9508ae5cb8d1c7bd3d",
+				"subtype": "interceptor",
+				"initTime": 16.74381697177887
 			}
 		},
 		"1810083890": {
@@ -1727,7 +1589,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "DiscoveryModule",
-				"initTime": 24.25967001914978
+				"initTime": 7.168169021606445
 			}
 		},
 		"1817283569": {
@@ -1744,6 +1606,22 @@
 				"exported": false,
 				"token": "EventsGuard",
 				"subtype": "guard"
+			}
+		},
+		"1848826318": {
+			"id": "1848826318",
+			"label": "CONFIGURABLE_MODULE_OPTIONS[3f0d9508ae5cb8d1c7bd3]",
+			"parent": "-1033621697",
+			"metadata": {
+				"type": "provider",
+				"internal": false,
+				"sourceModuleName": "DevtoolsModule",
+				"durable": false,
+				"static": true,
+				"scope": 0,
+				"transient": false,
+				"exported": false,
+				"token": "CONFIGURABLE_MODULE_OPTIONS[3f0d9508ae5cb8d1c7bd3]"
 			}
 		},
 		"1864609274": {
@@ -1775,7 +1653,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "EventsQueueHandler",
-				"initTime": 103.57086098194122
+				"initTime": 96.45860904455185
 			}
 		},
 		"1879849979": {
@@ -1791,24 +1669,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "SchedulerRegistry",
-				"initTime": 26.39001101255417
-			}
-		},
-		"1888818656": {
-			"id": "1888818656",
-			"label": "ReportsModule",
-			"parent": "-416447202",
-			"metadata": {
-				"type": "provider",
-				"internal": true,
-				"sourceModuleName": "ReportsModule",
-				"durable": false,
-				"static": true,
-				"scope": 0,
-				"transient": false,
-				"exported": false,
-				"token": "ReportsModule",
-				"initTime": 0.2380320131778717
+				"initTime": 9.379390001296997
 			}
 		},
 		"1916799540": {
@@ -1835,7 +1696,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "REQUEST",
-				"initTime": 10.20567700266838
+				"initTime": 9.582282960414886
 			}
 		},
 		"1948000294": {
@@ -1851,7 +1712,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "UserPreferenceService",
-				"initTime": 252.83946400880814
+				"initTime": 165.98229801654816
 			}
 		},
 		"1989366767": {
@@ -1867,12 +1728,8 @@
 				"transient": false,
 				"exported": true,
 				"token": "WebSocketServer",
-				"initTime": 116.19477897882462,
+				"initTime": 107.0122640132904,
 				"enhancers": [
-					{
-						"id": "1817283569",
-						"subtype": "guard"
-					},
 					{
 						"id": "1817283569",
 						"subtype": "guard"
@@ -1912,6 +1769,23 @@
 				"token": "ApplicationConfig"
 			}
 		},
+		"2033993571": {
+			"id": "2033993571",
+			"label": "UpdateUserValidatorPipe",
+			"parent": "-1537098012",
+			"metadata": {
+				"type": "injectable",
+				"internal": false,
+				"sourceModuleName": "UserModule",
+				"durable": false,
+				"static": true,
+				"transient": false,
+				"exported": false,
+				"token": "UpdateUserValidatorPipe",
+				"subtype": "pipe",
+				"initTime": 4.51086300611496
+			}
+		},
 		"2062526105": {
 			"id": "2062526105",
 			"label": "SyncCronTask",
@@ -1925,7 +1799,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "SyncCronTask",
-				"initTime": 240.42577901482582
+				"initTime": 157.20956200361252
 			}
 		},
 		"2063779508": {
@@ -1952,7 +1826,7 @@
 				"exported": false,
 				"token": "CustomThrottlerGuard",
 				"subtype": "guard",
-				"initTime": 7.105188995599747
+				"initTime": 20.849102020263672
 			}
 		},
 		"2087698226": {
@@ -2033,7 +1907,7 @@
 				"transient": true,
 				"exported": true,
 				"token": "INQUIRER",
-				"initTime": 10.185561001300812
+				"initTime": 9.57369202375412
 			}
 		},
 		"-26938366": {
@@ -2049,7 +1923,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "ModulesContainer",
-				"initTime": 14.071593999862671
+				"initTime": 11.7759730219841
 			}
 		},
 		"-326832201": {
@@ -2065,7 +1939,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "HttpAdapterHost",
-				"initTime": 14.05308598279953
+				"initTime": 11.76060801744461
 			}
 		},
 		"-702581189": {
@@ -2081,7 +1955,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "LazyModuleLoader",
-				"initTime": 14.049383997917175
+				"initTime": 11.75641804933548
 			}
 		},
 		"-1904419534": {
@@ -2097,7 +1971,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "SerializedGraph",
-				"initTime": 14.043656975030899
+				"initTime": 11.754671037197113
 			}
 		},
 		"-1125887048": {
@@ -2140,7 +2014,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "Symbol(LoggerProvider)",
-				"initTime": 63.36572501063347
+				"initTime": 56.264325976371765
 			}
 		},
 		"-300737958": {
@@ -2157,7 +2031,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "Symbol(DatabaseConnectionProvider)",
-				"initTime": 239.9905050098896
+				"initTime": 156.51511597633362
 			}
 		},
 		"-140984175": {
@@ -2173,7 +2047,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "RedisClient",
-				"initTime": 63.00281101465225
+				"initTime": 55.90023595094681
 			}
 		},
 		"-1169590642": {
@@ -2189,7 +2063,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "SnsClient",
-				"initTime": 89.82146099209785
+				"initTime": 84.1954830288887
 			}
 		},
 		"-1296848609": {
@@ -2205,7 +2079,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "SyncCronJob",
-				"initTime": 254.75531101226807
+				"initTime": 167.85778504610062
 			}
 		},
 		"-503631789": {
@@ -2221,12 +2095,12 @@
 				"transient": false,
 				"exported": true,
 				"token": "ConfigService",
-				"initTime": 37.61144298315048
+				"initTime": 31.22207498550415
 			}
 		},
-		"-401687723": {
-			"id": "-401687723",
-			"label": "CONFIGURATION(b64a556a-badc-43c3-b5d6-349ff03cb156)",
+		"-801249467": {
+			"id": "-801249467",
+			"label": "CONFIGURATION(4be21dae-58b7-4f3c-884f-1442a59e6061)",
 			"parent": "1712628187",
 			"metadata": {
 				"type": "provider",
@@ -2236,8 +2110,8 @@
 				"static": true,
 				"transient": false,
 				"exported": true,
-				"token": "CONFIGURATION(b64a556a-badc-43c3-b5d6-349ff03cb156)",
-				"initTime": 26.611139982938766
+				"token": "CONFIGURATION(4be21dae-58b7-4f3c-884f-1442a59e6061)",
+				"initTime": 9.62111496925354
 			}
 		},
 		"-968002283": {
@@ -2269,7 +2143,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "ScheduleExplorer",
-				"initTime": 36.06318899989128
+				"initTime": 32.256166994571686
 			}
 		},
 		"-643397745": {
@@ -2296,7 +2170,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "DiscoveryModule",
-				"initTime": 26.38561099767685
+				"initTime": 9.373592972755432
 			}
 		},
 		"-501891371": {
@@ -2344,7 +2218,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "MetadataScanner",
-				"initTime": 26.39420199394226
+				"initTime": 9.38476699590683
 			}
 		},
 		"-1001049395": {
@@ -2386,7 +2260,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "Symbol(ThrottlerStorage)",
-				"initTime": 27.878336995840073
+				"initTime": 10.303059995174408
 			}
 		},
 		"-1497318880": {
@@ -2403,7 +2277,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "GraphQLModule",
-				"initTime": 122.4845270216465
+				"initTime": 123.36838400363922
 			}
 		},
 		"-1181044340": {
@@ -2419,7 +2293,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "ResolversExplorerService",
-				"initTime": 31.64451801776886
+				"initTime": 13.47908902168274
 			}
 		},
 		"-897067162": {
@@ -2435,7 +2309,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "ScalarsExplorerService",
-				"initTime": 31.57390397787094
+				"initTime": 13.408686995506287
 			}
 		},
 		"-407945788": {
@@ -2451,7 +2325,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "GraphQLSchemaBuilder",
-				"initTime": 116.25889599323273
+				"initTime": 106.09131801128387
 			}
 		},
 		"-952748802": {
@@ -2467,7 +2341,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "TypeDefsDecoratorFactory",
-				"initTime": 25.860865980386734
+				"initTime": 8.842787981033325
 			}
 		},
 		"-1783200635": {
@@ -2499,7 +2373,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "AbstractGraphQLDriver",
-				"initTime": 120.28978899121284
+				"initTime": 119.86465400457382
 			}
 		},
 		"-1745210310": {
@@ -2516,7 +2390,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "GraphQLSchemaBuilderModule",
-				"initTime": 25.821123987436295
+				"initTime": 8.797670006752014
 			}
 		},
 		"-1399120880": {
@@ -2532,7 +2406,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "InputTypeDefinitionFactory",
-				"initTime": 33.097292989492416
+				"initTime": 14.931189000606537
 			}
 		},
 		"-325525981": {
@@ -2548,7 +2422,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "InputTypeFactory",
-				"initTime": 29.70415499806404
+				"initTime": 11.734486997127533
 			}
 		},
 		"-1046435906": {
@@ -2564,7 +2438,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "OutputTypeFactory",
-				"initTime": 29.452084004878998
+				"initTime": 11.475998997688293
 			}
 		},
 		"-1956905867": {
@@ -2580,7 +2454,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "OrphanedTypesFactory",
-				"initTime": 29.43504300713539
+				"initTime": 11.458818018436432
 			}
 		},
 		"-848002075": {
@@ -2596,7 +2470,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "QueryTypeFactory",
-				"initTime": 61.45797899365425
+				"initTime": 54.25013202428818
 			}
 		},
 		"-1492607355": {
@@ -2612,7 +2486,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "UnionDefinitionFactory",
-				"initTime": 32.62507098913193
+				"initTime": 14.458563029766083
 			}
 		},
 		"-1155703408": {
@@ -2628,7 +2502,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "AstDefinitionNodeFactory",
-				"initTime": 25.328786998987198
+				"initTime": 8.298084020614624
 			}
 		},
 		"-1185748874": {
@@ -2644,7 +2518,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "FileSystemHelper",
-				"initTime": 25.908080995082855
+				"initTime": 8.895799040794373
 			}
 		},
 		"-973488942": {
@@ -2660,7 +2534,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "TypeDefinitionsStorage",
-				"initTime": 25.273330003023148
+				"initTime": 8.23292201757431
 			}
 		},
 		"-1717366145": {
@@ -2676,7 +2550,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "TypeMapperSevice",
-				"initTime": 25.27123400568962
+				"initTime": 8.230127990245819
 			}
 		},
 		"-1455444777": {
@@ -2692,7 +2566,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "TypeFieldsAccessor",
-				"initTime": 25.268440008163452
+				"initTime": 8.22684496641159
 			}
 		},
 		"-713980898": {
@@ -2708,7 +2582,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "OrphanedReferenceRegistry",
-				"initTime": 25.26683497428894
+				"initTime": 8.223493039608002
 			}
 		},
 		"-1033621697": {
@@ -2735,7 +2609,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "DevtoolsModule",
-				"initTime": 25.261177003383636
+				"initTime": 8.218603014945984
 			}
 		},
 		"-751962311": {
@@ -2767,7 +2641,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "ContentTypeConstants",
-				"initTime": 25.1426500082016
+				"initTime": 8.121872007846832
 			}
 		},
 		"-1210927497": {
@@ -2783,7 +2657,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "RequestRateConstants",
-				"initTime": 25.140763998031616
+				"initTime": 8.118728995323181
 			}
 		},
 		"-1099080417": {
@@ -2799,7 +2673,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "RegExConstants",
-				"initTime": 25.136783003807068
+				"initTime": 8.11530601978302
 			}
 		},
 		"-251213970": {
@@ -2815,7 +2689,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "DataParserHelper",
-				"initTime": 104.24751800298691
+				"initTime": 97.1530550122261
 			}
 		},
 		"-19112576": {
@@ -2842,7 +2716,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "AppModule",
-				"initTime": 24.996114999055862
+				"initTime": 7.983581960201263
 			}
 		},
 		"-71302842": {
@@ -2890,12 +2764,8 @@
 				"transient": false,
 				"exported": false,
 				"token": "DefaultController",
-				"initTime": 52.82891398668289,
+				"initTime": 50.76358300447464,
 				"enhancers": [
-					{
-						"id": "2073616543",
-						"subtype": "guard"
-					},
 					{
 						"id": "2073616543",
 						"subtype": "guard"
@@ -2927,7 +2797,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "UserModule",
-				"initTime": 24.97851398587227
+				"initTime": 7.961233019828796
 			}
 		},
 		"-523403191": {
@@ -2959,7 +2829,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "UserStrategy",
-				"initTime": 24.96831700205803
+				"initTime": 7.952781975269318
 			}
 		},
 		"-2045439487": {
@@ -2975,7 +2845,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "UserService",
-				"initTime": 252.8747360110283
+				"initTime": 166.0178490281105
 			}
 		},
 		"-1972613748": {
@@ -2991,7 +2861,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "UserRepository",
-				"initTime": 250.7880479991436
+				"initTime": 163.93862998485565
 			}
 		},
 		"-1601231298": {
@@ -3007,7 +2877,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "UserRepository",
-				"initTime": 250.75885301828384
+				"initTime": 163.90776002407074
 			}
 		},
 		"-1087004763": {
@@ -3024,12 +2894,12 @@
 				"exported": false,
 				"token": "CustomThrottlerGuard",
 				"subtype": "guard",
-				"initTime": 4.199009984731674
+				"initTime": 7.222297012805939
 			}
 		},
-		"-1291309967": {
-			"id": "-1291309967",
-			"label": "ListQueryPipeValidator",
+		"-655645619": {
+			"id": "-655645619",
+			"label": "ListQueryValidatorPipe",
 			"parent": "-1537098012",
 			"metadata": {
 				"type": "injectable",
@@ -3039,14 +2909,14 @@
 				"static": true,
 				"transient": false,
 				"exported": false,
-				"token": "ListQueryPipeValidator",
+				"token": "ListQueryValidatorPipe",
 				"subtype": "pipe",
-				"initTime": 1.4208569824695587
+				"initTime": 4.56038099527359
 			}
 		},
-		"-1619599500": {
-			"id": "-1619599500",
-			"label": "CreateUserPipeValidator",
+		"-983935152": {
+			"id": "-983935152",
+			"label": "CreateUserValidatorPipe",
 			"parent": "-1537098012",
 			"metadata": {
 				"type": "injectable",
@@ -3056,9 +2926,9 @@
 				"static": true,
 				"transient": false,
 				"exported": false,
-				"token": "CreateUserPipeValidator",
+				"token": "CreateUserValidatorPipe",
 				"subtype": "pipe",
-				"initTime": 1.444674015045166
+				"initTime": 4.556120991706848
 			}
 		},
 		"-610248223": {
@@ -3075,24 +2945,7 @@
 				"exported": false,
 				"token": "ParseIntPipe",
 				"subtype": "pipe",
-				"initTime": 3.9544119834899902
-			}
-		},
-		"-18515673": {
-			"id": "-18515673",
-			"label": "LoginUserPipeValidator",
-			"parent": "-1537098012",
-			"metadata": {
-				"type": "injectable",
-				"internal": false,
-				"sourceModuleName": "UserModule",
-				"durable": false,
-				"static": true,
-				"transient": false,
-				"exported": false,
-				"token": "LoginUserPipeValidator",
-				"subtype": "pipe",
-				"initTime": 1.4038139879703522
+				"initTime": 6.879508972167969
 			}
 		},
 		"-207939746": {
@@ -3108,7 +2961,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "UserController",
-				"initTime": 1.246942013502121,
+				"initTime": 1.2158219814300537,
 				"enhancers": [
 					{
 						"id": "-1087004763",
@@ -3119,12 +2972,12 @@
 						"subtype": "guard"
 					},
 					{
-						"id": "-1291309967",
+						"id": "-655645619",
 						"methodKey": "listUsers",
 						"subtype": "pipe"
 					},
 					{
-						"id": "-1619599500",
+						"id": "-983935152",
 						"methodKey": "createUser",
 						"subtype": "pipe"
 					},
@@ -3134,55 +2987,12 @@
 						"subtype": "pipe"
 					},
 					{
-						"id": "-18515673",
+						"id": "617148675",
 						"methodKey": "loginUser",
 						"subtype": "pipe"
 					},
 					{
-						"id": "1398329223",
-						"methodKey": "updateUser",
-						"subtype": "pipe"
-					},
-					{
-						"id": "-610248223",
-						"methodKey": "updateUser",
-						"subtype": "pipe"
-					},
-					{
-						"id": "-610248223",
-						"methodKey": "deleteUser",
-						"subtype": "pipe"
-					},
-					{
-						"id": "-1087004763",
-						"subtype": "guard"
-					},
-					{
-						"id": "648447924",
-						"subtype": "guard"
-					},
-					{
-						"id": "-1291309967",
-						"methodKey": "listUsers",
-						"subtype": "pipe"
-					},
-					{
-						"id": "-1619599500",
-						"methodKey": "createUser",
-						"subtype": "pipe"
-					},
-					{
-						"id": "-610248223",
-						"methodKey": "getUser",
-						"subtype": "pipe"
-					},
-					{
-						"id": "-18515673",
-						"methodKey": "loginUser",
-						"subtype": "pipe"
-					},
-					{
-						"id": "1398329223",
+						"id": "2033993571",
 						"methodKey": "updateUser",
 						"subtype": "pipe"
 					},
@@ -3244,7 +3054,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "SubscriptionService",
-				"initTime": 103.88900399208069
+				"initTime": 96.75914198160172
 			}
 		},
 		"-103136634": {
@@ -3261,7 +3071,7 @@
 				"exported": false,
 				"token": "AuthGuard",
 				"subtype": "guard",
-				"initTime": 11.436414003372192
+				"initTime": 10.854258954524994
 			}
 		},
 		"-1327562795": {
@@ -3304,7 +3114,7 @@
 				"exported": false,
 				"token": "CustomThrottlerGuard",
 				"subtype": "guard",
-				"initTime": 5.982989996671677
+				"initTime": 17.20400995016098
 			}
 		},
 		"-2011863492": {
@@ -3331,7 +3141,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "HookModule",
-				"initTime": 24.715757995843887
+				"initTime": 7.651201009750366
 			}
 		},
 		"-998168671": {
@@ -3363,7 +3173,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "WebhookService",
-				"initTime": 113.93403699994087
+				"initTime": 103.38211798667908
 			}
 		},
 		"-1561770243": {
@@ -3380,24 +3190,7 @@
 				"exported": false,
 				"token": "CustomThrottlerGuard",
 				"subtype": "guard",
-				"initTime": 3.7151229977607727
-			}
-		},
-		"-363273959": {
-			"id": "-363273959",
-			"label": "RegisterEventHookPipeValidator",
-			"parent": "-2011863492",
-			"metadata": {
-				"type": "injectable",
-				"internal": false,
-				"sourceModuleName": "HookModule",
-				"durable": false,
-				"static": true,
-				"transient": false,
-				"exported": false,
-				"token": "RegisterEventHookPipeValidator",
-				"subtype": "pipe",
-				"initTime": 0.3048030138015747
+				"initTime": 13.00506603717804
 			}
 		},
 		"-880890866": {
@@ -3413,7 +3206,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "HookController",
-				"initTime": 2.188731998205185,
+				"initTime": 3.5905449986457825,
 				"enhancers": [
 					{
 						"id": "-1561770243",
@@ -3424,20 +3217,7 @@
 						"subtype": "guard"
 					},
 					{
-						"id": "-363273959",
-						"methodKey": "registerEventHook",
-						"subtype": "pipe"
-					},
-					{
-						"id": "-1561770243",
-						"subtype": "guard"
-					},
-					{
-						"id": "173682444",
-						"subtype": "guard"
-					},
-					{
-						"id": "-363273959",
+						"id": "272390389",
 						"methodKey": "registerEventHook",
 						"subtype": "pipe"
 					}
@@ -3468,7 +3248,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "EventsModule",
-				"initTime": 24.642559975385666
+				"initTime": 7.586178004741669
 			}
 		},
 		"-2089910036": {
@@ -3500,7 +3280,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "EventsQueueConsumer",
-				"initTime": 113.9590420126915
+				"initTime": 103.4500060081482
 			}
 		},
 		"-1149402848": {
@@ -3517,7 +3297,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "SqsModule",
-				"initTime": 24.334612995386124
+				"initTime": 7.277402997016907
 			}
 		},
 		"-128710609": {
@@ -3549,7 +3329,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "SqsService",
-				"initTime": 33.56658101081848
+				"initTime": 29.783873975276947
 			}
 		},
 		"-30367748": {
@@ -3613,7 +3393,7 @@
 				"transient": false,
 				"exported": true,
 				"token": "DiscoveryService",
-				"initTime": 29.587584018707275
+				"initTime": 11.416422963142395
 			}
 		},
 		"-118944513": {
@@ -3629,7 +3409,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "MetadataScanner",
-				"initTime": 24.253942996263504
+				"initTime": 7.1597179770469666
 			}
 		},
 		"-709655576": {
@@ -3671,49 +3451,7 @@
 				"transient": false,
 				"exported": false,
 				"token": "ConnectionService",
-				"initTime": 29.49713498353958
-			}
-		},
-		"-1555249199": {
-			"id": "-1555249199",
-			"label": "RequestLoggerMiddleware",
-			"parent": "-19112576",
-			"metadata": {
-				"type": "middleware",
-				"internal": false,
-				"sourceModuleName": "AppModule",
-				"durable": false,
-				"static": true,
-				"transient": false,
-				"exported": false,
-				"token": "RequestLoggerMiddleware",
-				"initTime": 2.485852986574173
-			}
-		},
-		"-416447202": {
-			"id": "-416447202",
-			"label": "ReportsModule",
-			"metadata": {
-				"type": "module",
-				"global": false,
-				"dynamic": false,
-				"internal": false
-			}
-		},
-		"-1100098076": {
-			"id": "-1100098076",
-			"label": "ModuleRef",
-			"parent": "-416447202",
-			"metadata": {
-				"type": "provider",
-				"internal": true,
-				"sourceModuleName": "ReportsModule",
-				"durable": false,
-				"static": true,
-				"scope": 0,
-				"transient": false,
-				"exported": false,
-				"token": "ModuleRef"
+				"initTime": 11.308515965938568
 			}
 		}
 	},
@@ -3857,6 +3595,22 @@
 				"targetModuleName": "EventEmitterModule"
 			},
 			"id": "131707269"
+		},
+		"134318561": {
+			"source": "1877732055",
+			"target": "-1147558365",
+			"metadata": {
+				"type": "class-to-class",
+				"sourceModuleName": "EventsModule",
+				"sourceClassName": "EventsQueueHandler",
+				"targetClassName": "Symbol(LoggerProvider)",
+				"sourceClassToken": "EventsQueueHandler",
+				"targetClassToken": "Symbol(LoggerProvider)",
+				"targetModuleName": "CoreModule",
+				"keyOrIndex": 3,
+				"injectionType": "constructor"
+			},
+			"id": "134318561"
 		},
 		"155890435": {
 			"source": "-1537098012",
@@ -4099,22 +3853,6 @@
 			},
 			"id": "298548111"
 		},
-		"307119489": {
-			"source": "227927063",
-			"target": "337228516",
-			"metadata": {
-				"type": "class-to-class",
-				"sourceModuleName": "ReportsModule",
-				"sourceClassName": "UploadService",
-				"targetClassName": "FileReaderHelper",
-				"sourceClassToken": "UploadService",
-				"targetClassToken": "FileReaderHelper",
-				"targetModuleName": "CommonModule",
-				"keyOrIndex": 2,
-				"injectionType": "constructor"
-			},
-			"id": "307119489"
-		},
 		"312354937": {
 			"source": "-1181044340",
 			"target": "-1904419534",
@@ -4269,16 +4007,6 @@
 			},
 			"id": "389981665"
 		},
-		"391159113": {
-			"source": "-416447202",
-			"target": "-1001049395",
-			"metadata": {
-				"type": "module-to-module",
-				"sourceModuleName": "ReportsModule",
-				"targetModuleName": "EventEmitterModule"
-			},
-			"id": "391159113"
-		},
 		"391419314": {
 			"source": "-1492044695",
 			"target": "-26938366",
@@ -4363,6 +4091,22 @@
 			},
 			"id": "467550607"
 		},
+		"479093202": {
+			"source": "1688619051",
+			"target": "1848826318",
+			"metadata": {
+				"type": "class-to-class",
+				"sourceModuleName": "DevtoolsModule",
+				"sourceClassName": "DevtoolsHttpServerHost",
+				"targetClassName": "CONFIGURABLE_MODULE_OPTIONS[3f0d9508ae5cb8d1c7bd3]",
+				"sourceClassToken": "DevtoolsHttpServerHost",
+				"targetClassToken": "CONFIGURABLE_MODULE_OPTIONS[3f0d9508ae5cb8d1c7bd3]",
+				"targetModuleName": "DevtoolsModule",
+				"keyOrIndex": 2,
+				"injectionType": "constructor"
+			},
+			"id": "479093202"
+		},
 		"485479872": {
 			"source": "2063779508",
 			"target": "170060673",
@@ -4404,21 +4148,6 @@
 				"injectionType": "constructor"
 			},
 			"id": "518846606"
-		},
-		"522422238": {
-			"source": "-207939746",
-			"target": "-18515673",
-			"metadata": {
-				"type": "class-to-class",
-				"sourceModuleName": "UserModule",
-				"sourceClassName": "UserController",
-				"targetClassName": "LoginUserPipeValidator",
-				"sourceClassToken": "UserController",
-				"targetClassToken": "LoginUserPipeValidator",
-				"targetModuleName": "UserModule",
-				"injectionType": "decorator"
-			},
-			"id": "522422238"
 		},
 		"537945151": {
 			"source": "-1125887048",
@@ -5162,6 +4891,21 @@
 			},
 			"id": "1006246965"
 		},
+		"1009307850": {
+			"source": "1609867136",
+			"target": "1790487810",
+			"metadata": {
+				"type": "class-to-class",
+				"sourceModuleName": "FileModule",
+				"sourceClassName": "FileController",
+				"targetClassName": "f0d9508ae5cb8d1c7bd3d",
+				"sourceClassToken": "FileController",
+				"targetClassToken": "f0d9508ae5cb8d1c7bd3d",
+				"targetModuleName": "FileModule",
+				"injectionType": "decorator"
+			},
+			"id": "1009307850"
+		},
 		"1022082071": {
 			"source": "-19112576",
 			"target": "303754800",
@@ -5291,16 +5035,6 @@
 				"targetModuleName": "CoreModule"
 			},
 			"id": "1071409108"
-		},
-		"1073973715": {
-			"source": "-416447202",
-			"target": "1712628187",
-			"metadata": {
-				"type": "module-to-module",
-				"sourceModuleName": "ReportsModule",
-				"targetModuleName": "ConfigModule"
-			},
-			"id": "1073973715"
 		},
 		"1084747280": {
 			"source": "-1945923175",
@@ -5480,22 +5214,6 @@
 			},
 			"id": "1168355067"
 		},
-		"1179408577": {
-			"source": "-503631789",
-			"target": "-401687723",
-			"metadata": {
-				"type": "class-to-class",
-				"sourceModuleName": "ConfigModule",
-				"sourceClassName": "ConfigService",
-				"targetClassName": "CONFIGURATION(b64a556a-badc-43c3-b5d6-349ff03cb156)",
-				"sourceClassToken": "ConfigService",
-				"targetClassToken": "CONFIGURATION(b64a556a-badc-43c3-b5d6-349ff03cb156)",
-				"targetModuleName": "ConfigModule",
-				"keyOrIndex": 1,
-				"injectionType": "constructor"
-			},
-			"id": "1179408577"
-		},
 		"1193140038": {
 			"source": "-2011863492",
 			"target": "-1125887048",
@@ -5625,6 +5343,22 @@
 				"targetModuleName": "SqsModule"
 			},
 			"id": "1253771936"
+		},
+		"1261731892": {
+			"source": "1310883338",
+			"target": "-801249467",
+			"metadata": {
+				"type": "class-to-class",
+				"sourceModuleName": "ConfigModule",
+				"sourceClassName": "CONFIGURATION_LOADER",
+				"targetClassName": "CONFIGURATION(4be21dae-58b7-4f3c-884f-1442a59e6061)",
+				"sourceClassToken": "CONFIGURATION_LOADER",
+				"targetClassToken": "CONFIGURATION(4be21dae-58b7-4f3c-884f-1442a59e6061)",
+				"targetModuleName": "ConfigModule",
+				"keyOrIndex": 1,
+				"injectionType": "constructor"
+			},
+			"id": "1261731892"
 		},
 		"1263467622": {
 			"source": "-103136634",
@@ -5786,22 +5520,6 @@
 			},
 			"id": "1380035877"
 		},
-		"1385534427": {
-			"source": "1688619051",
-			"target": "92032840",
-			"metadata": {
-				"type": "class-to-class",
-				"sourceModuleName": "DevtoolsModule",
-				"sourceClassName": "DevtoolsHttpServerHost",
-				"targetClassName": "CONFIGURABLE_MODULE_OPTIONS[bb60e81ddbf5bd7e51a83]",
-				"sourceClassToken": "DevtoolsHttpServerHost",
-				"targetClassToken": "CONFIGURABLE_MODULE_OPTIONS[bb60e81ddbf5bd7e51a83]",
-				"targetModuleName": "DevtoolsModule",
-				"keyOrIndex": 2,
-				"injectionType": "constructor"
-			},
-			"id": "1385534427"
-		},
 		"1412068273": {
 			"source": "-1497318880",
 			"target": "1479432515",
@@ -5869,16 +5587,6 @@
 				"injectionType": "constructor"
 			},
 			"id": "1437735758"
-		},
-		"1450789700": {
-			"source": "-416447202",
-			"target": "211572259",
-			"metadata": {
-				"type": "module-to-module",
-				"sourceModuleName": "ReportsModule",
-				"targetModuleName": "ConfigHostModule"
-			},
-			"id": "1450789700"
 		},
 		"1450802644": {
 			"source": "-19112576",
@@ -5951,22 +5659,6 @@
 				"targetModuleName": "DiscoveryModule"
 			},
 			"id": "1476243610"
-		},
-		"1495436089": {
-			"source": "1877732055",
-			"target": "-251213970",
-			"metadata": {
-				"type": "class-to-class",
-				"sourceModuleName": "EventsModule",
-				"sourceClassName": "EventsQueueHandler",
-				"targetClassName": "DataParserHelper",
-				"sourceClassToken": "EventsQueueHandler",
-				"targetClassToken": "DataParserHelper",
-				"targetModuleName": "CommonModule",
-				"keyOrIndex": 3,
-				"injectionType": "constructor"
-			},
-			"id": "1495436089"
 		},
 		"1507231464": {
 			"source": "-1945923175",
@@ -6609,21 +6301,6 @@
 			},
 			"id": "1932632160"
 		},
-		"1933412475": {
-			"source": "-207939746",
-			"target": "1398329223",
-			"metadata": {
-				"type": "class-to-class",
-				"sourceModuleName": "UserModule",
-				"sourceClassName": "UserController",
-				"targetClassName": "UpdateUserPipeValidator",
-				"sourceClassToken": "UserController",
-				"targetClassToken": "UpdateUserPipeValidator",
-				"targetModuleName": "UserModule",
-				"injectionType": "decorator"
-			},
-			"id": "1933412475"
-		},
 		"1940664375": {
 			"source": "-1033621697",
 			"target": "170060673",
@@ -6675,6 +6352,21 @@
 				"injectionType": "constructor"
 			},
 			"id": "1944028460"
+		},
+		"1947355383": {
+			"source": "-207939746",
+			"target": "-655645619",
+			"metadata": {
+				"type": "class-to-class",
+				"sourceModuleName": "UserModule",
+				"sourceClassName": "UserController",
+				"targetClassName": "ListQueryValidatorPipe",
+				"sourceClassToken": "UserController",
+				"targetClassToken": "ListQueryValidatorPipe",
+				"targetModuleName": "UserModule",
+				"injectionType": "decorator"
+			},
+			"id": "1947355383"
 		},
 		"1949282163": {
 			"source": "-140984175",
@@ -7089,22 +6781,6 @@
 			},
 			"id": "-1036206953"
 		},
-		"-1640296035": {
-			"source": "1034278248",
-			"target": "951215151",
-			"metadata": {
-				"type": "class-to-class",
-				"sourceModuleName": "CommonModule",
-				"sourceClassName": "SchemaValidator",
-				"targetClassName": "Exceptions",
-				"sourceClassToken": "SchemaValidator",
-				"targetClassToken": "Exceptions",
-				"targetModuleName": "CoreModule",
-				"keyOrIndex": 0,
-				"injectionType": "constructor"
-			},
-			"id": "-1640296035"
-		},
 		"-206413828": {
 			"source": "-595535094",
 			"target": "612451450",
@@ -7153,22 +6829,6 @@
 				"injectionType": "constructor"
 			},
 			"id": "-1045206778"
-		},
-		"-2000616139": {
-			"source": "1310883338",
-			"target": "-401687723",
-			"metadata": {
-				"type": "class-to-class",
-				"sourceModuleName": "ConfigModule",
-				"sourceClassName": "CONFIGURATION_LOADER",
-				"targetClassName": "CONFIGURATION(b64a556a-badc-43c3-b5d6-349ff03cb156)",
-				"sourceClassToken": "CONFIGURATION_LOADER",
-				"targetClassToken": "CONFIGURATION(b64a556a-badc-43c3-b5d6-349ff03cb156)",
-				"targetModuleName": "ConfigModule",
-				"keyOrIndex": 1,
-				"injectionType": "constructor"
-			},
-			"id": "-2000616139"
 		},
 		"-1597821732": {
 			"source": "373235992",
@@ -7299,6 +6959,22 @@
 				"injectionType": "constructor"
 			},
 			"id": "-1909949270"
+		},
+		"-1659064350": {
+			"source": "-503631789",
+			"target": "-801249467",
+			"metadata": {
+				"type": "class-to-class",
+				"sourceModuleName": "ConfigModule",
+				"sourceClassName": "ConfigService",
+				"targetClassName": "CONFIGURATION(4be21dae-58b7-4f3c-884f-1442a59e6061)",
+				"sourceClassToken": "ConfigService",
+				"targetClassToken": "CONFIGURATION(4be21dae-58b7-4f3c-884f-1442a59e6061)",
+				"targetModuleName": "ConfigModule",
+				"keyOrIndex": 1,
+				"injectionType": "constructor"
+			},
+			"id": "-1659064350"
 		},
 		"-1609063867": {
 			"source": "1688619051",
@@ -8023,37 +7699,37 @@
 			},
 			"id": "-2036939073"
 		},
-		"-191414752": {
+		"-615854280": {
 			"source": "1877732055",
-			"target": "1034278248",
+			"target": "-251213970",
 			"metadata": {
 				"type": "class-to-class",
 				"sourceModuleName": "EventsModule",
 				"sourceClassName": "EventsQueueHandler",
-				"targetClassName": "SchemaValidator",
+				"targetClassName": "DataParserHelper",
 				"sourceClassToken": "EventsQueueHandler",
-				"targetClassToken": "SchemaValidator",
+				"targetClassToken": "DataParserHelper",
 				"targetModuleName": "CommonModule",
 				"keyOrIndex": 2,
 				"injectionType": "constructor"
 			},
-			"id": "-191414752"
+			"id": "-615854280"
 		},
-		"-2049358366": {
+		"-423723724": {
 			"source": "1877732055",
-			"target": "-1147558365",
+			"target": "951215151",
 			"metadata": {
 				"type": "class-to-class",
 				"sourceModuleName": "EventsModule",
 				"sourceClassName": "EventsQueueHandler",
-				"targetClassName": "Symbol(LoggerProvider)",
+				"targetClassName": "Exceptions",
 				"sourceClassToken": "EventsQueueHandler",
-				"targetClassToken": "Symbol(LoggerProvider)",
+				"targetClassToken": "Exceptions",
 				"targetModuleName": "CoreModule",
 				"keyOrIndex": 4,
 				"injectionType": "constructor"
 			},
-			"id": "-2049358366"
+			"id": "-423723724"
 		},
 		"-1302835195": {
 			"source": "972580381",
@@ -8603,6 +8279,22 @@
 				"injectionType": "constructor"
 			},
 			"id": "-1154409020"
+		},
+		"-126450234": {
+			"source": "-300737958",
+			"target": "-1147558365",
+			"metadata": {
+				"type": "class-to-class",
+				"sourceModuleName": "CoreModule",
+				"sourceClassName": "Symbol(DatabaseConnectionProvider)",
+				"targetClassName": "Symbol(LoggerProvider)",
+				"sourceClassToken": "Symbol(DatabaseConnectionProvider)",
+				"targetClassToken": "Symbol(LoggerProvider)",
+				"targetModuleName": "CoreModule",
+				"keyOrIndex": 0,
+				"injectionType": "constructor"
+			},
+			"id": "-126450234"
 		},
 		"-648833550": {
 			"source": "2062526105",
@@ -10014,35 +9706,20 @@
 			},
 			"id": "-243224074"
 		},
-		"-258399747": {
+		"-267095278": {
 			"source": "-207939746",
-			"target": "-1291309967",
+			"target": "-983935152",
 			"metadata": {
 				"type": "class-to-class",
 				"sourceModuleName": "UserModule",
 				"sourceClassName": "UserController",
-				"targetClassName": "ListQueryPipeValidator",
+				"targetClassName": "CreateUserValidatorPipe",
 				"sourceClassToken": "UserController",
-				"targetClassToken": "ListQueryPipeValidator",
+				"targetClassToken": "CreateUserValidatorPipe",
 				"targetModuleName": "UserModule",
 				"injectionType": "decorator"
 			},
-			"id": "-258399747"
-		},
-		"-813768720": {
-			"source": "-207939746",
-			"target": "-1619599500",
-			"metadata": {
-				"type": "class-to-class",
-				"sourceModuleName": "UserModule",
-				"sourceClassName": "UserController",
-				"targetClassName": "CreateUserPipeValidator",
-				"sourceClassToken": "UserController",
-				"targetClassToken": "CreateUserPipeValidator",
-				"targetModuleName": "UserModule",
-				"injectionType": "decorator"
-			},
-			"id": "-813768720"
+			"id": "-267095278"
 		},
 		"-803445298": {
 			"source": "-207939746",
@@ -10058,6 +9735,36 @@
 				"injectionType": "decorator"
 			},
 			"id": "-803445298"
+		},
+		"-1668653484": {
+			"source": "-207939746",
+			"target": "617148675",
+			"metadata": {
+				"type": "class-to-class",
+				"sourceModuleName": "UserModule",
+				"sourceClassName": "UserController",
+				"targetClassName": "LoginUserValidatorPipe",
+				"sourceClassToken": "UserController",
+				"targetClassToken": "LoginUserValidatorPipe",
+				"targetModuleName": "UserModule",
+				"injectionType": "decorator"
+			},
+			"id": "-1668653484"
+		},
+		"-1721689441": {
+			"source": "-207939746",
+			"target": "2033993571",
+			"metadata": {
+				"type": "class-to-class",
+				"sourceModuleName": "UserModule",
+				"sourceClassName": "UserController",
+				"targetClassName": "UpdateUserValidatorPipe",
+				"sourceClassToken": "UserController",
+				"targetClassToken": "UpdateUserValidatorPipe",
+				"targetModuleName": "UserModule",
+				"injectionType": "decorator"
+			},
+			"id": "-1721689441"
 		},
 		"-1145514005": {
 			"source": "1678542466",
@@ -10119,21 +9826,6 @@
 			},
 			"id": "-59477322"
 		},
-		"-190461249": {
-			"source": "1609867136",
-			"target": "630444767",
-			"metadata": {
-				"type": "class-to-class",
-				"sourceModuleName": "FileModule",
-				"sourceClassName": "FileController",
-				"targetClassName": "b60e81ddbf5bd7e51a838",
-				"sourceClassToken": "FileController",
-				"targetClassToken": "b60e81ddbf5bd7e51a838",
-				"targetModuleName": "FileModule",
-				"injectionType": "decorator"
-			},
-			"id": "-190461249"
-		},
 		"-12525042": {
 			"source": "-880890866",
 			"target": "-1561770243",
@@ -10149,20 +9841,20 @@
 			},
 			"id": "-12525042"
 		},
-		"-518552957": {
+		"-1354988980": {
 			"source": "-880890866",
-			"target": "-363273959",
+			"target": "272390389",
 			"metadata": {
 				"type": "class-to-class",
 				"sourceModuleName": "HookModule",
 				"sourceClassName": "HookController",
-				"targetClassName": "RegisterEventHookPipeValidator",
+				"targetClassName": "RegisterEventHookValidatorPipe",
 				"sourceClassToken": "HookController",
-				"targetClassToken": "RegisterEventHookPipeValidator",
+				"targetClassToken": "RegisterEventHookValidatorPipe",
 				"targetModuleName": "HookModule",
 				"injectionType": "decorator"
 			},
-			"id": "-518552957"
+			"id": "-1354988980"
 		},
 		"-989267452": {
 			"source": "1989366767",
@@ -10178,530 +9870,9 @@
 				"injectionType": "decorator"
 			},
 			"id": "-989267452"
-		},
-		"-1453588556": {
-			"source": "227927063",
-			"target": "-503631789",
-			"metadata": {
-				"type": "class-to-class",
-				"sourceModuleName": "ReportsModule",
-				"sourceClassName": "UploadService",
-				"targetClassName": "ConfigService",
-				"sourceClassToken": "UploadService",
-				"targetClassToken": "ConfigService",
-				"targetModuleName": "ConfigModule",
-				"keyOrIndex": 0,
-				"injectionType": "constructor"
-			},
-			"id": "-1453588556"
-		},
-		"-1064733588": {
-			"source": "227927063",
-			"target": "640772982",
-			"metadata": {
-				"type": "class-to-class",
-				"sourceModuleName": "ReportsModule",
-				"sourceClassName": "UploadService",
-				"targetClassName": "S3Client",
-				"sourceClassToken": "UploadService",
-				"targetClassToken": "S3Client",
-				"targetModuleName": "CoreModule",
-				"keyOrIndex": 1,
-				"injectionType": "constructor"
-			},
-			"id": "-1064733588"
-		},
-		"-2050141999": {
-			"source": "-416447202",
-			"target": "555176277",
-			"metadata": {
-				"type": "module-to-module",
-				"sourceModuleName": "ReportsModule",
-				"targetModuleName": "InternalCoreModule"
-			},
-			"id": "-2050141999"
-		},
-		"-2126899292": {
-			"source": "-416447202",
-			"target": "-1125887048",
-			"metadata": {
-				"type": "module-to-module",
-				"sourceModuleName": "ReportsModule",
-				"targetModuleName": "CoreModule"
-			},
-			"id": "-2126899292"
-		},
-		"-98348329": {
-			"source": "-416447202",
-			"target": "303754800",
-			"metadata": {
-				"type": "module-to-module",
-				"sourceModuleName": "ReportsModule",
-				"targetModuleName": "ScheduleModule"
-			},
-			"id": "-98348329"
-		},
-		"-1978224297": {
-			"source": "-416447202",
-			"target": "1482218087",
-			"metadata": {
-				"type": "module-to-module",
-				"sourceModuleName": "ReportsModule",
-				"targetModuleName": "ThrottlerModule"
-			},
-			"id": "-1978224297"
-		},
-		"-2099922529": {
-			"source": "-416447202",
-			"target": "1631380932",
-			"metadata": {
-				"type": "module-to-module",
-				"sourceModuleName": "ReportsModule",
-				"targetModuleName": "CommonModule"
-			},
-			"id": "-2099922529"
-		},
-		"-1348477932": {
-			"source": "-416447202",
-			"target": "170060673",
-			"metadata": {
-				"type": "module-to-module",
-				"sourceModuleName": "ReportsModule",
-				"targetModuleName": "DiscoveryModule"
-			},
-			"id": "-1348477932"
-		},
-		"-1110416586": {
-			"source": "-416447202",
-			"target": "1916799540",
-			"metadata": {
-				"type": "module-to-module",
-				"sourceModuleName": "ReportsModule",
-				"targetModuleName": "SqsModule"
-			},
-			"id": "-1110416586"
 		}
 	},
-	"entrypoints": {
-		"54141763": [
-			{
-				"type": "middleware",
-				"methodName": "use",
-				"className": "RequestLoggerMiddleware",
-				"classNodeId": "54141763",
-				"metadata": {
-					"key": "/users/",
-					"path": "/users/",
-					"requestMethod": "GET"
-				},
-				"id": "54141763_use"
-			},
-			{
-				"type": "middleware",
-				"methodName": "use",
-				"className": "RequestLoggerMiddleware",
-				"classNodeId": "54141763",
-				"metadata": {
-					"key": "/users/",
-					"path": "/users/",
-					"requestMethod": "POST"
-				},
-				"id": "54141763_use"
-			},
-			{
-				"type": "middleware",
-				"methodName": "use",
-				"className": "RequestLoggerMiddleware",
-				"classNodeId": "54141763",
-				"metadata": {
-					"key": "/users/:userId",
-					"path": "/users/:userId",
-					"requestMethod": "GET"
-				},
-				"id": "54141763_use"
-			},
-			{
-				"type": "middleware",
-				"methodName": "use",
-				"className": "RequestLoggerMiddleware",
-				"classNodeId": "54141763",
-				"metadata": {
-					"key": "/users/",
-					"path": "/users/",
-					"requestMethod": "PUT"
-				},
-				"id": "54141763_use"
-			},
-			{
-				"type": "middleware",
-				"methodName": "use",
-				"className": "RequestLoggerMiddleware",
-				"classNodeId": "54141763",
-				"metadata": {
-					"key": "/users/:userId",
-					"path": "/users/:userId",
-					"requestMethod": "PATCH"
-				},
-				"id": "54141763_use"
-			},
-			{
-				"type": "middleware",
-				"methodName": "use",
-				"className": "RequestLoggerMiddleware",
-				"classNodeId": "54141763",
-				"metadata": {
-					"key": "/users/:userId",
-					"path": "/users/:userId",
-					"requestMethod": "DELETE"
-				},
-				"id": "54141763_use"
-			}
-		],
-		"54141764": [
-			{
-				"type": "middleware",
-				"methodName": "use",
-				"className": "RequestLoggerMiddleware",
-				"classNodeId": "54141764",
-				"metadata": {
-					"key": "/subscriptions/",
-					"path": "/subscriptions/",
-					"requestMethod": "GET"
-				},
-				"id": "54141764_use"
-			}
-		],
-		"54141765": [
-			{
-				"type": "middleware",
-				"methodName": "use",
-				"className": "RequestLoggerMiddleware",
-				"classNodeId": "54141765",
-				"metadata": {
-					"key": "/files/license",
-					"path": "/files/license",
-					"requestMethod": "GET"
-				},
-				"id": "54141765_use"
-			},
-			{
-				"type": "middleware",
-				"methodName": "use",
-				"className": "RequestLoggerMiddleware",
-				"classNodeId": "54141765",
-				"metadata": {
-					"key": "/files/upload",
-					"path": "/files/upload",
-					"requestMethod": "POST"
-				},
-				"id": "54141765_use"
-			}
-		],
-		"54141766": [
-			{
-				"type": "middleware",
-				"methodName": "use",
-				"className": "RequestLoggerMiddleware",
-				"classNodeId": "54141766",
-				"metadata": {
-					"key": "/hook/",
-					"path": "/hook/",
-					"requestMethod": "PUT"
-				},
-				"id": "54141766_use"
-			}
-		],
-		"1609867136": [
-			{
-				"type": "http-endpoint",
-				"methodName": "getLicense",
-				"className": "FileController",
-				"classNodeId": "1609867136",
-				"metadata": {
-					"key": "/api/files/license",
-					"path": "/api/files/license",
-					"requestMethod": "GET",
-					"controllerVersion": ""
-				},
-				"id": "1609867136_getLicense"
-			},
-			{
-				"type": "http-endpoint",
-				"methodName": "sendFile",
-				"className": "FileController",
-				"classNodeId": "1609867136",
-				"metadata": {
-					"key": "/api/files/upload",
-					"path": "/api/files/upload",
-					"requestMethod": "POST",
-					"controllerVersion": ""
-				},
-				"id": "1609867136_sendFile"
-			}
-		],
-		"1654975325": [
-			{
-				"id": "1654975325_createConnection",
-				"type": "graphql-entrypoint",
-				"methodName": "createConnection",
-				"className": "ConnectionResolver",
-				"classNodeId": "1654975325",
-				"metadata": {
-					"key": "createConnection",
-					"parentType": "Mutation"
-				}
-			},
-			{
-				"id": "1654975325_findConnections",
-				"type": "graphql-entrypoint",
-				"methodName": "findConnections",
-				"className": "ConnectionResolver",
-				"classNodeId": "1654975325",
-				"metadata": {
-					"key": "findConnections",
-					"parentType": "Query"
-				}
-			},
-			{
-				"id": "1654975325_findConnection",
-				"type": "graphql-entrypoint",
-				"methodName": "findConnection",
-				"className": "ConnectionResolver",
-				"classNodeId": "1654975325",
-				"metadata": {
-					"key": "findConnection",
-					"parentType": "Query"
-				}
-			},
-			{
-				"id": "1654975325_updateConnection",
-				"type": "graphql-entrypoint",
-				"methodName": "updateConnection",
-				"className": "ConnectionResolver",
-				"classNodeId": "1654975325",
-				"metadata": {
-					"key": "updateConnection",
-					"parentType": "Mutation"
-				}
-			},
-			{
-				"id": "1654975325_removeConnection",
-				"type": "graphql-entrypoint",
-				"methodName": "removeConnection",
-				"className": "ConnectionResolver",
-				"classNodeId": "1654975325",
-				"metadata": {
-					"key": "removeConnection",
-					"parentType": "Mutation"
-				}
-			}
-		],
-		"1678542466": [
-			{
-				"type": "http-endpoint",
-				"methodName": "listSubscriptions",
-				"className": "SubscriptionController",
-				"classNodeId": "1678542466",
-				"metadata": {
-					"key": "/api/subscriptions",
-					"path": "/api/subscriptions",
-					"requestMethod": "GET",
-					"controllerVersion": ""
-				},
-				"id": "1678542466_listSubscriptions"
-			}
-		],
-		"1989366767": [
-			{
-				"type": "websocket",
-				"methodName": "handleReconnect",
-				"className": "WebSocketServer",
-				"classNodeId": "1989366767",
-				"metadata": {
-					"port": 0,
-					"key": "reconnect",
-					"message": "reconnect"
-				},
-				"id": "1989366767_handleReconnect"
-			},
-			{
-				"type": "websocket",
-				"methodName": "broadcast",
-				"className": "WebSocketServer",
-				"classNodeId": "1989366767",
-				"metadata": {
-					"port": 0,
-					"key": "broadcast",
-					"message": "broadcast"
-				},
-				"id": "1989366767_broadcast"
-			},
-			{
-				"type": "websocket",
-				"methodName": "emitPrivate",
-				"className": "WebSocketServer",
-				"classNodeId": "1989366767",
-				"metadata": {
-					"port": 0,
-					"key": "emit_private",
-					"message": "emit_private"
-				},
-				"id": "1989366767_emitPrivate"
-			}
-		],
-		"-1555249199": [
-			{
-				"type": "middleware",
-				"methodName": "use",
-				"className": "RequestLoggerMiddleware",
-				"classNodeId": "-1555249199",
-				"metadata": {
-					"key": "/check",
-					"path": "/check",
-					"requestMethod": "GET"
-				},
-				"id": "-1555249199_use"
-			},
-			{
-				"type": "middleware",
-				"methodName": "use",
-				"className": "RequestLoggerMiddleware",
-				"classNodeId": "-1555249199",
-				"metadata": {
-					"key": "/check",
-					"path": "/check",
-					"requestMethod": "GET",
-					"version": "v1"
-				},
-				"id": "-1555249199_use"
-			}
-		],
-		"-143558704": [
-			{
-				"type": "http-endpoint",
-				"methodName": "healthCheck",
-				"className": "DefaultController",
-				"classNodeId": "-143558704",
-				"metadata": {
-					"key": "/api/check",
-					"path": "/api/check",
-					"requestMethod": "GET",
-					"methodVersion": "",
-					"controllerVersion": ""
-				},
-				"id": "-143558704_healthCheck"
-			},
-			{
-				"type": "http-endpoint",
-				"methodName": "healthCheckV1",
-				"className": "DefaultController",
-				"classNodeId": "-143558704",
-				"metadata": {
-					"key": "/api/v1/check",
-					"path": "/api/v1/check",
-					"requestMethod": "GET",
-					"methodVersion": "v1",
-					"controllerVersion": ""
-				},
-				"id": "-143558704_healthCheckV1"
-			}
-		],
-		"-207939746": [
-			{
-				"type": "http-endpoint",
-				"methodName": "listUsers",
-				"className": "UserController",
-				"classNodeId": "-207939746",
-				"metadata": {
-					"key": "/api/users",
-					"path": "/api/users",
-					"requestMethod": "GET",
-					"controllerVersion": ""
-				},
-				"id": "-207939746_listUsers"
-			},
-			{
-				"type": "http-endpoint",
-				"methodName": "createUser",
-				"className": "UserController",
-				"classNodeId": "-207939746",
-				"metadata": {
-					"key": "/api/users",
-					"path": "/api/users",
-					"requestMethod": "POST",
-					"controllerVersion": ""
-				},
-				"id": "-207939746_createUser"
-			},
-			{
-				"type": "http-endpoint",
-				"methodName": "getUser",
-				"className": "UserController",
-				"classNodeId": "-207939746",
-				"metadata": {
-					"key": "/api/users/:userId",
-					"path": "/api/users/:userId",
-					"requestMethod": "GET",
-					"controllerVersion": ""
-				},
-				"id": "-207939746_getUser"
-			},
-			{
-				"type": "http-endpoint",
-				"methodName": "loginUser",
-				"className": "UserController",
-				"classNodeId": "-207939746",
-				"metadata": {
-					"key": "/api/users",
-					"path": "/api/users",
-					"requestMethod": "PUT",
-					"controllerVersion": ""
-				},
-				"id": "-207939746_loginUser"
-			},
-			{
-				"type": "http-endpoint",
-				"methodName": "updateUser",
-				"className": "UserController",
-				"classNodeId": "-207939746",
-				"metadata": {
-					"key": "/api/users/:userId",
-					"path": "/api/users/:userId",
-					"requestMethod": "PATCH",
-					"controllerVersion": ""
-				},
-				"id": "-207939746_updateUser"
-			},
-			{
-				"type": "http-endpoint",
-				"methodName": "deleteUser",
-				"className": "UserController",
-				"classNodeId": "-207939746",
-				"metadata": {
-					"key": "/api/users/:userId",
-					"path": "/api/users/:userId",
-					"requestMethod": "DELETE",
-					"controllerVersion": ""
-				},
-				"id": "-207939746_deleteUser"
-			}
-		],
-		"-880890866": [
-			{
-				"type": "http-endpoint",
-				"methodName": "registerEventHook",
-				"className": "HookController",
-				"classNodeId": "-880890866",
-				"metadata": {
-					"key": "/api/hook",
-					"path": "/api/hook",
-					"requestMethod": "PUT",
-					"controllerVersion": ""
-				},
-				"id": "-880890866_registerEventHook"
-			}
-		]
-	},
+	"entrypoints": {},
 	"extras": {
 		"orphanedEnhancers": [
 			{

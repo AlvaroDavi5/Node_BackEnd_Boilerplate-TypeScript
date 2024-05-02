@@ -18,13 +18,13 @@ export default class UserService {
 		private readonly userRepository: UserRepository,
 		private readonly exceptions: Exceptions,
 	) {
-		const { secretKey }: ConfigsInterface['security'] = this.configService.get<any>('security');
+		const { secretKey } = this.configService.get<ConfigsInterface['security']>('security')!;
 		this.secret = secretKey;
 	}
 
-	public async getById(id: number): Promise<UserEntity | null> {
+	public async getById(id: number, withoutPassword = true): Promise<UserEntity | null> {
 		try {
-			return await this.userRepository.getById(id);
+			return await this.userRepository.getById(id, withoutPassword);
 		} catch (error) {
 			throw this.exceptions.internal({
 				message: 'Error to comunicate with database',
@@ -100,16 +100,15 @@ export default class UserService {
 		}
 	}
 
-	private protectPassword(password: string): string {
-		// ? dbRes = salt + hash(salt + password + secretEnv)
-
+	// * dbRes = salt + hash(salt + password + secretEnv)
+	private protectPassword(plainTextPassword: string): string {
 		const salt = this.cryptographyService.generateSalt();
 		if (!salt)
 			throw this.exceptions.internal({
 				message: 'Error to generate salt',
 			});
 
-		const toHash = salt + password + this.secret;
+		const toHash = salt + plainTextPassword + this.secret;
 		const hash = this.cryptographyService.hashing(toHash, 'ascii', 'sha256', 'base64url');
 		if (!hash)
 			throw this.exceptions.internal({

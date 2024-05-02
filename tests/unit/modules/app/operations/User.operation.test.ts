@@ -12,11 +12,11 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 	// // mocks
 	const userServiceMock = {
 		getByEmail: jest.fn(async (email: string): Promise<UserEntity | null> => (null)),
-		getById: jest.fn(async (id: number): Promise<UserEntity | null> => (null)),
+		getById: jest.fn(async (id: number, withoutPassword = true): Promise<UserEntity | null> => (null)),
 		create: jest.fn(async (entity: UserEntity): Promise<UserEntity | null> => (null)),
 		update: jest.fn(async (id: number, entity: UserEntity): Promise<UserEntity | null> => (null)),
 		delete: jest.fn(async (id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean | null> => (null)),
-		list: jest.fn(async (query: ListQueryInterface): Promise<PaginationInterface<UserEntity> | null> => ({ content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 })),
+		list: jest.fn(async (query: ListQueryInterface, withoutSensibleData = true): Promise<PaginationInterface<UserEntity> | null> => ({ content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 })),
 		protectPassword: jest.fn((password: string): string => (password)),
 		validatePassword: jest.fn((entity: UserEntity, passwordToValidate: string): void => { return undefined; }),
 	};
@@ -148,7 +148,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				totalPages: 1,
 				totalItems: 3,
 			};
-			userServiceMock.list.mockImplementation(async (query: ListQueryInterface): Promise<PaginationInterface<UserEntity> | null> => (listResult));
+			userServiceMock.list.mockImplementation(async (query: ListQueryInterface, withoutSensibleData = true): Promise<PaginationInterface<UserEntity> | null> => (listResult));
 
 			const listedUsers = await userOperation.listUsers(listData);
 			expect(userServiceMock.list).toHaveBeenCalledTimes(1);
@@ -162,7 +162,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				limit: 15,
 				page: 0,
 			};
-			userServiceMock.list.mockImplementation(async (query: ListQueryInterface): Promise<PaginationInterface<UserEntity> | null> => (null));
+			userServiceMock.list.mockImplementation(async (query: ListQueryInterface, withoutSensibleData = true): Promise<PaginationInterface<UserEntity> | null> => (null));
 
 			try {
 				await userOperation.listUsers(listData);
@@ -180,7 +180,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		test('Should return created user', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			userServiceMock.create.mockImplementation(async (entity: UserEntity): Promise<UserEntity | null> => (entity));
-			userServiceMock.getById.mockImplementation(async (id: number): Promise<UserEntity | null> => {
+			userServiceMock.getById.mockImplementation(async (id: number, withoutPassword = true): Promise<UserEntity | null> => {
 				if (id === userEntity.getId()) return userEntity;
 				else return null;
 			});
@@ -194,13 +194,13 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 			expect(createdUser?.getId()).toBe(userEntity.getId());
 			expect(createdUser?.getLogin()?.email).toBe(userEntity.getLogin().email);
-			expect(createdUser?.getPassword()).toBe('');
+			expect(createdUser?.getPassword()).toBeNull();
 		});
 
 		test('Should throw a not found error', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			userServiceMock.create.mockImplementation(async (entity: UserEntity): Promise<UserEntity | null> => (entity));
-			userServiceMock.getById.mockImplementation(async (id: number): Promise<UserEntity | null> => (null));
+			userServiceMock.getById.mockImplementation(async (id: number, withoutPassword = true): Promise<UserEntity | null> => (null));
 			userPreferenceServiceMock.create.mockImplementation(async (entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (entity));
 			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: number): Promise<UserPreferenceEntity | null> => (null));
 
@@ -248,7 +248,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		test('Should return finded user', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ userId: userEntity.getId() });
-			userServiceMock.getById.mockImplementation(async (id: number): Promise<UserEntity | null> => {
+			userServiceMock.getById.mockImplementation(async (id: number, withoutPassword = true): Promise<UserEntity | null> => {
 				if (id === userEntity.getId()) return userEntity;
 				else return null;
 			});
@@ -259,7 +259,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 
 			const foundedUser = await userOperation.getUser(1, userAgent);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-			expect(userServiceMock.getById).toHaveBeenCalledWith(1);
+			expect(userServiceMock.getById).toHaveBeenCalledWith(1, true);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith(1);
 			expect(foundedUser?.getId()).toBe(userEntity.getId());
@@ -268,7 +268,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 
 		test('Should return a null preference', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
-			userServiceMock.getById.mockImplementation(async (id: number): Promise<UserEntity | null> => {
+			userServiceMock.getById.mockImplementation(async (id: number, withoutPassword = true): Promise<UserEntity | null> => {
 				if (id === userEntity.getId()) return userEntity;
 				else return null;
 			});
@@ -276,7 +276,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 
 			const foundedUser = await userOperation.getUser(1, userAgent);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-			expect(userServiceMock.getById).toHaveBeenCalledWith(1);
+			expect(userServiceMock.getById).toHaveBeenCalledWith(1, true);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith(1);
 			expect(foundedUser?.getPreference()).toBeNull();
@@ -285,7 +285,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		test('Should throw a conflict error', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ userId: userEntity.getId() });
-			userServiceMock.getById.mockImplementation(async (id: number): Promise<UserEntity | null> => {
+			userServiceMock.getById.mockImplementation(async (id: number, withoutPassword = true): Promise<UserEntity | null> => {
 				if (id === userEntity.getId()) return userEntity;
 				else return null;
 			});
@@ -298,7 +298,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				await userOperation.getUser(0, userAgent);
 			} catch (error) {
 				expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-				expect(userServiceMock.getById).toHaveBeenCalledWith(0);
+				expect(userServiceMock.getById).toHaveBeenCalledWith(0, true);
 				expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 				expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith(0);
 				expect(exceptionsMock.notFound).toHaveBeenCalledWith({
@@ -322,7 +322,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		test('Should return updated user', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 2, userId: userEntity.getId() });
-			userServiceMock.getById.mockImplementation(async (id: number): Promise<UserEntity | null> => {
+			userServiceMock.getById.mockImplementation(async (id: number, withoutPassword = true): Promise<UserEntity | null> => {
 				if (id === userEntity.getId()) return userEntity;
 				else return null;
 			});
@@ -331,27 +331,45 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				else return null;
 			});
 			userServiceMock.update.mockImplementation(async (id: number, entity: UserEntity): Promise<UserEntity | null> => {
-				if (id === userEntity.getId()) return new UserEntity({ ...userEntity.getAttributes(), ...entity.getAttributes() });
+				if (id === userEntity.getId()) {
+					const attributes = entity.getAttributes();
+
+					userEntity.setLogin(attributes.email ?? '', attributes.fullName ?? '');
+					userEntity.setDocInfos(attributes.document ?? '', attributes.docType ?? '', attributes.fu ?? '');
+					userEntity.setPhone(attributes.phone ?? '');
+					userEntity.setPreference(attributes.preference);
+					userEntity.setDeletedBy(attributes.deletedBy ?? '');
+
+					return userEntity;
+				}
 				else return null;
 			});
 			userPreferenceServiceMock.update.mockImplementation(async (id: number, entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => {
-				if (id === userPreferenceEntity.getId()) return new UserPreferenceEntity({ ...userPreferenceEntity.getAttributes(), ...entity.getAttributes() });
+				if (id === userPreferenceEntity.getId()) {
+					const attributes = entity.getAttributes();
+
+					userPreferenceEntity.setUserId(attributes.userId ?? 0);
+					userPreferenceEntity.setDefaultTheme(attributes.defaultTheme ?? 'DEFAULT');
+					userPreferenceEntity.setImagePath(attributes.imagePath ?? './image.png');
+
+					return userPreferenceEntity;
+				}
 				else return null;
 			});
 
 			const updatedUser = await userOperation.updateUser(1, { phone: '+55999999999', createdAt }, userAgent);
-			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
+			expect(userServiceMock.getById).toHaveBeenCalledTimes(2);
+			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(2);
 			expect(userPreferenceServiceMock.update).toHaveBeenCalledWith(2, new UserPreferenceEntity({ userId: 1, phone: '+55999999999', createdAt }));
 			expect(userServiceMock.update).toHaveBeenCalledWith(1, new UserEntity({ email: 'user.test@nomail.test', phone: '+55999999999', createdAt }));
 			expect(updatedUser?.getPhone()).toEqual('+55999999999');
-			expect(updatedUser?.getPassword()).toBe('');
+			expect(updatedUser?.getPassword()).toBeNull();
 		});
 
 		test('Should throw a conflict error', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 2, userId: userEntity.getId() });
-			userServiceMock.getById.mockImplementation(async (id: number): Promise<UserEntity | null> => {
+			userServiceMock.getById.mockImplementation(async (id: number, withoutPassword = true): Promise<UserEntity | null> => {
 				if (id === userEntity.getId()) return userEntity;
 				else return null;
 			});
@@ -364,7 +382,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				await userOperation.updateUser(0, {}, userAgent);
 			} catch (error) {
 				expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-				expect(userServiceMock.getById).toHaveBeenCalledWith(0);
+				expect(userServiceMock.getById).toHaveBeenCalledWith(0, true);
 				expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 				expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith(0);
 				expect(exceptionsMock.notFound).toHaveBeenCalledWith({
@@ -377,7 +395,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 2, userId: userEntity.getId() });
 			const otherUserAgent = { username: 'test', clientId: '1' };
-			userServiceMock.getById.mockImplementation(async (id: number): Promise<UserEntity | null> => {
+			userServiceMock.getById.mockImplementation(async (id: number, withoutPassword = true): Promise<UserEntity | null> => {
 				if (id === userEntity.getId()) return userEntity;
 				else return null;
 			});
@@ -390,7 +408,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				await userOperation.updateUser(1, {}, otherUserAgent);
 			} catch (error) {
 				expect(exceptionsMock.business).toHaveBeenCalledWith({
-					message: 'userAgent not allowed to update this user'
+					message: 'userAgent not allowed to update this user!'
 				});
 			}
 		});
@@ -398,7 +416,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		test('Should throw a conflict error', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 2, userId: userEntity.getId() });
-			userServiceMock.getById.mockImplementation(async (id: number): Promise<UserEntity | null> => {
+			userServiceMock.getById.mockImplementation(async (id: number, withoutPassword = true): Promise<UserEntity | null> => {
 				if (id === userEntity.getId()) return userEntity;
 				else return null;
 			});
@@ -432,7 +450,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		test('Should return deleted user', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 2, userId: userEntity.getId() });
-			userServiceMock.getById.mockImplementation(async (id: number): Promise<UserEntity | null> => {
+			userServiceMock.getById.mockImplementation(async (id: number, withoutPassword = true): Promise<UserEntity | null> => {
 				if (id === userEntity.getId()) return userEntity;
 				else return null;
 			});
@@ -460,7 +478,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		test('Should throw a not found error', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ userId: userEntity.getId() });
-			userServiceMock.getById.mockImplementation(async (id: number): Promise<UserEntity | null> => {
+			userServiceMock.getById.mockImplementation(async (id: number, withoutPassword = true): Promise<UserEntity | null> => {
 				if (id === userEntity.getId()) return userEntity;
 				else return null;
 			});
@@ -473,7 +491,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				await userOperation.deleteUser(0, userAgent);
 			} catch (error) {
 				expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-				expect(userServiceMock.getById).toHaveBeenCalledWith(0);
+				expect(userServiceMock.getById).toHaveBeenCalledWith(0, true);
 				expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 				expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith(0);
 				expect(exceptionsMock.notFound).toHaveBeenCalledWith({
@@ -496,7 +514,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 2, userId: userEntity.getId() });
 			const otherUserAgent = { username: 'test', clientId: '1' };
-			userServiceMock.getById.mockImplementation(async (id: number): Promise<UserEntity | null> => {
+			userServiceMock.getById.mockImplementation(async (id: number, withoutPassword = true): Promise<UserEntity | null> => {
 				if (id === userEntity.getId()) return userEntity;
 				else return null;
 			});
@@ -509,7 +527,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				await userOperation.deleteUser(1, otherUserAgent);
 			} catch (error) {
 				expect(exceptionsMock.business).toHaveBeenCalledWith({
-					message: 'userAgent not allowed to delete this user'
+					message: 'userAgent not allowed to delete this user!'
 				});
 			}
 		});
@@ -517,7 +535,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		test('Should throw a conflict error', async () => {
 			const userEntity = new UserEntity({ id: 1, email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 2, userId: userEntity.getId() });
-			userServiceMock.getById.mockImplementation(async (id: number): Promise<UserEntity | null> => {
+			userServiceMock.getById.mockImplementation(async (id: number, withoutPassword = true): Promise<UserEntity | null> => {
 				if (id === userEntity.getId()) return userEntity;
 				else return null;
 			});

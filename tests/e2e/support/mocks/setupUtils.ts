@@ -14,7 +14,7 @@ import { ErrorInterface } from '@shared/interfaces/errorInterface';
 
 
 export const createNestApplicationOptions = {
-	abortOnError: false,
+	abortOnError: true,
 	snapshot: false,
 	preview: false,
 	forceCloseConnections: true,

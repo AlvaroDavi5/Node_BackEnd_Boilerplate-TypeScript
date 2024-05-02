@@ -55,8 +55,8 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 		);
 	}
 
-	public async getById(id: number, restrictData = true): Promise<UserEntity | null> {
-		const userModel = (restrictData) ? this.ResourceModel.scope('withoutPassword') : this.ResourceModel;
+	public async getById(id: number, withoutPassword = true): Promise<UserEntity | null> {
+		const userModel = (withoutPassword) ? this.ResourceModel.scope('withoutPassword') : this.ResourceModel;
 
 		const result = await userModel.findByPk(
 			id,
@@ -67,8 +67,8 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 		return this.resourceMapper.toEntity(result);
 	}
 
-	public async list(query?: ListQueryInterface, restrictData = true): Promise<PaginationInterface<UserEntity>> {
-		const userModel = (restrictData) ? this.ResourceModel.scope('withoutSensibleData') : this.ResourceModel;
+	public async list(query?: ListQueryInterface, withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> {
+		const userModel = (withoutSensibleData) ? this.ResourceModel.scope('withoutSensibleData') : this.ResourceModel;
 
 		const buildedQuery = this.queryParamsBuilder?.buildParams(query);
 		const { rows, count } = await userModel.findAndCountAll(buildedQuery);

@@ -18,7 +18,7 @@ export default class WebSocketClient {
 		private readonly loggerProvider: LoggerProviderInterface,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
-		const configs: ConfigsInterface['application'] = this.configService.get<any>('application');
+		const configs = this.configService.get<ConfigsInterface['application']>('application')!;
 		const socketUrl = configs.url;
 		const isSocketEnvEnabled = configs.socketEnv === 'enabled';
 

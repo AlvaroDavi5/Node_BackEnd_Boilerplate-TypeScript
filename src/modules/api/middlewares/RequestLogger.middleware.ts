@@ -18,11 +18,11 @@ export default class RequestLoggerMiddleware implements NestMiddleware {
 	public use(request: RequestInterface, response: ResponseInterface, next: NextFunctionInterface) {
 		const method = request.method;
 		const originalUrl = request.originalUrl;
-		const paramsKeys = Object.keys(request.params);
-		const queryKeys = Object.keys(request.query);
+		const pathParamsKeys = Object.keys(request.params);
+		const queryParamsKeys = Object.keys(request.query);
 		const bodyKeys = Object.keys(request.body);
 
-		this.logger.info(`REQUESTED - [${method}] ${originalUrl} { "params": {${paramsKeys}} "query": {${queryKeys}} "body": {${bodyKeys}} }`);
+		this.logger.info(`REQUESTED - [${method}] ${originalUrl} { "pathParams": {${pathParamsKeys}} "queryParams": {${queryParamsKeys}} "body": {${bodyKeys}} }`);
 		next();
 	}
 }

@@ -30,7 +30,7 @@ export default class MongoClient {
 		private readonly configService: ConfigService,
 		private readonly exceptions: Exceptions,
 	) {
-		const { mongo, databases }: ConfigsInterface['data'] = this.configService.get<any>('data');
+		const { mongo, databases } = this.configService.get<ConfigsInterface['data']>('data')!;
 
 		this.mongoClient = new MongoDBClient(String(mongo.uri), {
 			maxConnecting: mongo.maxConnecting,

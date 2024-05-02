@@ -1,6 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { writeFile } from 'fs';
 import { Readable } from 'stream';
 import { Logger } from 'winston';
 import {
@@ -10,6 +9,7 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ConfigsInterface } from '@core/configs/configs.config';
+import Exceptions from '@core/infra/errors/Exceptions';
 import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
 
 
@@ -27,6 +27,7 @@ export default class S3Client {
 		private readonly configService: ConfigService,
 		@Inject(LOGGER_PROVIDER)
 		private readonly loggerProvider: LoggerProviderInterface,
+		private readonly exceptions: Exceptions,
 	) {
 		this.logger = this.loggerProvider.getLogger(S3Client.name);
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
@@ -55,7 +56,6 @@ export default class S3Client {
 	}
 
 	private uploadParams(bucketName: string, fileName: string, fileContent: s3FileContentType, expirationDate?: Date): PutObjectCommandInput {
-
 		const params: PutObjectCommandInput = {
 			Bucket: bucketName,
 			Key: fileName,
@@ -67,7 +67,6 @@ export default class S3Client {
 	}
 
 	private getObjectParams(bucketName: string, objectKey: string): GetObjectCommandInput | DeleteObjectCommandInput {
-
 		const params: GetObjectCommandInput | DeleteObjectCommandInput = {
 			Bucket: bucketName,
 			Key: objectKey,
@@ -171,10 +170,12 @@ export default class S3Client {
 
 		try {
 			const result = await this.s3Client.send(new GetObjectCommand(this.getObjectParams(bucketName, objectKey)));
-			if (result?.ContentLength) {
-				content = result.Body;
-				contentLength = result.ContentLength;
+			if (!result.Body || !result.ContentLength) {
+				throw this.exceptions.internal({ message: 'Empty body' });
 			}
+
+			content = result.Body;
+			contentLength = result.ContentLength;
 		} catch (error) {
 			this.logger.error('Download Error:', error);
 		}

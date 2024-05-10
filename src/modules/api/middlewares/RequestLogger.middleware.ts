@@ -27,7 +27,7 @@ export default class RequestLoggerMiddleware implements NestMiddleware {
 	}
 
 	private maskSensibleData(payload: any) {
-		const sensibleDataFields: string[] = ['password', 'cvv', 'newPassword'];
+		const sensibleDataFields: string[] = ['password', 'newPassword', 'cvv'];
 
 		const payloadKeys = Object.keys(payload);
 		if (payloadKeys.some((key: string) => sensibleDataFields.includes(key))) {

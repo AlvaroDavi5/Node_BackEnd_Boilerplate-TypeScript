@@ -160,10 +160,7 @@
 		"@typescript-eslint/prefer-for-of": "warn",
 		"@typescript-eslint/prefer-function-type": "warn",
 		"@typescript-eslint/prefer-namespace-keyword": "warn",
-		"@typescript-eslint/quotes": [
-			"warn",
-			"single"
-		],
+		"@typescript-eslint/quotes": 1,
 		"@typescript-eslint/unified-signatures": "warn",
 		"@typescript-eslint/triple-slash-reference": [
 			"warn",

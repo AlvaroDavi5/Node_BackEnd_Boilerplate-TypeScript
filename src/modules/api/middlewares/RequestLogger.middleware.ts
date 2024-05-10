@@ -18,11 +18,30 @@ export default class RequestLoggerMiddleware implements NestMiddleware {
 	public use(request: RequestInterface, response: ResponseInterface, next: NextFunctionInterface) {
 		const method = request.method;
 		const originalUrl = request.originalUrl;
-		const pathParamsKeys = Object.keys(request.params);
-		const queryParamsKeys = Object.keys(request.query);
-		const bodyKeys = Object.keys(request.body);
+		const pathParamsPayload = JSON.stringify(this.maskSensibleData(request.params));
+		const queryParamsPayload = JSON.stringify(this.maskSensibleData(request.query));
+		const bodyPayload = JSON.stringify(this.maskSensibleData(request.body));
 
-		this.logger.info(`REQUESTED - [${method}] ${originalUrl} { "pathParams": {${pathParamsKeys}} "queryParams": {${queryParamsKeys}} "body": {${bodyKeys}} }`);
+		this.logger.info(`REQUESTED - [${method}] ${originalUrl} { "pathParams": ${pathParamsPayload} "queryParams": ${queryParamsPayload} "body": ${bodyPayload} }`);
 		next();
+	}
+
+	private maskSensibleData(payload: any) {
+		const sensibleDataFields: string[] = ['password', 'cvv', 'newPassword'];
+
+		const payloadKeys = Object.keys(payload);
+		if (payloadKeys.some((key: string) => sensibleDataFields.includes(key))) {
+			const newPayload = structuredClone(payload);
+
+			sensibleDataFields.forEach((key: string) => {
+				if (newPayload[key] !== undefined) {
+					newPayload[key] = '***';
+				}
+			});
+
+			return newPayload;
+		}
+
+		return payload;
 	}
 }

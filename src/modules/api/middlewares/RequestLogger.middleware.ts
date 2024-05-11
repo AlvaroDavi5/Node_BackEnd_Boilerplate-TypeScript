@@ -1,6 +1,7 @@
 import { Injectable, Inject, NestMiddleware } from '@nestjs/common';
 import { Logger } from 'winston';
 import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import { checkFields, replaceFields } from '@common/utils/objectRecursiveFunctions.util';
 import { RequestInterface, ResponseInterface, NextFunctionInterface } from '@shared/interfaces/endpointInterface';
 
 
@@ -26,22 +27,15 @@ export default class RequestLoggerMiddleware implements NestMiddleware {
 		next();
 	}
 
-	private maskSensibleData(payload: any) {
-		const sensibleDataFields: string[] = ['password', 'newPassword', 'cvv'];
+	private maskSensibleData(data: any) {
+		const sensibleDataFields: string[] = ['password', 'newPassword', 'cvv', 'pin'];
 
-		const payloadKeys = Object.keys(payload);
-		if (payloadKeys.some((key: string) => sensibleDataFields.includes(key))) {
-			const newPayload = structuredClone(payload);
-
-			sensibleDataFields.forEach((key: string) => {
-				if (newPayload[key] !== undefined) {
-					newPayload[key] = '***';
-				}
-			});
-
-			return newPayload;
+		const hasSensibleData: boolean = checkFields(data, sensibleDataFields);
+		if (hasSensibleData) {
+			const newData = structuredClone(data);
+			return replaceFields(newData, sensibleDataFields);
 		}
 
-		return payload;
+		return data;
 	}
 }

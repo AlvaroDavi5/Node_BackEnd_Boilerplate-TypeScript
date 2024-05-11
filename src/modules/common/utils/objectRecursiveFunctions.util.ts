@@ -1,6 +1,6 @@
 
 export function checkFields(obj: any, fieldsToApply: string[]): boolean {
-	let result: boolean = false;
+	let result = false;
 
 	const callback = (payload: any): boolean => {
 		const payloadKeys = Object.keys(payload);

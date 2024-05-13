@@ -157,8 +157,6 @@ ___
 - **Packaging**
 	- Infra Utils Lib Package
 - **Integrations**
-	- [ ] OAuth
-	- [ ] PIX
 	- [Kafka](#to-do)
 - **Tests**
 	* _Integration_

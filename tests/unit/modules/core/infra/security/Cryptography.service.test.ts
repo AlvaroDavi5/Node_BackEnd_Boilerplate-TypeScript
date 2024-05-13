@@ -1,4 +1,4 @@
-import CryptographyService from '../../../../../../src/modules/core/infra/security/Cryptography.service';
+import CryptographyService from '../../../../../../src/modules/core/security/Cryptography.service';
 import configs from '../../../../../../src/modules/core/configs/configs.config';
 
 

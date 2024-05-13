@@ -1,7 +1,7 @@
 import { PipeTransform, ArgumentMetadata } from '@nestjs/common';
 import { Logger } from 'winston';
-import Exceptions from '@core/infra/errors/Exceptions';
-import { generateLogger } from '@core/infra/logging/Logger.provider';
+import Exceptions from '@core/errors/Exceptions';
+import { generateLogger } from '@core/logging/Logger.provider';
 
 
 type dateInputType = (string | Date) | (() => string | Date) | undefined | null

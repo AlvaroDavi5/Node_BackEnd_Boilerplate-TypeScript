@@ -1,9 +1,9 @@
 import { PipeTransform, ArgumentMetadata } from '@nestjs/common';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
-import Exceptions from '@core/infra/errors/Exceptions';
+import Exceptions from '@core/errors/Exceptions';
 import registerEventHookSchema, { RegisterEventHookInterface } from '@app/hook/api/schemas/registerEventHook.schema';
 import { RegisterEventHookInputDto } from '@app/hook/api/dto/HookInput.dto';
-import { generateLogger } from '@core/infra/logging/Logger.provider';
+import { generateLogger } from '@core/logging/Logger.provider';
 
 
 export class RegisterEventHookValidatorPipe implements PipeTransform<RegisterEventHookInputDto, RegisterEventHookInterface> {

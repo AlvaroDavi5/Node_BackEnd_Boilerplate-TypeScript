@@ -1,10 +1,10 @@
 import { PipeTransform, ArgumentMetadata } from '@nestjs/common';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
-import Exceptions from '@core/infra/errors/Exceptions';
+import Exceptions from '@core/errors/Exceptions';
 import listQuerySchema from '@api/schemas/listQuery.schema';
 import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
 import { ListQueryInputDto } from './dto/QueryInput.dto';
-import { generateLogger } from '@core/infra/logging/Logger.provider';
+import { generateLogger } from '@core/logging/Logger.provider';
 
 
 export class ListQueryValidatorPipe implements PipeTransform<ListQueryInputDto, ListQueryInterface> {

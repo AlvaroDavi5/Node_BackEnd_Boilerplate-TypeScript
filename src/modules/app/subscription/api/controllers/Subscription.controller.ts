@@ -7,7 +7,7 @@ import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
 import SubscriptionEntity, { SubscriptionInterface } from '@domain/entities/Subscription.entity';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
 
 
 @ApiTags('Subscriptions')

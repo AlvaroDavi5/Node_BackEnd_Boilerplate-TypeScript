@@ -1,8 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Logger } from 'winston';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
-import SyncCronTask from '@core/infra/cron/tasks/SyncCron.task';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import SyncCronTask from '@core/cron/tasks/SyncCron.task';
 import { CronJobsEnum } from '../cronJobs.enum';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 

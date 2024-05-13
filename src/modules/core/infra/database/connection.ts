@@ -1,8 +1,8 @@
-import { Inject, Provider, Scope } from '@nestjs/common';
+import { Provider, Scope } from '@nestjs/common';
 import { Sequelize } from 'sequelize';
 import { Logger } from 'winston';
 import { config as DBConfig } from './db.config';
-import LoggerProvider, { LOGGER_PROVIDER, LoggerProviderInterface } from '../logging/Logger.provider';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '../../logging/Logger.provider';
 
 
 /* connecting to a database */

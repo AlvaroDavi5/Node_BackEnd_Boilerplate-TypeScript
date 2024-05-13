@@ -1,8 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Sequelize, Association } from 'sequelize';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
-import Exceptions from '@core/infra/errors/Exceptions';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import Exceptions from '@core/errors/Exceptions';
 import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import AbstractRepository from '@core/infra/database/repositories/AbstractRepository.repository';
 import UsersModel from '@core/infra/database/models/Users.model';

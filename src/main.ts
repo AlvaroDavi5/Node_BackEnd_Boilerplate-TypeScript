@@ -10,7 +10,7 @@ import { ProcessEventsEnum, ProcessSignalsEnum, ProcessExitStatusEnum } from '@c
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
 import swaggerSetupConfig from '@core/configs/swaggerSetup.config';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import { ErrorInterface } from '@shared/interfaces/errorInterface';

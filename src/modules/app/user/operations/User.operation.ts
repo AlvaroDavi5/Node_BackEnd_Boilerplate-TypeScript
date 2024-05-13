@@ -4,10 +4,10 @@ import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
 import UserService from '@app/user/services/User.service';
 import UserPreferenceService from '@app/user/services/UserPreference.service';
 import UserStrategy from '@app/user/strategies/User.strategy';
-import Exceptions from '@core/infra/errors/Exceptions';
+import Exceptions from '@core/errors/Exceptions';
 import { UserAuthInterface } from '@shared/interfaces/userAuthInterface';
 import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
-import CryptographyService from '@core/infra/security/Cryptography.service';
+import CryptographyService from '@core/security/Cryptography.service';
 
 
 @Injectable()

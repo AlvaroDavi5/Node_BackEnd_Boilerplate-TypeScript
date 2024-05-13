@@ -4,7 +4,7 @@ import axios, { AxiosInstance } from 'axios';
 import axiosRetry from 'axios-retry';
 import { Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
 import { RestClientResponseInterface, requestMethodType } from '@shared/types/restClientTypes';
 
 

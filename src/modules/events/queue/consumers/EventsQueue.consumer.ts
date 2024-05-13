@@ -3,12 +3,12 @@ import { SqsMessageHandler, SqsConsumerEventHandler } from '@ssut/nestjs-sqs';
 import { Message } from '@aws-sdk/client-sqs';
 import { Logger } from 'winston';
 import MongoClient from '@core/infra/data/Mongo.client';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import { ProcessEventsEnum } from '@common/enums/processEvents.enum';
 import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
 import configs from '@core/configs/configs.config';
-import Exceptions from '@core/infra/errors/Exceptions';
+import Exceptions from '@core/errors/Exceptions';
 
 
 const appConfigs = configs();

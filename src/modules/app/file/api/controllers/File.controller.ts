@@ -18,12 +18,12 @@ import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.deco
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
 import ContentTypeConstants from '@common/constants/ContentType.constants';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
 import ReportsModule from '@app/reports/reports.module';
 import UploadService from '@app/reports/services/Upload.service';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import CryptographyService from '@core/infra/security/Cryptography.service';
+import CryptographyService from '@core/security/Cryptography.service';
 
 
 @ApiTags('Files')

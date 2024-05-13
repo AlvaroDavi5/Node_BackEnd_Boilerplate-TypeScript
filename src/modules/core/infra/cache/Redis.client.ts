@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import IORedis from 'ioredis';
 import { ScanStreamOptions } from 'ioredis/built/types';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import Exceptions from '@core/infra/errors/Exceptions';
+import Exceptions from '@core/errors/Exceptions';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
 

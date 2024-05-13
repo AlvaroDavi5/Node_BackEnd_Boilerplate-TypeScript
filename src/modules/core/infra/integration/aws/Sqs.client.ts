@@ -8,8 +8,8 @@ import {
 	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput, DeleteMessageCommandInput,
 } from '@aws-sdk/client-sqs';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import CryptographyService from '@core/infra/security/Cryptography.service';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import CryptographyService from '@core/security/Cryptography.service';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
 

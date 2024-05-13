@@ -1,8 +1,8 @@
 import { Model, Op, QueryTypes, ModelAttributes, Includeable, InitOptions, FindAndCountOptions, Attributes } from 'sequelize';
 import { Logger } from 'winston';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
-import { LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
-import Exceptions from '@core/infra/errors/Exceptions';
+import { LoggerProviderInterface } from '@core/logging/Logger.provider';
+import Exceptions from '@core/errors/Exceptions';
 import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity';
 import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
 import { constructorType } from '@shared/types/constructorType';

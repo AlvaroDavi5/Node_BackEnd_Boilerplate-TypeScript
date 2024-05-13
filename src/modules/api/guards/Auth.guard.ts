@@ -1,8 +1,8 @@
 import { Injectable, Inject, CanActivate, ExecutionContext } from '@nestjs/common';
 import { Logger } from 'winston';
-import Exceptions from '@core/infra/errors/Exceptions';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
-import CryptographyService from '@core/infra/security/Cryptography.service';
+import Exceptions from '@core/errors/Exceptions';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import CryptographyService from '@core/security/Cryptography.service';
 import { RequestInterface } from '@shared/interfaces/endpointInterface';
 
 

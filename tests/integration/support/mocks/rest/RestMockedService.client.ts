@@ -1,5 +1,5 @@
 import { Inject, Injectable } from '@nestjs/common';
-import { LOGGER_PROVIDER } from '@core/infra/logging/Logger.provider';
+import { LOGGER_PROVIDER } from '@core/logging/Logger.provider';
 import { MockObservableInterface } from '../mockObservable';
 import LoggerProvider from '../logging/Logger.provider';
 

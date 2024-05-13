@@ -1,6 +1,6 @@
 import { v4 as uuidV4 } from 'uuid';
 import configs from 'src/modules/core/configs/configs.config';
-import { LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import { LoggerProviderInterface } from '@core/logging/Logger.provider';
 
 
 export const configServiceMock = {

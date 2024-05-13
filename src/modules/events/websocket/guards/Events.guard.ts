@@ -4,8 +4,8 @@ import { Observable } from 'rxjs';
 import { Socket as ServerSocket } from 'socket.io';
 import { Logger } from 'winston';
 import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
-import Exceptions from '@core/infra/errors/Exceptions';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import Exceptions from '@core/errors/Exceptions';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
 
 
 @Injectable()

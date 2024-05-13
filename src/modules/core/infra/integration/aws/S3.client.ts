@@ -9,8 +9,8 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import Exceptions from '@core/infra/errors/Exceptions';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import Exceptions from '@core/errors/Exceptions';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
 
 
 export type s3FileContentType = string | Uint8Array | Buffer | Readable | ReadableStream | Blob;

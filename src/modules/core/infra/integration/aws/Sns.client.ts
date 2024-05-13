@@ -8,9 +8,9 @@ import {
 	CreateTopicCommandInput, SubscribeCommandInput, PublishCommandInput,
 } from '@aws-sdk/client-sns';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import CryptographyService from '@core/infra/security/Cryptography.service';
+import CryptographyService from '@core/security/Cryptography.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
 
 
 export type protocolType = 'email' | 'sms' | 'http' | 'https' | 'sqs' | 'lambda' | 'application'

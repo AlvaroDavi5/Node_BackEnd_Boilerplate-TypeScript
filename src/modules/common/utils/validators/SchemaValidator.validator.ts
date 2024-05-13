@@ -1,7 +1,7 @@
 import { ArgumentMetadata } from '@nestjs/common';
 import { Schema } from 'joi';
 import { Logger } from 'winston';
-import Exceptions from '@core/infra/errors/Exceptions';
+import Exceptions from '@core/errors/Exceptions';
 
 
 export default class SchemaValidator<S> {

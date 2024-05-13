@@ -1,11 +1,11 @@
 import { PipeTransform, ArgumentMetadata } from '@nestjs/common';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
-import Exceptions from '@core/infra/errors/Exceptions';
+import Exceptions from '@core/errors/Exceptions';
 import createUserSchema, { CreateUserSchemaInterface } from '@app/user/api/schemas/user/createUser.schema';
 import updateUserSchema, { UpdateUserSchemaInterface } from '@app/user/api/schemas/user/updateUser.schema';
 import loginUserSchema, { LoginUserSchemaInterface } from '@app/user/api/schemas/user/loginUser.schema';
 import { CreateUserInputDto, UpdateUserInputDto, LoginUserInputDto } from '@app/user/api/dto/UserInput.dto';
-import { generateLogger } from '@core/infra/logging/Logger.provider';
+import { generateLogger } from '@core/logging/Logger.provider';
 
 
 export class CreateUserValidatorPipe implements PipeTransform<CreateUserInputDto, CreateUserSchemaInterface> {

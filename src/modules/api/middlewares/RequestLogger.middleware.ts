@@ -1,6 +1,6 @@
 import { Injectable, Inject, NestMiddleware } from '@nestjs/common';
 import { Logger } from 'winston';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
 import { checkFields, replaceFields } from '@common/utils/objectRecursiveFunctions.util';
 import { RequestInterface, ResponseInterface, NextFunctionInterface } from '@shared/interfaces/endpointInterface';
 

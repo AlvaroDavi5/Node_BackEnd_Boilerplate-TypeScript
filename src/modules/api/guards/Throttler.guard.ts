@@ -1,8 +1,8 @@
 import { Injectable, ExecutionContext } from '@nestjs/common';
 import { ThrottlerGuard, ThrottlerOptions } from '@nestjs/throttler';
 import { Logger } from 'winston';
-import Exceptions from '@core/infra/errors/Exceptions';
-import { generateLogger } from '@core/infra/logging/Logger.provider';
+import Exceptions from '@core/errors/Exceptions';
+import { generateLogger } from '@core/logging/Logger.provider';
 
 
 @Injectable()

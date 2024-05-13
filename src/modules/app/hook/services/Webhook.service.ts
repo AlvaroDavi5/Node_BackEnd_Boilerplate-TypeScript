@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import CryptographyService from '@core/infra/security/Cryptography.service';
+import CryptographyService from '@core/security/Cryptography.service';
 import RestMockedServiceClient from '@core/infra/integration/rest/RestMockedService.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';

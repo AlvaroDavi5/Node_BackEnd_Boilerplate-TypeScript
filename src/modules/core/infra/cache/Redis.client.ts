@@ -90,7 +90,7 @@ export default class RedisClient {
 	}
 
 	public async set(key: string, value: object, ttl = 30): Promise<string> {
-		const result = await this.redisClient.set(String(key), this.dataParserHelper.toString(value) ?? '{}');
+		const result = await this.redisClient.set(String(key), this.dataParserHelper.toString(value));
 		await this.redisClient.expire(String(key), Number(ttl)); // [key] expires in [ttl] seconds
 		return result;
 	}

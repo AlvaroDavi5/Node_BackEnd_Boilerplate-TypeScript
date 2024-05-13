@@ -35,7 +35,7 @@ export default class WebSocketClient {
 	}
 
 	private formatMessageBeforeSend(message: unknown): string {
-		return this.dataParserHelper.toString(message) ?? '{}';
+		return this.dataParserHelper.toString(message);
 	}
 
 	// send message to server

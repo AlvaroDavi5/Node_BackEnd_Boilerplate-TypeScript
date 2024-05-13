@@ -127,9 +127,7 @@ export default class UserService {
 				message: 'Invalid password',
 			});
 
-		const splittedUserPassword = userPassword.split('|');
-		const salt = splittedUserPassword[0];
-		const hash = splittedUserPassword[1];
+		const [salt, hash] = userPassword.split('|');
 
 		if (!salt.length || !hash.length)
 			throw this.exceptions.internal({

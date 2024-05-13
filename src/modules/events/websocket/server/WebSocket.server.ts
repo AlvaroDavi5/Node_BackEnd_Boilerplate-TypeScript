@@ -51,7 +51,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 	}
 
 	private formatMessageBeforeSendHelper(message: unknown): string {
-		return this.dataParserHelper.toString(message) ?? '{}';
+		return this.dataParserHelper.toString(message);
 	}
 
 	public afterInit(server: SocketIoServer): void {

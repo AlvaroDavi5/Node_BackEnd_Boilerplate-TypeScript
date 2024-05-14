@@ -14,7 +14,7 @@ export default class DataParserHelper {
 		this.logger = this.loggerProvider.getLogger(DataParserHelper.name);
 	}
 
-	public toString(data: unknown): string | null {
+	public toString(data: unknown): string {
 		let result = null;
 
 		switch (typeof data) {
@@ -31,7 +31,10 @@ export default class DataParserHelper {
 			result = data;
 			break;
 		case 'object':
-			result = (JSON.stringify(data) || data?.toString()) ?? '';
+			if (!data)
+				result = '';
+			else
+				result = (JSON.stringify(data) || data?.toString()) ?? '';
 			break;
 		case 'symbol':
 			result = data.toString();

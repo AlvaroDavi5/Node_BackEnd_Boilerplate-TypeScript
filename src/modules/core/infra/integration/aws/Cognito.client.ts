@@ -1,13 +1,12 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Logger } from 'winston';
 import {
 	CognitoIdentityProviderClient, CognitoIdentityProviderClientConfig, UserPoolDescriptionType,
 	ListUserPoolsCommand, CreateUserPoolCommand, DeleteUserPoolCommand, CreateUserPoolClientCommand, DeleteUserPoolClientCommand, AdminCreateUserCommand, AdminGetUserCommand, AdminDeleteUserCommand, SignUpCommand, AdminConfirmSignUpCommand,
 	SignUpCommandInput,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import LoggerService from '@core/logging/Logger.service';
 
 
 @Injectable()
@@ -17,14 +16,11 @@ export default class CognitoClient {
 	public readonly userPoolId: string;
 	private readonly clientId: string;
 	private readonly cognitoClient: CognitoIdentityProviderClient;
-	private readonly logger: Logger;
 
 	constructor(
 		private readonly configService: ConfigService,
-		@Inject(LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
+		private readonly logger: LoggerService,
 	) {
-		this.logger = this.loggerProvider.getLogger(CognitoClient.name);
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
 		const {

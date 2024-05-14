@@ -1,13 +1,13 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { readFileSync, createReadStream, ReadStream } from 'fs';
 import { join } from 'path';
-import { Logger } from 'winston';
 import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import { LoggerInterface } from '@core/logging/logger';
 
 
 @Injectable()
 export default class FileReaderHelper {
-	private readonly logger: Logger;
+	private readonly logger: LoggerInterface;
 
 	constructor(
 		@Inject(LOGGER_PROVIDER)

@@ -1,6 +1,5 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Logger } from 'winston';
 import {
 	SNSClient, SNSClientConfig, Topic,
 	ListTopicsCommand, CreateTopicCommand, DeleteTopicCommand,
@@ -9,8 +8,8 @@ import {
 } from '@aws-sdk/client-sns';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import CryptographyService from '@core/security/Cryptography.service';
+import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
 
 
 export type protocolType = 'email' | 'sms' | 'http' | 'https' | 'sqs' | 'lambda' | 'application'
@@ -23,16 +22,13 @@ export default class SnsClient {
 	private readonly awsConfig: SNSClientConfig;
 	private readonly messageGroupId: string;
 	private readonly snsClient: SNSClient;
-	private readonly logger: Logger;
 
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly cryptographyService: CryptographyService,
-		@Inject(LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
+		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
-		this.logger = this.loggerProvider.getLogger(SnsClient.name);
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
 		const {

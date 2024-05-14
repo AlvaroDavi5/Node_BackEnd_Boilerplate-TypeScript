@@ -2,13 +2,13 @@ import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { Collection, Db, ObjectId } from 'mongodb';
-import { Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import WebSocketClient from '@events/websocket/client/WebSocket.client';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import { LoggerInterface } from '@core/logging/logger';
 import SubscriptionEntity, { SubscriptionInterface } from '@domain/entities/Subscription.entity';
 import { CacheEnum } from '@domain/enums/cache.enum';
 import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
@@ -17,7 +17,7 @@ import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
 @Injectable()
 export default class SubscriptionService implements OnModuleInit {
 	private webSocketClient!: WebSocketClient;
-	private readonly logger: Logger;
+	private readonly logger: LoggerInterface;
 	public readonly subscriptionsTimeToLive: number;
 	public readonly datalakeDatabase: Db;
 	public readonly subscriptionsCollection: Collection;

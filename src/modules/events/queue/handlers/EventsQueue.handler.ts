@@ -1,13 +1,13 @@
 import { Injectable, Inject, OnModuleInit, ArgumentMetadata } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { Message } from '@aws-sdk/client-sqs';
-import { Logger } from 'winston';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
 import WebhookService from '@app/hook/services/Webhook.service';
 import MongoClient from '@core/infra/data/Mongo.client';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import { LoggerInterface } from '@core/logging/logger';
 import Exceptions from '@core/errors/Exceptions';
 import eventSchema, { EventSchemaInterface } from './schemas/event.schema';
 import { EventsEnum } from '@domain/enums/events.enum';
@@ -19,7 +19,7 @@ export default class EventsQueueHandler implements OnModuleInit {
 	private subscriptionService!: SubscriptionService;
 	private webhookService!: WebhookService;
 	private readonly schemaValidator: SchemaValidator<EventSchemaInterface>;
-	private readonly logger: Logger;
+	private readonly logger: LoggerInterface;
 
 	constructor(
 		private readonly moduleRef: ModuleRef,

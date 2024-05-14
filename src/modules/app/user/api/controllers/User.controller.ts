@@ -6,7 +6,6 @@ import {
 	UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
-import { Logger } from 'winston';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import UserEntity, { UserEntityList, UserInterface } from '@domain/entities/User.entity';
@@ -18,6 +17,7 @@ import { ListQueryInputDto } from '@api/pipes/dto/QueryInput.dto';
 import { CreateUserValidatorPipe, UpdateUserValidatorPipe, LoginUserValidatorPipe } from '@app/user/api/pipes/UserValidator.pipe';
 import { CreateUserInputDto, UpdateUserInputDto, LoginUserInputDto } from '@app/user/api/dto/UserInput.dto';
 import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import { LoggerInterface } from '@core/logging/logger';
 import { RequestInterface } from '@shared/interfaces/endpointInterface';
 import { PaginationInterface } from '@shared/interfaces/listPaginationInterface';
 
@@ -28,7 +28,7 @@ import { PaginationInterface } from '@shared/interfaces/listPaginationInterface'
 @authSwaggerDecorator()
 @exceptionsResponseDecorator()
 export default class UserController {
-	private readonly logger: Logger;
+	private readonly logger: LoggerInterface;
 
 	constructor(
 		private readonly userOperation: UserOperation,

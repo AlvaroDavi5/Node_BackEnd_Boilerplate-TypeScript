@@ -36,6 +36,7 @@ export default class LoggerService implements LoggerInterface {
 		const loggerOptions = getLoggerOptions(
 			applicationConfigs.name,
 			applicationConfigs.environment,
+			undefined as any,
 			applicationConfigs.logsPath,
 			defaultFormat,
 		);
@@ -62,10 +63,11 @@ export default class LoggerService implements LoggerInterface {
 	}
 
 	private buildLog(args: any[]): { message: string, meta: MetadataInterface } {
-		const contextName = typeof this.inquirer === 'string'
+		const inquirerName = typeof this.inquirer === 'string'
 			? this.inquirer
 			: this.inquirer?.constructor?.name;
-		this.setContextName(contextName ?? 'DefaultContext');
+		const contextName = this.getContextName() ?? inquirerName;
+		this.setContextName(contextName);
 
 		let message = '';
 		const metadata: MetadataInterface = {

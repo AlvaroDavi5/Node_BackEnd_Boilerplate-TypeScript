@@ -1,63 +1,15 @@
 import { Provider, Scope } from '@nestjs/common';
-import { createLogger, transports, format, Logger } from 'winston';
-import { ConfigService } from '@nestjs/config';
-import { ConfigsInterface } from '@core/configs/configs.config';
-import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import { createLogger, format, Logger } from 'winston';
+import LoggerService from '@core/logging/Logger.service';
+import {
+	LoggerInterface,
+	getLoggerOptions, getDefaultFormat,
+} from './logger';
+import { dataParserHelperMock } from '@dev/mocks/mockedModules';
 
 
-function getMessageFormatter(context: string, parser: (data: unknown) => string | null) {
-	return format.printf((msg) => {
-		const { level, timestamp, message, stack } = msg;
-		let log = typeof message === 'object'
-			? parser(msg.message)
-			: message;
-
-		if (stack) {
-			log = stack;
-		}
-
-		return `${timestamp} | ${level} [${context}]: ${log}`;
-	});
-}
-
-function getDefaultFormat(stackErrorVisible: boolean, defaultMessageFormatter: any) {
-	return format.combine(
-		format.timestamp(),
-		format.errors({ stack: stackErrorVisible }),
-		defaultMessageFormatter,
-	);
-}
-
-function getLoggerOptions(serviceName: string, environment: string, logsPath: string, defaultFormat: any) {
-	return {
-		format: format.combine(
-			defaultFormat,
-			format.json(),
-		),
-		defaultMeta: {
-			service: serviceName,
-			env: environment,
-		},
-		transports: [
-			new transports.Console({
-				level: 'debug', // error,warn,info,debug
-				format: format.combine(
-					format.colorize(),
-					defaultFormat,
-				),
-			}),
-			new transports.File({
-				level: 'info',
-				filename: logsPath,
-			}),
-		],
-		exitOnError: false,
-	};
-}
-
-type getLoggerType = (context: string) => Logger;
 export interface LoggerProviderInterface {
-	getLogger: getLoggerType,
+	getLogger: (context: string) => LoggerInterface,
 }
 
 export const LOGGER_PROVIDER = Symbol('LoggerProvider');
@@ -66,37 +18,12 @@ const LoggerProvider: Provider = {
 	provide: LOGGER_PROVIDER,
 	scope: Scope.DEFAULT,
 
-	inject: [
-		ConfigService,
-		DataParserHelper,
-	],
-	useFactory: (
-		configService: ConfigService,
-		dataParserHelper: DataParserHelper,
-		...args: any[]
-	): LoggerProviderInterface => {
-		const applicationConfigs = configService.get<ConfigsInterface['application']>('application')!;
+	inject: [],
+	useFactory: (...args: any[]): LoggerProviderInterface => {
 
 		return {
-			getLogger: (context: string): Logger => {
-				const messageFormatter = getMessageFormatter(
-					context,
-					dataParserHelper.toString,
-				);
-
-				const defaultFormat = getDefaultFormat(
-					applicationConfigs.stackErrorVisible === 'true',
-					messageFormatter,
-				);
-
-				const loggerOptions = getLoggerOptions(
-					applicationConfigs.name,
-					applicationConfigs.environment,
-					applicationConfigs.logsPath,
-					defaultFormat,
-				);
-
-				return createLogger(loggerOptions);
+			getLogger: (context: string): LoggerInterface => {
+				return generateLogger(context);
 			}
 		};
 	},
@@ -107,16 +34,22 @@ const LoggerProvider: Provider = {
 export default LoggerProvider;
 
 export function generateLogger(context: string): Logger {
-	const messageFormatter = getMessageFormatter(
-		context,
-		(data: any) => {
-			try {
-				return JSON.stringify(data) ?? '';
-			} catch (error) {
-				return data?.toString() ?? '';
-			}
-		},
-	);
+
+	const messageFormatter = format.printf((info) => {
+		const { level, message, timestamp, stack, context, meta } = info;
+		const logContext = (context || meta?.context) ?? 'DefaultContext';
+		const requestId = meta?.requestId;
+		const logStack = stack ?? meta?.stack;
+
+		let log = `${dataParserHelperMock.toString(message)}`;
+
+		if (requestId)
+			log += ` - requestId: ${requestId}`;
+		if (logStack)
+			log += `\n${logStack}`;
+
+		return `${timestamp} | ${level} [${logContext}]: ${log}`;
+	});
 
 	const defaultFormat = getDefaultFormat(
 		(process.env.SHOW_ERROR_STACK ?? 'true') === 'true',
@@ -126,6 +59,7 @@ export function generateLogger(context: string): Logger {
 	const loggerOptions = getLoggerOptions(
 		(process.env.APP_NAME ?? 'Node Boilerplate'),
 		(process.env.NODE_ENV ?? 'dev'),
+		context,
 		(process.env.APP_LOGS_PATH ?? './logs/logs.log'),
 		defaultFormat,
 	);

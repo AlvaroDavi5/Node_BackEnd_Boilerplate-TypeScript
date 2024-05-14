@@ -9,7 +9,6 @@ import { LazyModuleLoader } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { ApiOperation, ApiTags, ApiBody, ApiHeaders, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Logger } from 'winston';
 import { Multer } from 'multer';
 import { Response } from 'express';
 import { Readable } from 'stream';
@@ -19,6 +18,7 @@ import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
 import ContentTypeConstants from '@common/constants/ContentType.constants';
 import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import { LoggerInterface } from '@core/logging/logger';
 import ReportsModule from '@app/reports/reports.module';
 import UploadService from '@app/reports/services/Upload.service';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
@@ -33,7 +33,7 @@ import CryptographyService from '@core/security/Cryptography.service';
 @exceptionsResponseDecorator()
 export default class FileController implements OnModuleInit {
 	private uploadService!: UploadService;
-	private readonly logger: Logger;
+	private readonly logger: LoggerInterface;
 	private readonly isTestEnv: boolean; // ! lazy loads not works in test environment
 
 	constructor(

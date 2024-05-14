@@ -1,13 +1,13 @@
 import { Injectable, Inject, NestMiddleware } from '@nestjs/common';
-import { Logger } from 'winston';
 import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import { LoggerInterface } from '@core/logging/logger';
 import { checkFields, replaceFields } from '@common/utils/objectRecursiveFunctions.util';
 import { RequestInterface, ResponseInterface, NextFunctionInterface } from '@shared/interfaces/endpointInterface';
 
 
 @Injectable()
 export default class RequestLoggerMiddleware implements NestMiddleware {
-	private readonly logger: Logger;
+	private readonly logger: LoggerInterface;
 
 	constructor(
 		@Inject(LOGGER_PROVIDER)
@@ -23,7 +23,8 @@ export default class RequestLoggerMiddleware implements NestMiddleware {
 		const queryParamsPayload = JSON.stringify(this.maskSensibleData(request.query));
 		const bodyPayload = JSON.stringify(this.maskSensibleData(request.body));
 
-		this.logger.info(`REQUESTED - [${method}] ${originalUrl} { "pathParams": ${pathParamsPayload} "queryParams": ${queryParamsPayload} "body": ${bodyPayload} }`);
+		this.logger.http(`REQUESTED - [${method}] ${originalUrl} { "pathParams": ${pathParamsPayload} "queryParams": ${queryParamsPayload} "body": ${bodyPayload} }`);
+
 		next();
 	}
 

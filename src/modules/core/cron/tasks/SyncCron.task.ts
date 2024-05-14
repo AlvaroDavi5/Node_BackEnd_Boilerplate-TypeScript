@@ -1,18 +1,16 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Sequelize } from 'sequelize';
-import { Logger } from 'winston';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import WebSocketClient from '@events/websocket/client/WebSocket.client';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import LoggerService from '@core/logging/Logger.service';
 import { DATABASE_CONNECTION_PROVIDER, testConnection, syncConnection } from '@core/infra/database/connection';
 
 
 @Injectable()
 export default class SyncCronTask {
 	public readonly name: string;
-	private readonly logger: Logger;
 
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER)
@@ -21,11 +19,9 @@ export default class SyncCronTask {
 		private readonly redisClient: RedisClient,
 		private readonly webSocketServer: WebSocketServer,
 		private readonly webSocketClient: WebSocketClient,
-		@Inject(LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
+		private readonly logger: LoggerService,
 	) {
 		this.name = SyncCronTask.name;
-		this.logger = this.loggerProvider.getLogger(this.name);
 	}
 
 	public async execute(): Promise<void> {

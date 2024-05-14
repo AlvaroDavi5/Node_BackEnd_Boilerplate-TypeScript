@@ -1,11 +1,11 @@
 import { Injectable, Inject, forwardRef } from '@nestjs/common';
-import { Logger } from 'winston';
 import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import { LoggerInterface } from '@core/logging/logger';
 
 
 @Injectable()
 export default class DataParserHelper {
-	private readonly logger: Logger;
+	private readonly logger: LoggerInterface;
 
 	constructor(
 		@Inject(forwardRef(() => LOGGER_PROVIDER)) // ? resolve circular dependency

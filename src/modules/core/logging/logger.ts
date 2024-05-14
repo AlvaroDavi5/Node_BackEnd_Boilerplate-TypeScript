@@ -1,7 +1,6 @@
 import { transports, format } from 'winston';
 
 
-
 export enum LogLevelEnum {
 	ERROR = 'error',
 	WARN = 'warn',
@@ -27,20 +26,21 @@ export interface MetadataInterface {
 	stack?: string | string[] | object[],
 }
 
-export function getMessageFormatter(parser: (data: unknown) => string | null) {
+export function getMessageFormatter(parser: (data: unknown) => string) {
 	return format.printf((info) => {
-		const { level, message, timestamp, stack, meta } = info;
-		const context = meta?.context ?? 'DefaultContext';
+		const { level, message, timestamp, stack, context, meta } = info;
+		const logContext = (context || meta?.context) ?? 'DefaultContext';
 		const requestId = meta?.requestId;
+		const logStack = stack ?? meta?.stack;
 
 		let log = `${parser(message)}`;
 
 		if (requestId)
 			log += ` - requestId: ${requestId}`;
-		if (stack)
-			log += `\n${stack}`;
+		if (logStack)
+			log += `\n${logStack}`;
 
-		return `${timestamp} | ${level} [${context}]: ${log}`;
+		return `${timestamp} | ${level} [${logContext}]: ${log}`;
 	});
 }
 
@@ -52,13 +52,14 @@ export function getDefaultFormat(stackErrorVisible: boolean, defaultMessageForma
 	);
 }
 
-export function getLoggerOptions(serviceName: string, environment: string, logsPath: string, defaultFormat: any) {
+export function getLoggerOptions(serviceName: string, environment: string, context: string, logsPath: string, defaultFormat: any) {
 	return {
 		format: format.combine(
 			defaultFormat,
 			format.json(),
 		),
 		defaultMeta: {
+			context: context,
 			service: serviceName,
 			env: environment,
 		},

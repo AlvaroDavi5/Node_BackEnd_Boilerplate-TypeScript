@@ -12,6 +12,7 @@ import configs from '@core/configs/configs.config';
 import LifecycleService from '@core/start/Lifecycle.service';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerProvider from '@core/logging/Logger.provider';
+import LoggerService from '@core/logging/Logger.service';
 import CryptographyService from '@core/security/Cryptography.service';
 import DatabaseConnectionProvider from '@core/infra/database/connection';
 import RedisClient from '@core/infra/cache/Redis.client';
@@ -85,6 +86,7 @@ const requestRateConstants = new RequestRateConstants();
 		LifecycleService,
 		Exceptions,
 		LoggerProvider,
+		LoggerService,
 		CryptographyService,
 		DatabaseConnectionProvider,
 		RedisClient,
@@ -100,6 +102,7 @@ const requestRateConstants = new RequestRateConstants();
 	exports: [
 		Exceptions,
 		LoggerProvider,
+		LoggerService,
 		CryptographyService,
 		DatabaseConnectionProvider,
 		RedisClient,

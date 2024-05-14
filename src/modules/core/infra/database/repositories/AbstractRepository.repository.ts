@@ -1,7 +1,7 @@
 import { Model, Op, QueryTypes, ModelAttributes, Includeable, InitOptions, FindAndCountOptions, Attributes } from 'sequelize';
-import { Logger } from 'winston';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { LoggerProviderInterface } from '@core/logging/Logger.provider';
+import { LoggerInterface } from '@core/logging/logger';
 import Exceptions from '@core/errors/Exceptions';
 import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity';
 import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
@@ -26,7 +26,7 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 	protected queryOptions: { include: Includeable[] };
 	protected exceptions: Exceptions;
 	protected dateGeneratorHelper: DateGeneratorHelper;
-	protected logger: Logger;
+	protected logger: LoggerInterface;
 
 	// // ------ Associations Attribute ------
 	public static associations: any = {};

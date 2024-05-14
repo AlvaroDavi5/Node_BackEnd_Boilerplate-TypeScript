@@ -2,15 +2,15 @@ import { Inject, Injectable, CanActivate, ExecutionContext } from '@nestjs/commo
 import { WsException } from '@nestjs/websockets';
 import { Observable } from 'rxjs';
 import { Socket as ServerSocket } from 'socket.io';
-import { Logger } from 'winston';
 import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
 import Exceptions from '@core/errors/Exceptions';
 import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import { LoggerInterface } from '@core/logging/logger';
 
 
 @Injectable()
 export default class EventsGuard implements CanActivate {
-	private readonly logger: Logger;
+	private readonly logger: LoggerInterface;
 
 	constructor(
 		private readonly exceptions: Exceptions,

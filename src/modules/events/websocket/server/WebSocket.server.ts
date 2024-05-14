@@ -6,13 +6,13 @@ import {
 	OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Server as SocketIoServer, Socket as ServerSocket } from 'socket.io';
-import { Logger } from 'winston';
 import { EventsEnum } from '@domain/enums/events.enum';
 import { WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/webSocketEvents.enum';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
 import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
 import EventsGuard from '@events/websocket/guards/Events.guard';
 import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import { LoggerInterface } from '@core/logging/logger';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 
@@ -30,7 +30,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 	private server!: SocketIoServer;
 
 	private subscriptionService!: SubscriptionService;
-	private readonly logger: Logger;
+	private readonly logger: LoggerInterface;
 
 	constructor(
 		private readonly moduleRef: ModuleRef,

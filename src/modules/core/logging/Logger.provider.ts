@@ -1,6 +1,5 @@
 import { Provider, Scope } from '@nestjs/common';
 import { createLogger, format, Logger } from 'winston';
-import LoggerService from '@core/logging/Logger.service';
 import {
 	LoggerInterface,
 	getLoggerOptions, getDefaultFormat,

@@ -1,14 +1,15 @@
 import { INQUIRER } from '@nestjs/core';
-import { Injectable, Inject, forwardRef, Scope } from '@nestjs/common';
+import { Injectable, Inject, Provider, Scope } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { createLogger, Logger } from 'winston';
+import { createLogger, format, Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import { wrapperType } from '@shared/types/constructorType';
 import {
 	LoggerInterface, LogLevelEnum, MetadataInterface,
 	getLoggerOptions, getDefaultFormat, getMessageFormatter
 } from './logger';
+import { wrapperType } from '@shared/types/constructorType';
+import { dataParserHelperMock } from '@dev/mocks/mockedModules';
 
 
 @Injectable({ scope: Scope.TRANSIENT })
@@ -21,8 +22,9 @@ export default class LoggerService implements LoggerInterface {
 		@Inject(INQUIRER) // ? get inquirer class
 		private readonly inquirer: string | object,
 		private readonly configService: ConfigService,
-		@Inject(forwardRef(() => DataParserHelper)) // ? resolve circular dependency
-		private readonly dataParserHelper: wrapperType<DataParserHelper>,
+		// @Inject(forwardRef(() => DataParserHelper)) // ? resolve circular dependency
+		// private readonly dataParserHelper: wrapperType<DataParserHelper>,
+		private readonly dataParserHelper: DataParserHelper,
 	) {
 		const applicationConfigs = this.configService.get<ConfigsInterface['application']>('application')!;
 
@@ -78,7 +80,8 @@ export default class LoggerService implements LoggerInterface {
 		const separator = args.length > 1 ? ' ' : '';
 		args.forEach(arg => {
 			if (arg instanceof Error) {
-				message += `${arg.name}: ${arg.message}${separator}`;
+				const errorName = arg.name.length > 0 ? `\x1b[0;30m${arg.name}\x1b[0m - ` : '';
+				message += `${errorName}${arg.message}${separator}`;
 				if (arg.stack)
 					metadata.stack = arg.stack;
 			}
@@ -154,3 +157,46 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 }
+
+export const REQUEST_LOGGER_PROVIDER = Symbol('RequestLoggerProvider');
+export const RequestLoggerProvider: Provider = {
+	provide: REQUEST_LOGGER_PROVIDER,
+	scope: Scope.REQUEST,
+
+	inject: [
+		INQUIRER,
+		ConfigService,
+	],
+	useFactory: (
+		inquirer: string | object,
+		configService: ConfigService,
+	): LoggerInterface => {
+		return new LoggerService(inquirer, configService, dataParserHelperMock as any);
+	},
+
+	durable: false,
+};
+
+export const SINGLETON_LOGGER_PROVIDER = Symbol('SingletonLoggerProvider');
+export interface LoggerProviderInterface {
+	getLogger: (context: string) => LoggerInterface,
+}
+export const SingletonLoggerProvider: Provider = {
+	provide: SINGLETON_LOGGER_PROVIDER,
+	scope: Scope.DEFAULT,
+
+	inject: [
+		ConfigService,
+	],
+	useFactory: (
+		configService: ConfigService,
+	): LoggerProviderInterface => {
+		return {
+			getLogger: (context: string): LoggerInterface => {
+				return new LoggerService(context, configService, dataParserHelperMock as any);
+			},
+		};
+	},
+
+	durable: false,
+};

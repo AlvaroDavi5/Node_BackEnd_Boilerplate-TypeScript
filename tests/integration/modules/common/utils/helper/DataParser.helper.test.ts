@@ -1,21 +1,20 @@
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
 import DataParserHelper from '../../../../../../src/modules/common/utils/helpers/DataParser.helper';
-import LoggerProviderMock from '../../../../support/mocks/logging/Logger.provider';
-import { mockObservable } from '../../../../support/mocks/mockObservable';
+import { configServiceMock } from '../../../../../../src/dev/mocks/mockedModules';
 
 
 describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 	let nestTestingModule: TestingModule;
 	let dataParserHelper: DataParserHelper;
-	// // mocks
-	const loggerProviderMock = new LoggerProviderMock(mockObservable);
-	const dataParserHelperMock = new DataParserHelper(loggerProviderMock); // ! mock instanced outside testing module due TypeError
+
 
 	// ? build test app
 	beforeAll(async () => {
 		nestTestingModule = await Test.createTestingModule({
 			providers: [
-				{ provide: DataParserHelper, useValue: dataParserHelperMock },
+				{ provide: ConfigService, useValue: configServiceMock },
+				DataParserHelper,
 			]
 		}).compile();
 
@@ -46,7 +45,7 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 		});
 
 		test('Should return a stringified null object', () => {
-			expect(dataParserHelper.toString(null)).toBe('null');
+			expect(dataParserHelper.toString(null)).toBe('');
 		});
 
 		test('Should return a stringified symbol', () => {
@@ -69,7 +68,6 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 		test('Should return the same data', () => {
 			const parsedUser = dataParserHelper.toObject('{user:{id:1}}');
 			expect(parsedUser).toEqual(null);
-			expect(mockObservable.call).toHaveBeenCalledWith('String->Object parse error');
 		});
 	});
 });

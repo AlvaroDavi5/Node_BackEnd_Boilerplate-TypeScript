@@ -3,7 +3,7 @@ import { ModuleRef } from '@nestjs/core';
 import { CreateConnectionInputDto, UpdateConnectionInputDto } from '../dto/ConnectionInput.dto';
 import SubscriptionEntity from '@domain/entities/Subscription.entity';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
-import Exceptions from '@core/infra/errors/Exceptions';
+import Exceptions from '@core/errors/Exceptions';
 
 
 @Injectable()

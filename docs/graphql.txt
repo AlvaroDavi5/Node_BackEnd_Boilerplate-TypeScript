@@ -1,0 +1,25 @@
+
+query {
+	findConnections
+	{
+		databaseId,
+		subscriptionId,
+		clientId,
+		createdAt,
+		newConnectionsListen,
+	}
+}
+
+mutation {
+	createConnection(createConnectionInput: {
+		subscriptionId: "xSFPA_XAuTtAB",
+		clientId: "Alvaro#5",
+		newConnectionsListen: true
+	}){
+		databaseId,
+		subscriptionId,
+		clientId,
+		newConnectionsListen,
+		createdAt
+	}
+}

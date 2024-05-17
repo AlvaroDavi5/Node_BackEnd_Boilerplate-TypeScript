@@ -1,6 +1,6 @@
 import { INestApplication } from '@nestjs/common';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import readPackageInfo from '@common/utils/PackageInfoReader.util';
+import readPackageInfo from '@common/utils/packageInfoReader.util';
 
 
 export default (nestApp: INestApplication<any>): void => {

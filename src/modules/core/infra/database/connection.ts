@@ -1,8 +1,9 @@
-import { Inject, Provider, Scope } from '@nestjs/common';
+import { Provider, Scope } from '@nestjs/common';
 import { Sequelize } from 'sequelize';
 import { Logger } from 'winston';
 import { config as DBConfig } from './db.config';
-import LoggerProvider, { LOGGER_PROVIDER, LoggerProviderInterface } from '../logging/Logger.provider';
+import LoggerService from '@core/logging/Logger.service';
+import { LoggerInterface } from '@core/logging/logger';
 
 
 /* connecting to a database */
@@ -11,7 +12,7 @@ export const connection = new Sequelize(DBConfig);
 /* passing a connection URI - example for postgres */
 // const connection = new Sequelize('postgres://user:pass@example.com:5432/dbname')
 
-export async function testConnection(connection: Sequelize, logger?: Logger): Promise<boolean> {
+export async function testConnection(connection: Sequelize, logger?: Logger | LoggerInterface | Console): Promise<boolean> {
 	try {
 		await connection.authenticate({
 			logging: false,
@@ -26,7 +27,7 @@ export async function testConnection(connection: Sequelize, logger?: Logger): Pr
 	}
 }
 
-export async function syncConnection(connection: Sequelize, logger?: Logger): Promise<void> {
+export async function syncConnection(connection: Sequelize, logger?: Logger | LoggerInterface | Console): Promise<void> {
 	try {
 		await connection.sync({ force: false, logging: false }).then(
 			(value: Sequelize) => {
@@ -46,15 +47,16 @@ const databaseConnectionProvider: Provider = {
 	scope: Scope.DEFAULT,
 
 	inject: [
-		LOGGER_PROVIDER,
+		LoggerService,
 	],
 	useFactory: async (
-		loggerProvider: LoggerProviderInterface,
+		logger: LoggerService,
 		...args: any[]
 	): Promise<Sequelize> => {
 		const connection = new Sequelize(DBConfig);
 
-		await syncConnection(connection, loggerProvider.getLogger('DatabaseConnectionProvider'));
+		logger.setContextName('DatabaseConnectionProvider');
+		await syncConnection(connection, logger);
 
 		return connection;
 	},

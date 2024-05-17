@@ -21,7 +21,7 @@ export default class RequestRateConstants {
 	// * 100 calls per minute
 	public readonly long: ThrottlerOptions = {
 		name: 'long',
-		ttl: (60 * 1000),
 		limit: 100,
+		ttl: (60 * 1000),
 	};
 }

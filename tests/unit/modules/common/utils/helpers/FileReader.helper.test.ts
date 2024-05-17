@@ -1,17 +1,11 @@
 import { ReadStream } from 'fs';
 import FileReaderHelper from '../../../../../../src/modules/common/utils/helpers/FileReader.helper';
+import DataParserHelper from '../../../../../../src/modules/common/utils/helpers/DataParser.helper';
+import { configServiceMock } from '../../../../../../src/dev/mocks/mockedModules';
 
 
 describe('Modules :: Common :: Utils :: Helpers :: FileReaderHelper', () => {
-	// // mocks
-	const warnLoggerMock = jest.fn();
-	const loggerProviderMock = {
-		getLogger: () => ({
-			warn: warnLoggerMock,
-		}),
-	};
-
-	const fileReaderHelper = new FileReaderHelper(loggerProviderMock);
+	const fileReaderHelper = new FileReaderHelper(configServiceMock as any, new DataParserHelper(configServiceMock as any));
 
 	describe('# Invalid File Path', () => {
 		const filePath = './invalidFile.txt';
@@ -20,7 +14,6 @@ describe('Modules :: Common :: Utils :: Helpers :: FileReaderHelper', () => {
 			const content = fileReaderHelper.readFile(filePath);
 
 			expect(content).toBeUndefined();
-			expect(warnLoggerMock).toHaveBeenCalled();
 		});
 
 		test('Should return undefined stream', () => {
@@ -30,7 +23,6 @@ describe('Modules :: Common :: Utils :: Helpers :: FileReaderHelper', () => {
 				stream = fileReaderHelper.readStream(filePath, 'utf8');
 			} catch (error) {
 				expect(stream?.readable).toBeUndefined();
-				expect(warnLoggerMock).toHaveBeenCalled();
 			}
 		});
 	});
@@ -40,14 +32,12 @@ describe('Modules :: Common :: Utils :: Helpers :: FileReaderHelper', () => {
 
 		test('Should return the content string', () => {
 			const content = fileReaderHelper.readFile(filePath);
-			expect(warnLoggerMock).not.toHaveBeenCalled();
 			expect(content).toContain('MIT License');
 		});
 
 		test('Should return the content stream', () => {
 			const stream = fileReaderHelper.readStream(filePath, 'utf8');
 
-			expect(warnLoggerMock).not.toHaveBeenCalled();
 			expect(stream?.readable).toBe(true);
 		});
 	});

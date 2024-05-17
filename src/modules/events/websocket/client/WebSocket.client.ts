@@ -1,8 +1,8 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { io, Socket as ClientSocket } from 'socket.io-client';
-import { Logger } from 'winston';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
+import { LoggerInterface } from '@core/logging/logger';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { ConfigsInterface } from '@core/configs/configs.config';
 
@@ -10,11 +10,11 @@ import { ConfigsInterface } from '@core/configs/configs.config';
 @Injectable()
 export default class WebSocketClient {
 	private readonly clientSocket!: ClientSocket;
-	private readonly logger: Logger;
+	private readonly logger: LoggerInterface;
 
 	constructor(
 		private readonly configService: ConfigService,
-		@Inject(LOGGER_PROVIDER)
+		@Inject(SINGLETON_LOGGER_PROVIDER)
 		private readonly loggerProvider: LoggerProviderInterface,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
@@ -35,7 +35,7 @@ export default class WebSocketClient {
 	}
 
 	private formatMessageBeforeSend(message: unknown): string {
-		return this.dataParserHelper.toString(message) ?? '{}';
+		return this.dataParserHelper.toString(message);
 	}
 
 	// send message to server

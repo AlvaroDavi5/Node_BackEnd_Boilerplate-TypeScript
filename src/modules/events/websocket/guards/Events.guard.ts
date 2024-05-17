@@ -1,20 +1,20 @@
-import { Inject, Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, Inject, CanActivate, ExecutionContext } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { Observable } from 'rxjs';
 import { Socket as ServerSocket } from 'socket.io';
-import { Logger } from 'winston';
 import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
-import Exceptions from '@core/infra/errors/Exceptions';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import Exceptions from '@core/errors/Exceptions';
+import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
+import { LoggerInterface } from '@core/logging/logger';
 
 
 @Injectable()
 export default class EventsGuard implements CanActivate {
-	private readonly logger: Logger;
+	private readonly logger: LoggerInterface;
 
 	constructor(
 		private readonly exceptions: Exceptions,
-		@Inject(LOGGER_PROVIDER)
+		@Inject(SINGLETON_LOGGER_PROVIDER)
 		private readonly loggerProvider: LoggerProviderInterface,
 	) {
 		this.logger = this.loggerProvider.getLogger(EventsGuard.name);
@@ -25,7 +25,7 @@ export default class EventsGuard implements CanActivate {
 		const message = context.getArgs()[1] as any;
 		const event = context.getArgs()[3] as WebSocketEventsEnum;
 
-		this.logger.debug(`Running guard to '${event}' event for '${socket.id}' socket`);
+		this.logger.verbose(`Running guard to '${event}' event for '${socket.id}' socket`);
 
 		if (!Object.values(WebSocketEventsEnum).includes(event) || !Object.keys(message).length) {
 			this.logger.warn(`Invalid event: '${event}' or message, disconnecting socket`);

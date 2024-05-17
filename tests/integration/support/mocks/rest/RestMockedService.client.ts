@@ -1,20 +1,17 @@
-import { Inject, Injectable } from '@nestjs/common';
-import { LOGGER_PROVIDER } from '@core/infra/logging/Logger.provider';
+import { Injectable } from '@nestjs/common';
+import LoggerService from '../logging/Logger.service';
 import { MockObservableInterface } from '../mockObservable';
-import LoggerProvider from '../logging/Logger.provider';
 
 
 @Injectable()
 export default class RestMockedServiceClient {
 	private serviceName: string;
-	private readonly logger: any;
 
 	constructor(
-		@Inject(LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProvider,
+		private readonly logger: LoggerService,
 		private readonly mockObservable: MockObservableInterface,
 	) {
-		this.logger = this.loggerProvider.getLogger(RestMockedServiceClient.name);
+		this.logger.setContextName(RestMockedServiceClient.name);
 		this.serviceName = process.env.MOCKED_SERVICE_NAME || 'mockedService';
 	}
 

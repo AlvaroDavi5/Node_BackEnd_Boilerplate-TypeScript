@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import IORedis from 'ioredis';
 import { ScanStreamOptions } from 'ioredis/built/types';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import Exceptions from '@core/infra/errors/Exceptions';
+import Exceptions from '@core/errors/Exceptions';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
 
@@ -90,7 +90,7 @@ export default class RedisClient {
 	}
 
 	public async set(key: string, value: object, ttl = 30): Promise<string> {
-		const result = await this.redisClient.set(String(key), this.dataParserHelper.toString(value) ?? '{}');
+		const result = await this.redisClient.set(String(key), this.dataParserHelper.toString(value));
 		await this.redisClient.expire(String(key), Number(ttl)); // [key] expires in [ttl] seconds
 		return result;
 	}

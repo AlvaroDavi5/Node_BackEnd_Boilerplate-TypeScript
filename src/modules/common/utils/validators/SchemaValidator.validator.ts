@@ -1,17 +1,20 @@
 import { ArgumentMetadata } from '@nestjs/common';
 import { Schema } from 'joi';
 import { Logger } from 'winston';
-import Exceptions from '@core/infra/errors/Exceptions';
+import { Console } from 'console';
+import Exceptions from '@core/errors/Exceptions';
+import { LoggerInterface } from '@core/logging/logger';
 
 
 export default class SchemaValidator<S> {
 	constructor(
 		private readonly exceptions: Exceptions,
-		private readonly logger: Logger,
+		private readonly logger: Logger | LoggerInterface | Console,
 	) { }
 
 	public validate(data: unknown, metadata: ArgumentMetadata, schema: Schema<S>): S {
-		this.logger.debug(`Validating '${metadata.type}' received as '${metadata.metatype?.name}'`);
+		const log = this.logger instanceof Console ? this.logger.log : this.logger.verbose;
+		log(`Validating '${metadata.type}' received as '${metadata.metatype?.name}'`);
 
 		const { value, error } = schema.validate(
 			data,

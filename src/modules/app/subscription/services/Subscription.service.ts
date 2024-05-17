@@ -7,7 +7,7 @@ import WebSocketClient from '@events/websocket/client/WebSocket.client';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
 import SubscriptionEntity, { SubscriptionInterface } from '@domain/entities/Subscription.entity';
 import { CacheEnum } from '@domain/enums/cache.enum';
@@ -27,7 +27,7 @@ export default class SubscriptionService implements OnModuleInit {
 		private readonly configService: ConfigService,
 		private readonly mongoClient: MongoClient,
 		private readonly redisClient: RedisClient,
-		@Inject(LOGGER_PROVIDER)
+		@Inject(SINGLETON_LOGGER_PROVIDER)
 		private readonly loggerProvider: LoggerProviderInterface,
 		private readonly cacheAccessHelper: CacheAccessHelper,
 	) {

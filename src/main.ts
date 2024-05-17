@@ -10,7 +10,7 @@ import { ProcessEventsEnum, ProcessSignalsEnum, ProcessExitStatusEnum } from '@c
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import swaggerSetupConfig from '@core/configs/swaggerSetup.config';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import { ErrorInterface } from '@shared/interfaces/errorInterface';
@@ -57,7 +57,7 @@ async function startNestApplication() {
 
 	swaggerSetupConfig(nestApp);
 
-	const logger = nestApp.get<LoggerProviderInterface>(LOGGER_PROVIDER, {}).getLogger('NestApplication');
+	const logger = nestApp.get<LoggerProviderInterface>(SINGLETON_LOGGER_PROVIDER, {}).getLogger('NestApplication');
 	const appConfigs = nestApp.get<ConfigService>(ConfigService, {}).get<ConfigsInterface['application']>('application')!;
 
 	if (appConfigs?.environment === EnvironmentsEnum.DEVELOPMENT)

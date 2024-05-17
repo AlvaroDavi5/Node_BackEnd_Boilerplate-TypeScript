@@ -1,17 +1,18 @@
-import { Injectable, Inject, forwardRef } from '@nestjs/common';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
-import { LoggerInterface } from '@core/logging/logger';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import LoggerService from '@core/logging/Logger.service';
+import { dataParserHelperMock } from '@dev/mocks/mockedModules';
 
 
 @Injectable()
 export default class DataParserHelper {
-	private readonly logger: LoggerInterface;
+	private readonly logger: LoggerService;
 
 	constructor(
-		@Inject(forwardRef(() => LOGGER_PROVIDER)) // ? resolve circular dependency
-		private readonly loggerProvider: LoggerProviderInterface,
+		private readonly configService: ConfigService,
 	) {
-		this.logger = this.loggerProvider.getLogger(DataParserHelper.name);
+		this.logger = new LoggerService(DataParserHelper.name, this.configService, dataParserHelperMock as any);
+		this.logger.setContextName(DataParserHelper.name);
 	}
 
 	public toString(data: unknown): string {

@@ -2,7 +2,7 @@ import { Injectable, ExecutionContext } from '@nestjs/common';
 import { ThrottlerGuard, ThrottlerOptions } from '@nestjs/throttler';
 import { Logger } from 'winston';
 import Exceptions from '@core/errors/Exceptions';
-import { generateLogger } from '@core/logging/Logger.provider';
+import { generateLogger } from '@core/logging/logger';
 
 
 @Injectable()
@@ -17,7 +17,7 @@ export default class CustomThrottlerGuard extends ThrottlerGuard {
 		throttler: ThrottlerOptions,
 	): Promise<boolean> {
 		const throttlerName = throttler.name ?? 'defaultThrottler';
-		this.logger.debug(`Running guard '${CustomThrottlerGuard.name}' with '${throttlerName}' throttler`);
+		this.logger.verbose(`Running guard with '${throttlerName}' throttler`);
 
 		const { req, res } = this.getRequestResponse(context);
 

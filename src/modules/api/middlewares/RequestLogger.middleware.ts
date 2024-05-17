@@ -1,19 +1,24 @@
-import { Injectable, Inject, NestMiddleware } from '@nestjs/common';
+import { Injectable, Inject, Scope, NestMiddleware } from '@nestjs/common';
 import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
+import CryptographyService from '@core/security/Cryptography.service';
 import { checkFields, replaceFields } from '@common/utils/objectRecursiveFunctions.util';
 import { RequestInterface, ResponseInterface, NextFunctionInterface } from '@shared/interfaces/endpointInterface';
 
 
-@Injectable()
+@Injectable({ scope: Scope.DEFAULT })
 export default class RequestLoggerMiddleware implements NestMiddleware {
 	constructor(
 		@Inject(REQUEST_LOGGER_PROVIDER)
 		private readonly logger: LoggerService,
+		private readonly cryptographyService: CryptographyService,
 	) {
 		this.logger.setContextName(RequestLoggerMiddleware.name);
 	}
 
 	public use(request: RequestInterface, response: ResponseInterface, next: NextFunctionInterface) {
+		const requestId = this.cryptographyService.generateUuid();
+		this.logger.setRequestId(requestId);
+
 		const method = request.method;
 		const originalUrl = request.originalUrl;
 		const pathParamsPayload = JSON.stringify(this.maskSensibleData(request.params));

@@ -55,13 +55,11 @@ export default class LoggerService implements LoggerInterface {
 	}
 
 	public getRequestId(): string | undefined {
-		this.requestId = this.configService.get<string>('requestId');
 		return this.requestId;
 	}
 
 	public setRequestId(requestId: string | undefined): void {
 		this.requestId = requestId;
-		this.configService.set<string | undefined>('requestId', requestId);
 	}
 
 	private buildLog(args: any[]): { message: string, meta: MetadataInterface } {

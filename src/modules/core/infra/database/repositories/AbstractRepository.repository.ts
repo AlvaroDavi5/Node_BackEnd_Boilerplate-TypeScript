@@ -1,6 +1,6 @@
 import { Model, Op, QueryTypes, ModelAttributes, Includeable, InitOptions, FindAndCountOptions, Attributes } from 'sequelize';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
-import { LoggerProviderInterface } from '@core/logging/Logger.provider';
+import LoggerService from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
 import Exceptions from '@core/errors/Exceptions';
 import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity';
@@ -41,7 +41,7 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 		queryParamsBuilder,
 		queryOptions,
 		exceptions,
-		loggerProvider,
+		logger,
 		dateGeneratorHelper,
 	}: {
 		DomainEntity: constructorType<E>,
@@ -57,7 +57,7 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 		},
 		queryOptions: any,
 		exceptions: Exceptions,
-		loggerProvider: LoggerProviderInterface,
+		logger: LoggerService,
 		dateGeneratorHelper: DateGeneratorHelper,
 	}) {
 		this.DomainEntity = DomainEntity;
@@ -66,7 +66,7 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 		this.queryParamsBuilder = queryParamsBuilder;
 		this.queryOptions = queryOptions;
 		this.exceptions = exceptions;
-		this.logger = loggerProvider.getLogger(ResourceModel.name);
+		this.logger = logger;
 		this.dateGeneratorHelper = dateGeneratorHelper;
 
 		this.ResourceModel.init(resourceAttributes, resourceOptions);

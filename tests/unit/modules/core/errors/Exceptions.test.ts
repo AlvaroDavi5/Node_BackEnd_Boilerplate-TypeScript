@@ -1,4 +1,4 @@
-import Exceptions from '../../../../../../src/modules/core/errors/Exceptions';
+import Exceptions from '../../../../../src/modules/core/errors/Exceptions';
 
 
 describe('Infra :: Errors :: Exceptions', () => {

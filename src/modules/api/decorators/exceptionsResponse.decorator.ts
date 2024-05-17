@@ -3,7 +3,7 @@ import {
 	ApiBadRequestResponse, ApiUnauthorizedResponse, ApiForbiddenResponse, ApiNotFoundResponse,
 	ApiConflictResponse, ApiInternalServerErrorResponse, ApiServiceUnavailableResponse, ApiTooManyRequestsResponse,
 } from '@nestjs/swagger';
-import Exceptions from '@core/infra/errors/Exceptions';
+import Exceptions from '@core/errors/Exceptions';
 
 
 export default () => {

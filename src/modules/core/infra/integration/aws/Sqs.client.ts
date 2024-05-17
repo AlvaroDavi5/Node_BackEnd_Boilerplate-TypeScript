@@ -1,6 +1,5 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Logger } from 'winston';
 import {
 	SQSClient, SQSClientConfig, Message,
 	ListQueuesCommand, CreateQueueCommand, DeleteQueueCommand,
@@ -8,8 +7,8 @@ import {
 	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput, DeleteMessageCommandInput,
 } from '@aws-sdk/client-sqs';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import CryptographyService from '@core/infra/security/Cryptography.service';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import CryptographyService from '@core/security/Cryptography.service';
+import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
 
@@ -18,16 +17,13 @@ export default class SqsClient {
 	private readonly awsConfig: SQSClientConfig;
 	private readonly messageGroupId: string;
 	private readonly sqsClient: SQSClient;
-	private readonly logger: Logger;
 
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly cryptographyService: CryptographyService,
-		@Inject(LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
+		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
-		this.logger = this.loggerProvider.getLogger(SqsClient.name);
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
 		const {
@@ -53,7 +49,7 @@ export default class SqsClient {
 
 
 	private formatMessageBeforeSend(message: any = {}): string {
-		return this.dataParserHelper.toString(message) ?? '{}';
+		return this.dataParserHelper.toString(message);
 	}
 
 	private createParams(queueName: string): CreateQueueCommandInput {

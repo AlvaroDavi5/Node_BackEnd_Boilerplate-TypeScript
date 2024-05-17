@@ -1,9 +1,9 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import UserEntity, { UserEntityList } from '@domain/entities/User.entity';
-import CryptographyService from '@core/infra/security/Cryptography.service';
+import CryptographyService from '@core/security/Cryptography.service';
 import UserRepository from '@app/user/repositories/user/User.repository';
-import Exceptions from '@core/infra/errors/Exceptions';
+import Exceptions from '@core/errors/Exceptions';
 import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
 import { ConfigsInterface } from '@core/configs/configs.config';
 
@@ -127,9 +127,7 @@ export default class UserService {
 				message: 'Invalid password',
 			});
 
-		const splittedUserPassword = userPassword.split('|');
-		const salt = splittedUserPassword[0];
-		const hash = splittedUserPassword[1];
+		const [salt, hash] = userPassword.split('|');
 
 		if (!salt.length || !hash.length)
 			throw this.exceptions.internal({

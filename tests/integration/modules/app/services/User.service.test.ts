@@ -1,10 +1,10 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-import configs from '../../../../../src/modules/core/configs/configs.config';
+import { configServiceMock } from '../../../../../src/dev/mocks/mockedModules';
 import UserService from '../../../../../src/modules/app/user/services/User.service';
 import UserRepository from '../../../../../src/modules/app/user/repositories/user/User.repository';
-import Exceptions from '../../../../../src/modules/core/infra/errors/Exceptions';
-import CryptographyService from '../../../../../src/modules/core/infra/security/Cryptography.service';
+import Exceptions from '../../../../../src/modules/core/errors/Exceptions';
+import CryptographyService from '../../../../../src/modules/core/security/Cryptography.service';
 import UserEntity from '../../../../../src/modules/domain/entities/User.entity';
 
 
@@ -17,25 +17,6 @@ describe('Modules :: App :: Services :: UserService', () => {
 		create: jest.fn(async (entity: UserEntity): Promise<UserEntity | null> => (null)),
 		update: jest.fn(async (id: number, entity: UserEntity): Promise<UserEntity | null> => (null)),
 		deleteOne: jest.fn(async (id: number, softDelete = true, agentId: number | string | null = null): Promise<boolean> => (false)),
-	};
-	const configServiceMock = {
-		get: (propertyPath?: string): any => {
-			if (propertyPath) {
-				const splitedPaths = propertyPath.split('.');
-				let scopedProperty: any = configs();
-
-				for (let i = 0; i < splitedPaths.length; i++) {
-					const scopedPath = splitedPaths[i];
-
-					if (scopedPath.length)
-						scopedProperty = scopedProperty[scopedPath];
-				}
-
-				return scopedProperty;
-			}
-			else
-				return configs();
-		},
 	};
 
 	// ? build test app

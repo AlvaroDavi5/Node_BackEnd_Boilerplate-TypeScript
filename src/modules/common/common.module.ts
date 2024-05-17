@@ -1,12 +1,12 @@
 import { Module, Global } from '@nestjs/common';
-import HttpConstants from '@common/constants/Http.constants';
-import RequestRateConstants from '@common/constants/RequestRate.constants';
-import ContentTypeConstants from '@common/constants/ContentType.constants';
-import RegExConstants from '@common/constants/Regex.constants';
-import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
-import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
-import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
+import HttpConstants from './constants/Http.constants';
+import RequestRateConstants from './constants/RequestRate.constants';
+import ContentTypeConstants from './constants/ContentType.constants';
+import RegExConstants from './constants/Regex.constants';
+import DataParserHelper from './utils/helpers/DataParser.helper';
+import DateGeneratorHelper from './utils/helpers/DateGenerator.helper';
+import CacheAccessHelper from './utils/helpers/CacheAccess.helper';
+import FileReaderHelper from './utils/helpers/FileReader.helper';
 
 
 @Global()

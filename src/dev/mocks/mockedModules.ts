@@ -1,6 +1,6 @@
 import { v4 as uuidV4 } from 'uuid';
 import configs from 'src/modules/core/configs/configs.config';
-import { LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import { LoggerInterface } from '@core/logging/logger';
 
 
 export const configServiceMock = {
@@ -29,20 +29,22 @@ export const cryptographyServiceMock = {
 	}
 };
 
-export const loggerProviderMock: LoggerProviderInterface = {
-	getLogger: (context: string): any => {
-		return {
-			error: console.error,
-			warn: console.warn,
-			info: console.info,
-			debug: console.debug,
-			log: console.log,
-		};
-	}
+export const loggerProviderMock: LoggerInterface & {
+	setContextName: (context: string) => void,
+	setRequestId: (requestId: string) => void,
+} = {
+	error: console.error,
+	warn: console.warn,
+	info: console.info,
+	http: console.info,
+	verbose: console.log,
+	debug: console.debug,
+	setContextName: (context: string) => { context.trim(); },
+	setRequestId: (requestId: string) => { requestId.trim(); },
 };
 
 export const dataParserHelperMock = {
-	toString: (data: unknown = {}): string => {
+	toString: (data: unknown): string => {
 		let result = null;
 
 		switch (typeof data) {
@@ -59,7 +61,10 @@ export const dataParserHelperMock = {
 			result = data;
 			break;
 		case 'object':
-			result = (JSON.stringify(data) || data?.toString()) ?? '';
+			if (!data)
+				result = '';
+			else
+				result = (JSON.stringify(data) || data?.toString()) ?? '';
 			break;
 		case 'symbol':
 			result = data.toString();
@@ -71,4 +76,12 @@ export const dataParserHelperMock = {
 
 		return result;
 	},
+
+	toObject: (data: string): object | null => {
+		try {
+			return JSON.parse(data);
+		} catch (error) {
+			return null;
+		}
+	}
 };

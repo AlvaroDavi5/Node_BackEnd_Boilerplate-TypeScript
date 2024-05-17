@@ -1,28 +1,44 @@
-import { Injectable, Inject, NestMiddleware } from '@nestjs/common';
-import { Logger } from 'winston';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import { Injectable, Inject, Scope, NestMiddleware } from '@nestjs/common';
+import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
+import CryptographyService from '@core/security/Cryptography.service';
+import { checkFields, replaceFields } from '@common/utils/objectRecursiveFunctions.util';
 import { RequestInterface, ResponseInterface, NextFunctionInterface } from '@shared/interfaces/endpointInterface';
 
 
-@Injectable()
+@Injectable({ scope: Scope.DEFAULT })
 export default class RequestLoggerMiddleware implements NestMiddleware {
-	private readonly logger: Logger;
-
 	constructor(
-		@Inject(LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
+		@Inject(REQUEST_LOGGER_PROVIDER)
+		private readonly logger: LoggerService,
+		private readonly cryptographyService: CryptographyService,
 	) {
-		this.logger = this.loggerProvider.getLogger(RequestLoggerMiddleware.name);
+		this.logger.setContextName(RequestLoggerMiddleware.name);
 	}
 
 	public use(request: RequestInterface, response: ResponseInterface, next: NextFunctionInterface) {
+		const requestId = this.cryptographyService.generateUuid();
+		this.logger.setRequestId(requestId);
+
 		const method = request.method;
 		const originalUrl = request.originalUrl;
-		const pathParamsKeys = Object.keys(request.params);
-		const queryParamsKeys = Object.keys(request.query);
-		const bodyKeys = Object.keys(request.body);
+		const pathParamsPayload = JSON.stringify(this.maskSensibleData(request.params));
+		const queryParamsPayload = JSON.stringify(this.maskSensibleData(request.query));
+		const bodyPayload = JSON.stringify(this.maskSensibleData(request.body));
 
-		this.logger.info(`REQUESTED - [${method}] ${originalUrl} { "pathParams": {${pathParamsKeys}} "queryParams": {${queryParamsKeys}} "body": {${bodyKeys}} }`);
+		this.logger.http(`REQUESTED - [${method}] ${originalUrl} { "pathParams": ${pathParamsPayload} "queryParams": ${queryParamsPayload} "body": ${bodyPayload} }`);
+
 		next();
+	}
+
+	private maskSensibleData(data: any) {
+		const sensibleDataFields: string[] = ['password', 'newPassword', 'cvv', 'pin'];
+
+		const hasSensibleData: boolean = checkFields(data, sensibleDataFields);
+		if (hasSensibleData) {
+			const newData = structuredClone(data);
+			return replaceFields(newData, sensibleDataFields);
+		}
+
+		return data;
 	}
 }

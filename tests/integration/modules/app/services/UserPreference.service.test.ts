@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import configs from '../../../../../src/modules/core/configs/configs.config';
 import UserPreferenceService from '../../../../../src/modules/app/user/services/UserPreference.service';
 import UserPreferenceRepository from '../../../../../src/modules/app/user/repositories/userPreference/UserPreference.repository';
-import Exceptions from '../../../../../src/modules/core/infra/errors/Exceptions';
+import Exceptions from '../../../../../src/modules/core/errors/Exceptions';
 import UserPreferenceEntity from '../../../../../src/modules/domain/entities/UserPreference.entity';
 
 

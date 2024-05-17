@@ -1,14 +1,14 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { SqsMessageHandler, SqsConsumerEventHandler } from '@ssut/nestjs-sqs';
 import { Message } from '@aws-sdk/client-sqs';
-import { Logger } from 'winston';
 import MongoClient from '@core/infra/data/Mongo.client';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
+import { LoggerInterface } from '@core/logging/logger';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import { ProcessEventsEnum } from '@common/enums/processEvents.enum';
 import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
 import configs from '@core/configs/configs.config';
-import Exceptions from '@core/infra/errors/Exceptions';
+import Exceptions from '@core/errors/Exceptions';
 
 
 const appConfigs = configs();
@@ -16,8 +16,8 @@ const { queueName: eventsQueueName, queueUrl: eventsQueueUrl } = appConfigs.inte
 
 @Injectable()
 export default class EventsQueueConsumer {
+	private readonly logger: LoggerInterface;
 	private readonly name: string;
-	private readonly logger: Logger;
 	private errorsCount = 0;
 
 	constructor(
@@ -25,7 +25,7 @@ export default class EventsQueueConsumer {
 		private readonly mongoClient: MongoClient,
 		private readonly eventsQueueHandler: EventsQueueHandler,
 		private readonly exceptions: Exceptions,
-		@Inject(LOGGER_PROVIDER)
+		@Inject(SINGLETON_LOGGER_PROVIDER)
 		private readonly loggerProvider: LoggerProviderInterface,
 	) {
 		this.name = EventsQueueConsumer.name;

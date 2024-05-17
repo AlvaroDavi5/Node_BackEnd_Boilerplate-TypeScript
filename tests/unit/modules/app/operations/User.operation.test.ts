@@ -2,8 +2,8 @@ import UserOperation from '../../../../../src/modules/app/user/operations/User.o
 import UserEntity from '../../../../../src/modules/domain/entities/User.entity';
 import UserPreferenceEntity from '../../../../../src/modules/domain/entities/UserPreference.entity';
 import UserStrategy from '../../../../../src/modules/app/user/strategies/User.strategy';
-import CryptographyService from '../../../../../src/modules/core/infra/security/Cryptography.service';
-import configs from '../../../../../src/modules/core/configs/configs.config';
+import CryptographyService from '../../../../../src/modules/core/security/Cryptography.service';
+import { configServiceMock } from '../../../../../src/dev/mocks/mockedModules';
 import { ListQueryInterface, PaginationInterface } from '../../../../../src/shared/interfaces/listPaginationInterface';
 import { ErrorInterface } from '../../../../../src/shared/interfaces/errorInterface';
 
@@ -33,25 +33,6 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		business: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 		notFound: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 		conflict: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
-	};
-	const configServiceMock = {
-		get: (propertyPath?: string): any => {
-			if (propertyPath) {
-				const splitedPaths = propertyPath.split('.');
-				let scopedProperty: any = configs();
-
-				for (let i = 0; i < splitedPaths.length; i++) {
-					const scopedPath = splitedPaths[i];
-
-					if (scopedPath.length)
-						scopedProperty = scopedProperty[scopedPath];
-				}
-
-				return scopedProperty;
-			}
-			else
-				return configs();
-		},
 	};
 
 	const createdAt = new Date();

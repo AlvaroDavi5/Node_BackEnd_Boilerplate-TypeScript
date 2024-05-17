@@ -1,6 +1,5 @@
 import { ConfigService } from '@nestjs/config';
 import { Readable } from 'stream';
-import { Logger } from 'winston';
 import {
 	S3Client as S3AWSClient, S3ClientConfig, NotificationConfiguration,
 	ListBucketsCommand, CreateBucketCommand, DeleteBucketCommand, PutBucketNotificationConfigurationCommand, PutObjectCommand, GetObjectCommand, DeleteObjectCommand,
@@ -15,15 +14,14 @@ type s3FileContentType = string | Uint8Array | Buffer | Readable | ReadableStrea
 export default class S3Client {
 	private readonly awsConfig: S3ClientConfig;
 	private readonly s3Client: S3AWSClient;
-	private readonly logger: Logger;
 	public readonly bucketName: string;
 	private readonly filesExpiration: number;
 
 	constructor(
 		private readonly configService: ConfigService,
-		private readonly loggerProvider: any,
+		private readonly logger: any,
 	) {
-		this.logger = this.loggerProvider.getLogger(S3Client.name);
+		this.logger.setContextName(S3Client.name);
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
 		const {

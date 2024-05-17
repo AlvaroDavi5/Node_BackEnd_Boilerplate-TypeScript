@@ -1,7 +1,7 @@
 import { PipeTransform, ArgumentMetadata } from '@nestjs/common';
 import { Logger } from 'winston';
 import Exceptions from '@core/errors/Exceptions';
-import { generateLogger } from '@core/logging/Logger.provider';
+import { generateLogger } from '@core/logging/logger';
 
 
 type dateInputType = (string | Date) | (() => string | Date) | undefined | null
@@ -16,7 +16,7 @@ export class ParseDatePipe implements PipeTransform<dateInputType, Date> {
 	}
 
 	public transform(value: dateInputType, metadata: ArgumentMetadata): Date {
-		this.logger.debug(`Validating '${metadata.type}' received as '${metadata.metatype?.name}'`);
+		this.logger.verbose(`Validating '${metadata.type}' received as '${metadata.metatype?.name}'`);
 
 		if (!value)
 			throw this.exceptions.contract({

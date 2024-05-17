@@ -1,19 +1,16 @@
 import { Injectable, Inject, NestMiddleware } from '@nestjs/common';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import { checkFields, replaceFields } from '@common/utils/objectRecursiveFunctions.util';
 import { RequestInterface, ResponseInterface, NextFunctionInterface } from '@shared/interfaces/endpointInterface';
 
 
 @Injectable()
 export default class RequestLoggerMiddleware implements NestMiddleware {
-	private readonly logger: LoggerInterface;
-
 	constructor(
-		@Inject(LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
+		@Inject(REQUEST_LOGGER_PROVIDER)
+		private readonly logger: LoggerService,
 	) {
-		this.logger = this.loggerProvider.getLogger(RequestLoggerMiddleware.name);
+		this.logger.setContextName(RequestLoggerMiddleware.name);
 	}
 
 	public use(request: RequestInterface, response: ResponseInterface, next: NextFunctionInterface) {

@@ -16,8 +16,7 @@ import { ListQueryValidatorPipe } from '@api/pipes/QueryValidator.pipe';
 import { ListQueryInputDto } from '@api/pipes/dto/QueryInput.dto';
 import { CreateUserValidatorPipe, UpdateUserValidatorPipe, LoginUserValidatorPipe } from '@app/user/api/pipes/UserValidator.pipe';
 import { CreateUserInputDto, UpdateUserInputDto, LoginUserInputDto } from '@app/user/api/dto/UserInput.dto';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import { RequestInterface } from '@shared/interfaces/endpointInterface';
 import { PaginationInterface } from '@shared/interfaces/listPaginationInterface';
 
@@ -28,14 +27,12 @@ import { PaginationInterface } from '@shared/interfaces/listPaginationInterface'
 @authSwaggerDecorator()
 @exceptionsResponseDecorator()
 export default class UserController {
-	private readonly logger: LoggerInterface;
-
 	constructor(
 		private readonly userOperation: UserOperation,
-		@Inject(LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
+		@Inject(REQUEST_LOGGER_PROVIDER)
+		private readonly logger: LoggerService,
 	) {
-		this.logger = this.loggerProvider.getLogger(UserController.name);
+		this.logger.setContextName(UserController.name);
 	}
 
 	@ApiOperation({

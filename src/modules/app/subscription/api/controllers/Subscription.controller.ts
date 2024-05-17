@@ -6,8 +6,7 @@ import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
 import SubscriptionEntity, { SubscriptionInterface } from '@domain/entities/Subscription.entity';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 
 
 @ApiTags('Subscriptions')
@@ -16,14 +15,12 @@ import { LoggerInterface } from '@core/logging/logger';
 @authSwaggerDecorator()
 @exceptionsResponseDecorator()
 export default class SubscriptionController {
-	private readonly logger: LoggerInterface;
-
 	constructor(
 		private readonly subscriptionService: SubscriptionService,
-		@Inject(LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
+		@Inject(REQUEST_LOGGER_PROVIDER)
+		private readonly logger: LoggerService,
 	) {
-		this.logger = this.loggerProvider.getLogger(SubscriptionController.name);
+		this.logger.setContextName(SubscriptionController.name);
 	}
 
 	@ApiOperation({

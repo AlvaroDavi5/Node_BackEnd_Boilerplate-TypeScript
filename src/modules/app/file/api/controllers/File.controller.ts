@@ -1,5 +1,5 @@
 import {
-	OnModuleInit, Inject,
+	Inject, OnModuleInit,
 	Controller, Res,
 	Get, Post, Headers,
 	UseInterceptors, UseGuards,
@@ -17,8 +17,7 @@ import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.deco
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
 import ContentTypeConstants from '@common/constants/ContentType.constants';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import ReportsModule from '@app/reports/reports.module';
 import UploadService from '@app/reports/services/Upload.service';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
@@ -33,7 +32,6 @@ import CryptographyService from '@core/security/Cryptography.service';
 @exceptionsResponseDecorator()
 export default class FileController implements OnModuleInit {
 	private uploadService!: UploadService;
-	private readonly logger: LoggerInterface;
 	private readonly isTestEnv: boolean; // ! lazy loads not works in test environment
 
 	constructor(
@@ -41,10 +39,10 @@ export default class FileController implements OnModuleInit {
 		private readonly configService: ConfigService,
 		private readonly cryptographyService: CryptographyService,
 		private readonly contentTypeConstants: ContentTypeConstants,
-		@Inject(LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
+		@Inject(REQUEST_LOGGER_PROVIDER)
+		private readonly logger: LoggerService,
 	) {
-		this.logger = this.loggerProvider.getLogger(FileController.name);
+		this.logger.setContextName(FileController.name);
 		const appConfigs = this.configService.get<ConfigsInterface['application']>('application')!;
 		this.isTestEnv = appConfigs.environment === EnvironmentsEnum.TEST;
 	}

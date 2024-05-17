@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { Sequelize, Association } from 'sequelize';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import LoggerService from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
 import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import AbstractRepository from '@core/infra/database/repositories/AbstractRepository.repository';
@@ -23,10 +23,10 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 		@Inject(DATABASE_CONNECTION_PROVIDER)
 			connection: Sequelize,
 			exceptions: Exceptions,
-		@Inject(LOGGER_PROVIDER)
-			loggerProvider: LoggerProviderInterface,
+			logger: LoggerService,
 			dateGeneratorHelper: DateGeneratorHelper,
 	) {
+		logger.setContextName(UserRepository.name);
 		userOptions.sequelize = connection;
 		super({
 			DomainEntity: UserEntity,
@@ -37,7 +37,7 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 			queryParamsBuilder: userQueryParamsBuilder,
 			queryOptions: userQueryOptions,
 			exceptions: exceptions,
-			loggerProvider: loggerProvider,
+			logger: logger,
 			dateGeneratorHelper: dateGeneratorHelper,
 		});
 	}

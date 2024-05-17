@@ -2,7 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
 import CryptographyService from '@core/security/Cryptography.service';
 import { ConfigsInterface } from '@core/configs/configs.config';
@@ -32,7 +32,7 @@ export default class EventsQueueProducer {
 		private readonly configService: ConfigService,
 		private readonly cryptographyService: CryptographyService,
 		private readonly sqsClient: SqsClient,
-		@Inject(LOGGER_PROVIDER)
+		@Inject(SINGLETON_LOGGER_PROVIDER)
 		private readonly loggerProvider: LoggerProviderInterface,
 		private readonly dateGeneratorHelper: DateGeneratorHelper,
 	) {

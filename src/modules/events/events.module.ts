@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { SqsModule } from '@ssut/nestjs-sqs';
-import WebSocketServer from '@events/websocket/server/WebSocket.server';
-import WebSocketClient from '@events/websocket/client/WebSocket.client';
-import EventsQueueConsumer from '@events/queue/consumers/EventsQueue.consumer';
-import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
-import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
+import WebSocketServer from './websocket/server/WebSocket.server';
+import WebSocketClient from './websocket/client/WebSocket.client';
+import EventsQueueConsumer from './queue/consumers/EventsQueue.consumer';
+import EventsQueueProducer from './queue/producers/EventsQueue.producer';
+import EventsQueueHandler from './queue/handlers/EventsQueue.handler';
 import configs from '@core/configs/configs.config';
 import SqsClient from '@dev/localstack/queues/SqsClient';
 import { configServiceMock, cryptographyServiceMock, dataParserHelperMock, loggerProviderMock } from '@dev/mocks/mockedModules';

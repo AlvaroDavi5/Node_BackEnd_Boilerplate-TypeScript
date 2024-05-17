@@ -6,7 +6,7 @@ import WebhookService from '@app/hook/services/Webhook.service';
 import MongoClient from '@core/infra/data/Mongo.client';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.provider';
+import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
 import Exceptions from '@core/errors/Exceptions';
 import eventSchema, { EventSchemaInterface } from './schemas/event.schema';
@@ -25,7 +25,7 @@ export default class EventsQueueHandler implements OnModuleInit {
 		private readonly moduleRef: ModuleRef,
 		private readonly mongoClient: MongoClient,
 		private readonly dataParserHelper: DataParserHelper,
-		@Inject(LOGGER_PROVIDER)
+		@Inject(SINGLETON_LOGGER_PROVIDER)
 		private readonly loggerProvider: LoggerProviderInterface,
 		private readonly exceptions: Exceptions,
 	) {

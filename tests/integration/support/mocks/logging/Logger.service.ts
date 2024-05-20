@@ -13,7 +13,6 @@ export default class LoggerService {
 	private log(level: 'error' | 'warn' | 'info' | 'debug' | 'log', args: unknown[]): void {
 		const shouldLog = (this.showLogs === true) && (['error', 'warn'].includes(level));
 
-		console.log('→', args);
 		args.forEach((arg: unknown) => {
 			if (this.mockObservable?.call)
 				this.mockObservable.call(arg);

@@ -24,22 +24,29 @@ describe('API :: DefaultController', () => {
 	describe('# [GET] /api/check', () => {
 		test('Should get success', async () => {
 			const response = await request(await nestTestApp.getHttpServer())
-				.get('/api/check');
+				.get('/api/check?key=value')
+				.send({
+					test: 'Hello World!',
+				});
 
 			expect(response.statusCode).toBe(200);
 			expect(response.body).toEqual({
-				baseUrl: '',
 				method: 'GET',
+				url: '/api/check?key=value',
+				baseUrl: '',
 				headers: {
 					connection: 'close',
 					host: '127.0.0.1:3000',
 				},
+				pathParams: {},
+				queryParams: {
+					key: 'value',
+				},
+				body: {
+					test: 'Hello World!',
+				},
 				statusCode: 200,
 				statusMessage: 'Endpoint finded successfully.',
-				pathParams: {},
-				queryParams: {},
-				body: {},
-				url: '/api/check'
 			});
 		});
 	});

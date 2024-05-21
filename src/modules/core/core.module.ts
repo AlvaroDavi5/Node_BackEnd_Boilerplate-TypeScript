@@ -8,21 +8,21 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { GraphQLFormattedError } from 'graphql';
 import { join } from 'path';
-import configs from '@core/configs/configs.config';
-import LifecycleService from '@core/infra/start/Lifecycle.service';
-import Exceptions from '@core/infra/errors/Exceptions';
-import LoggerProvider from '@core/infra/logging/Logger.provider';
-import CryptographyService from '@core/infra/security/Cryptography.service';
-import DatabaseConnectionProvider from '@core/infra/database/connection';
-import RedisClient from '@core/infra/cache/Redis.client';
-import MongoClient from '@core/infra/data/Mongo.client';
-import SqsClient from '@core/infra/integration/aws/Sqs.client';
-import SnsClient from '@core/infra/integration/aws/Sns.client';
-import S3Client from '@core/infra/integration/aws/S3.client';
-import CognitoClient from '@core/infra/integration/aws/Cognito.client';
-import RestMockedServiceClient from '@core/infra/integration/rest/RestMockedService.client';
-import SyncCronJob from '@core/infra/cron/jobs/SyncCron.job';
-import SyncCronTask from '@core/infra/cron/tasks/SyncCron.task';
+import configs from './configs/configs.config';
+import LifecycleService from './start/Lifecycle.service';
+import Exceptions from './errors/Exceptions';
+import LoggerService, { SingletonLoggerProvider, RequestLoggerProvider } from './logging/Logger.service';
+import CryptographyService from './security/Cryptography.service';
+import DatabaseConnectionProvider from './infra/database/connection';
+import RedisClient from './infra/cache/Redis.client';
+import MongoClient from './infra/data/Mongo.client';
+import SqsClient from './infra/integration/aws/Sqs.client';
+import SnsClient from './infra/integration/aws/Sns.client';
+import S3Client from './infra/integration/aws/S3.client';
+import CognitoClient from './infra/integration/aws/Cognito.client';
+import RestMockedServiceClient from './infra/integration/rest/RestMockedService.client';
+import SyncCronJob from './cron/jobs/SyncCron.job';
+import SyncCronTask from './cron/tasks/SyncCron.task';
 import CommonModule from '@common/common.module';
 import AppModule from '@app/app.module';
 import EventsModule from '@events/events.module';
@@ -84,7 +84,9 @@ const requestRateConstants = new RequestRateConstants();
 	providers: [
 		LifecycleService,
 		Exceptions,
-		LoggerProvider,
+		LoggerService,
+		SingletonLoggerProvider,
+		RequestLoggerProvider,
 		CryptographyService,
 		DatabaseConnectionProvider,
 		RedisClient,
@@ -99,7 +101,9 @@ const requestRateConstants = new RequestRateConstants();
 	],
 	exports: [
 		Exceptions,
-		LoggerProvider,
+		LoggerService,
+		SingletonLoggerProvider,
+		RequestLoggerProvider,
 		CryptographyService,
 		DatabaseConnectionProvider,
 		RedisClient,

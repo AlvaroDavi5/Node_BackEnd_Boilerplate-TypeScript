@@ -1,5 +1,4 @@
 import { ConfigService } from '@nestjs/config';
-import { Logger } from 'winston';
 import {
 	SQSClient, SQSClientConfig, Message,
 	ListQueuesCommand, CreateQueueCommand, DeleteQueueCommand,
@@ -13,15 +12,14 @@ export default class SqsClient {
 	private readonly awsConfig: SQSClientConfig;
 	private readonly messageGroupId: string;
 	private readonly sqsClient: SQSClient;
-	private readonly logger: Logger;
 
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly cryptographyService: any,
-		private readonly loggerProvider: any,
+		private readonly logger: any,
 		private readonly dataParserHelper: any,
 	) {
-		this.logger = this.loggerProvider.getLogger(SqsClient.name);
+		this.logger.setContextName(SqsClient.name);
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
 		const {
@@ -47,7 +45,7 @@ export default class SqsClient {
 
 
 	private formatMessageBeforeSend(message: any = {}): string {
-		return this.dataParserHelper.toString(message) ?? '{}';
+		return this.dataParserHelper.toString(message);
 	}
 
 	private createParams(queueName: string): CreateQueueCommandInput {

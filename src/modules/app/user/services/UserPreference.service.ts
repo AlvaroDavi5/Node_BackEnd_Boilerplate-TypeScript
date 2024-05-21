@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import UserPreferenceRepository from '@app/user/repositories/userPreference/UserPreference.repository';
 import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
-import Exceptions from '@core/infra/errors/Exceptions';
+import Exceptions from '@core/errors/Exceptions';
 
 
 @Injectable()

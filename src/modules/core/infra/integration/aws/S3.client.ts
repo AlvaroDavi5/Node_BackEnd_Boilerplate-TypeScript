@@ -1,7 +1,6 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Readable } from 'stream';
-import { Logger } from 'winston';
 import {
 	S3Client as S3AWSClient, S3ClientConfig, NotificationConfiguration,
 	ListBucketsCommand, CreateBucketCommand, DeleteBucketCommand, PutBucketNotificationConfigurationCommand, PutObjectCommand, GetObjectCommand, DeleteObjectCommand,
@@ -9,8 +8,8 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import Exceptions from '@core/infra/errors/Exceptions';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import Exceptions from '@core/errors/Exceptions';
+import LoggerService from '@core/logging/Logger.service';
 
 
 export type s3FileContentType = string | Uint8Array | Buffer | Readable | ReadableStream | Blob;
@@ -19,17 +18,14 @@ export type s3FileContentType = string | Uint8Array | Buffer | Readable | Readab
 export default class S3Client {
 	private readonly awsConfig: S3ClientConfig;
 	private readonly s3Client: S3AWSClient;
-	private readonly logger: Logger;
 	public readonly bucketName: string;
 	private readonly filesExpiration: number;
 
 	constructor(
 		private readonly configService: ConfigService,
-		@Inject(LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
+		private readonly logger: LoggerService,
 		private readonly exceptions: Exceptions,
 	) {
-		this.logger = this.loggerProvider.getLogger(S3Client.name);
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
 		const {

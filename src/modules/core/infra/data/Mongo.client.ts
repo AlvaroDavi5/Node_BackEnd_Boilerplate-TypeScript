@@ -6,7 +6,7 @@ import {
 	InsertOneResult, InsertManyResult, UpdateResult, DeleteResult,
 } from 'mongodb';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import Exceptions from '@core/infra/errors/Exceptions';
+import Exceptions from '@core/errors/Exceptions';
 
 
 export type documentObjectType = { [key: string]: any }

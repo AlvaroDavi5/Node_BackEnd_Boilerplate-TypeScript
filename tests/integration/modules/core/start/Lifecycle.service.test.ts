@@ -1,32 +1,24 @@
 import { Test, TestingModule } from '@nestjs/testing';
-import LifecycleService from '../../../../../../src/modules/core/infra/start/Lifecycle.service';
-import configs from '../../../../../../src/modules/core/configs/configs.config';
-import LoggerProviderMock from '../../../../support/mocks/logging/Logger.provider';
-import { mockObservable } from '../../../../support/mocks/mockObservable';
-
+import { HttpAdapterHost } from '@nestjs/core';
+import { ConfigService } from '@nestjs/config';
+import LifecycleService from '../../../../../src/modules/core/start/Lifecycle.service';
+import configs from '../../../../../src/modules/core/configs/configs.config';
+import { DATABASE_CONNECTION_PROVIDER } from '../../../../../src/modules/core/infra/database/connection';
+import WebSocketServer from '../../../../../src/modules/events/websocket/server/WebSocket.server';
+import SyncCronJob from '../../../../../src/modules/core/cron/jobs/SyncCron.job';
+import MongoClient from '../../../../../src/modules/core/infra/data/Mongo.client';
+import RedisClient from '../../../../../src/modules/core/infra/cache/Redis.client';
+import SqsClient from '../../../../../src/modules/core/infra/integration/aws/Sqs.client';
+import SnsClient from '../../../../../src/modules/core/infra/integration/aws/Sns.client';
+import S3Client from '../../../../../src/modules/core/infra/integration/aws/S3.client';
+import CognitoClient from '../../../../../src/modules/core/infra/integration/aws/Cognito.client';
+import { configServiceMock } from '../../../../../src/dev/mocks/mockedModules';
+import LoggerService from '../../../support/mocks/logging/Logger.service';
+import { mockObservable } from '../../../support/mocks/mockObservable';
 
 describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 	let nestTestingModule: TestingModule;
 	// // mocks
-	const configServiceMock = {
-		get: (propertyPath?: string): any => {
-			if (propertyPath) {
-				const splitedPaths = propertyPath.split('.');
-				let scopedProperty: any = configs();
-
-				for (let i = 0; i < splitedPaths.length; i++) {
-					const scopedPath = splitedPaths[i];
-
-					if (scopedPath.length)
-						scopedProperty = scopedProperty[scopedPath];
-				}
-
-				return scopedProperty;
-			}
-			else
-				return configs();
-		},
-	};
 	const databaseConnectionMock = {
 		close: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
 	};
@@ -56,26 +48,28 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 			redisClientMock.isConnected = false;
 		}),
 	};
-	const s3ClientMock = {
-		listBuckets: jest.fn(async (): Promise<string[]> => { return []; }),
-		createBucket: jest.fn(async (bucketName: string): Promise<string> => { return `/${bucketName}/`; }),
-		destroy: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
-	};
 	const awsClientMock = {
 		destroy: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
 	};
-	const loggerProviderMock = new LoggerProviderMock(mockObservable);
-	const lifecycleServiceMock = new LifecycleService(
-		httpAdapterHostMock as any, configServiceMock as any,
-		databaseConnectionMock as any, mongoClientMock, redisClientMock,
-		awsClientMock, awsClientMock, awsClientMock, s3ClientMock,
-		webSocketServerMock, syncCronJobMock, loggerProviderMock); // ! mock instanced outside testing module due TypeError
+	const loggerServiceMock = new LoggerService(mockObservable);
 
 	// ? build test app
 	beforeAll(async () => {
 		nestTestingModule = await Test.createTestingModule({
 			providers: [
-				{ provide: LifecycleService, useValue: lifecycleServiceMock },
+				{ provide: ConfigService, useValue: configServiceMock },
+				{ provide: DATABASE_CONNECTION_PROVIDER, useValue: databaseConnectionMock },
+				{ provide: HttpAdapterHost, useValue: httpAdapterHostMock },
+				{ provide: WebSocketServer, useValue: webSocketServerMock },
+				{ provide: SyncCronJob, useValue: syncCronJobMock },
+				{ provide: MongoClient, useValue: mongoClientMock },
+				{ provide: RedisClient, useValue: redisClientMock },
+				{ provide: SqsClient, useValue: awsClientMock },
+				{ provide: SnsClient, useValue: awsClientMock },
+				{ provide: S3Client, useValue: awsClientMock },
+				{ provide: CognitoClient, useValue: awsClientMock },
+				{ provide: LoggerService, useValue: loggerServiceMock },
+				LifecycleService,
 			]
 		}).compile();
 	});
@@ -95,8 +89,7 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 			expect(mongoClientMock.disconnect).toHaveBeenCalledTimes(1);
 			expect(redisClientMock.disconnect).toHaveBeenCalledTimes(1);
 			expect(databaseConnectionMock.close).toHaveBeenCalledTimes(1);
-			expect(awsClientMock.destroy).toHaveBeenCalledTimes(3);
-			expect(s3ClientMock.destroy).toHaveBeenCalledTimes(1);
+			expect(awsClientMock.destroy).toHaveBeenCalledTimes(4);
 			expect(mockObservable.call).toHaveBeenCalledWith('Exiting Application');
 			expect(mockObservable.call).toHaveBeenCalledTimes(5);
 		});

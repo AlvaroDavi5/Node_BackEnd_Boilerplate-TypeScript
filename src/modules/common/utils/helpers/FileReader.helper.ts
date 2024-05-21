@@ -1,19 +1,21 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { readFileSync, createReadStream, ReadStream } from 'fs';
 import { join } from 'path';
-import { Logger } from 'winston';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import LoggerService from '@core/logging/Logger.service';
+import DataParserHelper from './DataParser.helper';
 
 
 @Injectable()
 export default class FileReaderHelper {
-	private readonly logger: Logger;
+	private readonly logger: LoggerService;
 
 	constructor(
-		@Inject(LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
+		private readonly configService: ConfigService,
+		private readonly dataParserHelper: DataParserHelper,
 	) {
-		this.logger = this.loggerProvider.getLogger(FileReaderHelper.name);
+		this.logger = new LoggerService(FileReaderHelper.name, this.configService, this.dataParserHelper);
+		this.logger.setContextName(FileReaderHelper.name);
 	}
 
 	public readFile(filePath: string, encoding?: BufferEncoding): string | undefined {

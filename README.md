@@ -137,6 +137,9 @@ ___
 
 ### TO DO
 
+- **Integrations**
+	- [ ] TypeORM
+	- [Kafka](#to-do)
 - **SQL**
 	- [ ] UUID Fields
 	- [ ] Manual Queries
@@ -156,10 +159,6 @@ ___
 	- [kafka](https://docs.nestjs.com/microservices/kafka)
 - **Packaging**
 	- Infra Utils Lib Package
-- **Integrations**
-	- [ ] OAuth
-	- [ ] PIX
-	- [Kafka](#to-do)
 - **Tests**
 	* _Integration_
 		- [ ] Configs

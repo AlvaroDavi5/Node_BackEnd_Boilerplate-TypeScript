@@ -1,20 +1,21 @@
-import { Injectable, Inject, forwardRef } from '@nestjs/common';
-import { Logger } from 'winston';
-import { LOGGER_PROVIDER, LoggerProviderInterface } from '@core/infra/logging/Logger.provider';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import LoggerService from '@core/logging/Logger.service';
+import { dataParserHelperMock } from '@dev/mocks/mockedModules';
 
 
 @Injectable()
 export default class DataParserHelper {
-	private readonly logger: Logger;
+	private readonly logger: LoggerService;
 
 	constructor(
-		@Inject(forwardRef(() => LOGGER_PROVIDER)) // ? resolve circular dependency
-		private readonly loggerProvider: LoggerProviderInterface,
+		private readonly configService: ConfigService,
 	) {
-		this.logger = this.loggerProvider.getLogger(DataParserHelper.name);
+		this.logger = new LoggerService(DataParserHelper.name, this.configService, dataParserHelperMock as any);
+		this.logger.setContextName(DataParserHelper.name);
 	}
 
-	public toString(data: unknown): string | null {
+	public toString(data: unknown): string {
 		let result = null;
 
 		switch (typeof data) {
@@ -31,7 +32,10 @@ export default class DataParserHelper {
 			result = data;
 			break;
 		case 'object':
-			result = (JSON.stringify(data) || data?.toString()) ?? '';
+			if (!data)
+				result = '';
+			else
+				result = (JSON.stringify(data) || data?.toString()) ?? '';
 			break;
 		case 'symbol':
 			result = data.toString();

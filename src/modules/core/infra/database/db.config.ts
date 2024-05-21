@@ -1,63 +1,39 @@
-import { Options, BuildOptions, Dialect } from 'sequelize/types';
+import { DataSourceOptions } from 'typeorm';
 import configs from '@core/configs/configs.config';
+import { User } from './entities/User';
 
 
-function getDialect(dialect: string): Dialect {
+function getDialect(dialect: string): 'mysql' | 'postgres' | 'sqlite' | 'mssql' {
 	switch (dialect?.toLowerCase()) {
-	case 'mysql':
-		return 'mysql';
-	case 'postgres':
-		return 'postgres';
-	case 'sqlite':
-		return 'sqlite';
-	case 'mssql':
-		return 'mssql';
-	default:
-		return 'mysql';
+		case 'mysql':
+			return 'mysql';
+		case 'postgres':
+			return 'postgres';
+		case 'sqlite':
+			return 'sqlite';
+		case 'mssql':
+			return 'mssql';
+		default:
+			return 'mysql';
 	}
-}
-
-export interface DatabaseConfigInterface {
-	database: string,
-	username: string,
-	password: string,
-	host: string,
-	port: number,
-	dialect: Dialect,
-	charset?: string,
-	dialectOptions?: {
-		ssl?: {
-			rejectUnauthorized?: boolean,
-		}
-	},
-	define?: {
-		underscored?: boolean,
-		timestamps?: boolean,
-		paranoid?: boolean,
-		freezeTableName?: boolean,
-	},
-	pool?: {
-		min?: number,
-		max?: number,
-		acquire?: number,
-		idle?: number,
-	},
-	logging?: boolean | ((msg: string) => void),
-	options?: Options,
-	buildOptions?: BuildOptions,
 }
 
 const { application: app, database: db } = configs();
 
-export const config: DatabaseConfigInterface = {
+export const dbConfig: DataSourceOptions = {
 	database: db.database,
 	username: db.username,
 	password: db.password,
 	host: db.host,
-	charset: db.charset,
-	dialect: getDialect(db.dialect),
 	port: parseInt(db.port),
-	define: { ...db.define },
+	type: getDialect(db.dialect),
+	charset: db.charset,
+	timezone: db.timezone,
+	logging: app.logging === 'true',
+	entities: [User],
+	migrations: [],
+	subscribers: [],
 	pool: { ...db.pool },
-	logging: app.logging === 'true' ? console.log : false,
-};
+	...db.define,
+	synchronize: false,
+}

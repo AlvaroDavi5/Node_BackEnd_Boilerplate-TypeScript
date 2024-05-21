@@ -138,7 +138,6 @@ ___
 ### TO DO
 
 - **Integrations**
-	- [ ] Catch Axios Errors and map to Internal Exceptions
 	- [ ] TypeORM
 	- [Kafka](#to-do)
 - **SQL**

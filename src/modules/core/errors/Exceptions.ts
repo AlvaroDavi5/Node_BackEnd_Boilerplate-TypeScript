@@ -4,25 +4,36 @@ import {
 	ConflictException, InternalServerErrorException, ServiceUnavailableException,
 } from '@nestjs/common';
 import { ThrottlerException } from '@nestjs/throttler';
-import { ExceptionsEnum } from '../../common/enums/exceptions.enum';
-import { ErrorInterface } from '@shared/interfaces/errorInterface';
+import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import HttpConstants from '@common/constants/Http.constants';
+import { ErrorInterface } from '@shared/interfaces/errorInterface';
 
 
 @Injectable()
 export default class Exceptions {
 	private readonly httpConstants: HttpConstants = new HttpConstants();
 
-	private buildException(exceptionName: string, statusCode: number, errorName: string, errorMessage: string, errorDetails: unknown, errorStack?: string) {
+	private parseToString(value?: unknown): string | undefined {
+		if (value === undefined || value === null || typeof value === 'function')
+			return undefined;
+		else if (typeof value === 'object')
+			return JSON.stringify(value) || value.toString();
+		else if (typeof value === 'string')
+			return value;
+		else
+			return value.toString();
+	}
+
+	private buildException(exceptionName: string, statusCode: number, errorName: string, errorMessage: string, errorDetails: unknown, errorCause?: unknown, errorStack?: string): HttpException {
 		const errorPayload: string | Record<string, any> = {
 			error: errorName,
 			message: errorMessage,
 			statusCode: statusCode,
-			details: errorDetails ? JSON.stringify(errorDetails) || String(errorDetails) : undefined,
+			details: this.parseToString(errorDetails),
 		};
 		const detailsPayload: HttpExceptionOptions = {
-			description: errorDetails ? JSON.stringify(errorDetails) || String(errorDetails) : undefined,
-			cause: errorDetails,
+			description: this.parseToString(errorDetails),
+			cause: this.parseToString(errorCause),
 		};
 
 		const exception = new HttpException(errorPayload, statusCode, detailsPayload);
@@ -39,7 +50,7 @@ export default class Exceptions {
 			ExceptionsEnum.CONTRACT,
 			this.httpConstants.status.BAD_REQUEST,
 			error.name ?? 'Bad Request',
-			error.message, error.details, error.stack,
+			error.message, error.details, error.cause, error.stack,
 		);
 	}
 
@@ -48,7 +59,7 @@ export default class Exceptions {
 			ExceptionsEnum.BUSINESS,
 			this.httpConstants.status.FORBIDDEN,
 			error.name ?? 'Forbidden',
-			error.message, error.details, error.stack,
+			error.message, error.details, error.cause, error.stack,
 		);
 	}
 
@@ -57,7 +68,7 @@ export default class Exceptions {
 			ExceptionsEnum.UNAUTHORIZED,
 			this.httpConstants.status.UNAUTHORIZED,
 			error.name ?? 'Unauthorized',
-			error.message, error.details, error.stack,
+			error.message, error.details, error.cause, error.stack,
 		);
 	}
 
@@ -66,7 +77,7 @@ export default class Exceptions {
 			ExceptionsEnum.TOO_MANY_REQUESTS,
 			this.httpConstants.status.TOO_MANY_REQUESTS,
 			error.name ?? 'Too Many Requests',
-			error.message, error.details, error.stack,
+			error.message, error.details, error.cause, error.stack,
 		);
 	}
 
@@ -75,7 +86,7 @@ export default class Exceptions {
 			ExceptionsEnum.CONFLICT,
 			this.httpConstants.status.CONFLICT,
 			error.name ?? 'Conflict',
-			error.message, error.details, error.stack,
+			error.message, error.details, error.cause, error.stack,
 		);
 	}
 
@@ -84,7 +95,7 @@ export default class Exceptions {
 			ExceptionsEnum.NOT_FOUND,
 			this.httpConstants.status.NOT_FOUND,
 			error.name ?? 'Not Found',
-			error.message, error.details, error.stack,
+			error.message, error.details, error.cause, error.stack,
 		);
 	}
 
@@ -93,7 +104,7 @@ export default class Exceptions {
 			ExceptionsEnum.INTEGRATION,
 			this.httpConstants.status.SERVICE_UNAVAILABLE,
 			error.name ?? 'Service Unavailable',
-			error.message, error.details, error.stack,
+			error.message, error.details, error.cause, error.stack,
 		);
 	}
 
@@ -102,7 +113,7 @@ export default class Exceptions {
 			ExceptionsEnum.INTERNAL,
 			this.httpConstants.status.INTERNAL_SERVER_ERROR,
 			error.name ?? 'Internal Server Error',
-			error.message, error.details, error.stack,
+			error.message, error.details, error.cause, error.stack,
 		);
 	}
 }

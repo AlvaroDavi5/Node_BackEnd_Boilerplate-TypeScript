@@ -4,6 +4,7 @@ import axios, { AxiosInstance } from 'axios';
 import axiosRetry from 'axios-retry';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import LoggerService from '@core/logging/Logger.service';
+import { catchError } from '@common/utils/errorCatcher.util';
 import { RestClientResponseInterface, requestMethodType } from '@shared/types/restClientTypes';
 
 
@@ -47,7 +48,7 @@ export default class RestMockedServiceClient {
 			return { data, status };
 		} catch (error) {
 			this.logger.error(error);
-			return { data: null, error, status: (error as any)?.response?.status };
+			throw catchError(error);
 		}
 	}
 
@@ -60,7 +61,7 @@ export default class RestMockedServiceClient {
 			return { data, status };
 		} catch (error) {
 			this.logger.error(error);
-			return { data: null, error, status: (error as any)?.response?.status };
+			throw catchError(error);
 		}
 	}
 }

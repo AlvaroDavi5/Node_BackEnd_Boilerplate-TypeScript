@@ -7,10 +7,6 @@ import LoggerService from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
 
 
-/* connecting to a database */
-/* passing Parameters separately (other dialects) */
-export const connection = new DataSource(dbConfig);
-
 export async function testConnection(connection: DataSource, logger?: Logger | LoggerInterface | Console): Promise<boolean> {
 	try {
 		if (connection.isInitialized) {

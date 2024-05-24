@@ -1,4 +1,4 @@
-import { DataSourceOptions } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import configs from 'src/modules/core/configs/configs.config';
 import UsersModel from './models/Users.model';
 import UserPreferencesModel from './models/UserPreferences.model';
@@ -42,3 +42,8 @@ export const dbConfig: DataSourceOptions = {
 	...db.define,
 	synchronize: false,
 };
+
+/* connecting to a database */
+/* passing Parameters separately (other dialects) */
+const connection = new DataSource(dbConfig);
+export default connection;

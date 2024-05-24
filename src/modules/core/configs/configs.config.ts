@@ -1,4 +1,4 @@
-import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import { TimeZonesEnum } from 'src/modules/common/enums/timeZones.enum';
 import dotenv from 'dotenv';
 
 

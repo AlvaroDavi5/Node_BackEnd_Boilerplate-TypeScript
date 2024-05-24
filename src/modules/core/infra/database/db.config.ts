@@ -1,5 +1,5 @@
 import { DataSourceOptions } from 'typeorm';
-import configs from '@core/configs/configs.config';
+import configs from 'src/modules/core/configs/configs.config';
 import UsersModel from './models/Users.model';
 import UserPreferencesModel from './models/UserPreferences.model';
 
@@ -22,6 +22,7 @@ function getDialect(dialect: string): 'mysql' | 'postgres' | 'sqlite' | 'mssql' 
 const { application: app, database: db } = configs();
 
 export const dbConfig: DataSourceOptions = {
+	name: 'dbConfig',
 	database: db.database,
 	username: db.username,
 	password: db.password,

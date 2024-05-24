@@ -13,10 +13,10 @@ export const connection = new DataSource(dbConfig);
 
 export async function testConnection(connection: DataSource, logger?: Logger | LoggerInterface | Console): Promise<boolean> {
 	try {
-		await connection.initialize().then(() => {
-			logger?.info(`Database '${dbConfig.database}' connection is initialized successfully`);
+		if (connection.isInitialized) {
+			logger?.info(`Database connection with '${dbConfig.database}' database is initialized successfully`);
 			return connection.isInitialized;
-		});
+		}
 
 		return false;
 	}

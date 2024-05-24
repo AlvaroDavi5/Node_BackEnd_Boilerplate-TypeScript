@@ -1,23 +1,22 @@
-import UserEntity, { UserInterface } from '@domain/entities/User.entity';
+import UserEntity from '@domain/entities/User.entity';
 import UsersModel from '@core/infra/database/models/Users.model';
 import userPreferenceMapper from '@app/user/repositories/userPreference/userPreference.mapper';
 
 
-const toEntity = ({ dataValues }: UsersModel): UserEntity => {
+const toDomainEntity = (dataValues: UsersModel): UserEntity => {
 	const preferenceDataValues = {
-		dataValues: {
-			...dataValues?.preference?.toJSON(),
-			userId: dataValues?.id,
-		}
+		...dataValues?.preference,
+		userId: dataValues?.id,
 	};
 
-	const userPreference = userPreferenceMapper.toEntity(preferenceDataValues as any);
-	dataValues.preference = userPreference;
+	const userPreference = userPreferenceMapper.toDomainEntity(preferenceDataValues as any);
+	const user = new UserEntity(dataValues);
+	user.setPreference(userPreference);
 
-	return new UserEntity(dataValues);
+	return user;
 };
 
-const toDatabase = (entity: UserEntity): UserInterface | null => {
+const toDatabaseEntity = (entity: UserEntity): any => {
 	if (!(entity.validate().valid))
 		return null;
 
@@ -27,6 +26,6 @@ const toDatabase = (entity: UserEntity): UserInterface | null => {
 };
 
 export default {
-	toEntity,
-	toDatabase,
+	toDomainEntity,
+	toDatabaseEntity,
 };

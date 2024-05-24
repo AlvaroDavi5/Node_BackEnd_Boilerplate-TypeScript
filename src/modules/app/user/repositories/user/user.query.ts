@@ -1,46 +1,35 @@
-import { Op, Includeable, FindAndCountOptions, Attributes, WhereOptions, Order } from 'sequelize';
+import { Not, IsNull, Equal, Like, In, And, FindManyOptions, FindOptionsWhere, FindOptionsOrder } from 'typeorm';
 import UsersModel from '@core/infra/database/models/Users.model';
-import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 import { UserInterface } from '@domain/entities/User.entity';
 import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
 
 
-export const userQueryOptions: { include: Includeable[] } = {
-	include: [
-		{
-			model: UserPreferencesModel,
-			association: UsersModel.associations.preference,
-			as: 'preference',
-		},
-	],
-};
-
-interface PaginationOptionsInterface {
-	limit?: number,
-	offset?: number,
-	order?: Order,
+interface PaginationOptionsInterface<M = any> {
+	take?: number, // limit
+	skip?: number, // offset
+	order?: FindOptionsOrder<M>,
 }
 
-const _buildPaginationParams = ({ limit, page, order, sortBy }: ListQueryInterface): PaginationOptionsInterface => {
-	const paginationParams: PaginationOptionsInterface = {};
+const buildPaginationParams = ({ limit, page, order, sortBy }: ListQueryInterface): PaginationOptionsInterface => {
+	const paginationParams: PaginationOptionsInterface<UsersModel> = {};
 
 	if (limit && page) {
-		paginationParams.limit = Number(limit) || 10; // max results
-		paginationParams.offset = (Number(page) || 0) * paginationParams.limit; // start from
+		paginationParams.take = Number(limit) || 10; // max results
+		paginationParams.skip = (Number(page) || 0) * paginationParams.take; // start from
 	}
 
 	if (sortBy || order) {
 		const listOrder = order ?? 'ASC';
 		const sortOrder = sortBy ?? 'createdAt';
 
-		paginationParams.order = [[sortOrder, listOrder]];
+		paginationParams.order = { [sortOrder]: listOrder };
 	}
 
 	return paginationParams;
 };
 
-const _buildWhereParams = ({
+const buildWhereParams = ({
 	searchTerm,
 	selectSoftDeleted,
 	id,
@@ -51,56 +40,52 @@ const _buildWhereParams = ({
 	document,
 	fu,
 	preference,
-}: ListQueryInterface & UserInterface): WhereOptions => {
-	const where: WhereOptions = {};
+}: ListQueryInterface & UserInterface): FindOptionsWhere<UsersModel>[] => {
+	const where: FindOptionsWhere<UsersModel>[] = [];
+	const partialWhere: FindOptionsWhere<UsersModel> = {};
 
 	if (selectSoftDeleted === true) {
-		where[Op.or as any] = [
-			{ deletedAt: { [Op.not]: null } },
-			{ deletedBy: { [Op.not]: null } },
-		];
+		// ? AND operator
+		partialWhere.deletedAt = Not(IsNull());
+		partialWhere.deletedBy = Not(IsNull());
 	}
 
 	if (id) {
-		where.id = id;
+		partialWhere.id = id;
+		where.push(partialWhere);
 		return where;
 	}
 
-	if (document) where.document = document;
-	if (docType) where.docType = docType;
-	if (fu) where.fu = fu;
-	if (phone) where.phone = phone;
+	if (email) partialWhere.email = email;
+	if (document) partialWhere.document = document;
+	if (docType) partialWhere.docType = docType;
+	if (fu) partialWhere.fu = fu;
+	if (phone) partialWhere.phone = phone;
+	if (fullName) partialWhere.fullName = fullName;
 
-	if (searchTerm) where.fullName = { [Op.substring]: searchTerm };
-	if (fullName) where.fullName = { [Op.eq]: fullName };
-	if (email) where.email = { [Op.like]: email };
-
-	if (preference?.defaultTheme) {
-		where[Op.and as any] = [
-			{
-				'$preference.defaultTheme$': {
-					[Op.in]: Object.values(ThemesEnum),
-				},
-			},
-			{ '$preference.defaultTheme$': { [Op.is]: preference.defaultTheme } },
-		];
+	if (searchTerm) {
+		partialWhere.fullName = Like(`%${searchTerm}%`);
 	}
 
+	if (preference?.defaultTheme) {
+		partialWhere.preference = {
+			defaultTheme: And(In(Object.values(ThemesEnum)), Equal(preference.defaultTheme)),
+		};
+	}
+
+	where.push(partialWhere);
 	return where;
 };
 
 export const userQueryParamsBuilder = ({
 
-	buildParams: (data: any): Omit<FindAndCountOptions<Attributes<UsersModel>>, 'group'> => {
-		const where = _buildWhereParams(data);
-		const pagination = _buildPaginationParams(data);
+	buildParams: (data: any): FindManyOptions<UsersModel> => {
+		const where = buildWhereParams(data);
+		const pagination = buildPaginationParams(data);
 
 		return {
 			...pagination,
 			where,
-			subQuery: false,
-			distinct: true,
-			...userQueryOptions,
 		};
 	}
 });

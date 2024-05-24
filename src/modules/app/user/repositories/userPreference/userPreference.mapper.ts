@@ -1,12 +1,12 @@
-import UserPreferenceEntity, { UserPreferenceInterface } from '@domain/entities/UserPreference.entity';
+import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 
 
-const toEntity = ({ dataValues }: UserPreferencesModel): UserPreferenceEntity => {
+const toDomainEntity = (dataValues: UserPreferencesModel): UserPreferenceEntity => {
 	return new UserPreferenceEntity(dataValues);
 };
 
-const toDatabase = (entity: UserPreferenceEntity): UserPreferenceInterface | null => {
+const toDatabaseEntity = (entity: UserPreferenceEntity): any => {
 	if (!(entity.validate().valid))
 		return null;
 
@@ -16,6 +16,6 @@ const toDatabase = (entity: UserPreferenceEntity): UserPreferenceInterface | nul
 };
 
 export default {
-	toEntity,
-	toDatabase,
+	toDomainEntity,
+	toDatabaseEntity,
 };

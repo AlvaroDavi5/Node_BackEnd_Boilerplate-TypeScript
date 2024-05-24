@@ -1,96 +1,102 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Sequelize, Association } from 'sequelize';
-import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
+import { DataSource } from 'typeorm';
+import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import LoggerService from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
-import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import AbstractRepository from '@core/infra/database/repositories/AbstractRepository.repository';
-import UsersModel, { userAttributes, userOptions } from '@core/infra/database/models/Users.model';
-import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
+import UsersModel from '@core/infra/database/models/Users.model';
 import UserEntity from '@domain/entities/User.entity';
+import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import userMapper from './user.mapper';
-import { userQueryParamsBuilder, userQueryOptions } from './user.query';
+import { userQueryParamsBuilder } from './user.query';
 import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
 
 
 @Injectable()
 export default class UserRepository extends AbstractRepository<UsersModel, UserEntity> {
-	public static associations: {
-		preference: Association<UserPreferencesModel>,
-	};
-
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER)
-			connection: Sequelize,
+			connection: DataSource,
 			exceptions: Exceptions,
 			logger: LoggerService,
 			dateGeneratorHelper: DateGeneratorHelper,
 	) {
 		logger.setContextName(UserRepository.name);
-		userOptions.sequelize = connection;
 		super({
+			connection: connection,
 			DomainEntity: UserEntity,
 			ResourceModel: UsersModel,
-			resourceAttributes: userAttributes,
-			resourceOptions: userOptions,
+			ResourceRepo: UsersModel.getRepository(),
 			resourceMapper: userMapper,
 			queryParamsBuilder: userQueryParamsBuilder,
-			queryOptions: userQueryOptions,
+			dateGeneratorHelper: dateGeneratorHelper,
 			exceptions: exceptions,
 			logger: logger,
-			dateGeneratorHelper: dateGeneratorHelper,
 		});
 	}
 
-	public associate(): void {
-		this.ResourceModel.hasOne(
-			UserPreferencesModel,
-			{
-				constraints: true,
-				foreignKeyConstraint: true,
-				foreignKey: 'userId',
-				sourceKey: 'id',
-				as: 'preference',
+	public async getById(id: string, withoutPassword = true): Promise<UserEntity | null> {
+		try {
+			let result: UsersModel | null = null;
+
+			if (withoutPassword) {
+				result = await this.ResourceRepo.findOne({ where: { id } });
 			}
-		);
-	}
+			else {
+				result = await this.ResourceRepo.createQueryBuilder()
+					.addSelect('password')
+					.where({ id })
+					.getOne();
+			}
+			if (!result) return null;
 
-	public async getById(id: number, withoutPassword = true): Promise<UserEntity | null> {
-		const userModel = (withoutPassword) ? this.ResourceModel.scope('withoutPassword') : this.ResourceModel;
-
-		const result = await userModel.findByPk(
-			id,
-			this.queryOptions,
-		);
-		if (!result) return null;
-
-		return this.resourceMapper.toEntity(result);
-	}
-
-	public async list(query?: ListQueryInterface, withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> {
-		const userModel = (withoutSensibleData) ? this.ResourceModel.scope('withoutSensibleData') : this.ResourceModel;
-
-		const buildedQuery = this.queryParamsBuilder?.buildParams(query);
-		const { rows, count } = await userModel.findAndCountAll(buildedQuery);
-
-		const totalItems = count;
-		const totalPages = Math.ceil(totalItems / (query?.limit ?? 1)) || 1;
-		const pageNumber = query?.page ?? 0;
-		const pageSize = rows.length;
-
-		let content: UserEntity[] = [];
-		if (rows.length) {
-			content = rows.map((register) =>
-				this.resourceMapper.toEntity(register)
-			);
+			return this.resourceMapper.toDomainEntity(result);
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
 		}
+	}
 
-		return {
-			content,
-			pageNumber,
-			pageSize,
-			totalPages,
-			totalItems,
-		};
+	public async list(query?: ListQueryInterface, withoutSensitiveData = true): Promise<PaginationInterface<UserEntity>> {
+		try {
+			const buildedQuery = this.queryParamsBuilder.buildParams(query);
+
+			let result!: [UsersModel[], number];
+			if (withoutSensitiveData) {
+				result = await this.ResourceRepo.findAndCount(buildedQuery);
+			}
+			else {
+				result = await this.ResourceRepo.createQueryBuilder()
+					.addSelect('email')
+					.addSelect('password')
+					.addSelect('document')
+					.addSelect('phone')
+					.where(buildedQuery)
+					.getManyAndCount();
+			}
+
+			const { 0: rows, 1: count } = result;
+
+			const totalItems = count;
+			const totalPages = Math.ceil(totalItems / (query?.limit ?? 1)) || 1;
+			const pageNumber = query?.page ?? 0;
+			const pageSize = rows.length;
+
+			let content: UserEntity[] = [];
+			if (rows.length) {
+				content = rows.map((register) =>
+					this.resourceMapper.toDomainEntity(register)
+				);
+			}
+
+			return {
+				content,
+				pageNumber,
+				pageSize,
+				totalPages,
+				totalItems,
+			};
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
+		}
 	}
 }

@@ -1,86 +1,71 @@
-import { Model, Op, QueryTypes, ModelAttributes, Includeable, InitOptions, FindAndCountOptions, Attributes } from 'sequelize';
+import { DataSource, BaseEntity, In, Repository, FindOneOptions, FindManyOptions, UpdateResult } from 'typeorm';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import LoggerService from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
 import Exceptions from '@core/errors/Exceptions';
-import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity';
+import AbstractEntity from '@domain/entities/AbstractEntity.entity';
 import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
 import { constructorType } from '@shared/types/constructorType';
 
 
-type ModelType<T extends Model<T>> = constructorType<T> & typeof Model;
 
-export default abstract class AbstractRepository<M extends Model, E extends AbstractEntity> {
+type ModelType<T extends BaseEntity> = constructorType<T> & typeof BaseEntity;
+
+export default abstract class AbstractRepository<M extends BaseEntity, E extends AbstractEntity> {
 	// ? ------ Attributes ------
 	protected DomainEntity: constructorType<E>;
 	protected ResourceModel: ModelType<M>;
+	protected ResourceRepo: Repository<M>;
 	protected resourceMapper: {
-		toEntity: ({ dataValues }: M) => E,
-		toDatabase: (entity: E) => any,
+		toDomainEntity: (dataValues: M) => E,
+		toDatabaseEntity: (entity: E) => M,
 	};
 
 	protected queryParamsBuilder: {
-		buildParams: (data: any) => Omit<FindAndCountOptions<Attributes<M>>, 'group'>,
+		buildParams: (data: any) => FindManyOptions<M>,
 	};
 
-	protected queryOptions: { include: Includeable[] };
 	protected exceptions: Exceptions;
 	protected dateGeneratorHelper: DateGeneratorHelper;
 	protected logger: LoggerInterface;
 
-	// // ------ Associations Attribute ------
-	public static associations: any = {};
-
 	// ! ------ Class Constructor ------
 	constructor({
+		connection,
 		DomainEntity,
 		ResourceModel,
-		resourceAttributes,
-		resourceOptions,
+		ResourceRepo,
 		resourceMapper,
 		queryParamsBuilder,
-		queryOptions,
+		dateGeneratorHelper,
 		exceptions,
 		logger,
-		dateGeneratorHelper,
 	}: {
+		connection: DataSource,
 		DomainEntity: constructorType<E>,
 		ResourceModel: ModelType<M>,
-		resourceAttributes: ModelAttributes,
-		resourceOptions: InitOptions,
+		ResourceRepo: Repository<M>,
 		resourceMapper: {
-			toEntity: ({ dataValues }: M) => E,
-			toDatabase: (entity: E) => any,
+			toDomainEntity: (dataValues: M) => E,
+			toDatabaseEntity: (entity: E) => M,
 		},
 		queryParamsBuilder: {
-			buildParams: (data: any) => any,
+			buildParams: (data: any) => FindManyOptions<M>,
 		},
-		queryOptions: any,
+		dateGeneratorHelper: DateGeneratorHelper,
 		exceptions: Exceptions,
 		logger: LoggerService,
-		dateGeneratorHelper: DateGeneratorHelper,
 	}) {
 		this.DomainEntity = DomainEntity;
 		this.ResourceModel = ResourceModel;
+		this.ResourceModel.useDataSource(connection);
+		this.ResourceRepo = ResourceRepo;
 		this.resourceMapper = resourceMapper;
 		this.queryParamsBuilder = queryParamsBuilder;
-		this.queryOptions = queryOptions;
+		this.dateGeneratorHelper = dateGeneratorHelper;
 		this.exceptions = exceptions;
 		this.logger = logger;
-		this.dateGeneratorHelper = dateGeneratorHelper;
-
-		this.ResourceModel.init(resourceAttributes, resourceOptions);
-		this.associate();
 	}
-
-	/**
-	 * ?    Association Methods
-	 * @belongsTo - One-to-One, source -> target
-	 * @hasOne - One-to-One, target -> source
-	 * @hasMany - One-to-Many, target -> source
-	 * @belongsToMany - Many-to-Many, source -> target
-	**/
-	public associate(): void { this.logger.debug('Associating entities'); }
 
 	// * ------ Methods ------
 	public validatePayload(entity: E): void {
@@ -102,166 +87,175 @@ export default abstract class AbstractRepository<M extends Model, E extends Abst
 		}
 	}
 
-	public async create(entity: E): Promise<E | null> {
-		this.validatePayload(entity);
+	public async create(entity: E): Promise<E> {
+		try {
+			this.validatePayload(entity);
 
-		const result = await this.ResourceModel.create(
-			this.resourceMapper.toDatabase(entity)
-		);
-		if (!result) return null;
+			const result = this.ResourceRepo.create(
+				this.resourceMapper.toDatabaseEntity(entity)
+			);
 
-		return this.resourceMapper.toEntity(result);
+			return this.resourceMapper.toDomainEntity(result);
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
+		}
 	}
 
-	public async getById(id: number): Promise<E | null> {
-		const result = await this.ResourceModel.findByPk(
-			id,
-			this.queryOptions,
-		);
-		if (!result) return null;
+	public async getById(id: string): Promise<E | null> {
+		try {
+			const result = await this.ResourceRepo.findOne({ where: { id } } as any);
+			if (!result) return null;
 
-		return this.resourceMapper.toEntity(result);
+			return this.resourceMapper.toDomainEntity(result);
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
+		}
 	}
 
-	public async findOne(query: any): Promise<E | null> {
-		const result = await this.ResourceModel.findOne({
-			where: query,
-			...this.queryOptions,
-		});
-		if (!result) return null;
+	public async findOne(query: FindOneOptions<M>): Promise<E | null> {
+		try {
+			const result = await this.ResourceRepo.findOne(query);
+			if (!result) return null;
 
-		return this.resourceMapper.toEntity(result);
+			return this.resourceMapper.toDomainEntity(result);
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
+		}
 	}
 
-	public async findAll(query?: any): Promise<E[] | null> {
-		const result = await this.ResourceModel.findAll({
-			where: query,
-			...this.queryOptions,
-		});
-		if (!result) return null;
+	public async findAll(query?: FindManyOptions<M>): Promise<E[]> {
+		try {
+			const result = await this.ResourceRepo.find(query);
 
-		return result.map(this.resourceMapper.toEntity);
+			return result.map(this.resourceMapper.toDomainEntity);
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
+		}
 	}
 
-	public async update(id: number, entity: E): Promise<E | null> {
-		this.validatePayload(entity);
+	public async update(id: string, entity: E): Promise<E | null> {
+		try {
+			this.validatePayload(entity);
+			const query: FindOneOptions<M> = {
+				where: { id },
+			} as any;
 
-		const where: any = {
-			id: Number(id),
-		};
-		await this.ResourceModel.update(this.resourceMapper.toDatabase(entity), { where });
-		const result = await this.ResourceModel.findByPk(id);
-		if (!result) return null;
+			await this.ResourceRepo.update(id, {
+				...this.resourceMapper.toDatabaseEntity(entity),
+			} as any);
+			const result = await this.ResourceRepo.findOne(query);
+			if (!result) return null;
 
-		return this.resourceMapper.toEntity(result);
+			return this.resourceMapper.toDomainEntity(result);
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
+		}
 	}
 
 	public async list(query?: ListQueryInterface): Promise<PaginationInterface<E>> {
-		const buildedQuery = this.queryParamsBuilder.buildParams(query);
-		const { rows, count } = await this.ResourceModel.findAndCountAll(buildedQuery);
+		try {
+			const buildedQuery = this.queryParamsBuilder.buildParams(query);
+			const { 0: rows, 1: count } = await this.ResourceRepo.findAndCount(buildedQuery);
 
-		const totalItems = count;
-		const totalPages = Math.ceil(totalItems / (query?.limit ?? 1)) || 1;
-		const pageNumber = query?.page ?? 0;
-		const pageSize = rows.length;
+			const totalItems = count;
+			const totalPages = Math.ceil(totalItems / (query?.limit ?? 1)) || 1;
+			const pageNumber = query?.page ?? 0;
+			const pageSize = rows.length;
 
-		let content: E[] = [];
-		if (rows.length) {
-			content = rows.map((register) =>
-				this.resourceMapper.toEntity(register)
-			);
-		}
-
-		return {
-			content,
-			pageNumber,
-			pageSize,
-			totalPages,
-			totalItems,
-		};
-	}
-
-	public async count(query: any): Promise<number> {
-		const counter = await this.ResourceModel.count({
-			where: query,
-			...this.queryOptions,
-		});
-
-		return counter;
-	}
-
-	public async deleteOne(id: number, softDelete = true, agentId: number | string | null = null): Promise<boolean> {
-		const where: any = {
-			id: Number(id),
-		};
-
-		let result = null;
-		if (softDelete) {
-			const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
-			result = await this.ResourceModel.update({
-				deletedAt: timestamp,
-				deletedBy: agentId,
-			}, { where });
-		}
-		else {
-			const register = await this.ResourceModel.findByPk(id);
-			if (register) {
-				result = await register?.destroy();
-				return true;
+			let content: E[] = [];
+			if (rows.length) {
+				content = rows.map((register) =>
+					this.resourceMapper.toDomainEntity(register)
+				);
 			}
-		}
-		if (!result) return false;
 
-		return result[0] == 1;
+			return {
+				content,
+				pageNumber,
+				pageSize,
+				totalPages,
+				totalItems,
+			};
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
+		}
 	}
 
-	public async deleteMany(ids: Array<number>, softDelete = true, agentId: number | string | null = null): Promise<number> {
-		const where: any = {};
-		where.id = { [Op.in]: ids };
+	public async count(query: FindManyOptions<M> | undefined): Promise<number> {
+		try {
+			const counter = await this.ResourceRepo.count(query);
 
-		let result = null;
-		if (softDelete) {
-			const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
-			result = await this.ResourceModel.update(
-				{
+			return counter;
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
+		}
+	}
+
+	public async deleteOne(id: string, softDelete = true, agentId: string | null = null): Promise<boolean> {
+		try {
+			const query: FindOneOptions<M> = {
+				where: { id } as any,
+			};
+
+			let result: UpdateResult | M | null = null;
+			if (softDelete) {
+				const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
+				result = await this.ResourceRepo.update(id, {
 					deletedAt: timestamp,
 					deletedBy: agentId,
-				},
-				{
-					where,
-				}
-			);
-		}
-		else {
-			const registers = await this.ResourceModel.findAll({
-				where,
-			});
-			if (!registers) return 0;
-
-			let counter = 0;
-			for (const register of registers) {
-				await register.destroy();
-				counter++;
+				} as any);
+				return result !== null && result !== undefined;
 			}
-			return counter;
+			else {
+				const register = await this.ResourceRepo.findOne(query);
+				if (register) {
+					result = await register.remove();
+					return true;
+				}
+				return false;
+			}
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
 		}
-		if (!result) return 0;
-
-		return result?.[0];
 	}
 
-	public async executeQuery(sqlQuery: string, QueryType?: QueryTypes): Promise<any> {
-		let result: any;
-
+	public async deleteMany(ids: string[], softDelete = true, agentId: string | null = null): Promise<number> {
 		try {
-			result = await this.ResourceModel.sequelize?.query(sqlQuery, {
-				type: QueryType,
-			});
-		} catch (error) {
-			this.logger.error(error);
-			result = null;
-		}
+			const query: FindManyOptions<M> = {
+				where: { id: In(ids) }
+			} as any;
 
-		return result;
+			let result: UpdateResult | M | null = null;
+			if (softDelete) {
+				const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
+				result = await this.ResourceRepo.update(ids, {
+					deletedAt: timestamp,
+					deletedBy: agentId,
+				} as any);
+				return Number(result.affected);
+			}
+			else {
+				const registers = await this.ResourceRepo.find(query);
+				if (!registers) return 0;
+
+				let counter = 0;
+				for (const register of registers) {
+					result = await register.remove();
+					counter++;
+				}
+				return counter;
+			}
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
+		}
+	}
+
+	public async executeQuery(sqlQuery: string): Promise<any> {
+		try {
+			const result = await this.ResourceRepo.query(sqlQuery);
+			return result;
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
+		}
 	}
 }

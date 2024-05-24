@@ -1,6 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsEnum, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
+import { Type, Transform } from 'class-transformer';
 import { CreateUserSchemaInterface } from '@app/user/api/schemas/user/createUser.schema';
 import { UpdateUserSchemaInterface, UserPreferenceSchemaInterface } from '@app/user/api/schemas/user/updateUser.schema';
 import { LoginUserSchemaInterface } from '@app/user/api/schemas/user/loginUser.schema';
@@ -48,6 +48,9 @@ export abstract class CreateUserInputDto implements CreateUserSchemaInterface {
 	@ApiProperty({ type: String, example: '00000000000', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
+	@Transform(({ value }: { value?: string }) => {
+		return value?.replace(/\D/g, '');
+	})
 	public document?: string;
 
 	@ApiProperty({ type: String, example: 'UF', default: undefined, nullable: false, required: false })
@@ -91,6 +94,9 @@ export abstract class UpdateUserInputDto implements UpdateUserSchemaInterface {
 	@ApiProperty({ type: String, example: '00000000000', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
+	@Transform(({ value }: { value?: string }) => {
+		return value?.replace(/\D/g, '');
+	})
 	public document?: string;
 
 	@ApiProperty({ type: String, example: 'UF', default: undefined, nullable: false, required: false })

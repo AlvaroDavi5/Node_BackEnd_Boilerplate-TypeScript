@@ -1,6 +1,6 @@
 import {
 	Inject,
-	Controller, Req, ParseIntPipe,
+	Controller, Req, ParseUUIDPipe,
 	Param, Query, Body,
 	Get, Post, Put, Patch, Delete,
 	UseGuards,
@@ -124,7 +124,7 @@ export default class UserController {
 	@ApiProduces('application/json')
 	public async getUser(
 		@Req() request: RequestInterface,
-		@Param('userId', ParseIntPipe) userId: number,
+		@Param('userId', ParseUUIDPipe) userId: string,
 	): Promise<UserInterface> {
 		try {
 			const { user } = request;
@@ -149,7 +149,7 @@ export default class UserController {
 	@ApiProduces('application/json')
 	public async updateUser(
 		@Req() request: RequestInterface,
-		@Param('userId', ParseIntPipe) userId: number,
+		@Param('userId', ParseUUIDPipe) userId: string,
 		@Body(UpdateUserValidatorPipe) body: UpdateUserInputDto,
 	): Promise<UserInterface> {
 		try {
@@ -175,7 +175,7 @@ export default class UserController {
 	@ApiProduces('application/json')
 	public async deleteUser(
 		@Req() request: RequestInterface,
-		@Param('userId', ParseIntPipe) userId: number,
+		@Param('userId', ParseUUIDPipe) userId: string,
 	): Promise<[affectedCount: number] | unknown> {
 		try {
 			const { user } = request;

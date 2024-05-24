@@ -1,5 +1,5 @@
 import { io, Socket as ClientSocket } from 'socket.io-client';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from 'src/modules/core/configs/configs.config';
 
 
 export default class WebSocketClient {

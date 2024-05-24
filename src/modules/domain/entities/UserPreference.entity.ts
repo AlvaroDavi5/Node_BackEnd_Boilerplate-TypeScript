@@ -25,12 +25,12 @@ export interface UserPreferenceInterface {
 	description: 'user preference entity',
 })
 export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceInterface> {
-	@ApiProperty({ type: String, example: 'xxx', default: '', nullable: false, required: false, description: 'Database register ID' })
+	@ApiProperty({ type: String, example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', default: '', nullable: false, required: false, description: 'Database register ID' })
 	@Field(returingString, { defaultValue: '', nullable: false, description: 'Database register ID' })
 	@IsString()
 	private id!: string;
 
-	@ApiProperty({ type: String, example: 'xxx', default: '', nullable: false, required: false, description: 'User ID' })
+	@ApiProperty({ type: String, example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', default: '', nullable: false, required: false, description: 'User ID' })
 	@Field(returingString, { defaultValue: '', nullable: false, description: 'User ID' })
 	@IsString()
 	private userId!: string;

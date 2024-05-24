@@ -1,75 +1,133 @@
-import { Model, DataTypes, Association, HasOneGetAssociationMixin, HasManyHasAssociationMixin, ModelAttributes, InitOptions } from 'sequelize';
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, OneToOne } from 'typeorm';
 import UserPreferencesModel from './UserPreferences.model';
-import { connection } from '@core/infra/database/connection';
 
 
-class UsersModel extends Model {
-	protected id!: number;
+@Entity({
+	name: 'Users',
+	comment: 'Users data structure',
+	synchronize: true,
+})
+export default class UsersModel extends BaseEntity {
+	@PrimaryGeneratedColumn('uuid')
+	public id!: string;
+
+	@Column({
+		name: 'fullName',
+		type: 'varchar',
+		length: 100,
+		nullable: false,
+		default: '',
+		comment: 'User name',
+	})
 	public fullName!: string;
-	protected email!: string;
-	protected password!: string;
-	protected phone!: string;
-	public docType!: string;
-	protected document!: string;
-	public fu!: string;
+
+	@Column({
+		name: 'email',
+		type: 'varchar',
+		length: 70,
+		unique: true,
+		nullable: false,
+		default: '',
+		select: false,
+		comment: 'User email',
+	})
+	public email!: string;
+
+	@Column({
+		name: 'password',
+		type: 'varchar',
+		length: 550,
+		nullable: false,
+		default: '',
+		select: false,
+		comment: 'User password',
+	})
+	public password!: string;
+
+	@Column({
+		name: 'phone',
+		type: 'varchar',
+		length: 16,
+		nullable: true,
+		default: null,
+		select: false,
+		comment: 'User phone number',
+	})
+	public phone!: string | null;
+
+	@Column({
+		name: 'docType',
+		type: 'varchar',
+		length: 10,
+		nullable: true,
+		default: null,
+		comment: 'Document type',
+	})
+	public docType!: string | null;
+
+	@Column({
+		name: 'document',
+		type: 'varchar',
+		length: 18,
+		nullable: true,
+		default: null,
+		select: false,
+		comment: 'Document code',
+	})
+	public document!: string | null;
+
+	@Column({
+		name: 'fu',
+		type: 'varchar',
+		length: 2,
+		nullable: true,
+		default: null,
+		comment: 'Brazilian Federative Unity',
+	})
+	public fu!: string | null;
+
+	@Column({
+		name: 'createdAt',
+		type: 'date',
+		nullable: false,
+		default: 'NOW()',
+		comment: 'User creation timestamp',
+	})
 	public readonly createdAt!: Date;
+
+	@Column({
+		name: 'updatedAt',
+		type: 'date',
+		nullable: true,
+		default: null,
+		comment: 'User updated timestamp',
+	})
 	public updatedAt!: Date | null;
+
+	@Column({
+		name: 'deletedAt',
+		type: 'date',
+		nullable: true,
+		default: null,
+		comment: 'User deleted timestamp',
+	})
 	public deletedAt!: Date | null;
-	protected deletedBy!: string | null;
 
-	static associate() {
-		this.hasOne(
-			UserPreferencesModel,
-			{
-				constraints: true,
-				foreignKeyConstraint: true,
-				foreignKey: 'userId',
-				sourceKey: 'id',
-				as: 'preference',
-			}
-		);
-	}
+	@Column({
+		name: 'deletedBy',
+		type: 'varchar',
+		length: 260,
+		nullable: true,
+		default: null,
+		comment: 'Delete userAgent',
+	})
+	public deletedBy!: string | null;
 
-	public static associations: {
-		preference: Association<UserPreferencesModel>,
-	};
-
-	public getPreference!: HasOneGetAssociationMixin<UserPreferencesModel>;
-	public hasPreference!: HasManyHasAssociationMixin<UserPreferencesModel, number>;
+	@OneToOne(() => UserPreferencesModel, (preference: UserPreferencesModel) => preference.user, {
+		createForeignKeyConstraints: true,
+		nullable: true,
+		onUpdate: 'CASCADE',
+		onDelete: 'CASCADE',
+	})
+	public preference!: UserPreferencesModel | null;
 }
-
-export const userAttributes: ModelAttributes = {
-	fullName: DataTypes.STRING(100),
-	email: DataTypes.STRING(70),
-	password: DataTypes.STRING(550),
-	phone: DataTypes.STRING(16),
-	docType: DataTypes.STRING(10),
-	document: DataTypes.STRING(18),
-	fu: DataTypes.STRING(2),
-	createdAt: DataTypes.DATE,
-	updatedAt: DataTypes.DATE,
-	deletedAt: DataTypes.DATE,
-	deletedBy: DataTypes.STRING(256),
-};
-
-export const userOptions: InitOptions = {
-	modelName: 'Users',
-	tableName: 'Users',
-	scopes: {
-		withoutPassword: {
-			attributes: {
-				exclude: ['password'],
-			}
-		},
-		withoutSensibleData: {
-			attributes: {
-				exclude: ['email', 'password', 'phone', 'document'],
-			},
-		}
-	},
-	sequelize: connection,
-};
-
-UsersModel.init(userAttributes, userOptions);
-
-export default UsersModel;

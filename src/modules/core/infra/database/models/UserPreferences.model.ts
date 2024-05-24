@@ -71,13 +71,14 @@ export default class UserPreferencesModel extends BaseEntity {
 	})
 	public user!: UsersModel | null;
 
-	@Column({
-		name: 'userId',
-		foreignKeyConstraintName: 'userId',
-		type: 'uuid',
-		nullable: false,
-		default: '',
-		comment: 'User ID',
-	})
-	public userId!: string;
+	/**
+		@param name: 'userId'
+		@param foreignKeyConstraintName: 'userId'
+		@param type: 'uuid'
+		@param length: 260
+		@param nullable: true
+		@param default: ''
+		@param comment: 'User ID'
+	**/
+	public userId!: string | null;
 }

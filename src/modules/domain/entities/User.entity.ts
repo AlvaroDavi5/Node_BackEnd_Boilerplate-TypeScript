@@ -1,19 +1,19 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString, IsDate } from 'class-validator';
+import { IsString, IsDate } from 'class-validator';
 import { Type } from 'class-transformer';
-import AbstractEntity, { AbstractEntityList } from '@core/infra/database/entities/AbstractEntity.entity';
-import UserPreferenceEntity, { UserPreferenceInterface } from '@domain/entities/UserPreference.entity';
+import AbstractEntity, { AbstractEntityList } from '@domain/entities/AbstractEntity.entity';
+import UserPreferenceEntity, { UserPreferenceInterface, returingUserPreferenceEntity } from './UserPreference.entity';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
-import { returingNumber, returingString, returingDate } from '@shared/types/returnTypeFunc';
+import { returingString, returingDate } from '@shared/types/returnTypeFunc';
 
 
 const dateGeneratorHelper = new DateGeneratorHelper();
 const dateExample = dateGeneratorHelper.getDate('2024-06-10T03:52:50.885Z', 'iso-8601', true, TimeZonesEnum.SaoPaulo);
 
 export interface UserInterface {
-	id?: number,
+	id?: string,
 	fullName?: string,
 	email?: string,
 	password?: string,
@@ -28,14 +28,14 @@ export interface UserInterface {
 	deletedBy?: string,
 }
 
-export const returingUserPreferenceEntity = () => UserPreferenceEntity;
-
-@ObjectType()
+@ObjectType({
+	description: 'user entity',
+})
 export default class UserEntity extends AbstractEntity<UserInterface> {
-	@ApiProperty({ type: Number, nullable: false, required: false, default: 0, example: 0, description: 'Database register ID' })
-	@Field(returingNumber, { defaultValue: 0, nullable: false, description: 'Database register ID' })
-	@IsNumber()
-	private id = 0;
+	@ApiProperty({ type: String, example: 'xxx', default: '', nullable: false, required: false, description: 'Database register ID' })
+	@Field(returingString, { defaultValue: '', nullable: false, description: 'Database register ID' })
+	@IsString()
+	private id!: string;
 
 	@ApiProperty({ type: String, example: 'User Default', default: null, nullable: true, required: true, description: 'User name' })
 	@Field(returingString, { defaultValue: null, nullable: true, description: 'User name' })
@@ -134,9 +134,9 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 		};
 	}
 
-	public getId(): number { return this.id; }
-	public setId(id: number): void {
-		if (id <= 0)
+	public getId(): string { return this.id; }
+	public setId(id: string): void {
+		if (id.length < 1)
 			return;
 
 		this.id = id;

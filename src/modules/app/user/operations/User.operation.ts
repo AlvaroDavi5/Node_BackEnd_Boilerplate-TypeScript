@@ -82,7 +82,7 @@ export default class UserOperation {
 		return foundedUser;
 	}
 
-	public async getUser(id: number, userAgent?: UserAuthInterface): Promise<UserEntity> {
+	public async getUser(id: string, userAgent?: UserAuthInterface): Promise<UserEntity> {
 		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
@@ -102,7 +102,7 @@ export default class UserOperation {
 		return foundedUser;
 	}
 
-	public async updateUser(id: number, data: any, userAgent?: UserAuthInterface): Promise<UserEntity> {
+	public async updateUser(id: string, data: any, userAgent?: UserAuthInterface): Promise<UserEntity> {
 		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
@@ -157,7 +157,7 @@ export default class UserOperation {
 		return foundedUser;
 	}
 
-	public async deleteUser(id: number, userAgent?: UserAuthInterface): Promise<boolean> {
+	public async deleteUser(id: string, userAgent?: UserAuthInterface): Promise<boolean> {
 		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'

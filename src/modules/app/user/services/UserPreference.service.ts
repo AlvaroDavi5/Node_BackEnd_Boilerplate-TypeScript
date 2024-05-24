@@ -11,9 +11,9 @@ export default class UserPreferenceService {
 		private readonly exceptions: Exceptions,
 	) { }
 
-	public async getByUserId(userId: number): Promise<UserPreferenceEntity | null> {
+	public async getByUserId(userId: string): Promise<UserPreferenceEntity | null> {
 		try {
-			return await this.userPreferenceRepository.findOne({ userId: userId });
+			return await this.userPreferenceRepository.findOne({ where: { userId: userId } });
 		} catch (error) {
 			throw this.exceptions.internal({
 				message: 'Error to comunicate with database',
@@ -33,7 +33,7 @@ export default class UserPreferenceService {
 		}
 	}
 
-	public async update(id: number, entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> {
+	public async update(id: string, entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> {
 		try {
 			return await this.userPreferenceRepository.update(id, entity);
 		} catch (error) {
@@ -44,7 +44,7 @@ export default class UserPreferenceService {
 		}
 	}
 
-	public async delete(id: number, data: { softDelete: boolean }): Promise<boolean | null> {
+	public async delete(id: string, data: { softDelete: boolean }): Promise<boolean | null> {
 		try {
 			return await this.userPreferenceRepository.deleteOne(id, Boolean(data.softDelete));
 		} catch (error) {

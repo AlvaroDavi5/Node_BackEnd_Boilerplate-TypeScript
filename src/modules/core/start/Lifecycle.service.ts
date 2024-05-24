@@ -1,7 +1,7 @@
 import { Injectable, Inject, OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown } from '@nestjs/common';
 import { HttpAdapterHost } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { Sequelize } from 'sequelize';
+import { DataSource } from 'typeorm';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
@@ -25,7 +25,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 		private readonly httpAdapterHost: HttpAdapterHost,
 		private readonly configService: ConfigService,
 		@Inject(DATABASE_CONNECTION_PROVIDER)
-		private readonly connection: Sequelize,
+		private readonly connection: DataSource,
 		private readonly mongoClient: MongoClient,
 		private readonly redisClient: RedisClient,
 		private readonly cognitoClient: CognitoClient,
@@ -80,7 +80,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 			}
 
 		try {
-			await this.connection.close();
+			await this.connection.destroy();
 		} catch (error) {
 			this.logger.error(error);
 		}

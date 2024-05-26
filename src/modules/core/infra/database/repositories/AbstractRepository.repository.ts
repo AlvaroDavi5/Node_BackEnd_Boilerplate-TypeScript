@@ -1,4 +1,5 @@
 import { DataSource, BaseEntity, In, Repository, FindOneOptions, FindManyOptions, UpdateResult } from 'typeorm';
+import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import LoggerService from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
@@ -6,7 +7,6 @@ import Exceptions from '@core/errors/Exceptions';
 import AbstractEntity from '@domain/entities/AbstractEntity.entity';
 import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
 import { constructorType } from '@shared/types/constructorType';
-
 
 
 type ModelType<T extends BaseEntity> = constructorType<T> & typeof BaseEntity;
@@ -91,9 +91,9 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 		try {
 			this.validatePayload(entity);
 
-			const result = this.ResourceRepo.create(
+			const result = await this.ResourceRepo.create(
 				this.resourceMapper.toDatabaseEntity(entity)
-			);
+			).save();
 
 			return this.resourceMapper.toDomainEntity(result);
 		} catch (error) {
@@ -133,16 +133,15 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 		}
 	}
 
-	public async update(id: string, entity: E): Promise<E | null> {
+	public async update(id: string, dataValues: QueryDeepPartialEntity<M>): Promise<E | null> {
 		try {
-			this.validatePayload(entity);
 			const query: FindOneOptions<M> = {
 				where: { id },
 			} as any;
 
-			await this.ResourceRepo.update(id, {
-				...this.resourceMapper.toDatabaseEntity(entity),
-			} as any);
+			const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
+			(dataValues as any).updatedAt = timestamp;
+			await this.ResourceRepo.update(id, dataValues);
 			const result = await this.ResourceRepo.findOne(query);
 			if (!result) return null;
 

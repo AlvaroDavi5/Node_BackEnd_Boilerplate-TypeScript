@@ -190,7 +190,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 		}
 	}
 
-	public async deleteOne(id: string, softDelete = true, agentId: string | null = null): Promise<boolean> {
+	public async deleteOne(id: string, softDelete = true): Promise<boolean> {
 		try {
 			const query: FindOneOptions<M> = {
 				where: { id } as any,
@@ -201,7 +201,6 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 				const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
 				result = await this.ResourceRepo.update(id, {
 					deletedAt: timestamp,
-					deletedBy: agentId,
 				} as any);
 				return result !== null && result !== undefined;
 			}
@@ -218,7 +217,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 		}
 	}
 
-	public async deleteMany(ids: string[], softDelete = true, agentId: string | null = null): Promise<number> {
+	public async deleteMany(ids: string[], softDelete = true): Promise<number> {
 		try {
 			const query: FindManyOptions<M> = {
 				where: { id: In(ids) }
@@ -229,7 +228,6 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 				const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
 				result = await this.ResourceRepo.update(ids, {
 					deletedAt: timestamp,
-					deletedBy: agentId,
 				} as any);
 				return Number(result.affected);
 			}

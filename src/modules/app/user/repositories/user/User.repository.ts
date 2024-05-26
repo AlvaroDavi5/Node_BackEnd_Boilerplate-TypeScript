@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { DataSource } from 'typeorm';
+import { DataSource, In, FindOneOptions, FindManyOptions, UpdateResult } from 'typeorm';
 import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import LoggerService from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
@@ -94,6 +94,65 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 				totalPages,
 				totalItems,
 			};
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
+		}
+	}
+
+	public async deleteOne(id: string, softDelete = true, agentId: string | null = null): Promise<boolean> {
+		try {
+			const query: FindOneOptions<UsersModel> = {
+				where: { id } as any,
+			};
+
+			let result: UpdateResult | UsersModel | null = null;
+			if (softDelete) {
+				const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
+				result = await this.ResourceRepo.update(id, {
+					deletedAt: timestamp,
+					deletedBy: agentId,
+				} as any);
+				return result !== null && result !== undefined;
+			}
+			else {
+				const register = await this.ResourceRepo.findOne(query);
+				if (register) {
+					result = await register.remove();
+					return true;
+				}
+				return false;
+			}
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
+		}
+	}
+
+	public async deleteMany(ids: string[], softDelete = true, agentId: string | null = null): Promise<number> {
+		try {
+			const query: FindManyOptions<UsersModel> = {
+				where: { id: In(ids) }
+			} as any;
+
+			let result: UpdateResult | UsersModel | null = null;
+			if (softDelete) {
+				const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
+				result = await this.ResourceRepo.update(ids, {
+					deletedAt: timestamp,
+					deletedBy: agentId,
+				} as any);
+				return Number(result.affected);
+			}
+			else {
+				const registers = await this.ResourceRepo.find(query);
+				if (!registers) return 0;
+
+				let counter = 0;
+				for (const register of registers) {
+					result = await register.remove();
+					counter++;
+				}
+				return counter;
+			}
 		} catch (error) {
 			throw this.exceptions.internal(error as Error);
 		}

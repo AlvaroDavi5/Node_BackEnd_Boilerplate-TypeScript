@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import UserEntity, { UserEntityList } from '@domain/entities/User.entity';
+import UserEntity, { UpdateUserInterface, UserEntityList } from '@domain/entities/User.entity';
 import CryptographyService from '@core/security/Cryptography.service';
 import UserRepository from '@app/user/repositories/user/User.repository';
 import Exceptions from '@core/errors/Exceptions';
@@ -63,13 +63,16 @@ export default class UserService {
 		}
 	}
 
-	public async update(id: string, entity: UserEntity): Promise<UserEntity | null> {
-		try {
-			const userPassword = entity.getPassword();
-			if (userPassword?.length)
-				entity.setPassword(this.protectPassword(userPassword));
 
-			return await this.userRepository.update(id, entity);
+	public async update(id: string, data: UpdateUserInterface): Promise<UserEntity | null> {
+		const { id: userId, createdAt, preference, ...userData } = new UserEntity(data).getAttributes();
+
+		try {
+			const userPassword = userData.password;
+			if (userPassword?.length)
+				userData.password = this.protectPassword(userPassword);
+
+			return await this.userRepository.update(id, userData);
 		} catch (error) {
 			throw this.exceptions.internal({
 				message: 'Error to comunicate with database',

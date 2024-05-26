@@ -9,7 +9,7 @@ export class InsertUsersAndUserPreferences1716538631918 implements MigrationInte
 		const usersRepository = dataSource.getRepository(UsersModel);
 		const preferencesRepository = dataSource.getRepository(UserPreferencesModel);
 
-		const user = usersRepository.create({
+		const user = await usersRepository.create({
 			fullName: 'Tester',
 			email: 'tester@nomail.test',
 			password: 'pass',
@@ -17,12 +17,12 @@ export class InsertUsersAndUserPreferences1716538631918 implements MigrationInte
 			docType: 'invalid',
 			document: '00000000000',
 			fu: 'SP',
-		});
-		const preference = preferencesRepository.create({
-			userId: user.id,
+		}).save();
+		const preference = await preferencesRepository.create({
+			user: user,
 			imagePath: './generic.png',
 			defaultTheme: 'DARK',
-		});
+		}).save();
 		user.preference = preference;
 	}
 

@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDate } from 'class-validator';
 import { Type } from 'class-transformer';
 import AbstractEntity, { AbstractEntityList } from '@domain/entities/AbstractEntity.entity';
-import UserPreferenceEntity, { UserPreferenceInterface, returingUserPreferenceEntity } from './UserPreference.entity';
+import UserPreferenceEntity, { CreateUserPreferenceInterface, UserPreferenceInterface, returingUserPreferenceEntity } from './UserPreference.entity';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { returingString, returingDate } from '@shared/types/returnTypeFunc';
@@ -12,7 +12,7 @@ import { returingString, returingDate } from '@shared/types/returnTypeFunc';
 const dateGeneratorHelper = new DateGeneratorHelper();
 const dateExample = dateGeneratorHelper.getDate('2024-06-10T03:52:50.885Z', 'iso-8601', true, TimeZonesEnum.SaoPaulo);
 
-export interface UserInterface {
+export interface UserInterface<UP = UserPreferenceInterface> {
 	id?: string,
 	fullName?: string,
 	email?: string,
@@ -21,12 +21,18 @@ export interface UserInterface {
 	docType?: string,
 	document?: string,
 	fu?: string,
-	preference?: UserPreferenceInterface,
+	preference?: UP,
 	readonly createdAt: Date,
 	updatedAt?: Date,
 	deletedAt?: Date,
 	deletedBy?: string,
 }
+
+export type CreateUserInterface = Omit<UserInterface<CreateUserPreferenceInterface>, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
+export type UpdateUserInterface = Partial<CreateUserInterface>;
+export type ViewUserInterface = UserInterface;
+export type ViewUserWithoutPasswordInterface = Omit<UserInterface, 'password'>;
+export type ViewUserWithoutSensitiveDataInterface = Omit<UserInterface, 'password' | 'phone' | 'document'>;
 
 @ObjectType({
 	description: 'user entity',
@@ -109,7 +115,7 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 		if (this.exists(dataValues?.docType)) this.docType = dataValues.docType;
 		if (this.exists(dataValues?.document)) this.document = dataValues.document;
 		if (this.exists(dataValues?.fu)) this.fu = dataValues.fu;
-		if (this.exists(dataValues?.preference)) this.preference = dataValues.preference;
+		if (this.exists(dataValues?.preference)) this.preference = new UserPreferenceEntity(dataValues.preference);
 		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
 		if (this.exists(dataValues?.deletedAt)) this.deletedAt = dataValues.deletedAt;
 		if (this.exists(dataValues?.deletedBy)) this.deletedBy = dataValues.deletedBy;

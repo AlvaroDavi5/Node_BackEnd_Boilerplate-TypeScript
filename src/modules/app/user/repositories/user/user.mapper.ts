@@ -5,7 +5,7 @@ import userPreferenceMapper from '@app/user/repositories/userPreference/userPref
 
 const toDomainEntity = (dataValues: UsersModel): UserEntity => {
 	const preferenceDataValues = {
-		...dataValues?.preference,
+		...dataValues?.preference ?? {},
 		userId: dataValues?.id,
 	};
 

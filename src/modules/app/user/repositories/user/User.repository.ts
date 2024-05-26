@@ -66,7 +66,6 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 			}
 			else {
 				result = await this.ResourceRepo.createQueryBuilder()
-					.addSelect('email')
 					.addSelect('password')
 					.addSelect('document')
 					.addSelect('phone')

@@ -4,10 +4,12 @@ import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
 import UserService from '@app/user/services/User.service';
 import UserPreferenceService from '@app/user/services/UserPreference.service';
 import UserStrategy from '@app/user/strategies/User.strategy';
+import { CreateUserInputDto, UpdateUserInputDto } from '@app/user/api/dto/UserInput.dto';
+import CryptographyService from '@core/security/Cryptography.service';
 import Exceptions from '@core/errors/Exceptions';
+import HttpConstants from '@common/constants/Http.constants';
 import { UserAuthInterface } from '@shared/interfaces/userAuthInterface';
 import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
-import CryptographyService from '@core/security/Cryptography.service';
 
 
 @Injectable()
@@ -17,6 +19,7 @@ export default class UserOperation {
 		private readonly userPreferenceService: UserPreferenceService,
 		private readonly cryptographyService: CryptographyService,
 		private readonly userStrategy: UserStrategy,
+		private readonly httpConstants: HttpConstants,
 		private readonly exceptions: Exceptions,
 	) { }
 
@@ -49,13 +52,19 @@ export default class UserOperation {
 		return usersList;
 	}
 
-	public async createUser(data: unknown, userAgent?: UserAuthInterface): Promise<UserEntity> {
+	public async createUser(data: CreateUserInputDto, userAgent?: UserAuthInterface): Promise<UserEntity> {
 		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
 			});
 
 		const newUser = new UserEntity(data);
+		const existentUser = await this.userService.getByEmail(newUser.getLogin()?.email as string);
+		if (existentUser)
+			throw this.exceptions.conflict({
+				message: this.httpConstants.messages.conflict('User'),
+			});
+
 		const createdUser = await this.userService.create(newUser);
 
 		if (!createdUser)
@@ -63,11 +72,9 @@ export default class UserOperation {
 				message: 'User not created!'
 			});
 
-		const newPreference = new UserPreferenceEntity(data);
-		if (createdUser.getId()) {
-			newPreference.setUserId(createdUser.getId());
-			await this.userPreferenceService.create(newPreference);
-		}
+		const newPreference = new UserPreferenceEntity(data.preference);
+		newPreference.setUserId(createdUser.getId());
+		await this.userPreferenceService.create(newPreference);
 
 		const foundedUser = await this.userService.getById(createdUser.getId(), true);
 		const foundedPreference = await this.userPreferenceService.getByUserId(createdUser.getId());
@@ -102,7 +109,7 @@ export default class UserOperation {
 		return foundedUser;
 	}
 
-	public async updateUser(id: string, data: any, userAgent?: UserAuthInterface): Promise<UserEntity> {
+	public async updateUser(id: string, data: UpdateUserInputDto, userAgent?: UserAuthInterface): Promise<UserEntity> {
 		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent'
@@ -122,23 +129,17 @@ export default class UserOperation {
 				message: 'userAgent not allowed to update this user!'
 			});
 
-		const attributesToUpdate = Object.keys({
-			...user.getAttributes(),
-			...preference.getAttributes(),
-		});
-		attributesToUpdate.forEach((attributeKey) => {
-			if (attributeKey !== 'id') {
-				const userAttribute = (user as any)[attributeKey];
-				const preferenceAttribute = (preference as any)[attributeKey];
-				const currentAttribute = data[attributeKey];
-				data[attributeKey] = currentAttribute ?? userAttribute ?? preferenceAttribute;
-			}
-		});
+		const mustUpdateUser = this.mustUpdate(user, data);
+		const mustUpdateUserPreference = this.mustUpdate(preference, data.preference);
 
-		const updatedUser = await this.userService.update(user.getId(), new UserEntity(data));
-		const updatedPreference = await this.userPreferenceService.update(preference.getId(), new UserPreferenceEntity(data));
+		const updatedUser = mustUpdateUser
+			? await this.userService.update(user.getId(), data)
+			: null;
+		const updatedPreference = data.preference !== undefined && mustUpdateUserPreference
+			? await this.userPreferenceService.update(preference.getId(), data.preference)
+			: null;
 
-		if (!updatedUser || !updatedPreference)
+		if ((mustUpdateUser && !updatedUser) || (mustUpdateUserPreference && !updatedPreference))
 			throw this.exceptions.conflict({
 				message: 'User or preference not updated!'
 			});
@@ -191,5 +192,29 @@ export default class UserOperation {
 			});
 
 		return softDeletedUser;
+	}
+
+	private mustUpdate(entityAttributes: any, inputAttributes: any): boolean {
+		if (!inputAttributes)
+			return false;
+		const attributesToUpdate = Object.keys(inputAttributes as any);
+
+		let mustUpdate = false;
+		attributesToUpdate.forEach((attributeKey: string) => {
+			const isUpdatedField = inputAttributes[attributeKey] !== undefined;
+			let hasValueChanged = false;
+
+			if (isUpdatedField) {
+				if (typeof inputAttributes[attributeKey] === 'object' && inputAttributes[attributeKey])
+					hasValueChanged = this.mustUpdate(entityAttributes[attributeKey], inputAttributes[attributeKey]);
+				else
+					hasValueChanged = inputAttributes[attributeKey] !== entityAttributes[attributeKey];
+			}
+
+			if (isUpdatedField && hasValueChanged)
+				mustUpdate = true;
+		});
+
+		return mustUpdate;
 	}
 }

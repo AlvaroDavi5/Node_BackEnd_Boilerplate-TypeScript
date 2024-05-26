@@ -28,7 +28,6 @@ export default class UsersModel extends BaseEntity {
 		unique: true,
 		nullable: false,
 		default: '',
-		select: false,
 		comment: 'User email',
 	})
 	public email!: string;
@@ -88,7 +87,7 @@ export default class UsersModel extends BaseEntity {
 
 	@Column({
 		name: 'createdAt',
-		type: 'date',
+		type: 'timestamp without time zone',
 		nullable: false,
 		default: 'NOW()',
 		comment: 'User creation timestamp',
@@ -97,7 +96,7 @@ export default class UsersModel extends BaseEntity {
 
 	@Column({
 		name: 'updatedAt',
-		type: 'date',
+		type: 'timestamp without time zone',
 		nullable: true,
 		default: null,
 		comment: 'User updated timestamp',
@@ -106,7 +105,7 @@ export default class UsersModel extends BaseEntity {
 
 	@Column({
 		name: 'deletedAt',
-		type: 'date',
+		type: 'timestamp without time zone',
 		nullable: true,
 		default: null,
 		comment: 'User deleted timestamp',

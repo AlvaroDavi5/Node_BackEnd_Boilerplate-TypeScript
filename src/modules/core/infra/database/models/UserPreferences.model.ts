@@ -22,7 +22,7 @@ export default class UserPreferencesModel extends BaseEntity {
 	public imagePath!: string | null;
 
 	@Column({
-		name: 'document',
+		name: 'defaultTheme',
 		type: 'varchar',
 		length: 20,
 		nullable: true,
@@ -33,7 +33,7 @@ export default class UserPreferencesModel extends BaseEntity {
 
 	@Column({
 		name: 'createdAt',
-		type: 'date',
+		type: 'timestamp without time zone',
 		nullable: false,
 		default: 'NOW()',
 		comment: 'User creation timestamp',
@@ -42,7 +42,7 @@ export default class UserPreferencesModel extends BaseEntity {
 
 	@Column({
 		name: 'updatedAt',
-		type: 'date',
+		type: 'timestamp without time zone',
 		nullable: true,
 		default: null,
 		comment: 'User updated timestamp',
@@ -51,7 +51,7 @@ export default class UserPreferencesModel extends BaseEntity {
 
 	@Column({
 		name: 'deletedAt',
-		type: 'date',
+		type: 'timestamp without time zone',
 		nullable: true,
 		default: null,
 		comment: 'User deleted timestamp',
@@ -66,19 +66,19 @@ export default class UserPreferencesModel extends BaseEntity {
 	})
 	@JoinColumn({
 		name: 'userId',
-		foreignKeyConstraintName: 'userId',
+		foreignKeyConstraintName: 'user_id',
 		referencedColumnName: 'id',
 	})
 	public user!: UsersModel | null;
 
 	/**
 		@param name: 'userId'
-		@param foreignKeyConstraintName: 'userId'
+		@param foreignKeyConstraintName: 'user_id'
 		@param type: 'uuid'
 		@param length: 260
 		@param nullable: true
 		@param default: ''
 		@param comment: 'User ID'
 	**/
-	public userId!: string | null;
+	// // public userId!: string | null;
 }

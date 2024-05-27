@@ -129,8 +129,8 @@ export default class UserOperation {
 				message: 'userAgent not allowed to update this user!'
 			});
 
-		const mustUpdateUser = this.mustUpdate(user, data);
-		const mustUpdateUserPreference = this.mustUpdate(preference, data.preference);
+		const mustUpdateUser = this.mustUpdate(user.getAttributes(), data);
+		const mustUpdateUserPreference = this.mustUpdate(preference.getAttributes(), data.preference);
 
 		const updatedUser = mustUpdateUser
 			? await this.userService.update(user.getId(), data)
@@ -195,7 +195,7 @@ export default class UserOperation {
 	}
 
 	private mustUpdate(entityAttributes: any, inputAttributes: any): boolean {
-		if (!inputAttributes)
+		if (!entityAttributes || !inputAttributes)
 			return false;
 		const attributesToUpdate = Object.keys(inputAttributes as any);
 

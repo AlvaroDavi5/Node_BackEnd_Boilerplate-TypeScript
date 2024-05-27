@@ -20,7 +20,7 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 	let nestTestingModule: TestingModule;
 	// // mocks
 	const databaseConnectionMock = {
-		close: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
+		destroy: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
 	};
 	const httpAdapterHostMock = {
 		httpAdapter: {
@@ -88,7 +88,7 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 			expect(mockObservable.call).toHaveBeenCalledWith('Closing cache and database connections');
 			expect(mongoClientMock.disconnect).toHaveBeenCalledTimes(1);
 			expect(redisClientMock.disconnect).toHaveBeenCalledTimes(1);
-			expect(databaseConnectionMock.close).toHaveBeenCalledTimes(1);
+			expect(databaseConnectionMock.destroy).toHaveBeenCalledTimes(1);
 			expect(awsClientMock.destroy).toHaveBeenCalledTimes(4);
 			expect(mockObservable.call).toHaveBeenCalledWith('Exiting Application');
 			expect(mockObservable.call).toHaveBeenCalledTimes(5);

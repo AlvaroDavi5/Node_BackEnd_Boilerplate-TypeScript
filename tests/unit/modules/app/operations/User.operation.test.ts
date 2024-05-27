@@ -123,7 +123,7 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				content: [
 					new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user1@nomail.test' }),
 					new UserEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user2@nomail.test' }),
-					new UserEntity({ id: 3, email: 'user3@nomail.test' }),
+					new UserEntity({ id: 'c5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user3@nomail.test' }),
 				],
 				pageNumber: 0,
 				pageSize: 3,

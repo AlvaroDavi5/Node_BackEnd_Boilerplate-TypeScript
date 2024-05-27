@@ -5,7 +5,11 @@ import { CreateUserInterface, UpdateUserInterface } from '@domain/entities/User.
 import { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.entity';
 import { LoginUserSchemaInterface } from '@app/user/api/schemas/user/loginUser.schema';
 import { ThemesEnum } from '@domain/enums/themes.enum';
+import RegExConstants from '@common/constants/Regex.constants';
 
+
+const regExConstants = new RegExConstants();
+const { regex: onlyNumericDigitsRegex } = regExConstants.onlyNumericDigitsPattern;
 
 abstract class UserPreferenceInputDto implements UpdateUserPreferenceInterface {
 	@ApiProperty({ type: String, example: './image.png', default: undefined, nullable: false, required: false })
@@ -49,7 +53,9 @@ export abstract class CreateUserInputDto implements CreateUserInterface {
 	@IsString()
 	@IsOptional()
 	@Transform(({ value }: { value?: string }) => {
-		return value?.replace(/\D/g, '');
+		if (!value)
+			return value;
+		return value.replace(onlyNumericDigitsRegex, '');
 	})
 	public document?: string;
 
@@ -95,7 +101,9 @@ export abstract class UpdateUserInputDto implements UpdateUserInterface {
 	@IsString()
 	@IsOptional()
 	@Transform(({ value }: { value?: string }) => {
-		return value?.replace(/\D/g, '');
+		if (!value)
+			return value;
+		return value.replace(onlyNumericDigitsRegex, '');
 	})
 	public document?: string;
 

@@ -86,6 +86,9 @@ export const userQueryParamsBuilder = ({
 		return {
 			...pagination,
 			where,
+			relations: [
+				'preference',
+			],
 		};
 	}
 });

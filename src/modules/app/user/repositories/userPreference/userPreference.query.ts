@@ -37,6 +37,9 @@ export const userPreferenceQueryParamsBuilder = ({
 
 		return {
 			where,
+			relations: [
+				'user',
+			],
 		};
 	}
 });

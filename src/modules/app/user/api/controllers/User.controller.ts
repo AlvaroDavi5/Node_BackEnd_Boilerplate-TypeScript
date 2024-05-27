@@ -8,7 +8,7 @@ import {
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
-import UserEntity, { UserEntityList, UserInterface } from '@domain/entities/User.entity';
+import UserEntity, { UserEntityList, ViewUserInterface } from '@domain/entities/User.entity';
 import UserOperation from '@app/user/operations/User.operation';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
@@ -51,7 +51,7 @@ export default class UserController {
 	@ApiProduces('application/json')
 	public async listUsers(
 		@Query(ListQueryValidatorPipe) query: ListQueryInputDto,
-	): Promise<PaginationInterface<UserInterface>> {
+	): Promise<PaginationInterface<ViewUserInterface>> {
 		try {
 			const { content, ...listInfo } = await this.userOperation.listUsers(query);
 			const mappedContent = content.map((entity) => entity.getAttributes());
@@ -78,7 +78,7 @@ export default class UserController {
 	public async createUser(
 		@Req() request: RequestInterface,
 		@Body(CreateUserValidatorPipe) body: CreateUserInputDto,
-	): Promise<UserInterface> {
+	): Promise<ViewUserInterface> {
 		try {
 			const { user } = request;
 
@@ -102,7 +102,7 @@ export default class UserController {
 	@ApiProduces('application/json')
 	public async loginUser(
 		@Body(LoginUserValidatorPipe) body: LoginUserInputDto,
-	): Promise<UserInterface & { token: string }> {
+	): Promise<ViewUserInterface & { token: string }> {
 		try {
 			const { user, token } = await this.userOperation.loginUser(body);
 
@@ -125,7 +125,7 @@ export default class UserController {
 	public async getUser(
 		@Req() request: RequestInterface,
 		@Param('userId', ParseUUIDPipe) userId: string,
-	): Promise<UserInterface> {
+	): Promise<ViewUserInterface> {
 		try {
 			const { user } = request;
 
@@ -151,7 +151,7 @@ export default class UserController {
 		@Req() request: RequestInterface,
 		@Param('userId', ParseUUIDPipe) userId: string,
 		@Body(UpdateUserValidatorPipe) body: UpdateUserInputDto,
-	): Promise<UserInterface> {
+	): Promise<ViewUserInterface> {
 		try {
 			const { user } = request;
 

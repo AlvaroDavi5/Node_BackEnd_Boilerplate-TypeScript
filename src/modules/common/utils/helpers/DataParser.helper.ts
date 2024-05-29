@@ -40,6 +40,9 @@ export default class DataParserHelper {
 		case 'symbol':
 			result = data.toString();
 			break;
+		case 'function':
+			result = data.toString();
+			break;
 		default:
 			result = '';
 			break;

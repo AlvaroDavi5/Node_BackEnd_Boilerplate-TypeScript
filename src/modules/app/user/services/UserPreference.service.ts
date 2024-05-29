@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import UserPreferenceRepository from '@app/user/repositories/userPreference/UserPreference.repository';
-import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
+import UserPreferenceEntity, { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.entity';
 import Exceptions from '@core/errors/Exceptions';
 
 
@@ -11,9 +11,9 @@ export default class UserPreferenceService {
 		private readonly exceptions: Exceptions,
 	) { }
 
-	public async getByUserId(userId: number): Promise<UserPreferenceEntity | null> {
+	public async getByUserId(userId: string): Promise<UserPreferenceEntity | null> {
 		try {
-			return await this.userPreferenceRepository.findOne({ userId: userId });
+			return await this.userPreferenceRepository.findOne({ where: { user: { id: userId } } });
 		} catch (error) {
 			throw this.exceptions.internal({
 				message: 'Error to comunicate with database',
@@ -33,9 +33,11 @@ export default class UserPreferenceService {
 		}
 	}
 
-	public async update(id: number, entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> {
+	public async update(id: string, data: UpdateUserPreferenceInterface): Promise<UserPreferenceEntity | null> {
+		const { id: preferenceId, userId, createdAt, ...userPreferenceData } = new UserPreferenceEntity(data).getAttributes();
+
 		try {
-			return await this.userPreferenceRepository.update(id, entity);
+			return await this.userPreferenceRepository.update(id, userPreferenceData);
 		} catch (error) {
 			throw this.exceptions.internal({
 				message: 'Error to comunicate with database',
@@ -44,7 +46,7 @@ export default class UserPreferenceService {
 		}
 	}
 
-	public async delete(id: number, data: { softDelete: boolean }): Promise<boolean | null> {
+	public async delete(id: string, data: { softDelete: boolean }): Promise<boolean | null> {
 		try {
 			return await this.userPreferenceRepository.deleteOne(id, Boolean(data.softDelete));
 		} catch (error) {

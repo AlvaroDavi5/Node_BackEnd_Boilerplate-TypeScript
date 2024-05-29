@@ -14,8 +14,8 @@
 		},
 		"baseUrl": "./",
 		"paths": {
-			"src/types/*": [
-				"src/types/*"
+			"src/shared/types/*": [
+				"src/shared/types/*"
 			]
 		},
 		"keepClassNames": true,
@@ -28,7 +28,7 @@
 		"noInterop": false
 	},
 	"exclude": [
-		"./**/.*.js$"
+		// "./**/.*.js$"
 	],
 	"sourceMaps": true,
 	"minify": false

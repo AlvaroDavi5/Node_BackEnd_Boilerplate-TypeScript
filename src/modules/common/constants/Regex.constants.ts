@@ -13,6 +13,7 @@ export default class RegExConstants {
 	private readonly requiredAsciiPattern: RegExp = /!-~/;
 	private readonly passwordLimitPattern: RegExp = /9,60/;
 	public readonly passwordPattern: CustomRegEx;
+	public readonly onlyNumericDigitsPattern: CustomRegEx;
 
 	constructor() {
 		this.passwordPattern = {
@@ -21,6 +22,12 @@ export default class RegExConstants {
 			regex: new RegExp(
 				`^(?=.*[${this.requiredCharsPattern.source}])(?=.*[${this.requiredAsciiPattern.source}])[${this.requiredCharsPattern.source}${this.requiredAsciiPattern.source}].{${this.passwordLimitPattern.source}}$`
 			),
+		};
+
+		this.onlyNumericDigitsPattern = {
+			name: 'OnlyNumericDigitsPattern',
+			message: (field) => `'${field}' must have only numeric digits`,
+			regex: (/\D/g),
 		};
 	}
 }

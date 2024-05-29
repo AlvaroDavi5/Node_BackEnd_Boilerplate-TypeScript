@@ -1,3 +1,4 @@
+import { TimeZonesEnum } from 'src/modules/common/enums/timeZones.enum';
 import dotenv from 'dotenv';
 
 
@@ -31,6 +32,7 @@ export interface ConfigsInterface {
 			},
 		},
 		charset: string, // database charset encoding
+		timezone: string, // database timezone
 		define: {
 			underscored: boolean, // to force underscore on name of fields
 			timestamps: boolean, // to createdAt and updatedAt
@@ -40,6 +42,7 @@ export interface ConfigsInterface {
 		pool: {
 			min: number, // minimum number of connections in pool
 			max: number, // maximum number of connections in pool
+			fifo: boolean, // the oldest resources will be first to be allocated (First-In-First-Out)
 			acquire: number, // maximum time, in milliseconds, that pool will try to get connection before throwing error
 			idle: number, // maximum time, in milliseconds, that a connection can be idle before being released
 		},
@@ -151,6 +154,7 @@ export default (): ConfigsInterface => ({
 		password: process.env.DB_PASSWORD ?? 'pass',
 		host: process.env.DB_HOST ?? 'database',
 		charset: 'utf8',
+		timezone: TimeZonesEnum.SaoPaulo,
 		dialect: process.env.DB_DBMS_NAME ?? 'postgres',
 		dialectOptions: {
 			ssl: {
@@ -167,6 +171,7 @@ export default (): ConfigsInterface => ({
 		pool: {
 			min: 0,
 			max: 5,
+			fifo: true,
 			acquire: (2 * 1000),
 			idle: (2 * 1000),
 		},

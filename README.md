@@ -109,7 +109,7 @@ docker-compose up -d cloud database data cache # create and run all docker conta
 ## Running Locally
 
 ```shell
-yarn run migrate && yarn run seed # create database entities and populate database registers
+yarn run db:migration-run # create database entities and populate database registers
 yarn run mock-dependencies # create message queue and storager and start external services mock
 yarn run start:dev # start application in development mode
 yarn run receive-messages # create websocket client and start connection to receive events
@@ -138,7 +138,7 @@ ___
 ### TO DO
 
 - **Integrations**
-	- [ ] TypeORM
+	- [x] TypeORM
 	- [Kafka](#to-do)
 - **SQL**
 	- [ ] UUID Fields

@@ -38,8 +38,8 @@ describe('Modules :: App :: Domain :: Entities :: UserEntities', () => {
 		}));
 
 		test('Validate fields', () => {
-			userEntity.setId(1);
-			expect(userEntity.getId()).toBe(1);
+			userEntity.setId('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
+			expect(userEntity.getId()).toBe('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			userEntity.setDocInfos('12312312312', 'CPF', 'ES');
 			expect(userEntity.getPhone()).toBe('+5527999999999');
 			userEntity.setLogin('user.test@nomail.test', 'Test User');
@@ -52,14 +52,15 @@ describe('Modules :: App :: Domain :: Entities :: UserEntities', () => {
 			expect(userEntity.getDeletedBy()).toBe('test');
 			expect(userEntity.deletedAt).not.toBeNull();
 			expect(userEntity.getPreference()?.getUserId()).toBe(userEntity.getId());
-			expect(userEntity.getPreference()?.getId()).toBe(0);
+			userEntity.getPreference()?.setId('a6483856-1bf7-4dae-9c21-d7ea4dd30d1d');
+			expect(userEntity.getPreference()?.getId()).toBe('a6483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			userEntity.getPreference()?.setImagePath('./image.png');
 			expect(userEntity.getPreference()?.getImagePath()).toBe('./image.png');
 			userEntity.getPreference()?.setDefaultTheme('DARK');
 			expect(userEntity.getPreference()?.getDefaultTheme()).toBe('DARK');
 			expect(userEntity.getPreference()?.createdAt).not.toBeNull();
 
-			expect(otherUserEntity.getId()).toBe(0);
+			expect(otherUserEntity.getId()).toBeUndefined();
 			otherUserEntity.getPreference()?.setDefaultTheme('INVALID');
 			expect(otherUserEntity.getPreference()?.getDefaultTheme()).toBeNull();
 			expect(otherUserEntity.createdAt).not.toBeNull();
@@ -73,7 +74,7 @@ describe('Modules :: App :: Domain :: Entities :: UserEntities', () => {
 
 		test('Validate all attributes', () => {
 			expect(userEntity.getAttributes()).toMatchObject({
-				id: 1,
+				id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
 				fullName: 'Test User',
 				email: 'user.test@nomail.test',
 				docType: 'CPF',
@@ -82,8 +83,8 @@ describe('Modules :: App :: Domain :: Entities :: UserEntities', () => {
 				phone: '+5527999999999',
 				fu: 'ES',
 				preference: {
-					id: 0,
-					userId: 1,
+					id: 'a6483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+					userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
 					defaultTheme: 'DARK',
 					imagePath: './image.png',
 					deletedAt: undefined,
@@ -92,8 +93,8 @@ describe('Modules :: App :: Domain :: Entities :: UserEntities', () => {
 			});
 
 			expect(userEntity.getPreference()?.getAttributes()).toMatchObject({
-				id: 0,
-				userId: 1,
+				id: 'a6483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+				userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
 				defaultTheme: 'DARK',
 				imagePath: './image.png',
 				deletedAt: undefined,

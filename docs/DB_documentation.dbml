@@ -7,7 +7,7 @@ Project DB_Example {
 
 // tables creation
 Table Users as USR {
-	id int [increment, not null, unique, primary key]
+	id varchar(260) [increment, not null, unique, primary key]
 	fullName varchar(100) [not null]
 	email varchar(70) [not null]
 	password varchar(550) [not null]
@@ -16,20 +16,23 @@ Table Users as USR {
 	document varchar(18)
 	fu varchar(2)
 	createdAt timestamp [not null, default: `now()`]
-	updatedAt timestamp [not null, default: `now()`]
+	updatedAt timestamp [default: `null`]
+	deletedAt timestamp [default: `null`]
+	deletedby varchar(260)
 }
 
 Table UserPreferences as PREF {
-	id int [increment, not null, pk]
-	userId int [not null]
-	imagePath varchar(255)
+	id varchar(260) [increment, not null, pk]
+	userId varchar(260) [not null]
+	imagePath varchar(260)
 	defaultTheme int
 	createdAt timestamp [not null, default: `now()`]
-	updatedAt timestamp [not null, default: `now()`]
+	updatedAt timestamp [default: `null`]
+	deletedAt timestamp [default: `null`]
 }
 
 // entities references
 //  > : Many-to-One
 //  < : One-to-Many
 //  - : One-to-One
-Ref: USR.id - PREF.userId [delete: cascade, update: cascade]
+Ref: USR.id - PREF.userId [update: cascade, delete: cascade]

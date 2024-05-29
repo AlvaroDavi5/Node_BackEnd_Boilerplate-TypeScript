@@ -5,7 +5,7 @@ import {
 	SendMessageCommand, ReceiveMessageCommand, DeleteMessageCommand,
 	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput, DeleteMessageCommandInput,
 } from '@aws-sdk/client-sqs';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from 'src/modules/core/configs/configs.config';
 
 
 export default class SqsClient {

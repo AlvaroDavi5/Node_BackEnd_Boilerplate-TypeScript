@@ -1,6 +1,6 @@
 import { v4 as uuidV4 } from 'uuid';
 import configs from 'src/modules/core/configs/configs.config';
-import { LoggerInterface } from '@core/logging/logger';
+import { LoggerInterface } from 'src/modules/core/logging/logger';
 
 
 export const configServiceMock = {
@@ -67,6 +67,9 @@ export const dataParserHelperMock = {
 				result = (JSON.stringify(data) || data?.toString()) ?? '';
 			break;
 		case 'symbol':
+			result = data.toString();
+			break;
+		case 'function':
 			result = data.toString();
 			break;
 		default:

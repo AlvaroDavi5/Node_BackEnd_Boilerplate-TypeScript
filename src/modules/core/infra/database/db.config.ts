@@ -41,7 +41,13 @@ export const dbConfig: DataSourceOptions = {
 		'build/modules/core/infra/database/seeders/**.js',
 	],
 	subscribers: [],
-	pool: { ...db.pool },
+	pool: {
+		max: db.pool.max,
+		min: db.pool.min,
+		fifo: db.pool.fifo,
+		idleTimeoutMillis: db.pool.idle,
+		acquireTimeoutMillis: db.pool.acquire,
+	},
 	...db.define,
 	synchronize: false,
 };

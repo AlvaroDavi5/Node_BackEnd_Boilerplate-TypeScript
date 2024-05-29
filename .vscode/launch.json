@@ -8,6 +8,24 @@
 			"type": "node-terminal"
 		},
 		{
+			"name": "Node.js: Test Unit Debug with YARN",
+			"command": "yarn test:unit:watch",
+			"request": "launch",
+			"type": "node-terminal"
+		},
+		{
+			"name": "Node.js: Test Integ Debug with YARN",
+			"command": "yarn test:integ:watch",
+			"request": "launch",
+			"type": "node-terminal"
+		},
+		{
+			"name": "Node.js: Test E2E Debug with YARN",
+			"command": "yarn test:e2e:watch",
+			"request": "launch",
+			"type": "node-terminal"
+		},
+		{
 			"name": "Node.js: Launch Current File",
 			"type": "node",
 			"request": "launch",

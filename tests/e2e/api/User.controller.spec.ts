@@ -31,13 +31,10 @@ describe('API :: UserController', () => {
 			expect(response.body).toMatchObject({
 				content: [
 					{
-						id: 1,
 						fullName: 'Tester',
-						fu: 'BA',
+						fu: 'SP',
 						docType: 'invalid',
 						preference: {
-							id: 1,
-							userId: 1,
 							defaultTheme: 'DARK',
 							imagePath: './generic.png',
 						},

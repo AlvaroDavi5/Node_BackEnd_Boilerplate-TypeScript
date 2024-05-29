@@ -27,12 +27,13 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
+"""user preference entity"""
 type UserPreferenceEntity {
   """Database register ID"""
-  id: Float!
+  id: String!
 
   """User ID"""
-  userId: Float!
+  userId: String!
 
   """User profile image path"""
   imagePath: String

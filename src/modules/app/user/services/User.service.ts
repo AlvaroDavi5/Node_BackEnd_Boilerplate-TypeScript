@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import UserEntity, { UserEntityList } from '@domain/entities/User.entity';
+import UserEntity, { UpdateUserInterface, UserEntityList } from '@domain/entities/User.entity';
 import CryptographyService from '@core/security/Cryptography.service';
 import UserRepository from '@app/user/repositories/user/User.repository';
 import Exceptions from '@core/errors/Exceptions';
@@ -22,7 +22,7 @@ export default class UserService {
 		this.secret = secretKey;
 	}
 
-	public async getById(id: number, withoutPassword = true): Promise<UserEntity | null> {
+	public async getById(id: string, withoutPassword = true): Promise<UserEntity | null> {
 		try {
 			return await this.userRepository.getById(id, withoutPassword);
 		} catch (error) {
@@ -35,7 +35,7 @@ export default class UserService {
 
 	public async getByEmail(email: string): Promise<UserEntity | null> {
 		try {
-			return await this.userRepository.findOne({ email: email });
+			return await this.userRepository.findOne({ where: { email: email } });
 		} catch (error) {
 			throw this.exceptions.internal({
 				message: 'Error to comunicate with database',
@@ -63,13 +63,16 @@ export default class UserService {
 		}
 	}
 
-	public async update(id: number, entity: UserEntity): Promise<UserEntity | null> {
-		try {
-			const userPassword = entity.getPassword();
-			if (userPassword?.length)
-				entity.setPassword(this.protectPassword(userPassword));
 
-			return await this.userRepository.update(id, entity);
+	public async update(id: string, data: UpdateUserInterface): Promise<UserEntity | null> {
+		const { id: userId, createdAt, preference, ...userData } = new UserEntity(data).getAttributes();
+
+		try {
+			const userPassword = userData.password;
+			if (userPassword?.length)
+				userData.password = this.protectPassword(userPassword);
+
+			return await this.userRepository.update(id, userData);
 		} catch (error) {
 			throw this.exceptions.internal({
 				message: 'Error to comunicate with database',
@@ -78,7 +81,7 @@ export default class UserService {
 		}
 	}
 
-	public async delete(id: number, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean | null> {
+	public async delete(id: string, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean | null> {
 		try {
 			return await this.userRepository.deleteOne(id, Boolean(data.softDelete), String(data.userAgentId));
 		} catch (error) {
@@ -91,7 +94,7 @@ export default class UserService {
 
 	public async list(query: ListQueryInterface): Promise<UserEntityList> {
 		try {
-			return await this.userRepository.list(query);
+			return await this.userRepository.list(query, true);
 		} catch (error) {
 			throw this.exceptions.internal({
 				message: 'Error to comunicate with database',

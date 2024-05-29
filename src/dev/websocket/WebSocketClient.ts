@@ -1,5 +1,6 @@
 import { io, Socket as ClientSocket } from 'socket.io-client';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from 'src/modules/core/configs/configs.config';
+import { dataParserHelperMock } from '../mocks/mockedModules';
 
 
 export default class WebSocketClient {
@@ -27,33 +28,7 @@ export default class WebSocketClient {
 	}
 
 	private formatMessageBeforeSend(data: unknown): string {
-		let result = '';
-
-		switch (typeof data) {
-		case 'bigint':
-			result = data.toString();
-			break;
-		case 'number':
-			result = data.toString();
-			break;
-		case 'boolean':
-			result = data.toString();
-			break;
-		case 'string':
-			result = data;
-			break;
-		case 'object':
-			result = (JSON.stringify(data) || data?.toString()) ?? '';
-			break;
-		case 'symbol':
-			result = data.toString();
-			break;
-		default:
-			result = '{}';
-			break;
-		}
-
-		return result;
+		return dataParserHelperMock.toString(data);
 	}
 
 	public send(event: string, msg: unknown): void {

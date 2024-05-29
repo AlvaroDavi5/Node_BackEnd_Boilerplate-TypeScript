@@ -32,7 +32,7 @@ async function startNestApplication() {
 	nestApp.useGlobalPipes(
 		new ValidationPipe({
 			transform: true,
-			whitelist: true,
+			whitelist: false,
 			forbidNonWhitelisted: true,
 			disableErrorMessages: false,
 		}),

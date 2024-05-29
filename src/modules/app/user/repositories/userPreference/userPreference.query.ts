@@ -1,48 +1,30 @@
-import { Op, Includeable, FindAndCountOptions, Attributes, WhereOptions } from 'sequelize';
-import UsersModel from '@core/infra/database/models/Users.model';
+import { Equal, Like, In, And, FindManyOptions, FindOptionsWhere } from 'typeorm';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 import { UserPreferenceInterface } from '@domain/entities/UserPreference.entity';
 
 
-export const userPreferenceQueryOptions: { include: Includeable[] } = {
-	include: [
-		{
-			model: UsersModel,
-			association: UserPreferencesModel.associations.user,
-			as: 'user',
-		},
-	],
-};
-
-const _buildWhereParams = ({
+const buildWhereParams = ({
 	id,
 	userId,
 	imagePath,
 	defaultTheme,
-}: UserPreferenceInterface): WhereOptions => {
-	const where: WhereOptions = {};
+}: UserPreferenceInterface): FindOptionsWhere<UserPreferencesModel> => {
+	const where: FindOptionsWhere<UserPreferencesModel> = {};
 
 	if (id) {
 		where.id = id;
 		return where;
 	}
 	else if (userId) {
-		where.userId = userId;
+		where.user = { id: userId };
 		return where;
 	}
 
-	if (imagePath) where.imagePath = { [Op.like]: imagePath };
+	if (imagePath) where.imagePath = Like(`${imagePath}`);
 
 	if (defaultTheme) {
-		where[Op.and as any] = [
-			{
-				defaultTheme: {
-					[Op.in]: Object.values(ThemesEnum),
-				},
-			},
-			{ defaultTheme: { [Op.is]: defaultTheme } },
-		];
+		where.defaultTheme = And(In(Object.values(ThemesEnum)), Equal(defaultTheme));
 	}
 
 	return where;
@@ -50,14 +32,14 @@ const _buildWhereParams = ({
 
 export const userPreferenceQueryParamsBuilder = ({
 
-	buildParams: (data: any): Omit<FindAndCountOptions<Attributes<UsersModel>>, 'group'> => {
-		const where = _buildWhereParams(data);
+	buildParams: (data: any): FindManyOptions<UserPreferencesModel> => {
+		const where = buildWhereParams(data);
 
 		return {
 			where,
-			subQuery: false,
-			distinct: true,
-			...userPreferenceQueryOptions,
+			relations: [
+				'user',
+			],
 		};
 	}
 });

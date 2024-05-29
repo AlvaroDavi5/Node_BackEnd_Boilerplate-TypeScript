@@ -6,7 +6,7 @@ import {
 	PutObjectCommandInput, GetObjectCommandInput, DeleteObjectCommandInput,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from 'src/modules/core/configs/configs.config';
 
 
 type s3FileContentType = string | Uint8Array | Buffer | Readable | ReadableStream | Blob;

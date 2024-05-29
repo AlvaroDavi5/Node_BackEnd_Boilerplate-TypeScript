@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Sequelize } from 'sequelize';
+import { DataSource } from 'typeorm';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
@@ -14,7 +14,7 @@ export default class SyncCronTask {
 
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER)
-		private readonly connection: Sequelize,
+		private readonly connection: DataSource,
 		private readonly mongoClient: MongoClient,
 		private readonly redisClient: RedisClient,
 		private readonly webSocketServer: WebSocketServer,

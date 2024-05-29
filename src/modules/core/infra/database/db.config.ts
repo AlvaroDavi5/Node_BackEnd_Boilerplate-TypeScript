@@ -1,8 +1,10 @@
-import { Options, BuildOptions, Dialect } from 'sequelize/types';
-import configs from '@core/configs/configs.config';
+import { DataSource, DataSourceOptions } from 'typeorm';
+import configs from 'src/modules/core/configs/configs.config';
+import UsersModel from './models/Users.model';
+import UserPreferencesModel from './models/UserPreferences.model';
 
 
-function getDialect(dialect: string): Dialect {
+function getDialect(dialect: string): 'mysql' | 'postgres' | 'sqlite' | 'mssql' {
 	switch (dialect?.toLowerCase()) {
 	case 'mysql':
 		return 'mysql';
@@ -17,47 +19,40 @@ function getDialect(dialect: string): Dialect {
 	}
 }
 
-export interface DatabaseConfigInterface {
-	database: string,
-	username: string,
-	password: string,
-	host: string,
-	port: number,
-	dialect: Dialect,
-	charset?: string,
-	dialectOptions?: {
-		ssl?: {
-			rejectUnauthorized?: boolean,
-		}
-	},
-	define?: {
-		underscored?: boolean,
-		timestamps?: boolean,
-		paranoid?: boolean,
-		freezeTableName?: boolean,
-	},
-	pool?: {
-		min?: number,
-		max?: number,
-		acquire?: number,
-		idle?: number,
-	},
-	logging?: boolean | ((msg: string) => void),
-	options?: Options,
-	buildOptions?: BuildOptions,
-}
-
 const { application: app, database: db } = configs();
 
-export const config: DatabaseConfigInterface = {
+export const dbConfig: DataSourceOptions = {
+	name: 'dbConfig',
 	database: db.database,
 	username: db.username,
 	password: db.password,
 	host: db.host,
-	charset: db.charset,
-	dialect: getDialect(db.dialect),
 	port: parseInt(db.port),
-	define: { ...db.define },
-	pool: { ...db.pool },
-	logging: app.logging === 'true' ? console.log : false,
+	type: getDialect(db.dialect),
+	charset: db.charset,
+	timezone: db.timezone,
+	logging: app.logging === 'true',
+	entities: [
+		UsersModel,
+		UserPreferencesModel,
+	],
+	migrations: [
+		'build/modules/core/infra/database/migrations/**.js',
+		'build/modules/core/infra/database/seeders/**.js',
+	],
+	subscribers: [],
+	pool: {
+		max: db.pool.max,
+		min: db.pool.min,
+		fifo: db.pool.fifo,
+		idleTimeoutMillis: db.pool.idle,
+		acquireTimeoutMillis: db.pool.acquire,
+	},
+	...db.define,
+	synchronize: false,
 };
+
+/* connecting to a database */
+/* passing Parameters separately (other dialects) */
+const connection = new DataSource(dbConfig);
+export default connection;

@@ -12,9 +12,15 @@ export default class SchemaValidator<S> {
 		private readonly logger: Logger | LoggerInterface | Console,
 	) { }
 
+	private log(message: string): void {
+		if (this.logger instanceof Console)
+			this.logger.log(message);
+		else
+			this.logger.verbose(message);
+	}
+
 	public validate(data: unknown, metadata: ArgumentMetadata, schema: Schema<S>): S {
-		const log = this.logger instanceof Console ? this.logger.log : this.logger.verbose;
-		log(`Validating '${metadata.type}' received as '${metadata.metatype?.name}'`);
+		this.log(`Validating '${metadata.type}' received as '${metadata.metatype?.name}'`);
 
 		const { value, error } = schema.validate(
 			data,

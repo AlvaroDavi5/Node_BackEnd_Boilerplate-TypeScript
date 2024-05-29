@@ -1,96 +1,160 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Sequelize, Association } from 'sequelize';
-import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
+import { DataSource, In, FindOneOptions, FindManyOptions, UpdateResult } from 'typeorm';
+import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import LoggerService from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
-import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import AbstractRepository from '@core/infra/database/repositories/AbstractRepository.repository';
-import UsersModel, { userAttributes, userOptions } from '@core/infra/database/models/Users.model';
-import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
+import UsersModel from '@core/infra/database/models/Users.model';
 import UserEntity from '@domain/entities/User.entity';
+import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import userMapper from './user.mapper';
-import { userQueryParamsBuilder, userQueryOptions } from './user.query';
+import { userQueryParamsBuilder } from './user.query';
 import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
 
 
 @Injectable()
 export default class UserRepository extends AbstractRepository<UsersModel, UserEntity> {
-	public static associations: {
-		preference: Association<UserPreferencesModel>,
-	};
-
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER)
-			connection: Sequelize,
+			connection: DataSource,
 			exceptions: Exceptions,
 			logger: LoggerService,
 			dateGeneratorHelper: DateGeneratorHelper,
 	) {
 		logger.setContextName(UserRepository.name);
-		userOptions.sequelize = connection;
 		super({
+			connection: connection,
 			DomainEntity: UserEntity,
 			ResourceModel: UsersModel,
-			resourceAttributes: userAttributes,
-			resourceOptions: userOptions,
+			ResourceRepo: UsersModel.getRepository(),
 			resourceMapper: userMapper,
 			queryParamsBuilder: userQueryParamsBuilder,
-			queryOptions: userQueryOptions,
+			dateGeneratorHelper: dateGeneratorHelper,
 			exceptions: exceptions,
 			logger: logger,
-			dateGeneratorHelper: dateGeneratorHelper,
 		});
 	}
 
-	public associate(): void {
-		this.ResourceModel.hasOne(
-			UserPreferencesModel,
-			{
-				constraints: true,
-				foreignKeyConstraint: true,
-				foreignKey: 'userId',
-				sourceKey: 'id',
-				as: 'preference',
+	public async getById(id: string, withoutPassword = true): Promise<UserEntity | null> {
+		try {
+			let result: UsersModel | null = null;
+
+			if (withoutPassword) {
+				result = await this.ResourceRepo.findOne({ where: { id } });
 			}
-		);
-	}
+			else {
+				result = await this.ResourceRepo.createQueryBuilder()
+					.addSelect('password')
+					.where({ id })
+					.getOne();
+			}
+			if (!result) return null;
 
-	public async getById(id: number, withoutPassword = true): Promise<UserEntity | null> {
-		const userModel = (withoutPassword) ? this.ResourceModel.scope('withoutPassword') : this.ResourceModel;
-
-		const result = await userModel.findByPk(
-			id,
-			this.queryOptions,
-		);
-		if (!result) return null;
-
-		return this.resourceMapper.toEntity(result);
-	}
-
-	public async list(query?: ListQueryInterface, withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> {
-		const userModel = (withoutSensibleData) ? this.ResourceModel.scope('withoutSensibleData') : this.ResourceModel;
-
-		const buildedQuery = this.queryParamsBuilder?.buildParams(query);
-		const { rows, count } = await userModel.findAndCountAll(buildedQuery);
-
-		const totalItems = count;
-		const totalPages = Math.ceil(totalItems / (query?.limit ?? 1)) || 1;
-		const pageNumber = query?.page ?? 0;
-		const pageSize = rows.length;
-
-		let content: UserEntity[] = [];
-		if (rows.length) {
-			content = rows.map((register) =>
-				this.resourceMapper.toEntity(register)
-			);
+			return this.resourceMapper.toDomainEntity(result);
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
 		}
+	}
 
-		return {
-			content,
-			pageNumber,
-			pageSize,
-			totalPages,
-			totalItems,
-		};
+	public async list(query?: ListQueryInterface, withoutSensitiveData = true): Promise<PaginationInterface<UserEntity>> {
+		try {
+			const buildedQuery = this.queryParamsBuilder.buildParams(query);
+
+			let result!: [UsersModel[], number];
+			if (withoutSensitiveData) {
+				result = await this.ResourceRepo.findAndCount(buildedQuery);
+			}
+			else {
+				result = await this.ResourceRepo.createQueryBuilder()
+					.addSelect('password')
+					.addSelect('document')
+					.addSelect('phone')
+					.where(buildedQuery)
+					.getManyAndCount();
+			}
+
+			const { 0: rows, 1: count } = result;
+
+			const totalItems = count;
+			const totalPages = Math.ceil(totalItems / (query?.limit ?? 1)) || 1;
+			const pageNumber = query?.page ?? 0;
+			const pageSize = rows.length;
+
+			let content: UserEntity[] = [];
+			if (rows.length) {
+				content = rows.map((register) =>
+					this.resourceMapper.toDomainEntity(register)
+				);
+			}
+
+			return {
+				content,
+				pageNumber,
+				pageSize,
+				totalPages,
+				totalItems,
+			};
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
+		}
+	}
+
+	public async deleteOne(id: string, softDelete = true, agentId: string | null = null): Promise<boolean> {
+		try {
+			const query: FindOneOptions<UsersModel> = {
+				where: { id } as any,
+			};
+
+			let result: UpdateResult | UsersModel | null = null;
+			if (softDelete) {
+				const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
+				result = await this.ResourceRepo.update(id, {
+					deletedAt: timestamp,
+					deletedBy: agentId,
+				} as any);
+				return result !== null && result !== undefined;
+			}
+			else {
+				const register = await this.ResourceRepo.findOne(query);
+				if (register) {
+					result = await register.remove();
+					return true;
+				}
+				return false;
+			}
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
+		}
+	}
+
+	public async deleteMany(ids: string[], softDelete = true, agentId: string | null = null): Promise<number> {
+		try {
+			const query: FindManyOptions<UsersModel> = {
+				where: { id: In(ids) }
+			} as any;
+
+			let result: UpdateResult | UsersModel | null = null;
+			if (softDelete) {
+				const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
+				result = await this.ResourceRepo.update(ids, {
+					deletedAt: timestamp,
+					deletedBy: agentId,
+				} as any);
+				return Number(result.affected);
+			}
+			else {
+				const registers = await this.ResourceRepo.find(query);
+				if (!registers) return 0;
+
+				let counter = 0;
+				for (const register of registers) {
+					result = await register.remove();
+					counter++;
+				}
+				return counter;
+			}
+		} catch (error) {
+			throw this.exceptions.internal(error as Error);
+		}
 	}
 }

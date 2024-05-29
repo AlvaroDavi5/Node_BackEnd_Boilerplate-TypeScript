@@ -1,13 +1,17 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsEnum, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
-import { Type } from 'class-transformer';
-import { CreateUserSchemaInterface } from '@app/user/api/schemas/user/createUser.schema';
-import { UpdateUserSchemaInterface, UserPreferenceSchemaInterface } from '@app/user/api/schemas/user/updateUser.schema';
+import { Type, Transform } from 'class-transformer';
+import { CreateUserInterface, UpdateUserInterface } from '@domain/entities/User.entity';
+import { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.entity';
 import { LoginUserSchemaInterface } from '@app/user/api/schemas/user/loginUser.schema';
 import { ThemesEnum } from '@domain/enums/themes.enum';
+import RegExConstants from '@common/constants/Regex.constants';
 
 
-abstract class UserPreferenceInputDto implements UserPreferenceSchemaInterface {
+const regExConstants = new RegExConstants();
+const { regex: onlyNumericDigitsRegex } = regExConstants.onlyNumericDigitsPattern;
+
+abstract class UserPreferenceInputDto implements UpdateUserPreferenceInterface {
 	@ApiProperty({ type: String, example: './image.png', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
@@ -19,7 +23,7 @@ abstract class UserPreferenceInputDto implements UserPreferenceSchemaInterface {
 	public defaultTheme?: ThemesEnum;
 }
 
-export abstract class CreateUserInputDto implements CreateUserSchemaInterface {
+export abstract class CreateUserInputDto implements CreateUserInterface {
 	@ApiProperty({ type: String, example: 'User Default', default: '', nullable: false, required: true })
 	@IsString()
 	@IsNotEmpty()
@@ -48,6 +52,11 @@ export abstract class CreateUserInputDto implements CreateUserSchemaInterface {
 	@ApiProperty({ type: String, example: '00000000000', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
+	@Transform(({ value }: { value?: string }) => {
+		if (!value)
+			return value;
+		return value.replace(onlyNumericDigitsRegex, '');
+	})
 	public document?: string;
 
 	@ApiProperty({ type: String, example: 'UF', default: undefined, nullable: false, required: false })
@@ -62,7 +71,7 @@ export abstract class CreateUserInputDto implements CreateUserSchemaInterface {
 		preference?: UserPreferenceInputDto;
 }
 
-export abstract class UpdateUserInputDto implements UpdateUserSchemaInterface {
+export abstract class UpdateUserInputDto implements UpdateUserInterface {
 	@ApiProperty({ type: String, example: 'User Default', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
@@ -91,6 +100,11 @@ export abstract class UpdateUserInputDto implements UpdateUserSchemaInterface {
 	@ApiProperty({ type: String, example: '00000000000', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
+	@Transform(({ value }: { value?: string }) => {
+		if (!value)
+			return value;
+		return value.replace(onlyNumericDigitsRegex, '');
+	})
 	public document?: string;
 
 	@ApiProperty({ type: String, example: 'UF', default: undefined, nullable: false, required: false })

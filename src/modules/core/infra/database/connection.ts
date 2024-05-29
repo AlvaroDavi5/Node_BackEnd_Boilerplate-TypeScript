@@ -1,24 +1,20 @@
+import 'reflect-metadata';
 import { Provider, Scope } from '@nestjs/common';
-import { Sequelize } from 'sequelize';
+import { DataSource } from 'typeorm';
 import { Logger } from 'winston';
-import { config as DBConfig } from './db.config';
+import { dbConfig } from './db.config';
 import LoggerService from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
 
 
-/* connecting to a database */
-/* passing Parameters separately (other dialects) */
-export const connection = new Sequelize(DBConfig);
-/* passing a connection URI - example for postgres */
-// const connection = new Sequelize('postgres://user:pass@example.com:5432/dbname')
-
-export async function testConnection(connection: Sequelize, logger?: Logger | LoggerInterface | Console): Promise<boolean> {
+export async function testConnection(connection: DataSource, logger?: Logger | LoggerInterface | Console): Promise<boolean> {
 	try {
-		await connection.authenticate({
-			logging: false,
-		});
-		logger?.info('Database connection has been established successfully');
-		return true;
+		if (connection.isInitialized) {
+			logger?.info(`Database connection with '${dbConfig.database}' database is initialized successfully`);
+			return connection.isInitialized;
+		}
+
+		return false;
 	}
 	catch (error) {
 		logger?.warn('Unable to connect to the database:');
@@ -27,15 +23,14 @@ export async function testConnection(connection: Sequelize, logger?: Logger | Lo
 	}
 }
 
-export async function syncConnection(connection: Sequelize, logger?: Logger | LoggerInterface | Console): Promise<void> {
+export async function syncConnection(connection: DataSource, logger?: Logger | LoggerInterface | Console): Promise<void> {
 	try {
-		await connection.sync({ force: false, logging: false }).then(
-			(value: Sequelize) => {
-				logger?.debug(`Database synced: ${value.config.database}`);
-			}
-		);
+		await connection.synchronize(false).then(() => {
+			logger?.debug(`Database synced: ${dbConfig.database}`);
+		});
 	}
 	catch (error) {
+		logger?.warn('Unable to sync to the database:');
 		logger?.error(error);
 	}
 }
@@ -52,13 +47,15 @@ const databaseConnectionProvider: Provider = {
 	useFactory: async (
 		logger: LoggerService,
 		...args: any[]
-	): Promise<Sequelize> => {
-		const connection = new Sequelize(DBConfig);
-
+	): Promise<DataSource> => {
+		const connection = new DataSource(dbConfig);
 		logger.setContextName('DatabaseConnectionProvider');
-		await syncConnection(connection, logger);
 
-		return connection;
+		const isInitialized = await testConnection(connection, logger);
+
+		if (isInitialized)
+			return connection;
+		return await connection.initialize();
 	},
 	/*
 			? Provider Use Options

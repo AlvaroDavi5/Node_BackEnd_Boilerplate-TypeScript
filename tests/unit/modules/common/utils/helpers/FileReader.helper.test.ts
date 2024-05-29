@@ -28,7 +28,7 @@ describe('Modules :: Common :: Utils :: Helpers :: FileReaderHelper', () => {
 	});
 
 	describe('# Valid File Path', () => {
-		const filePath = 'src/dev/templates/LICENSE.txt';
+		const filePath = 'src/dev/templates/LICENSE.example.txt';
 
 		test('Should return the content string', () => {
 			const content = fileReaderHelper.readFile(filePath);

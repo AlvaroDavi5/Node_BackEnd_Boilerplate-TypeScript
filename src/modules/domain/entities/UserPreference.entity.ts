@@ -1,19 +1,19 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsNumber, IsString, IsDate, IsEnum } from 'class-validator';
-import AbstractEntity from '@core/infra/database/entities/AbstractEntity.entity';
+import { IsString, IsDate, IsEnum } from 'class-validator';
+import AbstractEntity from '@domain/entities/AbstractEntity.entity';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
-import { returingNumber, returingString, returingDate } from '@shared/types/returnTypeFunc';
+import { returingString, returingDate } from '@shared/types/returnTypeFunc';
 
 
 const dateGeneratorHelper = new DateGeneratorHelper();
 const dateExample = dateGeneratorHelper.getDate('2024-06-10T03:52:50.885Z', 'iso-8601', true, TimeZonesEnum.SaoPaulo);
 
 export interface UserPreferenceInterface {
-	id?: number,
-	userId?: number,
+	id?: string,
+	userId?: string,
 	imagePath?: string,
 	defaultTheme?: ThemesEnum,
 	readonly createdAt: Date,
@@ -21,17 +21,23 @@ export interface UserPreferenceInterface {
 	deletedAt?: Date,
 }
 
-@ObjectType()
-export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceInterface> {
-	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, required: false, description: 'Database register ID' })
-	@Field(returingNumber, { defaultValue: 0, nullable: false, description: 'Database register ID' })
-	@IsNumber()
-	private id = 0;
+export type CreateUserPreferenceInterface = Omit<UserPreferenceInterface, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
+export type UpdateUserPreferenceInterface = Partial<CreateUserPreferenceInterface>;
+export type ViewUserPreferenceInterface = UserPreferenceInterface;
 
-	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, required: true, description: 'User ID' })
-	@Field(returingNumber, { defaultValue: 0, nullable: false, description: 'User ID' })
-	@IsNumber()
-	private userId = 0;
+@ObjectType({
+	description: 'user preference entity',
+})
+export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceInterface> {
+	@ApiProperty({ type: String, example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', default: '', nullable: false, required: false, description: 'Database register ID' })
+	@Field(returingString, { defaultValue: '', nullable: false, description: 'Database register ID' })
+	@IsString()
+	private id!: string;
+
+	@ApiProperty({ type: String, example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', default: '', nullable: false, required: false, description: 'User ID' })
+	@Field(returingString, { defaultValue: '', nullable: false, description: 'User ID' })
+	@IsString()
+	private userId!: string;
 
 	@ApiProperty({ type: String, example: './image.png', default: null, nullable: true, required: true, description: 'User profile image path' })
 	@Field(returingString, { defaultValue: null, nullable: true, description: 'User profile image path' })
@@ -81,18 +87,18 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 		};
 	}
 
-	public getId(): number { return this.id; }
-	public setId(id: number): void {
-		if (id <= 0)
+	public getId(): string { return this.id; }
+	public setId(id: string): void {
+		if (id.length < 1)
 			return;
 
 		this.id = id;
 		this.updatedAt = this.getDate();
 	}
 
-	public getUserId(): number { return this.userId; }
-	public setUserId(userId: number): void {
-		if (userId <= 0)
+	public getUserId(): string { return this.userId; }
+	public setUserId(userId: string): void {
+		if (userId.length < 1)
 			return;
 
 		this.userId = userId;
@@ -114,3 +120,5 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 		this.updatedAt = this.getDate();
 	}
 }
+
+export const returingUserPreferenceEntity = () => UserPreferenceEntity;

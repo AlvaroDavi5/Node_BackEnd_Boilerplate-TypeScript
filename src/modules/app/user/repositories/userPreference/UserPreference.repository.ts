@@ -1,56 +1,36 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { Sequelize, Association } from 'sequelize';
-import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
+import { DataSource } from 'typeorm';
+import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import LoggerService from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
-import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import AbstractRepository from '@core/infra/database/repositories/AbstractRepository.repository';
-import UsersModel from '@core/infra/database/models/Users.model';
-import UserPreferencesModel, { userPreferenceAttributes, userPreferenceOptions } from '@core/infra/database/models/UserPreferences.model';
+import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
+import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import userPreferenceMapper from './userPreference.mapper';
-import { userPreferenceQueryParamsBuilder, userPreferenceQueryOptions } from './userPreference.query';
+import { userPreferenceQueryParamsBuilder } from './userPreference.query';
 
 
 @Injectable()
 export default class UserPreferenceRepository extends AbstractRepository<UserPreferencesModel, UserPreferenceEntity> {
-	public static associations: {
-		user: Association<UsersModel>
-	};
-
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER)
-			connection: Sequelize,
+			connection: DataSource,
 			exceptions: Exceptions,
 			logger: LoggerService,
 			dateGeneratorHelper: DateGeneratorHelper,
 	) {
 		logger.setContextName(UserPreferenceRepository.name);
-		userPreferenceOptions.sequelize = connection;
 		super({
+			connection: connection,
 			DomainEntity: UserPreferenceEntity,
 			ResourceModel: UserPreferencesModel,
-			resourceAttributes: userPreferenceAttributes,
-			resourceOptions: userPreferenceOptions,
+			ResourceRepo: UserPreferencesModel.getRepository(),
 			resourceMapper: userPreferenceMapper,
 			queryParamsBuilder: userPreferenceQueryParamsBuilder,
-			queryOptions: userPreferenceQueryOptions,
+			dateGeneratorHelper: dateGeneratorHelper,
 			exceptions: exceptions,
 			logger: logger,
-			dateGeneratorHelper: dateGeneratorHelper,
 		});
-	}
-
-	public associate(): void {
-		this.ResourceModel.belongsTo(
-			UsersModel,
-			{
-				constraints: true,
-				foreignKeyConstraint: true,
-				foreignKey: 'userId',
-				targetKey: 'id',
-				as: 'user',
-			}
-		);
 	}
 }

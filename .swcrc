@@ -28,7 +28,7 @@
 		"noInterop": false
 	},
 	"exclude": [
-		"./**/.*.js$"
+		// "./**/.*.js$"
 	],
 	"sourceMaps": true,
 	"minify": false

@@ -48,7 +48,7 @@ DataBase Diagram
   * _SNS_: Topic notification service;
   * _S3_: Files storage service;
   * _Cognito_: Users authenticator service;
-- **Sequelize**: ORM for relational databases;
+- **TypeORM**: ORM for databases;
 - **PostgreSQL**: Relational (SQL) database;
 - **MongoDB**: Schematic and document-oriented NoSQL database;
 - **Redis**: Cache and in-memory key-value NoSQL database;
@@ -138,7 +138,6 @@ ___
 ### TO DO
 
 - **Integrations**
-	- [x] TypeORM
 	- [Kafka](#to-do)
 - **SQL**
 	- [ ] UUID Fields

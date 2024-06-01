@@ -51,11 +51,16 @@ const databaseConnectionProvider: Provider = {
 		const connection = new DataSource(dbConfig);
 		logger.setContextName('DatabaseConnectionProvider');
 
-		const isInitialized = await testConnection(connection, logger);
+		try {
+			const isInitialized = await testConnection(connection, logger);
 
-		if (isInitialized)
-			return connection;
-		return await connection.initialize();
+			if (isInitialized)
+				return connection;
+			return await connection.initialize();
+		} catch (error) {
+			logger.error(error);
+			throw error;
+		}
 	},
 	/*
 			? Provider Use Options

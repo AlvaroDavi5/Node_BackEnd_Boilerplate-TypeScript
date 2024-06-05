@@ -37,8 +37,7 @@ export const dbConfig: DataSourceOptions = {
 		UserPreferencesModel,
 	],
 	migrations: [
-		'build/modules/core/infra/database/migrations/**.js',
-		'build/modules/core/infra/database/seeders/**.js',
+		'build/modules/core/infra/database/migrations/**/*{.ts,.js}',
 	],
 	subscribers: [],
 	pool: {

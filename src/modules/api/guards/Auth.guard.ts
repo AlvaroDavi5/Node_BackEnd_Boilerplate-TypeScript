@@ -37,15 +37,25 @@ export default class AuthGuard implements CanActivate {
 		if (!decoded) {
 			this.logger.warn('Request with invalid authorization token');
 			throw this.exceptions.unauthorized({
-				message: 'Authorization token is invalid'
+				message: 'Authorization token is invalid',
 			});
 		}
 
 		let username: string | null = null, clientId: string | null = null;
 		if (typeof decoded !== 'string') {
+			if (!decoded?.exp || decoded?.exp <= Date.now()) {
+				this.logger.warn('Request with expired authorization token');
+				throw this.exceptions.unauthorized({
+					message: 'Authorization token was expired',
+				});
+			}
+
 			username = decoded?.username ?? decoded['cognito:username'];
 			clientId = decoded?.clientId ?? decoded?.client_id;
+
 		}
+		else
+			return false;
 
 		request.user = {
 			username,

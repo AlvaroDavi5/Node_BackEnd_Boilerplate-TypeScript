@@ -202,7 +202,14 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 				result = await this.ResourceRepo.update(id, {
 					deletedAt: timestamp,
 				} as any);
-				return result !== null && result !== undefined;
+				if (result !== null && result !== undefined) {
+					const res = result.affected
+						? result.affected > 0
+						: true;
+					return res;
+				}
+				else
+					return false;
 			}
 			else {
 				const register = await this.ResourceRepo.findOne(query);

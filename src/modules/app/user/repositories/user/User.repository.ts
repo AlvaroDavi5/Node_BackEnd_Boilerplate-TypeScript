@@ -102,7 +102,7 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 	public async deleteOne(id: string, softDelete = true, agentId: string | null = null): Promise<boolean> {
 		try {
 			const query: FindOneOptions<UsersModel> = {
-				where: { id } as any,
+				where: { id },
 			};
 
 			let result: UpdateResult | UsersModel | null = null;
@@ -111,8 +111,15 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 				result = await this.ResourceRepo.update(id, {
 					deletedAt: timestamp,
 					deletedBy: agentId,
-				} as any);
-				return result !== null && result !== undefined;
+				});
+				if (result !== null && result !== undefined) {
+					const res = result.affected
+						? result.affected > 0
+						: true;
+					return res;
+				}
+				else
+					return false;
 			}
 			else {
 				const register = await this.ResourceRepo.findOne(query);
@@ -131,7 +138,7 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 		try {
 			const query: FindManyOptions<UsersModel> = {
 				where: { id: In(ids) }
-			} as any;
+			};
 
 			let result: UpdateResult | UsersModel | null = null;
 			if (softDelete) {
@@ -139,7 +146,7 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 				result = await this.ResourceRepo.update(ids, {
 					deletedAt: timestamp,
 					deletedBy: agentId,
-				} as any);
+				});
 				return Number(result.affected);
 			}
 			else {

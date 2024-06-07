@@ -25,7 +25,7 @@ export interface SubscriptionInterface {
 }
 
 export type CreateSubscriptionInterface = Omit<SubscriptionInterface, 'id' | 'subscriptionId'>;
-export type UpdateSubscriptionInterface = Partial<CreateSubscriptionInterface>;
+export type UpdateSubscriptionInterface = Partial<SubscriptionInterface>;
 export type ViewSubscriptionInterface = SubscriptionInterface;
 
 @ObjectType()

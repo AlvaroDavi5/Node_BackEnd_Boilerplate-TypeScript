@@ -2,7 +2,7 @@ import UserStrategy from '../../../../../src/modules/app/user/strategies/User.st
 import UserEntity from '../../../../../src/modules/domain/entities/User.entity';
 
 
-describe('Modules :: App :: Strategies :: UserStrategy', () => {
+describe('Modules :: App :: User :: Strategies :: UserStrategy', () => {
 	const userStrategy = new UserStrategy();
 
 	describe('# Same Agent is Allowed', () => {

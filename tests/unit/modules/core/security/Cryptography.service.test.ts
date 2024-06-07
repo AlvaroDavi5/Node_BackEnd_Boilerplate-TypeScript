@@ -2,7 +2,7 @@ import CryptographyService from '../../../../../src/modules/core/security/Crypto
 import configs from '../../../../../src/modules/core/configs/configs.config';
 
 
-describe('Modules :: Core :: Infra :: Security :: CryptographyService', () => {
+describe('Modules :: Core :: Security :: CryptographyService', () => {
 	// // mocks
 	const configServiceMock = {
 		get: (propertyPath?: string): any => {

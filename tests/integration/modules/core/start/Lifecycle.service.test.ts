@@ -2,7 +2,6 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { HttpAdapterHost } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import LifecycleService from '../../../../../src/modules/core/start/Lifecycle.service';
-import configs from '../../../../../src/modules/core/configs/configs.config';
 import { DATABASE_CONNECTION_PROVIDER } from '../../../../../src/modules/core/infra/database/connection';
 import WebSocketServer from '../../../../../src/modules/events/websocket/server/WebSocket.server';
 import SyncCronJob from '../../../../../src/modules/core/cron/jobs/SyncCron.job';
@@ -16,7 +15,7 @@ import { configServiceMock } from '../../../../../src/dev/mocks/mockedModules';
 import LoggerService from '../../../support/mocks/logging/Logger.service';
 import { mockObservable } from '../../../support/mocks/mockObservable';
 
-describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
+describe('Modules :: Core :: Start :: LifecycleService', () => {
 	let nestTestingModule: TestingModule;
 	// // mocks
 	const databaseConnectionMock = {

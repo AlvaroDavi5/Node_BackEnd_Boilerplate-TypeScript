@@ -9,7 +9,7 @@ import CryptographyService from '../../../../../src/modules/core/security/Crypto
 import UserEntity from '../../../../../src/modules/domain/entities/User.entity';
 
 
-describe('Modules :: App :: Services :: UserService', () => {
+describe('Modules :: App :: User :: Services :: UserService', () => {
 	let nestTestingModule: TestingModule;
 	let userService: UserService;
 	// // mocks

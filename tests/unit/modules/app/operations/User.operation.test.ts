@@ -9,7 +9,7 @@ import { ListQueryInterface, PaginationInterface } from '../../../../../src/shar
 import { ErrorInterface } from '../../../../../src/shared/interfaces/errorInterface';
 
 
-describe('Modules :: App :: Operations :: UserOperation', () => {
+describe('Modules :: App :: User :: Operations :: UserOperation', () => {
 	// // mocks
 	const userServiceMock = {
 		getByEmail: jest.fn(async (email: string): Promise<UserEntity | null> => (null)),

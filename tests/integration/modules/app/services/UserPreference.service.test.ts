@@ -9,7 +9,7 @@ import Exceptions from '../../../../../src/modules/core/errors/Exceptions';
 import UserPreferenceEntity from '../../../../../src/modules/domain/entities/UserPreference.entity';
 
 
-describe('Modules :: App :: Services :: UserPreferenceService', () => {
+describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 	let nestTestingModule: TestingModule;
 	let userPreferenceService: UserPreferenceService;
 	// // mocks

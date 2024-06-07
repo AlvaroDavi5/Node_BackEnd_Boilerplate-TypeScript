@@ -1,10 +1,10 @@
-import { CacheEnum } from '../../../../../../src/modules/domain/enums/cache.enum';
-import { EventsEnum } from '../../../../../../src/modules/domain/enums/events.enum';
-import { ThemesEnum } from '../../../../../../src/modules/domain/enums/themes.enum';
-import { WebSocketEventsEnum, WebSocketRoomsEnum } from '../../../../../../src/modules/domain/enums/webSocketEvents.enum';
+import { CacheEnum } from '../../../../../src/modules/domain/enums/cache.enum';
+import { EventsEnum } from '../../../../../src/modules/domain/enums/events.enum';
+import { ThemesEnum } from '../../../../../src/modules/domain/enums/themes.enum';
+import { WebSocketEventsEnum, WebSocketRoomsEnum } from '../../../../../src/modules/domain/enums/webSocketEvents.enum';
 
 
-describe('Modules :: App :: Domain :: Enums', () => {
+describe('Modules :: Domain :: Enums', () => {
 
 	describe('# CacheEnum', () => {
 		test('Should return keys', () => {

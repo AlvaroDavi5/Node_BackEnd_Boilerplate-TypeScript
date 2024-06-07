@@ -1,7 +1,7 @@
 import HttpConstants from '../../../../../src/modules/common/constants/Http.constants';
 
 
-describe('Modules :: API :: Constants :: HttpConstants', () => {
+describe('Modules :: Common :: Constants :: HttpConstants', () => {
 	const httpConstants = new HttpConstants();
 
 	describe('# Status Code', () => {

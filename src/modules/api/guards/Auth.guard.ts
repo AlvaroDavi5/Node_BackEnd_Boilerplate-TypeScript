@@ -28,7 +28,7 @@ export default class AuthGuard implements CanActivate {
 		if (!authorization) {
 			this.logger.warn('Request without authorization token');
 			throw this.exceptions.unauthorized({
-				message: 'Authorization token is required'
+				message: 'Authorization token is required',
 			});
 		}
 

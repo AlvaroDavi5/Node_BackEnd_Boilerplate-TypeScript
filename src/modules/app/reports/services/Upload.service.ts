@@ -38,7 +38,9 @@ export default class UploadService {
 			return Buffer.concat(chunks);
 		}
 		else {
-			throw this.exceptions.internal({ message: 'Unsupported content type' });
+			throw this.exceptions.internal({
+				message: 'Unsupported content type',
+			});
 		}
 	}
 

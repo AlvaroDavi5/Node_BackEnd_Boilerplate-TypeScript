@@ -9,7 +9,8 @@ import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
-import SubscriptionEntity, { SubscriptionInterface } from '@domain/entities/Subscription.entity';
+import Exceptions from '@core/errors/Exceptions';
+import SubscriptionEntity, { CreateSubscriptionInterface, UpdateSubscriptionInterface } from '@domain/entities/Subscription.entity';
 import { CacheEnum } from '@domain/enums/cache.enum';
 import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
 
@@ -29,6 +30,7 @@ export default class SubscriptionService implements OnModuleInit {
 		private readonly redisClient: RedisClient,
 		@Inject(SINGLETON_LOGGER_PROVIDER)
 		private readonly loggerProvider: LoggerProviderInterface,
+		private readonly exceptions: Exceptions,
 		private readonly cacheAccessHelper: CacheAccessHelper,
 	) {
 		const { datalake: { db, collections: { subscriptions } } } = this.mongoClient.databases;
@@ -44,27 +46,29 @@ export default class SubscriptionService implements OnModuleInit {
 		this.webSocketClient = this.moduleRef.get(WebSocketClient, { strict: false });
 	}
 
-	public async get(subscriptionId: string): Promise<SubscriptionEntity | null> {
+	public async get(subscriptionId: string): Promise<SubscriptionEntity> {
 		let subscription = await this.getFromCache(subscriptionId);
 		if (!subscription) {
-			const findedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
+			const foundedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
 				subscriptionId,
 			});
-			subscription = findedSubscription;
+			subscription = foundedSubscription;
 		}
 		if (!subscription)
-			return null;
+			throw this.exceptions.notFound({
+				message: 'Subscription not found!',
+			});
 
 		await this.saveOnCache(subscriptionId, subscription);
 
 		return new SubscriptionEntity(subscription);
 	}
 
-	public async save(subscriptionId: string, data: SubscriptionInterface): Promise<SubscriptionEntity | null> {
-		let findedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
+	public async save(subscriptionId: string, data: CreateSubscriptionInterface | UpdateSubscriptionInterface): Promise<SubscriptionEntity> {
+		let foundedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
 			subscriptionId,
 		});
-		let subscriptionDatabaseId: ObjectId | null | undefined = findedSubscription?._id;
+		let subscriptionDatabaseId: ObjectId | null | undefined = foundedSubscription?._id;
 
 		if (!subscriptionDatabaseId) {
 			// ? create
@@ -76,36 +80,38 @@ export default class SubscriptionService implements OnModuleInit {
 			await this.mongoClient.updateOne(this.subscriptionsCollection, subscriptionDatabaseId, data);
 
 		if (subscriptionDatabaseId) {
-			findedSubscription = await this.mongoClient.get(this.subscriptionsCollection, subscriptionDatabaseId);
-			await this.saveOnCache(subscriptionId, findedSubscription);
+			foundedSubscription = await this.mongoClient.get(this.subscriptionsCollection, subscriptionDatabaseId);
+			await this.saveOnCache(subscriptionId, foundedSubscription);
 		}
 		else
-			return null;
+			throw this.exceptions.conflict({
+				message: 'Subscription not created or updated!',
+			});
 
-		return new SubscriptionEntity(findedSubscription);
+		return new SubscriptionEntity(foundedSubscription);
 	}
 
 	public async delete(subscriptionId: string): Promise<boolean> {
 		let deletedSubscription = false;
-		const findedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
+		const foundedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
 			subscriptionId,
 		});
 
-		if (findedSubscription?._id) {
+		if (foundedSubscription?._id) {
 			await this.deleteFromCache(subscriptionId);
-			deletedSubscription = (await this.mongoClient.deleteOne(this.subscriptionsCollection, findedSubscription._id)).deletedCount > 0;
+			deletedSubscription = (await this.mongoClient.deleteOne(this.subscriptionsCollection, foundedSubscription._id)).deletedCount > 0;
 		}
 
 		return deletedSubscription;
 	}
 
 	public async list(useCache = true): Promise<SubscriptionEntity[]> {
-		let findedSubscriptions = await this.listFromCache();
+		let foundedSubscriptions = await this.listFromCache();
 
-		if (!useCache || !findedSubscriptions.length)
-			findedSubscriptions = await this.mongoClient.findMany(this.subscriptionsCollection, {});
+		if (!useCache || !foundedSubscriptions.length)
+			foundedSubscriptions = await this.mongoClient.findMany(this.subscriptionsCollection, {});
 
-		return findedSubscriptions.map((subscription: any) => {
+		return foundedSubscriptions.map((subscription: any) => {
 			return new SubscriptionEntity(subscription);
 		});
 	}

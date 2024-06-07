@@ -22,9 +22,16 @@ export default class UserService {
 		this.secret = secretKey;
 	}
 
-	public async getById(id: string, withoutPassword = true): Promise<UserEntity | null> {
+	public async getById(id: string, withoutPassword = true): Promise<UserEntity> {
 		try {
-			return await this.userRepository.getById(id, withoutPassword);
+			const user = await this.userRepository.getById(id, withoutPassword);
+
+			if (!user)
+				throw this.exceptions.notFound({
+					message: 'User not founded by ID!',
+				});
+
+			return user;
 		} catch (error) {
 			throw this.exceptions.internal({
 				message: 'Error to comunicate with database',
@@ -33,9 +40,16 @@ export default class UserService {
 		}
 	}
 
-	public async getByEmail(email: string): Promise<UserEntity | null> {
+	public async getByEmail(email: string): Promise<UserEntity> {
 		try {
-			return await this.userRepository.findOne({ where: { email: email } });
+			const user = await this.userRepository.findOne({ where: { email: email } });
+
+			if (!user)
+				throw this.exceptions.notFound({
+					message: 'User not founded by e-mail!',
+				});
+
+			return user;
 		} catch (error) {
 			throw this.exceptions.internal({
 				message: 'Error to comunicate with database',
@@ -44,7 +58,7 @@ export default class UserService {
 		}
 	}
 
-	public async create(entity: UserEntity): Promise<UserEntity | null> {
+	public async create(entity: UserEntity): Promise<UserEntity> {
 		try {
 			const userPassword = entity.getPassword();
 			if (!userPassword?.length)
@@ -64,7 +78,7 @@ export default class UserService {
 	}
 
 
-	public async update(id: string, data: UpdateUserInterface): Promise<UserEntity | null> {
+	public async update(id: string, data: UpdateUserInterface): Promise<UserEntity> {
 		const { id: userId, createdAt, preference, ...userData } = new UserEntity(data).getAttributes();
 
 		try {
@@ -72,7 +86,14 @@ export default class UserService {
 			if (userPassword?.length)
 				userData.password = this.protectPassword(userPassword);
 
-			return await this.userRepository.update(id, userData);
+			const user = await this.userRepository.update(id, userData);
+
+			if (!user)
+				throw this.exceptions.conflict({
+					message: 'User not updated!',
+				});
+
+			return user;
 		} catch (error) {
 			throw this.exceptions.internal({
 				message: 'Error to comunicate with database',
@@ -81,7 +102,7 @@ export default class UserService {
 		}
 	}
 
-	public async delete(id: string, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean | null> {
+	public async delete(id: string, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean> {
 		try {
 			return await this.userRepository.deleteOne(id, Boolean(data.softDelete), String(data.userAgentId));
 		} catch (error) {

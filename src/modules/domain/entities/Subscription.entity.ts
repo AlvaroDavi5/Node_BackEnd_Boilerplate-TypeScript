@@ -13,17 +13,20 @@ const dateExample = dateGeneratorHelper.getDate('2024-06-10T03:52:50.885Z', 'iso
 export interface SubscriptionInterface {
 	id?: string,
 	subscriptionId?: string,
-	dataValues?: {
+	dataValues: {
 		clientId?: string,
 		[key: string]: any | undefined,
 		readonly createdAt: Date,
 		updatedAt?: Date,
 	},
-	listen?: {
-		newConnections?: boolean,
-		[key: string]: boolean | undefined,
+	listen: {
+		newConnections: boolean,
 	},
 }
+
+export type CreateSubscriptionInterface = Omit<SubscriptionInterface, 'id' | 'subscriptionId'>;
+export type UpdateSubscriptionInterface = Partial<CreateSubscriptionInterface>;
+export type ViewSubscriptionInterface = SubscriptionInterface;
 
 @ObjectType()
 export default class SubscriptionEntity extends AbstractEntity<SubscriptionInterface> {

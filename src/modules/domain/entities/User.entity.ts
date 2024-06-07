@@ -14,9 +14,9 @@ const dateExample = dateGeneratorHelper.getDate('2024-06-10T03:52:50.885Z', 'iso
 
 export interface UserInterface<UP = UserPreferenceInterface> {
 	id?: string,
-	fullName?: string,
-	email?: string,
-	password?: string,
+	fullName: string,
+	email: string,
+	password: string,
 	phone?: string,
 	docType?: string,
 	document?: string,
@@ -46,17 +46,17 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	@ApiProperty({ type: String, example: 'User Default', default: null, nullable: true, required: true, description: 'User name' })
 	@Field(returingString, { defaultValue: null, nullable: true, description: 'User name' })
 	@IsString()
-	public fullName: string | null = null;
+	public fullName!: string;
 
 	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: null, nullable: true, required: true, description: 'User email' })
 	@Field(returingString, { defaultValue: null, nullable: true, description: 'User email' })
 	@IsString()
-	private email: string | null = null;
+	private email!: string;
 
 	@ApiProperty({ type: String, example: 'cGFzczEyMw==', default: null, nullable: true, required: true, description: 'User password' })
 	@Field(returingString, { defaultValue: null, nullable: true, description: 'User password' })
 	@IsString()
-	private password: string | null = null;
+	private password!: string;
 
 	@ApiProperty({ type: String, example: '+0000000000000', default: null, nullable: true, required: true, description: 'User phone number' })
 	@Field(returingString, { defaultValue: null, nullable: true, description: 'User phone number' })
@@ -122,12 +122,12 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 		this.createdAt = this.exists(dataValues?.createdAt) ? this.getDate(dataValues.createdAt) : this.getDate();
 	}
 
-	public getAttributes(): UserInterface {
+	public getAttributes(): ViewUserInterface {
 		return {
 			id: this.id,
-			fullName: this.fullName ?? undefined,
-			email: this.email ?? undefined,
-			password: this.password ?? undefined,
+			fullName: this.fullName,
+			email: this.email,
+			password: this.password,
 			phone: this.phone ?? undefined,
 			docType: this.docType ?? undefined,
 			document: this.document ?? undefined,

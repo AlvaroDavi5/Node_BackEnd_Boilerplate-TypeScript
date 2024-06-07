@@ -1,26 +1,25 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsEnum, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
+import { IsString, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
 import { CreateUserInterface, UpdateUserInterface } from '@domain/entities/User.entity';
-import { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.entity';
 import { LoginUserSchemaInterface } from '@app/user/api/schemas/user/loginUser.schema';
-import { ThemesEnum } from '@domain/enums/themes.enum';
 import RegExConstants from '@common/constants/Regex.constants';
+import { UserPreferenceInputDto } from './UserPreferenceInput.dto';
 
 
 const regExConstants = new RegExConstants();
 const { regex: onlyNumericDigitsRegex } = regExConstants.onlyNumericDigitsPattern;
 
-abstract class UserPreferenceInputDto implements UpdateUserPreferenceInterface {
-	@ApiProperty({ type: String, example: './image.png', default: undefined, nullable: false, required: false })
+export abstract class LoginUserInputDto implements LoginUserSchemaInterface {
+	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: '', nullable: false, required: true })
 	@IsString()
-	@IsOptional()
-	public imagePath?: string;
+	@IsNotEmpty()
+	public email!: string;
 
-	@ApiProperty({ type: ThemesEnum, enum: ThemesEnum, example: ThemesEnum.DEFAULT, default: undefined, nullable: false, required: false })
-	@IsEnum(ThemesEnum)
-	@IsOptional()
-	public defaultTheme?: ThemesEnum;
+	@ApiProperty({ type: String, example: 'pass123', default: '', nullable: false, required: true })
+	@IsString()
+	@IsNotEmpty()
+	public password!: string;
 }
 
 export abstract class CreateUserInputDto implements CreateUserInterface {
@@ -117,16 +116,4 @@ export abstract class UpdateUserInputDto implements UpdateUserInterface {
 	@ValidateNested()
 	@IsOptional()
 		preference?: UserPreferenceInputDto;
-}
-
-export abstract class LoginUserInputDto implements LoginUserSchemaInterface {
-	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: '', nullable: false, required: true })
-	@IsString()
-	@IsNotEmpty()
-	public email!: string;
-
-	@ApiProperty({ type: String, example: 'pass123', default: '', nullable: false, required: true })
-	@IsString()
-	@IsNotEmpty()
-	public password!: string;
 }

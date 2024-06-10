@@ -21,7 +21,7 @@ Node.js Domain-Driven Design Boilerplate with TypeScript for Back-End.
 <div align='center'>
 <br>
 <a href='https://dbdiagram.io/d/6338e5857b3d2034ff03a8c4'>
-<img src='./docs/database.png' alt='db diagram' height='300hv' width='500wv'>
+<img src='./docs/img/database.png' alt='db diagram' height='300hv' width='500wv'>
 <br>
 DataBase Diagram
 </a>
@@ -32,8 +32,8 @@ DataBase Diagram
 <b>Nest Modules Graph and Classes</b>
 </div>
 
-![Nest Modules Graph](./docs/graph.png)  
-![Nest Classes](./docs/classes.png)  
+![Nest Modules Graph](./docs/img/graph.png)  
+![Nest Classes](./docs/img/classes.png)  
 
 ## Main technologies
 
@@ -195,13 +195,14 @@ ___
 - **Clustering**
 	- [x] Clusters
 		- [x] Kubernetes
-			- [ ] Load Balancing
+		- [ ] Load Balancing
 - **CI/CD**
 	- [ ] Jenkins
 	- [x] GitHub Actions
 - **Deployment**
 	- [ ] Heroku
 - **Nest.js**
+	- [Interceptors](https://docs.nestjs.com/interceptors)
 	- [Hybrid Application](https://docs.nestjs.com/faq/hybrid-application)
 	- [kafka](https://docs.nestjs.com/microservices/kafka)
 - **Packaging**

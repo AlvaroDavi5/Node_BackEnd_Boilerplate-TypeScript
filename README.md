@@ -2,7 +2,7 @@
 
 ## Description
 
-Node.js Domain-Driven Design Boilerplate with TypeScript for Back-End.
+Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 
 ## Overview
 
@@ -97,7 +97,7 @@ $ aws configure
 
 1. Copy dotenv file  
 ```shell
-cp env/.env.development.local ./.env # copy development local example
+cp envs/.env.development.local ./.env # copy development local example
 source ./.env # load envs on shell session
 ```
 

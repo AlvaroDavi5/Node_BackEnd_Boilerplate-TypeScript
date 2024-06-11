@@ -9,9 +9,11 @@ export interface RegisterEventHookInterface {
 	sendAt: Date,
 }
 
-export default Joi.object().keys({
+const registerEventHookSchema: Joi.Schema<RegisterEventHookInterface> = Joi.object({
 	responseEndpoint: Joi.string(),
 	responseMethod: Joi.string().valid(...Object.values(HttpMethodsEnum)).default(HttpMethodsEnum.GET),
 	responseSchema: Joi.string(),
 	sendAt: Joi.date(),
-}).unknown(true) as Joi.Schema<RegisterEventHookInterface>;
+}).unknown(true);
+
+export default registerEventHookSchema;

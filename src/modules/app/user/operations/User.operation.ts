@@ -26,21 +26,26 @@ export default class UserOperation {
 	public async loginUser(data: { email: string, password: string }): Promise<{ user: UserEntity, token: string }> {
 		const foundedUser = await this.userService.getByEmail(data.email);
 
-		this.userService.validatePassword(foundedUser, data.password);
+		if (!foundedUser)
+			throw this.exceptions.notFound({
+				message: 'User not founded by e-mail!',
+			});
 
-		const foundedPreference = await this.userPreferenceService.getByUserId(foundedUser.getId());
+		const user = await this.userService.getById(foundedUser.getId(), false);
+		this.userService.validatePassword(user, data.password);
 
-		if (foundedPreference)
-			foundedUser.setPreference(foundedPreference);
-		foundedUser.setPassword('');
+		const preference = await this.userPreferenceService.getByUserId(foundedUser.getId());
+
+		user.setPreference(preference);
+		user.setPassword('');
 
 		const userAuthToEncode: UserAuthInterface = {
-			username: foundedUser.getLogin().email,
-			clientId: foundedUser.getId().toString(),
+			username: user.getLogin().email,
+			clientId: user.getId(),
 		};
 		const token = this.cryptographyService.encodeJwt(userAuthToEncode, 'utf8', '1d');
 
-		return { user: foundedUser, token };
+		return { user, token };
 	}
 
 	public async listUsers(query: ListQueryInterface): Promise<UserEntityList> {
@@ -91,6 +96,7 @@ export default class UserOperation {
 
 		if (foundedPreference)
 			foundedUser.setPreference(foundedPreference);
+		foundedUser.setPassword('');
 
 		return foundedUser;
 	}

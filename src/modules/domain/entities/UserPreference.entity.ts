@@ -68,6 +68,7 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 		super();
 		if (this.exists(dataValues?.id)) this.id = dataValues.id;
 		if (this.exists(dataValues?.userId)) this.userId = dataValues.userId;
+		else if (this.exists(dataValues?.user?.id)) this.userId = dataValues.user.id;
 		if (this.exists(dataValues?.imagePath)) this.imagePath = dataValues.imagePath;
 		if (this.exists(dataValues?.defaultTheme)) this.defaultTheme = dataValues.defaultTheme;
 		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;

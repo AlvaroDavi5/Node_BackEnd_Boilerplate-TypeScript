@@ -8,12 +8,12 @@ import UsersModel from '@core/infra/database/models/Users.model';
 import UserEntity from '@domain/entities/User.entity';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import userMapper from './user.mapper';
-import { userQueryParamsBuilder } from './user.query';
+import { userQueryParamsBuilder, UserBuildParamsInterface } from './user.query';
 import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
 
 
 @Injectable()
-export default class UserRepository extends AbstractRepository<UsersModel, UserEntity> {
+export default class UserRepository extends AbstractRepository<UsersModel, UserEntity, UserBuildParamsInterface> {
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER)
 			connection: DataSource,
@@ -37,17 +37,12 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 
 	public async getById(id: string, withoutPassword = true): Promise<UserEntity | null> {
 		try {
-			let result: UsersModel | null = null;
-
-			if (withoutPassword) {
-				result = await this.ResourceRepo.findOne({ where: { id } });
-			}
-			else {
-				result = await this.ResourceRepo.createQueryBuilder()
-					.addSelect('password')
-					.where({ id })
-					.getOne();
-			}
+			const buildedQuery = this.queryParamsBuilder.buildParams({
+				id,
+				withoutSensitiveData: false,
+				withoutPassword,
+			});
+			const result = await this.ResourceRepo.findOne(buildedQuery);
 			if (!result) return null;
 
 			return this.resourceMapper.toDomainEntity(result);
@@ -58,22 +53,12 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 
 	public async list(query?: ListQueryInterface, withoutSensitiveData = true): Promise<PaginationInterface<UserEntity>> {
 		try {
-			const buildedQuery = this.queryParamsBuilder.buildParams(query);
-
-			let result!: [UsersModel[], number];
-			if (withoutSensitiveData) {
-				result = await this.ResourceRepo.findAndCount(buildedQuery);
-			}
-			else {
-				result = await this.ResourceRepo.createQueryBuilder()
-					.addSelect('password')
-					.addSelect('document')
-					.addSelect('phone')
-					.where(buildedQuery)
-					.getManyAndCount();
-			}
-
-			const { 0: rows, 1: count } = result;
+			const buildedQuery = this.queryParamsBuilder.buildParams({
+				...(query ?? {}),
+				withoutSensitiveData,
+				withoutPassword: true,
+			});
+			const { 0: rows, 1: count } = await this.ResourceRepo.findAndCount(buildedQuery);
 
 			const totalItems = count;
 			const totalPages = Math.ceil(totalItems / (query?.limit ?? 1)) || 1;

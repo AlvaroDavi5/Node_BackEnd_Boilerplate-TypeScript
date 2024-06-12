@@ -8,11 +8,11 @@ import UserPreferencesModel from '@core/infra/database/models/UserPreferences.mo
 import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import userPreferenceMapper from './userPreference.mapper';
-import { userPreferenceQueryParamsBuilder } from './userPreference.query';
+import { userPreferenceQueryParamsBuilder, UserPreferenceBuildParamsInterface } from './userPreference.query';
 
 
 @Injectable()
-export default class UserPreferenceRepository extends AbstractRepository<UserPreferencesModel, UserPreferenceEntity> {
+export default class UserPreferenceRepository extends AbstractRepository<UserPreferencesModel, UserPreferenceEntity, UserPreferenceBuildParamsInterface> {
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER)
 			connection: DataSource,

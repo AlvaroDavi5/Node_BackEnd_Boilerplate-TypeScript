@@ -1,4 +1,4 @@
-import { DataSource, BaseEntity, In, Repository, FindOneOptions, FindManyOptions, UpdateResult } from 'typeorm';
+import { DataSource, BaseEntity, In, Repository, FindOneOptions, FindManyOptions, FindOptionsOrder, UpdateResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import LoggerService from '@core/logging/Logger.service';
@@ -9,9 +9,16 @@ import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/list
 import { constructorType } from '@shared/types/constructorType';
 
 
-type ModelType<T extends BaseEntity> = constructorType<T> & typeof BaseEntity;
+export interface PaginationOptionsInterface<M extends BaseEntity> {
+	take?: number, // limit
+	skip?: number, // offset
+	order?: FindOptionsOrder<M>,
+}
+export type BuildParamsInterface<I = any> = ListQueryInterface & Partial<I>;
 
-export default abstract class AbstractRepository<M extends BaseEntity, E extends AbstractEntity> {
+type ModelType<E extends BaseEntity> = constructorType<E> & typeof BaseEntity;
+
+export default abstract class AbstractRepository<M extends BaseEntity, E extends AbstractEntity, BI extends BuildParamsInterface> {
 	// ? ------ Attributes ------
 	protected DomainEntity: constructorType<E>;
 	protected ResourceModel: ModelType<M>;
@@ -22,7 +29,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 	};
 
 	protected queryParamsBuilder: {
-		buildParams: (data: any) => FindManyOptions<M>,
+		buildParams: (data: BI) => FindManyOptions<M>,
 	};
 
 	protected exceptions: Exceptions;
@@ -136,8 +143,8 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 	public async update(id: string, dataValues: QueryDeepPartialEntity<M>): Promise<E | null> {
 		try {
 			const query: FindOneOptions<M> = {
-				where: { id },
-			} as any;
+				where: { id } as any,
+			};
 
 			const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
 			(dataValues as any).updatedAt = timestamp;
@@ -153,7 +160,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 
 	public async list(query?: ListQueryInterface): Promise<PaginationInterface<E>> {
 		try {
-			const buildedQuery = this.queryParamsBuilder.buildParams(query);
+			const buildedQuery = this.queryParamsBuilder.buildParams(query as any);
 			const { 0: rows, 1: count } = await this.ResourceRepo.findAndCount(buildedQuery);
 
 			const totalItems = count;
@@ -227,8 +234,8 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 	public async deleteMany(ids: string[], softDelete = true): Promise<number> {
 		try {
 			const query: FindManyOptions<M> = {
-				where: { id: In(ids) }
-			} as any;
+				where: { id: In(ids) } as any,
+			};
 
 			let result: UpdateResult | M | null = null;
 			if (softDelete) {

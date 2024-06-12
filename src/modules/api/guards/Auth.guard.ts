@@ -33,33 +33,31 @@ export default class AuthGuard implements CanActivate {
 		}
 
 		const token = authorization.replace('Bearer ', '');
-		const decoded = this.cryptographyService.decodeJwt(token);
-		if (!decoded) {
-			this.logger.warn('Request with invalid authorization token');
-			throw this.exceptions.unauthorized({
-				message: 'Authorization token is invalid',
-			});
-		}
+		const { content, invalidSignature, expired } = this.cryptographyService.decodeJwt(token);
 
-		let username: string | null = null, clientId: string | null = null;
-		if (typeof decoded !== 'string') {
-			if (!decoded?.exp || decoded?.exp <= Date.now()) {
+		if (!content || typeof content === 'string') {
+			if (expired) {
 				this.logger.warn('Request with expired authorization token');
 				throw this.exceptions.unauthorized({
 					message: 'Authorization token was expired',
 				});
 			}
+			else if (invalidSignature) {
+				this.logger.warn('Request with invalid authorization token signature');
+				throw this.exceptions.unauthorized({
+					message: 'Authorization token has invalid signature',
+				});
+			}
 
-			username = decoded?.username ?? decoded['cognito:username'];
-			clientId = decoded?.clientId ?? decoded?.client_id;
-
+			this.logger.warn(`Request with invalid authorization token content: ${content}`);
+			throw this.exceptions.unauthorized({
+				message: 'Authorization token is invalid',
+			});
 		}
-		else
-			return false;
 
 		request.user = {
-			username,
-			clientId,
+			username: content?.username ?? content['cognito:username'],
+			clientId: content?.clientId ?? content?.client_id,
 		};
 
 		return true;

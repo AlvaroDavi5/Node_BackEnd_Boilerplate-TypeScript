@@ -46,7 +46,7 @@ export default class DefaultController {
 				},
 				body: {},
 				statusCode: 200,
-				statusMessage: 'Endpoint finded successfully.',
+				statusMessage: 'Endpoint founded successfully.',
 			},
 		}
 	})

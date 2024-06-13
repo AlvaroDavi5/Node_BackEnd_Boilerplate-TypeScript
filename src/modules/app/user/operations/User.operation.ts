@@ -68,11 +68,6 @@ export default class UserOperation {
 
 		const createdUser = await this.userService.create(newUser);
 
-		if (!createdUser)
-			throw this.exceptions.conflict({
-				message: 'User not created!',
-			});
-
 		const newPreference = new UserPreferenceEntity(data.preference);
 		newPreference.setUserId(createdUser.getId());
 		await this.userPreferenceService.create(newPreference);
@@ -118,18 +113,10 @@ export default class UserOperation {
 
 		const mustUpdateUser = this.mustUpdate(user.getAttributes(), data);
 		const mustUpdateUserPreference = this.mustUpdate(preference.getAttributes(), data.preference);
-
-		const updatedUser = mustUpdateUser
-			? await this.userService.update(user.getId(), data)
-			: null;
-		const updatedPreference = data.preference !== undefined && mustUpdateUserPreference
-			? await this.userPreferenceService.update(preference.getId(), data.preference)
-			: null;
-
-		if ((mustUpdateUser && !updatedUser) || (mustUpdateUserPreference && !updatedPreference))
-			throw this.exceptions.conflict({
-				message: 'User or preference not updated!',
-			});
+		if (mustUpdateUser)
+			await this.userService.update(user.getId(), data);
+		if (data.preference !== undefined && mustUpdateUserPreference)
+			await this.userPreferenceService.update(preference.getId(), data.preference);
 
 		const foundedUser = await this.userService.getById(user.getId(), true);
 		const foundedPreference = await this.userPreferenceService.getByUserId(user.getId());
@@ -162,11 +149,6 @@ export default class UserOperation {
 			softDelete: true,
 			userAgentId: userAgent.clientId,
 		});
-
-		if (typeof softDeletedUser !== 'boolean')
-			throw this.exceptions.conflict({
-				message: 'User not deleted!',
-			});
 
 		return softDeletedUser;
 	}

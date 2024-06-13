@@ -22,10 +22,7 @@ export default class UserPreferenceService {
 
 			return preference;
 		} catch (error) {
-			throw this.exceptions.internal({
-				message: 'Error to comunicate with database',
-				details: `${(error as any)?.original}`,
-			});
+			throw this.throwError(error);
 		}
 	}
 
@@ -33,10 +30,7 @@ export default class UserPreferenceService {
 		try {
 			return await this.userPreferenceRepository.create(entity);
 		} catch (error) {
-			throw this.exceptions.internal({
-				message: 'Error to comunicate with database',
-				details: `${(error as any)?.original}`,
-			});
+			throw this.throwError(error);
 		}
 	}
 
@@ -53,10 +47,7 @@ export default class UserPreferenceService {
 
 			return preference;
 		} catch (error) {
-			throw this.exceptions.internal({
-				message: 'Error to comunicate with database',
-				details: `${(error as any)?.original}`,
-			});
+			throw this.throwError(error);
 		}
 	}
 
@@ -64,10 +55,15 @@ export default class UserPreferenceService {
 		try {
 			return await this.userPreferenceRepository.deleteOne(id, Boolean(data.softDelete));
 		} catch (error) {
-			throw this.exceptions.internal({
-				message: 'Error to comunicate with database',
-				details: `${(error as any)?.original}`,
-			});
+			throw this.throwError(error);
 		}
+	}
+
+	private throwError(error: any): Error {
+		const errorDetails: string | undefined = error?.message ?? error?.cause ?? error?.original;
+		return this.exceptions.internal({
+			message: 'Error to comunicate with database',
+			details: errorDetails !== undefined ? `${errorDetails}` : undefined,
+		});
 	}
 }

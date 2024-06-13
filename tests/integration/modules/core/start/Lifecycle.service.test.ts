@@ -93,4 +93,8 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 			expect(mockObservable.call).toHaveBeenCalledTimes(5);
 		});
 	});
+
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
 });

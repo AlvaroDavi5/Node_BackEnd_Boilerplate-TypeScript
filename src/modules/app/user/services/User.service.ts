@@ -33,10 +33,7 @@ export default class UserService {
 
 			return user;
 		} catch (error) {
-			throw this.exceptions.internal({
-				message: 'Error to comunicate with database',
-				details: `${(error as any)?.original}`,
-			});
+			throw this.throwError(error);
 		}
 	}
 
@@ -46,10 +43,7 @@ export default class UserService {
 
 			return user;
 		} catch (error) {
-			throw this.exceptions.internal({
-				message: 'Error to comunicate with database',
-				details: `${(error as any)?.original}`,
-			});
+			throw this.throwError(error);
 		}
 	}
 
@@ -65,10 +59,7 @@ export default class UserService {
 
 			return await this.userRepository.create(entity);
 		} catch (error) {
-			throw this.exceptions.internal({
-				message: 'Error to comunicate with database',
-				details: `${(error as any)?.original}`,
-			});
+			throw this.throwError(error);
 		}
 	}
 
@@ -90,10 +81,7 @@ export default class UserService {
 
 			return user;
 		} catch (error) {
-			throw this.exceptions.internal({
-				message: 'Error to comunicate with database',
-				details: `${(error as any)?.original}`,
-			});
+			throw this.throwError(error);
 		}
 	}
 
@@ -101,10 +89,7 @@ export default class UserService {
 		try {
 			return await this.userRepository.deleteOne(id, Boolean(data.softDelete), String(data.userAgentId));
 		} catch (error) {
-			throw this.exceptions.internal({
-				message: 'Error to comunicate with database',
-				details: `${(error as any)?.original}`,
-			});
+			throw this.throwError(error);
 		}
 	}
 
@@ -112,10 +97,7 @@ export default class UserService {
 		try {
 			return await this.userRepository.list(query, true);
 		} catch (error) {
-			throw this.exceptions.internal({
-				message: 'Error to comunicate with database',
-				details: `${(error as any)?.original}`,
-			});
+			throw this.throwError(error);
 		}
 	}
 
@@ -159,5 +141,13 @@ export default class UserService {
 			throw this.exceptions.unauthorized({
 				message: 'Password hash is different from database',
 			});
+	}
+
+	private throwError(error: any): Error {
+		const errorDetails: string | undefined = error?.message ?? error?.cause ?? error?.original;
+		return this.exceptions.internal({
+			message: 'Error to comunicate with database',
+			details: errorDetails !== undefined ? `${errorDetails}` : undefined,
+		});
 	}
 }

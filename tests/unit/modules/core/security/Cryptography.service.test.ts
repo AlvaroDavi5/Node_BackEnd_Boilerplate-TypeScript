@@ -35,11 +35,18 @@ describe('Modules :: Core :: Security :: CryptographyService', () => {
 		});
 
 		test('Should generate JWT', () => {
-			const data = { name: 'Alvaro' };
+			const data = { name: 'Tester' };
 			const token = cryptographyService.encodeJwt(data, 'utf8');
+			const decoded = {
+				content: {
+					name: 'Tester',
+				},
+				expired: false,
+				invalidSignature: false,
+			};
 
 			expect(token.length).toBe(149);
-			expect(cryptographyService.decodeJwt(token)).toMatchObject(data);
+			expect(cryptographyService.decodeJwt(token)).toMatchObject(decoded);
 		});
 
 		test('Should generate UUID', () => {
@@ -169,5 +176,9 @@ describe('Modules :: Core :: Security :: CryptographyService', () => {
 			expect(encrypted).toBeNull();
 			expect(decrypted).toBeNull();
 		});
+	});
+
+	afterEach(() => {
+		jest.clearAllMocks();
 	});
 });

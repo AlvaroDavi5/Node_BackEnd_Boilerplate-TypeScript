@@ -8,14 +8,13 @@ import Exceptions from '../../../../../src/modules/core/errors/Exceptions';
 import CryptographyService from '../../../../../src/modules/core/security/Cryptography.service';
 import UserEntity from '../../../../../src/modules/domain/entities/User.entity';
 
-
 describe('Modules :: App :: User :: Services :: UserService', () => {
 	let nestTestingModule: TestingModule;
 	let userService: UserService;
 	// // mocks
 	const userRepositoryMock = {
 		getById: jest.fn(async (id: string, withoutPassword?: boolean): Promise<UserEntity | null> => (null)),
-		create: jest.fn(async (entity: UserEntity): Promise<UserEntity> => (new UserEntity({}))),
+		create: jest.fn(async (entity: UserEntity): Promise<UserEntity> => { throw new Error('GenericError') }),
 		update: jest.fn(async (id: string, dataValues: Partial<UsersModel>): Promise<UserEntity | null> => (null)),
 		deleteOne: jest.fn(async (id: string, softDelete?: boolean, agentId?: string | null): Promise<boolean> => (false)),
 	};
@@ -38,7 +37,11 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 
 	describe('# Create User', () => {
 		test('Should create a user successfully', async () => {
-			userRepositoryMock.create.mockImplementation(async (entity: UserEntity): Promise<UserEntity> => (new UserEntity(entity.getAttributes())));
+			userRepositoryMock.create.mockResolvedValueOnce(new UserEntity({
+				id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+				email: 'user.test@nomail.dev',
+				password: 'pas123',
+			}));
 
 			const createdUser = await userService.create(new UserEntity({
 				id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
@@ -51,28 +54,22 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 		});
 
 		test('Should not create a user', async () => {
-			userRepositoryMock.create.mockImplementation(async (entity: UserEntity): Promise<UserEntity> => { throw new Error('Unable to create User'); });
-
-			try {
-				await userService.create(new UserEntity({
-					id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
-					email: 'user.test@nomail.dev',
-					password: 'pas123',
-				}));
-			} catch (error) {
-				expect(userRepositoryMock.create).toHaveBeenCalledTimes(1);
-				expect(error.message).toBe('Error to comunicate with database');
-			}
+			await expect(userService.create(new UserEntity({
+				id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+				email: 'user.test@nomail.dev',
+				password: 'pas123',
+			}))).rejects.toMatchObject({
+				name: 'internal',
+				message: 'Error to comunicate with database',
+			});
+			expect(userRepositoryMock.create).toHaveBeenCalledTimes(1);
 		});
 	});
 
 	describe('# Get User', () => {
 		test('Should find a user successfully', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
-			userRepositoryMock.getById.mockImplementation(async (id: string, withoutPassword?: boolean): Promise<UserEntity | null> => {
-				if (id === userEntity.getId()) return userEntity;
-				else return null;
-			});
+			userRepositoryMock.getById.mockResolvedValueOnce(userEntity);
 
 			const user = await userService.getById('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(userRepositoryMock.getById).toHaveBeenCalledTimes(1);
@@ -80,21 +77,20 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 		});
 
 		test('Should not find a user', async () => {
-			userRepositoryMock.getById.mockImplementation(async (id: string, withoutPassword?: boolean): Promise<UserEntity | null> => (null));
-
-			const user = await userService.getById('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
+			await expect(userService.getById('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d'))
+				.rejects.toMatchObject({
+					name: 'internal',
+					message: 'Error to comunicate with database',
+				});
 			expect(userRepositoryMock.getById).toHaveBeenCalledTimes(1);
-			expect(user).toBeNull();
 		});
 	});
 
 	describe('# Update User', () => {
 		test('Should update a user successfully', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
-			userRepositoryMock.update.mockImplementation(async (id: string, dataValues: Partial<UsersModel>): Promise<UserEntity | null> => {
-				if (id !== userEntity.getId()) return null;
-				const userEmail = dataValues.email;
-				if (userEmail) userEntity.setLogin(userEmail, userEntity.getLogin().fullName as string);
+			userRepositoryMock.update.mockImplementationOnce(async (id: string, dataValues: Partial<UsersModel>) => {
+				if (dataValues.email) userEntity.setLogin(dataValues.email, userEntity.getLogin().fullName ?? '');
 				return userEntity;
 			});
 
@@ -106,24 +102,21 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 		});
 
 		test('Should not update a user', async () => {
-			userRepositoryMock.update.mockImplementation(async (id: string, dataValues: Partial<UsersModel>): Promise<UserEntity | null> => (null));
-
-			const updatedUser = await userService.update('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', new UserEntity({
+			await expect(userService.update('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', new UserEntity({
 				email: 'user.test@nomail.dev',
-			}));
+			})))
+				.rejects.toMatchObject({
+					name: 'internal',
+					message: 'Error to comunicate with database',
+				});
 			expect(userRepositoryMock.update).toHaveBeenCalledTimes(1);
-			expect(updatedUser).toBeNull();
 		});
 	});
 
 	describe('# Delete User', () => {
 		test('Should delete a user successfully', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
-			userRepositoryMock.deleteOne.mockImplementation(async (id: string, softDelete?: boolean, agentId?: string | null): Promise<boolean> => {
-				if (id === userEntity.getId())
-					return true;
-				return false;
-			});
+			userRepositoryMock.deleteOne.mockResolvedValueOnce(true);
 
 			const deletedUser = await userService.delete(userEntity.getId(), { softDelete: true });
 			expect(userRepositoryMock.deleteOne).toHaveBeenCalledTimes(1);
@@ -131,7 +124,7 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 		});
 
 		test('Should not delete a user', async () => {
-			userRepositoryMock.deleteOne.mockImplementation(async (id: string, softDelete?: boolean, agentId?: string | null): Promise<boolean> => (false));
+			userRepositoryMock.deleteOne.mockResolvedValueOnce(false);
 
 			const deletedUser = await userService.delete('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { softDelete: true });
 			expect(userRepositoryMock.deleteOne).toHaveBeenCalledTimes(1);
@@ -139,6 +132,9 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 		});
 	});
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
 	afterAll(async () => {
 		await nestTestingModule.close();
 	});

@@ -17,7 +17,7 @@ describe('Modules :: Common :: Constants :: HttpConstants', () => {
 
 	describe('# Messages', () => {
 		test('Should return the same value', () => {
-			expect(httpConstants.messages.found('Resource')).toBe('Resource finded successfully.');
+			expect(httpConstants.messages.found('Resource')).toBe('Resource founded successfully.');
 			expect(httpConstants.messages.notFound('Resource')).toBe('Resource not found!');
 			expect(httpConstants.messages.created('Resource')).toBe('Resource created successfully.');
 			expect(httpConstants.messages.notCreated('Resource')).toBe('Error to create Resource!');

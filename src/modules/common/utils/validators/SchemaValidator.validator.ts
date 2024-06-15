@@ -28,7 +28,7 @@ export default class SchemaValidator<S> {
 		);
 
 		if (error) {
-			const errorMessages = error.details.map((e) => e.message).join(', ');
+			const errorMessages = error.details.map((error) => error.message).join(', ');
 			throw this.exceptions.contract({
 				message: `${error.name}: ${errorMessages}`,
 				stack: error.stack,

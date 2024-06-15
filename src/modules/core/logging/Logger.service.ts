@@ -76,7 +76,7 @@ export default class LoggerService implements LoggerInterface {
 		};
 
 		const separator = args.length > 1 ? ' ' : '';
-		args.forEach(arg => {
+		args.forEach((arg: any) => {
 			if (arg instanceof Error) {
 				const errorName = arg.name.length > 0 ? `\x1b[0;30m${arg.name}\x1b[0m - ` : '';
 				message += `${errorName}${arg.message}${separator}`;

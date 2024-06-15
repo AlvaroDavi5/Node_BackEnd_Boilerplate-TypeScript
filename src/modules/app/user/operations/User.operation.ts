@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import UserEntity, { UserEntityList } from '@domain/entities/User.entity';
+import UserEntity from '@domain/entities/User.entity';
 import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
+import UserListEntity from '@domain/entities/generic/UserList.entity';
 import UserService from '@app/user/services/User.service';
 import UserPreferenceService from '@app/user/services/UserPreference.service';
 import UserStrategy from '@app/user/strategies/User.strategy';
-import { CreateUserInputDto, UpdateUserInputDto } from '@app/user/api/dto/UserInput.dto';
 import CryptographyService from '@core/security/Cryptography.service';
 import Exceptions from '@core/errors/Exceptions';
 import HttpConstants from '@common/constants/Http.constants';
+import CreateUserInputDto from '../api/dto/user/CreateUserInput.dto';
+import UpdateUserInputDto from '../api/dto/user/UpdateUserInput.dto';
 import { UserAuthInterface } from '@shared/interfaces/userAuthInterface';
 import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
 
@@ -48,7 +50,7 @@ export default class UserOperation {
 		return { user, token };
 	}
 
-	public async listUsers(query: ListQueryInterface): Promise<UserEntityList> {
+	public async listUsers(query: ListQueryInterface): Promise<UserListEntity> {
 		const usersList = await this.userService.list(query);
 		return usersList;
 	}

@@ -1,8 +1,9 @@
 import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
-import { CreateConnectionInputDto, UpdateConnectionInputDto } from '../dto/ConnectionInput.dto';
 import SubscriptionEntity from '@domain/entities/Subscription.entity';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
+import CreateConnectionInputDto from '../dto/CreateConnectionInput.dto';
+import UpdateConnectionInputDto from '../dto/UpdateConnectionInput.dto';
 
 
 @Injectable()

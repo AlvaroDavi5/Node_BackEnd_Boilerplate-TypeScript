@@ -15,7 +15,7 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 	// // mocks
 	const userPreferenceRepositoryMock = {
 		findOne: jest.fn(async (query: FindOneOptions<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => (null)),
-		create: jest.fn(async (entity: UserPreferenceEntity): Promise<UserPreferenceEntity> => { throw new Error('GenericError') }),
+		create: jest.fn(async (entity: UserPreferenceEntity): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
 		update: jest.fn(async (id: string, dataValues: Partial<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => (null)),
 		deleteOne: jest.fn(async (id: string, softDelete?: boolean): Promise<boolean> => (false)),
 	};
@@ -112,9 +112,9 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 				return userPreferenceEntity;
 			});
 
-			const updatedUserPreference = await userPreferenceService.update('b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
+			const updatedUserPreference = await userPreferenceService.update('b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', new UserPreferenceEntity({
 				defaultTheme: 'DARK',
-			});
+			}).getAttributes());
 			expect(userPreferenceRepositoryMock.update).toHaveBeenCalledTimes(1);
 			expect(updatedUserPreference?.getDefaultTheme()).toBe('DARK');
 		});
@@ -122,7 +122,7 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 		test('Should not update a user preference', async () => {
 			await expect(userPreferenceService.update('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', new UserPreferenceEntity({
 				defaultTheme: 'DARK',
-			})))
+			}).getAttributes()))
 				.rejects.toMatchObject({
 					name: 'internal',
 					message: 'Error to comunicate with database',

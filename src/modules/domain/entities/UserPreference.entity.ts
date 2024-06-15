@@ -1,10 +1,10 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDate, IsEnum } from 'class-validator';
-import AbstractEntity from '@domain/entities/AbstractEntity.entity';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import AbstractEntity from '@shared/classes/AbstractEntity.entity';
 import { returingString, returingDate } from '@shared/types/returnTypeFunc';
 
 

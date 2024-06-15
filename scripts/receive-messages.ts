@@ -24,7 +24,7 @@ function createSocketClient() {
 		configs: configs(),
 	});
 
-	webSocketClient.listen(WebSocketEventsEnum.EMIT, (msg: unknown, ...args: unknown[]) => {
+	webSocketClient.listen(WebSocketEventsEnum.EMIT, (msg: unknown, ..._args: unknown[]) => {
 		const message = formatMessageAfterReceiveHelper(msg);
 		console.info(message);
 	});

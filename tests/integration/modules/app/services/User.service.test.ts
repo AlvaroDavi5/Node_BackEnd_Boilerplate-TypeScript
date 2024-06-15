@@ -14,7 +14,7 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 	// // mocks
 	const userRepositoryMock = {
 		getById: jest.fn(async (id: string, withoutPassword?: boolean): Promise<UserEntity | null> => (null)),
-		create: jest.fn(async (entity: UserEntity): Promise<UserEntity> => { throw new Error('GenericError') }),
+		create: jest.fn(async (entity: UserEntity): Promise<UserEntity> => { throw new Error('GenericError'); }),
 		update: jest.fn(async (id: string, dataValues: Partial<UsersModel>): Promise<UserEntity | null> => (null)),
 		deleteOne: jest.fn(async (id: string, softDelete?: boolean, agentId?: string | null): Promise<boolean> => (false)),
 	};
@@ -96,7 +96,7 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 
 			const updatedUser = await userService.update('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', new UserEntity({
 				email: 'user.test@nomail.dev',
-			}));
+			}).getAttributes());
 			expect(userRepositoryMock.update).toHaveBeenCalledTimes(1);
 			expect(updatedUser?.getLogin()?.email).toBe('user.test@nomail.dev');
 		});
@@ -104,7 +104,7 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 		test('Should not update a user', async () => {
 			await expect(userService.update('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', new UserEntity({
 				email: 'user.test@nomail.dev',
-			})))
+			}).getAttributes()))
 				.rejects.toMatchObject({
 					name: 'internal',
 					message: 'Error to comunicate with database',

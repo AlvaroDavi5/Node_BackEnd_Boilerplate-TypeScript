@@ -4,7 +4,7 @@ import axios, { AxiosInstance } from 'axios';
 import axiosRetry from 'axios-retry';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import LoggerService from '@core/logging/Logger.service';
-import { catchError } from '@common/utils/errorCatcher.util';
+import catchError from '@common/utils/errorCatcher.util';
 import { RestClientResponseInterface, requestMethodType } from '@shared/types/restClientTypes';
 
 

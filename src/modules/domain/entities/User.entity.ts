@@ -2,15 +2,12 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDate } from 'class-validator';
 import { Type } from 'class-transformer';
-import AbstractEntity, { AbstractEntityList } from '@domain/entities/AbstractEntity.entity';
-import UserPreferenceEntity, { CreateUserPreferenceInterface, UserPreferenceInterface, returingUserPreferenceEntity } from './UserPreference.entity';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import AbstractEntity from '@shared/classes/AbstractEntity.entity';
 import { returingString, returingDate } from '@shared/types/returnTypeFunc';
+import UserPreferenceEntity, { CreateUserPreferenceInterface, UserPreferenceInterface, returingUserPreferenceEntity } from './UserPreference.entity';
 
-
-const dateGeneratorHelper = new DateGeneratorHelper();
-const dateExample = dateGeneratorHelper.getDate('2024-06-10T03:52:50.885Z', 'iso-8601', true, TimeZonesEnum.SaoPaulo);
 
 export interface UserInterface<UP = UserPreferenceInterface> {
 	id?: string,
@@ -33,6 +30,9 @@ export type UpdateUserInterface = Partial<CreateUserInterface>;
 export type ViewUserInterface = UserInterface;
 export type ViewUserWithoutPasswordInterface = Omit<UserInterface, 'password'>;
 export type ViewUserWithoutSensitiveDataInterface = Omit<UserInterface, 'password' | 'phone' | 'document'>;
+
+const dateGeneratorHelper = new DateGeneratorHelper();
+const dateExample = dateGeneratorHelper.getDate('2024-06-10T03:52:50.885Z', 'iso-8601', true, TimeZonesEnum.SaoPaulo);
 
 @ObjectType({
 	description: 'user entity',
@@ -205,32 +205,4 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	public setPreference(preference: UserPreferenceEntity): void {
 		this.preference = preference;
 	}
-}
-
-export const returingUserEntityArray = () => Array<UserEntity>;
-
-export class UserEntityList extends AbstractEntityList<UserEntity> {
-	@ApiProperty({
-		type: UserEntity,
-		isArray: true,
-		example: ([
-			new UserEntity({
-				fullName: 'User Default',
-				docType: 'INVALID',
-				fu: 'UF',
-				preference: new UserPreferenceEntity({
-					imagePath: './image.png',
-					defaultTheme: 'DEFAULT',
-				}),
-				createdAt: dateExample,
-				updatedAt: dateExample,
-			}),
-		]),
-		default: [],
-		nullable: false,
-		description: 'User list content',
-	})
-	@Type(returingUserEntityArray)
-	@Field(returingUserEntityArray, { defaultValue: [], nullable: false, description: 'User list content' })
-	public content: UserEntity[] = [];
 }

@@ -25,7 +25,7 @@ describe('API :: UserController', () => {
 		test('Should get success', async () => {
 			const response = await request(await nestTestApp.getHttpServer())
 				.get('/api/users')
-				.set('Authorization', 'Bearer ' + process.env.MOCKED_SERVICE_TOKEN);
+				.set('Authorization', `Bearer ${process.env.MOCKED_SERVICE_TOKEN}`);
 
 			expect(response.statusCode).toBe(200);
 			expect(response.body).toMatchObject({

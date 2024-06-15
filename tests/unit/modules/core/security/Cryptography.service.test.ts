@@ -10,10 +10,8 @@ describe('Modules :: Core :: Security :: CryptographyService', () => {
 				const splitedPaths = propertyPath.split('.');
 				let scopedProperty: any = configs();
 
-				for (let i = 0; i < splitedPaths.length; i++) {
-					const scopedPath = splitedPaths[i];
-
-					if (scopedPath.length)
+				for (const scopedPath of splitedPaths) {
+					if (scopedPath.length > 0)
 						scopedProperty = scopedProperty[scopedPath];
 				}
 
@@ -103,8 +101,8 @@ describe('Modules :: Core :: Security :: CryptographyService', () => {
 		const iv = '2a19dd220ef09ff472b59447';
 		let encrypted = '';
 		let decrypted = '';
-		let enc: { encrypted: string | null, iv: string } | undefined = undefined;
-		let dec: { decrypted: string | null, iv: string } | undefined = undefined;
+		let enc: { encrypted: string | null, iv: string } | undefined;
+		let dec: { decrypted: string | null, iv: string } | undefined;
 
 		test('Should encrypt', () => {
 			enc = cryptographyService.symmetricAESEncrypt(plainText, 'utf8', key1, 'base64', iv);

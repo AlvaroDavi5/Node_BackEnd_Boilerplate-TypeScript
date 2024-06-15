@@ -17,7 +17,7 @@ describe('Modules :: Common :: Utils :: Helpers :: FileReaderHelper', () => {
 		});
 
 		test('Should return undefined stream', () => {
-			let stream: ReadStream | undefined = undefined;
+			let stream: ReadStream | undefined;
 
 			try {
 				stream = fileReaderHelper.readStream(filePath, 'utf8');

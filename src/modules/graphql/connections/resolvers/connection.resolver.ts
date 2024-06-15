@@ -1,7 +1,8 @@
 import { Resolver, Query, Mutation, Args } from '@nestjs/graphql';
-import { CreateConnectionInputDto, UpdateConnectionInputDto } from '../dto/ConnectionInput.dto';
 import SubscriptionEntity from '@domain/entities/Subscription.entity';
 import ConnectionsService from '../services/Connection.service';
+import CreateConnectionInputDto from '../dto/CreateConnectionInput.dto';
+import UpdateConnectionInputDto from '../dto/UpdateConnectionInput.dto';
 
 
 @Resolver(() => SubscriptionEntity)

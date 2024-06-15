@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import UserEntity, { UpdateUserInterface, UserEntityList } from '@domain/entities/User.entity';
+import UserEntity, { UpdateUserInterface } from '@domain/entities/User.entity';
+import UserListEntity from '@domain/entities/generic/UserList.entity';
 import CryptographyService from '@core/security/Cryptography.service';
 import UserRepository from '@app/user/repositories/user/User.repository';
 import Exceptions from '@core/errors/Exceptions';
@@ -93,7 +94,7 @@ export default class UserService {
 		}
 	}
 
-	public async list(query: ListQueryInterface): Promise<UserEntityList> {
+	public async list(query: ListQueryInterface): Promise<UserListEntity> {
 		try {
 			return await this.userRepository.list(query, true);
 		} catch (error) {

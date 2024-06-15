@@ -4,7 +4,7 @@ import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import LoggerService from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
 import Exceptions from '@core/errors/Exceptions';
-import AbstractEntity from '@domain/entities/AbstractEntity.entity';
+import AbstractEntity from '@shared/classes/AbstractEntity.entity';
 import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
 import { constructorType } from '@shared/types/constructorType';
 

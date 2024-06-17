@@ -16,8 +16,7 @@ describe('Modules :: Core :: Security :: CryptographyService', () => {
 				}
 
 				return scopedProperty;
-			}
-			else
+			} else
 				return configs();
 		},
 	};

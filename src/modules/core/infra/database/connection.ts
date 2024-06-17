@@ -15,8 +15,7 @@ export async function testConnection(connection: DataSource, logger?: Logger | L
 		}
 
 		return false;
-	}
-	catch (error) {
+	} catch (error) {
 		logger?.warn('Unable to connect to the database:');
 		logger?.error(error);
 		return false;
@@ -28,8 +27,7 @@ export async function syncConnection(connection: DataSource, logger?: Logger | L
 		await connection.synchronize(false).then(() => {
 			logger?.debug(`Database synced: ${dbConfig.database}`);
 		});
-	}
-	catch (error) {
+	} catch (error) {
 		logger?.warn('Unable to sync to the database:');
 		logger?.error(error);
 	}

@@ -136,6 +136,7 @@ export interface ConfigsInterface {
 	},
 }
 
+// eslint-disable-next-line complexity
 export default (): ConfigsInterface => ({
 	application: {
 		name: process.env.APP_NAME ?? 'Node Boilerplate',

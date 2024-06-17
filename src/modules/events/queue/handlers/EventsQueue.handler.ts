@@ -49,8 +49,7 @@ export default class EventsQueueHandler implements OnModuleInit {
 				if (value.payload.event === EventsEnum.NEW_CONNECTION) {
 					this.subscriptionService.emit(value, WebSocketRoomsEnum.NEW_CONNECTIONS);
 					await this.webhookService.pullHook(value.payload.event, value.payload);
-				}
-				else
+				} else
 					this.subscriptionService.broadcast(value);
 
 				return true;

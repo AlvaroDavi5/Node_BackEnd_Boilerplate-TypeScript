@@ -41,8 +41,7 @@ export default class AuthGuard implements CanActivate {
 				throw this.exceptions.unauthorized({
 					message: 'Authorization token was expired',
 				});
-			}
-			else if (invalidSignature) {
+			} else if (invalidSignature) {
 				this.logger.warn('Request with invalid authorization token signature');
 				throw this.exceptions.unauthorized({
 					message: 'Authorization token has invalid signature',

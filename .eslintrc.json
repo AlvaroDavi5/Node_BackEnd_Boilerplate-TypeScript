@@ -1,5 +1,4 @@
 {
-	// TODO - ordenar por prioridade
 	"$schema": "https://json.schemastore.org/eslintrc",
 	"env": {
 		"es6": true,
@@ -21,14 +20,27 @@
 		"prettier"
 	],
 	"rules": {
-		"semi": [
-			"error",
-			"always"
-		],
 		"indent": [
 			"error",
 			"tab"
 		],
+		"quotes": [
+			"error",
+			"single"
+		],
+		"semi": [
+			"error",
+			"always"
+		],
+		"eqeqeq": [
+			"error",
+			"always"
+		],
+		"max-len": [
+			"warn",
+			160
+		],
+		"camelcase": "warn",
 		"comma-spacing": [
 			"error",
 			{
@@ -36,30 +48,22 @@
 				"after": true
 			}
 		],
-		"quotes": [
-			"error",
-			"single"
-		],
 		"object-curly-spacing": [
 			"error",
 			"always"
 		],
-		"arrow-parens": "error",
-		"brace-style": "off",
-		"complexity": "warn",
-		"camelcase": "off",
-		"constructor-super": "warn",
-		"curly": "off",
-		"eol-last": "error",
-		"eqeqeq": [
+		"max-classes-per-file": [
 			"error",
-			"always"
+			1
 		],
-		"max-len": [
-			"warn",
-			150
-		],
-		"guard-for-in": "warn",
+		"eol-last": "error",
+		"complexity": "error",
+		"constructor-super": "error",
+		"guard-for-in": "error",
+		"brace-style": "error",
+		"curly": "off",
+		"new-parens": "error",
+		"arrow-parens": "error",
 		"id-denylist": [
 			"error",
 			"err",
@@ -68,18 +72,13 @@
 		],
 		"id-match": "off",
 		"import/order": "off",
-		"max-classes-per-file": [
-			"error",
-			1
-		],
-		"new-parens": "error",
 		"no-bitwise": "off",
 		"no-caller": "warn",
-		"no-cond-assign": "error",
-		"no-console": "warn",
+		"no-cond-assign": "warn",
+		"no-empty": "error",
+		"no-eval": "error",
 		"no-debugger": "error",
-		"no-empty": "warn",
-		"no-eval": "off",
+		"no-console": "warn",
 		"no-fallthrough": "error",
 		"no-invalid-this": "warn",
 		"no-new-wrappers": "warn",

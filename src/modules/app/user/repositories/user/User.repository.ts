@@ -23,15 +23,15 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 	) {
 		logger.setContextName(UserRepository.name);
 		super({
-			connection: connection,
+			connection,
 			DomainEntity: UserEntity,
 			ResourceModel: UsersModel,
 			ResourceRepo: UsersModel.getRepository(),
 			resourceMapper: userMapper,
 			queryParamsBuilder: userQueryParamsBuilder,
-			dateGeneratorHelper: dateGeneratorHelper,
-			exceptions: exceptions,
-			logger: logger,
+			dateGeneratorHelper,
+			exceptions,
+			logger,
 		});
 	}
 
@@ -67,9 +67,7 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 
 			let content: UserEntity[] = [];
 			if (rows.length) {
-				content = rows.map((register) =>
-					this.resourceMapper.toDomainEntity(register)
-				);
+				content = rows.map((register) => this.resourceMapper.toDomainEntity(register));
 			}
 
 			return {
@@ -102,11 +100,9 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 						? result.affected > 0
 						: true;
 					return res;
-				}
-				else
+				} else
 					return false;
-			}
-			else {
+			} else {
 				const register = await this.ResourceRepo.findOne(query);
 				if (register) {
 					result = await register.remove();
@@ -133,8 +129,7 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 					deletedBy: agentId,
 				});
 				return Number(result.affected);
-			}
-			else {
+			} else {
 				const registers = await this.ResourceRepo.find(query);
 				if (!registers) return 0;
 

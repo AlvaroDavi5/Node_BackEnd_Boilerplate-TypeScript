@@ -29,8 +29,7 @@ const buildWhereParams = ({
 	if (id) {
 		where.id = id;
 		return where;
-	}
-	else if (userId) {
+	} else if (userId) {
 		where.user = { id: userId };
 		return where;
 	}

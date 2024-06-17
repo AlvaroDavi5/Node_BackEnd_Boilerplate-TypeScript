@@ -38,11 +38,6 @@ const dateExample = dateGeneratorHelper.getDate('2024-06-10T03:52:50.885Z', 'iso
 	description: 'user entity',
 })
 export default class UserEntity extends AbstractEntity<UserInterface> {
-	@ApiProperty({ type: String, example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', default: '', nullable: false, required: false, description: 'Database register ID' })
-	@Field(returingString, { defaultValue: '', nullable: false, description: 'Database register ID' })
-	@IsString()
-	private id!: string;
-
 	@ApiProperty({ type: String, example: 'User Default', default: null, nullable: true, required: true, description: 'User name' })
 	@Field(returingString, { defaultValue: null, nullable: true, description: 'User name' })
 	@IsString()
@@ -85,16 +80,6 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	@Field(returingUserPreferenceEntity, { defaultValue: null, nullable: true, description: 'User preference' })
 	private preference: UserPreferenceEntity | null = null;
 
-	@ApiProperty({ type: Date, example: dateExample, default: dateExample, nullable: false, required: false, description: 'User creation timestamp' })
-	@Field(returingDate, { defaultValue: dateGeneratorHelper.getDate(new Date(), 'jsDate', true), nullable: false, description: 'User creation timestamp' })
-	@IsDate()
-	public readonly createdAt: Date;
-
-	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: true, description: 'User updated timestamp' })
-	@Field(returingDate, { defaultValue: null, nullable: true, description: 'User updated timestamp' })
-	@IsDate()
-	public updatedAt: Date | null = null;
-
 	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: true, description: 'User deleted timestamp' })
 	@Field(returingDate, { defaultValue: null, nullable: true, description: 'User deleted timestamp' })
 	@IsDate()
@@ -106,8 +91,8 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	private deletedBy: string | null = null;
 
 	constructor(dataValues: any) {
-		super();
-		if (this.exists(dataValues?.id)) this.id = dataValues.id;
+		super(dataValues);
+		if (this.exists(dataValues?.id)) this.setId(dataValues.id);
 		if (this.exists(dataValues?.fullName)) this.fullName = dataValues.fullName;
 		if (this.exists(dataValues?.email)) this.email = dataValues.email;
 		if (this.exists(dataValues?.password)) this.password = dataValues.password;
@@ -119,12 +104,11 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
 		if (this.exists(dataValues?.deletedAt)) this.deletedAt = dataValues.deletedAt;
 		if (this.exists(dataValues?.deletedBy)) this.deletedBy = dataValues.deletedBy;
-		this.createdAt = this.exists(dataValues?.createdAt) ? this.getDate(dataValues.createdAt) : this.getDate();
 	}
 
 	public getAttributes(): ViewUserInterface {
 		return {
-			id: this.id,
+			id: this.getId(),
 			fullName: this.fullName,
 			email: this.email,
 			password: this.password,
@@ -140,30 +124,19 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 		};
 	}
 
-	public getId(): string { return this.id; }
-	public setId(id: string): void {
-		if (id.length < 1)
-			return;
-
-		this.id = id;
-		this.preference?.setUserId(id);
+	public getFullName(): string { return this.fullName; }
+	public setFullName(fullName: string): void {
+		this.fullName = fullName;
 		this.updatedAt = this.getDate();
 	}
 
-	public getLogin(): { fullName: string | null, email: string | null } {
-		return {
-			fullName: this.fullName,
-			email: this.email,
-		};
-	}
-
-	public setLogin(email: string, fullName: string): void {
-		this.fullName = fullName;
+	public getEmail(): string { return this.email; }
+	public setEmail(email: string): void {
 		this.email = email;
 		this.updatedAt = this.getDate();
 	}
 
-	public getPassword(): string | null { return this.password; }
+	public getPassword(): string { return this.password; }
 	public setPassword(password: string): void {
 		this.password = password;
 		this.updatedAt = this.getDate();

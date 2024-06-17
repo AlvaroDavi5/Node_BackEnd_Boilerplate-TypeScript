@@ -53,12 +53,10 @@ export default function catchError(error: any): generatedExceptionsType {
 	if (error instanceof AxiosError) {
 		const exception = exceptionSelector(error.status ?? error.response?.status);
 		return exception(error);
-	}
-	else if (error instanceof HttpException) {
+	} else if (error instanceof HttpException) {
 		const exception = exceptionSelector(error.getStatus());
 		return exception(error);
-	}
-	else if (error instanceof Error) {
+	} else if (error instanceof Error) {
 		const exception = exceptionSelector(500);
 		return exception(error);
 	}

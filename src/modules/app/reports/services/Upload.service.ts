@@ -26,18 +26,15 @@ export default class UploadService {
 	private async parseToBuffer(content: s3FileContentType, inputEncoding: BufferEncoding): Promise<Buffer> {
 		if (Buffer.isBuffer(content)) {
 			return content;
-		}
-		else if (typeof content === 'string') {
+		} else if (typeof content === 'string') {
 			return Buffer.from(content, inputEncoding);
-		}
-		else if (content instanceof Readable) {
+		} else if (content instanceof Readable) {
 			const chunks: Uint8Array[] = [];
 			for await (const chunk of content) {
 				chunks.push(chunk);
 			}
 			return Buffer.concat(chunks);
-		}
-		else {
+		} else {
 			throw this.exceptions.internal({
 				message: 'Unsupported content type',
 			});

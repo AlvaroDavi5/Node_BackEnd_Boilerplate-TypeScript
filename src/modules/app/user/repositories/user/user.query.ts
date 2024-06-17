@@ -1,4 +1,4 @@
-import { Not, IsNull, Equal, Like, In, And, FindManyOptions, FindOptionsWhere, FindOptionsOrder, FindOptionsSelect } from 'typeorm';
+import { Not, IsNull, Equal, Like, In, And, FindManyOptions, FindOptionsWhere, FindOptionsSelect } from 'typeorm';
 import UsersModel from '@core/infra/database/models/Users.model';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 import { UserInterface } from '@domain/entities/User.entity';

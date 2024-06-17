@@ -22,15 +22,15 @@ export default class UserPreferenceRepository extends AbstractRepository<UserPre
 	) {
 		logger.setContextName(UserPreferenceRepository.name);
 		super({
-			connection: connection,
+			connection,
 			DomainEntity: UserPreferenceEntity,
 			ResourceModel: UserPreferencesModel,
 			ResourceRepo: UserPreferencesModel.getRepository(),
 			resourceMapper: userPreferenceMapper,
 			queryParamsBuilder: userPreferenceQueryParamsBuilder,
-			dateGeneratorHelper: dateGeneratorHelper,
-			exceptions: exceptions,
-			logger: logger,
+			dateGeneratorHelper,
+			exceptions,
+			logger,
 		});
 	}
 }

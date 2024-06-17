@@ -57,7 +57,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 			toDatabaseEntity: (entity: E) => M,
 		},
 		queryParamsBuilder: {
-			buildParams: (data: any) => FindManyOptions<M>,
+			buildParams: (data: BI) => FindManyOptions<M>,
 		},
 		dateGeneratorHelper: DateGeneratorHelper,
 		exceptions: Exceptions,
@@ -110,7 +110,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 
 	public async getById(id: string): Promise<E | null> {
 		try {
-			const result = await this.ResourceRepo.findOne({ where: { id } } as any);
+			const result = await this.ResourceRepo.findOne({ where: { id } as any });
 			if (!result) return null;
 
 			return this.resourceMapper.toDomainEntity(result);
@@ -170,9 +170,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 
 			let content: E[] = [];
 			if (rows.length) {
-				content = rows.map((register) =>
-					this.resourceMapper.toDomainEntity(register)
-				);
+				content = rows.map((register) => this.resourceMapper.toDomainEntity(register));
 			}
 
 			return {
@@ -214,11 +212,9 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 						? result.affected > 0
 						: true;
 					return res;
-				}
-				else
+				} else
 					return false;
-			}
-			else {
+			} else {
 				const register = await this.ResourceRepo.findOne(query);
 				if (register) {
 					result = await register.remove();
@@ -244,8 +240,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 					deletedAt: timestamp,
 				} as any);
 				return Number(result.affected);
-			}
-			else {
+			} else {
 				const registers = await this.ResourceRepo.find(query);
 				if (!registers) return 0;
 

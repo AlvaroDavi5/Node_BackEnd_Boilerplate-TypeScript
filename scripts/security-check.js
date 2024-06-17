@@ -17,8 +17,7 @@ function runAudit() {
 						throw new Error(
 							'Security check failed, High or Critical vulnerability found'
 						);
-					}
-					else if (
+					} else if (
 						lines[i].includes('Info')
 						|| lines[i].includes('Low')
 						|| lines[i].includes('Moderate')

@@ -58,8 +58,7 @@ export default class HookController {
 				return {
 					statusMessage: response.statusMessage ?? this.httpConstants.messages.created('Hook event register'),
 				};
-			}
-			else {
+			} else {
 				response.status(this.httpConstants.status.CONFLICT);
 				return {
 					statusMessage: response.statusMessage ?? this.httpConstants.messages.notCreated('Hook event register'),

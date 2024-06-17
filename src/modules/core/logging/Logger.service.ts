@@ -82,8 +82,7 @@ export default class LoggerService implements LoggerInterface {
 				message += `${errorName}${arg.message}${separator}`;
 				if (arg.stack)
 					metadata.stack = arg.stack;
-			}
-			else if (typeof arg === 'string')
+			} else if (typeof arg === 'string')
 				message += `${arg}${separator}`;
 			else
 				message += `${this.dataParserHelper.toString(arg)}${separator}`;

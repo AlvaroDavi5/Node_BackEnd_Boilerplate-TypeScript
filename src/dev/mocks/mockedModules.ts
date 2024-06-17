@@ -9,16 +9,13 @@ export const configServiceMock = {
 			const splitedPaths = propertyPath.split('.');
 			let scopedProperty: any = configs();
 
-			for (let i = 0; i < splitedPaths.length; i++) {
-				const scopedPath = splitedPaths[i];
-
+			for (const scopedPath of splitedPaths) {
 				if (scopedPath.length)
 					scopedProperty = scopedProperty[scopedPath];
 			}
 
 			return scopedProperty;
-		}
-		else
+		} else
 			return configs();
 	},
 };

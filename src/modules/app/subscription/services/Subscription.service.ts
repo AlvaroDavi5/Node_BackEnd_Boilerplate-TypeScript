@@ -74,16 +74,14 @@ export default class SubscriptionService implements OnModuleInit {
 			// ? create
 			const savedSubscription = await this.mongoClient.insertOne(this.subscriptionsCollection, data);
 			subscriptionDatabaseId = savedSubscription.insertedId;
-		}
-		else
+		} else
 			// ? update
 			await this.mongoClient.updateOne(this.subscriptionsCollection, subscriptionDatabaseId, data);
 
 		if (subscriptionDatabaseId) {
 			foundedSubscription = await this.mongoClient.get(this.subscriptionsCollection, subscriptionDatabaseId);
 			await this.saveOnCache(subscriptionId, foundedSubscription);
-		}
-		else
+		} else
 			throw this.exceptions.conflict({
 				message: 'Subscription not created or updated!',
 			});
@@ -111,9 +109,7 @@ export default class SubscriptionService implements OnModuleInit {
 		if (!useCache || !foundedSubscriptions.length)
 			foundedSubscriptions = await this.mongoClient.findMany(this.subscriptionsCollection, {});
 
-		return foundedSubscriptions.map((subscription: any) => {
-			return new SubscriptionEntity(subscription);
-		});
+		return foundedSubscriptions.map((subscription: any) => new SubscriptionEntity(subscription));
 	}
 
 	public emit(msg: unknown, socketIdsOrRooms: string | string[]): void {

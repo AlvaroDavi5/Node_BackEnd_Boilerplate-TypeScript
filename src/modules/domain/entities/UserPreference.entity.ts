@@ -29,11 +29,6 @@ export type ViewUserPreferenceInterface = UserPreferenceInterface;
 	description: 'user preference entity',
 })
 export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceInterface> {
-	@ApiProperty({ type: String, example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', default: '', nullable: false, required: false, description: 'Database register ID' })
-	@Field(returingString, { defaultValue: '', nullable: false, description: 'Database register ID' })
-	@IsString()
-	private id!: string;
-
 	@ApiProperty({ type: String, example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', default: '', nullable: false, required: false, description: 'User ID' })
 	@Field(returingString, { defaultValue: '', nullable: false, description: 'User ID' })
 	@IsString()
@@ -49,36 +44,25 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 	@IsEnum(ThemesEnum)
 	public defaultTheme: ThemesEnum | null = null;
 
-	@ApiProperty({ type: Date, example: dateExample, default: dateExample, nullable: false, required: false, description: 'User creation timestamp' })
-	@Field(returingDate, { defaultValue: dateGeneratorHelper.getDate(new Date(), 'jsDate', true), nullable: false, description: 'User creation timestamp' })
-	@IsDate()
-	public readonly createdAt: Date;
-
-	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: true, description: 'User updated timestamp' })
-	@Field(returingDate, { defaultValue: null, nullable: true, description: 'User updated timestamp' })
-	@IsDate()
-	public updatedAt: Date | null = null;
-
 	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: true, description: 'User deleted timestamp' })
 	@Field(returingDate, { defaultValue: null, nullable: true, description: 'User deleted timestamp' })
 	@IsDate()
 	public deletedAt: Date | null = null;
 
 	constructor(dataValues: any) {
-		super();
-		if (this.exists(dataValues?.id)) this.id = dataValues.id;
+		super(dataValues);
+		if (this.exists(dataValues?.id)) this.setId(dataValues.id);
 		if (this.exists(dataValues?.userId)) this.userId = dataValues.userId;
 		else if (this.exists(dataValues?.user?.id)) this.userId = dataValues.user.id;
 		if (this.exists(dataValues?.imagePath)) this.imagePath = dataValues.imagePath;
 		if (this.exists(dataValues?.defaultTheme)) this.defaultTheme = dataValues.defaultTheme;
 		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
 		if (this.exists(dataValues?.deletedAt)) this.deletedAt = dataValues.deletedAt;
-		this.createdAt = this.exists(dataValues?.createdAt) ? this.getDate(dataValues.createdAt) : this.getDate();
 	}
 
 	public getAttributes(): UserPreferenceInterface {
 		return {
-			id: this.id,
+			id: this.getId(),
 			userId: this.userId,
 			imagePath: this.imagePath ?? undefined,
 			defaultTheme: this.defaultTheme ?? undefined,
@@ -86,15 +70,6 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 			updatedAt: this.updatedAt ?? undefined,
 			deletedAt: this.deletedAt ?? undefined,
 		};
-	}
-
-	public getId(): string { return this.id; }
-	public setId(id: string): void {
-		if (id.length < 1)
-			return;
-
-		this.id = id;
-		this.updatedAt = this.getDate();
 	}
 
 	public getUserId(): string { return this.userId; }

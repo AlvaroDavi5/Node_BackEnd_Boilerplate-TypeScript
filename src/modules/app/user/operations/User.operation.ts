@@ -42,7 +42,7 @@ export default class UserOperation {
 		user.setPassword('');
 
 		const userAuthToEncode: UserAuthInterface = {
-			username: user.getLogin().email,
+			username: user.getEmail(),
 			clientId: user.getId(),
 		};
 		const token = this.cryptographyService.encodeJwt(userAuthToEncode, 'utf8', '1d');
@@ -62,7 +62,7 @@ export default class UserOperation {
 			});
 
 		const newUser = new UserEntity(data);
-		const existentUser = await this.userService.getByEmail(newUser.getLogin()?.email as string);
+		const existentUser = await this.userService.getByEmail(newUser.getEmail());
 		if (existentUser)
 			throw this.exceptions.conflict({
 				message: this.httpConstants.messages.conflict('User'),

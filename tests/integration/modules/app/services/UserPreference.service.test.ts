@@ -33,8 +33,7 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 				}
 
 				return scopedProperty;
-			}
-			else
+			} else
 				return configs();
 		},
 	};

@@ -1,177 +1,1251 @@
-
-openapi: 3.0.1
+openapi: 3.0.0
 info:
-    title: Node Backend Boilerplate Service
-    version: 0.3.0
-    description: "<p>This is the Node Backend Boilerplate Service openApi specifications</p>"
+  title: Node Back-End Boilerplate
+  description: Node.js Boilerplate for Back-End using TypeScript - API
+  version: 4.3.0
+  contact:
+    name: Álvaro Alves
+    url: https://github.com/AlvaroDavi5
+    email: alvaro.davisa@gmail.com
 servers:
-    - url: http://localhost:3000/api
-      description: Local
-
-
+  - url: http://localhost:3000
+    description: Main Server
+    variables: {}
+  - url: http://localhost:4000
+    description: Mocked Server
+    variables: {}
+tags: []
 paths:
-    /api/healthcheck:
-        get:
-            operationId: api-healthcheck
-            tags:
-                - API
-            summary: API HealthCheck
-            description: Get infos about API
-            responses:
-                200:
-                    description: Return infos successfully
-                    content:
-                        application/json:
-                            schema:
-                                properties:
-                                    method:
-                                        type: string
-                                        example: GET
-                                    url:
-                                        type: string
-                                        example: /api/healthcheck
-                                    statusCode:
-                                        type: number
-                                        example: 200
-                                    status:
-                                        type: string
-                                        example: OK
-
-
-    /connection/subscribe:
-        post:
-            tags:
-                - Connection
-            # security:
-            #    - Authorization: []
-            operationId: connection-save
-            summary: Subscribe Connection
-            description: Save WebSocket Connection
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/connection-save"
-            responses:
-                200:
-                    description: Save/Update Connection
-                    content:
-                        application/json:
-                            schema:
-                                properties:
-                                    status:
-                                        type: string
-                                        example: OK
-
-    /connection/unsubscribe:
-        post:
-            tags:
-                - Connection
-            # security:
-            #    - Authorization: []
-            operationId: connection-delete
-            summary: Unsubscribe Connection
-            description: Delete WebSocket Connection
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/connection-delete"
-            responses:
-                200:
-                    description: Delete Connection
-                    content:
-                        application/json:
-                            schema:
-                                properties:
-                                    status:
-                                        type: number
-                                        example: 1
-
-    /connection/sync:
-        post:
-            tags:
-                - Connection
-            # security:
-            #    - Authorization: []
-            operationId: connection-sync
-            summary: Synchronize Connection
-            description: Synchronize WebSocket Connection
-            requestBody:
-                content:
-                    application/json:
-                        schema:
-                            $ref: "#/components/schemas/connection-sync"
-            responses:
-                200:
-                    description: Synchronize Connection
-                    content:
-                        application/json:
-                            schema:
-                                properties:
-                                    status:
-                                        type: boolean
-                                        example: true
-
-
-
+  /api/check:
+    get:
+      operationId: DefaultController_healthCheck
+      summary: Check API
+      description: Check if API is working
+      deprecated: false
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  baseUrl: /
+                  url: /api/check?test=oi
+                  method: GET
+                  headers:
+                    host: localhost:3000
+                    connection: keep-alive
+                    accept: application/json
+                  params:
+                    id: 1
+                  query:
+                    key: value
+                  body: {}
+                  statusCode: 200
+                  statusMessage: Endpoint founded successfully.
+        '400':
+          description: Invalid request format (body, query, params...).
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: Token does not match or is invalid (Authorization).
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: Operation not allowed due business rules.
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Resource not founded.
+          content:
+            application/json:
+              schema: {}
+        '409':
+          description: Operation not allowed due conflicts.
+          content:
+            application/json:
+              schema: {}
+        '429':
+          description: Multiple requests in short time.
+          content:
+            application/json:
+              schema: {}
+        '500':
+          description: Internal unhandled situation.
+          content:
+            application/json:
+              schema: {}
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema: {}
+      tags:
+        - HealthCheck
+  /api/v1/check:
+    get:
+      operationId: DefaultController_healthCheckV1
+      summary: Check API
+      description: Check if API is working (v1)
+      deprecated: true
+      parameters: []
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  baseUrl: /
+                  method: GET
+                  statusCode: 200
+        '400':
+          description: Invalid request format (body, query, params...).
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: Token does not match or is invalid (Authorization).
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: Operation not allowed due business rules.
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Resource not founded.
+          content:
+            application/json:
+              schema: {}
+        '409':
+          description: Operation not allowed due conflicts.
+          content:
+            application/json:
+              schema: {}
+        '429':
+          description: Multiple requests in short time.
+          content:
+            application/json:
+              schema: {}
+        '500':
+          description: Internal unhandled situation.
+          content:
+            application/json:
+              schema: {}
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema: {}
+      tags:
+        - HealthCheck
+  /api/users:
+    get:
+      operationId: UserController_listUsers
+      summary: List Users
+      description: List all users from cache or database
+      deprecated: false
+      parameters:
+        - name: limit
+          required: false
+          in: query
+          example: 5
+          description: Results amount by page
+          schema:
+            nullable: false
+            type: number
+        - name: page
+          required: false
+          in: query
+          example: 1
+          description: Page index
+          schema:
+            nullable: false
+            type: number
+        - name: order
+          required: false
+          in: query
+          example: ASC
+          description: List order
+          schema:
+            nullable: false
+            enum:
+              - ASC
+              - DESC
+            type: string
+        - name: sortBy
+          required: false
+          in: query
+          example: createdAt
+          description: Sort by attribute
+          schema:
+            nullable: false
+            enum:
+              - createdAt
+              - updatedAt
+              - deletedAt
+            type: string
+        - name: searchTerm
+          required: false
+          in: query
+          example: My Name
+          description: Term for search
+          schema:
+            nullable: false
+            type: string
+        - name: selectSoftDeleted
+          required: false
+          in: query
+          example: true
+          description: Filter just soft-deleted registers
+          schema:
+            nullable: false
+            type: boolean
+      responses:
+        '200':
+          schema:
+            example:
+              content: []
+              pageNumber: 0
+              pageSize: 0
+              totalPages: 0
+              totalItems: 0
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserEntityList'
+        '400':
+          description: Invalid request format (body, query, params...).
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: Token does not match or is invalid (Authorization).
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: Operation not allowed due business rules.
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Resource not founded.
+          content:
+            application/json:
+              schema: {}
+        '409':
+          description: Operation not allowed due conflicts.
+          content:
+            application/json:
+              schema: {}
+        '429':
+          description: Multiple requests in short time.
+          content:
+            application/json:
+              schema: {}
+        '500':
+          description: Internal unhandled situation.
+          content:
+            application/json:
+              schema: {}
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema: {}
+      tags:
+        - Users
+      security:
+        - Authorization: []
+    post:
+      operationId: UserController_createUser
+      summary: Create User
+      description: Create a new user
+      deprecated: false
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateUserInputDto'
+      responses:
+        '201':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserEntity'
+        '400':
+          description: Invalid request format (body, query, params...).
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: Token does not match or is invalid (Authorization).
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: Operation not allowed due business rules.
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Resource not founded.
+          content:
+            application/json:
+              schema: {}
+        '409':
+          description: Operation not allowed due conflicts.
+          content:
+            application/json:
+              schema: {}
+        '429':
+          description: Multiple requests in short time.
+          content:
+            application/json:
+              schema: {}
+        '500':
+          description: Internal unhandled situation.
+          content:
+            application/json:
+              schema: {}
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema: {}
+      tags:
+        - Users
+      security:
+        - Authorization: []
+    put:
+      operationId: UserController_loginUser
+      summary: Login User
+      description: Login user and get user authorization token (1d)
+      deprecated: false
+      parameters: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginUserInputDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserEntity'
+        '400':
+          description: Invalid request format (body, query, params...).
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: Token does not match or is invalid (Authorization).
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: Operation not allowed due business rules.
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Resource not founded.
+          content:
+            application/json:
+              schema: {}
+        '409':
+          description: Operation not allowed due conflicts.
+          content:
+            application/json:
+              schema: {}
+        '429':
+          description: Multiple requests in short time.
+          content:
+            application/json:
+              schema: {}
+        '500':
+          description: Internal unhandled situation.
+          content:
+            application/json:
+              schema: {}
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema: {}
+      tags:
+        - Users
+  /api/users/{userId}:
+    get:
+      operationId: UserController_getUser
+      summary: Get User
+      description: Get user by ID
+      deprecated: false
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserEntity'
+        '400':
+          description: Invalid request format (body, query, params...).
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: Token does not match or is invalid (Authorization).
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: Operation not allowed due business rules.
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Resource not founded.
+          content:
+            application/json:
+              schema: {}
+        '409':
+          description: Operation not allowed due conflicts.
+          content:
+            application/json:
+              schema: {}
+        '429':
+          description: Multiple requests in short time.
+          content:
+            application/json:
+              schema: {}
+        '500':
+          description: Internal unhandled situation.
+          content:
+            application/json:
+              schema: {}
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema: {}
+      tags:
+        - Users
+      security:
+        - Authorization: []
+    patch:
+      operationId: UserController_updateUser
+      summary: Update User
+      description: Update registered user
+      deprecated: false
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserInputDto'
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserEntity'
+        '400':
+          description: Invalid request format (body, query, params...).
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: Token does not match or is invalid (Authorization).
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: Operation not allowed due business rules.
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Resource not founded.
+          content:
+            application/json:
+              schema: {}
+        '409':
+          description: Operation not allowed due conflicts.
+          content:
+            application/json:
+              schema: {}
+        '429':
+          description: Multiple requests in short time.
+          content:
+            application/json:
+              schema: {}
+        '500':
+          description: Internal unhandled situation.
+          content:
+            application/json:
+              schema: {}
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema: {}
+      tags:
+        - Users
+      security:
+        - Authorization: []
+    delete:
+      operationId: UserController_deleteUser
+      summary: Delete User
+      description: Delete a user
+      deprecated: false
+      parameters:
+        - name: userId
+          required: true
+          in: path
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  result: true
+        '400':
+          description: Invalid request format (body, query, params...).
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: Token does not match or is invalid (Authorization).
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: Operation not allowed due business rules.
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Resource not founded.
+          content:
+            application/json:
+              schema: {}
+        '409':
+          description: Operation not allowed due conflicts.
+          content:
+            application/json:
+              schema: {}
+        '429':
+          description: Multiple requests in short time.
+          content:
+            application/json:
+              schema: {}
+        '500':
+          description: Internal unhandled situation.
+          content:
+            application/json:
+              schema: {}
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema: {}
+      tags:
+        - Users
+      security:
+        - Authorization: []
+  /api/subscriptions:
+    get:
+      operationId: SubscriptionController_listSubscriptions
+      summary: List Subscriptions
+      description: List websockets subscriptions
+      deprecated: false
+      parameters:
+        - name: useCache
+          required: true
+          in: query
+          schema:
+            type: boolean
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  - databaseId: 6561299695e69d3b19ddf979
+                    subscriptionId: 5-aUrSIYE7dSVsS8AAAB
+                    clientId: null
+                    updatedAt: null
+                    newConnectionsListen: false
+                    createdAt: 2024-06-12T03:06:32.057Z
+                  - databaseId: 65612ccebff9f0fbcd58256a
+                    subscriptionId: WKt2b2RWrMXogTfKAAAD
+                    clientId: localDev#1
+                    updatedAt: null
+                    newConnectionsListen: true
+                    createdAt: 2024-06-12T03:06:32.057Z
+                default: []
+        '400':
+          description: Invalid request format (body, query, params...).
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: Token does not match or is invalid (Authorization).
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: Operation not allowed due business rules.
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Resource not founded.
+          content:
+            application/json:
+              schema: {}
+        '409':
+          description: Operation not allowed due conflicts.
+          content:
+            application/json:
+              schema: {}
+        '429':
+          description: Multiple requests in short time.
+          content:
+            application/json:
+              schema: {}
+        '500':
+          description: Internal unhandled situation.
+          content:
+            application/json:
+              schema: {}
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema: {}
+      tags:
+        - Subscriptions
+      security:
+        - Authorization: []
+  /api/files/download:
+    get:
+      operationId: FileController_downloadFile
+      summary: Download File
+      description: Download Uploaded File
+      deprecated: false
+      parameters:
+        - name: fileName
+          required: true
+          in: header
+          schema:
+            type: string
+        - name: filePath
+          required: true
+          in: header
+          schema:
+            type: string
+        - name: accept
+          in: header
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Downloadable file
+          content:
+            application/octet-stream:
+              schema:
+                example: >-
+                  MIT License Copyright (c) 2022 Álvaro Alves
+                  <alvaro.davisa@gmail.com> ...
+            text/plain:
+              schema:
+                example: >-
+                  MIT License Copyright (c) 2022 Álvaro Alves
+                  <alvaro.davisa@gmail.com> ...
+        '400':
+          description: Invalid request format (body, query, params...).
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: Token does not match or is invalid (Authorization).
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: Operation not allowed due business rules.
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Resource not founded.
+          content:
+            application/json:
+              schema: {}
+        '409':
+          description: Operation not allowed due conflicts.
+          content:
+            application/json:
+              schema: {}
+        '429':
+          description: Multiple requests in short time.
+          content:
+            application/json:
+              schema: {}
+        '500':
+          description: Internal unhandled situation.
+          content:
+            application/json:
+              schema: {}
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema: {}
+      tags:
+        - Files
+      security:
+        - Authorization: []
+  /api/files/upload:
+    post:
+      operationId: FileController_uploadFile
+      summary: Upload File
+      description: Upload any file to S3
+      deprecated: false
+      parameters:
+        - name: fileName
+          required: true
+          in: header
+          schema:
+            type: string
+        - name: accept
+          in: header
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                file:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Uploaded File Info
+          content:
+            application/json:
+              schema:
+                example:
+                  filePath: upload/reports/file.txt
+                  fileContentType: text/plain
+                  uploadTag: '"d41d8cd98f00b204e9801998ecf8427e"'
+        '400':
+          description: Invalid request format (body, query, params...).
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: Token does not match or is invalid (Authorization).
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: Operation not allowed due business rules.
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Resource not founded.
+          content:
+            application/json:
+              schema: {}
+        '409':
+          description: Operation not allowed due conflicts.
+          content:
+            application/json:
+              schema: {}
+        '429':
+          description: Multiple requests in short time.
+          content:
+            application/json:
+              schema: {}
+        '500':
+          description: Internal unhandled situation.
+          content:
+            application/json:
+              schema: {}
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema: {}
+      tags:
+        - Files
+      security:
+        - Authorization: []
+  /api/hook:
+    put:
+      operationId: HookController_registerEventHook
+      summary: Register Event Hook
+      description: Create a new event register for hook
+      deprecated: false
+      parameters:
+        - name: responseEndpoint
+          required: true
+          in: query
+          example: http://localhost:4000/api/hook
+          schema:
+            nullable: false
+            default: ''
+            type: string
+        - name: responseMethod
+          required: true
+          in: query
+          example: POST
+          schema:
+            nullable: false
+            default: GET
+            enum:
+              - GET
+              - POST
+              - PUT
+              - PATCH
+              - DELETE
+            type: string
+        - name: responseSchema
+          required: true
+          in: query
+          example: INVALID
+          schema:
+            nullable: false
+            default: ''
+            type: string
+        - name: sendAt
+          required: false
+          in: query
+          example: '2024-04-17T17:36:48.666Z'
+          schema:
+            format: date-time
+            nullable: false
+            default: '2024-04-17T17:36:48.666Z'
+            type: string
+      responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                example:
+                  statusMessage: Event hook register created successfully.
+        '400':
+          description: Invalid request format (body, query, params...).
+          content:
+            application/json:
+              schema: {}
+        '401':
+          description: Token does not match or is invalid (Authorization).
+          content:
+            application/json:
+              schema: {}
+        '403':
+          description: Operation not allowed due business rules.
+          content:
+            application/json:
+              schema: {}
+        '404':
+          description: Resource not founded.
+          content:
+            application/json:
+              schema: {}
+        '409':
+          description: Operation not allowed due conflicts.
+          content:
+            application/json:
+              schema: {}
+        '429':
+          description: Multiple requests in short time.
+          content:
+            application/json:
+              schema: {}
+        '500':
+          description: Internal unhandled situation.
+          content:
+            application/json:
+              schema: {}
+        '503':
+          description: Service temporarily unavailable.
+          content:
+            application/json:
+              schema: {}
+      tags:
+        - Webhooks
+      security:
+        - Authorization: []
 components:
-    securitySchemes:
-        Authorization:
-            type: apiKey
-            name: Authorization
-            in: header
-    schemas:
-        connection-save:
-            type: object
-            properties:
-                connectionId:
-                    type: string
-                    default: Xxx_xxxxxx
-                data:
-                    type: object
-                    properties:
-                        action:
-                            type: string
-                            default: subscribe
-                        token:
-                            type: string
-                            default: Bearer XXX
-                        dataValues:
-                            type: object
-                            properties:
-                                clientId:
-                                    type: string
-                                    default: Xxxxxx=
-                                userId:
-                                    type: number
-                                    default: 0
-                                merchantIds:
-                                    type: array
-                                    items:
-                                        type: number
-                                    default: [0]
-        connection-delete:
-            type: object
-            properties:
-                connectionId:
-                    type: string
-                    default: Xxx_xxxxxx
-                data:
-                    type: object
-                    properties:
-                        action:
-                            type: string
-                            default: unsubscribe
-        connection-sync:
-            type: object
-            properties:
-                connectionId:
-                    type: string
-                    default: Xxx_xxxxxx
-                data:
-                    type: object
-                    properties:
-                        action:
-                            type: string
-                            default: sync
+  securitySchemes:
+    Authorization:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+      in: header
+      name: JWT
+      description: Enter JWT token
+  schemas:
+    UserPreferenceEntity:
+      type: object
+      properties:
+        id:
+          type: string
+          example: a5483856-1bf7-4dae-9c21-d7ea4dd30d1d
+          default: ''
+          nullable: false
+          description: Database register ID
+        userId:
+          type: string
+          example: a5483856-1bf7-4dae-9c21-d7ea4dd30d1d
+          default: ''
+          nullable: false
+          description: User ID
+        imagePath:
+          type: string
+          example: ./image.png
+          default: null
+          nullable: true
+          description: User profile image path
+        defaultTheme:
+          type: string
+          enum:
+            - DEFAULT
+            - LIGHT
+            - DARK
+          example: DEFAULT
+          default: null
+          nullable: true
+          description: User default theme
+        createdAt:
+          format: date-time
+          type: string
+          example: 2024-06-10T03:52:50.885Z
+          default: 2024-06-10T03:52:50.885Z
+          nullable: false
+          description: User creation timestamp
+        updatedAt:
+          format: date-time
+          type: string
+          example: null
+          default: null
+          nullable: true
+          description: User updated timestamp
+        deletedAt:
+          format: date-time
+          type: string
+          example: null
+          default: null
+          nullable: true
+          description: User deleted timestamp
+      required:
+        - imagePath
+        - defaultTheme
+        - updatedAt
+        - deletedAt
+    UserEntity:
+      type: object
+      properties:
+        id:
+          type: string
+          example: a5483856-1bf7-4dae-9c21-d7ea4dd30d1d
+          default: ''
+          nullable: false
+          description: Database register ID
+        fullName:
+          type: string
+          example: User Default
+          default: null
+          nullable: true
+          description: User name
+        email:
+          type: string
+          example: user.default@nomail.dev
+          default: null
+          nullable: true
+          description: User email
+        password:
+          type: string
+          example: cGFzczEyMw==
+          default: null
+          nullable: true
+          description: User password
+        phone:
+          type: string
+          example: '+0000000000000'
+          default: null
+          nullable: true
+          description: User phone number
+        docType:
+          type: string
+          example: INVALID
+          default: null
+          nullable: true
+          description: Document type
+        document:
+          type: string
+          example: '00000000000'
+          default: null
+          nullable: true
+          description: Document code
+        fu:
+          type: string
+          example: UF
+          default: null
+          nullable: true
+          description: Brazilian Federative Unity
+        preference:
+          example:
+            imagePath: ./image.png
+            defaultTheme: DEFAULT
+            updatedAt: null
+            deletedAt: null
+            createdAt: 2024-06-12T03:06:31.260Z
+          default: null
+          nullable: true
+          description: User preference
+          allOf:
+            - $ref: '#/components/schemas/UserPreferenceEntity'
+        createdAt:
+          format: date-time
+          type: string
+          example: 2024-06-10T03:52:50.885Z
+          default: 2024-06-10T03:52:50.885Z
+          nullable: false
+          description: User creation timestamp
+        updatedAt:
+          format: date-time
+          type: string
+          example: null
+          default: null
+          nullable: true
+          description: User updated timestamp
+        deletedAt:
+          format: date-time
+          type: string
+          example: null
+          default: null
+          nullable: true
+          description: User deleted timestamp
+        deletedBy:
+          type: string
+          example: null
+          default: null
+          nullable: true
+          description: Delete userAgent
+      required:
+        - fullName
+        - email
+        - password
+        - phone
+        - docType
+        - document
+        - fu
+        - preference
+        - updatedAt
+        - deletedAt
+        - deletedBy
+    UserEntityList:
+      type: object
+      properties:
+        pageNumber:
+          type: number
+          example: 0
+          default: 0
+          nullable: false
+          description: Page index
+        pageSize:
+          type: number
+          example: 0
+          default: 0
+          nullable: false
+          description: Amount of items by page
+        totalPages:
+          type: number
+          example: 0
+          default: 0
+          nullable: false
+          description: Pages amount
+        totalItems:
+          type: number
+          example: 0
+          default: 0
+          nullable: false
+          description: All results amount
+        content:
+          example:
+            - phone: null
+              docType: INVALID
+              document: null
+              fu: UF
+              preference:
+                imagePath: ./image.png
+                defaultTheme: DEFAULT
+                updatedAt: null
+                deletedAt: null
+                createdAt: 2024-06-12T03:06:31.261Z
+              updatedAt: 2024-06-10T03:52:50.885Z
+              deletedAt: null
+              deletedBy: null
+              fullName: User Default
+              createdAt: 2024-06-10T03:52:50.885Z
+          default: []
+          nullable: false
+          description: User list content
+          type: array
+          items:
+            $ref: '#/components/schemas/UserEntity'
+      required:
+        - pageNumber
+        - pageSize
+        - totalPages
+        - totalItems
+        - content
+    UserPreferenceInputDto:
+      type: object
+      properties:
+        imagePath:
+          type: string
+          example: ./image.png
+          nullable: false
+        defaultTheme:
+          type: string
+          enum:
+            - DEFAULT
+            - LIGHT
+            - DARK
+          example: DEFAULT
+          nullable: false
+    CreateUserInputDto:
+      type: object
+      properties:
+        fullName:
+          type: string
+          example: User Default
+          default: ''
+          nullable: false
+        email:
+          type: string
+          example: user.default@nomail.dev
+          default: ''
+          nullable: false
+        password:
+          type: string
+          example: pass123
+          default: ''
+          nullable: false
+        phone:
+          type: string
+          example: '+0000000000000'
+          nullable: false
+        docType:
+          type: string
+          example: INVALID
+          nullable: false
+        document:
+          type: string
+          example: '00000000000'
+          nullable: false
+        fu:
+          type: string
+          example: UF
+          nullable: false
+        preference:
+          nullable: false
+          allOf:
+            - $ref: '#/components/schemas/UserPreferenceInputDto'
+      required:
+        - fullName
+        - email
+        - password
+    LoginUserInputDto:
+      type: object
+      properties:
+        email:
+          type: string
+          example: user.default@nomail.dev
+          default: ''
+          nullable: false
+        password:
+          type: string
+          example: pass123
+          default: ''
+          nullable: false
+      required:
+        - email
+        - password
+    UpdateUserInputDto:
+      type: object
+      properties:
+        fullName:
+          type: string
+          example: User Default
+          nullable: false
+        email:
+          type: string
+          example: user.default@nomail.dev
+          nullable: false
+        password:
+          type: string
+          example: pass123
+          nullable: false
+        phone:
+          type: string
+          example: '+0000000000000'
+          nullable: false
+        docType:
+          type: string
+          example: INVALID
+          nullable: false
+        document:
+          type: string
+          example: '00000000000'
+          nullable: false
+        fu:
+          type: string
+          example: UF
+          nullable: false
+        preference:
+          nullable: false
+          allOf:
+            - $ref: '#/components/schemas/UserPreferenceInputDto'

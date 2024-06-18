@@ -8,12 +8,12 @@ import RegExConstants from '@common/constants/Regex.constants';
 const regExConstants = new RegExConstants();
 const passwordPattern = regExConstants.passwordPattern;
 
-const preference = Joi.object().keys({
+const preference: Joi.Schema<UpdateUserPreferenceInterface> = Joi.object({
 	imagePath: Joi.string().empty('').max(255).trim(),
 	defaultTheme: Joi.string().valid(...Object.values(ThemesEnum)).default(ThemesEnum.DEFAULT).max(20),
-}).unknown(false) as Joi.Schema<UpdateUserPreferenceInterface>;
+}).unknown(false).optional();
 
-export default Joi.object().keys({
+const createUserSchema: Joi.Schema<CreateUserInterface> = Joi.object({
 	fullName: Joi.string().trim().max(100).required(),
 	email: Joi.string().email().max(70).required(),
 	password: Joi.string().regex(passwordPattern.regex, { name: passwordPattern.name }).message(passwordPattern.message('password')).required(),
@@ -22,4 +22,6 @@ export default Joi.object().keys({
 	document: Joi.string().empty('').max(18).trim(),
 	fu: Joi.string().empty('').trim().min(2).max(2),
 	preference,
-}).unknown(false).required() as Joi.Schema<CreateUserInterface>;
+}).unknown(false).required();
+
+export default createUserSchema;

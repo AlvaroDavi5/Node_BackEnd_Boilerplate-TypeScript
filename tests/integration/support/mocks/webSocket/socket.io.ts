@@ -1,4 +1,5 @@
 
+// eslint-disable-next-line max-classes-per-file
 export class Server {
 	httpServer: any;
 	options!: any;
@@ -37,6 +38,7 @@ export class Server {
 	}
 }
 
+// eslint-disable-next-line max-classes-per-file
 export class ServerSocket {
 	public readonly id: string;
 	public connected: boolean;

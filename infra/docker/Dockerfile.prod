@@ -26,7 +26,6 @@ COPY webpack.config.js ./webpack.config.js
 COPY babel.config.js ./babel.config.js
 COPY .swcrc ./.swcrc
 COPY nest-cli.json ./nest-cli.json
-COPY .sequelizerc ./.sequelizerc
 COPY src ./src
 COPY tests ./tests
 COPY scripts ./scripts
@@ -41,5 +40,3 @@ CMD [ "./init.sh" ]
 #ENTRYPOINT ["/usr/bin/node", "-D", "FOREGROUND"]
 #VOLUME [ "/app" ]
 EXPOSE 3000
-
-# to build run: "docker build -t boilerplate-image:1.0 ."

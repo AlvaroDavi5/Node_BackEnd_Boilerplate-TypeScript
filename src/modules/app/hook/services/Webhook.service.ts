@@ -5,9 +5,9 @@ import CryptographyService from '@core/security/Cryptography.service';
 import RestMockedServiceClient from '@core/infra/integration/rest/RestMockedService.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
-import { RegisterEventHookInputDto } from '@app/hook/api/dto/HookInput.dto';
 import { CacheEnum } from '@domain/enums/cache.enum';
 import { requestMethodType } from '@shared/types/restClientTypes';
+import { RegisterEventHookInterface } from '../api/schemas/registerEventHook.schema';
 
 
 @Injectable()
@@ -37,13 +37,13 @@ export default class WebhookService {
 		});
 	}
 
-	public async get(hookId: string, hookSchema: string): Promise<any> {
+	public async get(hookId: string, hookSchema: string): Promise<RegisterEventHookInterface> {
 		const key = this.cacheAccessHelper.generateKey(`${hookSchema}:${hookId}`, CacheEnum.HOOKS);
 
 		return await this.redisClient.get(key);
 	}
 
-	public async save(hookSchema: string, data: any): Promise<string> {
+	public async save(hookSchema: string, data: RegisterEventHookInterface): Promise<string> {
 		const hookId = this.cryptographyService.generateUuid();
 		const key = this.cacheAccessHelper.generateKey(`${hookSchema}:${hookId}`, CacheEnum.HOOKS);
 
@@ -60,9 +60,9 @@ export default class WebhookService {
 
 	public async list(additionalPattern = ''): Promise<{
 		key: string;
-		value: RegisterEventHookInputDto | null;
+		value: RegisterEventHookInterface | null;
 	}[]> {
 		const pattern = `${CacheEnum.HOOKS}:${additionalPattern}*`;
-		return await this.redisClient.getByKeyPattern<RegisterEventHookInputDto>(pattern);
+		return await this.redisClient.getByKeyPattern<RegisterEventHookInterface>(pattern);
 	}
 }

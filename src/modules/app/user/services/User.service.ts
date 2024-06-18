@@ -1,6 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import UserEntity, { UpdateUserInterface, UserEntityList } from '@domain/entities/User.entity';
+import UserEntity, { UpdateUserInterface } from '@domain/entities/User.entity';
+import UserListEntity from '@domain/entities/generic/UserList.entity';
 import CryptographyService from '@core/security/Cryptography.service';
 import UserRepository from '@app/user/repositories/user/User.repository';
 import Exceptions from '@core/errors/Exceptions';
@@ -22,29 +23,32 @@ export default class UserService {
 		this.secret = secretKey;
 	}
 
-	public async getById(id: string, withoutPassword = true): Promise<UserEntity | null> {
+	public async getById(id: string, withoutPassword = true): Promise<UserEntity> {
 		try {
-			return await this.userRepository.getById(id, withoutPassword);
+			const user = await this.userRepository.getById(id, withoutPassword);
+
+			if (!user)
+				throw this.exceptions.notFound({
+					message: 'User not founded by ID!',
+				});
+
+			return user;
 		} catch (error) {
-			throw this.exceptions.internal({
-				message: 'Error to comunicate with database',
-				details: `${(error as any)?.original}`,
-			});
+			throw this.throwError(error);
 		}
 	}
 
 	public async getByEmail(email: string): Promise<UserEntity | null> {
 		try {
-			return await this.userRepository.findOne({ where: { email: email } });
+			const user = await this.userRepository.findOne({ where: { email: email } });
+
+			return user;
 		} catch (error) {
-			throw this.exceptions.internal({
-				message: 'Error to comunicate with database',
-				details: `${(error as any)?.original}`,
-			});
+			throw this.throwError(error);
 		}
 	}
 
-	public async create(entity: UserEntity): Promise<UserEntity | null> {
+	public async create(entity: UserEntity): Promise<UserEntity> {
 		try {
 			const userPassword = entity.getPassword();
 			if (!userPassword?.length)
@@ -56,15 +60,12 @@ export default class UserService {
 
 			return await this.userRepository.create(entity);
 		} catch (error) {
-			throw this.exceptions.internal({
-				message: 'Error to comunicate with database',
-				details: `${(error as any)?.original}`,
-			});
+			throw this.throwError(error);
 		}
 	}
 
 
-	public async update(id: string, data: UpdateUserInterface): Promise<UserEntity | null> {
+	public async update(id: string, data: UpdateUserInterface): Promise<UserEntity> {
 		const { id: userId, createdAt, preference, ...userData } = new UserEntity(data).getAttributes();
 
 		try {
@@ -72,34 +73,32 @@ export default class UserService {
 			if (userPassword?.length)
 				userData.password = this.protectPassword(userPassword);
 
-			return await this.userRepository.update(id, userData);
+			const user = await this.userRepository.update(id, userData);
+
+			if (!user)
+				throw this.exceptions.conflict({
+					message: 'User not updated!',
+				});
+
+			return user;
 		} catch (error) {
-			throw this.exceptions.internal({
-				message: 'Error to comunicate with database',
-				details: `${(error as any)?.original}`,
-			});
+			throw this.throwError(error);
 		}
 	}
 
-	public async delete(id: string, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean | null> {
+	public async delete(id: string, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean> {
 		try {
 			return await this.userRepository.deleteOne(id, Boolean(data.softDelete), String(data.userAgentId));
 		} catch (error) {
-			throw this.exceptions.internal({
-				message: 'Error to comunicate with database',
-				details: `${(error as any)?.original}`,
-			});
+			throw this.throwError(error);
 		}
 	}
 
-	public async list(query: ListQueryInterface): Promise<UserEntityList> {
+	public async list(query: ListQueryInterface): Promise<UserListEntity> {
 		try {
 			return await this.userRepository.list(query, true);
 		} catch (error) {
-			throw this.exceptions.internal({
-				message: 'Error to comunicate with database',
-				details: `${(error as any)?.original}`,
-			});
+			throw this.throwError(error);
 		}
 	}
 
@@ -143,5 +142,13 @@ export default class UserService {
 			throw this.exceptions.unauthorized({
 				message: 'Password hash is different from database',
 			});
+	}
+
+	private throwError(error: any): Error {
+		const errorDetails: string | undefined = error?.message ?? error?.cause ?? error?.original;
+		return this.exceptions.internal({
+			message: 'Error to comunicate with database',
+			details: errorDetails !== undefined ? `${errorDetails}` : undefined,
+		});
 	}
 }

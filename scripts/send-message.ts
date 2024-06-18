@@ -5,7 +5,4 @@ import { configServiceMock } from '../src/dev/mocks/mockedModules';
 
 const eventsQueue = configServiceMock.get('integration.aws.sqs.eventsQueue');
 
-sendMessage(
-	'Events Queue', eventsQueue.queueUrl,
-	eventPayload,
-	'mocked_message', 'backend');
+sendMessage('Events Queue', eventsQueue.queueUrl, eventPayload, 'mocked_message', 'backend');

@@ -1,115 +1,114 @@
-import UserOperation from '../../../../../src/modules/app/user/operations/User.operation';
-import UserEntity, { UpdateUserInterface } from '../../../../../src/modules/domain/entities/User.entity';
-import UserPreferenceEntity, { UpdateUserPreferenceInterface } from '../../../../../src/modules/domain/entities/UserPreference.entity';
-import UserStrategy from '../../../../../src/modules/app/user/strategies/User.strategy';
-import HttpConstants from '../../../../../src/modules/common/constants/Http.constants';
-import CryptographyService from '../../../../../src/modules/core/security/Cryptography.service';
-import { configServiceMock } from '../../../../../src/dev/mocks/mockedModules';
-import { ListQueryInterface, PaginationInterface } from '../../../../../src/shared/interfaces/listPaginationInterface';
-import { ErrorInterface } from '../../../../../src/shared/interfaces/errorInterface';
+import UserOperation from '@app/user/operations/User.operation';
+import UserEntity, { UpdateUserInterface } from '@domain/entities/User.entity';
+import UserPreferenceEntity, { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.entity';
+import UserStrategy from '@app/user/strategies/User.strategy';
+import HttpConstants from '@common/constants/Http.constants';
+import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
+import { ErrorInterface } from '@shared/interfaces/errorInterface';
+import { ThemesEnum } from '@domain/enums/themes.enum';
 
 
-describe('Modules :: App :: Operations :: UserOperation', () => {
+describe('Modules :: App :: User :: Operations :: UserOperation', () => {
 	// // mocks
-	const userServiceMock = {
-		getByEmail: jest.fn(async (email: string): Promise<UserEntity | null> => (null)),
-		getById: jest.fn(async (id: string, withoutPassword = true): Promise<UserEntity | null> => (null)),
-		create: jest.fn(async (entity: UserEntity): Promise<UserEntity | null> => (null)),
-		update: jest.fn(async (id: string, data: UpdateUserInterface): Promise<UserEntity | null> => (null)),
-		delete: jest.fn(async (id: string, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean | null> => (null)),
-		list: jest.fn(async (query: ListQueryInterface, withoutSensibleData = true): Promise<PaginationInterface<UserEntity> | null> => ({ content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 })),
-		protectPassword: jest.fn((password: string): string => (password)),
-		validatePassword: jest.fn((entity: UserEntity, passwordToValidate: string): void => { return undefined; }),
-	};
-	const userPreferenceServiceMock = {
-		getByUserId: jest.fn(async (userId: string): Promise<UserPreferenceEntity | null> => (null)),
-		create: jest.fn(async (entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (null)),
-		update: jest.fn(async (id: string, data: UpdateUserPreferenceInterface): Promise<UserPreferenceEntity | null> => (null)),
-		delete: jest.fn(async (id: string, data: { softDelete: boolean }): Promise<boolean | null> => (null)),
-	};
-	const userStrategy = new UserStrategy();
-	const httpConstants = new HttpConstants();
 	const exceptionsMock = {
+		internal: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 		integration: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 		unauthorized: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 		business: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 		notFound: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 		conflict: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 	};
+	const userServiceMock = {
+		getByEmail: jest.fn(async (email: string): Promise<UserEntity | null> => (null)),
+		getById: jest.fn(async (id: string, withoutPassword = true): Promise<UserEntity> => { throw new Error('GenericError'); }),
+		create: jest.fn(async (entity: UserEntity): Promise<UserEntity> => { throw new Error('GenericError'); }),
+		update: jest.fn(async (id: string, data: UpdateUserInterface): Promise<UserEntity> => { throw new Error('GenericError'); }),
+		delete: jest.fn(async (id: string, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean> => (false)),
+		list: jest.fn(async (query: ListQueryInterface, withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => {
+			return { content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 };
+		}),
+		protectPassword: jest.fn((password: string): string => (password)),
+		validatePassword: jest.fn((entity: UserEntity, passwordToValidate: string): void => { throw new Error('GenericError'); }),
+	};
+	const userPreferenceServiceMock = {
+		getByUserId: jest.fn(async (userId: string): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
+		create: jest.fn(async (entity: UserPreferenceEntity): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
+		update: jest.fn(async (id: string, data: UpdateUserPreferenceInterface): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
+		delete: jest.fn(async (id: string, data: { softDelete: boolean }): Promise<boolean> => (false)),
+	};
+	const cryptographyServiceMock = {
+		encodeJwt: jest.fn((payload: any, inputEncoding: BufferEncoding, expiration?: string): string => ('')),
+	};
 
 	const userAgent = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' };
-	const userOperation = new UserOperation(userServiceMock, userPreferenceServiceMock, new CryptographyService(configServiceMock as any), userStrategy, httpConstants, exceptionsMock);
+	const userOperation = new UserOperation(
+		userServiceMock as any,
+		userPreferenceServiceMock as any,
+		cryptographyServiceMock as any,
+		new UserStrategy(),
+		new HttpConstants(),
+		exceptionsMock as any,
+	);
 
 	describe('# User Login', () => {
 		test('Should validate password', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test', password: 'admin' });
-			userServiceMock.getByEmail.mockImplementation(async (email: string): Promise<UserEntity | null> => {
-				if (email === userEntity.getLogin().email) return userEntity;
-				else return null;
-			});
-			userServiceMock.validatePassword.mockImplementation((entity: UserEntity, passwordToValidate: string): void => {
-				if (!entity.getPassword()?.length)
-					throw exceptionsMock.business({
-						message: 'Invalid password',
-					});
-				if (passwordToValidate !== entity.getPassword())
-					throw exceptionsMock.unauthorized({
-						message: 'Password hash is different from database',
-					});
-			});
-			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: string): Promise<UserPreferenceEntity | null> => (new UserPreferenceEntity({ userId })));
+			userServiceMock.getById.mockResolvedValueOnce(userEntity);
+			userServiceMock.getByEmail.mockResolvedValueOnce(userEntity);
+			userServiceMock.validatePassword.mockImplementationOnce((entity: UserEntity, passwordToValidate: string) => { return undefined; });
+			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(new UserPreferenceEntity({ userId: userEntity.getId() }));
+			cryptographyServiceMock.encodeJwt.mockReturnValueOnce('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIuZGVmYXVsdEBub21haWwuZGV2IiwiY2xpZW50SWQiOiIxODZlN2RhYS1kMmRmLTQ0YWYtYmE4Yy00ZjIwNDM1NmQwZjkiLCJpYXQiOjE3MTgxNTY2MjQsImV4cCI6MTcxODI0MzAyNH0.4gmn_kp7YaZq4XGvKxe2i6QgWZh-f2iNaJg40md6agQ');
 
-			const loggedUser = await userOperation.loginUser({ email: 'user.test@nomail.test', password: 'admin' });
+			const result = await userOperation.loginUser({ email: 'user.test@nomail.test', password: 'admin' });
 			expect(userServiceMock.getByEmail).toHaveBeenCalledTimes(1);
+			expect(userServiceMock.getByEmail).toHaveBeenCalledWith('user.test@nomail.test');
+			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
+			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', false);
 			expect(userServiceMock.validatePassword).toHaveBeenCalledTimes(1);
+			expect(userServiceMock.validatePassword).toHaveBeenCalledWith(userEntity, 'admin');
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
-			expect(loggedUser.user.getLogin().email).toBe('user.test@nomail.test');
-			expect(loggedUser.user.getPassword()).toBe('');
+			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
+			expect(cryptographyServiceMock.encodeJwt).toHaveBeenCalledTimes(1);
+			expect(cryptographyServiceMock.encodeJwt).toHaveBeenCalledWith({ clientId: userEntity.getId(), username: userEntity.getEmail() }, 'utf8', '1d');
+			expect(result.token).toBe('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIuZGVmYXVsdEBub21haWwuZGV2IiwiY2xpZW50SWQiOiIxODZlN2RhYS1kMmRmLTQ0YWYtYmE4Yy00ZjIwNDM1NmQwZjkiLCJpYXQiOjE3MTgxNTY2MjQsImV4cCI6MTcxODI0MzAyNH0.4gmn_kp7YaZq4XGvKxe2i6QgWZh-f2iNaJg40md6agQ');
+			expect(result.user.getEmail()).toBe('user.test@nomail.test');
+			expect(result.user.getPassword()).toBe('');
 		});
 
 		test('Should not validate password', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test', password: 'admin' });
-			userServiceMock.getByEmail.mockImplementation(async (email: string): Promise<UserEntity | null> => {
-				if (email === userEntity.getLogin().email) return userEntity;
-				else return null;
-			});
-			userServiceMock.validatePassword.mockImplementation((entity: UserEntity, passwordToValidate: string): void => {
-				if (!entity.getPassword()?.length)
-					throw exceptionsMock.business({
-						message: 'Invalid password',
-					});
-				if (passwordToValidate !== entity.getPassword())
-					throw exceptionsMock.unauthorized({
-						message: 'Password hash is different from database',
-					});
-			});
-			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: string): Promise<UserPreferenceEntity | null> => (new UserPreferenceEntity({ userId })));
-
-			try {
-				await userOperation.loginUser({ email: 'user.test@nomail.test', password: 'test' });
-			} catch (error) {
-				expect(userServiceMock.getByEmail).toHaveBeenCalledTimes(1);
-				expect(userServiceMock.validatePassword).toHaveBeenCalledWith(userEntity, 'test');
-				expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
-					message: 'Password hash is different from database'
+			userServiceMock.getById.mockResolvedValueOnce(userEntity);
+			userServiceMock.getByEmail.mockResolvedValueOnce(userEntity);
+			userServiceMock.validatePassword.mockImplementationOnce((entity: UserEntity, passwordToValidate: string) => {
+				throw exceptionsMock.unauthorized({
+					message: 'Password hash is different from database',
 				});
-				expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
-			}
+			});
+
+			await expect(userOperation.loginUser({ email: 'user.test@nomail.test', password: 'admin' }))
+				.rejects.toMatchObject(new Error('Password hash is different from database'));
+			expect(userServiceMock.getByEmail).toHaveBeenCalledTimes(1);
+			expect(userServiceMock.getByEmail).toHaveBeenCalledWith('user.test@nomail.test');
+			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
+			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', false);
+			expect(userServiceMock.validatePassword).toHaveBeenCalledTimes(1);
+			expect(userServiceMock.validatePassword).toHaveBeenCalledWith(userEntity, 'admin');
+			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
+			expect(cryptographyServiceMock.encodeJwt).not.toHaveBeenCalled();
 		});
 
 		test('Should throw a not found error', async () => {
-			userServiceMock.getByEmail.mockImplementation(async (email: string): Promise<UserEntity | null> => (null));
+			userServiceMock.getByEmail.mockResolvedValueOnce(null);
 
-			try {
-				await userOperation.loginUser({ email: 'user.test@nomail.test', password: 'admin' });
-			} catch (error) {
-				expect(userServiceMock.getByEmail).toHaveBeenCalledTimes(1);
-				expect(exceptionsMock.notFound).toHaveBeenCalledWith({
-					message: 'User not found!'
-				});
-				expect(userServiceMock.validatePassword).not.toHaveBeenCalled();
-				expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
-			}
+			await expect(userOperation.loginUser({ email: 'user.test@nomail.test', password: 'admin' }))
+				.rejects.toMatchObject(new Error('User not founded by e-mail!'));
+			expect(userServiceMock.getByEmail).toHaveBeenCalledTimes(1);
+			expect(userServiceMock.getByEmail).toHaveBeenCalledWith('user.test@nomail.test');
+			expect(exceptionsMock.notFound).toHaveBeenCalledWith({
+				message: 'User not founded by e-mail!'
+			});
+			expect(userServiceMock.validatePassword).not.toHaveBeenCalled();
+			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
 		});
 	});
 
@@ -130,99 +129,83 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 				totalPages: 1,
 				totalItems: 3,
 			};
-			userServiceMock.list.mockImplementation(async (query: ListQueryInterface, withoutSensibleData = true): Promise<PaginationInterface<UserEntity> | null> => (listResult));
+			userServiceMock.list.mockResolvedValueOnce(listResult);
 
-			const listedUsers = await userOperation.listUsers(listData);
+			const result = await userOperation.listUsers(listData);
 			expect(userServiceMock.list).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.list).toHaveBeenCalledWith(listData);
-			expect(listedUsers.totalItems).toBe(listResult.totalItems);
-			expect(listedUsers.content).toEqual(listResult.content);
-		});
-
-		test('Should throw a integration error', async () => {
-			const listData: ListQueryInterface = {
-				limit: 15,
-				page: 0,
-			};
-			userServiceMock.list.mockImplementation(async (query: ListQueryInterface, withoutSensibleData = true): Promise<PaginationInterface<UserEntity> | null> => (null));
-
-			try {
-				await userOperation.listUsers(listData);
-			} catch (error) {
-				expect(userServiceMock.list).toHaveBeenCalledTimes(1);
-				expect(userServiceMock.list).toHaveBeenCalledWith(listData);
-				expect(exceptionsMock.integration).toHaveBeenCalledWith({
-					message: 'Error to connect database'
-				});
-			}
+			expect(result.totalItems).toBe(listResult.totalItems);
+			expect(result.content).toEqual(listResult.content);
 		});
 	});
 
 	describe('# Create User', () => {
 		test('Should return created user', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
-			userServiceMock.create.mockImplementation(async (entity: UserEntity): Promise<UserEntity | null> => (entity));
-			userServiceMock.getById.mockImplementation(async (id: string, withoutPassword = true): Promise<UserEntity | null> => {
-				if (id === userEntity.getId()) return userEntity;
-				else return null;
-			});
-			userPreferenceServiceMock.create.mockImplementation(async (entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (entity));
-			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: string): Promise<UserPreferenceEntity | null> => (new UserPreferenceEntity({ userId })));
+			const userPreferenceEntity = new UserPreferenceEntity({ userId: userEntity.getId() });
+			userEntity.setPreference(userPreferenceEntity);
+			userServiceMock.getByEmail.mockResolvedValueOnce(null);
+			userServiceMock.create.mockResolvedValueOnce(userEntity);
+			userPreferenceServiceMock.create.mockResolvedValueOnce(userPreferenceEntity);
+			userServiceMock.getById.mockResolvedValueOnce(userEntity);
+			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
 
-			const createdUser = await userOperation.createUser(userEntity.getAttributes(), userAgent);
+			const result = await userOperation.createUser(userEntity.getAttributes(), userAgent);
 			expect(userServiceMock.create).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.create).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
+			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
-			expect(createdUser?.getId()).toBe(userEntity.getId());
-			expect(createdUser?.getLogin()?.email).toBe(userEntity.getLogin().email);
-			expect(createdUser?.getPassword()).toBeNull();
+			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
+			expect(result?.getId()).toBe(userEntity.getId());
+			expect(result?.getEmail()).toBe(userEntity.getEmail());
+			expect(result?.getPassword()).toBeUndefined();
 		});
 
 		test('Should throw a not found error', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
-			userServiceMock.create.mockImplementation(async (entity: UserEntity): Promise<UserEntity | null> => (entity));
-			userServiceMock.getById.mockImplementation(async (id: string, withoutPassword = true): Promise<UserEntity | null> => (null));
-			userPreferenceServiceMock.create.mockImplementation(async (entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (entity));
-			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: string): Promise<UserPreferenceEntity | null> => (null));
+			const userPreferenceEntity = new UserPreferenceEntity({ userId: userEntity.getId() });
+			userEntity.setPreference(userPreferenceEntity);
+			userServiceMock.getByEmail.mockResolvedValueOnce(null);
+			userServiceMock.create.mockResolvedValueOnce(userEntity);
+			userPreferenceServiceMock.create.mockResolvedValueOnce(userPreferenceEntity);
+			userServiceMock.getById.mockRejectedValueOnce(exceptionsMock.notFound({
+				message: 'User not founded by ID!',
+			}));
 
-			try {
-				await userOperation.createUser(userEntity.getAttributes(), userAgent);
-			} catch (error) {
-				expect(userServiceMock.create).toHaveBeenCalledTimes(1);
-				expect(userPreferenceServiceMock.create).toHaveBeenCalledTimes(1);
-				expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-				expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
-				expect(exceptionsMock.notFound).toHaveBeenCalledWith({
-					message: 'Created user not found!'
-				});
-			}
+			await expect(userOperation.createUser(userEntity.getAttributes(), userAgent))
+				.rejects.toMatchObject(new Error('User not founded by ID!'));
+			expect(userServiceMock.create).toHaveBeenCalledTimes(1);
+			expect(userPreferenceServiceMock.create).toHaveBeenCalledTimes(1);
+			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
+			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
+			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
+			expect(exceptionsMock.notFound).toHaveBeenCalledWith({
+				message: 'User not founded by ID!'
+			});
 		});
 
 		test('Should throw a conflict error', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
-			userServiceMock.create.mockImplementation(async (entity: UserEntity): Promise<UserEntity | null> => (null));
-			userPreferenceServiceMock.create.mockImplementation(async (entity: UserPreferenceEntity): Promise<UserPreferenceEntity | null> => (null));
+			userServiceMock.getByEmail.mockResolvedValueOnce(userEntity);
 
-			try {
-				await userOperation.createUser(userEntity.getAttributes(), userAgent);
-			} catch (error) {
-				expect(userServiceMock.create).toHaveBeenCalledTimes(1);
-				expect(userPreferenceServiceMock.create).not.toHaveBeenCalled();
-				expect(exceptionsMock.conflict).toHaveBeenCalledWith({
-					message: 'User not created!'
-				});
-			}
+			await expect(userOperation.createUser(userEntity.getAttributes(), userAgent))
+				.rejects.toMatchObject(new Error('User already exists!'));
+			expect(userServiceMock.create).not.toHaveBeenCalled();
+			expect(userPreferenceServiceMock.create).not.toHaveBeenCalled();
+			expect(userServiceMock.getById).not.toHaveBeenCalled();
+			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
+			expect(exceptionsMock.conflict).toHaveBeenCalledWith({
+				message: 'User already exists!'
+			});
 		});
 
 		test('Should throw a unauthorized error', async () => {
-			try {
-				await userOperation.createUser({}, null);
-			} catch (error) {
-				expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
-					message: 'Invalid userAgent'
-				});
-			}
+			await expect(userOperation.createUser({} as any))
+				.rejects.toMatchObject(new Error('Invalid userAgent'));
+			expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
+				message: 'Invalid userAgent'
+			});
 		});
 	});
 
@@ -230,73 +213,38 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		test('Should return finded user', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ userId: userEntity.getId() });
-			userServiceMock.getById.mockImplementation(async (id: string, withoutPassword = true): Promise<UserEntity | null> => {
-				if (id === userEntity.getId()) return userEntity;
-				else return null;
-			});
-			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: string): Promise<UserPreferenceEntity | null> => {
-				if (userId === userEntity.getId()) return userPreferenceEntity;
-				else return null;
-			});
+			userServiceMock.getById.mockResolvedValueOnce(userEntity);
+			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
 
-			const foundedUser = await userOperation.getUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userAgent);
+			const result = await userOperation.getUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userAgent);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
-			expect(foundedUser?.getId()).toBe(userEntity.getId());
-			expect(foundedUser?.getLogin()?.email).toBe(userEntity.getLogin().email);
+			expect(result?.getId()).toBe(userEntity.getId());
+			expect(result?.getEmail()).toBe(userEntity.getEmail());
 		});
 
-		test('Should return a null preference', async () => {
-			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
-			userServiceMock.getById.mockImplementation(async (id: string, withoutPassword = true): Promise<UserEntity | null> => {
-				if (id === userEntity.getId()) return userEntity;
-				else return null;
-			});
-			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: string): Promise<UserPreferenceEntity | null> => (null));
+		test('Should throw a not found error', async () => {
+			userServiceMock.getById.mockRejectedValueOnce(exceptionsMock.notFound({
+				message: 'User not founded by ID!',
+			}));
 
-			const foundedUser = await userOperation.getUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userAgent);
+			await expect(userOperation.getUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userAgent))
+				.rejects.toMatchObject(new Error('User not founded by ID!'));
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
-			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
-			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
-			expect(foundedUser?.getPreference()).toBeNull();
-		});
-
-		test('Should throw a conflict error', async () => {
-			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
-			const userPreferenceEntity = new UserPreferenceEntity({ userId: userEntity.getId() });
-			userServiceMock.getById.mockImplementation(async (id: string, withoutPassword = true): Promise<UserEntity | null> => {
-				if (id === userEntity.getId()) return userEntity;
-				else return null;
+			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
+			expect(exceptionsMock.notFound).toHaveBeenCalledWith({
+				message: 'User not founded by ID!'
 			});
-			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: string): Promise<UserPreferenceEntity | null> => {
-				if (userId === userEntity.getId()) return userPreferenceEntity;
-				else return null;
-			});
-
-			try {
-				await userOperation.getUser('', userAgent);
-			} catch (error) {
-				expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-				expect(userServiceMock.getById).toHaveBeenCalledWith('', true);
-				expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
-				expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('');
-				expect(exceptionsMock.notFound).toHaveBeenCalledWith({
-					message: 'User not found!'
-				});
-			}
 		});
 
 		test('Should throw a unauthorized error', async () => {
-			try {
-				await userOperation.getUser('', null);
-			} catch (error) {
-				expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
-					message: 'Invalid userAgent'
-				});
-			}
+			await expect(userOperation.getUser(''))
+				.rejects.toMatchObject(new Error('Invalid userAgent'));
+			expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
+				message: 'Invalid userAgent'
+			});
 		});
 	});
 
@@ -304,126 +252,114 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		test('Should return updated user', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: userEntity.getId() });
-			userServiceMock.getById.mockImplementation(async (id: string, withoutPassword = true): Promise<UserEntity | null> => {
-				if (id === userEntity.getId()) return userEntity;
-				else return null;
+			userServiceMock.getById
+				.mockResolvedValueOnce(userEntity)
+				.mockResolvedValueOnce(userEntity);
+			userPreferenceServiceMock.getByUserId
+				.mockResolvedValueOnce(userPreferenceEntity)
+				.mockResolvedValueOnce(userPreferenceEntity);
+			userServiceMock.update.mockImplementationOnce(async (id: string, data: UpdateUserInterface): Promise<UserEntity> => {
+				if (data.email) userEntity.setEmail(data.email);
+				if (data.password) userEntity.setPhone(data.password);
+				if (data.fullName) userEntity.setFullName(data.fullName);
+				if (data.phone) userEntity.setPhone(data.phone);
+				if (data.document) userEntity.setDocInfos(data.document, userEntity.getDocInfos().docType as string, userEntity.getDocInfos().fu as string);
+				if (data.docType) userEntity.setDocInfos(userEntity.getDocInfos().document as string, data.docType, userEntity.getDocInfos().fu as string);
+				if (data.fu) userEntity.setDocInfos(userEntity.getDocInfos().document as string, userEntity.getDocInfos().docType as string, data.fu);
+				if (data.preference) userEntity.setPreference(new UserPreferenceEntity(data.preference));
+				if (data.deletedBy) userEntity.setDeletedBy(data.deletedBy);
+				return userEntity;
 			});
-			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: string): Promise<UserPreferenceEntity | null> => {
-				if (userId === userEntity.getId()) return userPreferenceEntity;
-				else return null;
-			});
-			userServiceMock.update.mockImplementation(async (id: string, data: UpdateUserInterface): Promise<UserEntity | null> => {
-				if (id === userEntity.getId()) {
-					if (data.email) userEntity.setLogin(data.email, userEntity.getLogin().fullName as string);
-					if (data.password) userEntity.setPhone(data.password);
-					if (data.fullName) userEntity.setLogin(userEntity.getLogin().email as string, data.fullName);
-					if (data.phone) userEntity.setPhone(data.phone);
-					if (data.document) userEntity.setDocInfos(data.document, userEntity.getDocInfos().docType as string, userEntity.getDocInfos().fu as string);
-					if (data.docType) userEntity.setDocInfos(userEntity.getDocInfos().document as string, data.docType, userEntity.getDocInfos().fu as string);
-					if (data.fu) userEntity.setDocInfos(userEntity.getDocInfos().document as string, userEntity.getDocInfos().docType as string, data.fu);
-					if (data.preference) userEntity.setPreference(new UserPreferenceEntity(data.preference));
-					if (data.deletedBy) userEntity.setDeletedBy(data.deletedBy);
-
-					return userEntity;
-				}
-				else return null;
-			});
-			userPreferenceServiceMock.update.mockImplementation(async (id: string, data: UpdateUserPreferenceInterface): Promise<UserPreferenceEntity | null> => {
-				if (id === userPreferenceEntity.getId()) {
-					if (data.defaultTheme) userPreferenceEntity.setDefaultTheme(data.defaultTheme);
-					if (data.imagePath) userPreferenceEntity.setImagePath(data.imagePath);
-
-					return userPreferenceEntity;
-				}
-				else return null;
+			userPreferenceServiceMock.update.mockImplementationOnce(async (id: string, data: UpdateUserPreferenceInterface): Promise<UserPreferenceEntity> => {
+				if (data.defaultTheme) userPreferenceEntity.setDefaultTheme(data.defaultTheme);
+				if (data.imagePath) userPreferenceEntity.setImagePath(data.imagePath);
+				return userPreferenceEntity;
 			});
 
-			const updatedUser = await userOperation.updateUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { phone: '+55999999999', preference: { defaultTheme: 'DEFAULT' } }, userAgent);
+			const result = await userOperation.updateUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
+				phone: '+55999999999',
+				preference: { defaultTheme: ThemesEnum.DEFAULT }
+			}, userAgent);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(2);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(2);
-			expect(userServiceMock.update).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { phone: '+55999999999', preference: { defaultTheme: 'DEFAULT' } });
-			expect(userPreferenceServiceMock.update).toHaveBeenCalledWith('b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { defaultTheme: 'DEFAULT' });
-			expect(updatedUser?.getPhone()).toEqual('+55999999999');
-			expect(updatedUser?.getPreference()?.getDefaultTheme()).toEqual('DEFAULT');
+			expect(userServiceMock.update).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
+				phone: '+55999999999',
+				preference: { defaultTheme: 'DEFAULT' },
+			});
+			expect(userPreferenceServiceMock.update).toHaveBeenCalledWith('b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
+				defaultTheme: 'DEFAULT',
+			});
+			expect(result?.getPhone()).toEqual('+55999999999');
+			expect(result?.getPreference()?.getDefaultTheme()).toEqual('DEFAULT');
 		});
 
 		test('Should throw a conflict error', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: userEntity.getId() });
-			userServiceMock.getById.mockImplementation(async (id: string, withoutPassword = true): Promise<UserEntity | null> => {
-				if (id === userEntity.getId()) return userEntity;
-				else return null;
-			});
-			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: string): Promise<UserPreferenceEntity | null> => {
-				if (userId === userEntity.getId()) return userPreferenceEntity;
-				else return null;
-			});
+			userServiceMock.getById.mockResolvedValueOnce(userEntity);
+			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
+			userServiceMock.update.mockRejectedValueOnce(exceptionsMock.conflict({
+				message: 'User not updated!',
+			}));
 
-			try {
-				await userOperation.updateUser('', {}, userAgent);
-			} catch (error) {
-				expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-				expect(userServiceMock.getById).toHaveBeenCalledWith('', true);
-				expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
-				expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('');
-				expect(exceptionsMock.notFound).toHaveBeenCalledWith({
-					message: 'User or preference not found!'
-				});
-			}
+			await expect(userOperation.updateUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
+				phone: '+55999999999',
+				preference: { defaultTheme: ThemesEnum.DEFAULT }
+			}, userAgent))
+				.rejects.toMatchObject(new Error('User not updated!'));
+			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
+			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
+			expect(userServiceMock.update).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
+				phone: '+55999999999',
+				preference: { defaultTheme: 'DEFAULT' }
+			});
+			expect(userPreferenceServiceMock.update).not.toHaveBeenCalled();
+			expect(exceptionsMock.conflict).toHaveBeenCalledWith({
+				message: 'User not updated!'
+			});
 		});
 
 		test('Should throw a business error', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: userEntity.getId() });
 			const otherUserAgent = { username: 'test', clientId: '1' };
-			userServiceMock.getById.mockImplementation(async (id: string, withoutPassword = true): Promise<UserEntity | null> => {
-				if (id === userEntity.getId()) return userEntity;
-				else return null;
-			});
-			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: string): Promise<UserPreferenceEntity | null> => {
-				if (userId === userEntity.getId()) return userPreferenceEntity;
-				else return null;
-			});
+			userServiceMock.getById.mockResolvedValueOnce(userEntity);
+			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
 
-			try {
-				await userOperation.updateUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {}, otherUserAgent);
-			} catch (error) {
-				expect(exceptionsMock.business).toHaveBeenCalledWith({
-					message: 'userAgent not allowed to update this user!'
-				});
-			}
+			await expect(userOperation.updateUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
+				phone: '+55999999999',
+				preference: { defaultTheme: ThemesEnum.DEFAULT }
+			}, otherUserAgent))
+				.rejects.toMatchObject(new Error('userAgent not allowed to update this user!'));
+			expect(exceptionsMock.business).toHaveBeenCalledWith({
+				message: 'userAgent not allowed to update this user!'
+			});
 		});
 
-		test('Should throw a conflict error', async () => {
-			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
-			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: userEntity.getId() });
-			userServiceMock.getById.mockImplementation(async (id: string, withoutPassword = true): Promise<UserEntity | null> => {
-				if (id === userEntity.getId()) return userEntity;
-				else return null;
-			});
-			userServiceMock.update.mockImplementation(async (id: string, data: UpdateUserInterface): Promise<UserEntity | null> => (null));
-			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: string): Promise<UserPreferenceEntity | null> => {
-				if (userId === userEntity.getId()) return userPreferenceEntity;
-				else return null;
-			});
+		test('Should throw a not found error', async () => {
+			userServiceMock.getById.mockRejectedValueOnce(exceptionsMock.notFound({
+				message: 'User not founded by ID!',
+			}));
 
-			try {
-				await userOperation.updateUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {}, userAgent);
-			} catch (error) {
-				expect(exceptionsMock.conflict).toHaveBeenCalledWith({
-					message: 'User or preference not updated!'
-				});
-			}
+			await expect(userOperation.updateUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
+				phone: '+55999999999',
+				preference: { defaultTheme: ThemesEnum.DEFAULT }
+			}, userAgent))
+				.rejects.toMatchObject(new Error('User not founded by ID!'));
+			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
+			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
+			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
+			expect(exceptionsMock.notFound).toHaveBeenCalledWith({
+				message: 'User not founded by ID!'
+			});
 		});
 
 		test('Should throw a unauthorized error', async () => {
-			try {
-				await userOperation.updateUser('', {}, null);
-			} catch (error) {
-				expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
-					message: 'Invalid userAgent'
-				});
-			}
+			await expect(userOperation.updateUser('', {}))
+				.rejects.toMatchObject(new Error('Invalid userAgent'));
+			expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
+				message: 'Invalid userAgent'
+			});
 		});
 	});
 
@@ -431,113 +367,82 @@ describe('Modules :: App :: Operations :: UserOperation', () => {
 		test('Should return deleted user', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: userEntity.getId() });
-			userServiceMock.getById.mockImplementation(async (id: string, withoutPassword = true): Promise<UserEntity | null> => {
-				if (id === userEntity.getId()) return userEntity;
-				else return null;
-			});
-			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: string): Promise<UserPreferenceEntity | null> => {
-				if (userId === userEntity.getId()) return userPreferenceEntity;
-				else return null;
-			});
-			userServiceMock.delete.mockImplementation(async (id: string, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean | null> => {
-				if (id === userEntity.getId()) return true;
-				else return null;
-			});
-			userPreferenceServiceMock.delete.mockImplementation(async (id: string, data: { softDelete: boolean }): Promise<boolean | null> => {
-				if (id === userPreferenceEntity.getId()) return true;
-				else return null;
-			});
+			userServiceMock.getById.mockResolvedValueOnce(userEntity);
+			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
+			userPreferenceServiceMock.delete.mockResolvedValueOnce(true);
+			userServiceMock.delete.mockResolvedValueOnce(true);
 
-			const deletedUser = await userOperation.deleteUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userAgent);
+			const result = await userOperation.deleteUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userAgent);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
-			expect(userPreferenceServiceMock.delete).toHaveBeenCalledWith('b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { softDelete: true });
+			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
+			expect(userServiceMock.delete).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.delete).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { softDelete: true, userAgentId: userAgent.clientId });
-			expect(deletedUser).toEqual(true);
+			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
+			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
+			expect(userPreferenceServiceMock.delete).toHaveBeenCalledTimes(1);
+			expect(userPreferenceServiceMock.delete).toHaveBeenCalledWith('b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { softDelete: true });
+			expect(result).toEqual(true);
 		});
 
-		test('Should throw a not found error', async () => {
+		test('Should return not deleted user', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
-			const userPreferenceEntity = new UserPreferenceEntity({ userId: userEntity.getId() });
-			userServiceMock.getById.mockImplementation(async (id: string, withoutPassword = true): Promise<UserEntity | null> => {
-				if (id === userEntity.getId()) return userEntity;
-				else return null;
-			});
-			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: string): Promise<UserPreferenceEntity | null> => {
-				if (userId === userEntity.getId()) return userPreferenceEntity;
-				else return null;
-			});
+			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: userEntity.getId() });
+			userServiceMock.getById.mockResolvedValueOnce(userEntity);
+			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
+			userPreferenceServiceMock.delete.mockResolvedValueOnce(false);
+			userServiceMock.delete.mockResolvedValueOnce(false);
 
-			try {
-				await userOperation.deleteUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userAgent);
-			} catch (error) {
-				expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-				expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
-				expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
-				expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
-				expect(exceptionsMock.notFound).toHaveBeenCalledWith({
-					message: 'User or preference not found!'
-				});
-			}
-		});
-
-		test('Should throw a unauthorized error', async () => {
-			try {
-				await userOperation.deleteUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', null);
-			} catch (error) {
-				expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
-					message: 'Invalid userAgent'
-				});
-			}
+			const result = await userOperation.deleteUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userAgent);
+			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
+			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
+			expect(userServiceMock.delete).toHaveBeenCalledTimes(1);
+			expect(userServiceMock.delete).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { softDelete: true, userAgentId: userAgent.clientId });
+			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
+			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
+			expect(userPreferenceServiceMock.delete).toHaveBeenCalledTimes(1);
+			expect(userPreferenceServiceMock.delete).toHaveBeenCalledWith('b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { softDelete: true });
+			expect(result).toEqual(false);
 		});
 
 		test('Should throw a business error', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: userEntity.getId() });
 			const otherUserAgent = { username: 'test', clientId: '1' };
-			userServiceMock.getById.mockImplementation(async (id: string, withoutPassword = true): Promise<UserEntity | null> => {
-				if (id === userEntity.getId()) return userEntity;
-				else return null;
-			});
-			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: string): Promise<UserPreferenceEntity | null> => {
-				if (userId === userEntity.getId()) return userPreferenceEntity;
-				else return null;
-			});
+			userServiceMock.getById.mockResolvedValueOnce(userEntity);
+			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
 
-			try {
-				await userOperation.deleteUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', otherUserAgent);
-			} catch (error) {
-				expect(exceptionsMock.business).toHaveBeenCalledWith({
-					message: 'userAgent not allowed to delete this user!'
-				});
-			}
+			await expect(userOperation.deleteUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', otherUserAgent))
+				.rejects.toMatchObject(new Error('userAgent not allowed to delete this user!'));
+			expect(exceptionsMock.business).toHaveBeenCalledWith({
+				message: 'userAgent not allowed to delete this user!'
+			});
 		});
 
-		test('Should throw a conflict error', async () => {
-			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
-			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: userEntity.getId() });
-			userServiceMock.getById.mockImplementation(async (id: string, withoutPassword = true): Promise<UserEntity | null> => {
-				if (id === userEntity.getId()) return userEntity;
-				else return null;
-			});
-			userPreferenceServiceMock.getByUserId.mockImplementation(async (userId: string): Promise<UserPreferenceEntity | null> => {
-				if (userId === userEntity.getId()) return userPreferenceEntity;
-				else return null;
-			});
-			userServiceMock.delete.mockImplementation(async (id: string, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean | null> => (null));
-			userPreferenceServiceMock.delete.mockImplementation(async (id: string, data: { softDelete: boolean }): Promise<boolean | null> => {
-				if (id === userPreferenceEntity.getId()) return true;
-				else return null;
-			});
+		test('Should throw a not found error', async () => {
+			userServiceMock.getById.mockRejectedValueOnce(exceptionsMock.notFound({
+				message: 'User not founded by ID!',
+			}));
 
-			try {
-				await userOperation.deleteUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userAgent);
-			} catch (error) {
-				expect(exceptionsMock.conflict).toHaveBeenCalledWith({
-					message: 'User not deleted!'
-				});
-			}
+			await expect(userOperation.deleteUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userAgent))
+				.rejects.toMatchObject(new Error('User not founded by ID!'));
+			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
+			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
+			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
+			expect(exceptionsMock.notFound).toHaveBeenCalledWith({
+				message: 'User not founded by ID!'
+			});
+		});
+
+		test('Should throw a unauthorized error', async () => {
+			await expect(userOperation.deleteUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d'))
+				.rejects.toMatchObject(new Error('Invalid userAgent'));
+			expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
+				message: 'Invalid userAgent'
+			});
 		});
 	});
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
 });

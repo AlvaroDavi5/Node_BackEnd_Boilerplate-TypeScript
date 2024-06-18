@@ -11,17 +11,16 @@ function runAudit() {
 			for (let i = 0; i < lines.length; i++) {
 				if (lines[i]?.startsWith('Severity: ')) {
 					if (
-						lines[i]?.includes('High') ||
-						lines[i]?.includes('Critical')
+						lines[i]?.includes('High')
+						|| lines[i]?.includes('Critical')
 					) {
 						throw new Error(
 							'Security check failed, High or Critical vulnerability found'
 						);
-					}
-					else if (
-						lines[i].includes('Info') ||
-						lines[i].includes('Low') ||
-						lines[i].includes('Moderate')
+					} else if (
+						lines[i].includes('Info')
+						|| lines[i].includes('Low')
+						|| lines[i].includes('Moderate')
 					) {
 						console.error('Security check passed, but Info, Low or Moderate vulnerability found');
 						return;

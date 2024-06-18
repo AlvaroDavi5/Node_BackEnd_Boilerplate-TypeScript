@@ -1,46 +1,45 @@
-import { Not, IsNull, Equal, Like, In, And, FindManyOptions, FindOptionsWhere, FindOptionsOrder } from 'typeorm';
+import { Not, IsNull, Equal, Like, In, And, FindManyOptions, FindOptionsWhere, FindOptionsSelect } from 'typeorm';
 import UsersModel from '@core/infra/database/models/Users.model';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 import { UserInterface } from '@domain/entities/User.entity';
-import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
+import { BuildParamsInterface, PaginationOptionsInterface } from '@core/infra/database/repositories/AbstractRepository.repository';
 
 
-interface PaginationOptionsInterface<M = any> {
-	take?: number, // limit
-	skip?: number, // offset
-	order?: FindOptionsOrder<M>,
+interface UserSelectRestrictInterface {
+	withoutPassword: boolean,
+	withoutSensitiveData: boolean,
 }
 
-const buildPaginationParams = ({ limit, page, order, sortBy }: ListQueryInterface): PaginationOptionsInterface => {
-	const paginationParams: PaginationOptionsInterface<UsersModel> = {};
+export type UserBuildParamsInterface = BuildParamsInterface<UserInterface> & UserSelectRestrictInterface;
 
-	if (limit && page) {
-		paginationParams.take = Number(limit) || 10; // max results
-		paginationParams.skip = (Number(page) || 0) * paginationParams.take; // start from
-	}
+const buildSelectParams = ({
+	withoutPassword,
+	withoutSensitiveData,
+}: UserSelectRestrictInterface): FindOptionsSelect<UsersModel> => {
+	const selectSensitiveData = withoutSensitiveData === false;
+	const selectPassword = withoutPassword === false;
 
-	if (sortBy || order) {
-		const listOrder = order ?? 'ASC';
-		const sortOrder = sortBy ?? 'createdAt';
+	const select: FindOptionsSelect<UsersModel> = {
+		id: true, fullName: true,
+		email: true, password: selectPassword,
+		phone: selectSensitiveData, fu: true,
+		docType: true, document: selectSensitiveData,
+		createdAt: true, updatedAt: true,
+		deletedAt: true, deletedBy: true,
+	};
 
-		paginationParams.order = { [sortOrder]: listOrder };
-	}
-
-	return paginationParams;
+	return select;
 };
 
 const buildWhereParams = ({
-	searchTerm,
-	selectSoftDeleted,
 	id,
-	fullName,
-	email,
-	phone,
-	docType,
-	document,
-	fu,
+	searchTerm,
+	fullName, email,
+	phone, fu,
+	docType, document,
 	preference,
-}: ListQueryInterface & UserInterface): FindOptionsWhere<UsersModel>[] => {
+	selectSoftDeleted,
+}: UserBuildParamsInterface): FindOptionsWhere<UsersModel>[] => {
 	const where: FindOptionsWhere<UsersModel>[] = [];
 	const partialWhere: FindOptionsWhere<UsersModel> = {};
 
@@ -77,18 +76,39 @@ const buildWhereParams = ({
 	return where;
 };
 
+const buildPaginationParams = ({
+	limit, page,
+	order, sortBy,
+}: UserBuildParamsInterface): PaginationOptionsInterface<UsersModel> => {
+	const paginationParams: PaginationOptionsInterface<UsersModel> = {};
+
+	if (limit && page) {
+		paginationParams.take = Number(limit) || 10; // max results
+		paginationParams.skip = (Number(page) || 0) * paginationParams.take; // start from
+	}
+
+	if (sortBy || order) {
+		const listOrder = order ?? 'ASC';
+		const sortOrder = sortBy ?? 'createdAt';
+
+		paginationParams.order = { [sortOrder]: listOrder };
+	}
+
+	return paginationParams;
+};
+
 export const userQueryParamsBuilder = ({
 
-	buildParams: (data: any): FindManyOptions<UsersModel> => {
+	buildParams: (data: UserBuildParamsInterface): FindManyOptions<UsersModel> => {
+		const select = buildSelectParams(data);
 		const where = buildWhereParams(data);
 		const pagination = buildPaginationParams(data);
 
 		return {
-			...pagination,
+			select,
 			where,
-			relations: [
-				'preference',
-			],
+			...pagination,
+			relations: { preference: true },
 		};
 	}
 });

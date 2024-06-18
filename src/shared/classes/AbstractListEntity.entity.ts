@@ -1,44 +1,12 @@
 import { Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
-import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { returingNumber } from '@shared/types/returnTypeFunc';
 import { PaginationInterface } from '@shared/interfaces/listPaginationInterface';
+import AbstractEntity from './AbstractEntity.entity';
 
 
-export default abstract class AbstractEntity<I = any> {
-
-	public validate(): { value: any, valid: boolean, error: Error | null } {
-		let value: any = null;
-		let valid = false;
-		let error: Error | null = null;
-
-		if (this instanceof AbstractEntity) {
-			valid = true;
-			value = { ...this };
-		}
-		else {
-			error = new Error('Invalid Entity');
-		}
-
-		return { value, valid, error };
-	}
-
-	public exists(value: unknown): boolean {
-		return (value !== undefined && value !== null);
-	}
-
-	public getDate(strDate?: string): Date {
-		const dateGeneratorHelper: DateGeneratorHelper = new DateGeneratorHelper();
-		return dateGeneratorHelper.getDate(strDate ?? new Date().toISOString(), 'iso-8601', true);
-	}
-
-	public getAttributes(): I {
-		return {} as any;
-	}
-}
-
-export abstract class AbstractEntityList<T> implements PaginationInterface<T> {
+export default abstract class AbstractListEntity<T extends AbstractEntity> implements PaginationInterface<T> {
 	public content: T[] = [];
 
 	@ApiProperty({ type: Number, example: 0, default: 0, nullable: false, description: 'Page index' })

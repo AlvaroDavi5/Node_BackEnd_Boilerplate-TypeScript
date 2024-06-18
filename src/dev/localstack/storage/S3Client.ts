@@ -159,7 +159,7 @@ export default class S3Client {
 	}
 
 	public async downloadFile(bucketName: string, objectKey: string): Promise<{ content: s3FileContentType | undefined, contentLength: number; }> {
-		let content: s3FileContentType | undefined = undefined;
+		let content: s3FileContentType | undefined;
 		let contentLength = 0;
 
 		try {

@@ -1,10 +1,10 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsDate, IsEnum } from 'class-validator';
-import AbstractEntity from '@domain/entities/AbstractEntity.entity';
+import { IsString, IsDate, IsEnum, IsUUID } from 'class-validator';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import AbstractEntity from '@shared/classes/AbstractEntity.entity';
 import { returingString, returingDate } from '@shared/types/returnTypeFunc';
 
 
@@ -29,9 +29,15 @@ export type ViewUserPreferenceInterface = UserPreferenceInterface;
 	description: 'user preference entity',
 })
 export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceInterface> {
-	@ApiProperty({ type: String, example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', default: '', nullable: false, required: false, description: 'Database register ID' })
+	@ApiProperty({
+		type: String,
+		example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+		default: '', nullable: false, required: false,
+		description: 'Database register ID',
+	})
 	@Field(returingString, { defaultValue: '', nullable: false, description: 'Database register ID' })
 	@IsString()
+	@IsUUID()
 	private id!: string;
 
 	@ApiProperty({ type: String, example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', default: '', nullable: false, required: false, description: 'User ID' })
@@ -44,7 +50,12 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 	@IsString()
 	private imagePath: string | null = null;
 
-	@ApiProperty({ type: String, enum: Object.values(ThemesEnum), example: ThemesEnum.DEFAULT, default: null, nullable: true, required: true, description: 'User default theme' })
+	@ApiProperty({
+		type: String, enum: Object.values(ThemesEnum),
+		example: ThemesEnum.DEFAULT,
+		default: null, nullable: true, required: true,
+		description: 'User default theme',
+	})
 	@Field(returingString, { defaultValue: null, nullable: true, description: 'User default theme' })
 	@IsEnum(ThemesEnum)
 	public defaultTheme: ThemesEnum | null = null;
@@ -54,7 +65,7 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 	@IsDate()
 	public readonly createdAt: Date;
 
-	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: true, description: 'User updated timestamp' })
+	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: false, description: 'User updated timestamp' })
 	@Field(returingDate, { defaultValue: null, nullable: true, description: 'User updated timestamp' })
 	@IsDate()
 	public updatedAt: Date | null = null;
@@ -68,6 +79,7 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 		super();
 		if (this.exists(dataValues?.id)) this.id = dataValues.id;
 		if (this.exists(dataValues?.userId)) this.userId = dataValues.userId;
+		else if (this.exists(dataValues?.user?.id)) this.userId = dataValues.user.id;
 		if (this.exists(dataValues?.imagePath)) this.imagePath = dataValues.imagePath;
 		if (this.exists(dataValues?.defaultTheme)) this.defaultTheme = dataValues.defaultTheme;
 		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;

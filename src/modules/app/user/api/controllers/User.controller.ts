@@ -8,23 +8,27 @@ import {
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
-import UserEntity, { UserEntityList, ViewUserInterface } from '@domain/entities/User.entity';
+import UserEntity, { ViewUserInterface } from '@domain/entities/User.entity';
+import UserListEntity from '@domain/entities/generic/UserList.entity';
 import UserOperation from '@app/user/operations/User.operation';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
 import { ListQueryValidatorPipe } from '@api/pipes/QueryValidator.pipe';
 import { ListQueryInputDto } from '@api/pipes/dto/QueryInput.dto';
-import { CreateUserValidatorPipe, UpdateUserValidatorPipe, LoginUserValidatorPipe } from '@app/user/api/pipes/UserValidator.pipe';
-import { CreateUserInputDto, UpdateUserInputDto, LoginUserInputDto } from '@app/user/api/dto/UserInput.dto';
 import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import { RequestInterface } from '@shared/interfaces/endpointInterface';
 import { PaginationInterface } from '@shared/interfaces/listPaginationInterface';
+import CreateUserValidatorPipe from '../pipes/CreateUserValidator.pipe';
+import UpdateUserValidatorPipe from '../pipes/UpdateUserValidator.pipe';
+import LoginUserValidatorPipe from '../pipes/LoginUserValidator.pipe';
+import CreateUserInputDto from '../dto/user/CreateUserInput.dto';
+import UpdateUserInputDto from '../dto/user/UpdateUserInput.dto';
+import LoginUserInputDto from '../dto/user/LoginUserInput.dto';
 
 
 @ApiTags('Users')
 @Controller('/users')
-@UseGuards(CustomThrottlerGuard, AuthGuard)
-@authSwaggerDecorator()
+@UseGuards(CustomThrottlerGuard)
 @exceptionsResponseDecorator()
 export default class UserController {
 	constructor(
@@ -35,6 +39,8 @@ export default class UserController {
 		this.logger.setContextName(UserController.name);
 	}
 
+	@UseGuards(AuthGuard)
+	@authSwaggerDecorator()
 	@ApiOperation({
 		summary: 'List Users',
 		description: 'List all users from cache or database',
@@ -42,9 +48,9 @@ export default class UserController {
 	})
 	@Get('/')
 	@ApiOkResponse({
-		type: UserEntityList,
+		type: UserListEntity,
 		schema: {
-			example: (new UserEntityList()),
+			example: (new UserListEntity()),
 		},
 	})
 	@ApiConsumes('application/json')
@@ -66,6 +72,8 @@ export default class UserController {
 		}
 	}
 
+	@UseGuards(AuthGuard)
+	@authSwaggerDecorator()
 	@ApiOperation({
 		summary: 'Create User',
 		description: 'Create a new user',
@@ -91,6 +99,7 @@ export default class UserController {
 		}
 	}
 
+	@authSwaggerDecorator()
 	@ApiOperation({
 		summary: 'Login User',
 		description: 'Login user and get user authorization token (1d)',
@@ -113,6 +122,8 @@ export default class UserController {
 		}
 	}
 
+	@UseGuards(AuthGuard)
+	@authSwaggerDecorator()
 	@ApiOperation({
 		summary: 'Get User',
 		description: 'Get user by ID',
@@ -138,6 +149,8 @@ export default class UserController {
 		}
 	}
 
+	@UseGuards(AuthGuard)
+	@authSwaggerDecorator()
 	@ApiOperation({
 		summary: 'Update User',
 		description: 'Update registered user',
@@ -164,6 +177,8 @@ export default class UserController {
 		}
 	}
 
+	@UseGuards(AuthGuard)
+	@authSwaggerDecorator()
 	@ApiOperation({
 		summary: 'Delete User',
 		description: 'Delete a user',

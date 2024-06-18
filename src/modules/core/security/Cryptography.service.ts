@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import crypto from 'crypto';
 import { genSaltSync } from 'bcrypt';
-import { sign, decode, JwtPayload } from 'jsonwebtoken';
+import { sign, verify, JwtPayload, JsonWebTokenError } from 'jsonwebtoken';
 import { v4 as uuidV4 } from 'uuid';
 import { ConfigsInterface } from '@core/configs/configs.config';
 
@@ -37,8 +37,31 @@ export default class CryptographyService {
 		);
 	}
 
-	public decodeJwt(token: string): JwtPayload | string | null {
-		return decode(token);
+	public decodeJwt(token: string): {
+		content: JwtPayload | string | null,
+		invalidSignature: boolean, expired: boolean,
+	} {
+		try {
+			const decoded = verify(token,
+				this.secret,
+				{
+					algorithms: ['HS256'],
+					ignoreExpiration: false,
+				}
+			);
+			return {
+				content: decoded,
+				invalidSignature: false,
+				expired: false,
+			};
+		} catch (error) {
+			const jwtError = error as JsonWebTokenError;
+			return {
+				content: null,
+				invalidSignature: jwtError.message === 'invalid signature',
+				expired: jwtError.message === 'jwt expired',
+			};
+		}
 	}
 
 	public generateUuid(): string {

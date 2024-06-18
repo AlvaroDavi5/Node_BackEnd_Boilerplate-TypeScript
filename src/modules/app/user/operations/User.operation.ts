@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
-import UserEntity, { UserEntityList } from '@domain/entities/User.entity';
+import UserEntity from '@domain/entities/User.entity';
 import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
+import UserListEntity from '@domain/entities/generic/UserList.entity';
 import UserService from '@app/user/services/User.service';
 import UserPreferenceService from '@app/user/services/UserPreference.service';
 import UserStrategy from '@app/user/strategies/User.strategy';
-import { CreateUserInputDto, UpdateUserInputDto } from '@app/user/api/dto/UserInput.dto';
 import CryptographyService from '@core/security/Cryptography.service';
 import Exceptions from '@core/errors/Exceptions';
 import HttpConstants from '@common/constants/Http.constants';
+import CreateUserInputDto from '../api/dto/user/CreateUserInput.dto';
+import UpdateUserInputDto from '../api/dto/user/UpdateUserInput.dto';
 import { UserAuthInterface } from '@shared/interfaces/userAuthInterface';
 import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
 
@@ -25,29 +27,30 @@ export default class UserOperation {
 
 	public async loginUser(data: { email: string, password: string }): Promise<{ user: UserEntity, token: string }> {
 		const foundedUser = await this.userService.getByEmail(data.email);
+
 		if (!foundedUser)
 			throw this.exceptions.notFound({
-				message: 'User not found!'
+				message: 'User not founded by e-mail!',
 			});
 
-		this.userService.validatePassword(foundedUser, data.password);
+		const user = await this.userService.getById(foundedUser.getId(), false);
+		this.userService.validatePassword(user, data.password);
 
-		const foundedPreference = await this.userPreferenceService.getByUserId(foundedUser.getId());
+		const preference = await this.userPreferenceService.getByUserId(foundedUser.getId());
 
-		if (foundedPreference)
-			foundedUser.setPreference(foundedPreference);
-		foundedUser.setPassword('');
+		user.setPreference(preference);
+		user.setPassword('');
 
 		const userAuthToEncode: UserAuthInterface = {
-			username: foundedUser.getLogin().email,
-			clientId: foundedUser.getId().toString(),
+			username: user.getEmail(),
+			clientId: user.getId(),
 		};
 		const token = this.cryptographyService.encodeJwt(userAuthToEncode, 'utf8', '1d');
 
-		return { user: foundedUser, token };
+		return { user, token };
 	}
 
-	public async listUsers(query: ListQueryInterface): Promise<UserEntityList> {
+	public async listUsers(query: ListQueryInterface): Promise<UserListEntity> {
 		const usersList = await this.userService.list(query);
 		return usersList;
 	}
@@ -55,22 +58,17 @@ export default class UserOperation {
 	public async createUser(data: CreateUserInputDto, userAgent?: UserAuthInterface): Promise<UserEntity> {
 		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
-				message: 'Invalid userAgent'
+				message: 'Invalid userAgent',
 			});
 
 		const newUser = new UserEntity(data);
-		const existentUser = await this.userService.getByEmail(newUser.getLogin()?.email as string);
+		const existentUser = await this.userService.getByEmail(newUser.getEmail());
 		if (existentUser)
 			throw this.exceptions.conflict({
 				message: this.httpConstants.messages.conflict('User'),
 			});
 
 		const createdUser = await this.userService.create(newUser);
-
-		if (!createdUser)
-			throw this.exceptions.conflict({
-				message: 'User not created!'
-			});
 
 		const newPreference = new UserPreferenceEntity(data.preference);
 		newPreference.setUserId(createdUser.getId());
@@ -81,30 +79,21 @@ export default class UserOperation {
 		if (foundedPreference)
 			foundedUser?.setPreference(foundedPreference);
 
-		if (!foundedUser)
-			throw this.exceptions.notFound({
-				message: 'Created user not found!'
-			});
-
 		return foundedUser;
 	}
 
 	public async getUser(id: string, userAgent?: UserAuthInterface): Promise<UserEntity> {
 		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
-				message: 'Invalid userAgent'
+				message: 'Invalid userAgent',
 			});
 
 		const foundedUser = await this.userService.getById(id, true);
 		const foundedPreference = await this.userPreferenceService.getByUserId(id);
 
-		if (!foundedUser)
-			throw this.exceptions.notFound({
-				message: 'User not found!'
-			});
-
 		if (foundedPreference)
 			foundedUser.setPreference(foundedPreference);
+		foundedUser.setPassword('');
 
 		return foundedUser;
 	}
@@ -112,45 +101,27 @@ export default class UserOperation {
 	public async updateUser(id: string, data: UpdateUserInputDto, userAgent?: UserAuthInterface): Promise<UserEntity> {
 		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
-				message: 'Invalid userAgent'
+				message: 'Invalid userAgent',
 			});
 
 		const user = await this.userService.getById(id, true);
 		const preference = await this.userPreferenceService.getByUserId(id);
 
-		if (!user || !preference)
-			throw this.exceptions.notFound({
-				message: 'User or preference not found!'
-			});
-
 		const isAllowedToUpdateUser = this.userStrategy.isAllowedToManageUser(userAgent, user);
 		if (!isAllowedToUpdateUser)
 			throw this.exceptions.business({
-				message: 'userAgent not allowed to update this user!'
+				message: 'userAgent not allowed to update this user!',
 			});
 
 		const mustUpdateUser = this.mustUpdate(user.getAttributes(), data);
 		const mustUpdateUserPreference = this.mustUpdate(preference.getAttributes(), data.preference);
-
-		const updatedUser = mustUpdateUser
-			? await this.userService.update(user.getId(), data)
-			: null;
-		const updatedPreference = data.preference !== undefined && mustUpdateUserPreference
-			? await this.userPreferenceService.update(preference.getId(), data.preference)
-			: null;
-
-		if ((mustUpdateUser && !updatedUser) || (mustUpdateUserPreference && !updatedPreference))
-			throw this.exceptions.conflict({
-				message: 'User or preference not updated!'
-			});
+		if (mustUpdateUser)
+			await this.userService.update(user.getId(), data);
+		if (data.preference !== undefined && mustUpdateUserPreference)
+			await this.userPreferenceService.update(preference.getId(), data.preference);
 
 		const foundedUser = await this.userService.getById(user.getId(), true);
 		const foundedPreference = await this.userPreferenceService.getByUserId(user.getId());
-
-		if (!foundedUser)
-			throw this.exceptions.notFound({
-				message: 'User not found!'
-			});
 
 		if (foundedPreference)
 			foundedUser.setPreference(foundedPreference);
@@ -161,21 +132,16 @@ export default class UserOperation {
 	public async deleteUser(id: string, userAgent?: UserAuthInterface): Promise<boolean> {
 		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
-				message: 'Invalid userAgent'
+				message: 'Invalid userAgent',
 			});
 
 		const user = await this.userService.getById(id, true);
 		const preference = await this.userPreferenceService.getByUserId(id);
 
-		if (!user || !preference)
-			throw this.exceptions.notFound({
-				message: 'User or preference not found!'
-			});
-
 		const isAllowedToDeleteUser = this.userStrategy.isAllowedToManageUser(userAgent, user);
 		if (!isAllowedToDeleteUser)
 			throw this.exceptions.business({
-				message: 'userAgent not allowed to delete this user!'
+				message: 'userAgent not allowed to delete this user!',
 			});
 
 		await this.userPreferenceService.delete(preference.getId(), {
@@ -185,11 +151,6 @@ export default class UserOperation {
 			softDelete: true,
 			userAgentId: userAgent.clientId,
 		});
-
-		if (typeof softDeletedUser !== 'boolean')
-			throw this.exceptions.conflict({
-				message: 'User not deleted!'
-			});
 
 		return softDeletedUser;
 	}

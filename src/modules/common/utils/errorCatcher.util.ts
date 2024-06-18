@@ -13,7 +13,7 @@ import { ErrorInterface } from '@shared/interfaces/errorInterface';
 type generatedExceptionsType = BadRequestException | ForbiddenException | UnauthorizedException | ThrottlerException | ConflictException | NotFoundException | ServiceUnavailableException | InternalServerErrorException;
 type exceptionGeneratorType = (error: ErrorInterface) => generatedExceptionsType;
 
-export function catchError(err: any): generatedExceptionsType {
+export default function catchError(error: any): generatedExceptionsType {
 	const exceptions = new Exceptions();
 	const { status } = new HttpConstants();
 
@@ -50,22 +50,20 @@ export function catchError(err: any): generatedExceptionsType {
 		return exceptionGenerator;
 	};
 
-	if (err instanceof AxiosError) {
-		const exception = exceptionSelector(err.status ?? err.response?.status);
-		return exception(err);
-	}
-	else if (err instanceof HttpException) {
-		const exception = exceptionSelector(err.getStatus());
-		return exception(err);
-	}
-	else if (err instanceof Error) {
-		const exception = exceptionSelector(0);
-		return exception(err);
+	if (error instanceof AxiosError) {
+		const exception = exceptionSelector(error.status ?? error.response?.status);
+		return exception(error);
+	} else if (error instanceof HttpException) {
+		const exception = exceptionSelector(error.getStatus());
+		return exception(error);
+	} else if (error instanceof Error) {
+		const exception = exceptionSelector(500);
+		return exception(error);
 	}
 
 	return exceptions.internal({
-		message: err?.message,
-		details: err?.details,
-		cause: err?.cause,
+		message: error?.message,
+		details: error?.details,
+		cause: error?.cause,
 	});
 }

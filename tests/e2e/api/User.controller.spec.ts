@@ -2,7 +2,7 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { createNestApplicationOptions, startNestApplication } from '../support/mocks/setupUtils';
-import CoreModule from '../../../src/modules/core/core.module';
+import CoreModule from '@core/core.module';
 
 
 jest.setTimeout(1.2 * 5000);
@@ -25,7 +25,7 @@ describe('API :: UserController', () => {
 		test('Should get success', async () => {
 			const response = await request(await nestTestApp.getHttpServer())
 				.get('/api/users')
-				.set('Authorization', 'Bearer ' + process.env.MOCKED_SERVICE_TOKEN);
+				.set('Authorization', `Bearer ${process.env.MOCKED_SERVICE_TOKEN}`);
 
 			expect(response.statusCode).toBe(200);
 			expect(response.body).toMatchObject({

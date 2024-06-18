@@ -1,4 +1,4 @@
-import Exceptions from '../../../../../src/modules/core/errors/Exceptions';
+import Exceptions from '@core/errors/Exceptions';
 
 
 describe('Infra :: Errors :: Exceptions', () => {
@@ -19,7 +19,12 @@ describe('Infra :: Errors :: Exceptions', () => {
 			expect(exception.stack).not.toBeNull();
 			expect(exception.cause).toEqual({ info: 'A error occurred' });
 			expect(exception.getStatus()).toBe(400);
-			expect(exception.getResponse()).toMatchObject({ error: 'Bad Request', message: 'New Contract Exception', statusCode: 400, details: JSON.stringify({ info: 'A error occurred' }) });
+			expect(exception.getResponse()).toMatchObject({
+				error: 'Bad Request',
+				message: 'New Contract Exception',
+				statusCode: 400,
+				details: JSON.stringify({ info: 'A error occurred' }),
+			});
 		});
 
 		test('Should return a Business exception', () => {
@@ -36,7 +41,12 @@ describe('Infra :: Errors :: Exceptions', () => {
 			expect(exception.stack).not.toBeNull();
 			expect(exception.cause).toEqual({ info: 'A error occurred' });
 			expect(exception.getStatus()).toBe(403);
-			expect(exception.getResponse()).toMatchObject({ error: 'Forbidden', message: 'New Business Exception', statusCode: 403, details: JSON.stringify({ info: 'A error occurred' }) });
+			expect(exception.getResponse()).toMatchObject({
+				error: 'Forbidden',
+				message: 'New Business Exception',
+				statusCode: 403,
+				details: JSON.stringify({ info: 'A error occurred' }),
+			});
 		});
 
 		test('Should return a Unauthorized exception', () => {
@@ -53,7 +63,12 @@ describe('Infra :: Errors :: Exceptions', () => {
 			expect(exception.stack).not.toBeNull();
 			expect(exception.cause).toEqual({ info: 'A error occurred' });
 			expect(exception.getStatus()).toBe(401);
-			expect(exception.getResponse()).toMatchObject({ error: 'Unauthorized', message: 'New Unauthorized Exception', statusCode: 401, details: JSON.stringify({ info: 'A error occurred' }) });
+			expect(exception.getResponse()).toMatchObject({
+				error: 'Unauthorized',
+				message: 'New Unauthorized Exception',
+				statusCode: 401,
+				details: JSON.stringify({ info: 'A error occurred' }),
+			});
 		});
 
 		test('Should return a TooManyRequests exception', () => {
@@ -70,7 +85,12 @@ describe('Infra :: Errors :: Exceptions', () => {
 			expect(exception.stack).not.toBeNull();
 			expect(exception.cause).toEqual({ info: 'A error occurred' });
 			expect(exception.getStatus()).toBe(429);
-			expect(exception.getResponse()).toMatchObject({ error: 'Too Many Requests', message: 'New TooManyRequests Exception', statusCode: 429, details: JSON.stringify({ info: 'A error occurred' }) });
+			expect(exception.getResponse()).toMatchObject({
+				error: 'Too Many Requests',
+				message: 'New TooManyRequests Exception',
+				statusCode: 429,
+				details: JSON.stringify({ info: 'A error occurred' }),
+			});
 		});
 
 		test('Should return a Conflict exception', () => {
@@ -87,7 +107,12 @@ describe('Infra :: Errors :: Exceptions', () => {
 			expect(exception.stack).not.toBeNull();
 			expect(exception.cause).toEqual({ info: 'A error occurred' });
 			expect(exception.getStatus()).toBe(409);
-			expect(exception.getResponse()).toMatchObject({ error: 'Conflict', message: 'New Conflict Exception', statusCode: 409, details: JSON.stringify({ info: 'A error occurred' }) });
+			expect(exception.getResponse()).toMatchObject({
+				error: 'Conflict',
+				message: 'New Conflict Exception',
+				statusCode: 409,
+				details: JSON.stringify({ info: 'A error occurred' }),
+			});
 		});
 
 		test('Should return a NotFound exception', () => {
@@ -104,7 +129,12 @@ describe('Infra :: Errors :: Exceptions', () => {
 			expect(exception.stack).not.toBeNull();
 			expect(exception.cause).toEqual({ info: 'A error occurred' });
 			expect(exception.getStatus()).toBe(404);
-			expect(exception.getResponse()).toMatchObject({ error: 'Not Found', message: 'New NotFound Exception', statusCode: 404, details: JSON.stringify({ info: 'A error occurred' }) });
+			expect(exception.getResponse()).toMatchObject({
+				error: 'Not Found',
+				message: 'New NotFound Exception',
+				statusCode: 404,
+				details: JSON.stringify({ info: 'A error occurred' }),
+			});
 		});
 
 		test('Should return a Integration exception', () => {
@@ -121,7 +151,12 @@ describe('Infra :: Errors :: Exceptions', () => {
 			expect(exception.stack).not.toBeNull();
 			expect(exception.cause).toEqual({ info: 'A error occurred' });
 			expect(exception.getStatus()).toBe(503);
-			expect(exception.getResponse()).toMatchObject({ error: 'Service Unavailable', message: 'New Integration Exception', statusCode: 503, details: JSON.stringify({ info: 'A error occurred' }) });
+			expect(exception.getResponse()).toMatchObject({
+				error: 'Service Unavailable',
+				message: 'New Integration Exception',
+				statusCode: 503,
+				details: JSON.stringify({ info: 'A error occurred' }),
+			});
 		});
 
 		test('Should return a Internal exception', () => {
@@ -138,7 +173,12 @@ describe('Infra :: Errors :: Exceptions', () => {
 			expect(exception.stack).not.toBeNull();
 			expect(exception.cause).toEqual({ info: 'A error occurred' });
 			expect(exception.getStatus()).toBe(500);
-			expect(exception.getResponse()).toMatchObject({ error: 'Internal Server Error', message: 'New Internal Exception', statusCode: 500, details: JSON.stringify({ info: 'A error occurred' }) });
+			expect(exception.getResponse()).toMatchObject({
+				error: 'Internal Server Error',
+				message: 'New Internal Exception',
+				statusCode: 500,
+				details: JSON.stringify({ info: 'A error occurred' }),
+			});
 		});
 	});
 });

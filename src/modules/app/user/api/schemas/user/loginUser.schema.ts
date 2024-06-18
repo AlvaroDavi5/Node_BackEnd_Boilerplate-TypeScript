@@ -10,7 +10,9 @@ export interface LoginUserSchemaInterface {
 const regExConstants = new RegExConstants();
 const passwordPattern = regExConstants.passwordPattern;
 
-export default Joi.object().keys({
+const loginUserSchema: Joi.Schema<LoginUserSchemaInterface> = Joi.object({
 	email: Joi.string().email().max(70).required(),
 	password: Joi.string().regex(passwordPattern.regex, { name: passwordPattern.name }).message(passwordPattern.message('password')).required(),
-}).unknown(false).required() as Joi.Schema<LoginUserSchemaInterface>;
+}).strict(true).required();
+
+export default loginUserSchema;

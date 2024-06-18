@@ -21,7 +21,7 @@ services:
     volumes:
       - ./package.json:/app/package.json
       - ./yarn.lock:/app/yarn.lock
-      - ./tsconfig.json:/app/tsconfig.json
+      - ./tsconfig.build.json:/app/tsconfig.build.json
       - ./src:/app/src
       - ./init.sh:/app/init.sh
       - /node_modules
@@ -147,5 +147,4 @@ networks:
 volumes:
   db_volume:
     name: db_volume
-  ci_volume:
-    name: ci_volume
+    driver: local

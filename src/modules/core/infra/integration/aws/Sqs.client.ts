@@ -4,7 +4,7 @@ import {
 	SQSClient, SQSClientConfig, Message,
 	ListQueuesCommand, CreateQueueCommand, DeleteQueueCommand,
 	SendMessageCommand, ReceiveMessageCommand, DeleteMessageCommand,
-	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput, DeleteMessageCommandInput,
+	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput,
 } from '@aws-sdk/client-sqs';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import CryptographyService from '@core/security/Cryptography.service';

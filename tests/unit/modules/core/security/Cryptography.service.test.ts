@@ -1,8 +1,8 @@
-import CryptographyService from '../../../../../src/modules/core/security/Cryptography.service';
-import configs from '../../../../../src/modules/core/configs/configs.config';
+import CryptographyService from '@core/security/Cryptography.service';
+import configs from '@core/configs/configs.config';
 
 
-describe('Modules :: Core :: Infra :: Security :: CryptographyService', () => {
+describe('Modules :: Core :: Security :: CryptographyService', () => {
 	// // mocks
 	const configServiceMock = {
 		get: (propertyPath?: string): any => {
@@ -10,16 +10,13 @@ describe('Modules :: Core :: Infra :: Security :: CryptographyService', () => {
 				const splitedPaths = propertyPath.split('.');
 				let scopedProperty: any = configs();
 
-				for (let i = 0; i < splitedPaths.length; i++) {
-					const scopedPath = splitedPaths[i];
-
-					if (scopedPath.length)
+				for (const scopedPath of splitedPaths) {
+					if (scopedPath.length > 0)
 						scopedProperty = scopedProperty[scopedPath];
 				}
 
 				return scopedProperty;
-			}
-			else
+			} else
 				return configs();
 		},
 	};
@@ -35,11 +32,18 @@ describe('Modules :: Core :: Infra :: Security :: CryptographyService', () => {
 		});
 
 		test('Should generate JWT', () => {
-			const data = { name: 'Alvaro' };
+			const data = { name: 'Tester' };
 			const token = cryptographyService.encodeJwt(data, 'utf8');
+			const decoded = {
+				content: {
+					name: 'Tester',
+				},
+				expired: false,
+				invalidSignature: false,
+			};
 
 			expect(token.length).toBe(149);
-			expect(cryptographyService.decodeJwt(token)).toMatchObject(data);
+			expect(cryptographyService.decodeJwt(token)).toMatchObject(decoded);
 		});
 
 		test('Should generate UUID', () => {
@@ -96,8 +100,8 @@ describe('Modules :: Core :: Infra :: Security :: CryptographyService', () => {
 		const iv = '2a19dd220ef09ff472b59447';
 		let encrypted = '';
 		let decrypted = '';
-		let enc: { encrypted: string | null, iv: string } | undefined = undefined;
-		let dec: { decrypted: string | null, iv: string } | undefined = undefined;
+		let enc: { encrypted: string | null, iv: string } | undefined;
+		let dec: { decrypted: string | null, iv: string } | undefined;
 
 		test('Should encrypt', () => {
 			enc = cryptographyService.symmetricAESEncrypt(plainText, 'utf8', key1, 'base64', iv);
@@ -169,5 +173,9 @@ describe('Modules :: Core :: Infra :: Security :: CryptographyService', () => {
 			expect(encrypted).toBeNull();
 			expect(decrypted).toBeNull();
 		});
+	});
+
+	afterEach(() => {
+		jest.clearAllMocks();
 	});
 });

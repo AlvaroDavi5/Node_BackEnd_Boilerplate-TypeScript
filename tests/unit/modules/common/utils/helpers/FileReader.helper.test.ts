@@ -1,7 +1,7 @@
 import { ReadStream } from 'fs';
-import FileReaderHelper from '../../../../../../src/modules/common/utils/helpers/FileReader.helper';
-import DataParserHelper from '../../../../../../src/modules/common/utils/helpers/DataParser.helper';
-import { configServiceMock } from '../../../../../../src/dev/mocks/mockedModules';
+import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
+import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import { configServiceMock } from '@dev/mocks/mockedModules';
 
 
 describe('Modules :: Common :: Utils :: Helpers :: FileReaderHelper', () => {
@@ -17,7 +17,7 @@ describe('Modules :: Common :: Utils :: Helpers :: FileReaderHelper', () => {
 		});
 
 		test('Should return undefined stream', () => {
-			let stream: ReadStream | undefined = undefined;
+			let stream: ReadStream | undefined;
 
 			try {
 				stream = fileReaderHelper.readStream(filePath, 'utf8');

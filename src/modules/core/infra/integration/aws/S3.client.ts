@@ -161,13 +161,15 @@ export default class S3Client {
 	}
 
 	public async downloadFile(bucketName: string, objectKey: string): Promise<{ content: s3FileContentType | undefined, contentLength: number; }> {
-		let content: s3FileContentType | undefined = undefined;
+		let content: s3FileContentType | undefined;
 		let contentLength = 0;
 
 		try {
 			const result = await this.s3Client.send(new GetObjectCommand(this.getObjectParams(bucketName, objectKey)));
 			if (!result.Body || !result.ContentLength) {
-				throw this.exceptions.internal({ message: 'Empty body' });
+				throw this.exceptions.internal({
+					message: 'Empty body',
+				});
 			}
 
 			content = result.Body;

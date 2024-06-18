@@ -2,8 +2,6 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDate } from 'class-validator';
 import { Type } from 'class-transformer';
-import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
-import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import AbstractEntity from '@shared/classes/AbstractEntity.entity';
 import { returingString, returingDate } from '@shared/types/returnTypeFunc';
 import UserPreferenceEntity, { CreateUserPreferenceInterface, UserPreferenceInterface, returingUserPreferenceEntity } from './UserPreference.entity';
@@ -30,9 +28,6 @@ export type UpdateUserInterface = Partial<CreateUserInterface>;
 export type ViewUserInterface = UserInterface;
 export type ViewUserWithoutPasswordInterface = Omit<UserInterface, 'password'>;
 export type ViewUserWithoutSensitiveDataInterface = Omit<UserInterface, 'password' | 'phone' | 'document'>;
-
-const dateGeneratorHelper = new DateGeneratorHelper();
-const dateExample = dateGeneratorHelper.getDate('2024-06-10T03:52:50.885Z', 'iso-8601', true, TimeZonesEnum.SaoPaulo);
 
 @ObjectType({
 	description: 'user entity',
@@ -74,7 +69,10 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	public fu: string | null = null;
 
 	@ApiProperty({
-		type: UserPreferenceEntity, example: (new UserPreferenceEntity({ imagePath: './image.png', defaultTheme: 'DEFAULT' })), default: null, nullable: true, required: true, description: 'User preference'
+		type: UserPreferenceEntity,
+		example: (new UserPreferenceEntity({ imagePath: './image.png', defaultTheme: 'DEFAULT' })),
+		default: null, nullable: true, required: true,
+		description: 'User preference',
 	})
 	@Type(returingUserPreferenceEntity)
 	@Field(returingUserPreferenceEntity, { defaultValue: null, nullable: true, description: 'User preference' })

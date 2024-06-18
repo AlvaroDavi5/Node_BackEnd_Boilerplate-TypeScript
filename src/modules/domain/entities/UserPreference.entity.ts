@@ -2,14 +2,9 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDate, IsEnum } from 'class-validator';
 import { ThemesEnum } from '@domain/enums/themes.enum';
-import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
-import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import AbstractEntity from '@shared/classes/AbstractEntity.entity';
 import { returingString, returingDate } from '@shared/types/returnTypeFunc';
 
-
-const dateGeneratorHelper = new DateGeneratorHelper();
-const dateExample = dateGeneratorHelper.getDate('2024-06-10T03:52:50.885Z', 'iso-8601', true, TimeZonesEnum.SaoPaulo);
 
 export interface UserPreferenceInterface {
 	id?: string,
@@ -39,7 +34,12 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 	@IsString()
 	private imagePath: string | null = null;
 
-	@ApiProperty({ type: String, enum: Object.values(ThemesEnum), example: ThemesEnum.DEFAULT, default: null, nullable: true, required: true, description: 'User default theme' })
+	@ApiProperty({
+		type: String, enum: Object.values(ThemesEnum),
+		example: ThemesEnum.DEFAULT,
+		default: null, nullable: true, required: true,
+		description: 'User default theme',
+	})
 	@Field(returingString, { defaultValue: null, nullable: true, description: 'User default theme' })
 	@IsEnum(ThemesEnum)
 	public defaultTheme: ThemesEnum | null = null;

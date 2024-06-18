@@ -1,10 +1,11 @@
-import UserOperation from '../../../../../src/modules/app/user/operations/User.operation';
-import UserEntity, { UpdateUserInterface } from '../../../../../src/modules/domain/entities/User.entity';
-import UserPreferenceEntity, { UpdateUserPreferenceInterface } from '../../../../../src/modules/domain/entities/UserPreference.entity';
-import UserStrategy from '../../../../../src/modules/app/user/strategies/User.strategy';
-import HttpConstants from '../../../../../src/modules/common/constants/Http.constants';
-import { ListQueryInterface, PaginationInterface } from '../../../../../src/shared/interfaces/listPaginationInterface';
-import { ErrorInterface } from '../../../../../src/shared/interfaces/errorInterface';
+import UserOperation from '@app/user/operations/User.operation';
+import UserEntity, { UpdateUserInterface } from '@domain/entities/User.entity';
+import UserPreferenceEntity, { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.entity';
+import UserStrategy from '@app/user/strategies/User.strategy';
+import HttpConstants from '@common/constants/Http.constants';
+import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
+import { ErrorInterface } from '@shared/interfaces/errorInterface';
+import { ThemesEnum } from '@domain/enums/themes.enum';
 
 
 describe('Modules :: App :: User :: Operations :: UserOperation', () => {
@@ -23,7 +24,9 @@ describe('Modules :: App :: User :: Operations :: UserOperation', () => {
 		create: jest.fn(async (entity: UserEntity): Promise<UserEntity> => { throw new Error('GenericError'); }),
 		update: jest.fn(async (id: string, data: UpdateUserInterface): Promise<UserEntity> => { throw new Error('GenericError'); }),
 		delete: jest.fn(async (id: string, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean> => (false)),
-		list: jest.fn(async (query: ListQueryInterface, withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => ({ content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 })),
+		list: jest.fn(async (query: ListQueryInterface, withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => {
+			return { content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 };
+		}),
 		protectPassword: jest.fn((password: string): string => (password)),
 		validatePassword: jest.fn((entity: UserEntity, passwordToValidate: string): void => { throw new Error('GenericError'); }),
 	};
@@ -38,7 +41,14 @@ describe('Modules :: App :: User :: Operations :: UserOperation', () => {
 	};
 
 	const userAgent = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' };
-	const userOperation = new UserOperation(userServiceMock, userPreferenceServiceMock, cryptographyServiceMock, new UserStrategy(), new HttpConstants(), exceptionsMock);
+	const userOperation = new UserOperation(
+		userServiceMock as any,
+		userPreferenceServiceMock as any,
+		cryptographyServiceMock as any,
+		new UserStrategy(),
+		new HttpConstants(),
+		exceptionsMock as any,
+	);
 
 	describe('# User Login', () => {
 		test('Should validate password', async () => {
@@ -59,9 +69,9 @@ describe('Modules :: App :: User :: Operations :: UserOperation', () => {
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(cryptographyServiceMock.encodeJwt).toHaveBeenCalledTimes(1);
-			expect(cryptographyServiceMock.encodeJwt).toHaveBeenCalledWith({ clientId: userEntity.getId(), username: userEntity.getLogin().email }, 'utf8', '1d');
+			expect(cryptographyServiceMock.encodeJwt).toHaveBeenCalledWith({ clientId: userEntity.getId(), username: userEntity.getEmail() }, 'utf8', '1d');
 			expect(result.token).toBe('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIuZGVmYXVsdEBub21haWwuZGV2IiwiY2xpZW50SWQiOiIxODZlN2RhYS1kMmRmLTQ0YWYtYmE4Yy00ZjIwNDM1NmQwZjkiLCJpYXQiOjE3MTgxNTY2MjQsImV4cCI6MTcxODI0MzAyNH0.4gmn_kp7YaZq4XGvKxe2i6QgWZh-f2iNaJg40md6agQ');
-			expect(result.user.getLogin().email).toBe('user.test@nomail.test');
+			expect(result.user.getEmail()).toBe('user.test@nomail.test');
 			expect(result.user.getPassword()).toBe('');
 		});
 
@@ -148,7 +158,7 @@ describe('Modules :: App :: User :: Operations :: UserOperation', () => {
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(result?.getId()).toBe(userEntity.getId());
-			expect(result?.getLogin()?.email).toBe(userEntity.getLogin().email);
+			expect(result?.getEmail()).toBe(userEntity.getEmail());
 			expect(result?.getPassword()).toBeUndefined();
 		});
 
@@ -191,7 +201,7 @@ describe('Modules :: App :: User :: Operations :: UserOperation', () => {
 		});
 
 		test('Should throw a unauthorized error', async () => {
-			await expect(userOperation.createUser({} as any, null))
+			await expect(userOperation.createUser({} as any))
 				.rejects.toMatchObject(new Error('Invalid userAgent'));
 			expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
 				message: 'Invalid userAgent'
@@ -212,7 +222,7 @@ describe('Modules :: App :: User :: Operations :: UserOperation', () => {
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(result?.getId()).toBe(userEntity.getId());
-			expect(result?.getLogin()?.email).toBe(userEntity.getLogin().email);
+			expect(result?.getEmail()).toBe(userEntity.getEmail());
 		});
 
 		test('Should throw a not found error', async () => {
@@ -230,7 +240,7 @@ describe('Modules :: App :: User :: Operations :: UserOperation', () => {
 		});
 
 		test('Should throw a unauthorized error', async () => {
-			await expect(userOperation.getUser('', null))
+			await expect(userOperation.getUser(''))
 				.rejects.toMatchObject(new Error('Invalid userAgent'));
 			expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
 				message: 'Invalid userAgent'
@@ -249,9 +259,9 @@ describe('Modules :: App :: User :: Operations :: UserOperation', () => {
 				.mockResolvedValueOnce(userPreferenceEntity)
 				.mockResolvedValueOnce(userPreferenceEntity);
 			userServiceMock.update.mockImplementationOnce(async (id: string, data: UpdateUserInterface): Promise<UserEntity> => {
-				if (data.email) userEntity.setLogin(data.email, userEntity.getLogin().fullName as string);
+				if (data.email) userEntity.setEmail(data.email);
 				if (data.password) userEntity.setPhone(data.password);
-				if (data.fullName) userEntity.setLogin(userEntity.getLogin().email as string, data.fullName);
+				if (data.fullName) userEntity.setFullName(data.fullName);
 				if (data.phone) userEntity.setPhone(data.phone);
 				if (data.document) userEntity.setDocInfos(data.document, userEntity.getDocInfos().docType as string, userEntity.getDocInfos().fu as string);
 				if (data.docType) userEntity.setDocInfos(userEntity.getDocInfos().document as string, data.docType, userEntity.getDocInfos().fu as string);
@@ -266,11 +276,19 @@ describe('Modules :: App :: User :: Operations :: UserOperation', () => {
 				return userPreferenceEntity;
 			});
 
-			const result = await userOperation.updateUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { phone: '+55999999999', preference: { defaultTheme: 'DEFAULT' } }, userAgent);
+			const result = await userOperation.updateUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
+				phone: '+55999999999',
+				preference: { defaultTheme: ThemesEnum.DEFAULT }
+			}, userAgent);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(2);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(2);
-			expect(userServiceMock.update).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { phone: '+55999999999', preference: { defaultTheme: 'DEFAULT' } });
-			expect(userPreferenceServiceMock.update).toHaveBeenCalledWith('b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { defaultTheme: 'DEFAULT' });
+			expect(userServiceMock.update).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
+				phone: '+55999999999',
+				preference: { defaultTheme: 'DEFAULT' },
+			});
+			expect(userPreferenceServiceMock.update).toHaveBeenCalledWith('b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
+				defaultTheme: 'DEFAULT',
+			});
 			expect(result?.getPhone()).toEqual('+55999999999');
 			expect(result?.getPreference()?.getDefaultTheme()).toEqual('DEFAULT');
 		});
@@ -284,11 +302,17 @@ describe('Modules :: App :: User :: Operations :: UserOperation', () => {
 				message: 'User not updated!',
 			}));
 
-			await expect(userOperation.updateUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { phone: '+55999999999', preference: { defaultTheme: 'DEFAULT' } }, userAgent))
+			await expect(userOperation.updateUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
+				phone: '+55999999999',
+				preference: { defaultTheme: ThemesEnum.DEFAULT }
+			}, userAgent))
 				.rejects.toMatchObject(new Error('User not updated!'));
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
-			expect(userServiceMock.update).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { phone: '+55999999999', preference: { defaultTheme: 'DEFAULT' } });
+			expect(userServiceMock.update).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
+				phone: '+55999999999',
+				preference: { defaultTheme: 'DEFAULT' }
+			});
 			expect(userPreferenceServiceMock.update).not.toHaveBeenCalled();
 			expect(exceptionsMock.conflict).toHaveBeenCalledWith({
 				message: 'User not updated!'
@@ -302,7 +326,10 @@ describe('Modules :: App :: User :: Operations :: UserOperation', () => {
 			userServiceMock.getById.mockResolvedValueOnce(userEntity);
 			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
 
-			await expect(userOperation.updateUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { phone: '+55999999999', preference: { defaultTheme: 'DEFAULT' } }, otherUserAgent))
+			await expect(userOperation.updateUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
+				phone: '+55999999999',
+				preference: { defaultTheme: ThemesEnum.DEFAULT }
+			}, otherUserAgent))
 				.rejects.toMatchObject(new Error('userAgent not allowed to update this user!'));
 			expect(exceptionsMock.business).toHaveBeenCalledWith({
 				message: 'userAgent not allowed to update this user!'
@@ -314,7 +341,10 @@ describe('Modules :: App :: User :: Operations :: UserOperation', () => {
 				message: 'User not founded by ID!',
 			}));
 
-			await expect(userOperation.updateUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { phone: '+55999999999', preference: { defaultTheme: 'DEFAULT' } }, userAgent))
+			await expect(userOperation.updateUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
+				phone: '+55999999999',
+				preference: { defaultTheme: ThemesEnum.DEFAULT }
+			}, userAgent))
 				.rejects.toMatchObject(new Error('User not founded by ID!'));
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
@@ -325,7 +355,7 @@ describe('Modules :: App :: User :: Operations :: UserOperation', () => {
 		});
 
 		test('Should throw a unauthorized error', async () => {
-			await expect(userOperation.updateUser('', {}, null))
+			await expect(userOperation.updateUser('', {}))
 				.rejects.toMatchObject(new Error('Invalid userAgent'));
 			expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
 				message: 'Invalid userAgent'
@@ -404,7 +434,7 @@ describe('Modules :: App :: User :: Operations :: UserOperation', () => {
 		});
 
 		test('Should throw a unauthorized error', async () => {
-			await expect(userOperation.deleteUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', null))
+			await expect(userOperation.deleteUser('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d'))
 				.rejects.toMatchObject(new Error('Invalid userAgent'));
 			expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
 				message: 'Invalid userAgent'

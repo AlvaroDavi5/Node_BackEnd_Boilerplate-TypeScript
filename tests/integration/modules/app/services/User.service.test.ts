@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
-import UsersModel from '../../../../../src/modules/core/infra/database/models/Users.model';
-import { configServiceMock } from '../../../../../src/dev/mocks/mockedModules';
-import UserService from '../../../../../src/modules/app/user/services/User.service';
-import UserRepository from '../../../../../src/modules/app/user/repositories/user/User.repository';
-import Exceptions from '../../../../../src/modules/core/errors/Exceptions';
-import CryptographyService from '../../../../../src/modules/core/security/Cryptography.service';
-import UserEntity from '../../../../../src/modules/domain/entities/User.entity';
+import UsersModel from '@core/infra/database/models/Users.model';
+import { configServiceMock } from '@dev/mocks/mockedModules';
+import UserService from '@app/user/services/User.service';
+import UserRepository from '@app/user/repositories/user/User.repository';
+import Exceptions from '@core/errors/Exceptions';
+import CryptographyService from '@core/security/Cryptography.service';
+import UserEntity from '@domain/entities/User.entity';
 
 describe('Modules :: App :: User :: Services :: UserService', () => {
 	let nestTestingModule: TestingModule;
@@ -50,7 +50,7 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 			}));
 			expect(userRepositoryMock.create).toHaveBeenCalledTimes(1);
 			expect(createdUser?.getId()).toBe('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
-			expect(createdUser?.getLogin()?.email).toBe('user.test@nomail.dev');
+			expect(createdUser?.getEmail()).toBe('user.test@nomail.dev');
 		});
 
 		test('Should not create a user', async () => {
@@ -90,7 +90,7 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 		test('Should update a user successfully', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
 			userRepositoryMock.update.mockImplementationOnce(async (id: string, dataValues: Partial<UsersModel>) => {
-				if (dataValues.email) userEntity.setLogin(dataValues.email, userEntity.getLogin().fullName ?? '');
+				if (dataValues.email) userEntity.setEmail(dataValues.email);
 				return userEntity;
 			});
 
@@ -98,7 +98,7 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 				email: 'user.test@nomail.dev',
 			}).getAttributes());
 			expect(userRepositoryMock.update).toHaveBeenCalledTimes(1);
-			expect(updatedUser?.getLogin()?.email).toBe('user.test@nomail.dev');
+			expect(updatedUser?.getEmail()).toBe('user.test@nomail.dev');
 		});
 
 		test('Should not update a user', async () => {

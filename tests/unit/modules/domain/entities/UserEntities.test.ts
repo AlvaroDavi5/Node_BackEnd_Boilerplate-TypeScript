@@ -1,5 +1,5 @@
-import UserEntity from '../../../../../src/modules/domain/entities/User.entity';
-import UserPreferenceEntity from '../../../../../src/modules/domain/entities/UserPreference.entity';
+import UserEntity from '@domain/entities/User.entity';
+import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
 
 
 describe('Modules :: Domain :: Entities :: UserEntities', () => {
@@ -42,8 +42,8 @@ describe('Modules :: Domain :: Entities :: UserEntities', () => {
 			expect(userEntity.getId()).toBe('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			userEntity.setDocInfos('12312312312', 'CPF', 'ES');
 			expect(userEntity.getPhone()).toBe('+5527999999999');
-			userEntity.setLogin('user.test@nomail.test', 'Test User');
-			expect(userEntity.getLogin().email).toBe('user.test@nomail.test');
+			userEntity.setEmail('user.test@nomail.test');
+			expect(userEntity.getEmail()).toBe('user.test@nomail.test');
 			expect(userEntity.updatedAt).not.toBeNull();
 			userEntity.setPassword('admin');
 			expect(userEntity.getPassword()).toBe('admin');

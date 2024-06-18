@@ -1,5 +1,5 @@
-import CryptographyService from '../../../../../src/modules/core/security/Cryptography.service';
-import configs from '../../../../../src/modules/core/configs/configs.config';
+import CryptographyService from '@core/security/Cryptography.service';
+import configs from '@core/configs/configs.config';
 
 
 describe('Modules :: Core :: Security :: CryptographyService', () => {

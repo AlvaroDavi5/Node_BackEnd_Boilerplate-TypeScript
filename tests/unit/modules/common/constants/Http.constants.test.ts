@@ -1,4 +1,4 @@
-import HttpConstants from '../../../../../src/modules/common/constants/Http.constants';
+import HttpConstants from '@common/constants/Http.constants';
 
 
 describe('Modules :: Common :: Constants :: HttpConstants', () => {

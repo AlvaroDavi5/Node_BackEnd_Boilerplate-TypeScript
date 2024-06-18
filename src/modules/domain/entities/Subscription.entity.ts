@@ -1,6 +1,6 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsBoolean, IsDate } from 'class-validator';
+import { IsString, IsBoolean, IsDate, IsUUID } from 'class-validator';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import AbstractEntity from '@shared/classes/AbstractEntity.entity';
@@ -30,6 +30,17 @@ export type ViewSubscriptionInterface = SubscriptionInterface;
 
 @ObjectType()
 export default class SubscriptionEntity extends AbstractEntity<SubscriptionInterface> {
+	@ApiProperty({
+		type: String,
+		example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+		default: '', nullable: false, required: false,
+		description: 'Database register ID',
+	})
+	@Field(returingString, { defaultValue: '', nullable: false, description: 'Database register ID' })
+	@IsString()
+	@IsUUID()
+	private databaseId!: string;
+
 	@ApiProperty({ type: String, example: 'WKt2b2RWrMXogTfKAAAD', default: '', nullable: false, required: true, description: 'WebSocket ID' })
 	@Field(returingString, { defaultValue: '', nullable: false, description: 'WebSocket ID' })
 	@IsString()
@@ -56,15 +67,15 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 	public newConnectionsListen = false;
 
 	constructor(dataValues: any) {
-		super({});
+		super();
 		const newDataValues = { ...dataValues, ...dataValues?.value };
 		const values: any = {
 			...newDataValues,
 			...newDataValues?.listen,
 			...newDataValues.dataValues,
 		};
-		if (this.exists(values?._id)) this.setId(values._id);
-		if (this.exists(values?.id)) this.setId(values.id);
+		if (this.exists(values?._id)) this.databaseId = values._id;
+		if (this.exists(values?.id)) this.databaseId = values.id;
 		if (this.exists(values?.subscriptionId)) this.subscriptionId = values.subscriptionId;
 		if (this.exists(values?.clientId)) this.clientId = values.clientId;
 		if (this.exists(values?.newConnections)) this.newConnectionsListen = values.newConnections;
@@ -75,7 +86,7 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 
 	public getAttributes(): SubscriptionInterface {
 		return {
-			id: this.getId(),
+			id: this.databaseId,
 			subscriptionId: this.subscriptionId,
 			dataValues: {
 				clientId: this.clientId ?? undefined,
@@ -86,6 +97,12 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 				newConnections: this.newConnectionsListen,
 			} ?? undefined,
 		};
+	}
+
+	public getDatabaseId(): string { return this.databaseId; }
+	public setDatabaseId(id: string): void {
+		if (id.length > 0)
+			this.databaseId = id;
 	}
 
 	public getSubscriptionId(): string { return this.subscriptionId; }

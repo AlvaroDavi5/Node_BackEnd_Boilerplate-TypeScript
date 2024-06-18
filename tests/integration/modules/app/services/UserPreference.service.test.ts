@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { FindOneOptions } from 'typeorm';
-import configs from '../../../../../src/modules/core/configs/configs.config';
-import UserPreferencesModel from '../../../../../src/modules/core/infra/database/models/UserPreferences.model';
-import UserPreferenceService from '../../../../../src/modules/app/user/services/UserPreference.service';
-import UserPreferenceRepository from '../../../../../src/modules/app/user/repositories/userPreference/UserPreference.repository';
-import Exceptions from '../../../../../src/modules/core/errors/Exceptions';
-import UserPreferenceEntity from '../../../../../src/modules/domain/entities/UserPreference.entity';
+import configs from '@core/configs/configs.config';
+import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
+import UserPreferenceService from '@app/user/services/UserPreference.service';
+import UserPreferenceRepository from '@app/user/repositories/userPreference/UserPreference.repository';
+import Exceptions from '@core/errors/Exceptions';
+import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
 
 
 describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {

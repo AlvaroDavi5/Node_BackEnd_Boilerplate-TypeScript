@@ -2,7 +2,7 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import { createNestApplicationOptions, startNestApplication } from '../support/mocks/setupUtils';
-import CoreModule from '../../../src/modules/core/core.module';
+import CoreModule from '@core/core.module';
 
 
 jest.setTimeout(5000);

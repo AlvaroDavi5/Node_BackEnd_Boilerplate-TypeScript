@@ -141,8 +141,8 @@ export default (): ConfigsInterface => ({
 	application: {
 		name: process.env.APP_NAME ?? 'Node Boilerplate',
 		environment: process.env.NODE_ENV ?? 'dev',
-		appPort: parseInt(process.env.APP_PORT ?? '3000'),
-		nestDevToolsPort: parseInt(process.env.NESTDEV_PORT ?? '8000'),
+		appPort: parseInt(process.env.APP_PORT ?? '3000', 10),
+		nestDevToolsPort: parseInt(process.env.NESTDEV_PORT ?? '8000', 10),
 		url: process.env.APP_URL ?? 'http://localhost:3000/',
 		socketEnv: process.env.SOCKET_ENV ?? 'enabled',
 		stackErrorVisible: process.env.SHOW_ERROR_STACK ?? 'true',

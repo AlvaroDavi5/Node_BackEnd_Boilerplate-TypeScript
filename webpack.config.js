@@ -1,6 +1,8 @@
+/* eslint-disable import/no-extraneous-dependencies, @typescript-eslint/no-var-requires */
 const webpack = require('webpack');
 const { join } = require('path');
 const nodeExternals = require('webpack-node-externals');
+/* eslint-enable import/no-extraneous-dependencies, @typescript-eslint/no-var-requires */
 
 
 module.exports = {

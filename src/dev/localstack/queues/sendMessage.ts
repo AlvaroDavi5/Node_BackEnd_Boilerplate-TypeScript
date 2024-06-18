@@ -9,7 +9,7 @@ export default (queueName: string, queueUrl: string, payload: any, title: string
 		id: cryptographyServiceMock.generateUuid(),
 		schema: 'INVALID',
 		schemaVersion: 1,
-		payload: payload,
+		payload,
 		source: 'SCRIPT',
 		timestamp: new Date('2024-06-10T03:52:50.885Z'),
 	};

@@ -27,7 +27,7 @@ export const dbConfig: DataSourceOptions = {
 	username: db.username,
 	password: db.password,
 	host: db.host,
-	port: parseInt(db.port),
+	port: parseInt(db.port, 10),
 	type: getDialect(db.dialect),
 	charset: db.charset,
 	timezone: db.timezone,

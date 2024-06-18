@@ -22,7 +22,7 @@ export default class RestMockedServiceClient {
 		this.serviceName = serviceName;
 		this.client = axios.create({
 			baseURL: baseUrl,
-			timeout: timeout,
+			timeout,
 		});
 
 		axiosRetry(this.client, {

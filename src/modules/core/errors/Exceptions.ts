@@ -28,7 +28,7 @@ export default class Exceptions {
 		const errorPayload: string | Record<string, any> = {
 			error: errorName,
 			message: errorMessage,
-			statusCode: statusCode,
+			statusCode,
 			details: this.parseToString(errorDetails),
 		};
 		const detailsPayload: HttpExceptionOptions = {

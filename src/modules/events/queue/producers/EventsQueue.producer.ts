@@ -46,7 +46,7 @@ export default class EventsQueueProducer {
 		this.applicationName = String(appName);
 	}
 
-	private _buildMessageBody({ payload, schema }: { payload: any, schema?: string }): EventSchemaInterface {
+	private buildMessageBody({ payload, schema }: { payload: any, schema?: string }): EventSchemaInterface {
 		return {
 			id: this.cryptographyService.generateUuid(),
 			schema: schema || 'EVENTS',
@@ -58,7 +58,7 @@ export default class EventsQueueProducer {
 	}
 
 	public async dispatch({ payload, schema, author, title }: EventDispatchInterface): Promise<string | null> {
-		const message = this._buildMessageBody({ payload, schema });
+		const message = this.buildMessageBody({ payload, schema });
 
 		try {
 			const messageId = await this.sqsClient.sendMessage(

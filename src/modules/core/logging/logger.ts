@@ -60,7 +60,7 @@ export function getLoggerOptions(serviceName: string, environment: string, conte
 			format.json(),
 		),
 		defaultMeta: {
-			context: context,
+			context,
 			service: serviceName,
 			env: environment,
 		},

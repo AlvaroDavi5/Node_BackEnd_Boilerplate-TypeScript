@@ -40,7 +40,7 @@ export default class UserService {
 
 	public async getByEmail(email: string): Promise<UserEntity | null> {
 		try {
-			const user = await this.userRepository.findOne({ where: { email: email } });
+			const user = await this.userRepository.findOne({ where: { email } });
 
 			return user;
 		} catch (error) {

@@ -82,10 +82,10 @@
 			"cb"
 		],
 		"id-match": "off",
-		"import/order": "off",
 		"no-bitwise": "off",
 		"no-caller": "warn",
 		"radix": "warn",
+		"valid-typeof": "error",
 		"one-var": "off",
 		"prefer-const": "warn",
 		"no-undef": "error",
@@ -93,92 +93,38 @@
 		"no-constant-condition": "error",
 		"no-cond-assign": "error",
 		"no-empty": "error",
+		"no-template-curly-in-string": "warn",
+		"use-isnan": "error",
 		"no-eval": "error",
 		"no-var": "error",
 		"no-labels": "warn",
 		"no-unused-labels": "error",
 		"no-debugger": "error",
 		"no-console": "warn",
-		"no-template-curly-in-string": "warn",
 		"spaced-comment": [
 			"warn",
 			"always",
 			{
-				"markers": [
-					"/"
-				]
-			}
-		],
-		"use-isnan": "warn",
-		"valid-typeof": "off",
-		"@typescript-eslint/adjacent-overload-signatures": "warn",
-		"@typescript-eslint/array-type": "off",
-		"@typescript-eslint/ban-types": [
-			"warn",
-			{
-				"types": {
-					"Object": {
-						"message": "Avoid using the `Object` type. Did you mean `object`?"
-					},
-					"Function": {
-						"message": "Avoid using the `Function` type. Prefer a specific function type, like `() => void`."
-					},
-					"Boolean": {
-						"message": "Avoid using the `Boolean` type. Did you mean `boolean`?"
-					},
-					"Number": {
-						"message": "Avoid using the `Number` type. Did you mean `number`?"
-					},
-					"String": {
-						"message": "Avoid using the `String` type. Did you mean `string`?"
-					},
-					"Symbol": {
-						"message": "Avoid using the `Symbol` type. Did you mean `symbol`?"
-					}
+				"line": {
+					"markers": [
+						"/"
+					],
+					"exceptions": [
+						"-",
+						"+"
+					]
+				},
+				"block": {
+					"markers": [
+						"!"
+					],
+					"exceptions": [
+						"*"
+					],
+					"balanced": true
 				}
 			}
 		],
-		"@typescript-eslint/consistent-type-assertions": "warn",
-		"@typescript-eslint/explicit-member-accessibility": [
-			"off",
-			{
-				"accessibility": "explicit"
-			}
-		],
-		"@typescript-eslint/member-ordering": "off",
-		"@typescript-eslint/naming-convention": "off",
-		"@typescript-eslint/no-empty-function": "off",
-		"@typescript-eslint/no-empty-interface": "off",
-		"@typescript-eslint/no-explicit-any": "warn",
-		"@typescript-eslint/no-non-null-assertion": "warn",
-		"@typescript-eslint/no-misused-new": "warn",
-		"@typescript-eslint/no-namespace": "warn",
-		"@typescript-eslint/no-parameter-properties": "off",
-		"@typescript-eslint/no-shadow": [
-			"warn",
-			{
-				"hoist": "all"
-			}
-		],
-		"@typescript-eslint/no-unused-expressions": "error",
-		"@typescript-eslint/no-unused-vars": "error",
-		"@typescript-eslint/no-use-before-define": "error",
-		"@typescript-eslint/no-var-requires": "warn",
-		"@typescript-eslint/prefer-for-of": "warn",
-		"@typescript-eslint/prefer-function-type": "warn",
-		"@typescript-eslint/prefer-namespace-keyword": "warn",
-		"@typescript-eslint/quotes": "off",
-		"@typescript-eslint/unified-signatures": "warn",
-		"@typescript-eslint/triple-slash-reference": [
-			"warn",
-			{
-				"path": "always",
-				"types": "prefer-import",
-				"lib": "always"
-			}
-		],
-		"@typescript-eslint/ban-ts-ignore": "off",
-		"@typescript-eslint/ban-ts-comment": "off",
 		"array-bracket-spacing": [
 			2,
 			"never"
@@ -405,24 +351,91 @@
 				"onlyEquality": false
 			}
 		],
+		"prefer-destructuring": "warn",
+		"prefer-spread": "warn",
+		"security/detect-object-injection": "warn",
+		"import/order": "off",
+		"import/default": "off",
 		"import/no-extraneous-dependencies": [
 			"error",
 			{
 				"devDependencies": [
-					"tests/**",
-					"resolvers/*/test/**",
-					"scripts/**"
+					"scripts/**",
+					"tests/**"
 				],
-				"optionalDependencies": false,
 				"peerDependencies": true,
+				"optionalDependencies": false,
 				"bundledDependencies": false
 			}
 		],
-		"security/detect-object-injection": "off",
-		"import/unambiguous": "off",
-		"import/default": "off",
-		"prefer-destructuring": "warn",
-		"prefer-spread": "warn"
+		"import/unambiguous": "warn",
+		"@typescript-eslint/ban-ts-ignore": "off",
+		"@typescript-eslint/ban-ts-comment": "off",
+		"@typescript-eslint/ban-types": [
+			"error",
+			{
+				"types": {
+					"Object": {
+						"message": "Avoid using the `Object` type. Did you mean `object`?"
+					},
+					"Function": {
+						"message": "Avoid using the `Function` type. Prefer a specific function type, like `() => void`."
+					},
+					"Boolean": {
+						"message": "Avoid using the `Boolean` type. Did you mean `boolean`?"
+					},
+					"Number": {
+						"message": "Avoid using the `Number` type. Did you mean `number`?"
+					},
+					"String": {
+						"message": "Avoid using the `String` type. Did you mean `string`?"
+					},
+					"Symbol": {
+						"message": "Avoid using the `Symbol` type. Did you mean `symbol`?"
+					}
+				}
+			}
+		],
+		"@typescript-eslint/array-type": "warn",
+		"@typescript-eslint/consistent-type-assertions": "warn",
+		"@typescript-eslint/no-non-null-assertion": "warn",
+		"@typescript-eslint/no-explicit-any": "warn",
+		"@typescript-eslint/no-empty-function": "warn",
+		"@typescript-eslint/no-empty-interface": "warn",
+		"@typescript-eslint/no-use-before-define": "error",
+		"@typescript-eslint/no-unused-expressions": "error",
+		"@typescript-eslint/no-unused-vars": "error",
+		"@typescript-eslint/no-var-requires": "warn",
+		"@typescript-eslint/no-misused-new": "warn",
+		"@typescript-eslint/no-namespace": "warn",
+		"@typescript-eslint/prefer-namespace-keyword": "warn",
+		"@typescript-eslint/prefer-function-type": "warn",
+		"@typescript-eslint/prefer-for-of": "warn",
+		"@typescript-eslint/unified-signatures": "warn",
+		"@typescript-eslint/adjacent-overload-signatures": "error",
+		"@typescript-eslint/member-ordering": "off",
+		"@typescript-eslint/naming-convention": "off",
+		"@typescript-eslint/no-parameter-properties": "off",
+		"@typescript-eslint/no-shadow": [
+			"warn",
+			{
+				"hoist": "all"
+			}
+		],
+		"@typescript-eslint/triple-slash-reference": [
+			"warn",
+			{
+				"path": "always",
+				"types": "prefer-import",
+				"lib": "always"
+			}
+		],
+		"@typescript-eslint/explicit-member-accessibility": [
+			"off",
+			{
+				"accessibility": "explicit"
+			}
+		]
 	},
 	"overrides": [
 		{

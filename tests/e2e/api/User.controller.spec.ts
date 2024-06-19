@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { createNestApplicationOptions, startNestApplication } from '../support/mocks/setupUtils';
+import { createNestTestApplicationOptions, startNestApplication } from '../support/mocks/setupUtils';
 import CoreModule from '@core/core.module';
 
 
@@ -16,7 +16,7 @@ describe('API :: UserController', () => {
 			imports: [CoreModule]
 		}).compile();
 
-		nestTestApp = nestTestingModule.createNestApplication(createNestApplicationOptions);
+		nestTestApp = nestTestingModule.createNestApplication(createNestTestApplicationOptions);
 		await startNestApplication(nestTestApp);
 		await nestTestApp.init();
 	});

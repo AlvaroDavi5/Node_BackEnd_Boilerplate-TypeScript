@@ -3,7 +3,7 @@ import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import readPackageInfo from '@common/utils/packageInfoReader.util';
 
 
-export default (nestApp: INestApplication<any>): void => {
+export default (nestApp: INestApplication): void => {
 	const { description, version } = readPackageInfo();
 	const apiDescription = description ? `${description} - API` : undefined;
 

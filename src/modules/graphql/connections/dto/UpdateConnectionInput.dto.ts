@@ -1,6 +1,6 @@
 import { InputType, Field } from '@nestjs/graphql';
 import { IsString } from 'class-validator';
-import { returingString } from '@shared/types/returnTypeFunc';
+import { returingString } from '@shared/internal/types/returnTypeFunc';
 import CreateConnectionInputDto from './CreateConnectionInput.dto';
 
 

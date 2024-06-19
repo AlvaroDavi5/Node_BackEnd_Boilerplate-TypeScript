@@ -3,8 +3,8 @@ import UserEntity, { UpdateUserInterface } from '@domain/entities/User.entity';
 import UserPreferenceEntity, { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.entity';
 import UserStrategy from '@app/user/strategies/User.strategy';
 import HttpConstants from '@common/constants/Http.constants';
-import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
-import { ErrorInterface } from '@shared/interfaces/errorInterface';
+import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
+import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 
 

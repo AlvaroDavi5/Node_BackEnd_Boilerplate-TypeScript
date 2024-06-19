@@ -10,8 +10,8 @@ import Exceptions from '@core/errors/Exceptions';
 import HttpConstants from '@common/constants/Http.constants';
 import CreateUserInputDto from '../api/dto/user/CreateUserInput.dto';
 import UpdateUserInputDto from '../api/dto/user/UpdateUserInput.dto';
-import { UserAuthInterface } from '@shared/interfaces/userAuthInterface';
-import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
+import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
+import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
 
 @Injectable()

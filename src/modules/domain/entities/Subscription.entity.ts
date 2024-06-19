@@ -3,8 +3,8 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsBoolean, IsDate, IsUUID } from 'class-validator';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
-import AbstractEntity from '@shared/classes/AbstractEntity.entity';
-import { returingString, returingBoolean, returingDate } from '@shared/types/returnTypeFunc';
+import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
+import { returingString, returingBoolean, returingDate } from '@shared/internal/types/returnTypeFunc';
 
 
 const dateGeneratorHelper = new DateGeneratorHelper();

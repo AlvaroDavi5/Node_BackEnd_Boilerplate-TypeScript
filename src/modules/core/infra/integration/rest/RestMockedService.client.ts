@@ -5,7 +5,8 @@ import axiosRetry from 'axios-retry';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import LoggerService from '@core/logging/Logger.service';
 import catchError from '@common/utils/errorCatcher.util';
-import { RestClientResponseInterface, requestMethodType } from '@shared/types/restClientTypes';
+import { requestMethodType } from '@shared/internal/types/restClientTypes';
+import { RestClientResponseInterface } from '@shared/external/interfaces/RestClientInterface';
 
 
 @Injectable()

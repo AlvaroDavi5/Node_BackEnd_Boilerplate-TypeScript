@@ -13,7 +13,7 @@ import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import swaggerSetupConfig from '@core/configs/swaggerSetup.config';
 import { ConfigsInterface } from '@core/configs/configs.config';
-import { ErrorInterface } from '@shared/interfaces/errorInterface';
+import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
 async function startNestApplication() {

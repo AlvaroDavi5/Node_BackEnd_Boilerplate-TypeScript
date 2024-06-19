@@ -1,6 +1,6 @@
+/* eslint-disable no-console, @typescript-eslint/ban-types */
 
 export function classDecorator(): ClassDecorator {
-	// eslint-disable-next-line @typescript-eslint/ban-types
 	return <TFunction extends Function>(target: TFunction) => {
 		console.log(`[ClassDecorator] ${target.name} - ${JSON.stringify(target.prototype)}`);
 	};

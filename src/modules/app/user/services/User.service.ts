@@ -5,7 +5,7 @@ import UserListEntity from '@domain/entities/generic/UserList.entity';
 import CryptographyService from '@core/security/Cryptography.service';
 import UserRepository from '@app/user/repositories/user/User.repository';
 import Exceptions from '@core/errors/Exceptions';
-import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
+import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import { ConfigsInterface } from '@core/configs/configs.config';
 
 
@@ -63,7 +63,6 @@ export default class UserService {
 			throw this.throwError(error);
 		}
 	}
-
 
 	public async update(id: string, data: UpdateUserInterface): Promise<UserEntity> {
 		const { id: userId, createdAt, preference, ...userData } = new UserEntity(data).getAttributes();

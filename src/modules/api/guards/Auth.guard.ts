@@ -3,7 +3,7 @@ import Exceptions from '@core/errors/Exceptions';
 import { LoggerProviderInterface, SINGLETON_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
 import CryptographyService from '@core/security/Cryptography.service';
-import { RequestInterface } from '@shared/interfaces/endpointInterface';
+import { RequestInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @Injectable()

@@ -2,7 +2,7 @@ import { Injectable, Inject, Scope, NestMiddleware } from '@nestjs/common';
 import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import CryptographyService from '@core/security/Cryptography.service';
 import { checkFields, replaceFields } from '@common/utils/objectRecursiveFunctions.util';
-import { RequestInterface, ResponseInterface, NextFunctionInterface } from '@shared/interfaces/endpointInterface';
+import { RequestInterface, ResponseInterface, NextFunctionInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @Injectable({ scope: Scope.DEFAULT })

@@ -4,8 +4,8 @@ import { IsString, IsDate, IsEnum, IsUUID } from 'class-validator';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
-import AbstractEntity from '@shared/classes/AbstractEntity.entity';
-import { returingString, returingDate } from '@shared/types/returnTypeFunc';
+import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
+import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
 
 
 const dateGeneratorHelper = new DateGeneratorHelper();

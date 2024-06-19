@@ -7,7 +7,7 @@ import { ThrottlerException } from '@nestjs/throttler';
 import { AxiosError } from 'axios';
 import Exceptions from '@core/errors/Exceptions';
 import HttpConstants from '@common/constants/Http.constants';
-import { ErrorInterface } from '@shared/interfaces/errorInterface';
+import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
 type generatedExceptionsType = BadRequestException | ForbiddenException | UnauthorizedException | ThrottlerException | ConflictException | NotFoundException | ServiceUnavailableException | InternalServerErrorException;

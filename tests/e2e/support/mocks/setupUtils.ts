@@ -10,7 +10,7 @@ import compression from 'compression';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import { ProcessEventsEnum, ProcessSignalsEnum } from '@common/enums/processEvents.enum';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
-import { ErrorInterface } from '@shared/interfaces/errorInterface';
+import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
 export const createNestApplicationOptions = {

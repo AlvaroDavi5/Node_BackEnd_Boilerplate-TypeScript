@@ -6,7 +6,7 @@ import RestMockedServiceClient from '@core/infra/integration/rest/RestMockedServ
 import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 import { CacheEnum } from '@domain/enums/cache.enum';
-import { requestMethodType } from '@shared/types/restClientTypes';
+import { requestMethodType } from '@shared/internal/types/restClientTypes';
 import { RegisterEventHookInterface } from '../api/schemas/registerEventHook.schema';
 
 

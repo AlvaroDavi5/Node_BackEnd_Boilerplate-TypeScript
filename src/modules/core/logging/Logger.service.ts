@@ -8,7 +8,6 @@ import {
 	LoggerInterface, LogLevelEnum, MetadataInterface,
 	getLoggerOptions, getDefaultFormat, getMessageFormatter
 } from './logger';
-import { wrapperType } from '@shared/types/constructorType';
 import { dataParserHelperMock } from '@dev/mocks/mockedModules';
 
 

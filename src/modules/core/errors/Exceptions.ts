@@ -6,7 +6,7 @@ import {
 import { ThrottlerException } from '@nestjs/throttler';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import HttpConstants from '@common/constants/Http.constants';
-import { ErrorInterface } from '@shared/interfaces/errorInterface';
+import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
 @Injectable()

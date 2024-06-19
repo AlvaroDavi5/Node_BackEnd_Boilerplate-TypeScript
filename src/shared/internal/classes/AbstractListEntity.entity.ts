@@ -1,8 +1,8 @@
 import { Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsNumber } from 'class-validator';
-import { returingNumber } from '@shared/types/returnTypeFunc';
-import { PaginationInterface } from '@shared/interfaces/listPaginationInterface';
+import { returingNumber } from '@shared/internal/types/returnTypeFunc';
+import { PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import AbstractEntity from './AbstractEntity.entity';
 
 

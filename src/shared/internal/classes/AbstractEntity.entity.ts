@@ -1,10 +1,10 @@
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 
 
-export default abstract class AbstractEntity<I = any> {
+export default abstract class AbstractEntity<I = unknown> {
 
-	public validate(): { value: any, valid: boolean, error: Error | null } {
-		let value: any = null;
+	public validate(): { value: unknown, valid: boolean, error: Error | null } {
+		let value: unknown = null;
 		let valid = false;
 		let error: Error | null = null;
 

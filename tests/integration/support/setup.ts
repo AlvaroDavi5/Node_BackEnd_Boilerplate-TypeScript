@@ -12,8 +12,8 @@ jest.mock('src/modules/core/logging/Logger.service.ts', () =>
 	jest.requireActual('./mocks/logging/Logger.service')
 );
 
-jest.mock('src/modules/core/infra/integration/rest/RestMockedService.client.ts', () =>
-	jest.requireActual('./mocks/rest/RestMockedService.client')
+jest.mock('src/modules/core/infra/providers/RestMockedService.provider.ts', () =>
+	jest.requireActual('./mocks/rest/RestMockedService.provider')
 );
 
 /*

@@ -13,7 +13,7 @@ import S3Client from '@core/infra/integration/aws/S3.client';
 import CognitoClient from '@core/infra/integration/aws/Cognito.client';
 import { configServiceMock } from '@dev/mocks/mockedModules';
 import LoggerService from '../../../support/mocks/logging/Logger.service';
-import { mockObservable } from '../../../support/mocks/mockObservable';
+import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
 
 describe('Modules :: Core :: Start :: LifecycleService', () => {
 	let nestTestingModule: TestingModule;
@@ -49,6 +49,9 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 	};
 	const awsClientMock = {
 		destroy: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
+	};
+	const mockObservable: MockObservableInterface<void, unknown[]> = {
+		call: jest.fn((...args: unknown[]): void => (undefined)),
 	};
 	const loggerServiceMock = new LoggerService(mockObservable);
 

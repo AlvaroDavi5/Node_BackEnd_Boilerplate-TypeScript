@@ -7,7 +7,7 @@ export default class LoggerService {
 	private readonly showLogs = Boolean(process.env.SHOW_LOGS);
 
 	constructor(
-		private readonly mockObservable: MockObservableInterface,
+		private readonly mockObservable: MockObservableInterface<void, unknown[]>,
 	) { }
 
 	private log(level: 'error' | 'warn' | 'info' | 'debug' | 'log', args: unknown[]): void {
@@ -37,10 +37,10 @@ export default class LoggerService {
 		requestId.trim();
 	}
 
-	public error(...args: any[]): void { this.log('error', args); }
-	public warn(...args: any[]): void { this.log('warn', args); }
-	public info(...args: any[]): void { this.log('info', args); }
-	public http(...args: any[]): void { this.log('info', args); }
-	public verbose(...args: any[]): void { this.log('log', args); }
-	public debug(...args: any[]): void { this.log('debug', args); }
+	public error(...args: unknown[]): void { this.log('error', args); }
+	public warn(...args: unknown[]): void { this.log('warn', args); }
+	public info(...args: unknown[]): void { this.log('info', args); }
+	public http(...args: unknown[]): void { this.log('info', args); }
+	public verbose(...args: unknown[]): void { this.log('log', args); }
+	public debug(...args: unknown[]): void { this.log('debug', args); }
 }

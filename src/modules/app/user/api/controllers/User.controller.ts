@@ -99,7 +99,6 @@ export default class UserController {
 		}
 	}
 
-	@authSwaggerDecorator()
 	@ApiOperation({
 		summary: 'Login User',
 		description: 'Login user and get user authorization token (1d)',

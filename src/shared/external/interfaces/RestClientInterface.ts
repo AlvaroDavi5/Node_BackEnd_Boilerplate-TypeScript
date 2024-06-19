@@ -1,6 +1,7 @@
 
 export interface RestClientResponseInterface<DI = unknown, EI = unknown> {
 	status: number,
-	error?: EI,
+	headers: { [key: string]: unknown },
 	data: DI,
+	error?: EI,
 }

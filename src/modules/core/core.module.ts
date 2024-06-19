@@ -20,7 +20,7 @@ import SqsClient from './infra/integration/aws/Sqs.client';
 import SnsClient from './infra/integration/aws/Sns.client';
 import S3Client from './infra/integration/aws/S3.client';
 import CognitoClient from './infra/integration/aws/Cognito.client';
-import RestMockedServiceClient from './infra/integration/rest/RestMockedService.client';
+import RestMockedServiceProvider from './infra/providers/RestMockedService.provider';
 import SyncCronJob from './cron/jobs/SyncCron.job';
 import SyncCronTask from './cron/tasks/SyncCron.task';
 import CommonModule from '@common/common.module';
@@ -55,12 +55,10 @@ const requestRateConstants = new RequestRateConstants();
 			driver: ApolloDriver,
 			playground: appConfigs.environment === EnvironmentsEnum.DEVELOPMENT,
 			autoSchemaFile: join(process.cwd(), 'src/modules/graphql/schemas/schema.gql'),
-			formatError: (formattedError: GraphQLFormattedError, error: any) => {
-				const extensions = formattedError.extensions as any;
-
+			formatError: ({ message, extensions, path }: GraphQLFormattedError, error: any) => {
 				const graphQLFormattedError: GraphQLFormattedError = {
-					message: formattedError.message ?? error?.message,
-					path: formattedError.path ?? error?.path,
+					message: message ?? error?.message,
+					path: path ?? error?.path,
 					extensions: {
 						code: extensions?.code,
 						originalError: extensions?.originalError,
@@ -95,7 +93,7 @@ const requestRateConstants = new RequestRateConstants();
 		SnsClient,
 		S3Client,
 		CognitoClient,
-		RestMockedServiceClient,
+		RestMockedServiceProvider,
 		SyncCronJob,
 		SyncCronTask,
 	],
@@ -112,7 +110,7 @@ const requestRateConstants = new RequestRateConstants();
 		SnsClient,
 		S3Client,
 		CognitoClient,
-		RestMockedServiceClient,
+		RestMockedServiceProvider,
 	],
 })
 export default class CoreModule { }

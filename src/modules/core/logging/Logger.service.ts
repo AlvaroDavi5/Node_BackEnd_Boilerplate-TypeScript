@@ -61,7 +61,7 @@ export default class LoggerService implements LoggerInterface {
 		this.requestId = requestId;
 	}
 
-	private buildLog(args: any[]): { message: string, meta: MetadataInterface } {
+	private buildLog(args: unknown[]): { message: string, meta: MetadataInterface } {
 		const inquirerName = typeof this.inquirer === 'string'
 			? this.inquirer
 			: this.inquirer?.constructor?.name;
@@ -75,7 +75,7 @@ export default class LoggerService implements LoggerInterface {
 		};
 
 		const separator = args.length > 1 ? ' ' : '';
-		args.forEach((arg: any) => {
+		args.forEach((arg: unknown) => {
 			if (arg instanceof Error) {
 				const errorName = arg.name.length > 0 ? `\x1b[0;30m${arg.name}\x1b[0m - ` : '';
 				message += `${errorName}${arg.message}${separator}`;
@@ -93,7 +93,7 @@ export default class LoggerService implements LoggerInterface {
 		};
 	}
 
-	[LogLevelEnum.ERROR](...args: any[]): void {
+	[LogLevelEnum.ERROR](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -103,7 +103,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.WARN](...args: any[]): void {
+	[LogLevelEnum.WARN](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -113,7 +113,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.INFO](...args: any[]): void {
+	[LogLevelEnum.INFO](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -123,7 +123,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.HTTP](...args: any[]): void {
+	[LogLevelEnum.HTTP](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -133,7 +133,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.VERBOSE](...args: any[]): void {
+	[LogLevelEnum.VERBOSE](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -143,7 +143,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.DEBUG](...args: any[]): void {
+	[LogLevelEnum.DEBUG](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -166,9 +166,7 @@ export const RequestLoggerProvider: Provider = {
 	useFactory: (
 		inquirer: string | object,
 		configService: ConfigService,
-	): LoggerInterface => {
-		return new LoggerService(inquirer, configService, dataParserHelperMock as any);
-	},
+	): LoggerInterface => new LoggerService(inquirer, configService, dataParserHelperMock as DataParserHelper),
 
 	durable: false,
 };
@@ -186,13 +184,9 @@ export const SingletonLoggerProvider: Provider = {
 	],
 	useFactory: (
 		configService: ConfigService,
-	): LoggerProviderInterface => {
-		return {
-			getLogger: (context: string): LoggerInterface => {
-				return new LoggerService(context, configService, dataParserHelperMock as any);
-			},
-		};
-	},
+	): LoggerProviderInterface => ({
+		getLogger: (context: string): LoggerInterface => new LoggerService(context, configService, dataParserHelperMock as DataParserHelper),
+	}),
 
 	durable: false,
 };

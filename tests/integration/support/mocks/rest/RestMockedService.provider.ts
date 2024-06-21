@@ -3,7 +3,7 @@ import { ConfigService } from '@nestjs/config';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import AbstractRestClient from './AbstractRestClient.client';
 import LoggerService from '@core/logging/Logger.service';
-import catchError from '@common/utils/errorCatcher.util';
+import catchError from '@common/utils/externalErrorParser.util';
 import { requestMethodType } from '@shared/internal/types/restClientTypes';
 import { RestClientResponseInterface } from '@shared/external/interfaces/RestClientInterface';
 import { MockObservableInterface } from '../mockObservable';

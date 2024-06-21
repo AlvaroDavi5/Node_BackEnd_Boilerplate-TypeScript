@@ -1,19 +1,13 @@
-import {
-	HttpException, BadRequestException, ForbiddenException,
-	UnauthorizedException, ConflictException, NotFoundException,
-	ServiceUnavailableException, InternalServerErrorException
-} from '@nestjs/common';
-import { ThrottlerException } from '@nestjs/throttler';
+import { HttpException } from '@nestjs/common';
 import { AxiosError } from 'axios';
 import Exceptions from '@core/errors/Exceptions';
 import HttpConstants from '@common/constants/Http.constants';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
-type generatedExceptionsType = BadRequestException | ForbiddenException | UnauthorizedException | ThrottlerException | ConflictException | NotFoundException | ServiceUnavailableException | InternalServerErrorException;
-type exceptionGeneratorType = (error: ErrorInterface) => generatedExceptionsType;
+type exceptionGeneratorType = (error: ErrorInterface) => HttpException;
 
-export default function catchError(error: any): generatedExceptionsType {
+export default function externalErrorParser(error: any): HttpException {
 	const exceptions = new Exceptions();
 	const { status } = new HttpConstants();
 
@@ -26,6 +20,9 @@ export default function catchError(error: any): generatedExceptionsType {
 			break;
 		case status.FORBIDDEN:
 			exceptionGenerator = exceptions.business;
+			break;
+		case status.INVALID_TOKEN:
+			exceptionGenerator = exceptions.invalidToken;
 			break;
 		case status.UNAUTHORIZED:
 			exceptionGenerator = exceptions.unauthorized;

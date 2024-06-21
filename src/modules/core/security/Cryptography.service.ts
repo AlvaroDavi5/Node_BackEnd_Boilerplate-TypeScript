@@ -58,8 +58,8 @@ export default class CryptographyService {
 			const jwtError = error as JsonWebTokenError;
 			return {
 				content: null,
-				invalidSignature: jwtError.message === 'invalid signature',
-				expired: jwtError.message === 'jwt expired',
+				invalidSignature: jwtError.message === 'invalid signature', // REVIEW - do not compare with error message string
+				expired: jwtError.message === 'jwt expired', // REVIEW - do not compare with error message string
 			};
 		}
 	}

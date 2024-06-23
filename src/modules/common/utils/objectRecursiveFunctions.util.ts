@@ -1,4 +1,4 @@
-import { isNullOrUndefined, getObjKeys } from "./dataValidations.util";
+import { isNullOrUndefined, getObjKeys } from './dataValidations.util';
 
 
 export function checkFields(obj: any, fieldsToApply: string[]): boolean {

@@ -2,6 +2,7 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import RequestLoggerMiddleware from '@api/middlewares/RequestLogger.middleware';
 import FileController from './api/controllers/File.controller';
 import FileStrategy from './strategies/File.strategy';
+import FileService from './services/File.service';
 
 
 @Module({
@@ -10,6 +11,7 @@ import FileStrategy from './strategies/File.strategy';
 		FileController,
 	],
 	providers: [
+		FileService,
 		FileStrategy,
 	],
 	exports: [

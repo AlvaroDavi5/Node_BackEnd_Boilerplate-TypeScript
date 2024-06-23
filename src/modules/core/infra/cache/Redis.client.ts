@@ -52,7 +52,7 @@ export default class RedisClient {
 			this.isConnected = false;
 			throw this.exceptions.integration({
 				message: 'Error to connect redis client',
-				details: (error as any)?.message,
+				details: (error as Error)?.message,
 			});
 		}
 		return this.isConnected;

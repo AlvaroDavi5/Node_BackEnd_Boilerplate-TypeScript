@@ -3,6 +3,7 @@ import { IoAdapter } from '@nestjs/platform-socket.io';
 import { json, urlencoded } from 'express';
 import compression from 'compression';
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
+import { getObjValues } from '@common/utils/dataValidations.util';
 
 
 export default (nestApp: INestApplication): void => {
@@ -27,7 +28,7 @@ export default (nestApp: INestApplication): void => {
 	nestApp.enableCors({
 		origin: '*',
 		allowedHeaders: '*',
-		methods: Object.values(HttpMethodsEnum),
+		methods: getObjValues<HttpMethodsEnum>(HttpMethodsEnum),
 	});
 	nestApp.useWebSocketAdapter(new IoAdapter(nestApp)); // WsAdapter
 };

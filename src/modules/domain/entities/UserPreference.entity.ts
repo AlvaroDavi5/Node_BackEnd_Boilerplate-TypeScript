@@ -6,6 +6,7 @@ import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
 import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
+import { getObjValues } from '@common/utils/dataValidations.util';
 
 
 const dateGeneratorHelper = new DateGeneratorHelper();
@@ -51,7 +52,7 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 	private imagePath: string | null = null;
 
 	@ApiProperty({
-		type: String, enum: Object.values(ThemesEnum),
+		type: String, enum: getObjValues<ThemesEnum>(ThemesEnum),
 		example: ThemesEnum.DEFAULT,
 		default: null, nullable: true, required: true,
 		description: 'User default theme',
@@ -119,7 +120,7 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 
 	public getDefaultTheme(): ThemesEnum | null { return this.defaultTheme; }
 	public setDefaultTheme(theme: string): void {
-		if (!Object.values(ThemesEnum).includes(theme as any))
+		if (!getObjValues<ThemesEnum>(ThemesEnum).includes(theme as ThemesEnum))
 			return;
 
 		this.defaultTheme = theme as ThemesEnum;

@@ -3,6 +3,7 @@ import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/loggin
 import { ProcessEventsEnum, ProcessSignalsEnum } from '@common/enums/processEvents.enum';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
+import { getObjValues } from '@common/utils/dataValidations.util';
 
 
 export const createNestApplicationOptions: NestApplicationOptions = {
@@ -36,14 +37,14 @@ export default (nestApp: INestApplication): void => {
 		await nestApp.close();
 	});
 
-	Object.values(ProcessSignalsEnum).map((procSignal) => process.on(procSignal, async (signal) => {
+	getObjValues<ProcessSignalsEnum>(ProcessSignalsEnum).map((procSignal) => process.on(procSignal, async (signal) => {
 		logger.warn(`App received signal: ${signal}`);
 		await nestApp.close();
 	}));
 };
 
 export function validateKnownExceptions(error: ErrorInterface | Error) {
-	const knownExceptions = Object.values(ExceptionsEnum).map((exception) => exception.toString());
+	const knownExceptions = getObjValues<ExceptionsEnum>(ExceptionsEnum).map((exception) => exception.toString());
 
 	if (error?.name && !knownExceptions.includes(error.name)) {
 		const newError = new Error(error.message);

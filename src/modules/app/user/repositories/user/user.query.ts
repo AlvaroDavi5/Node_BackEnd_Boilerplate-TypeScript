@@ -3,6 +3,7 @@ import UsersModel from '@core/infra/database/models/Users.model';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 import { UserInterface } from '@domain/entities/User.entity';
 import { BuildParamsInterface, PaginationOptionsInterface } from '@core/infra/database/repositories/AbstractRepository.repository';
+import { getObjValues } from '@common/utils/dataValidations.util';
 
 
 interface UserSelectRestrictInterface {
@@ -68,7 +69,7 @@ const buildWhereParams = ({
 
 	if (preference?.defaultTheme) {
 		partialWhere.preference = {
-			defaultTheme: And(In(Object.values(ThemesEnum)), Equal(preference.defaultTheme)),
+			defaultTheme: And(In(getObjValues<ThemesEnum>(ThemesEnum)), Equal(preference.defaultTheme)),
 		};
 	}
 

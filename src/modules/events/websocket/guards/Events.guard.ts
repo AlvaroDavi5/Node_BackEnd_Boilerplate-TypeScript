@@ -6,6 +6,7 @@ import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
 import Exceptions from '@core/errors/Exceptions';
 import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
+import { getObjKeys, getObjValues } from '@common/utils/dataValidations.util';
 
 
 @Injectable()
@@ -27,7 +28,7 @@ export default class EventsGuard implements CanActivate {
 
 		this.logger.verbose(`Running guard to '${event}' event for '${socket.id}' socket`);
 
-		if (!Object.values(WebSocketEventsEnum).includes(event) || !Object.keys(message).length) {
+		if (!getObjValues<WebSocketEventsEnum>(WebSocketEventsEnum).includes(event) || !getObjKeys(message).length) {
 			this.logger.warn(`Invalid event: '${event}' or message, disconnecting socket`);
 			socket.disconnect(true);
 			throw new WsException(this.exceptions.internal({

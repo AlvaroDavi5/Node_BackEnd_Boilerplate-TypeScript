@@ -47,7 +47,7 @@ module.exports = {
 		'src/modules/api/pipes/',
 		'src/modules/api/schemas/',
 		'src/modules/domain/',
-		'src/modules/app/(.*)/operations/',
+		'src/modules/app/(.*)/usecases/',
 		'src/modules/app/(.*)/services/',
 		'src/modules/app/(.*)/strategies/',
 		'src/modules/events/queue/handlers/',

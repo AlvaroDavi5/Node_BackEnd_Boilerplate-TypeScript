@@ -15,13 +15,14 @@ import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/loggin
 import { LoggerInterface } from '@core/logging/logger';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
+import { getObjValues } from '@common/utils/dataValidations.util';
 
 
 @WebSocketGateway({
 	cors: {
 		origin: '*',
 		allowedHeaders: '*',
-		methods: Object.values(HttpMethodsEnum),
+		methods: getObjValues<HttpMethodsEnum>(HttpMethodsEnum),
 	}
 })
 @UseGuards(EventsGuard)

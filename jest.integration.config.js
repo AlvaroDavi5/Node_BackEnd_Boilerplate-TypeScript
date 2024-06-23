@@ -51,7 +51,7 @@ module.exports = {
 		'src/modules/domain/',
 		'src/modules/app/(.*)/api/controllers/',
 		'src/modules/app/(.*)/api/dto/',
-		'src/modules/app/(.*)/operations/',
+		'src/modules/app/(.*)/usecases/',
 		'src/modules/app/(.*)/repositories/',
 		'src/modules/app/(.*)/strategies/',
 		'src/modules/app/reports/',

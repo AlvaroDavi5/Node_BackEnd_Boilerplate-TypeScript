@@ -101,26 +101,6 @@ export default class UserService {
 		}
 	}
 
-	// * dbRes = salt + hash(salt + password + secretEnv)
-	private protectPassword(plainTextPassword: string): string {
-		const salt = this.cryptographyService.generateSalt();
-		if (!salt)
-			throw this.exceptions.internal({
-				message: 'Error to generate salt',
-			});
-
-		const toHash = salt + plainTextPassword + this.secret;
-		const hash = this.cryptographyService.hashing(toHash, 'ascii', 'sha256', 'base64url');
-		if (!hash)
-			throw this.exceptions.internal({
-				message: 'Error to generate hash',
-			});
-
-		const result = `${salt}|${hash}`;
-
-		return result;
-	}
-
 	public validatePassword(entity: UserEntity, passwordToValidate: string): void {
 		const userPassword = entity.getPassword();
 		if (!userPassword?.length)
@@ -141,6 +121,26 @@ export default class UserService {
 			throw this.exceptions.unauthorized({
 				message: 'Password hash is different from database',
 			});
+	}
+
+	// * dbRes = salt + hash(salt + password + secretEnv)
+	private protectPassword(plainTextPassword: string): string {
+		const salt = this.cryptographyService.generateSalt();
+		if (!salt)
+			throw this.exceptions.internal({
+				message: 'Error to generate salt',
+			});
+
+		const toHash = salt + plainTextPassword + this.secret;
+		const hash = this.cryptographyService.hashing(toHash, 'ascii', 'sha256', 'base64url');
+		if (!hash)
+			throw this.exceptions.internal({
+				message: 'Error to generate hash',
+			});
+
+		const result = `${salt}|${hash}`;
+
+		return result;
 	}
 
 	private throwError(error: any): Error {

@@ -42,6 +42,14 @@
 			"warn",
 			160
 		],
+		"no-multiple-empty-lines": [
+			"error",
+			{
+				"max": 2,
+				"maxEOF": 1,
+				"maxBOF": 1
+			}
+		],
 		"camelcase": "warn",
 		"no-underscore-dangle": "warn",
 		"comma-spacing": [
@@ -69,11 +77,28 @@
 		"no-fallthrough": "error",
 		"no-unsafe-finally": "error",
 		"guard-for-in": "error",
-		"brace-style": "error",
+		"default-case": "error",
+		"default-case-last": "error",
+		"default-param-last": "error",
 		"curly": "off",
+		"brace-style": "error",
+		"block-spacing": [
+			"error",
+			"always"
+		],
+		"array-bracket-spacing": [
+			"error",
+			"never"
+		],
+		"comma-style": [
+			"error",
+			"last"
+		],
+		"comma-dangle": "off",
 		"object-shorthand": "warn",
 		"new-parens": "error",
 		"arrow-parens": "error",
+		"arrow-body-style": "off",
 		"id-denylist": [
 			"error",
 			"err",
@@ -95,10 +120,29 @@
 		"no-cond-assign": "error",
 		"no-empty": "error",
 		"no-template-curly-in-string": "warn",
+		"for-direction": "error",
+		"computed-property-spacing": "off",
+		"implicit-arrow-linebreak": "off",
+		"function-call-argument-newline": "off",
+		"func-call-spacing": [
+			"error",
+			"never"
+		],
+		"dot-location": [
+			"error",
+			"property"
+		],
+		"dot-notation": [
+			"error",
+			{
+				"allowKeywords": true,
+				"allowPattern": "throws"
+			}
+		],
 		"use-isnan": "error",
 		"no-eval": "error",
 		"no-var": "error",
-		"no-labels": "warn",
+		"no-labels": "error",
 		"no-unused-labels": "error",
 		"no-debugger": "error",
 		"no-console": "warn",
@@ -127,65 +171,6 @@
 					"balanced": true
 				}
 			}
-		],
-		"array-bracket-spacing": [
-			2,
-			"never"
-		],
-		"arrow-body-style": [
-			"warn",
-			"as-needed"
-		],
-		"block-spacing": [
-			2,
-			"always"
-		],
-		"comma-dangle": "off",
-		"comma-style": [
-			2,
-			"last"
-		],
-		"computed-property-spacing": [
-			2,
-			"never"
-		],
-		"default-case": [
-			2,
-			{
-				"commentPattern": "(?:)"
-			}
-		],
-		"default-case-last": [
-			2
-		],
-		"default-param-last": [
-			2
-		],
-		"dot-location": [
-			2,
-			"property"
-		],
-		"dot-notation": [
-			2,
-			{
-				"allowKeywords": true,
-				"allowPattern": "throws"
-			}
-		],
-		"for-direction": [
-			2
-		],
-		"function-call-argument-newline": [
-			"warn",
-			"consistent"
-		],
-		"func-call-spacing": [
-			2,
-			"never"
-		],
-		"implicit-arrow-linebreak": [
-			"warn",
-			"beside"
 		],
 		"jsx-quotes": [
 			2,
@@ -231,14 +216,6 @@
 		"no-array-constructor": 2,
 		"no-compare-neg-zero": 2,
 		"no-extra-parens": 2,
-		"no-multiple-empty-lines": [
-			"warn",
-			{
-				"max": 2,
-				"maxEOF": 1,
-				"maxBOF": 1
-			}
-		],
 		"no-return-assign": [
 			2,
 			"always"

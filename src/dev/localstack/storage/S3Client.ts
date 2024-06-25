@@ -41,7 +41,7 @@ export default class S3Client {
 				sessionToken,
 			},
 			forcePathStyle: true,
-			logger: logging === 'true' ? this.logger : undefined,
+			logger: logging ? this.logger : undefined,
 		};
 		this.bucketName = bucketName;
 		this.s3Client = new S3AWSClient(this.awsConfig);

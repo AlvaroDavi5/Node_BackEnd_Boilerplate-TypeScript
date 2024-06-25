@@ -2,7 +2,7 @@ import { TimeZonesEnum } from 'src/modules/common/enums/timeZones.enum';
 import dotenv from 'dotenv';
 
 
-// dotenv.config({ path: (process.cwd() + '/envs/.env.development.local') });
+// dotenv.config({ path: (process.cwd() + '/envs/.env.development') });
 dotenv.config();
 
 export interface ConfigsInterface {
@@ -13,10 +13,10 @@ export interface ConfigsInterface {
 		appPort: number, // app port
 		nestDevToolsPort: number, // dev tools port
 		url: string, // app url
-		socketEnv: string, // enable websocket
-		stackErrorVisible: string, // enable app error stack
+		socketEnv: boolean, // enable websocket
+		stackErrorVisible: boolean, // enable app error stack
+		logging: boolean, // enable third-party and backing services logging
 		logsPath: string, // logs file path
-		logging: string, // enable third-party and backing services logging
 	},
 	// ? DataBase Backing-Service
 	database: {
@@ -144,10 +144,10 @@ export default (): ConfigsInterface => ({
 		appPort: parseInt(process.env.APP_PORT ?? '3000', 10),
 		nestDevToolsPort: parseInt(process.env.NESTDEV_PORT ?? '8000', 10),
 		url: process.env.APP_URL ?? 'http://localhost:3000/',
-		socketEnv: process.env.SOCKET_ENV ?? 'enabled',
-		stackErrorVisible: process.env.SHOW_ERROR_STACK ?? 'true',
+		socketEnv: process.env.SOCKET_ENV === 'enabled',
+		stackErrorVisible: process.env.SHOW_ERROR_STACK === 'true',
+		logging: process.env.SHOW_LOGS === 'true',
 		logsPath: process.env.APP_LOGS_PATH ?? './logs/logs.log',
-		logging: process.env.SHOW_LOGS ?? 'false',
 	},
 	database: {
 		database: process.env.DB_NAME ?? 'db_postgres',

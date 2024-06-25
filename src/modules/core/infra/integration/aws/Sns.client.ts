@@ -46,7 +46,7 @@ export default class SnsClient {
 				secretAccessKey: String(secretAccessKey),
 				sessionToken,
 			},
-			logger: logging === 'true' ? this.logger : undefined,
+			logger: logging ? this.logger : undefined,
 		};
 		this.messageGroupId = 'DefaultGroup';
 		this.snsClient = new SNSClient(this.awsConfig);

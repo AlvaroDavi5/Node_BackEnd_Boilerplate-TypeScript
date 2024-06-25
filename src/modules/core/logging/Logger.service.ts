@@ -30,7 +30,7 @@ export default class LoggerService implements LoggerInterface {
 		const messageFormatter = getMessageFormatter(this.dataParserHelper.toString);
 
 		const defaultFormat = getDefaultFormat(
-			applicationConfigs.stackErrorVisible === 'true',
+			applicationConfigs.stackErrorVisible,
 			messageFormatter,
 		);
 

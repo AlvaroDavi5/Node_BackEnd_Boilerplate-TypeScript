@@ -24,7 +24,7 @@ export default class RedisClient {
 		this.redisClient = new IORedis({
 			host: String(host),
 			port: Number(port),
-			showFriendlyErrorStack: logging === 'true',
+			showFriendlyErrorStack: logging,
 			maxRetriesPerRequest: 3,
 		});
 

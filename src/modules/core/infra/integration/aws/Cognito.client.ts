@@ -39,7 +39,7 @@ export default class CognitoClient {
 				secretAccessKey: String(secretAccessKey),
 				sessionToken,
 			},
-			logger: logging === 'true' ? this.logger : undefined,
+			logger: logging ? this.logger : undefined,
 		};
 		this.userPoolName = userPoolName;
 		this.userPoolId = userPoolId;

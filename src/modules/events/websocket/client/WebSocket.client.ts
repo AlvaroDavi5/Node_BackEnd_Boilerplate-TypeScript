@@ -20,10 +20,9 @@ export default class WebSocketClient {
 	) {
 		const configs = this.configService.get<ConfigsInterface['application']>('application')!;
 		const socketUrl = configs.url;
-		const isSocketEnvEnabled = configs.socketEnv === 'enabled';
 
 		this.logger = this.loggerProvider.getLogger(WebSocketClient.name);
-		if (isSocketEnvEnabled) {
+		if (configs.socketEnv) {
 			this.clientSocket = io(socketUrl, {
 				autoConnect: true,
 				closeOnBeforeunload: true,

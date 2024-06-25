@@ -31,7 +31,7 @@ export const dbConfig: DataSourceOptions = {
 	type: getDialect(db.dialect),
 	charset: db.charset,
 	timezone: db.timezone,
-	logging: app.logging === 'true',
+	logging: app.logging,
 	entities: [
 		UsersModel,
 		UserPreferencesModel,

@@ -13,10 +13,9 @@ export default class WebSocketClient {
 	}: any) {
 		const appConfigs: ConfigsInterface['application'] = configs.application;
 		const socketUrl = appConfigs.url;
-		const isSocketEnvEnabled = appConfigs.socketEnv === 'enabled';
 
 		this.logger = logger;
-		if (isSocketEnvEnabled) {
+		if (appConfigs.socketEnv) {
 			this.clientSocket = io(socketUrl, {
 				autoConnect: true,
 				closeOnBeforeunload: true,

@@ -97,7 +97,7 @@ $ aws configure
 
 1. Copy dotenv file  
 ```shell
-cp envs/.env.development.local ./.env # copy development local example
+cp envs/.env.local ./.env # copy development local example
 source ./.env # load envs on shell session
 ```
 
@@ -132,7 +132,7 @@ kubectl create -f=infra/kubernetes/namespaces/boilerplate-namespace.yml
 kubectl create -f=infra/kubernetes/secrets/boilerplate-secrets.yml
 # or
 # create secrets from env (only for tests/development)
-kubectl create secret generic -n boilerplate-namespace boilerplate-secrets --from-env-file=envs/.env.production.local
+kubectl create secret generic -n boilerplate-namespace boilerplate-secrets --from-env-file=envs/.env.production
 
 # deployments
 kubectl create -f=infra/kubernetes/deployments/boilerplate-deployment.yml
@@ -201,10 +201,6 @@ ___
 	- [x] GitHub Actions
 - **Deployment**
 	- [ ] Heroku
-- **Nest.js**
-	- [Interceptors](https://docs.nestjs.com/interceptors)
-	- [Hybrid Application](https://docs.nestjs.com/faq/hybrid-application)
-	- [kafka](https://docs.nestjs.com/microservices/kafka)
 - **Packaging**
 	- Infra Utils Lib Package
 - **Tests**

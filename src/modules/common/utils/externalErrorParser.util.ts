@@ -47,20 +47,20 @@ export default function externalErrorParser(error: any): HttpException {
 		return exceptionGenerator;
 	};
 
-	if (error instanceof AxiosError) {
-		const exception = exceptionSelector(error.status ?? error.response?.status);
-		return exception(error);
-	} else if (error instanceof HttpException) {
-		const exception = exceptionSelector(error.getStatus());
-		return exception(error);
-	} else if (error instanceof Error) {
-		const exception = exceptionSelector(500);
-		return exception(error);
+	let exception: exceptionGeneratorType;
+	if (error instanceof AxiosError)
+		exception = exceptionSelector(error.status ?? error.response?.status);
+	else if (error instanceof HttpException)
+		exception = exceptionSelector(error.getStatus());
+	else if (error instanceof Error)
+		exception = exceptionSelector(500);
+	else {
+		exception = () => exceptions.internal({
+			message: error?.message,
+			details: error?.details,
+			cause: error?.cause,
+		});
 	}
 
-	return exceptions.internal({
-		message: error?.message,
-		details: error?.details,
-		cause: error?.cause,
-	});
+	return exception(error);
 }

@@ -24,17 +24,19 @@ export default class Exceptions {
 			error: errorName,
 			message: errorMessage,
 			statusCode,
+			description: this.parseToString(errorDetails),
 			details: this.parseToString(errorDetails),
+			cause: this.parseToString(errorCause),
 		};
 		const detailsPayload: HttpExceptionOptions = {
 			description: this.parseToString(errorDetails),
-			cause: this.parseToString(errorCause),
+			cause: errorCause,
 		};
 
 		const exception = new HttpException(errorPayload, statusCode, detailsPayload);
 		exception.name = exceptionName;
 		exception.message = errorMessage;
-		exception.cause = errorDetails;
+		exception.cause = errorDetails ?? errorCause;
 		if (errorStack) exception.stack = errorStack;
 
 		return exception;

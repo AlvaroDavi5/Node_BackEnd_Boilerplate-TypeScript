@@ -1,4 +1,5 @@
-import { Module, Global } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
+import { Module, Global, Scope } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -23,12 +24,13 @@ import CognitoClient from './infra/integration/aws/Cognito.client';
 import RestMockedServiceProvider from './infra/providers/RestMockedService.provider';
 import SyncCronJob from './cron/jobs/SyncCron.job';
 import SyncCronTask from './cron/tasks/SyncCron.task';
+import KnownExceptionFilter from '@api/filters/KnownException.filter';
+import RequestRateConstants from '@common/constants/RequestRate.constants';
+import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import CommonModule from '@common/common.module';
 import AppModule from '@app/app.module';
 import EventsModule from '@events/events.module';
 import GraphQlModule from '@graphql/graphql.module';
-import RequestRateConstants from '@common/constants/RequestRate.constants';
-import { EnvironmentsEnum } from '@common/enums/environments.enum';
 
 
 const { application: appConfigs } = configs();
@@ -80,6 +82,11 @@ const requestRateConstants = new RequestRateConstants();
 	],
 	controllers: [],
 	providers: [
+		{
+			provide: APP_FILTER,
+			useClass: KnownExceptionFilter,
+			scope: Scope.DEFAULT,
+		},
 		LifecycleService,
 		Exceptions,
 		LoggerService,

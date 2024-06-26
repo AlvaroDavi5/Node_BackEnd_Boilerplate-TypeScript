@@ -34,6 +34,7 @@ Procfile                              @AlvaroDavi5
 /src/*                                @AlvaroDavi5
 tsconfig.*                            @AlvaroDavi5
 nest-cli.json                         @AlvaroDavi5
+.swcrc                                @AlvaroDavi5
 babel.config.js                       @AlvaroDavi5
 webpack.config.js                     @AlvaroDavi5
 package.json                          @AlvaroDavi5

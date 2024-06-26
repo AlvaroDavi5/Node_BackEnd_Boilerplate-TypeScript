@@ -1,7 +1,7 @@
 <!--
 Pull Request title pattern:
-  > <CODE> - <type>: short description
-  > Ex.: PROJ-123 - feature: new list users endpoint
+	> <CODE> - <type>: short description
+	> Ex.: PROJ-123 - feature: new list users endpoint
 -->
 
 # PROJ-TASK_ID
@@ -17,6 +17,7 @@ Pull Request title pattern:
 - [ ] Commits according to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
 - [ ] Typecheck and build passed
 - [ ] Already in development and test branches
+	* [ ] Migrations runned (if necessary)
 - [ ] Tested affected endpoints, connections, or event consumption
 - [ ] Implemented and passed unit, integration, and E2E tests
 - [ ] Security check passed

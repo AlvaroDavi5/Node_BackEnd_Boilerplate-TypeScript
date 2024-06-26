@@ -1,17 +1,8 @@
-<!--
-Pull Request title pattern:
-  > <type>/<CODE>-short_description
-  > Ex.: feat/PROJ-123-new_list_users_endpoint
--->
-
 # PROJ-TASK_ID
 
 ## Task Description
 
 ...
-<!--
-Description of the functionality and main decisions made
--->
 
 ## Checklist
 
@@ -23,6 +14,7 @@ Description of the functionality and main decisions made
 - [ ] Security check passed
 - [ ] ESLint rules passed
 - [ ] Code owners marked for review
+- [ ] Added GitHub labels for PR/Issues
 
 ___
 

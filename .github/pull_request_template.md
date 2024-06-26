@@ -6,6 +6,8 @@ Pull Request title pattern:
 
 # PROJ-TASK_ID
 
+[Card Link](https://google.com)  
+
 ## Task Description
 
 ...
@@ -30,5 +32,5 @@ Justification for unselected checkboxes:
 
 ## Evidence
 
-[Log Link](https://google.com)  
+[Logs Link](https://google.com)  
 ![Image Link](https://google.com)  

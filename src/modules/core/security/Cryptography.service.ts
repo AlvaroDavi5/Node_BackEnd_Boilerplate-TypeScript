@@ -12,14 +12,12 @@ type hashAlgorithmType = 'md5' | 'sha256' | 'sha512'
 @Injectable()
 export default class CryptographyService {
 	private readonly secret: string;
-	private readonly IV: string;
 
 	constructor(
 		private readonly configService: ConfigService,
 	) {
 		const { secretKey } = this.configService.get<ConfigsInterface['security']>('security')!;
 		this.secret = secretKey;
-		this.IV = crypto.randomBytes(12).toString('hex');
 	}
 
 	public changeBufferEncoding(data: string, encoding: BufferEncoding, decoding: BufferEncoding): string {
@@ -118,16 +116,16 @@ export default class CryptographyService {
 	}
 
 	public symmetricAESEncrypt(data: string, inputEncoding: BufferEncoding, keyContent: string, outputEncoding: BufferEncoding, iv?: string): { encrypted: string | null, iv: string } {
-		const defIV = iv ?? this.IV;
+		const IV = iv ?? crypto.randomBytes(12).toString('hex');
 
 		try {
-			const cipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(keyContent, 'hex'), Buffer.from(defIV, 'hex'));
+			const cipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(keyContent, 'hex'), Buffer.from(IV, 'hex'));
 			const hexEncrypted = cipher.update(data, inputEncoding, 'hex') + cipher.final('hex');
 			const encrypted = Buffer.from(hexEncrypted, 'hex').toString(outputEncoding);
 
-			return { encrypted, iv: defIV };
+			return { encrypted, iv: IV };
 		} catch (error) {
-			return { encrypted: null, iv: defIV };
+			return { encrypted: null, iv: IV };
 		}
 	}
 

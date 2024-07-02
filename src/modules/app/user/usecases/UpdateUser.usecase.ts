@@ -27,11 +27,7 @@ export default class UpdateUserUseCase {
 		const user = await this.userService.getById(id, true);
 		const preference = await this.userPreferenceService.getByUserId(id);
 
-		const isAllowedToUpdateUser = this.userStrategy.isAllowedToManageUser(userAgent, user);
-		if (!isAllowedToUpdateUser)
-			throw this.exceptions.business({
-				message: 'userAgent not allowed to update this user!',
-			});
+		this.validatePermissionToUpdateUser(userAgent, user);
 
 		const mustUpdateUser = this.mustUpdate(user.getAttributes(), data);
 		const mustUpdateUserPreference = this.mustUpdate(preference.getAttributes(), data.preference);
@@ -71,5 +67,13 @@ export default class UpdateUserUseCase {
 		});
 
 		return mustUpdate;
+	}
+
+	private validatePermissionToUpdateUser(userAgent: UserAuthInterface, user: UserEntity): void {
+		const isAllowedToUpdateUser = this.userStrategy.isAllowedToManageUser(userAgent, user);
+		if (!isAllowedToUpdateUser)
+			throw this.exceptions.business({
+				message: 'userAgent not allowed to update this user!',
+			});
 	}
 }

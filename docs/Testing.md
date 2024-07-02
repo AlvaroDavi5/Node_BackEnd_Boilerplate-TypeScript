@@ -12,7 +12,7 @@ Testes responsáveis por checar a aplicação sem precisar executá-la, como tes
 > Rápidos e fáceis de testar em toda a aplicação, podem ser considerados como o mínimo para a execução do projeto.  
 
 ## Unitários
-Testes responsáveis por testar uma unidade ou módulo de código. Nesse tipo de testes podemos focar em testar cada linha de código e ter o máximo de cobertura possível para seus casos, validando todo o comportamento do código (lógicas, validações, definições, retornos).  
+Testes responsáveis por testar uma unidade ou módulo de código. Nesse tipo de teste podemos focar em testar cada linha de código e ter o máximo de cobertura possível para seus casos, validando todo o comportamento do código (lógicas, validações, definições, retornos).  
 
 ### Mocks
 Por testar apenas uma unidade, acabam por depender muito de mocks para o teste de diferentes cenários.  
@@ -23,7 +23,7 @@ Uma vez que seu escopo se limita às unidades testadas e possuem muitos mocks, o
 > Ideais para testar trechos muito utilizados em diferentes contextos com diferentes inputs.  
 
 ## Integração
-Testes responsáveis por testar a integração entre diversas unidades ou módulos do código. Nesse tipo de testes devemos focar em testar diversos fluxos e como cada fluxo impacta na integração dos módulos que compõem o objeto de teste (fluxos, possíveis erros, definições, retornos).  
+Testes responsáveis por testar a integração entre diversas unidades ou módulos do código. Nesse tipo de teste devemos focar em testar diversos fluxos e como cada fluxo impacta na integração dos módulos que compõem o objeto de teste (fluxos, possíveis erros, definições, retornos).  
 
 ### Mocks
 Por testar um conjunto de unidades, costumam depender menos de mocks do que os testes unitários, porém ainda precisam de mocks, principalmente se tratando de conexões com backing services.  
@@ -34,9 +34,13 @@ Uma vez que seu escopo não se limita a apenas uma unidade por teste e possuem p
 > Ideais para testar vários fluxos da aplicação fazendo o caminho quase completo.  
 
 ## End-to-End
-- Vertical
-- Horizontal
-Testes responsáveis por testar todo um fluxo da aplicação, do início ao fim. Nesse tipo de testes o foco é testar um ou mais fluxos de forma completa, focando menos em cobertura e mais em resultado (requisições, validações, respostas).  
+Testes responsáveis por testar todo um fluxo da aplicação, do início ao fim. Nesse tipo de teste o foco é testar um ou mais fluxos de forma completa, focando menos em cobertura e mais em resultado (requisições, validações, respostas).  
+
+- Vertical  
+Tem como foco testar todas as camadas da aplicação e pode se limitar a um único fluxo (o caminho feliz).  
+
+- Horizontal  
+Tem como foco testar diversos fluxos em um contexto da aplicação e pode ignorar algumas camadas mais internas (já validadas nos testes unitários).  
 
 ### Mocks
 Por ser um teste de ponta-a-ponta, não deve-se utilizar de mocks para funcionar.  
@@ -56,23 +60,23 @@ Uma vez que faz parte de seu escopo testar todo um fluxo da aplicação, os test
 
 ```txt
 modules
-├── api ()
-│   ├── controllers
-│   ├── dto
-│   ├── filters
-│   ├── guards
-│   ├── middlewares
-│   ├── pipes
-│   └── schemas
+├── api (E2E)
+│   ├── controllers (integ)
+│   ├── dto (integ)
+│   ├── filters (integ)
+│   ├── guards (integ)
+│   ├── middlewares (integ)
+│   ├── pipes (integ)
+│   └── schemas (unit)
 ├── app
 │   └── ***
-│       ├── api ()
-│       │   ├── controllers
-│       │   ├── dto
-│       │   ├── pipes
-│       │   └── schemas
-│       ├── repositories ()
-│       ├── services ()
+│       ├── api (E2E)
+│       │   ├── controllers (integ)
+│       │   ├── dto (integ)
+│       │   ├── pipes (integ)
+│       │   └── schemas (unit)
+│       ├── repositories (integ)
+│       ├── services (integ)
 │       ├── strategies (unit)
 │       └── usecases (unit)
 ├── common (unit)
@@ -86,14 +90,13 @@ modules
 │   ├── infra
 │   │   ├── cache (E2E)
 │   │   ├── data (E2E)
-│   │   ├── database
-│   │   │   ├── migrations ()
-│   │   │   ├── models ()
-│   │   │   └── repositories ()
+│   │   ├── database (E2E)
+│   │   │   ├── models (integ)
+│   │   │   └── repositories (integ)
 │   │   ├── integration
 │   │   │   ├── aws (E2E)
-│   │   │   └── rest ()
-│   │   └── providers ()
+│   │   │   └── rest (integ)
+│   │   └── providers (E2E)
 │   ├── logging (integ)
 │   ├── security (unit)
 │   └── start (integ)
@@ -103,18 +106,18 @@ modules
 ├── events
 │   ├── queue
 │   │   ├── consumers ()
-│   │   ├── handlers ()
-│   │   │   └── schemas ()
+│   │   ├── handlers (integ)
+│   │   │   └── schemas (unit)
 │   │   └── producers ()
 │   └── websocket
 │       ├── client ()
-│       ├── guards ()
+│       ├── guards (integ)
 │       └── server ()
 └── graphql
-    ├── ***
+    └── ***
         ├── dto
-        ├── resolvers ()
-        └── services ()
+        ├── resolvers (integ)
+        └── services (integ)
 ```
 
 # Referências

@@ -4,7 +4,6 @@ import dotenv from 'dotenv';
 import { ConfigsInterface } from '@core/configs/configs.config';
 import nestListenConfig, { validateKnownExceptions } from '@core/configs/nestListen.config';
 import nestApiConfig from '@core/configs/nestApi.config';
-import swaggerDocConfig from '@core/configs/swaggerDoc.config';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
@@ -21,7 +20,6 @@ export async function startNestApplication(nestApp: INestApplication) {
 	nestListenConfig(nestApp);
 
 	nestApiConfig(nestApp);
-	swaggerDocConfig(nestApp);
 
 	const appConfigs = nestApp.get<ConfigService>(ConfigService, {}).get<ConfigsInterface['application']>('application')!;
 

@@ -4,7 +4,7 @@ import { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.e
 import { ThemesEnum } from '@domain/enums/themes.enum';
 
 
-export abstract class UserPreferenceInputDto implements UpdateUserPreferenceInterface {
+export class UserPreferenceInputDto implements UpdateUserPreferenceInterface {
 	@ApiProperty({ type: String, example: './image.png', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()

@@ -5,7 +5,7 @@ import CreateConnectionInputDto from './CreateConnectionInput.dto';
 
 
 @InputType()
-export default abstract class UpdateConnectionInputDto extends CreateConnectionInputDto {
+export default class UpdateConnectionInputDto extends CreateConnectionInputDto {
 	@Field(returingString, { defaultValue: '', nullable: false, description: 'Database register ID' })
 	@IsString()
 	public id!: string;

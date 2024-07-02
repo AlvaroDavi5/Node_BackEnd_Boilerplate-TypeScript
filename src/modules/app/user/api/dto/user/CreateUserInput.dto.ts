@@ -9,7 +9,7 @@ import { UserPreferenceInputDto } from '../userPreference/UserPreferenceInput.dt
 const regExConstants = new RegExConstants();
 const { regex: onlyNumericDigitsRegex } = regExConstants.onlyNumericDigitsPattern;
 
-export default abstract class CreateUserInputDto implements CreateUserInterface {
+export default class CreateUserInputDto implements CreateUserInterface {
 	@ApiProperty({ type: String, example: 'User Default', default: '', nullable: false, required: true })
 	@IsString()
 	@IsNotEmpty()

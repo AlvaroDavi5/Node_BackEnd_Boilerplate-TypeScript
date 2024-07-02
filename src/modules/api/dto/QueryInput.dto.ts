@@ -3,7 +3,7 @@ import { IsOptional, IsString, IsNumberString, IsBooleanString, IsEnum } from 'c
 import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
 
-export abstract class ListQueryInputDto implements ListQueryInterface {
+export class ListQueryInputDto implements ListQueryInterface {
 	@ApiProperty({ type: Number, example: 5, default: undefined, nullable: false, required: false, description: 'Results amount by page' })
 	@IsNumberString()
 	@IsOptional()

@@ -4,7 +4,7 @@ import { returingString, returingBoolean } from '@shared/internal/types/returnTy
 
 
 @InputType()
-export default abstract class CreateConnectionInputDto {
+export default class CreateConnectionInputDto {
 	@Field(returingString, { defaultValue: '', nullable: false, description: 'WebSocket ID' })
 	@IsString()
 	public subscriptionId!: string;

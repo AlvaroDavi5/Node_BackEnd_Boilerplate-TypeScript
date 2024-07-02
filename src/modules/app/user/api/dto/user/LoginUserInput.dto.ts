@@ -3,7 +3,7 @@ import { IsString, IsNotEmpty } from 'class-validator';
 import { LoginUserSchemaInterface } from '@app/user/api/schemas/user/loginUser.schema';
 
 
-export default abstract class LoginUserInputDto implements LoginUserSchemaInterface {
+export default class LoginUserInputDto implements LoginUserSchemaInterface {
 	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: '', nullable: false, required: true })
 	@IsString()
 	@IsNotEmpty()

@@ -4,7 +4,7 @@ import { RegisterEventHookInterface } from '@app/hook/api/schemas/registerEventH
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 
 
-export abstract class RegisterEventHookInputDto implements RegisterEventHookInterface {
+export class RegisterEventHookInputDto implements RegisterEventHookInterface {
 	@ApiProperty({ type: String, example: 'http://localhost:4000/api/hook', default: '', nullable: false, required: true })
 	@IsString()
 	@IsNotEmpty()

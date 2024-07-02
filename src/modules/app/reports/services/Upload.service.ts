@@ -2,7 +2,7 @@ import { Injectable, Scope } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Readable } from 'stream';
 import S3Client, { s3FileContentType } from '@core/infra/integration/aws/S3.client';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
 import FileStrategy from '@app/file/strategies/File.strategy';
 import FileReaderHelper from '@common/utils/helpers/FileReader.helper';

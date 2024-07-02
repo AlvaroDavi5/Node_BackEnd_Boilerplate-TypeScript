@@ -6,7 +6,7 @@ import CryptographyService from '@core/security/Cryptography.service';
 import UserRepository from '@app/user/repositories/user/User.repository';
 import Exceptions from '@core/errors/Exceptions';
 import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 
 
 @Injectable()

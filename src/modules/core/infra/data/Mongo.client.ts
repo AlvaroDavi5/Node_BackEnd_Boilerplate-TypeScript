@@ -5,7 +5,7 @@ import {
 	Db, Document, Collection, ObjectId,
 	InsertOneResult, InsertManyResult, UpdateResult, DeleteResult,
 } from 'mongodb';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
 
 

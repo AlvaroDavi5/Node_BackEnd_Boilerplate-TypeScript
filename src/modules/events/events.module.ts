@@ -5,12 +5,12 @@ import WebSocketClient from './websocket/client/WebSocket.client';
 import EventsQueueConsumer from './queue/consumers/EventsQueue.consumer';
 import EventsQueueProducer from './queue/producers/EventsQueue.producer';
 import EventsQueueHandler from './queue/handlers/EventsQueue.handler';
-import configs from '@core/configs/configs.config';
+import envsConfig from '@core/configs/envs.config';
 import SqsClient from '@dev/localstack/queues/SqsClient';
 import { configServiceMock, cryptographyServiceMock, dataParserHelperMock, loggerProviderMock } from '@dev/mocks/mockedModules';
 
 
-const appConfigs = configs();
+const appConfigs = envsConfig();
 const { region: awsRegion } = appConfigs.integration.aws.credentials;
 const { queueName: eventsQueueName, queueUrl: eventsQueueUrl } = appConfigs.integration.aws.sqs.eventsQueue;
 

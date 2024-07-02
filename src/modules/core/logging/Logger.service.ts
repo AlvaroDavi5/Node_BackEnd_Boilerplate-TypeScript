@@ -2,7 +2,7 @@ import { INQUIRER } from '@nestjs/core';
 import { Injectable, Inject, Provider, Scope } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createLogger, Logger } from 'winston';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import {
 	LoggerInterface, LogLevelEnum, MetadataInterface,

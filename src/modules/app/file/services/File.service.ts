@@ -3,7 +3,7 @@ import { LazyModuleLoader } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import CryptographyService from '@core/security/Cryptography.service';
 import Exceptions from '@core/errors/Exceptions';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import ReportsModule from '@app/reports/reports.module';
 import UploadService from '@app/reports/services/Upload.service';
 import ContentTypeConstants from '@common/constants/ContentType.constants';

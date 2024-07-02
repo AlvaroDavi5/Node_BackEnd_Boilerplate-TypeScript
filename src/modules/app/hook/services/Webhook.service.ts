@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import CryptographyService from '@core/security/Cryptography.service';
 import RestMockedServiceProvider from '@core/infra/providers/RestMockedService.provider';
 import RedisClient from '@core/infra/cache/Redis.client';

@@ -9,7 +9,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { GraphQLFormattedError } from 'graphql';
 import { join } from 'path';
-import configs from './configs/configs.config';
+import envsConfig from './configs/envs.config';
 import LifecycleService from './start/Lifecycle.service';
 import Exceptions from './errors/Exceptions';
 import LoggerService, { SingletonLoggerProvider, RequestLoggerProvider } from './logging/Logger.service';
@@ -33,7 +33,7 @@ import EventsModule from '@events/events.module';
 import GraphQlModule from '@graphql/graphql.module';
 
 
-const { application: appConfigs } = configs();
+const { application: appConfigs } = envsConfig();
 const requestRateConstants = new RequestRateConstants();
 
 @Global()
@@ -41,7 +41,7 @@ const requestRateConstants = new RequestRateConstants();
 	imports: [
 		ConfigModule.forRoot({
 			isGlobal: true,
-			load: [configs],
+			load: [envsConfig],
 		}),
 		ScheduleModule.forRoot(),
 		EventEmitterModule.forRoot({

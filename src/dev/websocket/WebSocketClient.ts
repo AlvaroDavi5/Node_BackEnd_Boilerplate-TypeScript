@@ -1,5 +1,5 @@
 import { io, Socket as ClientSocket } from 'socket.io-client';
-import { ConfigsInterface } from 'src/modules/core/configs/configs.config';
+import { ConfigsInterface } from 'src/modules/core/configs/envs.config';
 import { dataParserHelperMock } from '../mocks/mockedModules';
 
 

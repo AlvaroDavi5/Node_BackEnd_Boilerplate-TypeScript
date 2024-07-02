@@ -4,7 +4,7 @@ import { io, Socket as ClientSocket } from 'socket.io-client';
 import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 
 
 @Injectable()

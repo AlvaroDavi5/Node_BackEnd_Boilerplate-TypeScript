@@ -7,11 +7,11 @@ import { LoggerInterface } from '@core/logging/logger';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import { ProcessEventsEnum } from '@common/enums/processEvents.enum';
 import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
-import configs from '@core/configs/configs.config';
+import envsConfig from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
 
 
-const appConfigs = configs();
+const appConfigs = envsConfig();
 const { queueName: eventsQueueName, queueUrl: eventsQueueUrl } = appConfigs.integration.aws.sqs.eventsQueue;
 
 @Injectable()

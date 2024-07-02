@@ -4,7 +4,7 @@ import crypto from 'crypto';
 import { genSaltSync } from 'bcrypt';
 import { sign, verify, JwtPayload, JsonWebTokenError } from 'jsonwebtoken';
 import { v4 as uuidV4 } from 'uuid';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 
 
 type hashAlgorithmType = 'md5' | 'sha256' | 'sha512'

@@ -4,7 +4,7 @@ import { writeFileSync } from 'fs';
 import CoreModule from '@core/core.module';
 import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import nestListenConfig, { createNestApplicationOptions, validateKnownExceptions } from '@core/configs/nestListen.config';
 import nestApiConfig from '@core/configs/nestApi.config';
 import swaggerDocConfig from '@core/configs/swaggerDoc.config';

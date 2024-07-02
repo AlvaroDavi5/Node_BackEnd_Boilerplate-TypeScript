@@ -8,6 +8,7 @@ import Exceptions from '@core/errors/Exceptions';
 import CryptographyService from '@core/security/Cryptography.service';
 import UserEntity from '@domain/entities/User.entity';
 
+
 describe('Modules :: App :: User :: Services :: UserService', () => {
 	let nestTestingModule: TestingModule;
 	let userService: UserService;

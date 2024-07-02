@@ -1,26 +1,8 @@
-import { Test, TestingModule } from '@nestjs/testing';
-import { ConfigService } from '@nestjs/config';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import { configServiceMock } from '@dev/mocks/mockedModules';
 
 
 describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
-	let nestTestingModule: TestingModule;
-	let dataParserHelper: DataParserHelper;
-
-
-	// ? build test app
-	beforeAll(async () => {
-		nestTestingModule = await Test.createTestingModule({
-			providers: [
-				{ provide: ConfigService, useValue: configServiceMock },
-				DataParserHelper,
-			]
-		}).compile();
-
-		// * get app provider
-		dataParserHelper = nestTestingModule.get<DataParserHelper>(DataParserHelper);
-	});
+	const dataParserHelper = new DataParserHelper();
 
 	describe('# Valid Data To String', () => {
 		test('Should return the same string', () => {
@@ -59,15 +41,15 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 
 	describe('# Valid Data To Object', () => {
 		test('Should return a parsed object', () => {
-			const parsedUser = dataParserHelper.toObject('{"user":{"id":1}}');
+			const { data: parsedUser } = dataParserHelper.toObject('{"user":{"id":1}}');
 			expect(parsedUser).toEqual({ user: { id: 1 } });
 		});
 	});
 
 	describe('# Invalid Data To Object', () => {
 		test('Should return the same data', () => {
-			const parsedUser = dataParserHelper.toObject('{user:{id:1}}');
-			expect(parsedUser).toEqual(null);
+			const { data: parsedUser } = dataParserHelper.toObject('{user:{id:1}}');
+			expect(parsedUser).toBeNull();
 		});
 	});
 });

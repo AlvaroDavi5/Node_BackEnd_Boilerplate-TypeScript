@@ -1,7 +1,6 @@
 import CreateUserUseCase from '@app/user/usecases/CreateUser.usecase';
 import UserEntity, { UpdateUserInterface } from '@domain/entities/User.entity';
 import UserPreferenceEntity, { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.entity';
-import HttpConstants from '@common/constants/Http.constants';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
@@ -15,6 +14,9 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 		business: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 		notFound: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 		conflict: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
+	};
+	const httpConstantsMock = {
+		messages: { conflict: jest.fn((element: string): string => (`${element} already exists!`)) },
 	};
 	const userServiceMock = {
 		getByEmail: jest.fn(async (email: string): Promise<UserEntity | null> => (null)),
@@ -39,7 +41,7 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 	const createUserUseCase = new CreateUserUseCase(
 		userServiceMock as any,
 		userPreferenceServiceMock as any,
-		new HttpConstants(),
+		httpConstantsMock as any,
 		exceptionsMock as any,
 	);
 
@@ -86,6 +88,7 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
 			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
+			expect(httpConstantsMock.messages.conflict).not.toHaveBeenCalled();
 			expect(exceptionsMock.notFound).toHaveBeenCalledWith({
 				message: 'User not founded by ID!'
 			});
@@ -101,6 +104,7 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 			expect(userPreferenceServiceMock.create).not.toHaveBeenCalled();
 			expect(userServiceMock.getById).not.toHaveBeenCalled();
 			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
+			expect(httpConstantsMock.messages.conflict).toHaveBeenCalledWith('User');
 			expect(exceptionsMock.conflict).toHaveBeenCalledWith({
 				message: 'User already exists!'
 			});

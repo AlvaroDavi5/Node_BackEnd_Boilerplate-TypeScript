@@ -1,7 +1,7 @@
 import DeleteUserUseCase from '@app/user/usecases/DeleteUser.usecase';
 import UserEntity, { UpdateUserInterface } from '@domain/entities/User.entity';
 import UserPreferenceEntity, { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.entity';
-import UserStrategy from '@app/user/strategies/User.strategy';
+import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
@@ -15,6 +15,9 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 		business: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 		notFound: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 		conflict: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
+	};
+	const userStrategyMock = {
+		isAllowedToManageUser: jest.fn((userAgent: UserAuthInterface, userData: UserEntity): boolean => (false)),
 	};
 	const userServiceMock = {
 		getByEmail: jest.fn(async (email: string): Promise<UserEntity | null> => (null)),
@@ -39,7 +42,7 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 	const deleteUserUseCase = new DeleteUserUseCase(
 		userServiceMock as any,
 		userPreferenceServiceMock as any,
-		new UserStrategy(),
+		userStrategyMock as any,
 		exceptionsMock as any,
 	);
 
@@ -49,6 +52,7 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: userEntity.getId() });
 			userServiceMock.getById.mockResolvedValueOnce(userEntity);
 			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
+			userStrategyMock.isAllowedToManageUser.mockReturnValueOnce(true);
 			userPreferenceServiceMock.delete.mockResolvedValueOnce(true);
 			userServiceMock.delete.mockResolvedValueOnce(true);
 
@@ -69,6 +73,7 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: userEntity.getId() });
 			userServiceMock.getById.mockResolvedValueOnce(userEntity);
 			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
+			userStrategyMock.isAllowedToManageUser.mockReturnValueOnce(true);
 			userPreferenceServiceMock.delete.mockResolvedValueOnce(false);
 			userServiceMock.delete.mockResolvedValueOnce(false);
 

@@ -5,7 +5,7 @@ import { configServiceMock } from '@dev/mocks/mockedModules';
 
 
 describe('Modules :: Common :: Utils :: Helpers :: FileReaderHelper', () => {
-	const fileReaderHelper = new FileReaderHelper(configServiceMock as any, new DataParserHelper(configServiceMock as any));
+	const fileReaderHelper = new FileReaderHelper(configServiceMock as any, new DataParserHelper());
 
 	describe('# Invalid File Path', () => {
 		const filePath = './invalidFile.txt';

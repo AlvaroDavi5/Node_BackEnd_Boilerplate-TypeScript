@@ -1,10 +1,10 @@
 import UpdateUserUseCase from '@app/user/usecases/UpdateUser.usecase';
 import UserEntity, { UpdateUserInterface } from '@domain/entities/User.entity';
 import UserPreferenceEntity, { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.entity';
-import UserStrategy from '@app/user/strategies/User.strategy';
-import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
-import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 import { ThemesEnum } from '@domain/enums/themes.enum';
+import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
+import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
+import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
 describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
@@ -16,6 +16,9 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 		business: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 		notFound: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 		conflict: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
+	};
+	const userStrategyMock = {
+		isAllowedToManageUser: jest.fn((userAgent: UserAuthInterface, userData: UserEntity): boolean => (false)),
 	};
 	const userServiceMock = {
 		getByEmail: jest.fn(async (email: string): Promise<UserEntity | null> => (null)),
@@ -40,7 +43,7 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 	const updateUserUseCase = new UpdateUserUseCase(
 		userServiceMock as any,
 		userPreferenceServiceMock as any,
-		new UserStrategy(),
+		userStrategyMock as any,
 		exceptionsMock as any,
 	);
 
@@ -54,6 +57,7 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 			userPreferenceServiceMock.getByUserId
 				.mockResolvedValueOnce(userPreferenceEntity)
 				.mockResolvedValueOnce(userPreferenceEntity);
+			userStrategyMock.isAllowedToManageUser.mockReturnValueOnce(true);
 			userServiceMock.update.mockImplementationOnce(async (id: string, data: UpdateUserInterface): Promise<UserEntity> => {
 				if (data.email) userEntity.setEmail(data.email);
 				if (data.password) userEntity.setPhone(data.password);
@@ -96,6 +100,7 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: userEntity.getId() });
 			userServiceMock.getById.mockResolvedValueOnce(userEntity);
 			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
+			userStrategyMock.isAllowedToManageUser.mockReturnValueOnce(true);
 			userServiceMock.update.mockRejectedValueOnce(exceptionsMock.conflict({
 				message: 'User not updated!',
 			}));

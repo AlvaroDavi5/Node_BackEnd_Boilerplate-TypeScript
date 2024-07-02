@@ -55,7 +55,66 @@ Uma vez que faz parte de seu escopo testar todo um fluxo da aplicação, os test
 # Escopo de Testes para essa Aplicação
 
 ```txt
-...
+modules
+├── api ()
+│   ├── controllers
+│   ├── dto
+│   ├── filters
+│   ├── guards
+│   ├── middlewares
+│   ├── pipes
+│   └── schemas
+├── app
+│   └── ***
+│       ├── api ()
+│       │   ├── controllers
+│       │   ├── dto
+│       │   ├── pipes
+│       │   └── schemas
+│       ├── repositories ()
+│       ├── services ()
+│       ├── strategies (unit)
+│       └── usecases (unit)
+├── common (unit)
+│   └── ***
+├── core
+│   ├── configs (integ)
+│   ├── cron
+│   │   ├── jobs ()
+│   │   └── tasks ()
+│   ├── errors (unit)
+│   ├── infra
+│   │   ├── cache (E2E)
+│   │   ├── data (E2E)
+│   │   ├── database
+│   │   │   ├── migrations ()
+│   │   │   ├── models ()
+│   │   │   └── repositories ()
+│   │   ├── integration
+│   │   │   ├── aws (E2E)
+│   │   │   └── rest ()
+│   │   └── providers ()
+│   ├── logging (integ)
+│   ├── security (unit)
+│   └── start (integ)
+├── domain
+│   ├── entities (unit)
+│   └── enums (unit)
+├── events
+│   ├── queue
+│   │   ├── consumers ()
+│   │   ├── handlers ()
+│   │   │   └── schemas ()
+│   │   └── producers ()
+│   └── websocket
+│       ├── client ()
+│       ├── guards ()
+│       └── server ()
+└── graphql
+    ├── ***
+        ├── dto
+        ├── resolvers ()
+        └── services ()
 ```
 
 # Referências

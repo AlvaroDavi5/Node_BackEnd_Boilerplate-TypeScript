@@ -6,16 +6,12 @@
 		"src/**/*.ts",
 		"src/**/*.tsx",
 		"src/**/*.js",
-		"src/**/*.jsx",
-		"tests/**/*.d.ts",
-		"tests/**/*.ts",
-		"tests/**/*.tsx",
-		"tests/**/*.js",
-		"tests/**/*.jsx"
+		"src/**/*.jsx"
 	],
 	"exclude": [
 		"node_modules",
 		"build",
+		"tests",
 		"**/*.test.ts",
 		"**/*.spec.ts"
 	]

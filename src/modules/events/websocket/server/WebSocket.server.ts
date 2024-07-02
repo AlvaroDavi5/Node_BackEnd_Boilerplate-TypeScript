@@ -48,7 +48,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 	}
 
 	private formatMessageAfterReceiveHelper(message: string): object | string | null {
-		return this.dataParserHelper.toObject(message) ?? message;
+		return this.dataParserHelper.toObject(message).data ?? message;
 	}
 
 	private formatMessageBeforeSendHelper(message: unknown): string {

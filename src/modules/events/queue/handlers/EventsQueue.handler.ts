@@ -43,7 +43,7 @@ export default class EventsQueueHandler implements OnModuleInit {
 
 		try {
 			if (message.Body) {
-				const data = this.dataParserHelper.toObject(message.Body);
+				const { data } = this.dataParserHelper.toObject(message.Body);
 				const value = this.schemaValidator.validate(data, bodyMetadata, eventSchema);
 
 				if (value.payload.event === EventsEnum.NEW_CONNECTION) {

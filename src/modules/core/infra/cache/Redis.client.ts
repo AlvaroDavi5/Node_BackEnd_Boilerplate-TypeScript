@@ -38,6 +38,11 @@ export default class RedisClient {
 		this.isConnected = true;
 	}
 
+	private parseValue<VT = object>(strValue: string): VT | null {
+		const { data } = this.dataParserHelper.toObject<VT>(strValue);
+		return data;
+	}
+
 	public getClient(): IORedis {
 		return this.redisClient;
 	}
@@ -84,7 +89,7 @@ export default class RedisClient {
 
 	public async get<VT = any>(key: string): Promise<any> {
 		const value = await this.redisClient.get(String(key));
-		const result = value ? this.dataParserHelper.toObject(value) : null;
+		const result = value ? this.parseValue(value) : null;
 
 		return result as (VT | null);
 	}
@@ -102,7 +107,7 @@ export default class RedisClient {
 		const keys = await this.redisClient.keys(pattern);
 		const getByKeyPromises = keys.map(
 			async (key: string) => {
-				const value = this.dataParserHelper.toObject(String(await this.redisClient.get(key))) as (VT | null);
+				const value = this.parseValue<VT>(String(await this.redisClient.get(key)));
 
 				return {
 					key,
@@ -125,7 +130,7 @@ export default class RedisClient {
 		const caches = await this.redisClient.mget(keys);
 
 		return caches.map((cache) => {
-			return this.dataParserHelper.toObject(String(cache)) as (VT | null);
+			return this.parseValue<VT>(String(cache));
 		});
 	}
 

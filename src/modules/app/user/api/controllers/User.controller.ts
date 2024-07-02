@@ -20,7 +20,7 @@ import AuthGuard from '@api/guards/Auth.guard';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import { ListQueryValidatorPipe } from '@api/pipes/QueryValidator.pipe';
-import { ListQueryInputDto } from '@api/pipes/dto/QueryInput.dto';
+import { ListQueryInputDto } from '@api/dto/QueryInput.dto';
 import CreateUserValidatorPipe from '../pipes/CreateUserValidator.pipe';
 import UpdateUserValidatorPipe from '../pipes/UpdateUserValidator.pipe';
 import LoginUserValidatorPipe from '../pipes/LoginUserValidator.pipe';

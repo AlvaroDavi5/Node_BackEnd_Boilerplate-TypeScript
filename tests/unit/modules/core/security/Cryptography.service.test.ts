@@ -1,5 +1,5 @@
 import CryptographyService from '@core/security/Cryptography.service';
-import configs from '@core/configs/configs.config';
+import envsConfig from '@core/configs/envs.config';
 
 
 describe('Modules :: Core :: Security :: CryptographyService', () => {
@@ -8,7 +8,7 @@ describe('Modules :: Core :: Security :: CryptographyService', () => {
 		get: (propertyPath?: string): any => {
 			if (propertyPath) {
 				const splitedPaths = propertyPath.split('.');
-				let scopedProperty: any = configs();
+				let scopedProperty: any = envsConfig();
 
 				for (const scopedPath of splitedPaths) {
 					if (scopedPath.length > 0)
@@ -17,7 +17,7 @@ describe('Modules :: Core :: Security :: CryptographyService', () => {
 
 				return scopedProperty;
 			} else
-				return configs();
+				return envsConfig();
 		},
 	};
 

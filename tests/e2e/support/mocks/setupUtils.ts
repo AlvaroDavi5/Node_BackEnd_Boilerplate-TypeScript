@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import dotenv from 'dotenv';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import nestListenConfig, { validateKnownExceptions } from '@core/configs/nestListen.config';
 import nestApiConfig from '@core/configs/nestApi.config';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';

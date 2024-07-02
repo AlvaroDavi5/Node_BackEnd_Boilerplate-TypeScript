@@ -1,7 +1,7 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { FindOneOptions } from 'typeorm';
-import configs from '@core/configs/configs.config';
+import envsConfig from '@core/configs/envs.config';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 import UserPreferenceService from '@app/user/services/UserPreference.service';
 import UserPreferenceRepository from '@app/user/repositories/userPreference/UserPreference.repository';
@@ -23,7 +23,7 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 		get: (propertyPath?: string): any => {
 			if (propertyPath) {
 				const splitedPaths = propertyPath.split('.');
-				let scopedProperty: any = configs();
+				let scopedProperty: any = envsConfig();
 
 				for (let i = 0; i < splitedPaths.length; i++) {
 					const scopedPath = splitedPaths[i];
@@ -34,7 +34,7 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 
 				return scopedProperty;
 			} else
-				return configs();
+				return envsConfig();
 		},
 	};
 

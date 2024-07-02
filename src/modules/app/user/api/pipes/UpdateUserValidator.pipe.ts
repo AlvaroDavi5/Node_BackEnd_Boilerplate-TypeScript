@@ -8,13 +8,13 @@ import UpdateUserInputDto from '../dto/user/UpdateUserInput.dto';
 
 
 export default class UpdateUserValidatorPipe implements PipeTransform<UpdateUserInputDto, UpdateUserInterface> {
-	private readonly schemaValidator: SchemaValidator<UpdateUserInterface>;
+	private readonly schemaValidator: SchemaValidator;
 
 	constructor() {
-		this.schemaValidator = new SchemaValidator<UpdateUserInterface>(new Exceptions(), generateLogger(UpdateUserValidatorPipe.name));
+		this.schemaValidator = new SchemaValidator(new Exceptions(), generateLogger(UpdateUserValidatorPipe.name));
 	}
 
 	public transform(value: UpdateUserInputDto, metadata: ArgumentMetadata): UpdateUserInterface {
-		return this.schemaValidator.validate(value, metadata, updateUserSchema);
+		return this.schemaValidator.validate<UpdateUserInterface>(value, metadata, updateUserSchema);
 	}
 }

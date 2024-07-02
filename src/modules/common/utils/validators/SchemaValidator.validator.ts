@@ -6,7 +6,7 @@ import Exceptions from '@core/errors/Exceptions';
 import { LoggerInterface } from '@core/logging/logger';
 
 
-export default class SchemaValidator<S> {
+export default class SchemaValidator {
 	constructor(
 		private readonly exceptions: Exceptions,
 		private readonly logger: Logger | LoggerInterface | Console,
@@ -19,7 +19,7 @@ export default class SchemaValidator<S> {
 			this.logger.verbose(message);
 	}
 
-	public validate(data: unknown, metadata: ArgumentMetadata, schema: Schema<S>): S {
+	public validate<S = unknown>(data: unknown, metadata: ArgumentMetadata, schema: Schema<S>): S {
 		this.log(`Validating '${metadata.type}' received as '${metadata.metatype?.name}'`);
 
 		const { value, error } = schema.validate(

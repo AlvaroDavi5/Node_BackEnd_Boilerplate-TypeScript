@@ -18,7 +18,7 @@ import { WebSocketRoomsEnum } from '@domain/enums/webSocketEvents.enum';
 export default class EventsQueueHandler implements OnModuleInit {
 	private subscriptionService!: SubscriptionService;
 	private webhookService!: WebhookService;
-	private readonly schemaValidator: SchemaValidator<EventSchemaInterface>;
+	private readonly schemaValidator: SchemaValidator;
 	private readonly logger: LoggerInterface;
 
 	constructor(
@@ -30,7 +30,7 @@ export default class EventsQueueHandler implements OnModuleInit {
 		private readonly exceptions: Exceptions,
 	) {
 		this.logger = this.loggerProvider.getLogger(EventsQueueHandler.name);
-		this.schemaValidator = new SchemaValidator<EventSchemaInterface>(this.exceptions, this.logger);
+		this.schemaValidator = new SchemaValidator(this.exceptions, this.logger);
 	}
 
 	public onModuleInit(): void {
@@ -44,7 +44,7 @@ export default class EventsQueueHandler implements OnModuleInit {
 		try {
 			if (message.Body) {
 				const { data } = this.dataParserHelper.toObject(message.Body);
-				const value = this.schemaValidator.validate(data, bodyMetadata, eventSchema);
+				const value = this.schemaValidator.validate<EventSchemaInterface>(data, bodyMetadata, eventSchema);
 
 				if (value.payload.event === EventsEnum.NEW_CONNECTION) {
 					this.subscriptionService.emit(value, WebSocketRoomsEnum.NEW_CONNECTIONS);

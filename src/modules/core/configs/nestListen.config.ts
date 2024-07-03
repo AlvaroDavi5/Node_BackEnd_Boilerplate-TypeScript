@@ -2,8 +2,8 @@ import { INestApplication, NestApplicationOptions } from '@nestjs/common';
 import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import { ProcessEventsEnum, ProcessSignalsEnum } from '@common/enums/processEvents.enum';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
-import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 import { getObjValues } from '@common/utils/dataValidations.util';
+import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
 export const createNestApplicationOptions: NestApplicationOptions = {

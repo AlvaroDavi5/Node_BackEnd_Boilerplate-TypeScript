@@ -46,7 +46,7 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 				Exceptions,
 				{ provide: UserPreferenceRepository, useValue: userPreferenceRepositoryMock },
 				UserPreferenceService,
-			]
+			],
 		}).compile();
 
 		// * get app provider

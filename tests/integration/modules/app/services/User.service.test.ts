@@ -29,7 +29,7 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 				{ provide: UserRepository, useValue: userRepositoryMock },
 				CryptographyService,
 				UserService,
-			]
+			],
 		}).compile();
 
 		// * get app provider

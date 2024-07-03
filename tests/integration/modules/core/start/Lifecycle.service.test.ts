@@ -72,7 +72,7 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 				{ provide: CognitoClient, useValue: awsClientMock },
 				{ provide: LoggerService, useValue: loggerServiceMock },
 				LifecycleService,
-			]
+			],
 		}).compile();
 	});
 

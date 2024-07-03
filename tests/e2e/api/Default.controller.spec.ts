@@ -51,6 +51,23 @@ describe('API :: DefaultController', () => {
 		});
 	});
 
+	describe('# [GET] /api/v1/check', () => {
+		test('Should get success', async () => {
+			const response = await request(await nestTestApp.getHttpServer())
+				.get('/api/v1/check?key=value')
+				.send({
+					test: 'Hello World!',
+				});
+
+			expect(response.statusCode).toBe(200);
+			expect(response.body).toEqual({
+				method: 'GET',
+				baseUrl: '',
+				statusCode: 200,
+			});
+		});
+	});
+
 	afterAll(async () => {
 		await nestTestApp.close();
 		await nestTestingModule.close();

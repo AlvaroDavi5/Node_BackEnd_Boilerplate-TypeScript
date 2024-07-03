@@ -67,14 +67,14 @@ modules
 │   ├── guards (integ)
 │   ├── middlewares (integ)
 │   ├── pipes (integ)
-│   └── schemas (unit)
+│   └── schemas (integ)
 ├── app
 │   └── ***
 │       ├── api (E2E)
 │       │   ├── controllers (integ)
 │       │   ├── dto (integ)
 │       │   ├── pipes (integ)
-│       │   └── schemas (unit)
+│       │   └── schemas (integ)
 │       ├── repositories (integ)
 │       ├── services (integ)
 │       ├── strategies (unit)
@@ -83,15 +83,15 @@ modules
 │   └── ***
 ├── core
 │   ├── configs (integ)
-│   ├── cron
-│   │   ├── jobs ()
-│   │   └── tasks ()
+│   ├── cron (E2E)
+│   │   ├── jobs
+│   │   └── tasks
 │   ├── errors (unit)
 │   ├── infra
 │   │   ├── cache (E2E)
 │   │   ├── data (E2E)
 │   │   ├── database (E2E)
-│   │   │   ├── models (integ)
+│   │   │   ├── models (E2E)
 │   │   │   └── repositories (integ)
 │   │   ├── integration
 │   │   │   ├── aws (E2E)
@@ -105,14 +105,14 @@ modules
 │   └── enums (unit)
 ├── events
 │   ├── queue
-│   │   ├── consumers ()
+│   │   ├── consumers (E2E)
 │   │   ├── handlers (integ)
-│   │   │   └── schemas (unit)
-│   │   └── producers ()
+│   │   │   └── schemas (integ)
+│   │   └── producers (E2E)
 │   └── websocket
-│       ├── client ()
+│       ├── client (E2E)
 │       ├── guards (integ)
-│       └── server ()
+│       └── server (E2E)
 └── graphql
     └── ***
         ├── dto

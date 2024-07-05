@@ -22,7 +22,7 @@ export default class UserPreferenceService {
 
 			return preference;
 		} catch (error) {
-			throw this.throwError(error);
+			throw this.caughtError(error);
 		}
 	}
 
@@ -30,7 +30,7 @@ export default class UserPreferenceService {
 		try {
 			return await this.userPreferenceRepository.create(entity);
 		} catch (error) {
-			throw this.throwError(error);
+			throw this.caughtError(error);
 		}
 	}
 
@@ -47,7 +47,7 @@ export default class UserPreferenceService {
 
 			return preference;
 		} catch (error) {
-			throw this.throwError(error);
+			throw this.caughtError(error);
 		}
 	}
 
@@ -55,11 +55,11 @@ export default class UserPreferenceService {
 		try {
 			return await this.userPreferenceRepository.deleteOne(id, Boolean(data.softDelete));
 		} catch (error) {
-			throw this.throwError(error);
+			throw this.caughtError(error);
 		}
 	}
 
-	private throwError(error: any): Error {
+	private caughtError(error: any): Error {
 		const errorDetails: string | undefined = error?.message ?? error?.cause ?? error?.original;
 		return this.exceptions.internal({
 			message: 'Error to comunicate with database',

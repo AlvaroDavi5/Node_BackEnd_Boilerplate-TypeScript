@@ -34,7 +34,7 @@ export default class UserService {
 
 			return user;
 		} catch (error) {
-			throw this.throwError(error);
+			throw this.caughtError(error);
 		}
 	}
 
@@ -44,7 +44,7 @@ export default class UserService {
 
 			return user;
 		} catch (error) {
-			throw this.throwError(error);
+			throw this.caughtError(error);
 		}
 	}
 
@@ -60,7 +60,7 @@ export default class UserService {
 
 			return await this.userRepository.create(entity);
 		} catch (error) {
-			throw this.throwError(error);
+			throw this.caughtError(error);
 		}
 	}
 
@@ -81,7 +81,7 @@ export default class UserService {
 
 			return user;
 		} catch (error) {
-			throw this.throwError(error);
+			throw this.caughtError(error);
 		}
 	}
 
@@ -89,7 +89,7 @@ export default class UserService {
 		try {
 			return await this.userRepository.deleteOne(id, Boolean(data.softDelete), String(data.userAgentId));
 		} catch (error) {
-			throw this.throwError(error);
+			throw this.caughtError(error);
 		}
 	}
 
@@ -97,7 +97,7 @@ export default class UserService {
 		try {
 			return await this.userRepository.list(query, true);
 		} catch (error) {
-			throw this.throwError(error);
+			throw this.caughtError(error);
 		}
 	}
 
@@ -143,7 +143,7 @@ export default class UserService {
 		return result;
 	}
 
-	private throwError(error: any): Error {
+	private caughtError(error: any): Error {
 		const errorDetails: string | undefined = error?.message ?? error?.cause ?? error?.original;
 		return this.exceptions.internal({
 			message: 'Error to comunicate with database',

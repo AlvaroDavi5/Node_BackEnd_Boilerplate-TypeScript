@@ -37,8 +37,11 @@ export default class CreateUserUseCase {
 		newPreference.setUserId(createdUser.getId());
 		await this.userPreferenceService.create(newPreference);
 
-		const foundedUser = await this.userService.getById(createdUser.getId(), true);
-		const foundedPreference = await this.userPreferenceService.getByUserId(createdUser.getId());
+		const [foundedUser, foundedPreference] = await Promise.all([
+			this.userService.getById(createdUser.getId(), true),
+			this.userPreferenceService.getByUserId(createdUser.getId()),
+		]);
+
 		if (foundedPreference)
 			foundedUser?.setPreference(foundedPreference);
 

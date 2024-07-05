@@ -1,5 +1,6 @@
 import { ExceptionFilter, Catch, ArgumentsHost, HttpException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { AxiosError } from 'axios';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { getObjValues } from '@common/utils/dataValidations.util';
@@ -8,7 +9,7 @@ import { ResponseInterface } from '@shared/internal/interfaces/endpointInterface
 
 
 @Catch(HttpException)
-export default class KnownExceptionFilter implements ExceptionFilter {
+export default class KnownExceptionFilter implements ExceptionFilter<HttpException | AxiosError | Error> {
 	private readonly showStack: boolean;
 
 	constructor(
@@ -18,21 +19,22 @@ export default class KnownExceptionFilter implements ExceptionFilter {
 		this.showStack = appConfigs.stackErrorVisible;
 	}
 
-	public catch(exception: HttpException, host: ArgumentsHost) {
+	public catch(exception: HttpException | AxiosError | Error, host: ArgumentsHost) {
 		const ctx = host.switchToHttp();
 		const response = ctx.getResponse<ResponseInterface>();
-		const status = exception.getStatus();
+		const status = exception instanceof HttpException ? exception.getStatus() : 500;
 
+		const errorCause = exception instanceof HttpException ? exception.cause : undefined;
 		const errorResponse: ErrorInterface & { description?: string } = {
 			name: exception.name,
 			message: exception.message,
-			cause: exception.cause,
+			cause: errorCause,
 			stack: this.showStack ? exception.stack : undefined,
 		};
 
 		const knownExceptions = getObjValues<ExceptionsEnum>(ExceptionsEnum).map((exception) => exception.toString());
 		if (knownExceptions.includes(exception.name)) {
-			const { description, details } = exception.getResponse() as any;
+			const { description, details } = exception instanceof HttpException ? exception.getResponse() : {} as any;
 			errorResponse.description = description ?? details;
 			errorResponse.details = details;
 		}

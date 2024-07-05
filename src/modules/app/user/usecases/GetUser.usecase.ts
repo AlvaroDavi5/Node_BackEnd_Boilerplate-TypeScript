@@ -20,8 +20,10 @@ export default class GetUserUseCase {
 				message: 'Invalid userAgent',
 			});
 
-		const foundedUser = await this.userService.getById(id, true);
-		const foundedPreference = await this.userPreferenceService.getByUserId(id);
+		const [foundedUser, foundedPreference] = await Promise.all([
+			this.userService.getById(id, true),
+			this.userPreferenceService.getByUserId(id),
+		]);
 
 		if (foundedPreference)
 			foundedUser.setPreference(foundedPreference);

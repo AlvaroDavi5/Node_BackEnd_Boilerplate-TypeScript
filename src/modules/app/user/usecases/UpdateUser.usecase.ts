@@ -36,8 +36,10 @@ export default class UpdateUserUseCase {
 		if (data.preference !== undefined && mustUpdateUserPreference)
 			await this.userPreferenceService.update(preference.getId(), data.preference);
 
-		const foundedUser = await this.userService.getById(user.getId(), true);
-		const foundedPreference = await this.userPreferenceService.getByUserId(user.getId());
+		const [foundedUser, foundedPreference] = await Promise.all([
+			this.userService.getById(user.getId(), true),
+			this.userPreferenceService.getByUserId(user.getId()),
+		]);
 
 		if (foundedPreference)
 			foundedUser.setPreference(foundedPreference);

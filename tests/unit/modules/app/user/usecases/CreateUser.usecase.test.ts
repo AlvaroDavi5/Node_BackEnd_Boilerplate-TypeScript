@@ -87,7 +87,7 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 			expect(userPreferenceServiceMock.create).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
-			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
+			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalled();
 			expect(httpConstantsMock.messages.conflict).not.toHaveBeenCalled();
 			expect(exceptionsMock.notFound).toHaveBeenCalledWith({
 				message: 'User not founded by ID!'

@@ -67,7 +67,7 @@ describe('Modules :: App :: User :: UseCases :: GetUserUseCase', () => {
 			await expect(getUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userAgent))
 				.rejects.toMatchObject(new Error('User not founded by ID!'));
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
+			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalled();
 			expect(exceptionsMock.notFound).toHaveBeenCalledWith({
 				message: 'User not founded by ID!'
 			});

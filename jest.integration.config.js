@@ -23,7 +23,7 @@ module.exports = {
 	// cacheDirectory: '/private/var/folders/03/rn7ssyv96ybffs82bbssjs0w0000gn/T/jest_dx',
 
 	// Indicates whether the coverage information should be collected while executing the test
-	collectCoverage: true,
+	collectCoverage: false,
 
 	// The directory where Jest should output its coverage files
 	coverageDirectory: 'coverage/integration',

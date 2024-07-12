@@ -7,7 +7,7 @@ export default class LoggerService {
 	private readonly showLogs = Boolean(process.env.SHOW_LOGS);
 
 	constructor(
-		private readonly mockObservable: MockObservableInterface<void, unknown[]>,
+		private readonly mockObservable?: MockObservableInterface<void, unknown[]>,
 	) { }
 
 	private log(level: 'error' | 'warn' | 'info' | 'debug' | 'log', args: unknown[]): void {

@@ -6,16 +6,16 @@ import { ListQueryInterface, PaginationInterface } from '@shared/internal/interf
 describe('Modules :: App :: User :: UseCases :: ListUsersUseCase', () => {
 	// // mocks
 	const userServiceMock = {
-		getByEmail: jest.fn(async (email: string): Promise<UserEntity | null> => (null)),
-		getById: jest.fn(async (id: string, withoutPassword = true): Promise<UserEntity> => { throw new Error('GenericError'); }),
-		create: jest.fn(async (entity: UserEntity): Promise<UserEntity> => { throw new Error('GenericError'); }),
-		update: jest.fn(async (id: string, data: UpdateUserInterface): Promise<UserEntity> => { throw new Error('GenericError'); }),
-		delete: jest.fn(async (id: string, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean> => (false)),
-		list: jest.fn(async (query: ListQueryInterface, withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => {
+		getByEmail: jest.fn(async (_email: string): Promise<UserEntity | null> => (null)),
+		getById: jest.fn(async (_id: string, _withoutPassword = true): Promise<UserEntity> => { throw new Error('GenericError'); }),
+		create: jest.fn(async (_entity: UserEntity): Promise<UserEntity> => { throw new Error('GenericError'); }),
+		update: jest.fn(async (_id: string, _data: UpdateUserInterface): Promise<UserEntity> => { throw new Error('GenericError'); }),
+		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, userAgentId?: string }): Promise<boolean> => (false)),
+		list: jest.fn(async (_query: ListQueryInterface, _withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => {
 			return { content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 };
 		}),
 		protectPassword: jest.fn((password: string): string => (password)),
-		validatePassword: jest.fn((entity: UserEntity, passwordToValidate: string): void => { throw new Error('GenericError'); }),
+		validatePassword: jest.fn((_entity: UserEntity, _passwordToValidate: string): void => { throw new Error('GenericError'); }),
 	};
 
 	const listUsersUseCase = new ListUsersUseCase(userServiceMock as any);

@@ -26,7 +26,7 @@ export function checkFields(obj: any, fieldsToApply: string[]): boolean {
 	return result;
 }
 
-export function replaceFields(obj: any, fieldsToApply: string[], valueToReplace = '***'): any {
+export function replaceFields(obj: any, fieldsToApply: string[], valueToReplace: string): any {
 	if (isNullOrUndefined(obj))
 		return null;
 

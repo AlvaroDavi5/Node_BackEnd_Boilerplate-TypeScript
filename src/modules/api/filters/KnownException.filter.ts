@@ -20,8 +20,8 @@ export default class KnownExceptionFilter implements ExceptionFilter<HttpExcepti
 	}
 
 	public catch(exception: HttpException | AxiosError | Error, host: ArgumentsHost) {
-		const ctx = host.switchToHttp();
-		const response = ctx.getResponse<ResponseInterface>();
+		const context = host.switchToHttp();
+		const response = context.getResponse<ResponseInterface>();
 		const status = exception instanceof HttpException ? exception.getStatus() : 500;
 
 		const errorCause = exception instanceof HttpException ? exception.cause : undefined;

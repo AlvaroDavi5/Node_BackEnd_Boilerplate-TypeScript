@@ -18,6 +18,7 @@ export default class RequestLoggerMiddleware implements NestMiddleware {
 	public use(request: RequestInterface, response: ResponseInterface, next: NextFunctionInterface) {
 		const requestId = this.cryptographyService.generateUuid();
 		this.logger.setRequestId(requestId);
+		request.id = requestId;
 
 		const method = request.method;
 		const originalUrl = request.originalUrl;
@@ -36,7 +37,7 @@ export default class RequestLoggerMiddleware implements NestMiddleware {
 		const hasSensibleData: boolean = checkFields(data, sensibleDataFields);
 		if (hasSensibleData) {
 			const newData = structuredClone(data);
-			return replaceFields(newData, sensibleDataFields);
+			return replaceFields(newData, sensibleDataFields, '***');
 		}
 
 		return data;

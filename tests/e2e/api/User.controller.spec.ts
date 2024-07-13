@@ -22,7 +22,7 @@ describe('API :: UserController', () => {
 	});
 
 	describe('# [GET] /api/users', () => {
-		test('Should get success', async () => {
+		test('Success response', async () => {
 			const response = await request(await nestTestApp.getHttpServer())
 				.get('/api/users')
 				.set('Authorization', `Bearer ${process.env.MOCKED_SERVICE_TOKEN}`);
@@ -31,9 +31,10 @@ describe('API :: UserController', () => {
 			expect(response.body).toMatchObject({
 				content: [
 					{
-						fullName: 'Tester',
+						fullName: 'Tester User',
 						fu: 'SP',
-						docType: 'invalid',
+						docType: 'CPF',
+						document: '12312312345',
 						preference: {
 							defaultTheme: 'DARK',
 							imagePath: './generic.png',
@@ -47,15 +48,39 @@ describe('API :: UserController', () => {
 			});
 		});
 
-		test('Should get unauthorized', async () => {
+		test('Invalid Token response', async () => {
 			const response = await request(await nestTestApp.getHttpServer())
 				.get('/api/users');
 
-			expect(response.statusCode).toBe(401);
+			expect(response.statusCode).toBe(498);
 			expect(response.body).toEqual({
-				error: 'Unauthorized',
+				error: 'Invalid Token',
 				message: 'Authorization token is required',
-				statusCode: 401,
+				statusCode: 498,
+			});
+		});
+	});
+
+	describe('# [POST] /api/users', () => {
+		// TODO - Success response
+
+		test('Bad Request response', async () => {
+			const response = await request(await nestTestApp.getHttpServer())
+				.post('/api/users')
+				.set('Authorization', `Bearer ${process.env.MOCKED_SERVICE_TOKEN}`)
+				.send({
+					fullName: 'Tester User',
+					email: 'user.tester@nomail.com',
+				});
+
+			expect(response.statusCode).toBe(400);
+			expect(response.body).toEqual({
+				error: 'Bad Request',
+				message: [
+					'password should not be empty',
+					'password must be a string',
+				],
+				statusCode: 400,
 			});
 		});
 	});

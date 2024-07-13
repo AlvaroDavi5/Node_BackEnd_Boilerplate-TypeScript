@@ -22,7 +22,7 @@ describe('API :: DefaultController', () => {
 	});
 
 	describe('# [GET] /api/check', () => {
-		test('Should get success', async () => {
+		test('Success response', async () => {
 			const response = await request(await nestTestApp.getHttpServer())
 				.get('/api/check?key=value')
 				.send({
@@ -52,7 +52,7 @@ describe('API :: DefaultController', () => {
 	});
 
 	describe('# [GET] /api/v1/check', () => {
-		test('Should get success', async () => {
+		test('Success response', async () => {
 			const response = await request(await nestTestApp.getHttpServer())
 				.get('/api/v1/check?key=value')
 				.send({

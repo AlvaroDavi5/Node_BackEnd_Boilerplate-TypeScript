@@ -12,6 +12,7 @@ import CreateUserUseCase from '@app/user/usecases/CreateUser.usecase';
 import GetUserUseCase from '@app/user/usecases/GetUser.usecase';
 import UpdateUserUseCase from '@app/user/usecases/UpdateUser.usecase';
 import DeleteUserUseCase from '@app/user/usecases/DeleteUser.usecase';
+import UserEntity from '@domain/entities/User.entity';
 import UserListEntity from '@domain/entities/generic/UserList.entity';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
 import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
@@ -71,7 +72,26 @@ describe('API :: UserController', () => {
 	});
 
 	describe('# [GET] /api/users', () => {
-		test('Should get success', async () => {
+		test('Success response', async () => {
+			listUsersUseCaseMock.execute.mockResolvedValueOnce({
+				content: [
+					new UserEntity({
+						fullName: 'Tester User',
+						fu: 'SP',
+						docType: 'CPF',
+						document: '12312312345',
+						preference: {
+							defaultTheme: 'DARK',
+							imagePath: './generic.png',
+						},
+					}),
+				],
+				pageNumber: 0,
+				pageSize: 1,
+				totalPages: 1,
+				totalItems: 1,
+			});
+
 			const response = await request(await nestTestApp.getHttpServer())
 				.get('/api/users')
 				.set('Authorization', `Bearer ${process.env.MOCKED_SERVICE_TOKEN}`);
@@ -80,9 +100,10 @@ describe('API :: UserController', () => {
 			expect(response.body).toMatchObject({
 				content: [
 					{
-						fullName: 'Tester',
+						fullName: 'Tester User',
 						fu: 'SP',
-						docType: 'invalid',
+						docType: 'CPF',
+						document: '12312312345',
 						preference: {
 							defaultTheme: 'DARK',
 							imagePath: './generic.png',
@@ -96,33 +117,45 @@ describe('API :: UserController', () => {
 			});
 		});
 
-		test('Should get bad request', async () => {
-			const response = await request(await nestTestApp.getHttpServer())
-				.get('/api/users')
-				.set('Authorization', `Bearer ${process.env.MOCKED_SERVICE_TOKEN}`);
-
-			expect(response.statusCode).toBe(401);
-			expect(response.body).toEqual({
-				error: 'Unauthorized',
-				message: 'Authorization token is required',
-				statusCode: 401,
-			});
-		});
-
-		test('Should get invalid token', async () => {
+		test('Invalid Token response', async () => {
 			authGuardMock.canActivate.mockImplementationOnce(() => {
 				throw exceptions.invalidToken({
 					message: 'Authorization token is required',
 				});
 			});
+
 			const response = await request(await nestTestApp.getHttpServer())
 				.get('/api/users');
 
-			expect(response.statusCode).toBe(401);
+			expect(response.statusCode).toBe(498);
 			expect(response.body).toEqual({
-				error: 'Unauthorized',
+				error: 'Invalid Token',
 				message: 'Authorization token is required',
-				statusCode: 401,
+				statusCode: 498,
+			});
+		});
+	});
+
+	describe('# [POST] /api/users', () => {
+		// TODO - Success response
+
+		test('Bad Request response', async () => {
+			const response = await request(await nestTestApp.getHttpServer())
+				.post('/api/users')
+				.set('Authorization', `Bearer ${process.env.MOCKED_SERVICE_TOKEN}`)
+				.send({
+					fullName: 'Tester User',
+					email: 'user.tester@nomail.com',
+				});
+
+			expect(response.statusCode).toBe(400);
+			expect(response.body).toEqual({
+				error: 'Bad Request',
+				message: [
+					'password should not be empty',
+					'password must be a string',
+				],
+				statusCode: 400,
 			});
 		});
 	});

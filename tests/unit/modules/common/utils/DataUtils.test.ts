@@ -38,7 +38,7 @@ describe('Modules :: Common :: Utils :: DataUtils', () => {
 		});
 
 		test('Should replace fields', () => {
-			expect(replaceFields(undefined, ['key2'])).toBeNull();
+			expect(replaceFields(undefined, ['key2'], 'xxx')).toBeNull();
 			expect(replaceFields({ key1: 'value1' }, ['key2'], 'xxx')).toEqual({ key1: 'value1' });
 			expect(replaceFields({ key2: 'value2' }, ['key2'], 'xxx')).toEqual({ key2: 'xxx' });
 		});

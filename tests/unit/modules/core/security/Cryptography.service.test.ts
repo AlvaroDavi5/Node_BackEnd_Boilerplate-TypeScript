@@ -1,26 +1,8 @@
 import CryptographyService from '@core/security/Cryptography.service';
-import envsConfig from '@core/configs/envs.config';
+import { configServiceMock } from '@dev/mocks/mockedModules';
 
 
 describe('Modules :: Core :: Security :: CryptographyService', () => {
-	// // mocks
-	const configServiceMock = {
-		get: (propertyPath?: string): any => {
-			if (propertyPath) {
-				const splitedPaths = propertyPath.split('.');
-				let scopedProperty: any = envsConfig();
-
-				for (const scopedPath of splitedPaths) {
-					if (scopedPath.length > 0)
-						scopedProperty = scopedProperty[scopedPath];
-				}
-
-				return scopedProperty;
-			} else
-				return envsConfig();
-		},
-	};
-
 	const cryptographyService = new CryptographyService(configServiceMock as any);
 
 	describe('# Encoding and Hashing', () => {

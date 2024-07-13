@@ -60,21 +60,21 @@ Uma vez que faz parte de seu escopo testar todo um fluxo da aplicação, os test
 
 ```txt
 modules
-├── api (E2E)
-│   ├── controllers (integ)
-│   ├── dto (integ)
-│   ├── filters (integ)
-│   ├── guards (integ)
-│   ├── middlewares (integ)
-│   ├── pipes (integ)
-│   └── schemas (integ)
+├── api (integ)
+│   ├── controllers
+│   ├── dto
+│   ├── filters
+│   ├── guards
+│   ├── middlewares
+│   ├── pipes
+│   └── schemas
 ├── app
 │   └── ***
-│       ├── api (E2E)
-│       │   ├── controllers (integ)
-│       │   ├── dto (integ)
-│       │   ├── pipes (integ)
-│       │   └── schemas (integ)
+│       ├── api (integ)
+│       │   ├── controllers
+│       │   ├── dto
+│       │   ├── pipes
+│       │   └── schemas
 │       ├── repositories (integ)
 │       ├── services (integ)
 │       ├── strategies (unit)
@@ -83,9 +83,9 @@ modules
 │   └── ***
 ├── core
 │   ├── configs (integ)
-│   ├── cron (E2E)
-│   │   ├── jobs
-│   │   └── tasks
+│   ├── cron
+│   │   ├── jobs (E2E)
+│   │   └── tasks (integ)
 │   ├── errors (unit)
 │   ├── infra
 │   │   ├── cache (E2E)

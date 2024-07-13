@@ -12,7 +12,7 @@ import SnsClient from '@core/infra/integration/aws/Sns.client';
 import S3Client from '@core/infra/integration/aws/S3.client';
 import CognitoClient from '@core/infra/integration/aws/Cognito.client';
 import { configServiceMock } from '@dev/mocks/mockedModules';
-import LoggerService from '../../../support/mocks/logging/Logger.service';
+import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
 import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
 
 describe('Modules :: Core :: Start :: LifecycleService', () => {

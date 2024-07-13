@@ -1,9 +1,10 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, Provider, Scope } from '@nestjs/common';
+import { LoggerInterface } from '@core/logging/logger';
 import { MockObservableInterface } from '../mockObservable';
 
 
-@Injectable()
-export default class LoggerService {
+@Injectable({ scope: Scope.TRANSIENT })
+export default class LoggerService implements LoggerInterface {
 	private readonly showLogs = Boolean(process.env.SHOW_LOGS);
 
 	constructor(
@@ -44,3 +45,30 @@ export default class LoggerService {
 	public verbose(...args: unknown[]): void { this.log('log', args); }
 	public debug(...args: unknown[]): void { this.log('debug', args); }
 }
+
+export const REQUEST_LOGGER_PROVIDER = Symbol('RequestLoggerProvider');
+export const RequestLoggerProvider: Provider = {
+	provide: REQUEST_LOGGER_PROVIDER,
+	scope: Scope.REQUEST,
+
+	inject: [],
+	useFactory: (): LoggerInterface => new LoggerService(),
+
+	durable: false,
+};
+
+export const SINGLETON_LOGGER_PROVIDER = Symbol('SingletonLoggerProvider');
+export interface LoggerProviderInterface {
+	getLogger: (context: string) => LoggerInterface,
+}
+export const SingletonLoggerProvider: Provider = {
+	provide: SINGLETON_LOGGER_PROVIDER,
+	scope: Scope.DEFAULT,
+
+	inject: [],
+	useFactory: (): LoggerProviderInterface => ({
+		getLogger: (context: string): LoggerInterface => new LoggerService(),
+	}),
+
+	durable: false,
+};

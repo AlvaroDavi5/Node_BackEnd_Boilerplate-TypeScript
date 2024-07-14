@@ -19,7 +19,7 @@ import LoggerService from 'tests/integration/support/mocks/logging/Logger.servic
 import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
 
-describe('API :: UserController', () => {
+describe('Modules :: App :: User :: API :: UserController', () => {
 	let nestTestApp: INestApplication;
 	let nestTestingModule: TestingModule;
 	// // mocks

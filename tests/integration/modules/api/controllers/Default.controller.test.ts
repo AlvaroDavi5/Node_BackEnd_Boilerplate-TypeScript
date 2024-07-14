@@ -7,7 +7,7 @@ import HttpConstants from '@common/constants/Http.constants';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
 
 
-describe('API :: DefaultController', () => {
+describe('Modules :: API :: DefaultController', () => {
 	let nestTestApp: INestApplication;
 	let nestTestingModule: TestingModule;
 

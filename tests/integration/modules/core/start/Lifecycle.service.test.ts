@@ -76,6 +76,10 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 		}).compile();
 	});
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+
 	describe('# Build and Close Application', () => {
 		test('Should destroy, finish and close the app successfully', async () => {
 			await nestTestingModule.init();
@@ -95,9 +99,5 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 			expect(mockObservable.call).toHaveBeenCalledWith('Exiting Application');
 			expect(mockObservable.call).toHaveBeenCalledTimes(5);
 		});
-	});
-
-	afterEach(() => {
-		jest.clearAllMocks();
 	});
 });

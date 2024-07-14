@@ -47,6 +47,10 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 		exceptionsMock as any,
 	);
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+
 	describe('# Main Flux', () => {
 		test('Should return updated user', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
@@ -164,9 +168,5 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 				message: 'Invalid userAgent'
 			});
 		});
-	});
-
-	afterEach(() => {
-		jest.clearAllMocks();
 	});
 });

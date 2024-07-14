@@ -71,6 +71,14 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 		await nestTestApp.init();
 	});
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+	afterAll(async () => {
+		await nestTestApp.close();
+		await nestTestingModule.close();
+	});
+
 	describe('# [GET] /api/users', () => {
 		test('Success response', async () => {
 			listUsersUseCaseMock.execute.mockResolvedValueOnce({
@@ -158,10 +166,5 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 				statusCode: 400,
 			});
 		});
-	});
-
-	afterAll(async () => {
-		await nestTestApp.close();
-		await nestTestingModule.close();
 	});
 });

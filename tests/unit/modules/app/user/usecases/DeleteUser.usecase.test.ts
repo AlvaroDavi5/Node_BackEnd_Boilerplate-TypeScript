@@ -46,6 +46,10 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 		exceptionsMock as any,
 	);
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+
 	describe('# Main Flux', () => {
 		test('Should return deleted user', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
@@ -127,9 +131,5 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 				message: 'Invalid userAgent'
 			});
 		});
-	});
-
-	afterEach(() => {
-		jest.clearAllMocks();
 	});
 });

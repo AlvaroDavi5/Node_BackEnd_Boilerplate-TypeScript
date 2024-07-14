@@ -53,6 +53,13 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 		userPreferenceService = nestTestingModule.get<UserPreferenceService>(UserPreferenceService);
 	});
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+	afterAll(async () => {
+		await nestTestingModule.close();
+	});
+
 	describe('# Create User Preference', () => {
 		test('Should create a user preference successfully', async () => {
 			userPreferenceRepositoryMock.create.mockResolvedValueOnce(new UserPreferenceEntity({
@@ -147,12 +154,5 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 			expect(userPreferenceRepositoryMock.deleteOne).toHaveBeenCalledTimes(1);
 			expect(deletedUserPreference).toBe(false);
 		});
-	});
-
-	afterEach(() => {
-		jest.clearAllMocks();
-	});
-	afterAll(async () => {
-		await nestTestingModule.close();
 	});
 });

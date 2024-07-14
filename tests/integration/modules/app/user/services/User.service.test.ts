@@ -36,6 +36,13 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 		userService = nestTestingModule.get<UserService>(UserService);
 	});
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+	afterAll(async () => {
+		await nestTestingModule.close();
+	});
+
 	describe('# Create User', () => {
 		test('Should create a user successfully', async () => {
 			userRepositoryMock.create.mockResolvedValueOnce(new UserEntity({
@@ -131,12 +138,5 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 			expect(userRepositoryMock.deleteOne).toHaveBeenCalledTimes(1);
 			expect(deletedUser).toBe(false);
 		});
-	});
-
-	afterEach(() => {
-		jest.clearAllMocks();
-	});
-	afterAll(async () => {
-		await nestTestingModule.close();
 	});
 });

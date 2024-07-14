@@ -20,6 +20,10 @@ describe('Modules :: App :: User :: UseCases :: ListUsersUseCase', () => {
 
 	const listUsersUseCase = new ListUsersUseCase(userServiceMock as any);
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+
 	describe('# Main Flux', () => {
 		test('Should list users', async () => {
 			const listData: ListQueryInterface = {
@@ -56,9 +60,5 @@ describe('Modules :: App :: User :: UseCases :: ListUsersUseCase', () => {
 			expect(userServiceMock.list).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.list).toHaveBeenCalledWith({});
 		});
-	});
-
-	afterEach(() => {
-		jest.clearAllMocks();
 	});
 });

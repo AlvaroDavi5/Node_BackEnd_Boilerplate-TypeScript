@@ -21,6 +21,14 @@ describe('API :: UserController', () => {
 		await nestTestApp.init();
 	});
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+	afterAll(async () => {
+		await nestTestApp.close();
+		await nestTestingModule.close();
+	});
+
 	describe('# [GET] /api/users', () => {
 		test('Success response', async () => {
 			const response = await request(await nestTestApp.getHttpServer())
@@ -83,10 +91,5 @@ describe('API :: UserController', () => {
 				statusCode: 400,
 			});
 		});
-	});
-
-	afterAll(async () => {
-		await nestTestApp.close();
-		await nestTestingModule.close();
 	});
 });

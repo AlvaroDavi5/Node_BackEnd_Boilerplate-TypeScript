@@ -38,6 +38,14 @@ describe('Modules :: API :: DefaultController', () => {
 		await nestTestApp.init();
 	});
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+	afterAll(async () => {
+		await nestTestApp.close();
+		await nestTestingModule.close();
+	});
+
 	describe('# [GET] /api/check', () => {
 		test('Should get success', async () => {
 			const response = await request(await nestTestApp.getHttpServer())
@@ -83,10 +91,5 @@ describe('Modules :: API :: DefaultController', () => {
 				statusCode: 200,
 			});
 		});
-	});
-
-	afterAll(async () => {
-		await nestTestApp.close();
-		await nestTestingModule.close();
 	});
 });

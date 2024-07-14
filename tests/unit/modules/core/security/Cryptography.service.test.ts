@@ -5,6 +5,10 @@ import { configServiceMock } from '@dev/mocks/mockedModules';
 describe('Modules :: Core :: Security :: CryptographyService', () => {
 	const cryptographyService = new CryptographyService(configServiceMock as any);
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+
 	describe('# Encoding and Hashing', () => {
 		test('Should change encoding from UTF-8 to other encodings', () => {
 			expect(cryptographyService.changeBufferEncoding('Álvaro', 'utf8', 'base64')).toBe('w4FsdmFybw==');
@@ -155,9 +159,5 @@ describe('Modules :: Core :: Security :: CryptographyService', () => {
 			expect(encrypted).toBeNull();
 			expect(decrypted).toBeNull();
 		});
-	});
-
-	afterEach(() => {
-		jest.clearAllMocks();
 	});
 });

@@ -5,16 +5,10 @@
 		"isolatedModules": false
 	},
 	"include": [
-		"src/**/*.d.ts",
 		"src/**/*.ts",
-		"src/**/*.tsx",
 		"src/**/*.js",
-		"src/**/*.jsx",
-		"tests/**/*.d.ts",
 		"tests/**/*.ts",
-		"tests/**/*.tsx",
-		"tests/**/*.js",
-		"tests/**/*.jsx"
+		"tests/**/*.js"
 	],
 	"exclude": [
 		"node_modules",

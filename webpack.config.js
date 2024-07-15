@@ -17,7 +17,7 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.tsx?$/,
+				test: /\.ts?$/,
 				use: 'ts-loader',
 				exclude: /node_modules/,
 			},
@@ -25,7 +25,7 @@ module.exports = {
 	},
 	mode: 'development',
 	resolve: {
-		extensions: ['.tsx', '.ts', '.js', '.jsx'],
+		extensions: ['.ts', '.js'],
 	},
 	plugins: [
 		new webpack.HotModuleReplacementPlugin(),

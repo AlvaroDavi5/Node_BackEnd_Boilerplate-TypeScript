@@ -1,5 +1,6 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { SqsMessageHandler, SqsConsumerEventHandler } from '@ssut/nestjs-sqs';
+import { SqsConsumerOptions } from '@ssut/nestjs-sqs/dist/sqs.types';
 import { Message } from '@aws-sdk/client-sqs';
 import MongoClient from '@core/infra/data/Mongo.client';
 import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
@@ -9,10 +10,32 @@ import { ProcessEventsEnum } from '@common/enums/processEvents.enum';
 import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
 import envsConfig from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
+import SqsClientMock from '@dev/localstack/queues/SqsClient';
+import { configServiceMock, cryptographyServiceMock, dataParserHelperMock, loggerProviderMock } from '@dev/mocks/mockedModules';
 
 
 const appConfigs = envsConfig();
+const { region: awsRegion } = appConfigs.integration.aws.credentials;
 const { queueName: eventsQueueName, queueUrl: eventsQueueUrl } = appConfigs.integration.aws.sqs.eventsQueue;
+const sqsClient = new SqsClientMock(
+	configServiceMock as any,
+	cryptographyServiceMock,
+	loggerProviderMock,
+	dataParserHelperMock,
+).getClient();
+
+export const eventsQueueConsumerConfigs: SqsConsumerOptions = {
+	name: eventsQueueName,
+	queueUrl: eventsQueueUrl,
+	sqs: sqsClient,
+	region: awsRegion,
+	batchSize: 10,
+	shouldDeleteMessages: false,
+	pollingWaitTimeMs: 10,
+	waitTimeSeconds: 20,
+	handleMessageTimeout: (1 * 1000),
+	authenticationErrorTimeout: (10 * 1000),
+};
 
 @Injectable()
 export default class EventsQueueConsumer {

@@ -24,11 +24,10 @@ export default class CognitoClient {
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
 		const {
-			region, sessionToken,
+			region, endpoint, sessionToken,
 			accessKeyId, secretAccessKey,
 		} = awsConfigs.credentials;
-		const { userPoolName, userPoolId, clientId,
-			endpoint, apiVersion } = awsConfigs.congito;
+		const { userPoolName, userPoolId, clientId, apiVersion } = awsConfigs.congito;
 
 		this.awsConfig = {
 			endpoint,

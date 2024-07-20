@@ -27,10 +27,10 @@ export default class SqsClient {
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
 		const {
-			region, sessionToken,
+			region, endpoint, sessionToken,
 			accessKeyId, secretAccessKey,
 		} = awsConfigs.credentials;
-		const { endpoint, apiVersion } = awsConfigs.sqs;
+		const { apiVersion } = awsConfigs.sqs;
 
 		this.awsConfig = {
 			endpoint,

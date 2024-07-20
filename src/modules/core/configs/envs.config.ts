@@ -83,7 +83,7 @@ export interface ConfigsInterface {
 				accessKeyId: string,
 				secretAccessKey: string,
 				sessionToken: string,
-				apiVersion: string,
+				endpoint?: string,
 			},
 			// * Authentication Service
 			congito: {
@@ -91,7 +91,6 @@ export interface ConfigsInterface {
 				userPoolId: string,
 				clientName: string,
 				clientId: string,
-				endpoint: string,
 				apiVersion: string,
 			},
 			// * Message Queues Service
@@ -100,7 +99,6 @@ export interface ConfigsInterface {
 					queueName: string,
 					queueUrl: string,
 				},
-				endpoint: string,
 				apiVersion: string,
 			},
 			// * Notification Topics Service
@@ -110,13 +108,11 @@ export interface ConfigsInterface {
 					topicArn: string,
 					topicProtocol: string,
 				},
-				endpoint: string,
 				apiVersion: string,
 			},
 			// * Storage Service
 			s3: {
 				bucketName: string,
-				endpoint: string,
 				filesExpiration: number, // files expiration in seconds
 				apiVersion: string,
 			},
@@ -210,14 +206,13 @@ export default (): ConfigsInterface => ({
 				accessKeyId: process.env.AWS_ACCESS_KEY_ID ?? 'mock',
 				secretAccessKey: process.env.AWS_SECRET_ACCESS_KEY ?? 'mock',
 				sessionToken: process.env.AWS_SESSION_TOKEN ?? 'mock',
-				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
+				endpoint: process.env.AWS_ENDPOINT_URL,
 			},
 			congito: {
 				userPoolName: process.env.AWS_COGNITO_USER_POOL_NAME ?? 'defaultPool',
 				userPoolId: process.env.AWS_COGNITO_USER_POOL_ID ?? 'xxx',
 				clientName: process.env.AWS_COGNITO_USER_POOL_CLIENT_NAME ?? 'defaultClient',
 				clientId: process.env.AWS_COGNITO_USER_POOL_CLIENT_ID ?? 'xxx',
-				endpoint: process.env.AWS_ENDPOINT_URL ?? 'http://Cloud_LocalStack:4566/',
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
 			},
 			sqs: {
@@ -225,7 +220,6 @@ export default (): ConfigsInterface => ({
 					queueName: process.env.AWS_SQS_EVENTS_QUEUE_NAME ?? 'eventsQueue.fifo',
 					queueUrl: process.env.AWS_SQS_EVENTS_QUEUE_URL ?? 'http://sqs.us-east-1.Cloud_LocalStack.localstack.cloud:4566/000000000000/eventsQueue.fifo',
 				},
-				endpoint: process.env.AWS_ENDPOINT_URL ?? 'http://Cloud_LocalStack:4566/',
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
 			},
 			sns: {
@@ -234,13 +228,11 @@ export default (): ConfigsInterface => ({
 					topicArn: process.env.AWS_SNS_DEFAULT_TOPIC_ARN ?? 'arn:aws:sns:us-east-1:000000000000:defaultTopic',
 					topicProtocol: process.env.AWS_TOPIC_PROTOCOL ?? 'email',
 				},
-				endpoint: process.env.AWS_ENDPOINT_URL ?? 'http://Cloud_LocalStack:4566/',
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
 			},
 			s3: {
 				bucketName: process.env.AWS_S3_BUCKET_NAME ?? 'defaultbucket',
 				filesExpiration: (5 * 60),
-				endpoint: process.env.AWS_ENDPOINT_URL ?? 'http://Cloud_LocalStack:4566/',
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
 			},
 		},

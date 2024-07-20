@@ -25,10 +25,10 @@ export default class S3Client {
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
 		const {
-			region, sessionToken,
+			region, endpoint, sessionToken,
 			accessKeyId, secretAccessKey,
 		} = awsConfigs.credentials;
-		const { bucketName, filesExpiration, endpoint, apiVersion } = awsConfigs.s3;
+		const { bucketName, filesExpiration, apiVersion } = awsConfigs.s3;
 		this.filesExpiration = filesExpiration;
 
 		this.awsConfig = {

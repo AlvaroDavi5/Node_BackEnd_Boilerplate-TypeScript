@@ -85,7 +85,7 @@ export default class EventsQueueConsumer {
 	public async onProcessingError(error: Error, message: Message): Promise<void> {
 		this.logger.error(`Processing error from ${this.name} - MessageId: ${message?.MessageId}. Error: ${error.message}`);
 
-		const datalake = this.mongoClient.databases.datalake;
+		const { datalake } = this.mongoClient.databases;
 		const unprocessedMessagesCollection = this.mongoClient.getCollection(datalake.db, datalake.collections.unprocessedMessages);
 		const wasStored = (await this.mongoClient.insertOne(unprocessedMessagesCollection, message)).insertedId;
 		if (wasStored)

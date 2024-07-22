@@ -22,12 +22,12 @@ export default class DateGeneratorHelper {
 		let datetime: DateTime;
 
 		switch (format) {
-		case 'iso-8601':
-			datetime = DateTime.fromISO(strDate);
-			break;
-		default:
-			datetime = DateTime.fromJSDate(new Date(strDate));
-			break;
+			case 'iso-8601':
+				datetime = DateTime.fromISO(strDate);
+				break;
+			default:
+				datetime = DateTime.fromJSDate(new Date(strDate));
+				break;
 		}
 
 		return datetime;

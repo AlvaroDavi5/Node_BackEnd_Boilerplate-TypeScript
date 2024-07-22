@@ -19,7 +19,9 @@ export default class Exceptions {
 			return value.toString();
 	}
 
-	private buildException(exceptionName: string, statusCode: number, errorName: string, errorMessage: string, errorDetails: unknown, errorCause?: unknown, errorStack?: string): HttpException {
+	private buildException(
+		exceptionName: string, statusCode: number, errorName: string, errorMessage: string,
+		errorDetails: unknown, errorCause?: unknown, errorStack?: string): HttpException {
 		const errorPayload: string | Record<string, any> = {
 			error: errorName,
 			message: errorMessage,

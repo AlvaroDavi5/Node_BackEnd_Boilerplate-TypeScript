@@ -93,16 +93,16 @@ export default class SnsClient {
 		};
 
 		switch (protocol) {
-		case 'email':
-			publishData.Subject = subject;
-			break;
-		case 'sms':
-			publishData.PhoneNumber = phoneNumber;
-			break;
-		default: // application | sqs | lambda | http(s)
-			publishData.TopicArn = topicArn;
-			publishData.TargetArn = topicArn;
-			break;
+			case 'email':
+				publishData.Subject = subject;
+				break;
+			case 'sms':
+				publishData.PhoneNumber = phoneNumber;
+				break;
+			default: // application | sqs | lambda | http(s)
+				publishData.TopicArn = topicArn;
+				publishData.TargetArn = topicArn;
+				break;
 		}
 
 		return publishData;

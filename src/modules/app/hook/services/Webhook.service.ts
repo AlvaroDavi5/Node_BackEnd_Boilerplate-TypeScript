@@ -27,7 +27,8 @@ export default class WebhookService {
 
 	public async pullHook(hookSchema: string, data: unknown): Promise<any> {
 		const hookSchemaList = await this.list(hookSchema);
-		const mockedServiceBaseUrl = this.configService.get<ConfigsInterface['integration']['rest']['mockedService']['baseUrl']>('integration.rest.mockedService.baseUrl')!;
+		const mockedServiceBaseUrl = this.configService
+			.get<ConfigsInterface['integration']['rest']['mockedService']['baseUrl']>('integration.rest.mockedService.baseUrl')!;
 
 		for (const { value: hook } of hookSchemaList) {
 			const responseEndpoint = hook?.responseEndpoint ?? mockedServiceBaseUrl;

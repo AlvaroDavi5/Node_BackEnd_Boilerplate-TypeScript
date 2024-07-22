@@ -19,7 +19,11 @@ export class ListQueryInputDto implements ListQueryInterface {
 	@IsOptional()
 	public order?: 'ASC' | 'DESC';
 
-	@ApiProperty({ type: String, enum: ['createdAt', 'updatedAt', 'deletedAt'], example: 'createdAt', default: undefined, nullable: false, required: false, description: 'Sort by attribute' })
+	@ApiProperty({
+		type: String, enum: ['createdAt', 'updatedAt', 'deletedAt'], example: 'createdAt',
+		default: undefined, nullable: false, required: false,
+		description: 'Sort by attribute'
+	})
 	@IsEnum(['createdAt', 'updatedAt', 'deletedAt'])
 	@IsOptional()
 	public sortBy?: 'createdAt' | 'updatedAt' | 'deletedAt';

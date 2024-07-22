@@ -57,7 +57,7 @@ export default class EventsQueueHandler implements OnModuleInit {
 		} catch (error) {
 			this.logger.error(error);
 
-			const datalake = this.mongoClient.databases.datalake;
+			const { datalake } = this.mongoClient.databases;
 			const unprocessedMessagesCollection = this.mongoClient.getCollection(datalake.db, datalake.collections.unprocessedMessages);
 			await this.mongoClient.insertOne(unprocessedMessagesCollection, message);
 

@@ -20,7 +20,10 @@ export class RegisterEventHookInputDto implements RegisterEventHookInterface {
 	@IsNotEmpty()
 	public responseSchema!: string;
 
-	@ApiProperty({ type: Date, example: (new Date('2024-04-17T17:36:48.666Z').toISOString()), default: (new Date('2024-04-17T17:36:48.666Z').toISOString()), nullable: false, required: false })
+	@ApiProperty({
+		type: Date, example: (new Date('2024-04-17T17:36:48.666Z').toISOString()),
+		default: (new Date().toISOString()), nullable: false, required: false
+	})
 	@IsDateString()
 	@IsNotEmpty()
 	public sendAt!: Date;

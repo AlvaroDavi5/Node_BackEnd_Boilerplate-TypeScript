@@ -44,24 +44,24 @@ export default abstract class AbstractRestClient {
 		let requestCaller: Promise<AxiosResponse<RI, unknown>>;
 
 		switch (requestMethod) {
-		case 'get':
-			requestCaller = this.client.get<RI>(requestEndpoint, { params: query });
-			break;
-		case 'post':
-			requestCaller = this.client.post<RI>(requestEndpoint, body, { params: query });
-			break;
-		case 'put':
-			requestCaller = this.client.put<RI>(requestEndpoint, body, { params: query });
-			break;
-		case 'patch':
-			requestCaller = this.client.patch<RI>(requestEndpoint, body, { params: query });
-			break;
-		case 'delete':
-			requestCaller = this.client.delete<RI>(requestEndpoint, { params: query });
-			break;
-		default:
-			requestCaller = this.client.get<RI>(requestEndpoint, { params: query, data: body });
-			break;
+			case 'get':
+				requestCaller = this.client.get<RI>(requestEndpoint, { params: query });
+				break;
+			case 'post':
+				requestCaller = this.client.post<RI>(requestEndpoint, body, { params: query });
+				break;
+			case 'put':
+				requestCaller = this.client.put<RI>(requestEndpoint, body, { params: query });
+				break;
+			case 'patch':
+				requestCaller = this.client.patch<RI>(requestEndpoint, body, { params: query });
+				break;
+			case 'delete':
+				requestCaller = this.client.delete<RI>(requestEndpoint, { params: query });
+				break;
+			default:
+				requestCaller = this.client.get<RI>(requestEndpoint, { params: query, data: body });
+				break;
 		}
 
 		try {

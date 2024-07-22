@@ -176,8 +176,8 @@ export default class SqsClient {
 		return messageId;
 	}
 
-	public async getMessages(queueUrl: string): Promise<Array<Message>> {
-		const messages: Array<Message> = [];
+	public async getMessages(queueUrl: string): Promise<Message[]> {
+		const messages: Message[] = [];
 
 		try {
 			const result = await this.sqsClient.send(new ReceiveMessageCommand(

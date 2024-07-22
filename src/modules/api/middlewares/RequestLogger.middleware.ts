@@ -20,13 +20,13 @@ export default class RequestLoggerMiddleware implements NestMiddleware {
 		this.logger.setRequestId(requestId);
 		request.id = requestId;
 
-		const method = request.method;
-		const originalUrl = request.originalUrl;
-		const pathParamsPayload = JSON.stringify(this.maskSensibleData(request.params));
-		const queryParamsPayload = JSON.stringify(this.maskSensibleData(request.query));
-		const bodyPayload = JSON.stringify(this.maskSensibleData(request.body));
+		const { method, originalUrl } = request;
+		const pathParams = JSON.stringify(this.maskSensibleData(request.params));
+		const queryParams = JSON.stringify(this.maskSensibleData(request.query));
+		const body = JSON.stringify(this.maskSensibleData(request.body));
 
-		this.logger.http(`REQUESTED - [${method}] ${originalUrl} { "pathParams": ${pathParamsPayload} "queryParams": ${queryParamsPayload} "body": ${bodyPayload} }`);
+		const requestPayload = { pathParams, queryParams, body };
+		this.logger.http(`REQUESTED - [${method}] ${originalUrl} ${JSON.stringify(requestPayload)}`);
 
 		next();
 	}

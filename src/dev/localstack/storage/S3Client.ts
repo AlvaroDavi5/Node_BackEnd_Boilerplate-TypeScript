@@ -2,7 +2,8 @@ import { ConfigService } from '@nestjs/config';
 import { Readable } from 'stream';
 import {
 	S3Client as S3AWSClient, S3ClientConfig, NotificationConfiguration,
-	ListBucketsCommand, CreateBucketCommand, DeleteBucketCommand, PutBucketNotificationConfigurationCommand, PutObjectCommand, GetObjectCommand, DeleteObjectCommand,
+	ListBucketsCommand, CreateBucketCommand, DeleteBucketCommand,
+	PutBucketNotificationConfigurationCommand, PutObjectCommand, GetObjectCommand, DeleteObjectCommand,
 	PutObjectCommandInput, GetObjectCommandInput, DeleteObjectCommandInput,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';

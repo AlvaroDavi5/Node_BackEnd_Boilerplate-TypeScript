@@ -15,33 +15,33 @@ export default function externalErrorParser(error: any): HttpException {
 		let exceptionGenerator: exceptionGeneratorType;
 
 		switch (statusCode) {
-		case status.BAD_REQUEST:
-			exceptionGenerator = exceptions.contract;
-			break;
-		case status.FORBIDDEN:
-			exceptionGenerator = exceptions.business;
-			break;
-		case status.INVALID_TOKEN:
-			exceptionGenerator = exceptions.invalidToken;
-			break;
-		case status.UNAUTHORIZED:
-			exceptionGenerator = exceptions.unauthorized;
-			break;
-		case status.TOO_MANY_REQUESTS:
-			exceptionGenerator = exceptions.manyRequests;
-			break;
-		case status.CONFLICT:
-			exceptionGenerator = exceptions.conflict;
-			break;
-		case status.NOT_FOUND:
-			exceptionGenerator = exceptions.notFound;
-			break;
-		case status.SERVICE_UNAVAILABLE:
-			exceptionGenerator = exceptions.integration;
-			break;
-		default:
-			exceptionGenerator = exceptions.internal;
-			break;
+			case status.BAD_REQUEST:
+				exceptionGenerator = exceptions.contract;
+				break;
+			case status.FORBIDDEN:
+				exceptionGenerator = exceptions.business;
+				break;
+			case status.INVALID_TOKEN:
+				exceptionGenerator = exceptions.invalidToken;
+				break;
+			case status.UNAUTHORIZED:
+				exceptionGenerator = exceptions.unauthorized;
+				break;
+			case status.TOO_MANY_REQUESTS:
+				exceptionGenerator = exceptions.manyRequests;
+				break;
+			case status.CONFLICT:
+				exceptionGenerator = exceptions.conflict;
+				break;
+			case status.NOT_FOUND:
+				exceptionGenerator = exceptions.notFound;
+				break;
+			case status.SERVICE_UNAVAILABLE:
+				exceptionGenerator = exceptions.integration;
+				break;
+			default:
+				exceptionGenerator = exceptions.internal;
+				break;
 		}
 
 		return exceptionGenerator;

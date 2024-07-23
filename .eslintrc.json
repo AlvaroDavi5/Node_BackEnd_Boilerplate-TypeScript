@@ -23,11 +23,21 @@
 	"rules": {
 		"indent": [
 			"error",
-			"tab"
+			"tab",
+			{
+				"SwitchCase": 1,
+				"ignoredNodes": [
+					"PropertyDefinition"
+				]
+			}
 		],
 		"quotes": [
 			"error",
 			"single"
+		],
+		"jsx-quotes": [
+			"error",
+			"prefer-single"
 		],
 		"semi": [
 			"error",
@@ -51,7 +61,7 @@
 			}
 		],
 		"camelcase": "warn",
-		"no-underscore-dangle": "warn",
+		"no-underscore-dangle": "off",
 		"comma-spacing": [
 			"error",
 			{
@@ -139,6 +149,9 @@
 				"allowPattern": "throws"
 			}
 		],
+		"no-extra-boolean-cast": "off",
+		"no-unused-vars": "error",
+		"no-redeclare": "error",
 		"use-isnan": "error",
 		"no-eval": "error",
 		"no-var": "error",
@@ -171,10 +184,6 @@
 					"balanced": true
 				}
 			}
-		],
-		"jsx-quotes": [
-			2,
-			"prefer-double"
 		],
 		"key-spacing": [
 			2,
@@ -332,90 +341,7 @@
 			}
 		],
 		"prefer-destructuring": "warn",
-		"prefer-spread": "warn",
-		"security/detect-object-injection": "warn",
-		"import/order": "off",
-		"import/default": "off",
-		"import/no-extraneous-dependencies": [
-			"error",
-			{
-				"devDependencies": [
-					"scripts/**",
-					"tests/**"
-				],
-				"peerDependencies": true,
-				"optionalDependencies": false,
-				"bundledDependencies": false
-			}
-		],
-		"import/unambiguous": "warn",
-		"@typescript-eslint/ban-ts-ignore": "off",
-		"@typescript-eslint/ban-ts-comment": "off",
-		"@typescript-eslint/ban-types": [
-			"error",
-			{
-				"types": {
-					"Object": {
-						"message": "Avoid using the `Object` type. Did you mean `object`?"
-					},
-					"Function": {
-						"message": "Avoid using the `Function` type. Prefer a specific function type, like `() => void`."
-					},
-					"Boolean": {
-						"message": "Avoid using the `Boolean` type. Did you mean `boolean`?"
-					},
-					"Number": {
-						"message": "Avoid using the `Number` type. Did you mean `number`?"
-					},
-					"String": {
-						"message": "Avoid using the `String` type. Did you mean `string`?"
-					},
-					"Symbol": {
-						"message": "Avoid using the `Symbol` type. Did you mean `symbol`?"
-					}
-				}
-			}
-		],
-		"@typescript-eslint/array-type": "warn",
-		"@typescript-eslint/consistent-type-assertions": "warn",
-		"@typescript-eslint/no-non-null-assertion": "warn",
-		"@typescript-eslint/no-explicit-any": "warn",
-		"@typescript-eslint/no-empty-function": "warn",
-		"@typescript-eslint/no-empty-interface": "warn",
-		"@typescript-eslint/no-use-before-define": "error",
-		"@typescript-eslint/no-unused-expressions": "error",
-		"@typescript-eslint/no-unused-vars": "error",
-		"@typescript-eslint/no-var-requires": "warn",
-		"@typescript-eslint/no-misused-new": "warn",
-		"@typescript-eslint/no-namespace": "warn",
-		"@typescript-eslint/prefer-namespace-keyword": "warn",
-		"@typescript-eslint/prefer-function-type": "warn",
-		"@typescript-eslint/prefer-for-of": "warn",
-		"@typescript-eslint/unified-signatures": "warn",
-		"@typescript-eslint/adjacent-overload-signatures": "error",
-		"@typescript-eslint/member-ordering": "off",
-		"@typescript-eslint/naming-convention": "off",
-		"@typescript-eslint/no-parameter-properties": "off",
-		"@typescript-eslint/no-shadow": [
-			"warn",
-			{
-				"hoist": "all"
-			}
-		],
-		"@typescript-eslint/triple-slash-reference": [
-			"warn",
-			{
-				"path": "always",
-				"types": "prefer-import",
-				"lib": "always"
-			}
-		],
-		"@typescript-eslint/explicit-member-accessibility": [
-			"off",
-			{
-				"accessibility": "explicit"
-			}
-		]
+		"prefer-spread": "warn"
 	},
 	"overrides": [
 		{
@@ -431,7 +357,98 @@
 				"eslint-plugin-jsdoc",
 				"@typescript-eslint"
 			],
-			"rules": {},
+			"rules": {
+				"security/detect-object-injection": "warn",
+				"import/order": "off",
+				"import/default": "off",
+				"import/no-extraneous-dependencies": [
+					"error",
+					{
+						"devDependencies": [
+							"scripts/**",
+							"tests/**"
+						],
+						"peerDependencies": true,
+						"optionalDependencies": false,
+						"bundledDependencies": false
+					}
+				],
+				"import/unambiguous": "warn",
+				"@typescript-eslint/ban-ts-ignore": "off",
+				"@typescript-eslint/ban-ts-comment": "off",
+				"@typescript-eslint/ban-types": [
+					"error",
+					{
+						"types": {
+							"Object": {
+								"message": "Avoid using the `Object` type. Did you mean `object`?"
+							},
+							"Function": {
+								"message": "Avoid using the `Function` type. Prefer a specific function type, like `() => void`."
+							},
+							"Boolean": {
+								"message": "Avoid using the `Boolean` type. Did you mean `boolean`?"
+							},
+							"Number": {
+								"message": "Avoid using the `Number` type. Did you mean `number`?"
+							},
+							"String": {
+								"message": "Avoid using the `String` type. Did you mean `string`?"
+							},
+							"Symbol": {
+								"message": "Avoid using the `Symbol` type. Did you mean `symbol`?"
+							}
+						}
+					}
+				],
+				"@typescript-eslint/array-type": "warn",
+				"@typescript-eslint/consistent-type-assertions": "warn",
+				"@typescript-eslint/no-non-null-assertion": "off",
+				"@typescript-eslint/no-explicit-any": "warn",
+				"@typescript-eslint/no-empty-function": "warn",
+				"@typescript-eslint/no-empty-interface": "warn",
+				"@typescript-eslint/no-use-before-define": "error",
+				"@typescript-eslint/no-unused-expressions": "error",
+				"@typescript-eslint/no-unused-vars": [
+					"error",
+					{
+						"argsIgnorePattern": "^_",
+						"varsIgnorePattern": "^_",
+						"caughtErrorsIgnorePattern": "^_"
+					}
+				],
+				"@typescript-eslint/no-var-requires": "warn",
+				"@typescript-eslint/no-misused-new": "warn",
+				"@typescript-eslint/no-namespace": "warn",
+				"@typescript-eslint/prefer-namespace-keyword": "warn",
+				"@typescript-eslint/prefer-function-type": "warn",
+				"@typescript-eslint/prefer-for-of": "warn",
+				"@typescript-eslint/unified-signatures": "warn",
+				"@typescript-eslint/adjacent-overload-signatures": "error",
+				"@typescript-eslint/member-ordering": "off",
+				"@typescript-eslint/naming-convention": "off",
+				"@typescript-eslint/no-parameter-properties": "off",
+				"@typescript-eslint/no-shadow": [
+					"warn",
+					{
+						"hoist": "all"
+					}
+				],
+				"@typescript-eslint/triple-slash-reference": [
+					"warn",
+					{
+						"path": "always",
+						"types": "prefer-import",
+						"lib": "always"
+					}
+				],
+				"@typescript-eslint/explicit-member-accessibility": [
+					"off",
+					{
+						"accessibility": "explicit"
+					}
+				]
+			},
 			"files": [
 				"*.ts",
 				"*.js"

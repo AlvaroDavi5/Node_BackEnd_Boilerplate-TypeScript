@@ -4,14 +4,13 @@ import { Observable } from 'rxjs';
 import { Socket as ServerSocket } from 'socket.io';
 import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
 import Exceptions from '@core/errors/Exceptions';
-import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService, { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import { getObjKeys, getObjValues } from '@common/utils/dataValidations.util';
 
 
 @Injectable()
 export default class EventsGuard implements CanActivate {
-	private readonly logger: LoggerInterface;
+	private readonly logger: LoggerService;
 
 	constructor(
 		private readonly exceptions: Exceptions,

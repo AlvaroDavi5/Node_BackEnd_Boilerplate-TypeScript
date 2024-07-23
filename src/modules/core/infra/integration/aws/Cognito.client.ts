@@ -7,6 +7,7 @@ import {
 	SignUpCommandInput,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { ConfigsInterface } from '@core/configs/envs.config';
+import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 
 
@@ -20,6 +21,7 @@ export default class CognitoClient {
 
 	constructor(
 		private readonly configService: ConfigService,
+		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 	) {
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
@@ -81,6 +83,7 @@ export default class CognitoClient {
 				list = result.UserPools;
 		} catch (error) {
 			this.logger.error('List User Pools Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return list;
@@ -97,6 +100,7 @@ export default class CognitoClient {
 				userPoolId = result.UserPool.Id;
 		} catch (error) {
 			this.logger.error('Create User Pool Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return userPoolId;
@@ -113,6 +117,7 @@ export default class CognitoClient {
 				httpStatusCode = result.$metadata.httpStatusCode;
 		} catch (error) {
 			this.logger.error('Delete User Pool Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return httpStatusCode;
@@ -130,6 +135,7 @@ export default class CognitoClient {
 				clientId = result.UserPoolClient.ClientId;
 		} catch (error) {
 			this.logger.error('Create Client Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return clientId;
@@ -147,6 +153,7 @@ export default class CognitoClient {
 				httpStatusCode = result.$metadata.httpStatusCode;
 		} catch (error) {
 			this.logger.error('Delete Client Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return httpStatusCode;
@@ -164,6 +171,7 @@ export default class CognitoClient {
 				userStatus = result.User.UserStatus;
 		} catch (error) {
 			this.logger.error('Create User Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return userStatus;
@@ -181,6 +189,7 @@ export default class CognitoClient {
 				userEnabled = result.Enabled;
 		} catch (error) {
 			this.logger.error('Get User Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return userEnabled;
@@ -198,6 +207,7 @@ export default class CognitoClient {
 				httpStatusCode = result.$metadata.httpStatusCode;
 		} catch (error) {
 			this.logger.error('Delete User Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return httpStatusCode;
@@ -212,6 +222,7 @@ export default class CognitoClient {
 				userConfirmed = result.UserConfirmed;
 		} catch (error) {
 			this.logger.error('signUp Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return userConfirmed;
@@ -229,6 +240,7 @@ export default class CognitoClient {
 				httpStatusCode = result.$metadata.httpStatusCode;
 		} catch (error) {
 			this.logger.error('SignUp Confirm Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return httpStatusCode;

@@ -8,6 +8,7 @@ import {
 } from '@aws-sdk/client-sqs';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import CryptographyService from '@core/security/Cryptography.service';
+import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
@@ -21,6 +22,7 @@ export default class SqsClient {
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly cryptographyService: CryptographyService,
+		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
@@ -123,6 +125,7 @@ export default class SqsClient {
 				list = result.QueueUrls;
 		} catch (error) {
 			this.logger.error('List Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return list;
@@ -139,6 +142,7 @@ export default class SqsClient {
 				queueUrl = result.QueueUrl;
 		} catch (error) {
 			this.logger.error('Create Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return queueUrl;
@@ -155,6 +159,7 @@ export default class SqsClient {
 				isDeleted = true;
 		} catch (error) {
 			this.logger.error('Delete Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return isDeleted;
@@ -171,6 +176,7 @@ export default class SqsClient {
 				messageId = result.MessageId;
 		} catch (error) {
 			this.logger.error('Send Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return messageId;
@@ -191,6 +197,7 @@ export default class SqsClient {
 			}
 		} catch (error) {
 			this.logger.error('Receive Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return messages;
@@ -208,6 +215,7 @@ export default class SqsClient {
 				isDeleted = true;
 		} catch (error) {
 			this.logger.error('Error to Delete Message:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return isDeleted;

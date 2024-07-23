@@ -166,14 +166,14 @@ export const RequestLoggerProvider: Provider = {
 	useFactory: (
 		inquirer: string | object,
 		configService: ConfigService,
-	): LoggerInterface => new LoggerService(inquirer, configService, dataParserHelperMock as DataParserHelper),
+	): LoggerService => new LoggerService(inquirer, configService, dataParserHelperMock as DataParserHelper),
 
 	durable: false,
 };
 
 export const SINGLETON_LOGGER_PROVIDER = Symbol('SingletonLoggerProvider');
 export interface LoggerProviderInterface {
-	getLogger: (context: string) => LoggerInterface,
+	getLogger: (context: string) => LoggerService,
 }
 export const SingletonLoggerProvider: Provider = {
 	provide: SINGLETON_LOGGER_PROVIDER,
@@ -185,7 +185,7 @@ export const SingletonLoggerProvider: Provider = {
 	useFactory: (
 		configService: ConfigService,
 	): LoggerProviderInterface => ({
-		getLogger: (context: string): LoggerInterface => new LoggerService(context, configService, dataParserHelperMock as DataParserHelper),
+		getLogger: (context: string): LoggerService => new LoggerService(context, configService, dataParserHelperMock as DataParserHelper),
 	}),
 
 	durable: false,

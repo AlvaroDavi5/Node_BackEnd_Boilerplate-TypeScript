@@ -1,8 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { io, Socket as ClientSocket } from 'socket.io-client';
-import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService, { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { ConfigsInterface } from '@core/configs/envs.config';
 
@@ -10,7 +9,7 @@ import { ConfigsInterface } from '@core/configs/envs.config';
 @Injectable()
 export default class WebSocketClient {
 	private readonly clientSocket!: ClientSocket;
-	private readonly logger: LoggerInterface;
+	private readonly logger: LoggerService;
 
 	constructor(
 		private readonly configService: ConfigService,

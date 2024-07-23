@@ -24,8 +24,8 @@ export default class S3Client {
 
 	constructor(
 		private readonly configService: ConfigService,
-		private readonly logger: LoggerService,
 		private readonly exceptions: Exceptions,
+		private readonly logger: LoggerService,
 	) {
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
@@ -93,6 +93,7 @@ export default class S3Client {
 				});
 		} catch (error) {
 			this.logger.error('List Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return list;
@@ -111,6 +112,7 @@ export default class S3Client {
 				location = '';
 		} catch (error) {
 			this.logger.error('Create Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return location;
@@ -125,6 +127,7 @@ export default class S3Client {
 				httpStatusCode = result.$metadata.httpStatusCode;
 		} catch (error) {
 			this.logger.error('Delete Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return httpStatusCode;
@@ -142,6 +145,7 @@ export default class S3Client {
 				httpStatusCode = result.$metadata.httpStatusCode;
 		} catch (error) {
 			this.logger.error('Configure Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return httpStatusCode;
@@ -156,6 +160,7 @@ export default class S3Client {
 				tag = result.ETag;
 		} catch (error) {
 			this.logger.error('Upload Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return tag;
@@ -177,6 +182,7 @@ export default class S3Client {
 			contentLength = result.ContentLength;
 		} catch (error) {
 			this.logger.error('Download Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return {
@@ -196,6 +202,7 @@ export default class S3Client {
 			link = signedUrl;
 		} catch (error) {
 			this.logger.error('Get URL Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return link;
@@ -210,6 +217,7 @@ export default class S3Client {
 				marker = result.DeleteMarker;
 		} catch (error) {
 			this.logger.error('Delete Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return marker;

@@ -8,6 +8,7 @@ import {
 } from '@aws-sdk/client-sns';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import CryptographyService from '@core/security/Cryptography.service';
+import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
@@ -26,6 +27,7 @@ export default class SnsClient {
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly cryptographyService: CryptographyService,
+		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
@@ -125,6 +127,7 @@ export default class SnsClient {
 				list = result?.Topics;
 		} catch (error) {
 			this.logger.error('List Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return list;
@@ -141,6 +144,7 @@ export default class SnsClient {
 				topicArn = result.TopicArn;
 		} catch (error) {
 			this.logger.error('Create Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return topicArn;
@@ -157,6 +161,7 @@ export default class SnsClient {
 				isDeleted = true;
 		} catch (error) {
 			this.logger.error('Delete Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return isDeleted;
@@ -173,6 +178,7 @@ export default class SnsClient {
 				subscriptionArn = result.SubscriptionArn;
 		} catch (error) {
 			this.logger.error('Subscribe Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return subscriptionArn;
@@ -189,6 +195,7 @@ export default class SnsClient {
 				httpStatusCode = result.$metadata.httpStatusCode;
 		} catch (error) {
 			this.logger.error('Unsubscribe Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return httpStatusCode;
@@ -205,6 +212,7 @@ export default class SnsClient {
 				messageId = result.MessageId;
 		} catch (error) {
 			this.logger.error('Publish Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return messageId;

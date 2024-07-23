@@ -3,13 +3,13 @@ import { Schema } from 'joi';
 import { Logger } from 'winston';
 import { Console } from 'console';
 import Exceptions from '@core/errors/Exceptions';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService from '@core/logging/Logger.service';
 
 
 export default class SchemaValidator {
 	constructor(
 		private readonly exceptions: Exceptions,
-		private readonly logger: Logger | LoggerInterface | Console,
+		private readonly logger: Logger | LoggerService | Console,
 	) { }
 
 	private log(message: string): void {

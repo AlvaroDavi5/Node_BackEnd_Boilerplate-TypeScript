@@ -4,10 +4,9 @@ import { DataSource } from 'typeorm';
 import { Logger } from 'winston';
 import { dbConfig } from './db.config';
 import LoggerService from '@core/logging/Logger.service';
-import { LoggerInterface } from '@core/logging/logger';
 
 
-export async function testConnection(connection: DataSource, logger?: Logger | LoggerInterface | Console): Promise<boolean> {
+export async function testConnection(connection: DataSource, logger?: Logger | LoggerService | Console): Promise<boolean> {
 	try {
 		if (connection.isInitialized) {
 			logger?.info(`Database connection with '${dbConfig.database}' database is initialized successfully`);
@@ -22,7 +21,7 @@ export async function testConnection(connection: DataSource, logger?: Logger | L
 	}
 }
 
-export async function syncConnection(connection: DataSource, logger?: Logger | LoggerInterface | Console): Promise<void> {
+export async function syncConnection(connection: DataSource, logger?: Logger | LoggerService | Console): Promise<void> {
 	try {
 		await connection.synchronize(false).then(() => {
 			logger?.debug(`Database synced: ${dbConfig.database}`);

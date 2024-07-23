@@ -3,8 +3,7 @@ import { SqsMessageHandler, SqsConsumerEventHandler } from '@ssut/nestjs-sqs';
 import { SqsConsumerOptions } from '@ssut/nestjs-sqs/dist/sqs.types';
 import { Message } from '@aws-sdk/client-sqs';
 import MongoClient from '@core/infra/data/Mongo.client';
-import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService, { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import { ProcessEventsEnum } from '@common/enums/processEvents.enum';
 import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
@@ -39,7 +38,7 @@ export const eventsQueueConsumerConfigs: SqsConsumerOptions = {
 
 @Injectable()
 export default class EventsQueueConsumer {
-	private readonly logger: LoggerInterface;
+	private readonly logger: LoggerService;
 	private readonly name: string;
 	private errorsCount = 0;
 

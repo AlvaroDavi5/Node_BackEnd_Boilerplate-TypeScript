@@ -2,8 +2,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
-import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService, { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import CryptographyService from '@core/security/Cryptography.service';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import { EventSchemaInterface } from '@events/queue/handlers/schemas/event.schema';
@@ -20,7 +19,7 @@ interface EventDispatchInterface {
 
 @Injectable()
 export default class EventsQueueProducer {
-	private readonly logger: LoggerInterface;
+	private readonly logger: LoggerService;
 	private readonly credentials: {
 		queueName: string,
 		queueUrl: string,

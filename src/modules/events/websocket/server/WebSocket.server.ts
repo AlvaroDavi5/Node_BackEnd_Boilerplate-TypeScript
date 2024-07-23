@@ -11,8 +11,7 @@ import { WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/webSocket
 import SubscriptionService from '@app/subscription/services/Subscription.service';
 import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
 import EventsGuard from '@events/websocket/guards/Events.guard';
-import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService, { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 import { getObjValues } from '@common/utils/dataValidations.util';
@@ -31,7 +30,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 	private server!: SocketIoServer;
 
 	private subscriptionService!: SubscriptionService;
-	private readonly logger: LoggerInterface;
+	private readonly logger: LoggerService;
 
 	constructor(
 		private readonly moduleRef: ModuleRef,

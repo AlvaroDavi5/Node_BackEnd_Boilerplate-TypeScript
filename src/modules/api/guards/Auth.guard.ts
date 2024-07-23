@@ -1,14 +1,13 @@
 import { Injectable, Inject, CanActivate, ExecutionContext } from '@nestjs/common';
 import Exceptions from '@core/errors/Exceptions';
-import { LoggerProviderInterface, SINGLETON_LOGGER_PROVIDER } from '@core/logging/Logger.service';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService, { LoggerProviderInterface, SINGLETON_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import CryptographyService from '@core/security/Cryptography.service';
 import { RequestInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @Injectable()
 export default class AuthGuard implements CanActivate {
-	private readonly logger: LoggerInterface;
+	private readonly logger: LoggerService;
 
 	constructor(
 		private readonly cryptographyService: CryptographyService,

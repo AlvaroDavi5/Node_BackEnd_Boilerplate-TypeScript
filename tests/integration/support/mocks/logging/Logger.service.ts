@@ -52,14 +52,14 @@ export const RequestLoggerProvider: Provider = {
 	scope: Scope.REQUEST,
 
 	inject: [],
-	useFactory: (): LoggerInterface => new LoggerService(),
+	useFactory: (): LoggerService => new LoggerService(),
 
 	durable: false,
 };
 
 export const SINGLETON_LOGGER_PROVIDER = Symbol('SingletonLoggerProvider');
 export interface LoggerProviderInterface {
-	getLogger: (context: string) => LoggerInterface,
+	getLogger: (context: string) => LoggerService,
 }
 export const SingletonLoggerProvider: Provider = {
 	provide: SINGLETON_LOGGER_PROVIDER,
@@ -67,7 +67,7 @@ export const SingletonLoggerProvider: Provider = {
 
 	inject: [],
 	useFactory: (): LoggerProviderInterface => ({
-		getLogger: (context: string): LoggerInterface => new LoggerService(),
+		getLogger: (_context: string): LoggerService => new LoggerService(),
 	}),
 
 	durable: false,

@@ -1,4 +1,3 @@
-import { ReadStream } from 'fs';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 

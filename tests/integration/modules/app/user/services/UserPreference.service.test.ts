@@ -14,10 +14,10 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 	let userPreferenceService: UserPreferenceService;
 	// // mocks
 	const userPreferenceRepositoryMock = {
-		findOne: jest.fn(async (query: FindOneOptions<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => (null)),
-		create: jest.fn(async (entity: UserPreferenceEntity): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
-		update: jest.fn(async (id: string, dataValues: Partial<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => (null)),
-		deleteOne: jest.fn(async (id: string, softDelete?: boolean): Promise<boolean> => (false)),
+		findOne: jest.fn(async (_query: FindOneOptions<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => (null)),
+		create: jest.fn(async (_entity: UserPreferenceEntity): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
+		update: jest.fn(async (_id: string, _dataValues: Partial<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => (null)),
+		deleteOne: jest.fn(async (_id: string, _softDelete?: boolean): Promise<boolean> => (false)),
 	};
 	const configServiceMock = {
 		get: (propertyPath?: string): any => {

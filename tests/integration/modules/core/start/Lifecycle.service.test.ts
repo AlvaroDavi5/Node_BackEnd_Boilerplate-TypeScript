@@ -52,7 +52,7 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 		destroy: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
 	};
 	const mockObservable: MockObservableInterface<void, unknown[]> = {
-		call: jest.fn((...args: unknown[]): void => (undefined)),
+		call: jest.fn((..._args: unknown[]): void => (undefined)),
 	};
 	const loggerServiceMock = new LoggerService(mockObservable);
 

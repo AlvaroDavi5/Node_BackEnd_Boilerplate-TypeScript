@@ -24,7 +24,7 @@ describe('Modules :: API :: DefaultController', () => {
 			exports: [],
 		})
 			.overrideGuard(CustomThrottlerGuard).useValue({
-				handleRequest: (...args: unknown[]): Promise<boolean> => { return Promise.resolve(true); },
+				handleRequest: (..._args: unknown[]): Promise<boolean> => { return Promise.resolve(true); },
 			})
 			.overrideProvider(HttpConstants).useValue({
 				messages: {

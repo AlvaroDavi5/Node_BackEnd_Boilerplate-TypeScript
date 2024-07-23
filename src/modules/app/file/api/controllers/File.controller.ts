@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiBody, ApiHeaders, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Multer } from 'multer';
+import { Multer as _Multer } from 'multer';
 import { Response } from 'express';
 import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';

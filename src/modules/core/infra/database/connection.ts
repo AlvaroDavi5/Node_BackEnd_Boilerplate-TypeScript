@@ -43,7 +43,7 @@ const databaseConnectionProvider: Provider = {
 	],
 	useFactory: async (
 		logger: LoggerService,
-		...args: any[]
+		..._args: any[]
 	): Promise<DataSource> => {
 		const connection = new DataSource(dbConfig);
 		logger.setContextName('DatabaseConnectionProvider');

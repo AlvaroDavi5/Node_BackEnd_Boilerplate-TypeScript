@@ -117,7 +117,7 @@ export default class RedisClient {
 		);
 		const result = await Promise.allSettled(getByKeyPromises);
 
-		return result.map(({ status, ...args }) => ({ ...((args as any)?.value ?? {}) }));
+		return result.map(({ status: _, ...args }) => ({ ...((args as any)?.value ?? {}) }));
 	}
 
 	public async getValuesByKeyPattern<VT = any>(key: string): Promise<(VT | null)[]> {

@@ -43,15 +43,11 @@
 			"error",
 			"always"
 		],
-		"no-trailing-spaces": "error",
-		"eqeqeq": [
-			"error",
-			"always"
-		],
 		"max-len": [
 			"warn",
 			160
 		],
+		"eol-last": "error",
 		"no-multiple-empty-lines": [
 			"error",
 			{
@@ -60,13 +56,33 @@
 				"maxBOF": 1
 			}
 		],
+		"linebreak-style": [
+			"error",
+			"unix"
+		],
 		"camelcase": "warn",
 		"no-underscore-dangle": "off",
+		"no-trailing-spaces": "error",
 		"comma-spacing": [
 			"error",
 			{
 				"before": false,
 				"after": true
+			}
+		],
+		"keyword-spacing": [
+			"error",
+			{
+				"before": true,
+				"after": true
+			}
+		],
+		"key-spacing": [
+			"error",
+			{
+				"beforeColon": false,
+				"afterColon": true,
+				"mode": "strict"
 			}
 		],
 		"object-curly-spacing": [
@@ -77,8 +93,11 @@
 			"error",
 			1
 		],
-		"eol-last": "error",
 		"complexity": "error",
+		"eqeqeq": [
+			"error",
+			"always"
+		],
 		"constructor-super": "error",
 		"no-useless-constructor": "off",
 		"no-invalid-this": "error",
@@ -184,36 +203,6 @@
 					"balanced": true
 				}
 			}
-		],
-		"key-spacing": [
-			2,
-			{
-				"beforeColon": false,
-				"afterColon": true,
-				"mode": "strict"
-			}
-		],
-		"keyword-spacing": [
-			"error",
-			{
-				"before": true,
-				"after": true,
-				"overrides": {
-					"return": {
-						"after": true
-					},
-					"throw": {
-						"after": true
-					},
-					"case": {
-						"after": true
-					}
-				}
-			}
-		],
-		"linebreak-style": [
-			2,
-			"unix"
 		],
 		"lines-around-directive": [
 			2,

@@ -1,5 +1,4 @@
 import { ConfigService } from '@nestjs/config';
-import { Readable } from 'stream';
 import {
 	S3Client as S3AWSClient, S3ClientConfig, NotificationConfiguration,
 	ListBucketsCommand, CreateBucketCommand, DeleteBucketCommand,
@@ -8,9 +7,9 @@ import {
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ConfigsInterface } from 'src/modules/core/configs/envs.config';
+import { LoggerInterface } from 'src/modules/core/logging/logger';
+import { s3FileContentType } from 'src/modules/core/infra/integration/aws/S3.client';
 
-
-type s3FileContentType = string | Uint8Array | Buffer | Readable | ReadableStream | Blob;
 
 export default class S3Client {
 	private readonly awsConfig: S3ClientConfig;
@@ -20,9 +19,8 @@ export default class S3Client {
 
 	constructor(
 		private readonly configService: ConfigService,
-		private readonly logger: any,
+		private readonly logger: LoggerInterface,
 	) {
-		this.logger.setContextName(S3Client.name);
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
 		const {
@@ -49,7 +47,6 @@ export default class S3Client {
 	}
 
 	private uploadParams(bucketName: string, fileName: string, fileContent: s3FileContentType, expirationDate?: Date): PutObjectCommandInput {
-
 		const params: PutObjectCommandInput = {
 			Bucket: bucketName,
 			Key: fileName,
@@ -61,7 +58,6 @@ export default class S3Client {
 	}
 
 	private getObjectParams(bucketName: string, objectKey: string): GetObjectCommandInput | DeleteObjectCommandInput {
-
 		const params: GetObjectCommandInput | DeleteObjectCommandInput = {
 			Bucket: bucketName,
 			Key: objectKey,
@@ -115,34 +111,38 @@ export default class S3Client {
 	}
 
 	public async deleteBucket(bucketName: string): Promise<number> {
-		let httpStatusCode = 0;
+		let statusCode = 0;
 
 		try {
 			const result = await this.s3Client.send(new DeleteBucketCommand({ Bucket: bucketName }));
-			if (result?.$metadata?.httpStatusCode)
-				httpStatusCode = result.$metadata.httpStatusCode;
+
+			const { httpStatusCode } = result.$metadata;
+			if (httpStatusCode)
+				statusCode = httpStatusCode;
 		} catch (error) {
 			this.logger.error('Delete Error:', error);
 		}
 
-		return httpStatusCode;
+		return statusCode;
 	}
 
 	public async putBucketNotification(bucketName: string, configuration: NotificationConfiguration | undefined): Promise<number> {
-		let httpStatusCode = 0;
+		let statusCode = 0;
 
 		try {
 			const result = await this.s3Client.send(new PutBucketNotificationConfigurationCommand({
 				Bucket: bucketName,
 				NotificationConfiguration: configuration,
 			}));
-			if (result?.$metadata?.httpStatusCode)
-				httpStatusCode = result.$metadata.httpStatusCode;
+
+			const { httpStatusCode } = result.$metadata;
+			if (httpStatusCode)
+				statusCode = httpStatusCode;
 		} catch (error) {
 			this.logger.error('Configure Error:', error);
 		}
 
-		return httpStatusCode;
+		return statusCode;
 	}
 
 	public async uploadFile(bucketName: string, fileName: string, fileContent: s3FileContentType, expirationDate?: Date): Promise<string> {
@@ -165,7 +165,7 @@ export default class S3Client {
 
 		try {
 			const result = await this.s3Client.send(new GetObjectCommand(this.getObjectParams(bucketName, objectKey)));
-			if (result?.ContentLength) {
+			if (!!result.ContentLength) {
 				content = result.Body;
 				contentLength = result.ContentLength;
 			}
@@ -189,7 +189,7 @@ export default class S3Client {
 
 			link = signedUrl;
 		} catch (error) {
-			this.logger.error('Delete Error:', error);
+			this.logger.error('Get URL Error:', error);
 		}
 
 		return link;

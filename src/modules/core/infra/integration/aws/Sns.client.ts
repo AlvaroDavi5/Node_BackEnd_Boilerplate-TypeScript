@@ -185,20 +185,22 @@ export default class SnsClient {
 	}
 
 	public async unsubscribeTopic(subscriptionArn: string): Promise<number> {
-		let httpStatusCode = 0;
+		let statusCode = 0;
 
 		try {
 			const result = await this.snsClient.send(new UnsubscribeCommand({
 				SubscriptionArn: subscriptionArn
 			}));
-			if (result?.$metadata?.httpStatusCode)
-				httpStatusCode = result.$metadata.httpStatusCode;
+
+			const { httpStatusCode } = result.$metadata;
+			if (httpStatusCode)
+				statusCode = httpStatusCode;
 		} catch (error) {
 			this.logger.error('Unsubscribe Error:', error);
 			throw this.exceptions.integration(error as Error);
 		}
 
-		return httpStatusCode;
+		return statusCode;
 	}
 
 	public async publishMessage(protocol: protocolType, topicArn: string, topicName: string, message: string, destination: DestinationInterface): Promise<string> {

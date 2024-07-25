@@ -56,6 +56,18 @@
 				"maxBOF": 1
 			}
 		],
+		"operator-linebreak": [
+			"error",
+			"none",
+			{
+				"overrides": {
+					"?": "before",
+					":": "before",
+					"&&": "before",
+					"||": "before"
+				}
+			}
+		],
 		"linebreak-style": [
 			"error",
 			"unix"
@@ -98,7 +110,9 @@
 			"error",
 			"always"
 		],
+		"no-compare-neg-zero": "error",
 		"constructor-super": "error",
+		"no-array-constructor": "warn",
 		"no-useless-constructor": "off",
 		"no-invalid-this": "error",
 		"no-new-wrappers": "error",
@@ -143,10 +157,16 @@
 		"valid-typeof": "error",
 		"one-var": "off",
 		"prefer-const": "warn",
+		"prefer-destructuring": "error",
+		"prefer-spread": "error",
 		"no-undef": "error",
 		"no-undef-init": "warn",
 		"no-constant-condition": "error",
 		"no-cond-assign": "error",
+		"no-return-assign": [
+			"error",
+			"always"
+		],
 		"no-empty": "error",
 		"no-template-curly-in-string": "warn",
 		"for-direction": "error",
@@ -156,6 +176,10 @@
 		"func-call-spacing": [
 			"error",
 			"never"
+		],
+		"lines-around-directive": [
+			"error",
+			"always"
 		],
 		"dot-location": [
 			"error",
@@ -169,6 +193,7 @@
 			}
 		],
 		"no-extra-boolean-cast": "off",
+		"no-extra-parens": "warn",
 		"no-unused-vars": "error",
 		"no-redeclare": "error",
 		"use-isnan": "error",
@@ -204,59 +229,32 @@
 				}
 			}
 		],
-		"lines-around-directive": [
-			2,
-			{
-				"before": "always",
-				"after": "always"
-			}
-		],
-		"no-array-constructor": 2,
-		"no-compare-neg-zero": 2,
-		"no-extra-parens": 2,
-		"no-return-assign": [
-			2,
-			"always"
-		],
-		"operator-linebreak": [
-			2,
-			"none",
-			{
-				"overrides": {
-					"?": "before",
-					":": "before",
-					"&&": "before",
-					"||": "before"
-				}
-			}
-		],
-		"prefer-object-spread": 2,
-		"prefer-rest-params": 2,
+		"prefer-rest-params": "error",
 		"prefer-template": "error",
 		"quote-props": [
-			2,
+			"warn",
 			"as-needed",
 			{
 				"keywords": false
 			}
 		],
 		"rest-spread-spacing": [
-			2,
+			"warn",
 			"never"
 		],
 		"semi-spacing": [
-			2,
+			"warn",
 			{
 				"before": false,
 				"after": true
 			}
 		],
 		"semi-style": [
-			2,
+			"warn",
 			"last"
 		],
 		"space-before-blocks": [
-			2,
+			"warn",
 			{
 				"functions": "always",
 				"keywords": "always",
@@ -272,65 +270,63 @@
 			}
 		],
 		"space-in-parens": [
-			2,
+			"warn",
 			"never"
 		],
 		"space-infix-ops": [
-			2
+			"warn"
 		],
 		"space-unary-ops": [
-			2,
+			"warn",
 			{
 				"words": true,
 				"nonwords": false
 			}
 		],
 		"switch-colon-spacing": [
-			2,
+			"warn",
 			{
 				"after": true,
 				"before": false
 			}
 		],
 		"template-curly-spacing": [
-			2,
+			"warn",
 			"never"
 		],
 		"template-tag-spacing": [
-			2,
+			"warn",
 			"never"
 		],
 		"unicode-bom": [
-			2,
+			"warn",
 			"never"
 		],
 		"wrap-iife": [
-			2,
+			"warn",
 			"outside",
 			{
 				"functionPrototypeMethods": true
 			}
 		],
 		"wrap-regex": [
-			2
+			"warn"
 		],
 		"yield-star-spacing": [
-			2,
+			"warn",
 			{
 				"before": false,
 				"after": true
 			}
 		],
 		"yoda": [
-			2,
+			"warn",
 			"never",
 			{
 				"exceptRange": true,
 				"onlyEquality": false
 			}
-		],
-		"prefer-destructuring": "warn",
-		"prefer-spread": "warn"
+		]
 	},
 	"overrides": [
 		{

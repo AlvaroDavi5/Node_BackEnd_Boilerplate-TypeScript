@@ -32,7 +32,7 @@ export default class KnownExceptionFilter implements ExceptionFilter<HttpExcepti
 			stack: this.showStack ? exception.stack : undefined,
 		};
 
-		const knownExceptions = getObjValues<ExceptionsEnum>(ExceptionsEnum).map((exception) => exception.toString());
+		const knownExceptions = getObjValues<ExceptionsEnum>(ExceptionsEnum).map((exc) => exc.toString());
 		if (knownExceptions.includes(exception.name)) {
 			const { description, details } = exception instanceof HttpException ? exception.getResponse() : {} as any;
 			errorResponse.description = description ?? details;

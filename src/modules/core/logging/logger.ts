@@ -81,7 +81,7 @@ export function getLoggerOptions(serviceName: string, environment: string, conte
 	};
 }
 
-export function generateLogger(context: string): Logger {
+export function generateLogger(loggerContext: string): Logger {
 
 	const messageFormatter = format.printf((info) => {
 		const { level, message, timestamp, stack, context, meta } = info;
@@ -107,7 +107,7 @@ export function generateLogger(context: string): Logger {
 	const loggerOptions = getLoggerOptions(
 		(process.env.APP_NAME ?? 'Node Boilerplate'),
 		(process.env.NODE_ENV ?? 'dev'),
-		context,
+		loggerContext,
 		(process.env.APP_LOGS_PATH ?? './logs/logs.log'),
 		defaultFormat,
 	);

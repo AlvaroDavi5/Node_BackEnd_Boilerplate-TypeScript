@@ -107,9 +107,9 @@ export default class CryptographyService {
 
 	public contentDSASign(data: string, inputEncoding: BufferEncoding, privateKeyContent: string, algorithm: hashAlgorithmType, outputFormat: crypto.BinaryToTextEncoding): string | null {
 		try {
-			const sign = crypto.createSign(algorithm);
-			sign.update(data, inputEncoding);
-			return sign.sign(privateKeyContent, outputFormat);
+			const dsaSign = crypto.createSign(algorithm);
+			dsaSign.update(data, inputEncoding);
+			return dsaSign.sign(privateKeyContent, outputFormat);
 		} catch (error) {
 			return null;
 		}

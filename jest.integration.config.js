@@ -1,6 +1,7 @@
 // For a detailed explanation regarding each configuration property, visit:
 // https://jestjs.io/docs/en/configuration.html
 
+// eslint-disable-next-line import/unambiguous
 module.exports = {
 	// The root directory that Jest should scan for tests and modules within
 	rootDir: './',

@@ -1,3 +1,4 @@
+/* eslint-disable import/unambiguous, no-template-curly-in-string */
 module.exports = {
 	branches: [
 		'main',
@@ -13,3 +14,4 @@ module.exports = {
 		'@semantic-release/github',
 	],
 };
+/* eslint-enable import/unambiguous, no-template-curly-in-string */

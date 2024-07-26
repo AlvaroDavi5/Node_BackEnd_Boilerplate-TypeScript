@@ -59,6 +59,7 @@
 		"db:subscriber-create": "yarn typeorm subscriber:create",
 		"db:query-exec": "yarn build && yarn typeorm query -d build/modules/core/infra/database/db.config.js",
 		"test": "yarn test:unit && yarn test:integration && yarn test:e2e",
+		"test:coverage": "yarn test:unit --coverage && yarn test:integration --coverage && yarn test:e2e --coverage",
 		"test:unit": "cross-env NODE_ENV=test jest -c jest.config.js",
 		"test:unit:#it": "cross-env NODE_ENV=test jest -t=#it -c jest.config.js --verbose",
 		"test:unit:watch": "cross-env NODE_ENV=test jest -c jest.config.js --watch --verbose --detectOpenHandles",

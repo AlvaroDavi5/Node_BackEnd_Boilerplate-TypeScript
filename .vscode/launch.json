@@ -15,7 +15,7 @@
 		},
 		{
 			"name": "Node.js: Test Integ Debug with YARN",
-			"command": "yarn test:integ:watch",
+			"command": "yarn test:integration:watch",
 			"request": "launch",
 			"type": "node-terminal"
 		},

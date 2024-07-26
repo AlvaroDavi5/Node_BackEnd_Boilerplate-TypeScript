@@ -1,4 +1,5 @@
-import { Module, Global } from '@nestjs/common';
+import { APP_FILTER } from '@nestjs/core';
+import { Module, Global, Scope } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -8,7 +9,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { GraphQLFormattedError } from 'graphql';
 import { join } from 'path';
-import configs from './configs/configs.config';
+import envsConfig from './configs/envs.config';
 import LifecycleService from './start/Lifecycle.service';
 import Exceptions from './errors/Exceptions';
 import LoggerService, { SingletonLoggerProvider, RequestLoggerProvider } from './logging/Logger.service';
@@ -20,18 +21,19 @@ import SqsClient from './infra/integration/aws/Sqs.client';
 import SnsClient from './infra/integration/aws/Sns.client';
 import S3Client from './infra/integration/aws/S3.client';
 import CognitoClient from './infra/integration/aws/Cognito.client';
-import RestMockedServiceClient from './infra/integration/rest/RestMockedService.client';
+import RestMockedServiceProvider from './infra/providers/RestMockedService.provider';
 import SyncCronJob from './cron/jobs/SyncCron.job';
 import SyncCronTask from './cron/tasks/SyncCron.task';
+import KnownExceptionFilter from '@api/filters/KnownException.filter';
+import RequestRateConstants from '@common/constants/RequestRate.constants';
+import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import CommonModule from '@common/common.module';
 import AppModule from '@app/app.module';
 import EventsModule from '@events/events.module';
 import GraphQlModule from '@graphql/graphql.module';
-import RequestRateConstants from '@common/constants/RequestRate.constants';
-import { EnvironmentsEnum } from '@common/enums/environments.enum';
 
 
-const { application: appConfigs } = configs();
+const { application: appConfigs } = envsConfig();
 const requestRateConstants = new RequestRateConstants();
 
 @Global()
@@ -39,7 +41,7 @@ const requestRateConstants = new RequestRateConstants();
 	imports: [
 		ConfigModule.forRoot({
 			isGlobal: true,
-			load: [configs],
+			load: [envsConfig],
 		}),
 		ScheduleModule.forRoot(),
 		EventEmitterModule.forRoot({
@@ -55,12 +57,10 @@ const requestRateConstants = new RequestRateConstants();
 			driver: ApolloDriver,
 			playground: appConfigs.environment === EnvironmentsEnum.DEVELOPMENT,
 			autoSchemaFile: join(process.cwd(), 'src/modules/graphql/schemas/schema.gql'),
-			formatError: (formattedError: GraphQLFormattedError, error: any) => {
-				const extensions = formattedError.extensions as any;
-
+			formatError: ({ message, extensions, path }: GraphQLFormattedError, error: any) => {
 				const graphQLFormattedError: GraphQLFormattedError = {
-					message: formattedError.message ?? error?.message,
-					path: formattedError.path ?? error?.path,
+					message: message ?? error?.message,
+					path: path ?? error?.path,
 					extensions: {
 						code: extensions?.code,
 						originalError: extensions?.originalError,
@@ -82,6 +82,11 @@ const requestRateConstants = new RequestRateConstants();
 	],
 	controllers: [],
 	providers: [
+		{
+			provide: APP_FILTER,
+			useClass: KnownExceptionFilter,
+			scope: Scope.DEFAULT,
+		},
 		LifecycleService,
 		Exceptions,
 		LoggerService,
@@ -95,7 +100,7 @@ const requestRateConstants = new RequestRateConstants();
 		SnsClient,
 		S3Client,
 		CognitoClient,
-		RestMockedServiceClient,
+		RestMockedServiceProvider,
 		SyncCronJob,
 		SyncCronTask,
 	],
@@ -112,7 +117,7 @@ const requestRateConstants = new RequestRateConstants();
 		SnsClient,
 		S3Client,
 		CognitoClient,
-		RestMockedServiceClient,
+		RestMockedServiceProvider,
 	],
 })
 export default class CoreModule { }

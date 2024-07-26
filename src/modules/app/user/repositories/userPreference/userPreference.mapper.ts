@@ -10,7 +10,7 @@ const toDatabaseEntity = (entity: UserPreferenceEntity): any => {
 	if (!(entity.validate().valid))
 		return null;
 
-	const { id, userId, ...preferenceAttributes } = entity.getAttributes();
+	const { id: _id, userId, ...preferenceAttributes } = entity.getAttributes();
 	const userPreferenceAttributes = {
 		...preferenceAttributes,
 		user: { id: userId },

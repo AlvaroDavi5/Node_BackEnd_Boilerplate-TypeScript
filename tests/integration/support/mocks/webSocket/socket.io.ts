@@ -17,17 +17,17 @@ export class Server {
 		};
 	}
 
-	public setMaxListeners(listenersNumber: number): this {
+	public setMaxListeners(_listenersNumber: number): this {
 		return this;
 	}
 
-	public on(ev: string, listener?: ((...args: any[]) => void)): this {
+	public on(_ev: string, _listener?: ((...args: any[]) => void)): this {
 		return this;
 	}
 
-	public to(socketIdsOrRooms: string | string[]) {
+	public to(_socketIdsOrRooms: string | string[]) {
 		return {
-			emit: (ev: string, ...args: any[]): boolean => {
+			emit: (_ev: string, ..._args: any[]): boolean => {
 				return true;
 			},
 		};
@@ -52,15 +52,15 @@ export class ServerSocket {
 		};
 	}
 
-	public on(ev: string, listener?: ((...args: any[]) => void)): this {
+	public on(_ev: string, _listener?: ((...args: any[]) => void)): this {
 		return this;
 	}
 
-	public off(eventName: string | symbol, listener: (...args: any[]) => void): this {
+	public off(_eventName: string | symbol, _listener: (...args: any[]) => void): this {
 		return this;
 	}
 
-	public emit(ev: string, ...args: any[]): boolean {
+	public emit(_ev: string, ..._args: any[]): boolean {
 		return true;
 	}
 

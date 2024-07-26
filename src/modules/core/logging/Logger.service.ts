@@ -2,13 +2,12 @@ import { INQUIRER } from '@nestjs/core';
 import { Injectable, Inject, Provider, Scope } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createLogger, Logger } from 'winston';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import {
 	LoggerInterface, LogLevelEnum, MetadataInterface,
 	getLoggerOptions, getDefaultFormat, getMessageFormatter
 } from './logger';
-import { wrapperType } from '@shared/types/constructorType';
 import { dataParserHelperMock } from '@dev/mocks/mockedModules';
 
 
@@ -31,7 +30,7 @@ export default class LoggerService implements LoggerInterface {
 		const messageFormatter = getMessageFormatter(this.dataParserHelper.toString);
 
 		const defaultFormat = getDefaultFormat(
-			applicationConfigs.stackErrorVisible === 'true',
+			applicationConfigs.stackErrorVisible,
 			messageFormatter,
 		);
 
@@ -62,7 +61,7 @@ export default class LoggerService implements LoggerInterface {
 		this.requestId = requestId;
 	}
 
-	private buildLog(args: any[]): { message: string, meta: MetadataInterface } {
+	private buildLog(args: unknown[]): { message: string, meta: MetadataInterface } {
 		const inquirerName = typeof this.inquirer === 'string'
 			? this.inquirer
 			: this.inquirer?.constructor?.name;
@@ -76,7 +75,7 @@ export default class LoggerService implements LoggerInterface {
 		};
 
 		const separator = args.length > 1 ? ' ' : '';
-		args.forEach((arg: any) => {
+		args.forEach((arg: unknown) => {
 			if (arg instanceof Error) {
 				const errorName = arg.name.length > 0 ? `\x1b[0;30m${arg.name}\x1b[0m - ` : '';
 				message += `${errorName}${arg.message}${separator}`;
@@ -94,7 +93,7 @@ export default class LoggerService implements LoggerInterface {
 		};
 	}
 
-	[LogLevelEnum.ERROR](...args: any[]): void {
+	[LogLevelEnum.ERROR](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -104,7 +103,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.WARN](...args: any[]): void {
+	[LogLevelEnum.WARN](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -114,7 +113,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.INFO](...args: any[]): void {
+	[LogLevelEnum.INFO](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -124,7 +123,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.HTTP](...args: any[]): void {
+	[LogLevelEnum.HTTP](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -134,7 +133,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.VERBOSE](...args: any[]): void {
+	[LogLevelEnum.VERBOSE](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -144,7 +143,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.DEBUG](...args: any[]): void {
+	[LogLevelEnum.DEBUG](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -167,16 +166,14 @@ export const RequestLoggerProvider: Provider = {
 	useFactory: (
 		inquirer: string | object,
 		configService: ConfigService,
-	): LoggerInterface => {
-		return new LoggerService(inquirer, configService, dataParserHelperMock as any);
-	},
+	): LoggerService => new LoggerService(inquirer, configService, dataParserHelperMock as DataParserHelper),
 
 	durable: false,
 };
 
 export const SINGLETON_LOGGER_PROVIDER = Symbol('SingletonLoggerProvider');
 export interface LoggerProviderInterface {
-	getLogger: (context: string) => LoggerInterface,
+	getLogger: (context: string) => LoggerService,
 }
 export const SingletonLoggerProvider: Provider = {
 	provide: SINGLETON_LOGGER_PROVIDER,
@@ -187,13 +184,9 @@ export const SingletonLoggerProvider: Provider = {
 	],
 	useFactory: (
 		configService: ConfigService,
-	): LoggerProviderInterface => {
-		return {
-			getLogger: (context: string): LoggerInterface => {
-				return new LoggerService(context, configService, dataParserHelperMock as any);
-			},
-		};
-	},
+	): LoggerProviderInterface => ({
+		getLogger: (context: string): LoggerService => new LoggerService(context, configService, dataParserHelperMock as DataParserHelper),
+	}),
 
 	durable: false,
 };

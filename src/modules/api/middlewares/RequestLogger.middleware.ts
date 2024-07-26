@@ -2,7 +2,7 @@ import { Injectable, Inject, Scope, NestMiddleware } from '@nestjs/common';
 import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import CryptographyService from '@core/security/Cryptography.service';
 import { checkFields, replaceFields } from '@common/utils/objectRecursiveFunctions.util';
-import { RequestInterface, ResponseInterface, NextFunctionInterface } from '@shared/interfaces/endpointInterface';
+import { RequestInterface, ResponseInterface, NextFunctionInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @Injectable({ scope: Scope.DEFAULT })
@@ -18,14 +18,15 @@ export default class RequestLoggerMiddleware implements NestMiddleware {
 	public use(request: RequestInterface, response: ResponseInterface, next: NextFunctionInterface) {
 		const requestId = this.cryptographyService.generateUuid();
 		this.logger.setRequestId(requestId);
+		request.id = requestId;
 
-		const method = request.method;
-		const originalUrl = request.originalUrl;
-		const pathParamsPayload = JSON.stringify(this.maskSensibleData(request.params));
-		const queryParamsPayload = JSON.stringify(this.maskSensibleData(request.query));
-		const bodyPayload = JSON.stringify(this.maskSensibleData(request.body));
+		const { method, originalUrl } = request;
+		const pathParams = JSON.stringify(this.maskSensibleData(request.params));
+		const queryParams = JSON.stringify(this.maskSensibleData(request.query));
+		const body = JSON.stringify(this.maskSensibleData(request.body));
 
-		this.logger.http(`REQUESTED - [${method}] ${originalUrl} { "pathParams": ${pathParamsPayload} "queryParams": ${queryParamsPayload} "body": ${bodyPayload} }`);
+		const requestPayload = { pathParams, queryParams, body };
+		this.logger.http(`REQUESTED - [${method}] ${originalUrl} ${JSON.stringify(requestPayload)}`);
 
 		next();
 	}
@@ -36,7 +37,7 @@ export default class RequestLoggerMiddleware implements NestMiddleware {
 		const hasSensibleData: boolean = checkFields(data, sensibleDataFields);
 		if (hasSensibleData) {
 			const newData = structuredClone(data);
-			return replaceFields(newData, sensibleDataFields);
+			return replaceFields(newData, sensibleDataFields, '***');
 		}
 
 		return data;

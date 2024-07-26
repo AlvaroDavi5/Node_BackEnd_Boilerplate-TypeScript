@@ -11,7 +11,7 @@ services:
     # Refered Dockerfile
     build: ./
     #user: root
-    env_file: ./envs/.env.development.local
+    env_file: ./envs/.env.development
     #working_dir: /app
     #command: ['./init.sh']
     ports:

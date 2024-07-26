@@ -2,11 +2,10 @@ import { DataSource, BaseEntity, In, Repository, FindOneOptions, FindManyOptions
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import LoggerService from '@core/logging/Logger.service';
-import { LoggerInterface } from '@core/logging/logger';
 import Exceptions from '@core/errors/Exceptions';
-import AbstractEntity from '@shared/classes/AbstractEntity.entity';
-import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
-import { constructorType } from '@shared/types/constructorType';
+import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
+import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
+import { constructorType } from '@shared/internal/types/constructorType';
 
 
 export interface PaginationOptionsInterface<M extends BaseEntity> {
@@ -34,7 +33,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 
 	protected exceptions: Exceptions;
 	protected dateGeneratorHelper: DateGeneratorHelper;
-	protected logger: LoggerInterface;
+	protected logger: LoggerService;
 
 	// ! ------ Class Constructor ------
 	constructor({

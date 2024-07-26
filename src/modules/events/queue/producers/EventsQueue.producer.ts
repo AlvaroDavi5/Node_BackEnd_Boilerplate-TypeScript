@@ -2,10 +2,9 @@ import { Injectable, Inject } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
-import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService, { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import CryptographyService from '@core/security/Cryptography.service';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import { EventSchemaInterface } from '@events/queue/handlers/schemas/event.schema';
 
 
@@ -20,7 +19,7 @@ interface EventDispatchInterface {
 
 @Injectable()
 export default class EventsQueueProducer {
-	private readonly logger: LoggerInterface;
+	private readonly logger: LoggerService;
 	private readonly credentials: {
 		queueName: string,
 		queueUrl: string,
@@ -46,7 +45,7 @@ export default class EventsQueueProducer {
 		this.applicationName = String(appName);
 	}
 
-	private _buildMessageBody({ payload, schema }: { payload: any, schema?: string }): EventSchemaInterface {
+	private buildMessageBody({ payload, schema }: { payload: any, schema?: string }): EventSchemaInterface {
 		return {
 			id: this.cryptographyService.generateUuid(),
 			schema: schema || 'EVENTS',
@@ -58,7 +57,7 @@ export default class EventsQueueProducer {
 	}
 
 	public async dispatch({ payload, schema, author, title }: EventDispatchInterface): Promise<string | null> {
-		const message = this._buildMessageBody({ payload, schema });
+		const message = this.buildMessageBody({ payload, schema });
 
 		try {
 			const messageId = await this.sqsClient.sendMessage(

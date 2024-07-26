@@ -1,27 +1,13 @@
 import CryptographyService from '@core/security/Cryptography.service';
-import configs from '@core/configs/configs.config';
+import { configServiceMock } from '@dev/mocks/mockedModules';
 
 
 describe('Modules :: Core :: Security :: CryptographyService', () => {
-	// // mocks
-	const configServiceMock = {
-		get: (propertyPath?: string): any => {
-			if (propertyPath) {
-				const splitedPaths = propertyPath.split('.');
-				let scopedProperty: any = configs();
-
-				for (const scopedPath of splitedPaths) {
-					if (scopedPath.length > 0)
-						scopedProperty = scopedProperty[scopedPath];
-				}
-
-				return scopedProperty;
-			} else
-				return configs();
-		},
-	};
-
 	const cryptographyService = new CryptographyService(configServiceMock as any);
+
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
 
 	describe('# Encoding and Hashing', () => {
 		test('Should change encoding from UTF-8 to other encodings', () => {
@@ -173,9 +159,5 @@ describe('Modules :: Core :: Security :: CryptographyService', () => {
 			expect(encrypted).toBeNull();
 			expect(decrypted).toBeNull();
 		});
-	});
-
-	afterEach(() => {
-		jest.clearAllMocks();
 	});
 });

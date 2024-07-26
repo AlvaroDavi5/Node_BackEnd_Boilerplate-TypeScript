@@ -23,7 +23,7 @@ module.exports = {
 	// cacheDirectory: '/private/var/folders/03/rn7ssyv96ybffs82bbssjs0w0000gn/T/jest_dx',
 
 	// Indicates whether the coverage information should be collected while executing the test
-	collectCoverage: true,
+	collectCoverage: false,
 
 	// The directory where Jest should output its coverage files
 	coverageDirectory: 'coverage/e2e',
@@ -36,23 +36,23 @@ module.exports = {
 	// An array of regexp pattern strings used to skip coverage collection
 	coveragePathIgnorePatterns: [
 		'src/dev/',
+		'src/modules/api/dto/',
+		'src/modules/api/pipes/',
+		'src/modules/api/schemas/',
+		'src/modules/app/(.*)/api/dto/',
+		'src/modules/app/(.*)/api/pipes/',
+		'src/modules/app/(.*)/api/schemas/',
+		'src/modules/app/(.*)/usecases/',
+		'src/modules/app/(.*)/strategies/',
+		'src/modules/app/(.*)/services/',
+		'src/modules/app/(.*)/repositories/',
+		'src/modules/common/',
 		'src/modules/core/configs/',
-		'src/modules/core/cron/tasks/',
 		'src/modules/core/errors/',
 		'src/modules/core/logging/',
 		'src/modules/core/security/',
-		'src/modules/api/decorators/',
-		'src/modules/api/guards/',
-		'src/modules/api/middlewares/',
-		'src/modules/api/pipes/',
-		'src/modules/api/schemas/',
+		'src/modules/core/start/',
 		'src/modules/domain/',
-		'src/modules/app/(.*)/operations/',
-		'src/modules/app/(.*)/services/',
-		'src/modules/app/(.*)/strategies/',
-		'src/modules/events/queue/handlers/',
-		'src/modules/events/websocket/client/',
-		'src/modules/common/',
 		'src/shared/',
 		'.d.ts',
 		'.module.ts',
@@ -98,7 +98,8 @@ module.exports = {
 	// A set of global variables that need to be available in all test environments
 	// globals: {},
 
-	// The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
+	// The maximum amount of workers used to run your tests. Can be specified as % or a number.
+	// E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
 	// maxWorkers: '50%',
 
 	// An array of directory names to be searched recursively up from the requiring module's location

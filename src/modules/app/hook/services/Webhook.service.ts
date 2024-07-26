@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import CryptographyService from '@core/security/Cryptography.service';
-import RestMockedServiceClient from '@core/infra/integration/rest/RestMockedService.client';
+import RestMockedServiceProvider from '@core/infra/providers/RestMockedService.provider';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 import { CacheEnum } from '@domain/enums/cache.enum';
-import { requestMethodType } from '@shared/types/restClientTypes';
+import { requestMethodType } from '@shared/internal/types/restClientTypes';
 import { RegisterEventHookInterface } from '../api/schemas/registerEventHook.schema';
 
 
@@ -17,7 +17,7 @@ export default class WebhookService {
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly cryptographyService: CryptographyService,
-		private readonly restMockedServiceClient: RestMockedServiceClient,
+		private readonly restMockedServiceProvider: RestMockedServiceProvider,
 		private readonly redisClient: RedisClient,
 		private readonly cacheAccessHelper: CacheAccessHelper,
 	) {
@@ -27,14 +27,15 @@ export default class WebhookService {
 
 	public async pullHook(hookSchema: string, data: unknown): Promise<any> {
 		const hookSchemaList = await this.list(hookSchema);
+		const mockedServiceBaseUrl = this.configService
+			.get<ConfigsInterface['integration']['rest']['mockedService']['baseUrl']>('integration.rest.mockedService.baseUrl')!;
 
-		const mockedServiceBaseUrl = this.configService.get<ConfigsInterface['integration']['rest']['mockedService']['baseUrl']>('integration.rest.mockedService.baseUrl')!;
-		hookSchemaList.forEach(async ({ value }) => {
-			const responseEndpoint = value?.responseEndpoint ?? mockedServiceBaseUrl;
-			const responseMethod = value?.responseMethod?.toLowerCase() as requestMethodType;
+		for (const { value: hook } of hookSchemaList) {
+			const responseEndpoint = hook?.responseEndpoint ?? mockedServiceBaseUrl;
+			const responseMethod = hook?.responseMethod?.toLowerCase() as requestMethodType;
 
-			await this.restMockedServiceClient.requestHook(responseEndpoint, responseMethod, data);
-		});
+			await this.restMockedServiceProvider.requestHook(responseEndpoint, responseMethod, data);
+		}
 	}
 
 	public async get(hookId: string, hookSchema: string): Promise<RegisterEventHookInterface> {

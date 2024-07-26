@@ -3,6 +3,7 @@ import UserPreferencesModel from '@core/infra/database/models/UserPreferences.mo
 import { ThemesEnum } from '@domain/enums/themes.enum';
 import { UserPreferenceInterface } from '@domain/entities/UserPreference.entity';
 import { BuildParamsInterface } from '@core/infra/database/repositories/AbstractRepository.repository';
+import { getObjValues } from '@common/utils/dataValidations.util';
 
 
 export type UserPreferenceBuildParamsInterface = BuildParamsInterface<UserPreferenceInterface>;
@@ -37,7 +38,7 @@ const buildWhereParams = ({
 	if (imagePath) where.imagePath = Like(`${imagePath}`);
 
 	if (defaultTheme) {
-		where.defaultTheme = And(In(Object.values(ThemesEnum)), Equal(defaultTheme));
+		where.defaultTheme = And(In(getObjValues<ThemesEnum>(ThemesEnum)), Equal(defaultTheme));
 	}
 
 	return where;

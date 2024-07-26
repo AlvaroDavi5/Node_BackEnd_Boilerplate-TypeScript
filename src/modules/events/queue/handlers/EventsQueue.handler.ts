@@ -6,8 +6,7 @@ import WebhookService from '@app/hook/services/Webhook.service';
 import MongoClient from '@core/infra/data/Mongo.client';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService, { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
 import eventSchema, { EventSchemaInterface } from './schemas/event.schema';
 import { EventsEnum } from '@domain/enums/events.enum';
@@ -18,8 +17,8 @@ import { WebSocketRoomsEnum } from '@domain/enums/webSocketEvents.enum';
 export default class EventsQueueHandler implements OnModuleInit {
 	private subscriptionService!: SubscriptionService;
 	private webhookService!: WebhookService;
-	private readonly schemaValidator: SchemaValidator<EventSchemaInterface>;
-	private readonly logger: LoggerInterface;
+	private readonly schemaValidator: SchemaValidator;
+	private readonly logger: LoggerService;
 
 	constructor(
 		private readonly moduleRef: ModuleRef,
@@ -30,7 +29,7 @@ export default class EventsQueueHandler implements OnModuleInit {
 		private readonly exceptions: Exceptions,
 	) {
 		this.logger = this.loggerProvider.getLogger(EventsQueueHandler.name);
-		this.schemaValidator = new SchemaValidator<EventSchemaInterface>(this.exceptions, this.logger);
+		this.schemaValidator = new SchemaValidator(this.exceptions, this.logger);
 	}
 
 	public onModuleInit(): void {
@@ -43,8 +42,8 @@ export default class EventsQueueHandler implements OnModuleInit {
 
 		try {
 			if (message.Body) {
-				const data = this.dataParserHelper.toObject(message.Body);
-				const value = this.schemaValidator.validate(data, bodyMetadata, eventSchema);
+				const { data } = this.dataParserHelper.toObject(message.Body);
+				const value = this.schemaValidator.validate<EventSchemaInterface>(data, bodyMetadata, eventSchema);
 
 				if (value.payload.event === EventsEnum.NEW_CONNECTION) {
 					this.subscriptionService.emit(value, WebSocketRoomsEnum.NEW_CONNECTIONS);
@@ -57,7 +56,7 @@ export default class EventsQueueHandler implements OnModuleInit {
 		} catch (error) {
 			this.logger.error(error);
 
-			const datalake = this.mongoClient.databases.datalake;
+			const { datalake } = this.mongoClient.databases;
 			const unprocessedMessagesCollection = this.mongoClient.getCollection(datalake.db, datalake.collections.unprocessedMessages);
 			await this.mongoClient.insertOne(unprocessedMessagesCollection, message);
 

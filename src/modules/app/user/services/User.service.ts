@@ -5,8 +5,8 @@ import UserListEntity from '@domain/entities/generic/UserList.entity';
 import CryptographyService from '@core/security/Cryptography.service';
 import UserRepository from '@app/user/repositories/user/User.repository';
 import Exceptions from '@core/errors/Exceptions';
-import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
+import { ConfigsInterface } from '@core/configs/envs.config';
 
 
 @Injectable()
@@ -34,17 +34,17 @@ export default class UserService {
 
 			return user;
 		} catch (error) {
-			throw this.throwError(error);
+			throw this.caughtError(error);
 		}
 	}
 
 	public async getByEmail(email: string): Promise<UserEntity | null> {
 		try {
-			const user = await this.userRepository.findOne({ where: { email: email } });
+			const user = await this.userRepository.findOne({ where: { email } });
 
 			return user;
 		} catch (error) {
-			throw this.throwError(error);
+			throw this.caughtError(error);
 		}
 	}
 
@@ -60,13 +60,12 @@ export default class UserService {
 
 			return await this.userRepository.create(entity);
 		} catch (error) {
-			throw this.throwError(error);
+			throw this.caughtError(error);
 		}
 	}
 
-
 	public async update(id: string, data: UpdateUserInterface): Promise<UserEntity> {
-		const { id: userId, createdAt, preference, ...userData } = new UserEntity(data).getAttributes();
+		const { id: _userId, createdAt: _createdAt, preference: _preference, ...userData } = new UserEntity(data).getAttributes();
 
 		try {
 			const userPassword = userData.password;
@@ -82,7 +81,7 @@ export default class UserService {
 
 			return user;
 		} catch (error) {
-			throw this.throwError(error);
+			throw this.caughtError(error);
 		}
 	}
 
@@ -90,7 +89,7 @@ export default class UserService {
 		try {
 			return await this.userRepository.deleteOne(id, Boolean(data.softDelete), String(data.userAgentId));
 		} catch (error) {
-			throw this.throwError(error);
+			throw this.caughtError(error);
 		}
 	}
 
@@ -98,28 +97,8 @@ export default class UserService {
 		try {
 			return await this.userRepository.list(query, true);
 		} catch (error) {
-			throw this.throwError(error);
+			throw this.caughtError(error);
 		}
-	}
-
-	// * dbRes = salt + hash(salt + password + secretEnv)
-	private protectPassword(plainTextPassword: string): string {
-		const salt = this.cryptographyService.generateSalt();
-		if (!salt)
-			throw this.exceptions.internal({
-				message: 'Error to generate salt',
-			});
-
-		const toHash = salt + plainTextPassword + this.secret;
-		const hash = this.cryptographyService.hashing(toHash, 'ascii', 'sha256', 'base64url');
-		if (!hash)
-			throw this.exceptions.internal({
-				message: 'Error to generate hash',
-			});
-
-		const result = `${salt}|${hash}`;
-
-		return result;
 	}
 
 	public validatePassword(entity: UserEntity, passwordToValidate: string): void {
@@ -144,7 +123,27 @@ export default class UserService {
 			});
 	}
 
-	private throwError(error: any): Error {
+	// * dbRes = salt + hash(salt + password + secretEnv)
+	private protectPassword(plainTextPassword: string): string {
+		const salt = this.cryptographyService.generateSalt();
+		if (!salt)
+			throw this.exceptions.internal({
+				message: 'Error to generate salt',
+			});
+
+		const toHash = salt + plainTextPassword + this.secret;
+		const hash = this.cryptographyService.hashing(toHash, 'ascii', 'sha256', 'base64url');
+		if (!hash)
+			throw this.exceptions.internal({
+				message: 'Error to generate hash',
+			});
+
+		const result = `${salt}|${hash}`;
+
+		return result;
+	}
+
+	private caughtError(error: any): Error {
 		const errorDetails: string | undefined = error?.message ?? error?.cause ?? error?.original;
 		return this.exceptions.internal({
 			message: 'Error to comunicate with database',

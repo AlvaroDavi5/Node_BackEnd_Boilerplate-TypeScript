@@ -1,6 +1,6 @@
 import createWebSocketClient from '../src/dev/websocket/createWebSocketClient';
 import { WebSocketEventsEnum } from '../src/modules/domain/enums/webSocketEvents.enum';
-import configs from '../src/modules/core/configs/configs.config';
+import envsConfig from '../src/modules/core/configs/envs.config';
 
 
 function formatMessageAfterReceiveHelper(message: any) {
@@ -20,7 +20,7 @@ function createSocketClient() {
 
 	const webSocketClient = createWebSocketClient({
 		logger: console,
-		configs: configs(),
+		configs: envsConfig(),
 	});
 
 	webSocketClient.listen(WebSocketEventsEnum.EMIT, (msg: unknown, ..._args: unknown[]) => {

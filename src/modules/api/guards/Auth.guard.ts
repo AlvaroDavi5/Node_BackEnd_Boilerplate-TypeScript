@@ -1,14 +1,13 @@
 import { Injectable, Inject, CanActivate, ExecutionContext } from '@nestjs/common';
 import Exceptions from '@core/errors/Exceptions';
-import { LoggerProviderInterface, SINGLETON_LOGGER_PROVIDER } from '@core/logging/Logger.service';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService, { LoggerProviderInterface, SINGLETON_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import CryptographyService from '@core/security/Cryptography.service';
-import { RequestInterface } from '@shared/interfaces/endpointInterface';
+import { RequestInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @Injectable()
 export default class AuthGuard implements CanActivate {
-	private readonly logger: LoggerInterface;
+	private readonly logger: LoggerService;
 
 	constructor(
 		private readonly cryptographyService: CryptographyService,
@@ -27,7 +26,7 @@ export default class AuthGuard implements CanActivate {
 
 		if (!authorization) {
 			this.logger.warn('Request without authorization token');
-			throw this.exceptions.unauthorized({
+			throw this.exceptions.invalidToken({
 				message: 'Authorization token is required',
 			});
 		}
@@ -38,18 +37,18 @@ export default class AuthGuard implements CanActivate {
 		if (!content || typeof content === 'string') {
 			if (expired) {
 				this.logger.warn('Request with expired authorization token');
-				throw this.exceptions.unauthorized({
+				throw this.exceptions.invalidToken({
 					message: 'Authorization token was expired',
 				});
 			} else if (invalidSignature) {
 				this.logger.warn('Request with invalid authorization token signature');
-				throw this.exceptions.unauthorized({
+				throw this.exceptions.invalidToken({
 					message: 'Authorization token has invalid signature',
 				});
 			}
 
 			this.logger.warn(`Request with invalid authorization token content: ${content}`);
-			throw this.exceptions.unauthorized({
+			throw this.exceptions.invalidToken({
 				message: 'Authorization token is invalid',
 			});
 		}

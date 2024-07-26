@@ -8,21 +8,20 @@ function runAudit() {
 		if (error) {
 			const lines = stdout?.split('\n');
 
-			for (let i = 0; i < lines.length; i++) {
-				if (lines[i]?.startsWith('Severity: ')) {
+			for (const line of lines) {
+				if (line?.startsWith('Severity: ')) {
 					if (
-						lines[i]?.includes('High')
-						|| lines[i]?.includes('Critical')
+						line?.includes('High')
+						|| line?.includes('Critical')
 					) {
-						throw new Error(
-							'Security check failed, High or Critical vulnerability found'
-						);
+						console.error('Security check failed, High or Critical vulnerability found');
+						throw new Error('Security check failed, High or Critical vulnerability found');
 					} else if (
-						lines[i].includes('Info')
-						|| lines[i].includes('Low')
-						|| lines[i].includes('Moderate')
+						line.includes('Info')
+						|| line.includes('Low')
+						|| line.includes('Moderate')
 					) {
-						console.error('Security check passed, but Info, Low or Moderate vulnerability found');
+						console.warn('Security check passed, but Info, Low or Moderate vulnerability found');
 						return;
 					}
 				}

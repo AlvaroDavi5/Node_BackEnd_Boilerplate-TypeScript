@@ -19,7 +19,6 @@ describe('Modules :: Domain :: Entities :: UserEntities', () => {
 			defaultTheme: 'DEFAULT',
 		}));
 
-
 		const otherUserEntity = new UserEntity({
 			fullName: 'Test User',
 			email: 'user.test@nomail.test',

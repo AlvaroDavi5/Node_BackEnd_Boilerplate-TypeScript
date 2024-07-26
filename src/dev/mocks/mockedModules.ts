@@ -1,5 +1,5 @@
 import { v4 as uuidV4 } from 'uuid';
-import configs from 'src/modules/core/configs/configs.config';
+import envsConfig from 'src/modules/core/configs/envs.config';
 import { LoggerInterface } from 'src/modules/core/logging/logger';
 
 
@@ -7,7 +7,7 @@ export const configServiceMock = {
 	get: (propertyPath?: string): any => {
 		if (propertyPath) {
 			const splitedPaths = propertyPath.split('.');
-			let scopedProperty: any = configs();
+			let scopedProperty: any = envsConfig();
 
 			for (const scopedPath of splitedPaths) {
 				if (scopedPath.length)
@@ -16,7 +16,7 @@ export const configServiceMock = {
 
 			return scopedProperty;
 		} else
-			return configs();
+			return envsConfig();
 	},
 };
 
@@ -45,33 +45,33 @@ export const dataParserHelperMock = {
 		let result = null;
 
 		switch (typeof data) {
-		case 'bigint':
-			result = data.toString();
-			break;
-		case 'number':
-			result = data.toString();
-			break;
-		case 'boolean':
-			result = data.toString();
-			break;
-		case 'string':
-			result = data;
-			break;
-		case 'object':
-			if (!data)
+			case 'bigint':
+				result = data.toString();
+				break;
+			case 'number':
+				result = data.toString();
+				break;
+			case 'boolean':
+				result = data.toString();
+				break;
+			case 'string':
+				result = data;
+				break;
+			case 'object':
+				if (!data)
+					result = '';
+				else
+					result = (JSON.stringify(data) || data?.toString()) ?? '';
+				break;
+			case 'symbol':
+				result = data.toString();
+				break;
+			case 'function':
+				result = data.toString();
+				break;
+			default:
 				result = '';
-			else
-				result = (JSON.stringify(data) || data?.toString()) ?? '';
-			break;
-		case 'symbol':
-			result = data.toString();
-			break;
-		case 'function':
-			result = data.toString();
-			break;
-		default:
-			result = '';
-			break;
+				break;
 		}
 
 		return result;

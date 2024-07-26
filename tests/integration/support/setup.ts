@@ -12,8 +12,8 @@ jest.mock('src/modules/core/logging/Logger.service.ts', () =>
 	jest.requireActual('./mocks/logging/Logger.service')
 );
 
-jest.mock('src/modules/core/infra/integration/rest/RestMockedService.client.ts', () =>
-	jest.requireActual('./mocks/rest/RestMockedService.client')
+jest.mock('src/modules/core/infra/providers/RestMockedService.provider.ts', () =>
+	jest.requireActual('./mocks/rest/RestMockedService.provider')
 );
 
 /*
@@ -49,7 +49,7 @@ jest.mock('socket.io-client', () => {
 	return {
 		__esModule: true,
 		Socket: ClientSocket,
-		io: (uri: string, opts?: any) => (new ClientSocket()),
+		io: (_uri: string, _opts?: any) => (new ClientSocket()),
 	};
 });
 

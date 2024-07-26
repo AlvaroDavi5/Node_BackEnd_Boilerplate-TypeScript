@@ -1,10 +1,12 @@
 <!--
 Pull Request title pattern:
-  > <type>/<CODE>-short_description
-  > Ex.: feat/PROJ-123-new_list_users_endpoint
+	> <CODE> - <type>: short description
+	> Ex.: PROJ-123 - feature: new list users endpoint
 -->
 
 # PROJ-TASK_ID
+
+[Task Link](https://google.com)  
 
 ## Task Description
 
@@ -15,14 +17,16 @@ Description of the functionality and main decisions made
 
 ## Checklist
 
-- [ ] Already in development and test branches
-- [ ] Commits according to [Semantic Versioning](https://semver.org/spec/v2.0.0.html)
-- [ ] Typecheck and build passed
-- [ ] Tested affected endpoints, connections, or event consumption
-- [ ] Implemented and passed unit, integration, and E2E tests
-- [ ] Security check passed
-- [ ] ESLint rules passed
-- [ ] Code owners marked for review
+- [ ] Commits according to [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)  
+- [ ] Typecheck and build passed  
+- [ ] Already in development and test branches  
+	* [ ] Migrations runned (if necessary)  
+- [ ] Tested affected endpoints, connections, or event consumption  
+- [ ] Implemented and passed unit, integration, and E2E tests  
+- [ ] Security check passed  
+- [ ] ESLint rules passed  
+- [ ] Code owners marked for review  
+- [ ] Added GitHub labels for PR/Issues  
 
 ___
 
@@ -32,5 +36,5 @@ Justification for unselected checkboxes:
 
 ## Evidence
 
-[Log Link](https://google.com)  
+[Logs Link](https://google.com)  
 ![Image Link](https://google.com)  

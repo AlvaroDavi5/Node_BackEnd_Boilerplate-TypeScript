@@ -23,7 +23,7 @@ module.exports = {
 	// cacheDirectory: '/private/var/folders/03/rn7ssyv96ybffs82bbssjs0w0000gn/T/jest_dx',
 
 	// Indicates whether the coverage information should be collected while executing the test
-	collectCoverage: true,
+	collectCoverage: false,
 
 	// The directory where Jest should output its coverage files
 	coverageDirectory: 'coverage/integration',
@@ -36,35 +36,15 @@ module.exports = {
 	// An array of regexp pattern strings used to skip coverage collection
 	coveragePathIgnorePatterns: [
 		'src/dev/',
-		'src/modules/core/infra/cache/',
-		'src/modules/core/cron/jobs/',
-		'src/modules/core/infra/data/',
-		'src/modules/core/infra/database/',
-		'src/modules/core/errors/',
-		'src/modules/core/infra/integration/',
-		'src/modules/core/security/',
-		'src/modules/api/controllers/',
-		'src/modules/api/decorators/',
 		'src/modules/api/guards/',
+		'src/modules/api/filters/',
 		'src/modules/api/middlewares/',
-		'src/modules/graphql/',
-		'src/modules/domain/',
-		'src/modules/app/(.*)/api/controllers/',
-		'src/modules/app/(.*)/api/dto/',
-		'src/modules/app/(.*)/operations/',
-		'src/modules/app/(.*)/repositories/',
+		'src/modules/app/(.*)/usecases/',
 		'src/modules/app/(.*)/strategies/',
-		'src/modules/app/reports/',
-		'src/modules/events/queue/consumers/',
-		'src/modules/events/queue/producers/',
-		'src/modules/common/constants/',
-		'src/modules/common/decorators/',
-		'src/modules/common/enums/',
-		'src/modules/common/utils/helpers/CacheAccess.helper.ts',
-		'src/modules/common/utils/helpers/DateGenerator.helper.ts',
-		'src/modules/common/utils/helpers/FileReader.helper.ts',
-		'src/modules/common/utils/validators/',
-		'src/modules/common/utils/PackageInfoReader.util.ts',
+		'src/modules/common/',
+		'src/modules/core/errors/',
+		'src/modules/core/security/',
+		'src/modules/domain/',
 		'src/shared/',
 		'.d.ts',
 		'.module.ts',
@@ -110,7 +90,8 @@ module.exports = {
 	// A set of global variables that need to be available in all test environments
 	// globals: {},
 
-	// The maximum amount of workers used to run your tests. Can be specified as % or a number. E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
+	// The maximum amount of workers used to run your tests. Can be specified as % or a number.
+	// E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
 	// maxWorkers: '50%',
 
 	// An array of directory names to be searched recursively up from the requiring module's location

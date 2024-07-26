@@ -3,13 +3,13 @@ import { Schema } from 'joi';
 import { Logger } from 'winston';
 import { Console } from 'console';
 import Exceptions from '@core/errors/Exceptions';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService from '@core/logging/Logger.service';
 
 
-export default class SchemaValidator<S> {
+export default class SchemaValidator {
 	constructor(
 		private readonly exceptions: Exceptions,
-		private readonly logger: Logger | LoggerInterface | Console,
+		private readonly logger: Logger | LoggerService | Console,
 	) { }
 
 	private log(message: string): void {
@@ -19,7 +19,7 @@ export default class SchemaValidator<S> {
 			this.logger.verbose(message);
 	}
 
-	public validate(data: unknown, metadata: ArgumentMetadata, schema: Schema<S>): S {
+	public validate<S = unknown>(data: unknown, metadata: ArgumentMetadata, schema: Schema<S>): S {
 		this.log(`Validating '${metadata.type}' received as '${metadata.metatype?.name}'`);
 
 		const { value, error } = schema.validate(

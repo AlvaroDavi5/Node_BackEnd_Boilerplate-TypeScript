@@ -2,13 +2,12 @@ import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { Collection, Db, ObjectId } from 'mongodb';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import WebSocketClient from '@events/websocket/client/WebSocket.client';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
-import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService, { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
 import SubscriptionEntity, { CreateSubscriptionInterface, UpdateSubscriptionInterface } from '@domain/entities/Subscription.entity';
 import { CacheEnum } from '@domain/enums/cache.enum';
@@ -18,7 +17,7 @@ import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
 @Injectable()
 export default class SubscriptionService implements OnModuleInit {
 	private webSocketClient!: WebSocketClient;
-	private readonly logger: LoggerInterface;
+	private readonly logger: LoggerService;
 	public readonly subscriptionsTimeToLive: number;
 	public readonly datalakeDatabase: Db;
 	public readonly subscriptionsCollection: Collection;
@@ -38,7 +37,8 @@ export default class SubscriptionService implements OnModuleInit {
 		this.subscriptionsCollection = this.mongoClient.getCollection(this.datalakeDatabase, subscriptions);
 
 		this.logger = this.loggerProvider.getLogger(SubscriptionService.name);
-		const subscriptionsExpirationTime = this.configService.get<ConfigsInterface['cache']['expirationTime']['subscriptions']>('cache.expirationTime.subscriptions')!;
+		const subscriptionsExpirationTime = this.configService
+			.get<ConfigsInterface['cache']['expirationTime']['subscriptions']>('cache.expirationTime.subscriptions')!;
 		this.subscriptionsTimeToLive = subscriptionsExpirationTime;
 	}
 

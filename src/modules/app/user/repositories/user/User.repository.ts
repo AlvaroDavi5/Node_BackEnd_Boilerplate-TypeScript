@@ -9,7 +9,7 @@ import UserEntity from '@domain/entities/User.entity';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import userMapper from './user.mapper';
 import { userQueryParamsBuilder, UserBuildParamsInterface } from './user.query';
-import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
+import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
 
 @Injectable()

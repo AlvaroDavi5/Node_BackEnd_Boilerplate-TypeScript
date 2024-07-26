@@ -7,13 +7,13 @@ import LoginUserInputDto from '../dto/user/LoginUserInput.dto';
 
 
 export default class LoginUserValidatorPipe implements PipeTransform<LoginUserInputDto, LoginUserSchemaInterface> {
-	private readonly schemaValidator: SchemaValidator<LoginUserSchemaInterface>;
+	private readonly schemaValidator: SchemaValidator;
 
 	constructor() {
-		this.schemaValidator = new SchemaValidator<LoginUserSchemaInterface>(new Exceptions(), generateLogger(LoginUserValidatorPipe.name));
+		this.schemaValidator = new SchemaValidator(new Exceptions(), generateLogger(LoginUserValidatorPipe.name));
 	}
 
 	public transform(value: LoginUserInputDto, metadata: ArgumentMetadata): LoginUserSchemaInterface {
-		return this.schemaValidator.validate(value, metadata, loginUserSchema);
+		return this.schemaValidator.validate<LoginUserSchemaInterface>(value, metadata, loginUserSchema);
 	}
 }

@@ -1,5 +1,5 @@
 import Joi from 'joi';
-import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
+import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
 
 const listQuerySchema: Joi.Schema<ListQueryInterface> = Joi.object({

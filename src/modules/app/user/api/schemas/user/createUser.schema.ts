@@ -6,7 +6,7 @@ import RegExConstants from '@common/constants/Regex.constants';
 
 
 const regExConstants = new RegExConstants();
-const passwordPattern = regExConstants.passwordPattern;
+const { passwordPattern } = regExConstants;
 
 const preference: Joi.Schema<UpdateUserPreferenceInterface> = Joi.object({
 	imagePath: Joi.string().empty('').max(255).trim(),

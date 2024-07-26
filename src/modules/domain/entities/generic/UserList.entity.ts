@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
-import AbstractEntityList from '@shared/classes/AbstractListEntity.entity';
+import AbstractEntityList from '@shared/internal/classes/AbstractListEntity.entity';
 import UserEntity from '../User.entity';
 import UserPreferenceEntity from '../UserPreference.entity';
 

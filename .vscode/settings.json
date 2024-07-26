@@ -25,7 +25,7 @@
 	"workbench.productIconTheme": "material-product-icons",
 	"workbench.sideBar.location": "left",
 	"workbench.tree.indent": 15,
-	"workbench.colorTheme": "Dracula",
+	"workbench.colorTheme": "Dracula Theme",
 	"workbench.iconTheme": "material-icon-theme",
 	"workbench.editor.restoreViewState": true,
 	"terminal.integrated.defaultProfile.linux": "zsh",

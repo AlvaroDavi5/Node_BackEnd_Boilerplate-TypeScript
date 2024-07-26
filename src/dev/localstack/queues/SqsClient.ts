@@ -5,7 +5,8 @@ import {
 	SendMessageCommand, ReceiveMessageCommand, DeleteMessageCommand,
 	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput,
 } from '@aws-sdk/client-sqs';
-import { ConfigsInterface } from 'src/modules/core/configs/configs.config';
+import { ConfigsInterface } from 'src/modules/core/configs/envs.config';
+import { LoggerInterface } from 'src/modules/core/logging/logger';
 
 
 export default class SqsClient {
@@ -15,18 +16,17 @@ export default class SqsClient {
 
 	constructor(
 		private readonly configService: ConfigService,
-		private readonly cryptographyService: any,
-		private readonly logger: any,
-		private readonly dataParserHelper: any,
+		private readonly cryptographyService: { generateUuid: () => string },
+		private readonly logger: LoggerInterface,
+		private readonly dataParserHelper: { toString: (data: unknown) => string },
 	) {
-		this.logger.setContextName(SqsClient.name);
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
 		const {
-			region, sessionToken,
+			region, endpoint, sessionToken,
 			accessKeyId, secretAccessKey,
 		} = awsConfigs.credentials;
-		const { endpoint, apiVersion } = awsConfigs.sqs;
+		const { apiVersion } = awsConfigs.sqs;
 
 		this.awsConfig = {
 			endpoint,
@@ -37,7 +37,7 @@ export default class SqsClient {
 				secretAccessKey: String(secretAccessKey),
 				sessionToken,
 			},
-			logger: logging === 'true' ? this.logger : undefined,
+			logger: logging ? this.logger : undefined,
 		};
 		this.messageGroupId = 'DefaultGroup';
 		this.sqsClient = new SQSClient(this.awsConfig);
@@ -172,8 +172,8 @@ export default class SqsClient {
 		return messageId;
 	}
 
-	public async getMessages(queueUrl: string): Promise<Array<Message>> {
-		const messages: Array<Message> = [];
+	public async getMessages(queueUrl: string): Promise<Message[]> {
+		const messages: Message[] = [];
 
 		try {
 			const result = await this.sqsClient.send(new ReceiveMessageCommand(

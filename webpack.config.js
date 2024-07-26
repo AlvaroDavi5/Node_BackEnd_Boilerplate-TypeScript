@@ -1,6 +1,8 @@
+/* eslint-disable import/no-extraneous-dependencies, @typescript-eslint/no-var-requires */
 const webpack = require('webpack');
 const { join } = require('path');
 const nodeExternals = require('webpack-node-externals');
+/* eslint-enable import/no-extraneous-dependencies, @typescript-eslint/no-var-requires */
 
 
 module.exports = {
@@ -15,7 +17,7 @@ module.exports = {
 	module: {
 		rules: [
 			{
-				test: /\.tsx?$/,
+				test: /\.ts?$/,
 				use: 'ts-loader',
 				exclude: /node_modules/,
 			},
@@ -23,7 +25,7 @@ module.exports = {
 	},
 	mode: 'development',
 	resolve: {
-		extensions: ['.tsx', '.ts', '.js', '.jsx'],
+		extensions: ['.ts', '.js'],
 	},
 	plugins: [
 		new webpack.HotModuleReplacementPlugin(),

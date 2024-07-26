@@ -6,24 +6,29 @@ import {
 	UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
-import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
-import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
+import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import UserEntity, { ViewUserInterface } from '@domain/entities/User.entity';
 import UserListEntity from '@domain/entities/generic/UserList.entity';
-import UserOperation from '@app/user/operations/User.operation';
+import LoginUserUseCase from '@app/user/usecases/LoginUser.usecase';
+import ListUsersUseCase from '@app/user/usecases/ListUsers.usecase';
+import CreateUserUseCase from '@app/user/usecases/CreateUser.usecase';
+import GetUserUseCase from '@app/user/usecases/GetUser.usecase';
+import UpdateUserUseCase from '@app/user/usecases/UpdateUser.usecase';
+import DeleteUserUseCase from '@app/user/usecases/DeleteUser.usecase';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
+import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
+import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import { ListQueryValidatorPipe } from '@api/pipes/QueryValidator.pipe';
-import { ListQueryInputDto } from '@api/pipes/dto/QueryInput.dto';
-import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
-import { RequestInterface } from '@shared/interfaces/endpointInterface';
-import { PaginationInterface } from '@shared/interfaces/listPaginationInterface';
+import { ListQueryInputDto } from '@api/dto/QueryInput.dto';
 import CreateUserValidatorPipe from '../pipes/CreateUserValidator.pipe';
 import UpdateUserValidatorPipe from '../pipes/UpdateUserValidator.pipe';
 import LoginUserValidatorPipe from '../pipes/LoginUserValidator.pipe';
 import CreateUserInputDto from '../dto/user/CreateUserInput.dto';
 import UpdateUserInputDto from '../dto/user/UpdateUserInput.dto';
 import LoginUserInputDto from '../dto/user/LoginUserInput.dto';
+import { RequestInterface } from '@shared/internal/interfaces/endpointInterface';
+import { PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
 
 @ApiTags('Users')
@@ -32,7 +37,12 @@ import LoginUserInputDto from '../dto/user/LoginUserInput.dto';
 @exceptionsResponseDecorator()
 export default class UserController {
 	constructor(
-		private readonly userOperation: UserOperation,
+		private readonly loginUserUseCase: LoginUserUseCase,
+		private readonly listUsersUseCase: ListUsersUseCase,
+		private readonly createUserUseCase: CreateUserUseCase,
+		private readonly getUserUseCase: GetUserUseCase,
+		private readonly updateUserUseCase: UpdateUserUseCase,
+		private readonly deleteUserUseCase: DeleteUserUseCase,
 		@Inject(REQUEST_LOGGER_PROVIDER)
 		private readonly logger: LoggerService,
 	) {
@@ -59,7 +69,7 @@ export default class UserController {
 		@Query(ListQueryValidatorPipe) query: ListQueryInputDto,
 	): Promise<PaginationInterface<ViewUserInterface>> {
 		try {
-			const { content, ...listInfo } = await this.userOperation.listUsers(query);
+			const { content, ...listInfo } = await this.listUsersUseCase.execute(query);
 			const mappedContent = content.map((entity) => entity.getAttributes());
 
 			return {
@@ -90,7 +100,7 @@ export default class UserController {
 		try {
 			const { user } = request;
 
-			const result = await this.userOperation.createUser(body, user);
+			const result = await this.createUserUseCase.execute(body, user);
 
 			return result.getAttributes();
 		} catch (error) {
@@ -99,7 +109,6 @@ export default class UserController {
 		}
 	}
 
-	@authSwaggerDecorator()
 	@ApiOperation({
 		summary: 'Login User',
 		description: 'Login user and get user authorization token (1d)',
@@ -113,7 +122,7 @@ export default class UserController {
 		@Body(LoginUserValidatorPipe) body: LoginUserInputDto,
 	): Promise<ViewUserInterface & { token: string }> {
 		try {
-			const { user, token } = await this.userOperation.loginUser(body);
+			const { user, token } = await this.loginUserUseCase.execute(body);
 
 			return { ...user.getAttributes(), token };
 		} catch (error) {
@@ -140,7 +149,7 @@ export default class UserController {
 		try {
 			const { user } = request;
 
-			const result = await this.userOperation.getUser(userId, user);
+			const result = await this.getUserUseCase.execute(userId, user);
 
 			return result.getAttributes();
 		} catch (error) {
@@ -168,7 +177,7 @@ export default class UserController {
 		try {
 			const { user } = request;
 
-			const result = await this.userOperation.updateUser(userId, body, user);
+			const result = await this.updateUserUseCase.execute(userId, body, user);
 
 			return result.getAttributes();
 		} catch (error) {
@@ -195,7 +204,7 @@ export default class UserController {
 		try {
 			const { user } = request;
 
-			const result = await this.userOperation.deleteUser(userId, user);
+			const result = await this.deleteUserUseCase.execute(userId, user);
 
 			return { result };
 		} catch (error) {

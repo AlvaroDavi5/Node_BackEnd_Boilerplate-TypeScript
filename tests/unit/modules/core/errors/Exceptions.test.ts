@@ -49,6 +49,28 @@ describe('Infra :: Errors :: Exceptions', () => {
 			});
 		});
 
+		test('Should return a InvalidToken exception', () => {
+			const exception = exceptions.invalidToken({
+				message: 'New InvalidToken Exception',
+				stack: 'error1, error2, error3',
+				details: {
+					info: 'A error occurred',
+				},
+			});
+
+			expect(exception.name).toBe('invalidToken');
+			expect(exception.message).toBe('New InvalidToken Exception');
+			expect(exception.stack).not.toBeNull();
+			expect(exception.cause).toEqual({ info: 'A error occurred' });
+			expect(exception.getStatus()).toBe(498);
+			expect(exception.getResponse()).toMatchObject({
+				error: 'Invalid Token',
+				message: 'New InvalidToken Exception',
+				statusCode: 498,
+				details: JSON.stringify({ info: 'A error occurred' }),
+			});
+		});
+
 		test('Should return a Unauthorized exception', () => {
 			const exception = exceptions.unauthorized({
 				message: 'New Unauthorized Exception',

@@ -1,12 +1,7 @@
-import {
-	Injectable, HttpException, HttpExceptionOptions,
-	BadRequestException, UnauthorizedException, ForbiddenException, NotFoundException,
-	ConflictException, InternalServerErrorException, ServiceUnavailableException,
-} from '@nestjs/common';
-import { ThrottlerException } from '@nestjs/throttler';
+import { Injectable, HttpException, HttpExceptionOptions } from '@nestjs/common';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import HttpConstants from '@common/constants/Http.constants';
-import { ErrorInterface } from '@shared/interfaces/errorInterface';
+import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
 @Injectable()
@@ -24,28 +19,32 @@ export default class Exceptions {
 			return value.toString();
 	}
 
-	private buildException(exceptionName: string, statusCode: number, errorName: string, errorMessage: string, errorDetails: unknown, errorCause?: unknown, errorStack?: string): HttpException {
+	private buildException(
+		exceptionName: string, statusCode: number, errorName: string, errorMessage: string,
+		errorDetails: unknown, errorCause?: unknown, errorStack?: string): HttpException {
 		const errorPayload: string | Record<string, any> = {
 			error: errorName,
 			message: errorMessage,
-			statusCode: statusCode,
+			statusCode,
+			description: this.parseToString(errorDetails),
 			details: this.parseToString(errorDetails),
+			cause: this.parseToString(errorCause),
 		};
 		const detailsPayload: HttpExceptionOptions = {
 			description: this.parseToString(errorDetails),
-			cause: this.parseToString(errorCause),
+			cause: errorCause,
 		};
 
 		const exception = new HttpException(errorPayload, statusCode, detailsPayload);
 		exception.name = exceptionName;
 		exception.message = errorMessage;
-		exception.cause = errorDetails;
+		exception.cause = errorDetails ?? errorCause;
 		if (errorStack) exception.stack = errorStack;
 
 		return exception;
 	}
 
-	public [ExceptionsEnum.CONTRACT](error: ErrorInterface): BadRequestException {
+	public [ExceptionsEnum.CONTRACT](error: ErrorInterface): HttpException {
 		return this.buildException(
 			ExceptionsEnum.CONTRACT,
 			this.httpConstants.status.BAD_REQUEST,
@@ -54,7 +53,7 @@ export default class Exceptions {
 		);
 	}
 
-	public [ExceptionsEnum.BUSINESS](error: ErrorInterface): ForbiddenException {
+	public [ExceptionsEnum.BUSINESS](error: ErrorInterface): HttpException {
 		return this.buildException(
 			ExceptionsEnum.BUSINESS,
 			this.httpConstants.status.FORBIDDEN,
@@ -63,7 +62,16 @@ export default class Exceptions {
 		);
 	}
 
-	public [ExceptionsEnum.UNAUTHORIZED](error: ErrorInterface): UnauthorizedException {
+	public [ExceptionsEnum.INVALID_TOKEN](error: ErrorInterface): HttpException {
+		return this.buildException(
+			ExceptionsEnum.INVALID_TOKEN,
+			this.httpConstants.status.INVALID_TOKEN,
+			error.name ?? 'Invalid Token',
+			error.message, error.details, error.cause, error.stack,
+		);
+	}
+
+	public [ExceptionsEnum.UNAUTHORIZED](error: ErrorInterface): HttpException {
 		return this.buildException(
 			ExceptionsEnum.UNAUTHORIZED,
 			this.httpConstants.status.UNAUTHORIZED,
@@ -72,7 +80,7 @@ export default class Exceptions {
 		);
 	}
 
-	public [ExceptionsEnum.TOO_MANY_REQUESTS](error: ErrorInterface): ThrottlerException {
+	public [ExceptionsEnum.TOO_MANY_REQUESTS](error: ErrorInterface): HttpException {
 		return this.buildException(
 			ExceptionsEnum.TOO_MANY_REQUESTS,
 			this.httpConstants.status.TOO_MANY_REQUESTS,
@@ -81,7 +89,7 @@ export default class Exceptions {
 		);
 	}
 
-	public [ExceptionsEnum.CONFLICT](error: ErrorInterface): ConflictException {
+	public [ExceptionsEnum.CONFLICT](error: ErrorInterface): HttpException {
 		return this.buildException(
 			ExceptionsEnum.CONFLICT,
 			this.httpConstants.status.CONFLICT,
@@ -90,7 +98,7 @@ export default class Exceptions {
 		);
 	}
 
-	public [ExceptionsEnum.NOT_FOUND](error: ErrorInterface): NotFoundException {
+	public [ExceptionsEnum.NOT_FOUND](error: ErrorInterface): HttpException {
 		return this.buildException(
 			ExceptionsEnum.NOT_FOUND,
 			this.httpConstants.status.NOT_FOUND,
@@ -99,7 +107,7 @@ export default class Exceptions {
 		);
 	}
 
-	public [ExceptionsEnum.INTEGRATION](error: ErrorInterface): ServiceUnavailableException {
+	public [ExceptionsEnum.INTEGRATION](error: ErrorInterface): HttpException {
 		return this.buildException(
 			ExceptionsEnum.INTEGRATION,
 			this.httpConstants.status.SERVICE_UNAVAILABLE,
@@ -108,7 +116,7 @@ export default class Exceptions {
 		);
 	}
 
-	public [ExceptionsEnum.INTERNAL](error: ErrorInterface): InternalServerErrorException {
+	public [ExceptionsEnum.INTERNAL](error: ErrorInterface): HttpException {
 		return this.buildException(
 			ExceptionsEnum.INTERNAL,
 			this.httpConstants.status.INTERNAL_SERVER_ERROR,

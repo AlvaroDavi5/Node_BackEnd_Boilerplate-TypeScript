@@ -4,7 +4,7 @@ import { RegisterEventHookInterface } from '@app/hook/api/schemas/registerEventH
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 
 
-export abstract class RegisterEventHookInputDto implements RegisterEventHookInterface {
+export class RegisterEventHookInputDto implements RegisterEventHookInterface {
 	@ApiProperty({ type: String, example: 'http://localhost:4000/api/hook', default: '', nullable: false, required: true })
 	@IsString()
 	@IsNotEmpty()
@@ -20,7 +20,10 @@ export abstract class RegisterEventHookInputDto implements RegisterEventHookInte
 	@IsNotEmpty()
 	public responseSchema!: string;
 
-	@ApiProperty({ type: Date, example: (new Date('2024-04-17T17:36:48.666Z').toISOString()), default: (new Date('2024-04-17T17:36:48.666Z').toISOString()), nullable: false, required: false })
+	@ApiProperty({
+		type: Date, example: (new Date('2024-04-17T17:36:48.666Z').toISOString()),
+		default: (new Date().toISOString()), nullable: false, required: false
+	})
 	@IsDateString()
 	@IsNotEmpty()
 	public sendAt!: Date;

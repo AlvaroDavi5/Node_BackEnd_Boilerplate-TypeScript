@@ -12,9 +12,10 @@ import SnsClient from '@core/infra/integration/aws/Sns.client';
 import S3Client from '@core/infra/integration/aws/S3.client';
 import CognitoClient from '@core/infra/integration/aws/Cognito.client';
 import { configServiceMock } from '@dev/mocks/mockedModules';
-import LoggerService from '../../../support/mocks/logging/Logger.service';
-import { mockObservable } from '../../../support/mocks/mockObservable';
+import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
+import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
 
+// eslint-disable-next-line no-console
 describe('Modules :: Core :: Start :: LifecycleService', () => {
 	let nestTestingModule: TestingModule;
 	// // mocks
@@ -50,6 +51,9 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 	const awsClientMock = {
 		destroy: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
 	};
+	const mockObservable: MockObservableInterface<void, unknown[]> = {
+		call: jest.fn((..._args: unknown[]): void => (undefined)),
+	};
 	const loggerServiceMock = new LoggerService(mockObservable);
 
 	// ? build test app
@@ -69,8 +73,12 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 				{ provide: CognitoClient, useValue: awsClientMock },
 				{ provide: LoggerService, useValue: loggerServiceMock },
 				LifecycleService,
-			]
+			],
 		}).compile();
+	});
+
+	afterEach(() => {
+		jest.clearAllMocks();
 	});
 
 	describe('# Build and Close Application', () => {
@@ -92,9 +100,5 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 			expect(mockObservable.call).toHaveBeenCalledWith('Exiting Application');
 			expect(mockObservable.call).toHaveBeenCalledTimes(5);
 		});
-	});
-
-	afterEach(() => {
-		jest.clearAllMocks();
 	});
 });

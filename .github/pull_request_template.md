@@ -6,11 +6,14 @@ Pull Request title pattern:
 
 # PROJ-TASK_ID
 
-[Card Link](https://google.com)  
+[Task Link](https://google.com)  
 
 ## Task Description
 
 ...
+<!--
+Description of the functionality and main decisions made
+-->
 
 ## Checklist
 

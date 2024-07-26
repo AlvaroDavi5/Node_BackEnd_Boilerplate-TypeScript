@@ -31,6 +31,7 @@ export default function readPackageInfo(): PackageInfoInterface {
 		const content = readFileSync(join(process.cwd(), fileName), { encoding: 'utf8' });
 		return JSON.parse(content);
 	} catch (error) {
+		// eslint-disable-next-line no-console
 		console.error(`Error to read file ${fileName}`, error);
 
 		return {};

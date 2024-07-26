@@ -28,6 +28,7 @@ async function startNestApplication() {
 }
 
 startNestApplication().catch((error: Error) => {
+	// eslint-disable-next-line no-console
 	console.error(error);
 	if (process.env.NODE_ENV === EnvironmentsEnum.DEVELOPMENT)
 		writeFileSync('./docs/nestGraph.json', PartialGraphHost.toString() ?? '');

@@ -353,7 +353,7 @@
 						"bundledDependencies": false
 					}
 				],
-				"import/unambiguous": "warn",
+				"import/unambiguous": "error",
 				"@typescript-eslint/ban-ts-comment": "error",
 				"@typescript-eslint/ban-types": [
 					"error",

@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import IORedis from 'ioredis';
-import { ScanStreamOptions } from 'ioredis/built/types';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
@@ -38,7 +37,7 @@ export default class RedisClient {
 		this.isConnected = true;
 	}
 
-	private parseValue<VT = object>(strValue: string): VT | null {
+	private parseValue<VT = unknown>(strValue: string): VT | null {
 		const { data } = this.dataParserHelper.toObject<VT>(strValue);
 		return data;
 	}
@@ -94,7 +93,7 @@ export default class RedisClient {
 		return result as (VT | null);
 	}
 
-	public async set(key: string, value: object, ttl = 30): Promise<string> {
+	public async set(key: string, value: unknown, ttl = 30): Promise<string> {
 		const result = await this.redisClient.set(String(key), this.dataParserHelper.toString(value));
 		await this.redisClient.expire(String(key), Number(ttl)); // [key] expires in [ttl] seconds
 		return result;
@@ -145,7 +144,7 @@ export default class RedisClient {
 		return result;
 	}
 
-	public async remove(keyPattern: ScanStreamOptions | object | string): Promise<void> {
+	public async remove(keyPattern: string): Promise<void> {
 		const scanValue: string | any = `${keyPattern}:*`;
 		const stream = this.redisClient.scanStream(scanValue);
 

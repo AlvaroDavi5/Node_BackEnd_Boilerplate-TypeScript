@@ -1,9 +1,9 @@
 
-export function isNullOrUndefined(data: any): boolean {
+export function isNullOrUndefined(data: unknown): boolean {
 	return data === null || data === undefined;
 }
 
-export function isEmpty(data: any): boolean {
+export function isEmpty(data: unknown): boolean {
 	if (typeof data === 'string')
 		return data.length <= 0;
 
@@ -14,22 +14,22 @@ export function isEmpty(data: any): boolean {
 		if (isNullOrUndefined(data))
 			return true;
 
-		return Object.keys(data).length <= 0;
+		return Object.keys(data as any).length <= 0;
 	}
 
 	return true;
 }
 
-export function getObjKeys(obj: any): string[] {
+export function getObjKeys<OT = any>(obj: OT): [keyof OT] {
 	if (isNullOrUndefined(obj))
-		return [];
+		return [] as unknown as [keyof OT];
 
-	return Object.keys(obj);
+	return Object.keys(obj as any) as [keyof OT];
 }
 
-export function getObjValues<T = any>(obj: any): T[] {
+export function getObjValues<VT = any>(obj: unknown): VT[] {
 	if (isNullOrUndefined(obj))
 		return [];
 
-	return Object.values<T>(obj);
+	return Object.values<VT>(obj as any);
 }

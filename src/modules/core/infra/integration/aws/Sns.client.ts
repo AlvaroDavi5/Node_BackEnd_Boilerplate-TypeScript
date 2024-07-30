@@ -55,7 +55,7 @@ export default class SnsClient {
 	}
 
 
-	private formatMessageBeforeSend(message: any = {}): string {
+	private formatMessageBeforeSend(message: unknown = {}): string {
 		return this.dataParserHelper.toString(message);
 	}
 

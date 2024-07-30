@@ -109,7 +109,7 @@ export default class SubscriptionService implements OnModuleInit {
 		if (!useCache || !foundedSubscriptions.length)
 			foundedSubscriptions = await this.mongoClient.findMany(this.subscriptionsCollection, {});
 
-		return foundedSubscriptions.map((subscription: any) => new SubscriptionEntity(subscription));
+		return foundedSubscriptions.map((subscription) => new SubscriptionEntity(subscription));
 	}
 
 	public emit(msg: unknown, socketIdsOrRooms: string | string[]): void {
@@ -135,7 +135,7 @@ export default class SubscriptionService implements OnModuleInit {
 		return await this.redisClient.get(key);
 	}
 
-	private async saveOnCache(subscriptionId: string, data: any): Promise<string> {
+	private async saveOnCache(subscriptionId: string, data: unknown): Promise<string> {
 		const key = this.cacheAccessHelper.generateKey(subscriptionId, CacheEnum.SUBSCRIPTIONS);
 		return await this.redisClient.set(key, data, this.subscriptionsTimeToLive);
 	}

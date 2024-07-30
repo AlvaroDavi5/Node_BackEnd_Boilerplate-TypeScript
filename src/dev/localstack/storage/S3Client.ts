@@ -93,7 +93,7 @@ export default class S3Client {
 	}
 
 	public async createBucket(bucketName: string): Promise<string> {
-		let location: any = '';
+		let location = '';
 
 		try {
 			const result = await this.s3Client.send(new CreateBucketCommand({

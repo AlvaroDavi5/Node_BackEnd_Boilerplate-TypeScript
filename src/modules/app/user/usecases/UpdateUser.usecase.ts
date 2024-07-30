@@ -47,21 +47,21 @@ export default class UpdateUserUseCase {
 		return foundedUser;
 	}
 
-	private mustUpdate(entityAttributes: any, inputAttributes: any): boolean {
+	private mustUpdate<EA = any, IA = any>(entityAttributes: EA, inputAttributes: IA): boolean {
 		if (!entityAttributes || !inputAttributes)
 			return false;
-		const attributesToUpdate = getObjKeys(inputAttributes);
+		const attributesToUpdate = getObjKeys<IA>(inputAttributes);
 
 		let mustUpdate = false;
-		attributesToUpdate.forEach((attributeKey: string) => {
+		attributesToUpdate.forEach((attributeKey) => {
 			const isUpdatedField = inputAttributes[attributeKey] !== undefined;
 			let hasValueChanged = false;
 
 			if (isUpdatedField) {
 				if (typeof inputAttributes[attributeKey] === 'object' && inputAttributes[attributeKey])
-					hasValueChanged = this.mustUpdate(entityAttributes[attributeKey], inputAttributes[attributeKey]);
+					hasValueChanged = this.mustUpdate(entityAttributes[attributeKey as unknown as keyof EA], inputAttributes[attributeKey]);
 				else
-					hasValueChanged = inputAttributes[attributeKey] !== entityAttributes[attributeKey];
+					hasValueChanged = inputAttributes[attributeKey] !== (entityAttributes as any)[attributeKey];
 			}
 
 			if (isUpdatedField && hasValueChanged)

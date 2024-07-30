@@ -2,7 +2,7 @@ import SqsClient from './SqsClient';
 import { configServiceMock, cryptographyServiceMock, dataParserHelperMock, loggerProviderMock } from '../../mocks/mockedModules';
 
 
-export default (queueName: string, queueUrl: string, payload: any, title: string, author: string): void => {
+export default (queueName: string, queueUrl: string, payload: unknown, title: string, author: string): void => {
 	const sqsClient = new SqsClient(configServiceMock as any, cryptographyServiceMock, loggerProviderMock, dataParserHelperMock);
 
 	const message = {

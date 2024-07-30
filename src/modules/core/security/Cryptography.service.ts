@@ -24,7 +24,7 @@ export default class CryptographyService {
 		return Buffer.from(data, encoding).toString(decoding);
 	}
 
-	public encodeJwt(payload: any, inputEncoding: BufferEncoding, expiration = '7d'): string {
+	public encodeJwt<PT extends object = any>(payload: string | Buffer | PT, inputEncoding: BufferEncoding, expiration = '7d'): string {
 		return sign(payload,
 			this.secret,
 			{

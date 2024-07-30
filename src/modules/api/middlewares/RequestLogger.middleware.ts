@@ -31,13 +31,13 @@ export default class RequestLoggerMiddleware implements NestMiddleware {
 		next();
 	}
 
-	private maskSensibleData(data: any) {
+	private maskSensibleData(data: object) {
 		const sensibleDataFields: string[] = ['password', 'newPassword', 'cvv', 'pin'];
 
-		const hasSensibleData: boolean = checkFields(data, sensibleDataFields);
+		const hasSensibleData: boolean = checkFields(data, sensibleDataFields as keyof object);
 		if (hasSensibleData) {
 			const newData = structuredClone(data);
-			return replaceFields(newData, sensibleDataFields, '***');
+			return replaceFields(newData, sensibleDataFields as keyof object, '***');
 		}
 
 		return data;

@@ -3,10 +3,10 @@ import { WebSocketEventsEnum } from '../src/modules/domain/enums/webSocketEvents
 import envsConfig from '../src/modules/core/configs/envs.config';
 
 
-function formatMessageAfterReceiveHelper(message: any) {
+function formatMessageAfterReceiveHelper(message: unknown) {
 	let msg = '';
 	try {
-		msg = JSON.parse(message);
+		msg = JSON.parse(message as unknown as string);
 	} catch (error) {
 		msg = String(message);
 	}
@@ -19,8 +19,8 @@ function createSocketClient() {
 	);
 
 	const webSocketClient = createWebSocketClient({
-		logger: console,
 		configs: envsConfig(),
+		logger: console,
 	});
 
 	webSocketClient.listen(WebSocketEventsEnum.EMIT, (msg: unknown, ..._args: unknown[]) => {

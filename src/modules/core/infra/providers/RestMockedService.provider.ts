@@ -44,7 +44,7 @@ export default class RestMockedServiceProvider extends AbstractRestClient {
 	public async requestHook<RI = unknown>(
 		requestEndpoint: string, requestMethod: requestMethodType,
 		body: unknown, queryParams?: unknown): Promise<RestClientResponseInterface<RI>> {
-		const requestFunction = this.client[requestMethod];
+		const requestFunction = this.client[String(requestMethod) as requestMethodType];
 
 		try {
 			this.logger.http(`Requesting ${this.serviceName}: [${requestMethod.toUpperCase()}] '${requestEndpoint}' to pull hook`);

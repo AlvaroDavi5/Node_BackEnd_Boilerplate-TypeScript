@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty, IsOptional, ValidateNested } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
-import { CreateUserInterface } from '@domain/entities/User.entity';
+import { ICreateUser } from '@domain/entities/User.entity';
 import RegExConstants from '@common/constants/Regex.constants';
 import { UserPreferenceInputDto } from '../userPreference/UserPreferenceInput.dto';
 
@@ -9,7 +9,7 @@ import { UserPreferenceInputDto } from '../userPreference/UserPreferenceInput.dt
 const regExConstants = new RegExConstants();
 const { regex: onlyNumericDigitsRegex } = regExConstants.onlyNumericDigitsPattern;
 
-export default class CreateUserInputDto implements CreateUserInterface {
+export default class CreateUserInputDto implements ICreateUser {
 	@ApiProperty({ type: String, example: 'User Default', default: '', nullable: false, required: true })
 	@IsString()
 	@IsNotEmpty()
@@ -54,5 +54,5 @@ export default class CreateUserInputDto implements CreateUserInterface {
 	@Type(() => UserPreferenceInputDto)
 	@ValidateNested()
 	@IsOptional()
-		preference?: UserPreferenceInputDto;
+	preference?: UserPreferenceInputDto;
 }

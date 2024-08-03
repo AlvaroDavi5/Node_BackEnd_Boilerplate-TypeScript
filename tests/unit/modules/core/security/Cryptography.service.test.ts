@@ -1,9 +1,10 @@
+import { ConfigService } from '@nestjs/config';
 import CryptographyService from '@core/security/Cryptography.service';
 import { configServiceMock } from '@dev/mocks/mockedModules';
 
 
 describe('Modules :: Core :: Security :: CryptographyService', () => {
-	const cryptographyService = new CryptographyService(configServiceMock as any);
+	const cryptographyService = new CryptographyService(configServiceMock as unknown as ConfigService);
 
 	afterEach(() => {
 		jest.clearAllMocks();

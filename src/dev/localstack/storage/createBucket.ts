@@ -1,9 +1,10 @@
+import { ConfigService } from '@nestjs/config';
 import S3Client from './S3Client';
-import { configServiceMock, loggerProviderMock } from '../../mocks/mockedModules';
+import { configServiceMock, loggerProviderMock } from '@dev/mocks/mockedModules';
 
 
 export default (bucketName: string): void => {
-	const s3Client = new S3Client(configServiceMock as any, loggerProviderMock);
+	const s3Client = new S3Client(configServiceMock as unknown as ConfigService, loggerProviderMock);
 
 	try {
 		s3Client.listBuckets().then((bucketList: string[]) => {

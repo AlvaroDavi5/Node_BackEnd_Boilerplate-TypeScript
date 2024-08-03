@@ -1,10 +1,10 @@
-import { Router } from 'express';
+import { Router, Request, Response } from 'express';
 
 
 let toggle = 0;
 
 export default {
-	healthcheck: async (req: any, res: any) => {
+	healthcheck: async (req: Request, res: Response) => {
 		const { authorization } = req.headers;
 		console.log('\n#Request Received');
 		console.log('#Service: MockedService');

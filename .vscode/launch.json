@@ -44,7 +44,7 @@
 			"program": "${file}",
 			"preLaunchTask": "tsc: build - tsconfig.json",
 			"outFiles": [
-				"${workspaceFolder}/dist/**/*.js"
+				"${workspaceFolder}/build/**/*.js"
 			],
 			"internalConsoleOptions": "openOnSessionStart",
 			"sourceMaps": true,

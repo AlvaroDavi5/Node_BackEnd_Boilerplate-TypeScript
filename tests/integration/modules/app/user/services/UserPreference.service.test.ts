@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { FindOneOptions } from 'typeorm';
-import envsConfig from '@core/configs/envs.config';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 import UserPreferenceService from '@app/user/services/UserPreference.service';
 import UserPreferenceRepository from '@app/user/repositories/userPreference/UserPreference.repository';
 import Exceptions from '@core/errors/Exceptions';
 import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
+import { configServiceMock } from '@dev/mocks/mockedModules';
 
 
 describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
@@ -18,24 +18,6 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 		create: jest.fn(async (_entity: UserPreferenceEntity): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
 		update: jest.fn(async (_id: string, _dataValues: Partial<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => (null)),
 		deleteOne: jest.fn(async (_id: string, _softDelete?: boolean): Promise<boolean> => (false)),
-	};
-	const configServiceMock = {
-		get: (propertyPath?: string): any => {
-			if (propertyPath) {
-				const splitedPaths = propertyPath.split('.');
-				let scopedProperty: any = envsConfig();
-
-				for (let i = 0; i < splitedPaths.length; i++) {
-					const scopedPath = splitedPaths[i];
-
-					if (scopedPath.length)
-						scopedProperty = scopedProperty[scopedPath];
-				}
-
-				return scopedProperty;
-			} else
-				return envsConfig();
-		},
 	};
 
 	// ? build test app

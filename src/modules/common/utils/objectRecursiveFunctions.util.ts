@@ -1,39 +1,39 @@
 import { isNullOrUndefined, getObjKeys } from './dataValidations.util';
 
 
-export function checkFields(obj: any, fieldsToApply: string[]): boolean {
+export function checkFieldsExistence<OT extends object = any>(obj: OT, fieldsToApply: [keyof OT]): boolean {
 	if (isNullOrUndefined(obj))
 		return false;
 
-	let result = false;
-
-	const callback = (payload: any): boolean => {
+	const callback = (payload: OT): boolean => {
 		const payloadKeys = getObjKeys(payload);
-		return payloadKeys.some((key: string): boolean => fieldsToApply.includes(key));
+		return payloadKeys.some((key): boolean => fieldsToApply.includes(key));
 	};
+
+	let result = false;
 	result = callback(obj);
-	if (result)
+	if (result === true)
 		return result;
 
 	const objectKey = getObjKeys(obj);
-	objectKey.forEach((key: string): void => {
-		const value = obj[key];
+	objectKey.forEach((key) => {
+		const value = obj[key as keyof OT];
 
 		if (value && typeof value === 'object')
-			result = checkFields(value, fieldsToApply);
+			result = checkFieldsExistence(value as OT, fieldsToApply);
 	});
 
 	return result;
 }
 
-export function replaceFields(obj: any, fieldsToApply: string[], valueToReplace: string): any {
+export function replaceFields<OT extends object = any>(obj: OT, fieldsToApply: [keyof OT], valueToReplace: unknown): OT | null {
 	if (isNullOrUndefined(obj))
 		return null;
 
-	const callback = (payload: any) => {
-		fieldsToApply.forEach((key: string) => {
-			if (payload[key] !== undefined) {
-				payload[key] = valueToReplace;
+	const callback = (payload: OT) => {
+		fieldsToApply.forEach((key) => {
+			if (payload[String(key) as keyof OT] !== undefined) {
+				payload[String(key) as keyof OT] = valueToReplace as OT[keyof OT];
 			}
 		});
 
@@ -41,11 +41,11 @@ export function replaceFields(obj: any, fieldsToApply: string[], valueToReplace:
 	};
 
 	const objectKey = getObjKeys(obj);
-	objectKey.forEach((key: string): void => {
-		const value = obj[key];
+	objectKey.forEach((key) => {
+		const value = obj[key as keyof OT];
 
 		if (value && typeof value === 'object')
-			replaceFields(value, fieldsToApply, valueToReplace);
+			replaceFields(value as OT, fieldsToApply, valueToReplace);
 	});
 
 	return callback(obj);

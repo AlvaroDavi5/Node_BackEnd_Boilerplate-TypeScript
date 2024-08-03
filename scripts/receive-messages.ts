@@ -1,12 +1,13 @@
-import createWebSocketClient from '../src/dev/websocket/createWebSocketClient';
-import { WebSocketEventsEnum } from '../src/modules/domain/enums/webSocketEvents.enum';
-import envsConfig from '../src/modules/core/configs/envs.config';
+import envsConfig from '@core/configs/envs.config';
+import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
+import createWebSocketClient from '@dev/websocket/createWebSocketClient';
+import { loggerProviderMock } from '@dev/mocks/mockedModules';
 
 
-function formatMessageAfterReceiveHelper(message: any) {
+function formatMessageAfterReceiveHelper(message: unknown) {
 	let msg = '';
 	try {
-		msg = JSON.parse(message);
+		msg = JSON.parse(message as unknown as string);
 	} catch (error) {
 		msg = String(message);
 	}
@@ -19,8 +20,8 @@ function createSocketClient() {
 	);
 
 	const webSocketClient = createWebSocketClient({
-		logger: console,
 		configs: envsConfig(),
+		logger: loggerProviderMock,
 	});
 
 	webSocketClient.listen(WebSocketEventsEnum.EMIT, (msg: unknown, ..._args: unknown[]) => {

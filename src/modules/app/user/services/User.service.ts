@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import UserEntity, { UpdateUserInterface } from '@domain/entities/User.entity';
+import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
 import UserListEntity from '@domain/entities/generic/UserList.entity';
 import CryptographyService from '@core/security/Cryptography.service';
 import UserRepository from '@app/user/repositories/user/User.repository';
@@ -64,7 +64,7 @@ export default class UserService {
 		}
 	}
 
-	public async update(id: string, data: UpdateUserInterface): Promise<UserEntity> {
+	public async update(id: string, data: IUpdateUser): Promise<UserEntity> {
 		const { id: _userId, createdAt: _createdAt, preference: _preference, ...userData } = new UserEntity(data).getAttributes();
 
 		try {
@@ -112,14 +112,16 @@ export default class UserService {
 
 		if (!salt.length || !hash.length)
 			throw this.exceptions.internal({
-				message: 'Invalid salt or hash from database',
+				message: 'Error to get password',
+				details: 'Invalid salt or hash from database',
 			});
 
 		const toHash = salt + passwordToValidate + this.secret;
 		const newHash = this.cryptographyService.hashing(toHash, 'ascii', 'sha256', 'base64url');
 		if (newHash !== hash)
 			throw this.exceptions.unauthorized({
-				message: 'Password hash is different from database',
+				message: 'Incorrect password',
+				details: 'Password hash is different from database',
 			});
 	}
 

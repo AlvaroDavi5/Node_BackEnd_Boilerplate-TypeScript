@@ -5,8 +5,8 @@ import {
 	SendMessageCommand, ReceiveMessageCommand, DeleteMessageCommand,
 	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput,
 } from '@aws-sdk/client-sqs';
-import { ConfigsInterface } from 'src/modules/core/configs/envs.config';
-import { LoggerInterface } from 'src/modules/core/logging/logger';
+import { ConfigsInterface } from '@core/configs/envs.config';
+import { LoggerInterface } from '@core/logging/logger';
 
 
 export default class SqsClient {
@@ -44,7 +44,7 @@ export default class SqsClient {
 	}
 
 
-	private formatMessageBeforeSend(message: any = {}): string {
+	private formatMessageBeforeSend(message: unknown = {}): string {
 		return this.dataParserHelper.toString(message);
 	}
 
@@ -63,7 +63,7 @@ export default class SqsClient {
 		return params;
 	}
 
-	private msgParams(queueUrl: string, message: any, title: string, author: string): SendMessageCommandInput {
+	private msgParams(queueUrl: string, message: unknown, title: string, author: string): SendMessageCommandInput {
 		const isFifoQueue: boolean = queueUrl?.includes('.fifo');
 		const messageBody = this.formatMessageBeforeSend(message);
 
@@ -156,7 +156,7 @@ export default class SqsClient {
 		return isDeleted;
 	}
 
-	public async sendMessage(queueUrl: string, title: string, author: string, message: any): Promise<string> {
+	public async sendMessage(queueUrl: string, title: string, author: string, message: unknown): Promise<string> {
 		let messageId = '';
 
 		try {

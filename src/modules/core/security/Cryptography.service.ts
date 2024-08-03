@@ -24,7 +24,7 @@ export default class CryptographyService {
 		return Buffer.from(data, encoding).toString(decoding);
 	}
 
-	public encodeJwt(payload: any, inputEncoding: BufferEncoding, expiration = '7d'): string {
+	public encodeJwt<PT extends object = any>(payload: string | Buffer | PT, inputEncoding: BufferEncoding, expiration = '7d'): string {
 		return sign(payload,
 			this.secret,
 			{
@@ -107,9 +107,9 @@ export default class CryptographyService {
 
 	public contentDSASign(data: string, inputEncoding: BufferEncoding, privateKeyContent: string, algorithm: hashAlgorithmType, outputFormat: crypto.BinaryToTextEncoding): string | null {
 		try {
-			const sign = crypto.createSign(algorithm);
-			sign.update(data, inputEncoding);
-			return sign.sign(privateKeyContent, outputFormat);
+			const dsaSign = crypto.createSign(algorithm);
+			dsaSign.update(data, inputEncoding);
+			return dsaSign.sign(privateKeyContent, outputFormat);
 		} catch (error) {
 			return null;
 		}

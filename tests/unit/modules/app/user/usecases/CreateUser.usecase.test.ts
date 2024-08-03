@@ -1,6 +1,11 @@
+import Exceptions from '@core/errors/Exceptions';
 import CreateUserUseCase from '@app/user/usecases/CreateUser.usecase';
-import UserEntity, { UpdateUserInterface } from '@domain/entities/User.entity';
-import UserPreferenceEntity, { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.entity';
+import UserService from '@app/user/services/User.service';
+import UserPreferenceService from '@app/user/services/UserPreference.service';
+import CreateUserInputDto from '@app/user/api/dto/user/CreateUserInput.dto';
+import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
+import UserPreferenceEntity, { IUpdateUserPreference } from '@domain/entities/UserPreference.entity';
+import HttpConstants from '@common/constants/Http.constants';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
@@ -22,7 +27,7 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 		getByEmail: jest.fn(async (_email: string): Promise<UserEntity | null> => (null)),
 		getById: jest.fn(async (_id: string, _withoutPassword = true): Promise<UserEntity> => { throw new Error('GenericError'); }),
 		create: jest.fn(async (_entity: UserEntity): Promise<UserEntity> => { throw new Error('GenericError'); }),
-		update: jest.fn(async (_id: string, _data: UpdateUserInterface): Promise<UserEntity> => { throw new Error('GenericError'); }),
+		update: jest.fn(async (_id: string, _data: IUpdateUser): Promise<UserEntity> => { throw new Error('GenericError'); }),
 		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, userAgentId?: string }): Promise<boolean> => (false)),
 		list: jest.fn(async (_query: ListQueryInterface, _withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => {
 			return { content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 };
@@ -33,16 +38,16 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 	const userPreferenceServiceMock = {
 		getByUserId: jest.fn(async (_userId: string): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
 		create: jest.fn(async (_entity: UserPreferenceEntity): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
-		update: jest.fn(async (_id: string, _data: UpdateUserPreferenceInterface): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
+		update: jest.fn(async (_id: string, _data: IUpdateUserPreference): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
 		delete: jest.fn(async (_id: string, _data: { softDelete: boolean }): Promise<boolean> => (false)),
 	};
 
 	const userAgent = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' };
 	const createUserUseCase = new CreateUserUseCase(
-		userServiceMock as any,
-		userPreferenceServiceMock as any,
-		httpConstantsMock as any,
-		exceptionsMock as any,
+		userServiceMock as unknown as UserService,
+		userPreferenceServiceMock as unknown as UserPreferenceService,
+		httpConstantsMock as unknown as HttpConstants,
+		exceptionsMock as unknown as Exceptions,
 	);
 
 	afterEach(() => {
@@ -115,7 +120,7 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 		});
 
 		test('Should throw a unauthorized error', async () => {
-			await expect(createUserUseCase.execute({} as any))
+			await expect(createUserUseCase.execute({} as unknown as CreateUserInputDto))
 				.rejects.toMatchObject(new Error('Invalid userAgent'));
 			expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
 				message: 'Invalid userAgent'

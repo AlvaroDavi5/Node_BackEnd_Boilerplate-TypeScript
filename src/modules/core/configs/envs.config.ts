@@ -1,5 +1,5 @@
-import { TimeZonesEnum } from 'src/modules/common/enums/timeZones.enum';
 import dotenv from 'dotenv';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 
 
 // dotenv.config({ path: (process.cwd() + '/envs/.env.development') });

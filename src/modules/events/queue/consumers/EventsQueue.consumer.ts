@@ -16,17 +16,17 @@ import { configServiceMock, cryptographyServiceMock, dataParserHelperMock, logge
 const appConfigs = envsConfig();
 const { region: awsRegion } = appConfigs.integration.aws.credentials;
 const { queueName: eventsQueueName, queueUrl: eventsQueueUrl } = appConfigs.integration.aws.sqs.eventsQueue;
-const sqsClient = new SqsClientMock(
+const sqsClientMock = new SqsClientMock(
 	configServiceMock as any,
 	cryptographyServiceMock,
 	loggerProviderMock,
 	dataParserHelperMock,
-).getClient();
+);
 
 export const eventsQueueConsumerConfigs: SqsConsumerOptions = {
 	name: eventsQueueName,
 	queueUrl: eventsQueueUrl,
-	sqs: sqsClient,
+	sqs: sqsClientMock.getClient(),
 	region: awsRegion,
 	batchSize: 10,
 	shouldDeleteMessages: false,

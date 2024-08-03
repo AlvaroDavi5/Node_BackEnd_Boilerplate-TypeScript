@@ -1,6 +1,6 @@
-import sendMessage from '../src/dev/localstack/queues/sendMessage';
-import eventPayload from '../src/dev/templates/payloads/EventPayload.json';
-import { configServiceMock } from '../src/dev/mocks/mockedModules';
+import sendMessage from '@dev/localstack/queues/sendMessage';
+import eventPayload from '@dev/templates/payloads/EventPayload.json';
+import { configServiceMock } from '@dev/mocks/mockedModules';
 
 
 const eventsQueue = configServiceMock.get('integration.aws.sqs.eventsQueue');

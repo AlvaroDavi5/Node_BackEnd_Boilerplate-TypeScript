@@ -1,5 +1,5 @@
 import { isNullOrUndefined, isEmpty, getObjKeys, getObjValues } from '@common/utils/dataValidations.util';
-import { checkFields, replaceFields } from '@common/utils/objectRecursiveFunctions.util';
+import { checkFieldsExistence, replaceFields } from '@common/utils/objectRecursiveFunctions.util';
 
 
 describe('Modules :: Common :: Utils :: DataUtils', () => {
@@ -32,14 +32,14 @@ describe('Modules :: Common :: Utils :: DataUtils', () => {
 
 	describe('# Object Recursive Functions', () => {
 		test('Should check fields', () => {
-			expect(checkFields(null, ['key2'])).toBeFalsy();
-			expect(checkFields({ key1: 'value1' }, ['key2'])).toBeFalsy();
-			expect(checkFields({ key2: 'value2' }, ['key2'])).toBeTruthy();
+			expect(checkFieldsExistence<any>(null, ['key2'])).toBeFalsy();
+			expect(checkFieldsExistence({ key1: 'value1' }, ['key2'] as keyof object)).toBeFalsy();
+			expect(checkFieldsExistence({ key2: 'value2' }, ['key2'])).toBeTruthy();
 		});
 
 		test('Should replace fields', () => {
-			expect(replaceFields(undefined, ['key2'], 'xxx')).toBeNull();
-			expect(replaceFields({ key1: 'value1' }, ['key2'], 'xxx')).toEqual({ key1: 'value1' });
+			expect(replaceFields<any>(undefined, ['key2'], 'xxx')).toBeNull();
+			expect(replaceFields({ key1: 'value1' }, ['key2'] as keyof object, 'xxx')).toEqual({ key1: 'value1' });
 			expect(replaceFields({ key2: 'value2' }, ['key2'], 'xxx')).toEqual({ key2: 'xxx' });
 		});
 	});

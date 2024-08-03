@@ -22,9 +22,9 @@ export interface UserPreferenceInterface {
 	deletedAt?: Date,
 }
 
-export type CreateUserPreferenceInterface = Omit<UserPreferenceInterface, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
-export type UpdateUserPreferenceInterface = Partial<CreateUserPreferenceInterface>;
-export type ViewUserPreferenceInterface = UserPreferenceInterface;
+export type ICreateUserPreference = Omit<UserPreferenceInterface, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
+export type IUpdateUserPreference = Partial<ICreateUserPreference>;
+export type IViewUserPreference = UserPreferenceInterface;
 
 @ObjectType({
 	description: 'user preference entity',

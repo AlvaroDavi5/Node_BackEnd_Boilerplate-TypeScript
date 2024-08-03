@@ -6,9 +6,9 @@ import {
 	PutObjectCommandInput, GetObjectCommandInput, DeleteObjectCommandInput,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { ConfigsInterface } from 'src/modules/core/configs/envs.config';
-import { LoggerInterface } from 'src/modules/core/logging/logger';
-import { s3FileContentType } from 'src/modules/core/infra/integration/aws/S3.client';
+import { ConfigsInterface } from '@core/configs/envs.config';
+import { LoggerInterface } from '@core/logging/logger';
+import { s3FileContentType } from '@core/infra/integration/aws/S3.client';
 
 
 export default class S3Client {
@@ -93,7 +93,7 @@ export default class S3Client {
 	}
 
 	public async createBucket(bucketName: string): Promise<string> {
-		let location: any = '';
+		let location = '';
 
 		try {
 			const result = await this.s3Client.send(new CreateBucketCommand({

@@ -1,6 +1,6 @@
 import Joi from 'joi';
-import { UpdateUserInterface } from '@domain/entities/User.entity';
-import { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.entity';
+import { IUpdateUser } from '@domain/entities/User.entity';
+import { IUpdateUserPreference } from '@domain/entities/UserPreference.entity';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 import RegExConstants from '@common/constants/Regex.constants';
 
@@ -8,12 +8,12 @@ import RegExConstants from '@common/constants/Regex.constants';
 const regExConstants = new RegExConstants();
 const { passwordPattern } = regExConstants;
 
-const preference: Joi.Schema<UpdateUserPreferenceInterface> = Joi.object({
+const preference: Joi.Schema<IUpdateUserPreference> = Joi.object({
 	imagePath: Joi.string().empty('').max(255).trim(),
 	defaultTheme: Joi.string().valid(...Object.values(ThemesEnum)).max(20),
 }).unknown(false).optional();
 
-const updateUserSchema: Joi.Schema<UpdateUserInterface> = Joi.object({
+const updateUserSchema: Joi.Schema<IUpdateUser> = Joi.object({
 	fullName: Joi.string().trim().max(100),
 	email: Joi.string().email().max(70),
 	password: Joi.string().regex(passwordPattern.regex, { name: passwordPattern.name }).message(passwordPattern.message('password')),

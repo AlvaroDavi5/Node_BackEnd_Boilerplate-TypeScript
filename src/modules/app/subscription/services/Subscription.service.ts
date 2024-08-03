@@ -9,7 +9,7 @@ import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 import LoggerService, { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
-import SubscriptionEntity, { CreateSubscriptionInterface, UpdateSubscriptionInterface } from '@domain/entities/Subscription.entity';
+import SubscriptionEntity, { ICreateSubscription, IUpdateSubscription } from '@domain/entities/Subscription.entity';
 import { CacheEnum } from '@domain/enums/cache.enum';
 import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
 
@@ -64,7 +64,7 @@ export default class SubscriptionService implements OnModuleInit {
 		return new SubscriptionEntity(subscription);
 	}
 
-	public async save(subscriptionId: string, data: CreateSubscriptionInterface | UpdateSubscriptionInterface): Promise<SubscriptionEntity> {
+	public async save(subscriptionId: string, data: ICreateSubscription | IUpdateSubscription): Promise<SubscriptionEntity> {
 		let foundedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
 			subscriptionId,
 		});
@@ -109,7 +109,7 @@ export default class SubscriptionService implements OnModuleInit {
 		if (!useCache || !foundedSubscriptions.length)
 			foundedSubscriptions = await this.mongoClient.findMany(this.subscriptionsCollection, {});
 
-		return foundedSubscriptions.map((subscription: any) => new SubscriptionEntity(subscription));
+		return foundedSubscriptions.map((subscription) => new SubscriptionEntity(subscription));
 	}
 
 	public emit(msg: unknown, socketIdsOrRooms: string | string[]): void {
@@ -135,7 +135,7 @@ export default class SubscriptionService implements OnModuleInit {
 		return await this.redisClient.get(key);
 	}
 
-	private async saveOnCache(subscriptionId: string, data: any): Promise<string> {
+	private async saveOnCache(subscriptionId: string, data: unknown): Promise<string> {
 		const key = this.cacheAccessHelper.generateKey(subscriptionId, CacheEnum.SUBSCRIPTIONS);
 		return await this.redisClient.set(key, data, this.subscriptionsTimeToLive);
 	}

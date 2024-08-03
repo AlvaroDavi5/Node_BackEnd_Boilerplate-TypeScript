@@ -1,7 +1,7 @@
 import { Injectable, Inject, Scope, NestMiddleware } from '@nestjs/common';
 import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import CryptographyService from '@core/security/Cryptography.service';
-import { checkFields, replaceFields } from '@common/utils/objectRecursiveFunctions.util';
+import { checkFieldsExistence, replaceFields } from '@common/utils/objectRecursiveFunctions.util';
 import { RequestInterface, ResponseInterface, NextFunctionInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
@@ -34,7 +34,7 @@ export default class RequestLoggerMiddleware implements NestMiddleware {
 	private maskSensibleData(data: object) {
 		const sensibleDataFields: string[] = ['password', 'newPassword', 'cvv', 'pin'];
 
-		const hasSensibleData: boolean = checkFields(data, sensibleDataFields as keyof object);
+		const hasSensibleData: boolean = checkFieldsExistence(data, sensibleDataFields as keyof object);
 		if (hasSensibleData) {
 			const newData = structuredClone(data);
 			return replaceFields(newData, sensibleDataFields as keyof object, '***');

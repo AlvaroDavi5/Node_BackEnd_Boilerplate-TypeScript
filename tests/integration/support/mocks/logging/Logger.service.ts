@@ -3,6 +3,8 @@ import { LoggerInterface } from '@core/logging/logger';
 import { MockObservableInterface } from '../mockObservable';
 
 
+type logLevelType = 'error' | 'warn' | 'info' | 'debug' | 'log';
+
 @Injectable({ scope: Scope.TRANSIENT })
 export default class LoggerService implements LoggerInterface {
 	private readonly showLogs = Boolean(process.env.SHOW_LOGS);
@@ -11,14 +13,14 @@ export default class LoggerService implements LoggerInterface {
 		private readonly mockObservable?: MockObservableInterface<void, unknown[]>,
 	) { }
 
-	private log(level: 'error' | 'warn' | 'info' | 'debug' | 'log', args: unknown[]): void {
+	private log(level: logLevelType, args: unknown[]): void {
 		const shouldLog = (this.showLogs === true) && (['error', 'warn'].includes(level));
 
 		args.forEach((arg: unknown) => {
 			if (this.mockObservable?.call)
 				this.mockObservable.call(arg);
 			if (shouldLog)
-				console[level](arg);
+				console[String(level) as logLevelType](arg);
 		});
 	}
 

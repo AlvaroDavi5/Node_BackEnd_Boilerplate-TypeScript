@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import UserPreferenceRepository from '@app/user/repositories/userPreference/UserPreference.repository';
-import UserPreferenceEntity, { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.entity';
+import UserPreferenceEntity, { IUpdateUserPreference } from '@domain/entities/UserPreference.entity';
 import Exceptions from '@core/errors/Exceptions';
 
 
@@ -34,7 +34,7 @@ export default class UserPreferenceService {
 		}
 	}
 
-	public async update(id: string, data: UpdateUserPreferenceInterface): Promise<UserPreferenceEntity> {
+	public async update(id: string, data: IUpdateUserPreference): Promise<UserPreferenceEntity> {
 		const { id: _preferenceId, userId: _userId, createdAt: _createdAt, ...userPreferenceData } = new UserPreferenceEntity(data).getAttributes();
 
 		try {

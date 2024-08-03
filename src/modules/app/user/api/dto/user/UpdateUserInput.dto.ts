@@ -1,7 +1,7 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsOptional, ValidateNested } from 'class-validator';
 import { Type, Transform } from 'class-transformer';
-import { UpdateUserInterface } from '@domain/entities/User.entity';
+import { IUpdateUser } from '@domain/entities/User.entity';
 import RegExConstants from '@common/constants/Regex.constants';
 import { UserPreferenceInputDto } from '../userPreference/UserPreferenceInput.dto';
 
@@ -9,7 +9,7 @@ import { UserPreferenceInputDto } from '../userPreference/UserPreferenceInput.dt
 const regExConstants = new RegExConstants();
 const { regex: onlyNumericDigitsRegex } = regExConstants.onlyNumericDigitsPattern;
 
-export default class UpdateUserInputDto implements UpdateUserInterface {
+export default class UpdateUserInputDto implements IUpdateUser {
 	@ApiProperty({ type: String, example: 'User Default', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
@@ -54,5 +54,5 @@ export default class UpdateUserInputDto implements UpdateUserInterface {
 	@Type(() => UserPreferenceInputDto)
 	@ValidateNested()
 	@IsOptional()
-		preference?: UserPreferenceInputDto;
+	preference?: UserPreferenceInputDto;
 }

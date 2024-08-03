@@ -24,9 +24,9 @@ export interface SubscriptionInterface {
 	},
 }
 
-export type CreateSubscriptionInterface = Omit<SubscriptionInterface, 'id' | 'subscriptionId'>;
-export type UpdateSubscriptionInterface = Partial<SubscriptionInterface>;
-export type ViewSubscriptionInterface = SubscriptionInterface;
+export type ICreateSubscription = Omit<SubscriptionInterface, 'id' | 'subscriptionId'>;
+export type IUpdateSubscription = Partial<ICreateSubscription> & { subscriptionId?: string };
+export type IViewSubscription = SubscriptionInterface;
 
 @ObjectType()
 export default class SubscriptionEntity extends AbstractEntity<SubscriptionInterface> {

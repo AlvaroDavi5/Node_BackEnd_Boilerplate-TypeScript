@@ -9,7 +9,7 @@ import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 import LoggerService, { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
-import SubscriptionEntity, { CreateSubscriptionInterface, UpdateSubscriptionInterface } from '@domain/entities/Subscription.entity';
+import SubscriptionEntity, { ICreateSubscription, IUpdateSubscription } from '@domain/entities/Subscription.entity';
 import { CacheEnum } from '@domain/enums/cache.enum';
 import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
 
@@ -64,7 +64,7 @@ export default class SubscriptionService implements OnModuleInit {
 		return new SubscriptionEntity(subscription);
 	}
 
-	public async save(subscriptionId: string, data: CreateSubscriptionInterface | UpdateSubscriptionInterface): Promise<SubscriptionEntity> {
+	public async save(subscriptionId: string, data: ICreateSubscription | IUpdateSubscription): Promise<SubscriptionEntity> {
 		let foundedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
 			subscriptionId,
 		});

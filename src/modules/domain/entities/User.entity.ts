@@ -6,7 +6,7 @@ import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
 import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
-import UserPreferenceEntity, { CreateUserPreferenceInterface, UserPreferenceInterface, returingUserPreferenceEntity } from './UserPreference.entity';
+import UserPreferenceEntity, { ICreateUserPreference, UserPreferenceInterface, returingUserPreferenceEntity } from './UserPreference.entity';
 
 
 export interface UserInterface<UP = UserPreferenceInterface> {
@@ -25,11 +25,11 @@ export interface UserInterface<UP = UserPreferenceInterface> {
 	deletedBy?: string,
 }
 
-export type CreateUserInterface = Omit<UserInterface<CreateUserPreferenceInterface>, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
-export type UpdateUserInterface = Partial<CreateUserInterface>;
-export type ViewUserInterface = UserInterface;
-export type ViewUserWithoutPasswordInterface = Omit<UserInterface, 'password'>;
-export type ViewUserWithoutSensitiveDataInterface = Omit<UserInterface, 'password' | 'phone' | 'document'>;
+export type ICreateUser = Omit<UserInterface<ICreateUserPreference>, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
+export type IUpdateUser = Partial<ICreateUser>;
+export type IViewUser = UserInterface;
+export type IViewUserWithoutPassword = Omit<UserInterface, 'password'>;
+export type IViewUserWithoutSensitiveData = Omit<UserInterface, 'password' | 'phone' | 'document'>;
 
 const dateGeneratorHelper = new DateGeneratorHelper();
 const dateExample = dateGeneratorHelper.getDate('2024-06-10T03:52:50.885Z', 'iso-8601', true, TimeZonesEnum.SaoPaulo);
@@ -131,7 +131,7 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 		this.createdAt = this.exists(dataValues?.createdAt) ? this.getDate(dataValues.createdAt) : this.getDate();
 	}
 
-	public getAttributes(): ViewUserInterface {
+	public getAttributes(): IViewUser {
 		return {
 			id: this.id,
 			fullName: this.fullName,

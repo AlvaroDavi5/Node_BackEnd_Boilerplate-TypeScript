@@ -7,7 +7,7 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
-import UserEntity, { ViewUserInterface } from '@domain/entities/User.entity';
+import UserEntity, { IViewUser } from '@domain/entities/User.entity';
 import UserListEntity from '@domain/entities/generic/UserList.entity';
 import LoginUserUseCase from '@app/user/usecases/LoginUser.usecase';
 import ListUsersUseCase from '@app/user/usecases/ListUsers.usecase';
@@ -67,7 +67,7 @@ export default class UserController {
 	@ApiProduces('application/json')
 	public async listUsers(
 		@Query(ListQueryValidatorPipe) query: ListQueryInputDto,
-	): Promise<PaginationInterface<ViewUserInterface>> {
+	): Promise<PaginationInterface<IViewUser>> {
 		try {
 			const { content, ...listInfo } = await this.listUsersUseCase.execute(query);
 			const mappedContent = content.map((entity) => entity.getAttributes());
@@ -96,7 +96,7 @@ export default class UserController {
 	public async createUser(
 		@Req() request: RequestInterface,
 		@Body(CreateUserValidatorPipe) body: CreateUserInputDto,
-	): Promise<ViewUserInterface> {
+	): Promise<IViewUser> {
 		try {
 			const { user } = request;
 
@@ -120,7 +120,7 @@ export default class UserController {
 	@ApiProduces('application/json')
 	public async loginUser(
 		@Body(LoginUserValidatorPipe) body: LoginUserInputDto,
-	): Promise<ViewUserInterface & { token: string }> {
+	): Promise<IViewUser & { token: string }> {
 		try {
 			const { user, token } = await this.loginUserUseCase.execute(body);
 
@@ -145,7 +145,7 @@ export default class UserController {
 	public async getUser(
 		@Req() request: RequestInterface,
 		@Param('userId', ParseUUIDPipe) userId: string,
-	): Promise<ViewUserInterface> {
+	): Promise<IViewUser> {
 		try {
 			const { user } = request;
 
@@ -173,7 +173,7 @@ export default class UserController {
 		@Req() request: RequestInterface,
 		@Param('userId', ParseUUIDPipe) userId: string,
 		@Body(UpdateUserValidatorPipe) body: UpdateUserInputDto,
-	): Promise<ViewUserInterface> {
+	): Promise<IViewUser> {
 		try {
 			const { user } = request;
 

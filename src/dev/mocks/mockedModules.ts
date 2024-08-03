@@ -11,7 +11,7 @@ export const configServiceMock = {
 
 			for (const scopedPath of splitedPaths) {
 				if (scopedPath.length)
-					scopedProperty = scopedProperty[scopedPath];
+					scopedProperty = scopedProperty[String(scopedPath)];
 			}
 
 			return scopedProperty;

@@ -132,7 +132,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 		@ConnectedSocket() socket: ServerSocket,
 		@MessageBody() msg: string,
 	): void { // listen 'emit_private' order event from client
-		const { socketIdsOrRooms, ...message }: { [key: string]: unknown, socketIdsOrRooms?: string | string[] } = this.formatMessageAfterReceiveHelper(msg) as any;
+		const { socketIdsOrRooms, ...message } = this.formatMessageAfterReceiveHelper(msg) as { [key: string]: unknown, socketIdsOrRooms?: string | string[] };
 		const msgContent = this.formatMessageBeforeSendHelper(message);
 
 		if (!socketIdsOrRooms) {

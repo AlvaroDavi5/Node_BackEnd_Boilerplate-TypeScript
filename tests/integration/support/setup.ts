@@ -23,16 +23,16 @@ jest.mock('src/modules/core/infra/database/connection', () => {
 	return {
 		__esModule: true,
 		connection: {
-			authenticate: async (options?: any) => {
+			authenticate: async (_options?: unknown) => {
 				isConnected = true;
 			},
-			sync: async (options?: any) => ({}),
+			sync: async (_options?: unknown) => ({}),
 			close: async () => { isConnected = false; },
 		},
-		syncConnection: async (connection: any, logger?: any) => {
+		syncConnection: async (_connection: unknown, _logger?: unknown) => {
 			isConnected = !!isConnected;
 		},
-		testConnection: async (connection: any, logger?: any) => (isConnected),
+		testConnection: async (_connection: unknown, _logger?: unknown) => (isConnected),
 	};
 });
 */
@@ -49,7 +49,7 @@ jest.mock('socket.io-client', () => {
 	return {
 		__esModule: true,
 		Socket: ClientSocket,
-		io: (_uri: string, _opts?: any) => (new ClientSocket()),
+		io: (_uri: string, _opts?: unknown) => (new ClientSocket()),
 	};
 });
 

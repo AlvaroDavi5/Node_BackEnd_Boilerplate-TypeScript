@@ -1,12 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import Exceptions from '@core/errors/Exceptions';
-import UserEntity from '@domain/entities/User.entity';
+import UserStrategy from '@app/user/strategies/User.strategy';
 import UserService from '@app/user/services/User.service';
 import UserPreferenceService from '@app/user/services/UserPreference.service';
-import UserStrategy from '@app/user/strategies/User.strategy';
-import UpdateUserInputDto from '../api/dto/user/UpdateUserInput.dto';
+import UserEntity, { IUpdateUser, IViewUser } from '@domain/entities/User.entity';
+import { IUpdateUserPreference, IViewUserPreference } from '@domain/entities/UserPreference.entity';
+import UpdateUserInputDto from '@app/user/api/dto/user/UpdateUserInput.dto';
+import { UserPreferenceInputDto } from '@app/user/api/dto/userPreference/UserPreferenceInput.dto';
 import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
-import { getObjKeys } from '@common/utils/dataValidations.util';
 
 
 @Injectable()
@@ -29,8 +30,8 @@ export default class UpdateUserUseCase {
 
 		this.validatePermissionToUpdateUser(userAgent, user);
 
-		const mustUpdateUser = this.mustUpdate(user.getAttributes(), data);
-		const mustUpdateUserPreference = this.mustUpdate(preference.getAttributes(), data.preference);
+		const mustUpdateUser = this.userStrategy.mustUpdate<IViewUser, IUpdateUser>(user.getAttributes(), data);
+		const mustUpdateUserPreference = this.userStrategy.mustUpdate<IViewUserPreference, IUpdateUserPreference>(preference.getAttributes(), data.preference as UserPreferenceInputDto);
 		if (mustUpdateUser)
 			await this.userService.update(user.getId(), data);
 		if (data.preference !== undefined && mustUpdateUserPreference)
@@ -45,30 +46,6 @@ export default class UpdateUserUseCase {
 			foundedUser.setPreference(foundedPreference);
 
 		return foundedUser;
-	}
-
-	private mustUpdate<EA = any, IA = any>(entityAttributes: EA, inputAttributes: IA): boolean {
-		if (!entityAttributes || !inputAttributes)
-			return false;
-		const attributesToUpdate = getObjKeys<IA>(inputAttributes);
-
-		let mustUpdate = false;
-		attributesToUpdate.forEach((attributeKey) => {
-			const isUpdatedField = inputAttributes[attributeKey] !== undefined;
-			let hasValueChanged = false;
-
-			if (isUpdatedField) {
-				if (typeof inputAttributes[attributeKey] === 'object' && inputAttributes[attributeKey])
-					hasValueChanged = this.mustUpdate(entityAttributes[attributeKey as unknown as keyof EA], inputAttributes[attributeKey]);
-				else
-					hasValueChanged = inputAttributes[attributeKey] !== (entityAttributes as any)[attributeKey];
-			}
-
-			if (isUpdatedField && hasValueChanged)
-				mustUpdate = true;
-		});
-
-		return mustUpdate;
 	}
 
 	private validatePermissionToUpdateUser(userAgent: UserAuthInterface, user: UserEntity): void {

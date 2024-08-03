@@ -23,6 +23,7 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 	};
 	const userStrategyMock = {
 		isAllowedToManageUser: jest.fn((_userAgent: UserAuthInterface, _userData: UserEntity): boolean => (false)),
+		mustUpdate: jest.fn((_entityAttributes: unknown, _inputAttributes: unknown): boolean => (false)),
 	};
 	const userServiceMock = {
 		getByEmail: jest.fn(async (_email: string): Promise<UserEntity | null> => (null)),
@@ -66,6 +67,9 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 				.mockResolvedValueOnce(userPreferenceEntity)
 				.mockResolvedValueOnce(userPreferenceEntity);
 			userStrategyMock.isAllowedToManageUser.mockReturnValueOnce(true);
+			userStrategyMock.mustUpdate
+				.mockReturnValueOnce(true)
+				.mockReturnValueOnce(true);
 			userServiceMock.update.mockImplementationOnce(async (_id: string, data: IUpdateUser): Promise<UserEntity> => {
 				if (data.email) userEntity.setEmail(data.email);
 				if (data.password) userEntity.setPhone(data.password);
@@ -109,6 +113,9 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 			userServiceMock.getById.mockResolvedValueOnce(userEntity);
 			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
 			userStrategyMock.isAllowedToManageUser.mockReturnValueOnce(true);
+			userStrategyMock.mustUpdate
+				.mockReturnValueOnce(true)
+				.mockReturnValueOnce(true);
 			userServiceMock.update.mockRejectedValueOnce(exceptionsMock.conflict({
 				message: 'User not updated!',
 			}));

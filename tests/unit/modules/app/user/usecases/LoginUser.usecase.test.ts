@@ -1,4 +1,8 @@
+import Exceptions from '@core/errors/Exceptions';
+import CryptographyService from '@core/security/Cryptography.service';
 import LoginUserUseCase from '@app/user/usecases/LoginUser.usecase';
+import UserService from '@app/user/services/User.service';
+import UserPreferenceService from '@app/user/services/UserPreference.service';
 import UserEntity, { UpdateUserInterface } from '@domain/entities/User.entity';
 import UserPreferenceEntity, { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.entity';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
@@ -34,14 +38,14 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 		delete: jest.fn(async (_id: string, _data: { softDelete: boolean }): Promise<boolean> => (false)),
 	};
 	const cryptographyServiceMock = {
-		encodeJwt: jest.fn((_payload: any, _inputEncoding: BufferEncoding, _expiration?: string): string => ('')),
+		encodeJwt: jest.fn((_payload: unknown, _inputEncoding: BufferEncoding, _expiration?: string): string => ('')),
 	};
 
 	const loginUserUseCase = new LoginUserUseCase(
-		userServiceMock as any,
-		userPreferenceServiceMock as any,
-		cryptographyServiceMock as any,
-		exceptionsMock as any,
+		userServiceMock as unknown as UserService,
+		userPreferenceServiceMock as unknown as UserPreferenceService,
+		cryptographyServiceMock as unknown as CryptographyService,
+		exceptionsMock as unknown as Exceptions,
 	);
 
 	afterEach(() => {

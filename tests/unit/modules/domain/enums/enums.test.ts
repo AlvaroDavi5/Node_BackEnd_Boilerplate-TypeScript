@@ -1,7 +1,7 @@
 import { CacheEnum } from '@domain/enums/cache.enum';
 import { EventsEnum } from '@domain/enums/events.enum';
-import { ThemesEnum } from '@domain/enums/themes.enum';
 import { WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/webSocketEvents.enum';
+import { ThemesEnum } from '@domain/enums/themes.enum';
 
 
 describe('Modules :: Domain :: Enums', () => {

@@ -1,6 +1,11 @@
+import Exceptions from '@core/errors/Exceptions';
 import CreateUserUseCase from '@app/user/usecases/CreateUser.usecase';
+import UserService from '@app/user/services/User.service';
+import UserPreferenceService from '@app/user/services/UserPreference.service';
+import CreateUserInputDto from '@app/user/api/dto/user/CreateUserInput.dto';
 import UserEntity, { UpdateUserInterface } from '@domain/entities/User.entity';
 import UserPreferenceEntity, { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.entity';
+import HttpConstants from '@common/constants/Http.constants';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
@@ -39,10 +44,10 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 
 	const userAgent = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' };
 	const createUserUseCase = new CreateUserUseCase(
-		userServiceMock as any,
-		userPreferenceServiceMock as any,
-		httpConstantsMock as any,
-		exceptionsMock as any,
+		userServiceMock as unknown as UserService,
+		userPreferenceServiceMock as unknown as UserPreferenceService,
+		httpConstantsMock as unknown as HttpConstants,
+		exceptionsMock as unknown as Exceptions,
 	);
 
 	afterEach(() => {
@@ -115,7 +120,7 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 		});
 
 		test('Should throw a unauthorized error', async () => {
-			await expect(createUserUseCase.execute({} as any))
+			await expect(createUserUseCase.execute({} as unknown as CreateUserInputDto))
 				.rejects.toMatchObject(new Error('Invalid userAgent'));
 			expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
 				message: 'Invalid userAgent'

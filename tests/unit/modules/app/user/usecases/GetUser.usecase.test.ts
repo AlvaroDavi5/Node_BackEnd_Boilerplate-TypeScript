@@ -1,4 +1,7 @@
+import Exceptions from '@core/errors/Exceptions';
 import GetUserUseCase from '@app/user/usecases/GetUser.usecase';
+import UserService from '@app/user/services/User.service';
+import UserPreferenceService from '@app/user/services/UserPreference.service';
 import UserEntity, { UpdateUserInterface } from '@domain/entities/User.entity';
 import UserPreferenceEntity, { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.entity';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
@@ -36,9 +39,9 @@ describe('Modules :: App :: User :: UseCases :: GetUserUseCase', () => {
 
 	const userAgent = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' };
 	const getUserUseCase = new GetUserUseCase(
-		userServiceMock as any,
-		userPreferenceServiceMock as any,
-		exceptionsMock as any,
+		userServiceMock as unknown as UserService,
+		userPreferenceServiceMock as unknown as UserPreferenceService,
+		exceptionsMock as unknown as Exceptions,
 	);
 
 	afterEach(() => {

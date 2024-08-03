@@ -1,4 +1,5 @@
 import ListUsersUseCase from '@app/user/usecases/ListUsers.usecase';
+import UserService from '@app/user/services/User.service';
 import UserEntity, { UpdateUserInterface } from '@domain/entities/User.entity';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
@@ -18,7 +19,7 @@ describe('Modules :: App :: User :: UseCases :: ListUsersUseCase', () => {
 		validatePassword: jest.fn((_entity: UserEntity, _passwordToValidate: string): void => { throw new Error('GenericError'); }),
 	};
 
-	const listUsersUseCase = new ListUsersUseCase(userServiceMock as any);
+	const listUsersUseCase = new ListUsersUseCase(userServiceMock as unknown as UserService);
 
 	afterEach(() => {
 		jest.clearAllMocks();

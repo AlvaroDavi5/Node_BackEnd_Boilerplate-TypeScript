@@ -1,4 +1,8 @@
+import Exceptions from '@core/errors/Exceptions';
 import DeleteUserUseCase from '@app/user/usecases/DeleteUser.usecase';
+import UserStrategy from '@app/user/strategies/User.strategy';
+import UserService from '@app/user/services/User.service';
+import UserPreferenceService from '@app/user/services/UserPreference.service';
 import UserEntity, { UpdateUserInterface } from '@domain/entities/User.entity';
 import UserPreferenceEntity, { UpdateUserPreferenceInterface } from '@domain/entities/UserPreference.entity';
 import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
@@ -40,10 +44,10 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 
 	const userAgent = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' };
 	const deleteUserUseCase = new DeleteUserUseCase(
-		userServiceMock as any,
-		userPreferenceServiceMock as any,
-		userStrategyMock as any,
-		exceptionsMock as any,
+		userServiceMock as unknown as UserService,
+		userPreferenceServiceMock as unknown as UserPreferenceService,
+		userStrategyMock as unknown as UserStrategy,
+		exceptionsMock as unknown as Exceptions,
 	);
 
 	afterEach(() => {

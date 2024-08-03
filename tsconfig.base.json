@@ -147,6 +147,11 @@
 		"**/*.test.js",
 		"**/*.spec.js"
 	],
+	"ts-node": {
+		"require": [
+			"tsconfig-paths/register"
+		]
+	},
 	"typeAcquisition": {
 		"include": [
 			"jest"

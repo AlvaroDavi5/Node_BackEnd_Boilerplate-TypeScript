@@ -5,8 +5,8 @@ import {
 	SendMessageCommand, ReceiveMessageCommand, DeleteMessageCommand,
 	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput,
 } from '@aws-sdk/client-sqs';
-import { ConfigsInterface } from 'src/modules/core/configs/envs.config';
-import { LoggerInterface } from 'src/modules/core/logging/logger';
+import { ConfigsInterface } from '@core/configs/envs.config';
+import { LoggerInterface } from '@core/logging/logger';
 
 
 export default class SqsClient {

@@ -1,6 +1,6 @@
 import { v4 as uuidV4 } from 'uuid';
-import envsConfig from 'src/modules/core/configs/envs.config';
-import { LoggerInterface } from 'src/modules/core/logging/logger';
+import envsConfig from '@core/configs/envs.config';
+import { LoggerInterface } from '@core/logging/logger';
 
 
 export const configServiceMock = {

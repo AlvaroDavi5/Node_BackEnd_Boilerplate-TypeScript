@@ -85,16 +85,16 @@
 		"clean": "rm -rf build/ dist/ temp/ coverage/ .scannerwork/ test-report.xml",
 		"clean:all": "rm -rf build/ dist/ temp/ coverage/ .scannerwork/ test-report.xml node_modules/ .tool-versions .env* logs/logs.log"
 	},
+	"config": {
+		"commitizen": {
+			"path": "./node_modules/cz-conventional-changelog"
+		}
+	},
 	"husky": {
 		"hooks": {
 			"pre-commit": "husky add ./.husky/pre-commit",
 			"pre-push": "husky add ./.husky/pre-push",
 			"commit-msg": "husky add ./.husky/commit-msg"
-		}
-	},
-	"config": {
-		"commitizen": {
-			"path": "./node_modules/cz-conventional-changelog"
 		}
 	},
 	"dependencies": {

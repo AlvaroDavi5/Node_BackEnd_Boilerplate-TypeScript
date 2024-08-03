@@ -33,7 +33,7 @@
 		"nestjs"
 	],
 	"scripts": {
-		"typecheck": "tsc --project tsconfig.build.json --noEmit",
+		"typecheck": "tsc --project tsconfig.json --noEmit",
 		"build": "nest build",
 		"build:webpack": "yarn build && webpack --config webpack.config.js",
 		"start": "cross-env NODE_PATH=. nest start",

@@ -170,21 +170,23 @@ yarn run send-message # send event message to queue
 	* `/` - WebSocket Root Endpoint
 	* `/api` - REST Root Endpoint
 		- `/api/docs` - Swagger API Documentation (Page)
-		- `/api/docs.json` - Swagger API Documentation (JSON)
 		- `/api/docs.yml` - Swagger API Documentation (YAML)
+		- `/api/docs.json` - Swagger API Documentation (JSON)
 	* `/graphql` - GraphQL Endpoint
-- [localhost:4000](http://localhost:4000/) - Mocked Service Page  
 - [localhost:8000](http://localhost:8000/) - Nest.js DevTools Page  
 - [localhost:8080](http://localhost:8080/) - Adminer Page  
 - [localhost:8081](http://localhost:8081/) - Mongo Express Page  
 - [localhost:8082](http://localhost:8082/) - Redis Commander Page  
 - [localhost:8083](http://localhost:8083/) - Jenkins Page  
 - [localhost:9000](http://localhost:9000/) - SonarQube Page  
+- [localhost:9001](http://localhost:9001/) - Grafana Page  
 
 ___
 
 ### TO DO
 
+- **Style**
+	- [ ] Review import order (src, tests, scripts, root)
 - **Integrations**
 	- [Kafka](#to-do)
 - **SQL**

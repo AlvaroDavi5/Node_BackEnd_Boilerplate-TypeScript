@@ -11,7 +11,7 @@ services:
     environment:
       - DOCKER_TLS_CERTDIR=certs
     ports:
-      - 8083:8080
+      - 9000:8080
     volumes:
       - ci_volume:/var/jenkins_home
     networks:
@@ -24,7 +24,7 @@ services:
     environment:
       - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
     ports:
-      - 9000:9000
+      - 9001:9000
       - 9092:9092
     networks:
       - default_network
@@ -35,7 +35,7 @@ services:
     container_name: Monitoring_Grafana
     image: grafana/grafana:latest
     ports:
-      - 9001:3000
+      - 9002:3000
     networks:
       - monitoring_network
 

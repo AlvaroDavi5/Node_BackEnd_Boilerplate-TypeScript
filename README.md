@@ -177,9 +177,9 @@ yarn run send-message # send event message to queue
 - [localhost:8080](http://localhost:8080/) - Adminer Page  
 - [localhost:8081](http://localhost:8081/) - Mongo Express Page  
 - [localhost:8082](http://localhost:8082/) - Redis Commander Page  
-- [localhost:8083](http://localhost:8083/) - Jenkins Page  
-- [localhost:9000](http://localhost:9000/) - SonarQube Page  
-- [localhost:9001](http://localhost:9001/) - Grafana Page  
+- [localhost:9000](http://localhost:9000/) - Jenkins Page  
+- [localhost:9001](http://localhost:9001/) - SonarQube Page  
+- [localhost:9002](http://localhost:9002/) - Grafana Page  
 
 ___
 

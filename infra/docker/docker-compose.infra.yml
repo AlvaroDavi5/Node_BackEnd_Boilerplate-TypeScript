@@ -1,0 +1,53 @@
+# Docker Compose Version
+version: '3.7'
+
+# Containers
+services:
+
+  # CI
+  pipeline:
+    container_name: CI_Jenkins
+    image: jenkins/jenkins:latest
+    environment:
+      - DOCKER_TLS_CERTDIR=certs
+    ports:
+      - 8083:8080
+    volumes:
+      - ci_volume:/var/jenkins_home
+    networks:
+      - default_network
+
+  # Code Quality
+  quality:
+    container_name: Quality_SonarQube
+    image: sonarqube:latest
+    environment:
+      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+    ports:
+      - 9000:9000
+      - 9092:9092
+    networks:
+      - default_network
+      - monitoring_network
+
+  # Monitoring
+  monitor:
+    container_name: Monitoring_Grafana
+    image: grafana/grafana:latest
+    ports:
+      - 9001:3000
+    networks:
+      - monitoring_network
+
+# Networks for Containers
+networks:
+  default_network:
+    driver: bridge
+  monitoring_network:
+    driver: bridge
+
+# Volumes for Containers
+volumes:
+  ci_volume:
+    name: ci_volume
+    driver: local

@@ -127,32 +127,9 @@ services:
       - ${TMPDIR:-/tmp/localstack}:/var/lib/localstack
       - /var/run/docker.sock:/var/run/docker.sock
 
-  # Code Quality
-  quality:
-    container_name: Quality_SonarQube
-    image: sonarqube:latest
-    environment:
-      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
-    ports:
-      - 9000:9000
-      - 9092:9092
-    networks:
-      - default_network
-
-  # Monitoring
-  monitor:
-    container_name: Monitoring_Grafana
-    image: grafana/grafana:latest
-    ports:
-      - 9001:3000
-    networks:
-      - monitoring_network
-
 # Networks for Containers
 networks:
   default_network:
-    driver: bridge
-  monitoring_network:
     driver: bridge
 
 # Volumes for Containers

@@ -1,6 +1,6 @@
 import { ConfigService } from '@nestjs/config';
-import S3Client from './S3Client';
 import { configServiceMock, loggerProviderMock } from '@dev/mocks/mockedModules';
+import S3Client from './S3Client';
 
 
 export default (bucketName: string): void => {

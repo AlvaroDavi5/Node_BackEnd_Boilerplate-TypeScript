@@ -9,6 +9,13 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { GraphQLFormattedError } from 'graphql';
 import { join } from 'path';
+import KnownExceptionFilter from '@api/filters/KnownException.filter';
+import RequestRateConstants from '@common/constants/RequestRate.constants';
+import { EnvironmentsEnum } from '@common/enums/environments.enum';
+import CommonModule from '@common/common.module';
+import AppModule from '@app/app.module';
+import EventsModule from '@events/events.module';
+import GraphQlModule from '@graphql/graphql.module';
 import envsConfig from './configs/envs.config';
 import LifecycleService from './start/Lifecycle.service';
 import Exceptions from './errors/Exceptions';
@@ -24,13 +31,6 @@ import CognitoClient from './infra/integration/aws/Cognito.client';
 import RestMockedServiceProvider from './infra/providers/RestMockedService.provider';
 import SyncCronJob from './cron/jobs/SyncCron.job';
 import SyncCronTask from './cron/tasks/SyncCron.task';
-import KnownExceptionFilter from '@api/filters/KnownException.filter';
-import RequestRateConstants from '@common/constants/RequestRate.constants';
-import { EnvironmentsEnum } from '@common/enums/environments.enum';
-import CommonModule from '@common/common.module';
-import AppModule from '@app/app.module';
-import EventsModule from '@events/events.module';
-import GraphQlModule from '@graphql/graphql.module';
 
 
 const { application: appConfigs } = envsConfig();

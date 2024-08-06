@@ -4,11 +4,11 @@ import { ConfigService } from '@nestjs/config';
 import { createLogger, Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import { dataParserHelperMock } from '@dev/mocks/mockedModules';
 import {
 	LoggerInterface, LogLevelEnum, MetadataInterface,
 	getLoggerOptions, getDefaultFormat, getMessageFormatter
 } from './logger';
-import { dataParserHelperMock } from '@dev/mocks/mockedModules';
 
 
 @Injectable({ scope: Scope.TRANSIENT })

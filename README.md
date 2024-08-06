@@ -185,8 +185,6 @@ ___
 
 ### TO DO
 
-- **Style**
-	- [ ] Review import order (src, tests, scripts, root)
 - **Integrations**
 	- [Kafka](#to-do)
 - **SQL**

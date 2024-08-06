@@ -185,12 +185,10 @@ ___
 
 ### TO DO
 
-- **Integrations**
-	- [Kafka](#to-do)
 - **SQL**
-	- [ ] UUID Fields
 	- [ ] Manual Queries
 	- [ ] Index
+	- [ ] Views
 	- [ ] Transactions
 - **Clustering**
 	- [x] Clusters
@@ -198,52 +196,75 @@ ___
 		- [ ] Load Balancing
 - **CI/CD**
 	- [ ] Jenkins
-	- [x] GitHub Actions
 - **Deployment**
 	- [ ] Heroku
-- **Packaging**
-	- Infra Utils Lib Package
 - **Tests**
 	* _Integration_
-		- [ ] Configs
-		- Modules
-			- Core
-				- Infra
-					- [ ] Database
-					- [ ] Data
-					- [ ] Cache
-					- [ ] Cron Tasks
-					- [ ] Logging
-					- Integration
-						- [ ] AWS
-						- [ ] REST
-			- App
-				- [ ] Repositories
-			- Events
-				- [ ] Queue Handler
-					- [ ] Handlers Schemas
-				- [ ] Websocket Guards
-				- [ ] Websocket Server
-				- [ ] Websocket Client
-	* _End-to-End_
-		- Modules
-			- Core
-				- Infra
-					- [ ] Database Connection
-					- [ ] Data Connection
-					- [ ] Cache Connection
-					- Integration
-						- [ ] AWS Connection
-					- [ ] Cron Jobs
-					- [ ] Start
-			- API
-				- [ ] Guards
+		- [ ] Modules
+			- [ ] API
+				- [ ] Controllers
+				- [ ] DTO
 				- [ ] Pipes
 				- [ ] Schemas
-				- [x] Controllers
-			- Events
-				- [ ] Queue Consumer
-				- [ ] Queue Producer
-				- [ ] Websocket Gateway
-			- Reports
+			- [ ] App
+				- [ ] API
+					- [ ] Controllers
+					- [ ] DTO
+					- [ ] Pipes
+					- [ ] Schemas
+				- [ ] Repositories
 				- [ ] Services
+			- [ ] Core
+				- [ ] Configs
+				- [ ] Cron
+					- [ ] Tasks
+				- [ ] Infra
+						- [ ] Models
+						- [ ] Repositories
+					- [ ] Integration
+						- [ ] Rest
+				- [ ] Logging
+				- [ ] Start
+			- [ ] Domain
+			- [ ] Events
+				- [ ] Queue
+					- [ ] Handlers
+						- [ ] Schemas
+				- [ ] Websocket
+			- [ ] Graphql
+					- [ ] DTO
+					- [ ] Services
+	* _End-to-End_
+		- [ ] Modules
+			- [ ] API
+				- [ ] Controllers
+				- [ ] Filters
+				- [ ] Guards
+				- [ ] Middlewares
+			- [ ] App
+				- [ ] API
+					- [ ] controllers
+			- [ ] Core
+				- [ ] Cron
+					- [ ] Jobs
+				- [ ] Infra
+					- [ ] Cache
+					- [ ] Data
+					- [ ] Database
+						- [ ] Models
+						- [ ] Repositories
+					- [ ] Integration
+						- [ ] AWS
+					- [ ] Providers
+			- [ ] Domain
+			- [ ] Events
+				- [ ] Queue
+					- [ ] Consumers
+					- [ ] Producers
+				- [ ] Websocket
+					- [ ] Client
+					- [ ] Guards
+					- [ ] Server
+			- [ ] Graphql
+					- [ ] DTO
+					- [ ] Resolvers

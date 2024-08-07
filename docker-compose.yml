@@ -153,12 +153,13 @@ services:
       - default_network
 
   # Monitoring
-  monitor:
+  graph_monitor:
     container_name: Monitoring_Grafana
     image: grafana/grafana:latest
     ports:
       - 9002:3000
     networks:
+      - default_network
       - monitoring_network
 
 # Networks for Containers

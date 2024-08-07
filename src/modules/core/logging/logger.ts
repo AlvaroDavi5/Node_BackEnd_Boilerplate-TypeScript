@@ -29,7 +29,8 @@ export interface MetadataInterface {
 
 export function getMessageFormatter(parser: (data: unknown) => string) {
 	return format.printf((info) => {
-		const { level, message, timestamp, stack, context, meta } = info;
+		const { message, timestamp, stack, context, meta } = info;
+		const level = format.colorize().colorize(info.level, info.level.toUpperCase());
 		const logContext = (context || meta?.context) ?? 'DefaultContext';
 		const requestId = meta?.requestId;
 		const logStack = stack ?? meta?.stack;
@@ -66,14 +67,11 @@ export function getLoggerOptions(serviceName: string, environment: string, conte
 		},
 		transports: [
 			new transports.Console({
-				level: 'debug', // error,warn,info,debug
-				format: format.combine(
-					format.colorize(),
-					defaultFormat,
-				),
+				level: LogLevelEnum.DEBUG, // error,warn,info,debug
+				format: defaultFormat,
 			}),
 			new transports.File({
-				level: 'info',
+				level: LogLevelEnum.INFO,
 				filename: logsPath,
 			}),
 		],

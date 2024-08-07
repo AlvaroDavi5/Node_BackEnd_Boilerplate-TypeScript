@@ -25,18 +25,15 @@ if [ ! -e .env -a "$IS_ON_CONTAINER" != "TRUE" ]; then
 	source .env;
 fi
 
-BUILD_COMMAND='yarn run build'; # default script command
-EXEC_COMMAND='yarn run start:prod';
+EXEC_COMMAND='start:prod'; # default script command
 NODE_ENV=${NODE_ENV:-'dev'}; # default env
 SOCKET_ENV=${SOCKET_ENV:-'enabled'};
 if [ $NODE_ENV != 'prod' ]; then
 	if [ $NODE_ENV = 'test' ]; then
-		BUILD_COMMAND='yarn run build:webpack';
-		EXEC_COMMAND='yarn run start:webpack';
+		EXEC_COMMAND='start:webpack';
 		SHOW_LOGS='true'; # show third-party and backing services logs
 	elif [ $NODE_ENV = 'dev' ]; then
-		BUILD_COMMAND='';
-		EXEC_COMMAND='yarn run start:dev';
+		EXEC_COMMAND='start:dev';
 		SHOW_ERROR_STACK='true'; # show application errors stack
 	fi
 fi;
@@ -44,8 +41,8 @@ fi;
 if command -v yarn &> /dev/null
 then
 	log "Starting Application...";
-	$BUILD_COMMAND;
-	$EXEC_COMMAND;
+	mkdir -p docs;
+	yarn run $EXEC_COMMAND;
 	if [ $? -ne 0 ]; then
 		err "Error starting application.";
 	fi

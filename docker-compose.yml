@@ -27,9 +27,9 @@ services:
       - ./init.sh:/app/init.sh
       - /node_modules
     depends_on:
-      - cache
-      - cloud
       - database
+      - cloud
+      - cache
       - data
 
   # Relational DataBase
@@ -138,7 +138,7 @@ services:
     volumes:
       - ci_volume:/var/jenkins_home
     networks:
-      - default_network
+      - monitoring_network
 
   # Code Quality
   quality:

@@ -65,7 +65,7 @@ export default abstract class AbstractRestClient {
 		}
 
 		try {
-			this.logger.http(`Requesting ${this.serviceName}: [${requestMethod.toUpperCase()}] '${requestEndpoint}'`);
+			this.logger.http(`REQUESTING - ${this.serviceName}: [${requestMethod.toUpperCase()}] '${requestEndpoint}'`);
 			const { data, status, headers } = await requestCaller;
 			return { data, status, headers };
 		} catch (error) {

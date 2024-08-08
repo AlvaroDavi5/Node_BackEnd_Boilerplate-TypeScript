@@ -24,37 +24,42 @@ export interface MetadataInterface {
 	context?: string,
 	requestId?: string,
 	details?: string | object | object[],
-	stack?: string | string[] | object[],
+	stack?: unknown | unknown[],
 }
 
-export function getMessageFormatter(parser: (data: unknown) => string) {
+function getMessageFormatter() {
 	return format.printf((info) => {
-		const { message, timestamp, stack, context, meta } = info;
-		const level = format.colorize().colorize(info.level, info.level.toUpperCase());
+		const { level: logLevel, message, timestamp, stack: errorStack, context, meta } = info;
+		const level = format.colorize().colorize(logLevel, logLevel.toUpperCase());
 		const logContext = (context || meta?.context) ?? 'DefaultContext';
 		const requestId = meta?.requestId;
-		const logStack = stack ?? meta?.stack;
+		const logStack = errorStack ?? meta?.stack;
 
-		let log = `${parser(message)}`;
+		let log = `${dataParserHelperMock.toString(message)}`;
 
 		if (requestId)
 			log += ` - requestId: ${requestId}`;
-		if (logStack)
-			log += `\n${logStack}`;
+		if (logStack) {
+			if (Array.isArray(logStack))
+				logStack.forEach((stack) => {
+					log += `\n${stack}`;
+				});
+			else
+				log += `\n${logStack}`;
+		}
 
 		return `${timestamp} | ${level} [${logContext}]: ${log}`;
 	});
 }
 
-export function getDefaultFormat(stackErrorVisible: boolean, defaultMessageFormatter: any) {
-	return format.combine(
+export function getLoggerOptions(serviceName: string, environment: string, context: string, logsPath: string, showErrorStack: boolean) {
+	const messageFormatter = getMessageFormatter();
+	const defaultFormat = format.combine(
 		format.timestamp(),
-		format.errors({ stack: stackErrorVisible }),
-		defaultMessageFormatter,
+		format.errors({ stack: showErrorStack }),
+		messageFormatter,
 	);
-}
 
-export function getLoggerOptions(serviceName: string, environment: string, context: string, logsPath: string, defaultFormat: any) {
 	return {
 		format: format.combine(
 			defaultFormat,
@@ -67,7 +72,7 @@ export function getLoggerOptions(serviceName: string, environment: string, conte
 		},
 		transports: [
 			new transports.Console({
-				level: LogLevelEnum.DEBUG, // error,warn,info,debug
+				level: LogLevelEnum.DEBUG, // error ← debug
 				format: defaultFormat,
 			}),
 			new transports.File({
@@ -80,34 +85,12 @@ export function getLoggerOptions(serviceName: string, environment: string, conte
 }
 
 export function generateLogger(loggerContext: string): Logger {
-
-	const messageFormatter = format.printf((info) => {
-		const { level, message, timestamp, stack, context, meta } = info;
-		const logContext = (context || meta?.context) ?? 'DefaultContext';
-		const requestId = meta?.requestId;
-		const logStack = stack ?? meta?.stack;
-
-		let log = `${dataParserHelperMock.toString(message)}`;
-
-		if (requestId)
-			log += ` - requestId: ${requestId}`;
-		if (logStack)
-			log += `\n${logStack}`;
-
-		return `${timestamp} | ${level} [${logContext}]: ${log}`;
-	});
-
-	const defaultFormat = getDefaultFormat(
-		(process.env.SHOW_ERROR_STACK ?? 'true') === 'true',
-		messageFormatter,
-	);
-
 	const loggerOptions = getLoggerOptions(
 		(process.env.APP_NAME ?? 'Node Boilerplate'),
 		(process.env.NODE_ENV ?? 'dev'),
 		loggerContext,
 		(process.env.APP_LOGS_PATH ?? './logs/logs.log'),
-		defaultFormat,
+		(process.env.SHOW_ERROR_STACK ?? 'true') === 'true',
 	);
 
 	return createLogger(loggerOptions);

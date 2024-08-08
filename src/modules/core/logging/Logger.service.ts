@@ -4,11 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { createLogger, Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import { dataParserHelperMock } from '@dev/mocks/mockedModules';
-import {
-	LoggerInterface, LogLevelEnum, MetadataInterface,
-	getLoggerOptions, getDefaultFormat, getMessageFormatter
-} from './logger';
+import { LoggerInterface, LogLevelEnum, MetadataInterface, getLoggerOptions } from './logger';
 
 
 @Injectable({ scope: Scope.TRANSIENT })
@@ -27,19 +23,12 @@ export default class LoggerService implements LoggerInterface {
 	) {
 		const applicationConfigs = this.configService.get<ConfigsInterface['application']>('application')!;
 
-		const messageFormatter = getMessageFormatter(this.dataParserHelper.toString);
-
-		const defaultFormat = getDefaultFormat(
-			applicationConfigs.stackErrorVisible,
-			messageFormatter,
-		);
-
 		const loggerOptions = getLoggerOptions(
 			applicationConfigs.name,
 			applicationConfigs.environment,
 			undefined as any,
 			applicationConfigs.logsPath,
-			defaultFormat,
+			applicationConfigs.stackErrorVisible,
 		);
 
 		this.logger = createLogger(loggerOptions);
@@ -68,27 +57,27 @@ export default class LoggerService implements LoggerInterface {
 		const contextName = this.getContextName() ?? inquirerName;
 		this.setContextName(contextName);
 
-		let message = '';
 		const metadata: MetadataInterface = {
 			context: this.getContextName(),
 			requestId: this.getRequestId(),
 		};
 
-		const separator = args.length > 1 ? ' ' : '';
+		const errorStacks: string[] = [];
 		args.forEach((arg: unknown) => {
 			if (arg instanceof Error) {
-				const errorName = arg.name.length > 0 ? `\x1b[0;30m${arg.name}\x1b[0m - ` : '';
-				message += `${errorName}${arg.message}${separator}`;
-				if (arg.stack)
-					metadata.stack = arg.stack;
-			} else if (typeof arg === 'string')
-				message += `${arg}${separator}`;
-			else
-				message += `${this.dataParserHelper.toString(arg)}${separator}`;
+				if (arg.stack) {
+					if (Array.isArray(arg.stack)) {
+						const strStack: string[] = arg.stack.map((stack) => (`\x1b[0;30m${stack}\x1b[0m`));
+						errorStacks.push(...strStack);
+					} else
+						errorStacks.push(`\x1b[0;30m${arg.stack}\x1b[0m`);
+				}
+			}
 		});
+		metadata.stack = errorStacks.length > 0 ? errorStacks : undefined;
 
 		return {
-			message,
+			message: this.dataParserHelper.toString(args),
 			meta: metadata,
 		};
 	}
@@ -162,11 +151,13 @@ export const RequestLoggerProvider: Provider = {
 	inject: [
 		INQUIRER,
 		ConfigService,
+		DataParserHelper,
 	],
 	useFactory: (
 		inquirer: string | object,
 		configService: ConfigService,
-	): LoggerService => new LoggerService(inquirer, configService, dataParserHelperMock as DataParserHelper),
+		dataParserHelper: DataParserHelper,
+	): LoggerService => new LoggerService(inquirer, configService, dataParserHelper),
 
 	durable: false,
 };
@@ -181,11 +172,13 @@ export const SingletonLoggerProvider: Provider = {
 
 	inject: [
 		ConfigService,
+		DataParserHelper,
 	],
 	useFactory: (
 		configService: ConfigService,
+		dataParserHelper: DataParserHelper,
 	): LoggerProviderInterface => ({
-		getLogger: (context: string): LoggerService => new LoggerService(context, configService, dataParserHelperMock as DataParserHelper),
+		getLogger: (context: string): LoggerService => new LoggerService(context, configService, dataParserHelper),
 	}),
 
 	durable: false,

@@ -42,7 +42,7 @@ export const loggerProviderMock: LoggerInterface & {
 
 export const dataParserHelperMock = {
 	toString: (data: unknown): string => {
-		let result: string = '';
+		let result = '';
 
 		switch (typeof data) {
 			case 'bigint':

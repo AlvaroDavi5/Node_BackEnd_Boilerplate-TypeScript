@@ -1,17 +1,24 @@
-{"env":"dev","level":"debug","message":"Created EventsQueueConsumer","service":"Node Boilerplate","timestamp":"2023-10-05T04:16:51.487Z"}
-{"env":"dev","level":"debug","message":"Created SyncCronJob","service":"Node Boilerplate","timestamp":"2023-10-05T04:16:51.491Z"}
-{"env":"dev","level":"debug","message":"Started Websocket Server","service":"Node Boilerplate","timestamp":"2023-10-05T04:16:51.706Z"}
-{"env":"dev","level":"debug","message":"Builded host module","service":"Node Boilerplate","timestamp":"2023-10-05T04:16:51.740Z"}
-{"env":"dev","level":"debug","message":"\n\n\tApp started with PID: 94983 on URL: http://localhost:3000/\n","service":"Node Boilerplate","timestamp":"2023-10-05T04:16:51.755Z"}
-{"env":"dev","level":"info","message":"Client connected: se0lMTJo2LU02wnFAAAB - ","service":"Node Boilerplate","timestamp":"2023-10-05T04:16:51.847Z"}
-{"env":"dev","level":"info","message":"Sended message to queue eventsQueue.fifo","service":"Node Boilerplate","timestamp":"2023-10-05T04:16:51.906Z"}
-{"env":"dev","level":"info","message":"Running SyncCronTask","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:00.014Z"}
-{"env":"dev","level":"info","message":"Database connection has been established successfully","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:00.092Z"}
-{"env":"dev","level":"info","message":"New message received from EventsQueueConsumer","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:02.865Z"}
-{"env":"dev","level":"error","message":"\"payload.event\" is required","name":"contract","options":{},"response":{"error":"Bad Request","message":"\"payload.event\" is required","statusCode":400},"service":"Node Boilerplate","stack":"ValidationError: \"payload.event\" is required","status":400,"timestamp":"2023-10-05T04:17:02.871Z"}
-{"env":"dev","level":"info","message":"REQUESTED - [GET]:{null} /api/check?env=test { \"params\": {} \"query\": {env} \"body\": {test} }","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:14.318Z"}
-{"env":"dev","level":"info","message":"REQUESTED - [GET]:{null} /api/users?size=15 { \"params\": {} \"query\": {size} \"body\": {} }","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:25.359Z"}
-{"env":"dev","level":"warn","message":"Disconnecting websocket clients, stopping crons and destroying cloud integrations","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:46.424Z"}
-{"env":"dev","level":"info","message":"Client disconnected: se0lMTJo2LU02wnFAAAB","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:46.430Z"}
-{"env":"dev","level":"warn","message":"Closing cache and database connections","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:46.437Z"}
-{"env":"dev","level":"warn","message":"Exiting Application","service":"Node Boilerplate","timestamp":"2023-10-05T04:17:46.473Z"}
+{"env":"dev","level":"debug","message":"Created EventsQueueConsumer","meta":{"context":"EventsQueueConsumer"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:10.294Z"}
+{"env":"dev","level":"debug","message":"Created SyncCronJob","meta":{"context":"SyncCronJob"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:11.029Z"}
+{"env":"dev","level":"debug","message":"Started Websocket Server","meta":{"context":"WebSocketServer"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:11.114Z"}
+{"env":"dev","level":"debug","message":"Builded host module","meta":{"context":"LifecycleService"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:11.345Z"}
+{"env":"dev","level":"verbose","message":"\tApp started with PID: 1337045 on URL: http://localhost:3000/","meta":{"context":"LifecycleService"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:11.369Z"}
+{"env":"dev","level":"info","message":"Client connected: wTek0YhL0uB8UDEAAAAB - ","meta":{"context":"WebSocketServer"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:11.653Z"}
+{"env":"dev","level":"info","message":"Sended message to queue eventsQueue.fifo","meta":{"context":"EventsQueueProducer"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:11.747Z"}
+{"context":"CustomThrottlerGuard","env":"dev","level":"verbose","message":"Running guard with 'short' throttler","service":"Node Boilerplate","timestamp":"2024-08-08T03:52:14.447Z"}
+{"context":"CustomThrottlerGuard","env":"dev","level":"verbose","message":"Running guard with 'medium' throttler","service":"Node Boilerplate","timestamp":"2024-08-08T03:52:14.450Z"}
+{"context":"CustomThrottlerGuard","env":"dev","level":"verbose","message":"Running guard with 'long' throttler","service":"Node Boilerplate","timestamp":"2024-08-08T03:52:14.451Z"}
+{"env":"dev","level":"http","message":"REQUESTED - [GET] /api/check {\"pathParams\":\"{}\",\"queryParams\":\"{}\",\"body\":\"{}\"}","meta":{"context":"RequestLoggerMiddleware","requestId":"7a23d68a-3db5-430f-af09-2e74ad4af43f"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:14.445Z"}
+{"env":"dev","level":"info","message":"New message received from EventsQueueConsumer","meta":{"context":"EventsQueueConsumer"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:21.756Z"}
+{"env":"dev","level":"verbose","message":"Validating 'custom' received as 'String'","meta":{"context":"EventsQueueHandler"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:21.758Z"}
+{"env":"dev","level":"info","message":"Emiting event","meta":{"context":"SubscriptionService"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:21.762Z"}
+{"env":"dev","level":"verbose","message":"Running guard to 'emit_private' event for 'wTek0YhL0uB8UDEAAAAB' socket","meta":{"context":"EventsGuard"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:21.765Z"}
+{"env":"dev","level":"info","message":"Emiting message to: new_connections","meta":{"context":"WebSocketServer"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:21.767Z"}
+{"env":"dev","level":"warn","message":"App received signal: SIGINT","meta":{"context":"NestApplication"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:35.881Z"}
+{"env":"dev","level":"info","message":"Client disconnected: wTek0YhL0uB8UDEAAAAB","meta":{"context":"WebSocketServer"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:35.894Z"}
+{"env":"dev","level":"warn","message":"Closing HTTP server, disconnecting websocket clients, stopping crons and destroying cloud integrations","meta":{"context":"LifecycleService"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:35.896Z"}
+{"env":"dev","level":"warn","message":"Stopped SyncCronJob","meta":{"context":"SyncCronJob"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:35.897Z"}
+{"env":"dev","level":"warn","message":"Closing cache and database connections","meta":{"context":"LifecycleService"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:35.903Z"}
+{"env":"dev","level":"error","message":"App received unhandledRejection: \nreason: Error: Connection is closed. \npromise: [object Promise]","meta":{"context":"NestApplication"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:35.912Z"}
+{"env":"dev","level":"warn","message":"Closing HTTP server, disconnecting websocket clients, stopping crons and destroying cloud integrations","meta":{"context":"LifecycleService"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:35.914Z"}
+{"env":"dev","level":"warn","message":"Stopped SyncCronJob","meta":{"context":"SyncCronJob"},"service":"Node Boilerplate","timestamp":"2024-08-08T03:52:35.914Z"}

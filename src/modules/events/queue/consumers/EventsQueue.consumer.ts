@@ -50,9 +50,9 @@ export default class EventsQueueConsumer {
 		@Inject(SINGLETON_LOGGER_PROVIDER)
 		private readonly loggerProvider: LoggerProviderInterface,
 	) {
-		this.name = EventsQueueConsumer.name;
-		this.logger = this.loggerProvider.getLogger(this.name);
-		this.logger.debug(`Created ${this.name}`);
+		this.name = eventsQueueName;
+		this.logger = this.loggerProvider.getLogger(EventsQueueConsumer.name);
+		this.logger.debug(`Created ${this.name} consumer`);
 	}
 
 	@SqsMessageHandler(eventsQueueName, true)
@@ -95,14 +95,14 @@ export default class EventsQueueConsumer {
 
 	@SqsConsumerEventHandler(eventsQueueName, ProcessEventsEnum.ERROR)
 	public onError(error: Error): void {
-		this.logger.error(`Event error from queue. Error: ${error.message}`);
+		this.logger.error(`Consume error from ${this.name}: ${error.message}`);
 		this.errorsCount += 1;
 		this.checkError(error);
 	}
 
 	@SqsConsumerEventHandler(eventsQueueName, ProcessEventsEnum.TIMEOUT_ERROR)
 	public onTimeoutError(error: Error): void {
-		this.logger.error(`Timeout error from queue. Error: ${error.message}`);
+		this.logger.error(`Timeout error from ${this.name}: ${error.message}`);
 		this.errorsCount += 1;
 		this.checkError(error);
 	}

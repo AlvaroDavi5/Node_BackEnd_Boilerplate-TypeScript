@@ -61,7 +61,7 @@ export const dataParserHelperMock = {
 				if (!data)
 					result = '';
 				else if (Array.isArray(data))
-					result = data.join(', ');
+					result = `[ ${data.join(', ')} ]`;
 				else if (data instanceof Error)
 					result = data.toString();
 				else

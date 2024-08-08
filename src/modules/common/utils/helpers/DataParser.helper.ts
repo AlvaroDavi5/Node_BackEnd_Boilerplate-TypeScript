@@ -25,7 +25,7 @@ export default class DataParserHelper {
 					result = '';
 				else if (Array.isArray(data)) {
 					const parsedData = data.map((d) => this.toString(d));
-					result = parsedData.join(', ');
+					result = `[ ${parsedData.join(', ')} ]`;
 				} else if (data instanceof Error)
 					result = data.toString();
 				else

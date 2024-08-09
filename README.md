@@ -55,6 +55,7 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 - **Docker**: Services isolation and process resources management with containers;
 - **Kubernetes**: Containers orchestration system;
 - **SonarQube**: Test coverage and code quality analyzer;
+- **Grafana**: Containers data visualization and dashboards;
 - **Winston**: Custom logger with transports;
 - **Joi**: Schema validator library;
 - **Jest**: Testing Framework;

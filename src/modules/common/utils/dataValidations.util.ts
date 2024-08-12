@@ -20,11 +20,11 @@ export function isEmpty(data: unknown): boolean {
 	return true;
 }
 
-export function getObjKeys<OT = any>(obj: OT): [keyof OT] {
+export function getObjKeys<OT = any>(obj: OT): Array<keyof OT> {
 	if (isNullOrUndefined(obj))
-		return [] as unknown as [keyof OT];
+		return [] as unknown as Array<keyof OT>;
 
-	return Object.keys(obj as any) as [keyof OT];
+	return Object.keys(obj as any) as Array<keyof OT>;
 }
 
 export function getObjValues<VT = any>(obj: unknown): VT[] {

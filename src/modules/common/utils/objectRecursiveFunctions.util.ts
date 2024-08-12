@@ -1,12 +1,12 @@
 import { isNullOrUndefined, getObjKeys } from './dataValidations.util';
 
 
-export function checkFieldsExistence<OT extends object = any>(obj: OT, fieldsToApply: [keyof OT]): boolean {
+export function checkFieldsExistence<OT extends object = any>(obj: OT, fieldsToApply: Array<keyof OT>): boolean {
 	if (isNullOrUndefined(obj))
 		return false;
 
 	const callback = (payload: OT): boolean => {
-		const payloadKeys = getObjKeys(payload);
+		const payloadKeys = getObjKeys<OT>(payload);
 		return payloadKeys.some((key): boolean => fieldsToApply.includes(key));
 	};
 
@@ -15,8 +15,8 @@ export function checkFieldsExistence<OT extends object = any>(obj: OT, fieldsToA
 	if (result === true)
 		return result;
 
-	const objectKey = getObjKeys(obj);
-	objectKey.forEach((key) => {
+	const objectKeys = getObjKeys<OT>(obj);
+	objectKeys.forEach((key) => {
 		const value = obj[key as keyof OT];
 
 		if (value && typeof value === 'object')
@@ -26,7 +26,7 @@ export function checkFieldsExistence<OT extends object = any>(obj: OT, fieldsToA
 	return result;
 }
 
-export function replaceFields<OT extends object = any>(obj: OT, fieldsToApply: [keyof OT], valueToReplace: unknown): OT | null {
+export function replaceFields<OT extends object = any>(obj: OT, fieldsToApply: Array<keyof OT>, valueToReplace: unknown): OT | null {
 	if (isNullOrUndefined(obj))
 		return null;
 

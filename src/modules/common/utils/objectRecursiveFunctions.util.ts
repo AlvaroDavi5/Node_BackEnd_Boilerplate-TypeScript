@@ -1,7 +1,7 @@
 import { isNullOrUndefined, getObjKeys } from './dataValidations.util';
 
 
-export function checkFieldsExistence<OT extends object = any>(obj: OT, fieldsToApply: Array<keyof OT>): boolean {
+export function checkFieldsExistence<OT extends object = any>(obj: OT, fieldsToApply: (keyof OT)[]): boolean {
 	if (isNullOrUndefined(obj))
 		return false;
 
@@ -26,7 +26,7 @@ export function checkFieldsExistence<OT extends object = any>(obj: OT, fieldsToA
 	return result;
 }
 
-export function replaceFields<OT extends object = any>(obj: OT, fieldsToApply: Array<keyof OT>, valueToReplace: unknown): OT | null {
+export function replaceFields<OT extends object = any>(obj: OT, fieldsToApply: (keyof OT)[], valueToReplace: unknown): OT | null {
 	if (isNullOrUndefined(obj))
 		return null;
 

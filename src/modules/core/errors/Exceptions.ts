@@ -1,13 +1,11 @@
 import { Injectable, HttpException, HttpExceptionOptions } from '@nestjs/common';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
-import HttpConstants from '@common/constants/Http.constants';
+import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
 @Injectable()
 export default class Exceptions {
-	private readonly httpConstants: HttpConstants = new HttpConstants();
-
 	private parseToString(value?: unknown): string | undefined {
 		if (value === undefined || value === null || typeof value === 'function')
 			return undefined;
@@ -47,7 +45,7 @@ export default class Exceptions {
 	public [ExceptionsEnum.CONTRACT](error: ErrorInterface): HttpException {
 		return this.buildException(
 			ExceptionsEnum.CONTRACT,
-			this.httpConstants.status.BAD_REQUEST,
+			HttpStatusEnum.BAD_REQUEST,
 			error.name ?? 'Bad Request',
 			error.message, error.details, error.cause, error.stack,
 		);
@@ -56,7 +54,7 @@ export default class Exceptions {
 	public [ExceptionsEnum.BUSINESS](error: ErrorInterface): HttpException {
 		return this.buildException(
 			ExceptionsEnum.BUSINESS,
-			this.httpConstants.status.FORBIDDEN,
+			HttpStatusEnum.FORBIDDEN,
 			error.name ?? 'Forbidden',
 			error.message, error.details, error.cause, error.stack,
 		);
@@ -65,7 +63,7 @@ export default class Exceptions {
 	public [ExceptionsEnum.INVALID_TOKEN](error: ErrorInterface): HttpException {
 		return this.buildException(
 			ExceptionsEnum.INVALID_TOKEN,
-			this.httpConstants.status.INVALID_TOKEN,
+			HttpStatusEnum.INVALID_TOKEN,
 			error.name ?? 'Invalid Token',
 			error.message, error.details, error.cause, error.stack,
 		);
@@ -74,7 +72,7 @@ export default class Exceptions {
 	public [ExceptionsEnum.UNAUTHORIZED](error: ErrorInterface): HttpException {
 		return this.buildException(
 			ExceptionsEnum.UNAUTHORIZED,
-			this.httpConstants.status.UNAUTHORIZED,
+			HttpStatusEnum.UNAUTHORIZED,
 			error.name ?? 'Unauthorized',
 			error.message, error.details, error.cause, error.stack,
 		);
@@ -83,7 +81,7 @@ export default class Exceptions {
 	public [ExceptionsEnum.TOO_MANY_REQUESTS](error: ErrorInterface): HttpException {
 		return this.buildException(
 			ExceptionsEnum.TOO_MANY_REQUESTS,
-			this.httpConstants.status.TOO_MANY_REQUESTS,
+			HttpStatusEnum.TOO_MANY_REQUESTS,
 			error.name ?? 'Too Many Requests',
 			error.message, error.details, error.cause, error.stack,
 		);
@@ -92,7 +90,7 @@ export default class Exceptions {
 	public [ExceptionsEnum.CONFLICT](error: ErrorInterface): HttpException {
 		return this.buildException(
 			ExceptionsEnum.CONFLICT,
-			this.httpConstants.status.CONFLICT,
+			HttpStatusEnum.CONFLICT,
 			error.name ?? 'Conflict',
 			error.message, error.details, error.cause, error.stack,
 		);
@@ -101,7 +99,7 @@ export default class Exceptions {
 	public [ExceptionsEnum.NOT_FOUND](error: ErrorInterface): HttpException {
 		return this.buildException(
 			ExceptionsEnum.NOT_FOUND,
-			this.httpConstants.status.NOT_FOUND,
+			HttpStatusEnum.NOT_FOUND,
 			error.name ?? 'Not Found',
 			error.message, error.details, error.cause, error.stack,
 		);
@@ -110,7 +108,7 @@ export default class Exceptions {
 	public [ExceptionsEnum.INTEGRATION](error: ErrorInterface): HttpException {
 		return this.buildException(
 			ExceptionsEnum.INTEGRATION,
-			this.httpConstants.status.SERVICE_UNAVAILABLE,
+			HttpStatusEnum.SERVICE_UNAVAILABLE,
 			error.name ?? 'Service Unavailable',
 			error.message, error.details, error.cause, error.stack,
 		);
@@ -119,7 +117,7 @@ export default class Exceptions {
 	public [ExceptionsEnum.INTERNAL](error: ErrorInterface): HttpException {
 		return this.buildException(
 			ExceptionsEnum.INTERNAL,
-			this.httpConstants.status.INTERNAL_SERVER_ERROR,
+			HttpStatusEnum.INTERNAL_SERVER_ERROR,
 			error.name ?? 'Internal Server Error',
 			error.message, error.details, error.cause, error.stack,
 		);

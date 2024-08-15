@@ -1,7 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { AxiosError } from 'axios';
 import Exceptions from '@core/errors/Exceptions';
-import HttpConstants from '@common/constants/Http.constants';
+import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
@@ -9,34 +9,33 @@ type exceptionGeneratorType = (error: ErrorInterface) => HttpException;
 
 export default function externalErrorParser(error: any): HttpException {
 	const exceptions = new Exceptions();
-	const { status } = new HttpConstants();
 
 	const exceptionSelector = (statusCode: number | undefined): exceptionGeneratorType => {
 		let exceptionGenerator: exceptionGeneratorType;
 
 		switch (statusCode) {
-			case status.BAD_REQUEST:
+			case HttpStatusEnum.BAD_REQUEST:
 				exceptionGenerator = exceptions.contract;
 				break;
-			case status.FORBIDDEN:
+			case HttpStatusEnum.FORBIDDEN:
 				exceptionGenerator = exceptions.business;
 				break;
-			case status.INVALID_TOKEN:
+			case HttpStatusEnum.INVALID_TOKEN:
 				exceptionGenerator = exceptions.invalidToken;
 				break;
-			case status.UNAUTHORIZED:
+			case HttpStatusEnum.UNAUTHORIZED:
 				exceptionGenerator = exceptions.unauthorized;
 				break;
-			case status.TOO_MANY_REQUESTS:
+			case HttpStatusEnum.TOO_MANY_REQUESTS:
 				exceptionGenerator = exceptions.manyRequests;
 				break;
-			case status.CONFLICT:
+			case HttpStatusEnum.CONFLICT:
 				exceptionGenerator = exceptions.conflict;
 				break;
-			case status.NOT_FOUND:
+			case HttpStatusEnum.NOT_FOUND:
 				exceptionGenerator = exceptions.notFound;
 				break;
-			case status.SERVICE_UNAVAILABLE:
+			case HttpStatusEnum.SERVICE_UNAVAILABLE:
 				exceptionGenerator = exceptions.integration;
 				break;
 			default:

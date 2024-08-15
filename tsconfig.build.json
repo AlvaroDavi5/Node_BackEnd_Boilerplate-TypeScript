@@ -3,11 +3,12 @@
 	"extends": "./tsconfig.base.json",
 	"include": [
 		"src/**/*.ts",
-		"src/**/*.js"
+		"src/**/*.js",
+		"build"
 	],
 	"exclude": [
 		"node_modules",
-		"build",
+		"scripts",
 		"tests",
 		"**/*.test.ts",
 		"**/*.spec.ts",

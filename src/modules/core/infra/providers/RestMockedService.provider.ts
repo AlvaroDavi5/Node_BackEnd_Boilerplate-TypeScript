@@ -30,10 +30,7 @@ export default class RestMockedServiceProvider extends AbstractRestClient {
 			params: { [key: string]: unknown },
 			query: { [key: string]: unknown },
 			body: { [key: string]: unknown },
-		}>({
-			requestMethod: 'get',
-			requestEndpoint: 'mockedService/api/check',
-		});
+		}>('get', 'mockedService/api/check');
 
 		if (request.status !== 200)
 			return request.error;

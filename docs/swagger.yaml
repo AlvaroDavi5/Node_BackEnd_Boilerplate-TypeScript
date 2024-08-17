@@ -607,13 +607,13 @@ paths:
                     updatedAt: null
                     newConnectionsListen: false
                     databaseId: 6561299695e69d3b19ddf979
-                    createdAt: 2024-08-03T20:55:04.843Z
+                    createdAt: 2024-08-17T03:55:19.886Z
                   - subscriptionId: WKt2b2RWrMXogTfKAAAD
                     clientId: localDev#1
                     updatedAt: null
                     newConnectionsListen: true
                     databaseId: 65612ccebff9f0fbcd58256a
-                    createdAt: 2024-08-03T20:55:04.843Z
+                    createdAt: 2024-08-17T03:55:19.887Z
                 default: []
         '400':
           description: Invalid request format (body, query, params...).
@@ -862,7 +862,7 @@ paths:
           schema:
             format: date-time
             nullable: false
-            default: '2024-08-03T20:55:04.913Z'
+            default: '2024-08-17T03:55:20.070Z'
             type: string
       responses:
         '200':
@@ -1039,7 +1039,7 @@ components:
             defaultTheme: DEFAULT
             updatedAt: null
             deletedAt: null
-            createdAt: 2024-08-03T20:55:04.101Z
+            createdAt: 2024-08-17T03:55:18.031Z
           default: null
           nullable: true
           description: User preference
@@ -1121,7 +1121,7 @@ components:
                 defaultTheme: DEFAULT
                 updatedAt: null
                 deletedAt: null
-                createdAt: 2024-08-03T20:55:04.128Z
+                createdAt: 2024-08-17T03:55:18.062Z
               updatedAt: 2024-06-10T03:52:50.885Z
               deletedAt: null
               deletedBy: null

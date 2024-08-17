@@ -14,8 +14,8 @@ export interface ConfigsInterface {
 		nestDevToolsPort: number, // dev tools port
 		url: string, // app url
 		socketEnv: boolean, // enable websocket
-		stackErrorVisible: boolean, // enable app error stack
-		logging: boolean, // enable third-party and backing services logging
+		showDetailedLogs: boolean, // enable app error stack and debug levels logging
+		showExternalLogs: boolean, // enable third-party and backing services logging
 		logsPath: string, // logs file path
 	},
 	// ? DataBase Backing-Service
@@ -141,8 +141,8 @@ export default (): ConfigsInterface => ({
 		nestDevToolsPort: parseInt(process.env.NESTDEV_PORT ?? '8000', 10),
 		url: process.env.APP_URL ?? 'http://localhost:3000/',
 		socketEnv: process.env.SOCKET_ENV === 'enabled',
-		stackErrorVisible: process.env.SHOW_ERROR_STACK === 'true',
-		logging: process.env.SHOW_LOGS === 'true',
+		showDetailedLogs: process.env.SHOW_DETAILED_LOGS === 'true',
+		showExternalLogs: process.env.SHOW_EXTERNAL_LOGS === 'true',
 		logsPath: process.env.APP_LOGS_PATH ?? './logs/logs.log',
 	},
 	database: {

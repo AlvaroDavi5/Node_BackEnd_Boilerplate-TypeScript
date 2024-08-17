@@ -8,9 +8,9 @@ import SchemaValidator from '@common/utils/validators/SchemaValidator.validator'
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import LoggerService, { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
-import eventSchema, { EventSchemaInterface } from './schemas/event.schema';
 import { EventsEnum } from '@domain/enums/events.enum';
 import { WebSocketRoomsEnum } from '@domain/enums/webSocketEvents.enum';
+import eventSchema, { EventSchemaInterface } from './schemas/event.schema';
 
 
 @Injectable()

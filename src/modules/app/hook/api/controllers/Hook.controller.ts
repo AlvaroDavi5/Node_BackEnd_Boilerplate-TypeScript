@@ -14,6 +14,7 @@ import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
+import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 import HttpConstants from '@common/constants/Http.constants';
 
 
@@ -59,7 +60,7 @@ export default class HookController {
 					statusMessage: response.statusMessage ?? this.httpConstants.messages.created('Hook event register'),
 				};
 			} else {
-				response.status(this.httpConstants.status.CONFLICT);
+				response.status(HttpStatusEnum.CONFLICT);
 				return {
 					statusMessage: response.statusMessage ?? this.httpConstants.messages.notCreated('Hook event register'),
 				};

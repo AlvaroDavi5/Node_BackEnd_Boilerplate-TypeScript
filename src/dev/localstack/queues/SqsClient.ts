@@ -21,7 +21,7 @@ export default class SqsClient {
 		private readonly dataParserHelper: { toString: (data: unknown) => string },
 	) {
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
-		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
+		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
 		const {
 			region, endpoint, sessionToken,
 			accessKeyId, secretAccessKey,
@@ -37,7 +37,7 @@ export default class SqsClient {
 				secretAccessKey: String(secretAccessKey),
 				sessionToken,
 			},
-			logger: logging ? this.logger : undefined,
+			logger: showExternalLogs ? this.logger : undefined,
 		};
 		this.messageGroupId = 'DefaultGroup';
 		this.sqsClient = new SQSClient(this.awsConfig);

@@ -37,10 +37,10 @@ export default abstract class AbstractRestClient {
 		});
 	}
 
-	protected async makeRequest<RI = unknown>({ requestMethod, requestEndpoint, body, query }: {
+	protected async makeRequest<RI = unknown>(
 		requestMethod: requestMethodType, requestEndpoint: string,
-		body?: { [key: string]: unknown }, query?: { [key: string]: unknown },
-	}): Promise<RestClientResponseInterface<RI, Error>> {
+		query?: { [key: string]: unknown }, body?: { [key: string]: unknown },
+	): Promise<RestClientResponseInterface<RI, Error>> {
 		let requestCaller: Promise<AxiosResponse<RI, unknown>>;
 
 		switch (requestMethod) {
@@ -65,7 +65,7 @@ export default abstract class AbstractRestClient {
 		}
 
 		try {
-			this.logger.http(`Requesting ${this.serviceName}: [${requestMethod.toUpperCase()}] '${requestEndpoint}'`);
+			this.logger.http(`REQUESTING - ${this.serviceName}: [${requestMethod.toUpperCase()}] '${requestEndpoint}'`);
 			const { data, status, headers } = await requestCaller;
 			return { data, status, headers };
 		} catch (error) {

@@ -4,17 +4,6 @@ import HttpConstants from '@common/constants/Http.constants';
 describe('Modules :: Common :: Constants :: HttpConstants', () => {
 	const httpConstants = new HttpConstants();
 
-	describe('# Status Code', () => {
-		test('Should return the same value', () => {
-			expect(httpConstants.status.OK).toBe(200);
-			expect(httpConstants.status.BAD_REQUEST).toBe(400);
-			expect(httpConstants.status.UNAUTHORIZED).toBe(401);
-			expect(httpConstants.status.FORBIDDEN).toBe(403);
-			expect(httpConstants.status.NOT_FOUND).toBe(404);
-			expect(httpConstants.status.SERVICE_UNAVAILABLE).toBe(503);
-		});
-	});
-
 	describe('# Messages', () => {
 		test('Should return the same value', () => {
 			expect(httpConstants.messages.found('Resource')).toBe('Resource founded successfully.');

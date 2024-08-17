@@ -18,12 +18,12 @@ export default class RedisClient {
 		private readonly dataParserHelper: DataParserHelper,
 	) {
 		const { host, port } = this.configService.get<ConfigsInterface['cache']['redis']>('cache.redis')!;
-		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
+		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
 
 		this.redisClient = new IORedis({
 			host: String(host),
 			port: Number(port),
-			showFriendlyErrorStack: logging,
+			showFriendlyErrorStack: showExternalLogs,
 			maxRetriesPerRequest: 3,
 		});
 

@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ConfigsInterface } from '@core/configs/envs.config';
-import AbstractRestClient from './AbstractRestClient.client';
 import LoggerService from '@core/logging/Logger.service';
 import catchError from '@common/utils/externalErrorParser.util';
 import { requestMethodType } from '@shared/internal/types/restClientTypes';
 import { RestClientResponseInterface } from '@shared/external/interfaces/RestClientInterface';
 import { MockObservableInterface } from '../mockObservable';
+import AbstractRestClient from './AbstractRestClient.client';
 
 
 @Injectable()

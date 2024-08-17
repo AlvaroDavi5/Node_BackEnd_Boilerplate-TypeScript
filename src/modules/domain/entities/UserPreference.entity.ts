@@ -123,7 +123,13 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 		if (!getObjValues<ThemesEnum>(ThemesEnum).includes(theme as ThemesEnum))
 			return;
 
-		this.defaultTheme = theme as ThemesEnum;
+		const themeMapper: Record<string, ThemesEnum> = {
+			[ThemesEnum.DEFAULT]: ThemesEnum.DEFAULT,
+			[ThemesEnum.LIGHT]: ThemesEnum.LIGHT,
+			[ThemesEnum.DARK]: ThemesEnum.DARK,
+		};
+
+		this.defaultTheme = themeMapper[theme.toUpperCase()];
 		this.updatedAt = this.getDate();
 	}
 

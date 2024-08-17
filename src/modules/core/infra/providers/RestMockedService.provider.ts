@@ -30,10 +30,7 @@ export default class RestMockedServiceProvider extends AbstractRestClient {
 			params: { [key: string]: unknown },
 			query: { [key: string]: unknown },
 			body: { [key: string]: unknown },
-		}>({
-			requestMethod: 'get',
-			requestEndpoint: 'mockedService/api/check',
-		});
+		}>('get', 'mockedService/api/check');
 
 		if (request.status !== 200)
 			return request.error;
@@ -47,7 +44,7 @@ export default class RestMockedServiceProvider extends AbstractRestClient {
 		const requestFunction = this.client[String(requestMethod) as requestMethodType];
 
 		try {
-			this.logger.http(`Requesting ${this.serviceName}: [${requestMethod.toUpperCase()}] '${requestEndpoint}' to pull hook`);
+			this.logger.http(`REQUESTING - ${this.serviceName}: [${requestMethod.toUpperCase()}] '${requestEndpoint}' to pull hook`);
 			const { data, status, headers } = await requestFunction<RI>(requestEndpoint,
 				{ data: body, params: queryParams },
 				{ data: body, params: queryParams });

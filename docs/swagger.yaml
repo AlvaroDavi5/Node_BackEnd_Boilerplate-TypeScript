@@ -2,7 +2,7 @@ openapi: 3.0.0
 info:
   title: Node Back-End Boilerplate
   description: Node.js Boilerplate for Back-End using TypeScript - API
-  version: 4.3.0
+  version: 4.6.0
   contact:
     name: Álvaro Alves
     url: https://github.com/AlvaroDavi5
@@ -220,7 +220,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/UserEntityList'
+                $ref: '#/components/schemas/UserListEntity'
         '400':
           description: Invalid request format (body, query, params...).
           content:
@@ -602,18 +602,18 @@ paths:
             application/json:
               schema:
                 example:
-                  - databaseId: 6561299695e69d3b19ddf979
-                    subscriptionId: 5-aUrSIYE7dSVsS8AAAB
+                  - subscriptionId: 5-aUrSIYE7dSVsS8AAAB
                     clientId: null
                     updatedAt: null
                     newConnectionsListen: false
-                    createdAt: 2024-06-12T03:06:32.057Z
-                  - databaseId: 65612ccebff9f0fbcd58256a
-                    subscriptionId: WKt2b2RWrMXogTfKAAAD
+                    databaseId: 6561299695e69d3b19ddf979
+                    createdAt: 2024-08-17T03:55:19.886Z
+                  - subscriptionId: WKt2b2RWrMXogTfKAAAD
                     clientId: localDev#1
                     updatedAt: null
                     newConnectionsListen: true
-                    createdAt: 2024-06-12T03:06:32.057Z
+                    databaseId: 65612ccebff9f0fbcd58256a
+                    createdAt: 2024-08-17T03:55:19.887Z
                 default: []
         '400':
           description: Invalid request format (body, query, params...).
@@ -862,7 +862,7 @@ paths:
           schema:
             format: date-time
             nullable: false
-            default: '2024-04-17T17:36:48.666Z'
+            default: '2024-08-17T03:55:20.070Z'
             type: string
       responses:
         '200':
@@ -981,7 +981,6 @@ components:
       required:
         - imagePath
         - defaultTheme
-        - updatedAt
         - deletedAt
     UserEntity:
       type: object
@@ -1040,7 +1039,7 @@ components:
             defaultTheme: DEFAULT
             updatedAt: null
             deletedAt: null
-            createdAt: 2024-06-12T03:06:31.260Z
+            createdAt: 2024-08-17T03:55:18.031Z
           default: null
           nullable: true
           description: User preference
@@ -1082,10 +1081,9 @@ components:
         - document
         - fu
         - preference
-        - updatedAt
         - deletedAt
         - deletedBy
-    UserEntityList:
+    UserListEntity:
       type: object
       properties:
         pageNumber:
@@ -1123,7 +1121,7 @@ components:
                 defaultTheme: DEFAULT
                 updatedAt: null
                 deletedAt: null
-                createdAt: 2024-06-12T03:06:31.261Z
+                createdAt: 2024-08-17T03:55:18.062Z
               updatedAt: 2024-06-10T03:52:50.885Z
               deletedAt: null
               deletedBy: null

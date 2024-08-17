@@ -16,7 +16,7 @@ export default class KnownExceptionFilter implements ExceptionFilter<HttpExcepti
 		private readonly configService: ConfigService,
 	) {
 		const appConfigs = this.configService.get<ConfigsInterface['application']>('application')!;
-		this.showStack = appConfigs.stackErrorVisible;
+		this.showStack = appConfigs.showDetailedLogs;
 	}
 
 	public catch(exception: HttpException | AxiosError | Error, host: ArgumentsHost) {

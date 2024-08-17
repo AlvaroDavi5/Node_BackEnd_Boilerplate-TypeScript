@@ -5,8 +5,8 @@ import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
 import UserService from '@app/user/services/User.service';
 import UserPreferenceService from '@app/user/services/UserPreference.service';
 import HttpConstants from '@common/constants/Http.constants';
-import CreateUserInputDto from '../api/dto/user/CreateUserInput.dto';
 import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
+import CreateUserInputDto from '../api/dto/user/CreateUserInput.dto';
 
 
 @Injectable()

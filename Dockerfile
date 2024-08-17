@@ -29,12 +29,12 @@ COPY nest-cli.json ./nest-cli.json
 COPY src ./src
 COPY tests ./tests
 COPY scripts ./scripts
-COPY src ./src
 COPY jest* ./
 COPY init.sh ./init.sh
 
-RUN chmod +x init.sh
 RUN yarn install
+RUN yarn run build
+RUN chmod +x init.sh
 CMD [ "./init.sh" ]
 
 #ENTRYPOINT ["/usr/bin/node", "-D", "FOREGROUND"]

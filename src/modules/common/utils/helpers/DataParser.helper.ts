@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 export default class DataParserHelper {
 
 	public toString(data: unknown): string {
-		let result = null;
+		let result = '';
 
 		switch (typeof data) {
 			case 'bigint':
@@ -23,6 +23,11 @@ export default class DataParserHelper {
 			case 'object':
 				if (!data)
 					result = '';
+				else if (Array.isArray(data)) {
+					const parsedData = data.map((d) => this.toString(d));
+					result = `${parsedData.join(', ')}`;
+				} else if (data instanceof Error)
+					result = data.toString();
 				else
 					result = (JSON.stringify(data) || data?.toString()) ?? '';
 				break;
@@ -33,7 +38,6 @@ export default class DataParserHelper {
 				result = data.toString();
 				break;
 			default:
-				result = '';
 				break;
 		}
 

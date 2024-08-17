@@ -15,6 +15,7 @@ services:
     #working_dir: /app
     #command: ['./init.sh']
     ports:
+      # network_port:host_port
       - 3000:3000
     networks:
       - default_network
@@ -26,9 +27,9 @@ services:
       - ./init.sh:/app/init.sh
       - /node_modules
     depends_on:
-      - cache
-      - cloud
       - database
+      - cloud
+      - cache
       - data
 
   # Relational DataBase
@@ -126,6 +127,19 @@ services:
       - ${TMPDIR:-/tmp/localstack}:/var/lib/localstack
       - /var/run/docker.sock:/var/run/docker.sock
 
+  # CI
+  pipeline:
+    container_name: CI_Jenkins
+    image: jenkins/jenkins:latest
+    environment:
+      - DOCKER_TLS_CERTDIR=certs
+    ports:
+      - 9000:8080
+    volumes:
+      - ci_volume:/var/jenkins_home
+    networks:
+      - monitoring_network
+
   # Code Quality
   quality:
     container_name: Quality_SonarQube
@@ -133,18 +147,33 @@ services:
     environment:
       - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
     ports:
-      - 9000:9000
+      - 9001:9000
       - 9092:9092
     networks:
       - default_network
 
+  # Monitoring
+  graph_monitor:
+    container_name: Monitoring_Grafana
+    image: grafana/grafana:latest
+    ports:
+      - 9002:3000
+    networks:
+      - default_network
+      - monitoring_network
+
 # Networks for Containers
 networks:
   default_network:
+    driver: bridge
+  monitoring_network:
     driver: bridge
 
 # Volumes for Containers
 volumes:
   db_volume:
     name: db_volume
+    driver: local
+  ci_volume:
+    name: ci_volume
     driver: local

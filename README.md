@@ -55,6 +55,7 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 - **Docker**: Services isolation and process resources management with containers;
 - **Kubernetes**: Containers orchestration system;
 - **SonarQube**: Test coverage and code quality analyzer;
+- **Grafana**: Containers data visualization and dashboards;
 - **Winston**: Custom logger with transports;
 - **Joi**: Schema validator library;
 - **Jest**: Testing Framework;
@@ -170,27 +171,25 @@ yarn run send-message # send event message to queue
 	* `/` - WebSocket Root Endpoint
 	* `/api` - REST Root Endpoint
 		- `/api/docs` - Swagger API Documentation (Page)
-		- `/api/docs.json` - Swagger API Documentation (JSON)
 		- `/api/docs.yml` - Swagger API Documentation (YAML)
+		- `/api/docs.json` - Swagger API Documentation (JSON)
 	* `/graphql` - GraphQL Endpoint
-- [localhost:4000](http://localhost:4000/) - Mocked Service Page  
 - [localhost:8000](http://localhost:8000/) - Nest.js DevTools Page  
 - [localhost:8080](http://localhost:8080/) - Adminer Page  
 - [localhost:8081](http://localhost:8081/) - Mongo Express Page  
 - [localhost:8082](http://localhost:8082/) - Redis Commander Page  
-- [localhost:8083](http://localhost:8083/) - Jenkins Page  
-- [localhost:9000](http://localhost:9000/) - SonarQube Page  
+- [localhost:9000](http://localhost:9000/) - Jenkins Page  
+- [localhost:9001](http://localhost:9001/) - SonarQube Page  
+- [localhost:9002](http://localhost:9002/) - Grafana Page  
 
 ___
 
 ### TO DO
 
-- **Integrations**
-	- [Kafka](#to-do)
 - **SQL**
-	- [ ] UUID Fields
 	- [ ] Manual Queries
 	- [ ] Index
+	- [ ] Views
 	- [ ] Transactions
 - **Clustering**
 	- [x] Clusters
@@ -198,52 +197,75 @@ ___
 		- [ ] Load Balancing
 - **CI/CD**
 	- [ ] Jenkins
-	- [x] GitHub Actions
 - **Deployment**
 	- [ ] Heroku
-- **Packaging**
-	- Infra Utils Lib Package
 - **Tests**
 	* _Integration_
-		- [ ] Configs
-		- Modules
-			- Core
-				- Infra
-					- [ ] Database
-					- [ ] Data
-					- [ ] Cache
-					- [ ] Cron Tasks
-					- [ ] Logging
-					- Integration
-						- [ ] AWS
-						- [ ] REST
-			- App
-				- [ ] Repositories
-			- Events
-				- [ ] Queue Handler
-					- [ ] Handlers Schemas
-				- [ ] Websocket Guards
-				- [ ] Websocket Server
-				- [ ] Websocket Client
-	* _End-to-End_
-		- Modules
-			- Core
-				- Infra
-					- [ ] Database Connection
-					- [ ] Data Connection
-					- [ ] Cache Connection
-					- Integration
-						- [ ] AWS Connection
-					- [ ] Cron Jobs
-					- [ ] Start
-			- API
-				- [ ] Guards
+		- [ ] Modules
+			- [ ] API
+				- [ ] Controllers
+				- [ ] DTO
 				- [ ] Pipes
 				- [ ] Schemas
-				- [x] Controllers
-			- Events
-				- [ ] Queue Consumer
-				- [ ] Queue Producer
-				- [ ] Websocket Gateway
-			- Reports
+			- [ ] App
+				- [ ] API
+					- [ ] Controllers
+					- [ ] DTO
+					- [ ] Pipes
+					- [ ] Schemas
+				- [ ] Repositories
 				- [ ] Services
+			- [ ] Core
+				- [ ] Configs
+				- [ ] Cron
+					- [ ] Tasks
+				- [ ] Infra
+						- [ ] Models
+						- [ ] Repositories
+					- [ ] Integration
+						- [ ] Rest
+				- [ ] Logging
+				- [ ] Start
+			- [ ] Domain
+			- [ ] Events
+				- [ ] Queue
+					- [ ] Handlers
+						- [ ] Schemas
+				- [ ] Websocket
+			- [ ] Graphql
+					- [ ] DTO
+					- [ ] Services
+	* _End-to-End_
+		- [ ] Modules
+			- [ ] API
+				- [ ] Controllers
+				- [ ] Filters
+				- [ ] Guards
+				- [ ] Middlewares
+			- [ ] App
+				- [ ] API
+					- [ ] controllers
+			- [ ] Core
+				- [ ] Cron
+					- [ ] Jobs
+				- [ ] Infra
+					- [ ] Cache
+					- [ ] Data
+					- [ ] Database
+						- [ ] Models
+						- [ ] Repositories
+					- [ ] Integration
+						- [ ] AWS
+					- [ ] Providers
+			- [ ] Domain
+			- [ ] Events
+				- [ ] Queue
+					- [ ] Consumers
+					- [ ] Producers
+				- [ ] Websocket
+					- [ ] Client
+					- [ ] Guards
+					- [ ] Server
+			- [ ] Graphql
+					- [ ] DTO
+					- [ ] Resolvers

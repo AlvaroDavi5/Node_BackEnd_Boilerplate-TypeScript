@@ -2,8 +2,8 @@ import 'reflect-metadata';
 import { Provider, Scope } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { Logger } from 'winston';
-import { dbConfig } from './db.config';
 import LoggerService from '@core/logging/Logger.service';
+import { dbConfig } from './db.config';
 
 
 export async function testConnection(connection: DataSource, logger?: Logger | LoggerService | Console): Promise<boolean> {

@@ -1,6 +1,6 @@
 import { ConfigService } from '@nestjs/config';
-import SqsClient from './SqsClient';
 import { configServiceMock, cryptographyServiceMock, dataParserHelperMock, loggerProviderMock } from '@dev/mocks/mockedModules';
+import SqsClient from './SqsClient';
 
 
 export default (queueName: string, queueUrl: string): void => {

@@ -22,7 +22,7 @@ export default class S3Client {
 		private readonly logger: LoggerInterface,
 	) {
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
-		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
+		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
 		const {
 			region, endpoint, sessionToken,
 			accessKeyId, secretAccessKey,
@@ -40,7 +40,7 @@ export default class S3Client {
 				sessionToken,
 			},
 			forcePathStyle: true,
-			logger: logging ? this.logger : undefined,
+			logger: showExternalLogs ? this.logger : undefined,
 		};
 		this.bucketName = bucketName;
 		this.s3Client = new S3AWSClient(this.awsConfig);

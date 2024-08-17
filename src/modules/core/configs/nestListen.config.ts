@@ -25,15 +25,15 @@ export default (nestApp: INestApplication): void => {
 	const logger = nestApp.get<LoggerProviderInterface>(SINGLETON_LOGGER_PROVIDER, {}).getLogger('NestApplication');
 
 	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error: Error, origin: string) => {
-		logger.error(`App received ${origin}: \nerror: ${error}`);
+		logger.error(`App received ${ProcessEventsEnum.UNCAUGHT_EXCEPTION}`, `origin: ${origin}`, `error: ${error}`);
 		await nestApp.close();
 	});
-	process.on(ProcessEventsEnum.UNHANDLED_REJECTION, async (reason: unknown, promise: Promise<unknown>) => {
-		logger.error(`App received ${ProcessEventsEnum.UNHANDLED_REJECTION}: \nreason: ${reason} \npromise: ${promise}`);
+	process.on(ProcessEventsEnum.UNHANDLED_REJECTION, async (reason: unknown, _promise: Promise<unknown>) => {
+		logger.error(`App received ${ProcessEventsEnum.UNHANDLED_REJECTION}`, `reason: ${reason}`);
 		await nestApp.close();
 	});
-	process.on(ProcessEventsEnum.MULTIPLE_RESOLVES, async (type: 'resolve' | 'reject', promise: Promise<unknown>, value: unknown) => {
-		logger.error(`App received ${ProcessEventsEnum.MULTIPLE_RESOLVES}: \ntype: ${type} \nvalue: ${value} \npromise: ${promise}`);
+	process.on(ProcessEventsEnum.MULTIPLE_RESOLVES, async (type: 'resolve' | 'reject', _promise: Promise<unknown>, value: unknown) => {
+		logger.error(`App received ${ProcessEventsEnum.MULTIPLE_RESOLVES}`, `type: ${type}`, `value: ${value}`);
 		await nestApp.close();
 	});
 

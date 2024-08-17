@@ -31,10 +31,10 @@ SOCKET_ENV=${SOCKET_ENV:-'enabled'};
 if [ $NODE_ENV != 'prod' ]; then
 	if [ $NODE_ENV = 'test' ]; then
 		EXEC_COMMAND='start:webpack';
-		SHOW_LOGS='true'; # show third-party and backing services logs
+		SHOW_EXTERNAL_LOGS='true'; # show third-party and backing services logs
 	elif [ $NODE_ENV = 'dev' ]; then
 		EXEC_COMMAND='start:dev';
-		SHOW_ERROR_STACK='true'; # show application errors stack
+		SHOW_DETAILED_LOGS='true'; # show application errors stack
 	fi
 fi;
 

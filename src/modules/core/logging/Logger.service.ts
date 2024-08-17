@@ -28,7 +28,7 @@ export default class LoggerService implements LoggerInterface {
 			applicationConfigs.environment,
 			undefined as any,
 			applicationConfigs.logsPath,
-			applicationConfigs.stackErrorVisible,
+			applicationConfigs.showDetailedLogs,
 		);
 
 		this.logger = createLogger(loggerOptions);
@@ -65,12 +65,15 @@ export default class LoggerService implements LoggerInterface {
 		const errorStacks: string[] = [];
 		args.forEach((arg: unknown) => {
 			if (arg instanceof Error) {
+				const blackConsoleColor = '\x1b[0;30m';
+				const defaultConsoleColor = '\x1b[0m';
+
 				if (arg.stack) {
 					if (Array.isArray(arg.stack)) {
-						const strStack: string[] = arg.stack.map((stack) => (`\x1b[0;30m${stack}\x1b[0m`));
+						const strStack: string[] = arg.stack.map((stack) => (`${blackConsoleColor}${stack}${defaultConsoleColor}`));
 						errorStacks.push(...strStack);
 					} else
-						errorStacks.push(`\x1b[0;30m${arg.stack}\x1b[0m`);
+						errorStacks.push(`${blackConsoleColor}${arg.stack}${defaultConsoleColor}`);
 				}
 			}
 		});

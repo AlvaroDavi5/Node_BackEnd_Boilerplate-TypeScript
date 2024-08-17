@@ -30,9 +30,9 @@ export interface MetadataInterface {
 
 function getMessageFormatter() {
 	const levelFormatter = (level: string): string => format.colorize().colorize(level, level.toUpperCase());
-	const blueConsoleColor = '\x1b[0;34m';
+	const purpleConsoleColor = '\x1b[0;35m';
 	const defaultConsoleColor = '\x1b[0m';
-	const contextFormatter = (ctx: string): string => (`${blueConsoleColor}${ctx}${defaultConsoleColor}`);
+	const contextFormatter = (ctx: string): string => (`${purpleConsoleColor}${ctx}${defaultConsoleColor}`);
 
 	return format.printf((info) => {
 		const { level, message, timestamp, stack: errorStack, context, meta } = info;

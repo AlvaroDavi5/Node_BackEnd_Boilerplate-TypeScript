@@ -129,14 +129,14 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 
 	@SubscribeMessage(WebSocketEventsEnum.EMIT_PRIVATE)
 	public emitPrivate(
-		@ConnectedSocket() socket: ServerSocket,
+		@ConnectedSocket() _socket: ServerSocket,
 		@MessageBody() msg: string,
 	): void { // listen 'emit_private' order event from client
 		const { socketIdsOrRooms, ...message } = this.formatMessageAfterReceiveHelper(msg) as { [key: string]: unknown, socketIdsOrRooms?: string | string[] };
 		const msgContent = this.formatMessageBeforeSendHelper(message);
 
 		if (!socketIdsOrRooms) {
-			this.logger.warn('Invalid socketIds or Rooms to emit');
+			this.logger.warn('Invalid socket IDs or Rooms to emit');
 			return;
 		}
 

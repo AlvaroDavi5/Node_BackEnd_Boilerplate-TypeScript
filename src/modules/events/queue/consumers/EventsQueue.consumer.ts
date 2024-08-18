@@ -32,6 +32,7 @@ export const eventsQueueConsumerConfigs: SqsConsumerOptions = {
 	shouldDeleteMessages: false,
 	pollingWaitTimeMs: 10,
 	waitTimeSeconds: 20,
+	visibilityTimeout: 20,
 	handleMessageTimeout: (1 * 1000),
 	authenticationErrorTimeout: (10 * 1000),
 };

@@ -6,14 +6,13 @@ const nodeExternals = require('webpack-node-externals');
 
 
 module.exports = {
-	entry: ['webpack/hot/poll?1000', './build/main.js'],
+	mode: 'production',
 	watch: false,
 	target: 'node',
-	externals: [
-		nodeExternals({
-			allowlist: ['webpack/hot/poll?1000'],
-		}),
-	],
+	entry: ['webpack/hot/poll?1000', './build/main.js'],
+	resolve: {
+		extensions: ['.ts', '.js'],
+	},
 	module: {
 		rules: [
 			{
@@ -23,16 +22,17 @@ module.exports = {
 			},
 		],
 	},
-	mode: 'development',
-	resolve: {
-		extensions: ['.ts', '.js'],
-	},
-	plugins: [
-		new webpack.HotModuleReplacementPlugin(),
-	],
 	output: {
 		libraryTarget: 'commonjs',
 		path: join(__dirname, 'build'),
 		filename: 'webpack.js',
 	},
+	externals: [
+		nodeExternals({
+			allowlist: ['webpack/hot/poll?1000'],
+		}),
+	],
+	plugins: [
+		new webpack.HotModuleReplacementPlugin(),
+	],
 };

@@ -81,8 +81,6 @@ jobs:
       - name: Installing Dependencies
         run: yarn install
 
-      # - name: Building WebPack
-      #   run: yarn run build:webpack
-
       - name: Versioning Release
+        run: yarn run build:webpack
         run: yarn run versioning

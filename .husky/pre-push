@@ -2,11 +2,7 @@
 
 . "$(dirname "$0")/_/husky.sh"
 
-if [ -n "${GITHUB_TOKEN}" ]; then
-  echo "GITHUB_TOKEN finded, skipping hooks"
-else
-	yarn run build
-	yarn run security-check
-	yarn run test:unit
-	yarn run test:integration
-fi
+yarn run build
+yarn run security-check
+yarn run test:unit
+yarn run test:integration

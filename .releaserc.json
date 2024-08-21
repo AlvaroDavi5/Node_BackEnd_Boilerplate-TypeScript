@@ -64,7 +64,7 @@
 				"assets": [
 					{
 						"path": "dist/webpack.js",
-						"name": "node_backend_boilerplate-v4.7.4",
+						"name": "node_backend_boilerplate-v4.8.0.js",
 						"label": "Application WebPack"
 					}
 				]

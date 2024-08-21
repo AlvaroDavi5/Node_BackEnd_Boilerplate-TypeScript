@@ -57,7 +57,7 @@
 			"@semantic-release/git",
 			{
 				"assets": [
-					"build/**/*.{js,js.map}"
+					"build/webpack.js"
 				],
 				"message": "docs(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
 			}

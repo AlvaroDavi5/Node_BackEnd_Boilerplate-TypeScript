@@ -44,11 +44,14 @@ jobs:
       - name: Building WebPack
         run: yarn run build:webpack
 
+      - name: Zipping Build Files
+        run: zip -r dist.zip build
+
       - name: Upload Release Builded Files
         uses: actions/upload-artifact@v3
         with:
           name: dist
-          path: build
+          path: dist.zip
 
       - name: Testing Modules
         run: yarn run test:unit
@@ -91,7 +94,7 @@ jobs:
         uses: actions/download-artifact@v3
         with:
           name: dist
-          path: dist
+          path: dist.zip
 
       - name: Versioning Release
         run: yarn run versioning

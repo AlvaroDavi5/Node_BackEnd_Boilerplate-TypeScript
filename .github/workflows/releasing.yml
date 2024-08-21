@@ -41,8 +41,14 @@ jobs:
       - name: Checking Type
         run: yarn run typecheck
 
-      - name: Building
-        run: yarn run build
+      - name: Building WebPack
+        run: yarn run build:webpack
+
+      - name: Upload Release Builded Files
+        uses: actions/upload-artifact@v3
+        with:
+          name: build
+          path: build
 
       - name: Testing Modules
         run: yarn run test:unit
@@ -81,8 +87,11 @@ jobs:
       - name: Installing Dependencies
         run: yarn install
 
-      - name: Building WebPack
-        run: yarn run build:webpack
+      - name: Download Release Builded Files
+        uses: actions/download-artifact@v3
+        with:
+          name: build
+          path: build
 
       - name: Versioning Release
         run: yarn run versioning

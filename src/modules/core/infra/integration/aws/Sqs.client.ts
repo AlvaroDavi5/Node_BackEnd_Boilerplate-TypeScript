@@ -63,6 +63,7 @@ export default class SqsClient {
 				FifoQueue: String(isFifoQueue),
 				DelaySeconds: '10', // Unused in FIFO queues
 				MessageRetentionPeriod: '3600',
+				VisibilityTimeout: '20',
 			}
 		};
 

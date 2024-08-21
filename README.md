@@ -195,6 +195,8 @@ ___
 	- [x] Clusters
 		- [x] Kubernetes
 		- [ ] Load Balancing
+- **Monitoring**
+	- [ ] Logs Monitor
 - **CI/CD**
 	- [ ] Jenkins
 - **Deployment**
@@ -233,8 +235,8 @@ ___
 						- [ ] Schemas
 				- [ ] Websocket
 			- [ ] Graphql
-					- [ ] DTO
-					- [ ] Services
+				- [ ] DTO
+				- [ ] Services
 	* _End-to-End_
 		- [ ] Modules
 			- [ ] API
@@ -267,5 +269,5 @@ ___
 					- [ ] Guards
 					- [ ] Server
 			- [ ] Graphql
-					- [ ] DTO
-					- [ ] Resolvers
+				- [ ] DTO
+				- [ ] Resolvers

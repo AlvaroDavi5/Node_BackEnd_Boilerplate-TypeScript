@@ -93,5 +93,8 @@ jobs:
           name: build
           path: build
 
+      - name: Zipping Build Files
+        run: zip -r build.zip build
+
       - name: Versioning Release
         run: yarn run versioning

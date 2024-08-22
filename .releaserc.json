@@ -63,9 +63,14 @@
 			{
 				"assets": [
 					{
-						"path": "build",
-						"name": "node_backend_boilerplate-v4.8.3.zip",
+						"path": "build.zip",
+						"name": "node_backend_boilerplate-v4.8.4.zip",
 						"label": "Application WebPack"
+					},
+					{
+						"path": "CHANGELOG.md",
+						"name": "CHANGELOG-node_backend_boilerplate.md",
+						"label": "Application CHANGELOG"
 					}
 				]
 			}

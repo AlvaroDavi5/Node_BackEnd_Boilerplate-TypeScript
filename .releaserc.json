@@ -63,8 +63,8 @@
 			{
 				"assets": [
 					{
-						"path": "dist.zip",
-						"name": "node_backend_boilerplate-v4.8.2.zip",
+						"path": "build",
+						"name": "node_backend_boilerplate-v4.8.3.zip",
 						"label": "Application WebPack"
 					}
 				]

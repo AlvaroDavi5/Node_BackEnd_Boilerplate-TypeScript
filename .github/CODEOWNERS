@@ -24,7 +24,7 @@ init.sh                               @AlvaroDavi5
 
 # Owners responsible for workflows, CI/CD and deploy
 /.github/workflows/*                  @AlvaroDavi5
-release.config.js                     @AlvaroDavi5
+.releaserc.*                          @AlvaroDavi5
 /.husky/*                             @AlvaroDavi5
 Jenkinsfile                           @AlvaroDavi5
 Procfile                              @AlvaroDavi5

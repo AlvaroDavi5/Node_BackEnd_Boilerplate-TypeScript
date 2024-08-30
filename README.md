@@ -88,7 +88,7 @@ $ aws configure
 
 1. Start Docker containers or Kubernetes cluster;
 1. Mock external services;
-1. Creat database entities and populat registers;
+1. Creat database entities and populate registers;
 1. Start HTTP REST API & GraphQl API;
 1. Start TCP WebSocket;
 1. Send message to Queue;
@@ -174,6 +174,7 @@ yarn run send-message # send event message to queue
 		- `/api/docs.yml` - Swagger API Documentation (YAML)
 		- `/api/docs.json` - Swagger API Documentation (JSON)
 	* `/graphql` - GraphQL Endpoint
+- [localhost:4000](http://localhost:4000/) - Mocked Service Page  
 - [localhost:8000](http://localhost:8000/) - Nest.js DevTools Page  
 - [localhost:8080](http://localhost:8080/) - Adminer Page  
 - [localhost:8081](http://localhost:8081/) - Mongo Express Page  

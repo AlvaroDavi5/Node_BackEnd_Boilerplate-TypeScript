@@ -23,7 +23,7 @@ Description of the functionality and main decisions made
 - [ ] Already in development and test branches  
 	* [ ] Migrations runned (if necessary)  
 - [ ] Tested affected endpoints, connections, or event consumption  
-- [ ] Implemented and passed unit, integration, and E2E tests  
+- [ ] Implemented and approved unit, integration, and E2E tests  
 - [ ] Added GitHub labels for PR/Issues  
 - [ ] Code owners marked for review  
 - [ ] ESLint rules passed  

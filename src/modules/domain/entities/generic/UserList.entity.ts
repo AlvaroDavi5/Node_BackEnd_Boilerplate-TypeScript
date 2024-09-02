@@ -1,8 +1,8 @@
 import { Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import { fromISOToDateTime, fromDateTimeToJSDate } from '@common/utils/dates.util';
 import AbstractEntityList from '@shared/internal/classes/AbstractListEntity.entity';
 import UserEntity from '../User.entity';
 import UserPreferenceEntity from '../UserPreference.entity';
@@ -10,8 +10,8 @@ import UserPreferenceEntity from '../UserPreference.entity';
 
 export const returingUserEntityArray = () => Array<UserEntity>;
 
-const dateGeneratorHelper = new DateGeneratorHelper();
-const dateExample = dateGeneratorHelper.getDate('2024-06-10T03:52:50.885Z', 'iso-8601', true, TimeZonesEnum.SaoPaulo);
+const dateTimeExample = fromISOToDateTime('2024-06-10T03:52:50.885Z', false, TimeZonesEnum.SaoPaulo);
+const dateExample = fromDateTimeToJSDate(dateTimeExample, false);
 
 export default class UserListEntity extends AbstractEntityList<UserEntity> {
 	@ApiProperty({

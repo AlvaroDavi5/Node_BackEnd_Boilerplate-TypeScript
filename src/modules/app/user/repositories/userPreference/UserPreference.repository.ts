@@ -6,7 +6,6 @@ import Exceptions from '@core/errors/Exceptions';
 import AbstractRepository from '@core/infra/database/repositories/AbstractRepository.repository';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
-import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import userPreferenceMapper from './userPreference.mapper';
 import { userPreferenceQueryParamsBuilder, UserPreferenceBuildParamsInterface } from './userPreference.query';
 
@@ -15,10 +14,9 @@ import { userPreferenceQueryParamsBuilder, UserPreferenceBuildParamsInterface } 
 export default class UserPreferenceRepository extends AbstractRepository<UserPreferencesModel, UserPreferenceEntity, UserPreferenceBuildParamsInterface> {
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER)
-			connection: DataSource,
-			exceptions: Exceptions,
-			logger: LoggerService,
-			dateGeneratorHelper: DateGeneratorHelper,
+		connection: DataSource,
+		exceptions: Exceptions,
+		logger: LoggerService,
 	) {
 		logger.setContextName(UserPreferenceRepository.name);
 		super({
@@ -28,7 +26,6 @@ export default class UserPreferenceRepository extends AbstractRepository<UserPre
 			ResourceRepo: UserPreferencesModel.getRepository(),
 			resourceMapper: userPreferenceMapper,
 			queryParamsBuilder: userPreferenceQueryParamsBuilder,
-			dateGeneratorHelper,
 			exceptions,
 			logger,
 		});

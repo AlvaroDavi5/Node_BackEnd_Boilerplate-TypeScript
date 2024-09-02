@@ -1,14 +1,15 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsBoolean, IsDate, IsUUID } from 'class-validator';
-import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
 import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
 import { returingString, returingBoolean, returingDate } from '@shared/internal/types/returnTypeFunc';
 
 
-const dateGeneratorHelper = new DateGeneratorHelper();
-const dateExample = dateGeneratorHelper.getDate('2024-06-10T03:52:50.885Z', 'iso-8601', true, TimeZonesEnum.SaoPaulo);
+const dateTimeExample = fromISOToDateTime('2024-06-10T03:52:50.885Z', false, TimeZonesEnum.SaoPaulo);
+const dateExample = fromDateTimeToJSDate(dateTimeExample, false);
+const getDateNow = () => fromDateTimeToJSDate(getDateTimeNow(TimeZonesEnum.SaoPaulo));
 
 export interface SubscriptionInterface {
 	id?: string,
@@ -52,7 +53,7 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 	private clientId: string | null = null;
 
 	@ApiProperty({ type: Date, example: dateExample, default: dateExample, nullable: false, required: false, description: 'User creation timestamp' })
-	@Field(returingDate, { defaultValue: dateGeneratorHelper.getDate(new Date(), 'jsDate', true), nullable: false, description: 'User creation timestamp' })
+	@Field(returingDate, { defaultValue: getDateNow(), nullable: false, description: 'User creation timestamp' })
 	@IsDate()
 	public readonly createdAt: Date;
 

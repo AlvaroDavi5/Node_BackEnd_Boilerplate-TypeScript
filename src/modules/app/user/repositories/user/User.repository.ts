@@ -6,7 +6,6 @@ import Exceptions from '@core/errors/Exceptions';
 import AbstractRepository from '@core/infra/database/repositories/AbstractRepository.repository';
 import UsersModel from '@core/infra/database/models/Users.model';
 import UserEntity from '@domain/entities/User.entity';
-import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import userMapper from './user.mapper';
 import { userQueryParamsBuilder, UserBuildParamsInterface } from './user.query';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
@@ -16,10 +15,9 @@ import { ListQueryInterface, PaginationInterface } from '@shared/internal/interf
 export default class UserRepository extends AbstractRepository<UsersModel, UserEntity, UserBuildParamsInterface> {
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER)
-			connection: DataSource,
-			exceptions: Exceptions,
-			logger: LoggerService,
-			dateGeneratorHelper: DateGeneratorHelper,
+		connection: DataSource,
+		exceptions: Exceptions,
+		logger: LoggerService,
 	) {
 		logger.setContextName(UserRepository.name);
 		super({
@@ -29,7 +27,6 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 			ResourceRepo: UsersModel.getRepository(),
 			resourceMapper: userMapper,
 			queryParamsBuilder: userQueryParamsBuilder,
-			dateGeneratorHelper,
 			exceptions,
 			logger,
 		});
@@ -90,7 +87,7 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 
 			let result: UpdateResult | UsersModel | null = null;
 			if (softDelete) {
-				const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
+				const timestamp = this.getISODateNow();
 				result = await this.ResourceRepo.update(id, {
 					deletedAt: timestamp,
 					deletedBy: agentId,
@@ -123,7 +120,7 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 
 			let result: UpdateResult | UsersModel | null = null;
 			if (softDelete) {
-				const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
+				const timestamp = this.getISODateNow();
 				result = await this.ResourceRepo.update(ids, {
 					deletedAt: timestamp,
 					deletedBy: agentId,

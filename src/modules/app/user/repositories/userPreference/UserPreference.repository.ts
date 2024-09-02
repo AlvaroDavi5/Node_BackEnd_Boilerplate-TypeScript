@@ -14,9 +14,9 @@ import { userPreferenceQueryParamsBuilder, UserPreferenceBuildParamsInterface } 
 export default class UserPreferenceRepository extends AbstractRepository<UserPreferencesModel, UserPreferenceEntity, UserPreferenceBuildParamsInterface> {
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER)
-		connection: DataSource,
-		exceptions: Exceptions,
-		logger: LoggerService,
+			connection: DataSource,
+			exceptions: Exceptions,
+			logger: LoggerService,
 	) {
 		logger.setContextName(UserPreferenceRepository.name);
 		super({

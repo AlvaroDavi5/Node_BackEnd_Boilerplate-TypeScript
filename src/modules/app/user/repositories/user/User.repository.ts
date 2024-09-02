@@ -15,9 +15,9 @@ import { ListQueryInterface, PaginationInterface } from '@shared/internal/interf
 export default class UserRepository extends AbstractRepository<UsersModel, UserEntity, UserBuildParamsInterface> {
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER)
-		connection: DataSource,
-		exceptions: Exceptions,
-		logger: LoggerService,
+			connection: DataSource,
+			exceptions: Exceptions,
+			logger: LoggerService,
 	) {
 		logger.setContextName(UserRepository.name);
 		super({

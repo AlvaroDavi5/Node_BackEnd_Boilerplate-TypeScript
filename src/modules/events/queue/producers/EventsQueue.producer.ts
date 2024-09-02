@@ -52,7 +52,7 @@ export default class EventsQueueProducer {
 			schemaVersion: 1.0,
 			payload,
 			source: 'BOILERPLATE',
-			timestamp: fromDateTimeToISO(getDateTimeNow(TimeZonesEnum.SaoPaulo)),
+			timestamp: fromDateTimeToISO(getDateTimeNow(TimeZonesEnum.America_SaoPaulo)),
 		};
 	}
 

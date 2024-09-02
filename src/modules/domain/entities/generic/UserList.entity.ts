@@ -10,7 +10,7 @@ import UserPreferenceEntity from '../UserPreference.entity';
 
 export const returingUserEntityArray = () => Array<UserEntity>;
 
-const dateTimeExample = fromISOToDateTime('2024-06-10T03:52:50.885Z', false, TimeZonesEnum.SaoPaulo);
+const dateTimeExample = fromISOToDateTime('2024-06-10T03:52:50.885Z', false, TimeZonesEnum.America_SaoPaulo);
 const dateExample = fromDateTimeToJSDate(dateTimeExample, false);
 
 export default class UserListEntity extends AbstractEntityList<UserEntity> {

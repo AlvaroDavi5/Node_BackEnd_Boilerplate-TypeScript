@@ -72,7 +72,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 
 	// * ------ Methods ------
 	protected getISODateNow(): string {
-		return fromDateTimeToISO(getDateTimeNow(TimeZonesEnum.SaoPaulo));
+		return fromDateTimeToISO(getDateTimeNow(TimeZonesEnum.America_SaoPaulo));
 	}
 
 	public validatePayload(entity: E): void {

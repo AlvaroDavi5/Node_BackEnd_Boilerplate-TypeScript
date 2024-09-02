@@ -26,8 +26,8 @@ export default abstract class AbstractEntity<I = unknown> {
 
 	public getDate(strDate?: string): Date {
 		const date: DateTime = strDate?.length
-			? fromISOToDateTime(strDate, false, TimeZonesEnum.SaoPaulo)
-			: getDateTimeNow(TimeZonesEnum.SaoPaulo);
+			? fromISOToDateTime(strDate, false, TimeZonesEnum.America_SaoPaulo)
+			: getDateTimeNow(TimeZonesEnum.America_SaoPaulo);
 
 		return fromDateTimeToJSDate(date, true);
 	}

@@ -31,9 +31,9 @@ export type IViewUser = UserInterface;
 export type IViewUserWithoutPassword = Omit<UserInterface, 'password'>;
 export type IViewUserWithoutSensitiveData = Omit<UserInterface, 'password' | 'phone' | 'document'>;
 
-const dateTimeExample = fromISOToDateTime('2024-06-10T03:52:50.885Z', false, TimeZonesEnum.SaoPaulo);
+const dateTimeExample = fromISOToDateTime('2024-06-10T03:52:50.885Z', false, TimeZonesEnum.America_SaoPaulo);
 const dateExample = fromDateTimeToJSDate(dateTimeExample, false);
-const getDateNow = () => fromDateTimeToJSDate(getDateTimeNow(TimeZonesEnum.SaoPaulo));
+const getDateNow = () => fromDateTimeToJSDate(getDateTimeNow(TimeZonesEnum.America_SaoPaulo));
 
 @ObjectType({
 	description: 'user entity',

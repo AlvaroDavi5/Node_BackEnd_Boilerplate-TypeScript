@@ -211,6 +211,7 @@
 		"guard-for-in": "error",
 		"default-case": "error",
 		"default-case-last": "error",
+		"no-case-declarations": "error",
 		"default-param-last": "error",
 		"curly": "off",
 		"brace-style": "error",

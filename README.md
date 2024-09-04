@@ -187,11 +187,6 @@ ___
 
 ### TO DO
 
-- **SQL**
-	- [ ] Manual Queries
-	- [ ] Index
-	- [ ] Views
-	- [ ] Transactions
 - **Clustering**
 	- [x] Clusters
 		- [x] Kubernetes

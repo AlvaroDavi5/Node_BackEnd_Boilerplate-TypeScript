@@ -49,6 +49,7 @@
 	"powermode.combo.location": "editor",
 	"powermode.shake.enabled": false,
 	"material-icon-theme.activeIconPack": "nest",
+	"vsicons.presets.nestjs": true,
 	"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
 	"vsintellicode.features.python.deepLearning": "enabled",
 	"editorconfig.generateAuto": true,
@@ -59,17 +60,6 @@
 		"javascriptreact",
 		"typescript",
 		"typescriptreact"
-	],
-	"cSpell.language": "pt,pt-BR,en",
-	"cSpell.enableFiletypes": [
-		"!jade",
-		"!yml",
-		"log",
-		"ruby",
-		"shellscript",
-		"sql",
-		"swift",
-		"xml"
 	],
 	"debug.allowBreakpointsEverywhere": true,
 	"debug.console.closeOnEnd": true,
@@ -168,9 +158,6 @@
 	},
 	"[dockercompose]": {
 		"editor.defaultFormatter": "ms-azuretools.vscode-docker"
-	},
-	"[python]": {
-		"editor.formatOnType": true
 	},
 	"files.exclude": {
 		"**/.classpath": true,

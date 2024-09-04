@@ -18,6 +18,7 @@ Description of the functionality and main decisions made
 ## Checklist
 
 - [ ] Commits according to [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/)  
+	* Also allowed types from: [CommitLint Conventional Changelog](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional#readme)
 - [ ] Typecheck and build passed  
 - [ ] Security check passed  
 - [ ] Already in development and test branches  

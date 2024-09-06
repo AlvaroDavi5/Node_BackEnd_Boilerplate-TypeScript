@@ -19,9 +19,12 @@
 	"editor.codeActionsOnSave": {
 		"source.fixAll.eslint": "never"
 	},
+	"editor.unicodeHighlight.invisibleCharacters": false,
+	"editor.unicodeHighlight.ambiguousCharacters": false,
 	"explorer.autoReveal": true,
 	"explorer.confirmDragAndDrop": false,
 	"scm.defaultViewMode": "tree",
+	"scm.showHistoryGraph": false,
 	"workbench.productIconTheme": "material-product-icons",
 	"workbench.sideBar.location": "left",
 	"workbench.tree.indent": 15,
@@ -46,6 +49,7 @@
 	"powermode.combo.location": "editor",
 	"powermode.shake.enabled": false,
 	"material-icon-theme.activeIconPack": "nest",
+	"vsicons.presets.nestjs": true,
 	"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
 	"vsintellicode.features.python.deepLearning": "enabled",
 	"editorconfig.generateAuto": true,
@@ -56,17 +60,6 @@
 		"javascriptreact",
 		"typescript",
 		"typescriptreact"
-	],
-	"cSpell.language": "pt,pt-BR,en",
-	"cSpell.enableFiletypes": [
-		"!jade",
-		"!yml",
-		"log",
-		"ruby",
-		"shellscript",
-		"sql",
-		"swift",
-		"xml"
 	],
 	"debug.allowBreakpointsEverywhere": true,
 	"debug.console.closeOnEnd": true,
@@ -163,8 +156,8 @@
 	"[json]": {
 		"editor.defaultFormatter": "vscode.json-language-features"
 	},
-	"[python]": {
-		"editor.formatOnType": true
+	"[dockercompose]": {
+		"editor.defaultFormatter": "ms-azuretools.vscode-docker"
 	},
 	"files.exclude": {
 		"**/.classpath": true,
@@ -173,6 +166,9 @@
 		"**/.factorypath": true
 	},
 	"color-highlight.languages": [
+		"*"
+	],
+	"color-highlight.hslWithNoFunctionLanguages": [
 		"*"
 	],
 	"better-comments.multilineComments": true,

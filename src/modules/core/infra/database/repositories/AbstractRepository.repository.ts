@@ -1,6 +1,7 @@
 import { DataSource, BaseEntity, In, Repository, FindOneOptions, FindManyOptions, FindOptionsOrder, UpdateResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
-import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import { fromDateTimeToISO, getDateTimeNow } from '@common/utils/dates.util';
 import LoggerService from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
 import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
@@ -32,7 +33,6 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 	};
 
 	protected exceptions: Exceptions;
-	protected dateGeneratorHelper: DateGeneratorHelper;
 	protected logger: LoggerService;
 
 	// ! ------ Class Constructor ------
@@ -43,7 +43,6 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 		ResourceRepo,
 		resourceMapper,
 		queryParamsBuilder,
-		dateGeneratorHelper,
 		exceptions,
 		logger,
 	}: {
@@ -58,7 +57,6 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 		queryParamsBuilder: {
 			buildParams: (data: BI) => FindManyOptions<M>,
 		},
-		dateGeneratorHelper: DateGeneratorHelper,
 		exceptions: Exceptions,
 		logger: LoggerService,
 	}) {
@@ -68,12 +66,15 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 		this.ResourceRepo = ResourceRepo;
 		this.resourceMapper = resourceMapper;
 		this.queryParamsBuilder = queryParamsBuilder;
-		this.dateGeneratorHelper = dateGeneratorHelper;
 		this.exceptions = exceptions;
 		this.logger = logger;
 	}
 
 	// * ------ Methods ------
+	protected getISODateNow(): string {
+		return fromDateTimeToISO(getDateTimeNow(TimeZonesEnum.America_SaoPaulo));
+	}
+
 	public validatePayload(entity: E): void {
 		if (!(entity instanceof this.DomainEntity)) {
 			throw this.exceptions.contract({
@@ -145,7 +146,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 				where: { id } as any,
 			};
 
-			const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
+			const timestamp = this.getISODateNow();
 			(dataValues as any).updatedAt = timestamp;
 			await this.ResourceRepo.update(id, dataValues);
 			const result = await this.ResourceRepo.findOne(query);
@@ -202,7 +203,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 
 			let result: UpdateResult | M | null = null;
 			if (softDelete) {
-				const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
+				const timestamp = this.getISODateNow();
 				result = await this.ResourceRepo.update(id, {
 					deletedAt: timestamp,
 				} as any);
@@ -234,7 +235,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 
 			let result: UpdateResult | M | null = null;
 			if (softDelete) {
-				const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
+				const timestamp = this.getISODateNow();
 				result = await this.ResourceRepo.update(ids, {
 					deletedAt: timestamp,
 				} as any);

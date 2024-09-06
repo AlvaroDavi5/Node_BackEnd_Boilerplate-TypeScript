@@ -2,7 +2,7 @@ import { isNullOrUndefined, isEmpty, getObjKeys, getObjValues } from '@common/ut
 import { checkFieldsExistence, replaceFields } from '@common/utils/objectRecursiveFunctions.util';
 
 
-describe('Modules :: Common :: Utils :: DataUtils', () => {
+describe('Modules :: Common :: Utils :: DataObjects', () => {
 	describe('# Data Validations', () => {
 		test('Check nullish and definition', () => {
 			expect(isNullOrUndefined(null)).toBeTruthy();

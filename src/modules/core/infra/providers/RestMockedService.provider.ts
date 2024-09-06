@@ -3,7 +3,6 @@ import { ConfigService } from '@nestjs/config';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import AbstractRestClient from '@core/infra/integration/rest/AbstractRestClient.client';
 import LoggerService from '@core/logging/Logger.service';
-import catchError from '@common/utils/externalErrorParser.util';
 import { requestMethodType } from '@shared/internal/types/restClientTypes';
 import { RestClientResponseInterface } from '@shared/external/interfaces/RestClientInterface';
 
@@ -25,6 +24,8 @@ export default class RestMockedServiceProvider extends AbstractRestClient {
 	}
 
 	public async healthcheck() {
+		this.logger.info('Requesting healthcheck endpoint');
+
 		const request = await this.makeRequest<{
 			url: string, statusCode: number, method: string,
 			params: { [key: string]: unknown },
@@ -39,19 +40,16 @@ export default class RestMockedServiceProvider extends AbstractRestClient {
 	}
 
 	public async requestHook<RI = unknown>(
-		requestEndpoint: string, requestMethod: requestMethodType,
-		body: unknown, queryParams?: unknown): Promise<RestClientResponseInterface<RI>> {
-		const requestFunction = this.client[String(requestMethod) as requestMethodType];
+		requestMethod: requestMethodType, requestEndpoint: string,
+		queryParams?: { [key: string]: unknown }, body?: { [key: string]: unknown },
+	): Promise<RestClientResponseInterface<RI>> {
+		this.logger.info('Requesting webhook endpoint');
 
-		try {
-			this.logger.http(`REQUESTING - ${this.serviceName}: [${requestMethod.toUpperCase()}] '${requestEndpoint}' to pull hook`);
-			const { data, status, headers } = await requestFunction<RI>(requestEndpoint,
-				{ data: body, params: queryParams },
-				{ data: body, params: queryParams });
-			return { data, status, headers };
-		} catch (error) {
-			this.logger.error(error);
-			throw catchError(error);
-		}
+		const { data, status, headers, error } = await this.makeRequest<RI>(
+			requestMethod, requestEndpoint,
+			queryParams, body,
+		);
+
+		return { data, status, headers, error };
 	}
 }

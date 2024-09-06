@@ -34,7 +34,7 @@ export default class SyncCronJob {
 	@Cron('0 */5 * * * *', {
 		// // first second every 5 minutes
 		name: CronJobsEnum.SyncCron,
-		timeZone: TimeZonesEnum.SaoPaulo,
+		timeZone: TimeZonesEnum.America_SaoPaulo,
 		disabled: false,
 		unrefTimeout: false,
 	})

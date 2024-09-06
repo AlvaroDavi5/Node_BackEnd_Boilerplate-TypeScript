@@ -151,7 +151,7 @@ export default (): ConfigsInterface => ({
 		password: process.env.DB_PASSWORD ?? 'pass',
 		host: process.env.DB_HOST ?? 'database',
 		charset: 'utf8',
-		timezone: TimeZonesEnum.SaoPaulo,
+		timezone: TimeZonesEnum.America_SaoPaulo,
 		dialect: process.env.DB_DBMS_NAME ?? 'postgres',
 		dialectOptions: {
 			ssl: {

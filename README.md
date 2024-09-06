@@ -6,15 +6,7 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 
 ## Overview
 
-#### What to do if the service goes down
-
-- Check the logs;
-- Test the dependencies and execution locally;
-- Run automated tests;
-- If necessary, merge with a hotfix on git;
-- Rebuild the project and restart the service;
-
-## Architecture
+### Architecture
 
 [Back-End Architecture](https://google.com)  
 
@@ -35,9 +27,9 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 ![Nest Modules Graph](./docs/img/graph.png)  
 ![Nest Classes](./docs/img/classes.png)  
 
-## Main technologies
+### Main technologies
 
-- **JavaScript**: Web programming laguage;
+- **JavaScript**: Web programming language;
 - **TypeScript**: JavaScript superset for typing;
 - **Node.js**: JavaScript runtime;
 - **Nest.js**: TypeScript Framework for Back-End;
@@ -59,9 +51,8 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 - **Winston**: Custom logger with transports;
 - **Joi**: Schema validator library;
 - **Jest**: Testing Framework;
-- **EsLint**: JavaScript/TypeScript linter;
-- **Prettier**: JavaScript/TypeScript formatter;
-- **Huksy**: Git hook-listenner used to check tests, format the code and the commits;
+- **ESLint**: JavaScript/TypeScript linter and formatter;
+- **Huksy**: Git hooks tool used to check tests, format the code and the commits;
 
 ---
 
@@ -72,8 +63,7 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 yarn install
 ```
 
-2. Install AWS CLI  
-[AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
+2. Install [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
 3. Configure AWS CLI
 ```shell
@@ -88,11 +78,19 @@ $ aws configure
 
 1. Start Docker containers or Kubernetes cluster;
 1. Mock external services;
-1. Creat database entities and populat registers;
-1. Start HTTP REST API & GraphQl API;
-1. Start TCP WebSocket;
+1. Create database entities and populate registers;
+1. Start HTTP REST API & GraphQL API;
+1. Start TCP WebSockets Server;
 1. Send message to Queue;
 1. Receive message from Queue;
+
+#### What to do if the service goes down
+
+- Check the logs;
+- Test the dependencies and execution locally;
+- Run automated tests;
+- If necessary, merge with a hotfix on git;
+- Rebuild the project and restart the service;
 
 ## Environment Preparation
 
@@ -174,6 +172,7 @@ yarn run send-message # send event message to queue
 		- `/api/docs.yml` - Swagger API Documentation (YAML)
 		- `/api/docs.json` - Swagger API Documentation (JSON)
 	* `/graphql` - GraphQL Endpoint
+- [localhost:4000](http://localhost:4000/) - Mocked Service Page  
 - [localhost:8000](http://localhost:8000/) - Nest.js DevTools Page  
 - [localhost:8080](http://localhost:8080/) - Adminer Page  
 - [localhost:8081](http://localhost:8081/) - Mongo Express Page  
@@ -186,11 +185,6 @@ ___
 
 ### TO DO
 
-- **SQL**
-	- [ ] Manual Queries
-	- [ ] Index
-	- [ ] Views
-	- [ ] Transactions
 - **Clustering**
 	- [x] Clusters
 		- [x] Kubernetes

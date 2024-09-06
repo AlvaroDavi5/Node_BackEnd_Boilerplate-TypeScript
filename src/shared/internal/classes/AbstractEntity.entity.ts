@@ -1,4 +1,6 @@
-import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
+import { DateTime } from 'luxon';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
 
 
 export default abstract class AbstractEntity<I = unknown> {
@@ -23,8 +25,11 @@ export default abstract class AbstractEntity<I = unknown> {
 	}
 
 	public getDate(strDate?: string): Date {
-		const dateGeneratorHelper: DateGeneratorHelper = new DateGeneratorHelper();
-		return dateGeneratorHelper.getDate(strDate ?? new Date().toISOString(), 'iso-8601', true);
+		const date: DateTime = strDate?.length
+			? fromISOToDateTime(strDate, false, TimeZonesEnum.America_SaoPaulo)
+			: getDateTimeNow(TimeZonesEnum.America_SaoPaulo);
+
+		return fromDateTimeToJSDate(date, true);
 	}
 
 	public getAttributes(): I {

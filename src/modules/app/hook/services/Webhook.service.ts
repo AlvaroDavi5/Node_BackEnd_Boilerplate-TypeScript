@@ -34,7 +34,7 @@ export default class WebhookService {
 			const responseEndpoint = hook?.responseEndpoint ?? mockedServiceBaseUrl;
 			const responseMethod = hook?.responseMethod?.toLowerCase() as requestMethodType;
 
-			await this.restMockedServiceProvider.requestHook(responseEndpoint, responseMethod, data);
+			await this.restMockedServiceProvider.requestHook(responseMethod, responseEndpoint, {}, data as any);
 		}
 	}
 

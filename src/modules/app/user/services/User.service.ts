@@ -38,9 +38,14 @@ export default class UserService {
 		}
 	}
 
-	public async getByEmail(email: string): Promise<UserEntity | null> {
+	public async getByEmail(email: string): Promise<UserEntity> {
 		try {
 			const user = await this.userRepository.findOne({ where: { email } });
+
+			if (!user)
+				throw this.exceptions.notFound({
+					message: 'User not founded by email!',
+				});
 
 			return user;
 		} catch (error) {

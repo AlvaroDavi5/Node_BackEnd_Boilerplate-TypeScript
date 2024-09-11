@@ -399,12 +399,12 @@
 							{
 								"pattern": "@dev/**",
 								"group": "internal",
-								"position": "after"
+								"position": "before"
 							},
 							{
 								"pattern": "@shared/**",
-								"group": "type",
-								"position": "before"
+								"group": "internal",
+								"position": "after"
 							}
 						],
 						"alphabetize": {

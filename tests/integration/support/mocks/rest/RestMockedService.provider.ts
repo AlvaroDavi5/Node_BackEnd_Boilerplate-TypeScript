@@ -5,8 +5,8 @@ import LoggerService from '@core/logging/Logger.service';
 import catchError from '@common/utils/externalErrorParser.util';
 import { requestMethodType } from '@shared/internal/types/restClientTypes';
 import { RestClientResponseInterface } from '@shared/external/interfaces/RestClientInterface';
-import { MockObservableInterface } from '../mockObservable';
 import AbstractRestClient from './AbstractRestClient.client';
+import { MockObservableInterface } from '../mockObservable';
 
 
 @Injectable()

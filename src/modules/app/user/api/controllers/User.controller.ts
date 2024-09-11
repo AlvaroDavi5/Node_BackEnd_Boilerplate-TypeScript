@@ -21,14 +21,14 @@ import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import { ListQueryValidatorPipe } from '@api/pipes/QueryValidator.pipe';
 import { ListQueryInputDto } from '@api/dto/QueryInput.dto';
+import { RequestInterface } from '@shared/internal/interfaces/endpointInterface';
+import { PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import CreateUserValidatorPipe from '../pipes/CreateUserValidator.pipe';
 import UpdateUserValidatorPipe from '../pipes/UpdateUserValidator.pipe';
 import LoginUserValidatorPipe from '../pipes/LoginUserValidator.pipe';
 import CreateUserInputDto from '../dto/user/CreateUserInput.dto';
 import UpdateUserInputDto from '../dto/user/UpdateUserInput.dto';
 import LoginUserInputDto from '../dto/user/LoginUserInput.dto';
-import { RequestInterface } from '@shared/internal/interfaces/endpointInterface';
-import { PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
 
 @ApiTags('Users')

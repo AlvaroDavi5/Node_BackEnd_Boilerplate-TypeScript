@@ -15,7 +15,7 @@ export default class RequestLoggerMiddleware implements NestMiddleware {
 		this.logger.setContextName(RequestLoggerMiddleware.name);
 	}
 
-	public use(request: RequestInterface, response: ResponseInterface, next: NextFunctionInterface) {
+	public use(request: RequestInterface, _response: ResponseInterface, next: NextFunctionInterface) {
 		const requestId = this.cryptographyService.generateUuid();
 		this.logger.setRequestId(requestId);
 		request.id = requestId;

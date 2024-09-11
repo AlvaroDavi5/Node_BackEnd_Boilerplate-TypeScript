@@ -1,22 +1,23 @@
 import { v4 as uuidV4 } from 'uuid';
-import envsConfig from '@core/configs/envs.config';
+import envsConfig, { ConfigsInterface } from '@core/configs/envs.config';
 import { LoggerInterface } from '@core/logging/logger';
 
 
 export const configServiceMock = {
 	get: (propertyPath?: string): any => {
+		let scopedProperty = envsConfig();
+
 		if (propertyPath) {
-			const splitedPaths = propertyPath.split('.');
-			let scopedProperty: any = envsConfig();
+			const splitedPaths = propertyPath.split('.') as (keyof ConfigsInterface)[];
 
 			for (const scopedPath of splitedPaths) {
 				if (scopedPath.length)
-					scopedProperty = scopedProperty[String(scopedPath)];
+					scopedProperty = scopedProperty[String(scopedPath) as keyof ConfigsInterface] as unknown as ConfigsInterface;
 			}
 
 			return scopedProperty;
 		} else
-			return envsConfig();
+			return scopedProperty;
 	},
 };
 

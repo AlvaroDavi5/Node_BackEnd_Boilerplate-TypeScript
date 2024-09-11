@@ -28,17 +28,6 @@ Description of the functionality and main decisions made
 - [ ] Added GitHub labels for PR/Issues  
 - [ ] Code owners marked for review  
 - [ ] ESLint rules passed  
-	- [ ] Reviewered import order (src, tests, scripts, root)
-		> 1. External Imports
-		> 1. Core module
-		> 1. Domain Module  
-		> 1. App Module  
-		> 1. API Module  
-		> 1. GraphQl Module  
-		> 1. Events Module  
-		> 1. Common Module  
-		> 1. Shared Module  
-		> 1. Dev Module  
 
 ___
 

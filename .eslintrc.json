@@ -339,7 +339,80 @@
 			],
 			"rules": {
 				"security/detect-object-injection": "error",
-				"import/order": "off",
+				"import/order": [
+					"error",
+					{
+						"groups": [
+							[
+								"builtin",
+								"external"
+							],
+							"internal",
+							"sibling",
+							"parent",
+							"index",
+							"object",
+							"type"
+						],
+						"pathGroupsExcludedImportTypes": [
+							"builtin",
+							"external"
+						],
+						"distinctGroup": false,
+						"newlines-between": "never",
+						"pathGroups": [
+							{
+								"pattern": "@core/**",
+								"group": "internal",
+								"position": "before"
+							},
+							{
+								"pattern": "@domain/**",
+								"group": "internal",
+								"position": "before"
+							},
+							{
+								"pattern": "@app/**",
+								"group": "internal",
+								"position": "before"
+							},
+							{
+								"pattern": "@api/**",
+								"group": "internal",
+								"position": "before"
+							},
+							{
+								"pattern": "@graphql/**",
+								"group": "internal",
+								"position": "before"
+							},
+							{
+								"pattern": "@events/**",
+								"group": "internal",
+								"position": "before"
+							},
+							{
+								"pattern": "@common/**",
+								"group": "internal",
+								"position": "before"
+							},
+							{
+								"pattern": "@dev/**",
+								"group": "internal",
+								"position": "after"
+							},
+							{
+								"pattern": "@shared/**",
+								"group": "type",
+								"position": "before"
+							}
+						],
+						"alphabetize": {
+							"order": "ignore",
+							"caseInsensitive": true
+						}
+					}
+				],
 				"import/default": "error",
 				"import/unambiguous": "error",
 				"import/no-extraneous-dependencies": [

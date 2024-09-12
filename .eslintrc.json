@@ -221,7 +221,6 @@
 		"arrow-body-style": "off",
 		"id-denylist": [
 			"error",
-			"err",
 			"e",
 			"a",
 			"b",

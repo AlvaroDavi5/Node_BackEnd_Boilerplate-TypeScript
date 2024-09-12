@@ -22,7 +22,7 @@ export const createNestApplicationOptions: NestApplicationOptions = {
 export default (nestApp: INestApplication): void => {
 	nestApp.enableShutdownHooks();
 
-	const logger = nestApp.get<LoggerProviderInterface>(SINGLETON_LOGGER_PROVIDER, {}).getLogger('NestApplication');
+	const logger = nestApp.get<LoggerProviderInterface>(SINGLETON_LOGGER_PROVIDER, { strict: false }).getLogger('NestApplication');
 
 	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error: Error, origin: string) => {
 		logger.error(`App received ${ProcessEventsEnum.UNCAUGHT_EXCEPTION}`, `origin: ${origin}`, `error: ${error}`);

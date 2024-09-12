@@ -2,8 +2,8 @@ import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common
 import { IoAdapter } from '@nestjs/platform-socket.io';
 import { json, urlencoded } from 'express';
 import compression from 'compression';
-import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 import { getObjValues } from '@common/utils/dataValidations.util';
+import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 
 
 export default (nestApp: INestApplication): void => {

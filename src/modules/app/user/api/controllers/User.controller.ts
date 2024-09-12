@@ -1,11 +1,11 @@
 import {
 	Inject,
-	Controller, Req, ParseUUIDPipe,
+	Controller, Req, Res, ParseUUIDPipe,
 	Param, Query, Body,
 	Get, Post, Put, Patch, Delete,
 	UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse, ApiNoContentResponse } from '@nestjs/swagger';
 import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import UserEntity, { IViewUser } from '@domain/entities/User.entity';
 import UserListEntity from '@domain/entities/generic/UserList.entity';
@@ -21,8 +21,9 @@ import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import { ListQueryValidatorPipe } from '@api/pipes/QueryValidator.pipe';
 import { ListQueryInputDto } from '@api/dto/QueryInput.dto';
-import { RequestInterface } from '@shared/internal/interfaces/endpointInterface';
+import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 import { PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
+import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 import CreateUserValidatorPipe from '../pipes/CreateUserValidator.pipe';
 import UpdateUserValidatorPipe from '../pipes/UpdateUserValidator.pipe';
 import LoginUserValidatorPipe from '../pipes/LoginUserValidator.pipe';
@@ -169,17 +170,18 @@ export default class UserController {
 		deprecated: false,
 	})
 	@Delete('/:userId')
-	@ApiOkResponse({ schema: { example: { result: true } } })
+	@ApiNoContentResponse({})
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async deleteUser(
 		@Req() request: RequestInterface,
+		@Res() response: ResponseInterface,
 		@Param('userId', ParseUUIDPipe) userId: string,
-	): Promise<[affectedCount: number] | unknown> {
+	): Promise<void> {
 		const { user } = request;
 
-		const result = await this.deleteUserUseCase.execute(userId, user);
+		await this.deleteUserUseCase.execute(userId, user);
 
-		return { result };
+		response.status(HttpStatusEnum.NO_CONTENT).send(undefined);
 	}
 }

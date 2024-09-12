@@ -115,7 +115,7 @@ export default class UserService {
 
 		const [salt, hash] = userPassword.split('|');
 
-		if (!salt.length || !hash.length)
+		if (!salt?.length || !hash?.length)
 			throw this.exceptions.internal({
 				message: 'Error to get password',
 				details: 'Invalid salt or hash from database',

@@ -45,6 +45,7 @@
 		"mock-dependencies": "cross-env NODE_PATH=. ts-node --project tsconfig.json ./scripts/mock-dependencies.ts",
 		"receive-messages": "cross-env NODE_PATH=. ts-node --project tsconfig.json scripts/receive-messages.ts",
 		"send-message": "cross-env NODE_PATH=. ts-node --project tsconfig.json ./scripts/send-message.ts",
+		"db:seed": "cross-env NODE_PATH=. ts-node --project tsconfig.json ./scripts/seed.ts",
 		"db:setup": "yarn db:schema-drop && yarn db:schema-sync",
 		"db:schema-sync": "yarn build && yarn typeorm schema:sync -d build/modules/core/infra/database/db.config.js",
 		"db:schema-drop": "yarn build && yarn typeorm schema:drop -d build/modules/core/infra/database/db.config.js",

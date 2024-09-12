@@ -52,22 +52,17 @@ export default class HookController {
 		@Query(RegisterEventHookValidatorPipe) query: RegisterEventHookInputDto,
 		@Res({ passthrough: true }) response: Response,
 	): Promise<{ statusMessage: string }> {
-		try {
-			if (query.responseSchema.length) {
-				await this.webHookService.save(query.responseSchema, query);
+		if (query.responseSchema.length) {
+			await this.webHookService.save(query.responseSchema, query);
 
-				return {
-					statusMessage: response.statusMessage ?? this.httpConstants.messages.created('Hook event register'),
-				};
-			} else {
-				response.status(HttpStatusEnum.CONFLICT);
-				return {
-					statusMessage: response.statusMessage ?? this.httpConstants.messages.notCreated('Hook event register'),
-				};
-			}
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
+			return {
+				statusMessage: response.statusMessage ?? this.httpConstants.messages.created('Hook event register'),
+			};
+		} else {
+			response.status(HttpStatusEnum.CONFLICT);
+			return {
+				statusMessage: response.statusMessage ?? this.httpConstants.messages.notCreated('Hook event register'),
+			};
 		}
 	}
 }

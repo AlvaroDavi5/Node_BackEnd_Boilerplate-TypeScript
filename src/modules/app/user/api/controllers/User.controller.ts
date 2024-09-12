@@ -68,18 +68,13 @@ export default class UserController {
 	public async listUsers(
 		@Query(ListQueryValidatorPipe) query: ListQueryInputDto,
 	): Promise<PaginationInterface<IViewUser>> {
-		try {
-			const { content, ...listInfo } = await this.listUsersUseCase.execute(query);
-			const mappedContent = content.map((entity) => entity.getAttributes());
+		const { content, ...listInfo } = await this.listUsersUseCase.execute(query);
+		const mappedContent = content.map((entity) => entity.getAttributes());
 
-			return {
-				content: mappedContent,
-				...listInfo,
-			};
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return {
+			content: mappedContent,
+			...listInfo,
+		};
 	}
 
 	@UseGuards(AuthGuard)
@@ -97,16 +92,11 @@ export default class UserController {
 		@Req() request: RequestInterface,
 		@Body(CreateUserValidatorPipe) body: CreateUserInputDto,
 	): Promise<IViewUser> {
-		try {
-			const { user } = request;
+		const { user } = request;
 
-			const result = await this.createUserUseCase.execute(body, user);
+		const result = await this.createUserUseCase.execute(body, user);
 
-			return result.getAttributes();
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return result.getAttributes();
 	}
 
 	@ApiOperation({
@@ -121,14 +111,9 @@ export default class UserController {
 	public async loginUser(
 		@Body(LoginUserValidatorPipe) body: LoginUserInputDto,
 	): Promise<IViewUser & { token: string }> {
-		try {
-			const { user, token } = await this.loginUserUseCase.execute(body);
+		const { user, token } = await this.loginUserUseCase.execute(body);
 
-			return { ...user.getAttributes(), token };
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return { ...user.getAttributes(), token };
 	}
 
 	@UseGuards(AuthGuard)
@@ -146,16 +131,11 @@ export default class UserController {
 		@Req() request: RequestInterface,
 		@Param('userId', ParseUUIDPipe) userId: string,
 	): Promise<IViewUser> {
-		try {
-			const { user } = request;
+		const { user } = request;
 
-			const result = await this.getUserUseCase.execute(userId, user);
+		const result = await this.getUserUseCase.execute(userId, user);
 
-			return result.getAttributes();
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return result.getAttributes();
 	}
 
 	@UseGuards(AuthGuard)
@@ -174,16 +154,11 @@ export default class UserController {
 		@Param('userId', ParseUUIDPipe) userId: string,
 		@Body(UpdateUserValidatorPipe) body: UpdateUserInputDto,
 	): Promise<IViewUser> {
-		try {
-			const { user } = request;
+		const { user } = request;
 
-			const result = await this.updateUserUseCase.execute(userId, body, user);
+		const result = await this.updateUserUseCase.execute(userId, body, user);
 
-			return result.getAttributes();
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return result.getAttributes();
 	}
 
 	@UseGuards(AuthGuard)
@@ -201,15 +176,10 @@ export default class UserController {
 		@Req() request: RequestInterface,
 		@Param('userId', ParseUUIDPipe) userId: string,
 	): Promise<[affectedCount: number] | unknown> {
-		try {
-			const { user } = request;
+		const { user } = request;
 
-			const result = await this.deleteUserUseCase.execute(userId, user);
+		const result = await this.deleteUserUseCase.execute(userId, user);
 
-			return { result };
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return { result };
 	}
 }

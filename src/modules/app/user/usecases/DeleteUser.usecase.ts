@@ -40,8 +40,6 @@ export default class DeleteUserUseCase {
 				message: 'User not deleted',
 			});
 		}
-
-
 	}
 
 	private validatePermissionToDeleteUser(userAgent: UserAuthInterface, user: UserEntity): void {

@@ -64,7 +64,7 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 			userPreferenceServiceMock.delete.mockResolvedValueOnce(true);
 			userServiceMock.delete.mockResolvedValueOnce(true);
 
-			const result = await deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userAgent);
+			await deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userAgent);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
 			expect(userServiceMock.delete).toHaveBeenCalledTimes(1);
@@ -73,10 +73,9 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(userPreferenceServiceMock.delete).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.delete).toHaveBeenCalledWith('b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { softDelete: true });
-			expect(result).toEqual(true);
 		});
 
-		test('Should return not deleted user', async () => {
+		test('Should not deleted user', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: userEntity.getId() });
 			userServiceMock.getById.mockResolvedValueOnce(userEntity);
@@ -85,16 +84,17 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 			userPreferenceServiceMock.delete.mockResolvedValueOnce(false);
 			userServiceMock.delete.mockResolvedValueOnce(false);
 
-			const result = await deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userAgent);
+			await expect(deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userAgent))
+				.rejects.toMatchObject(new Error('User not deleted'));
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
 			expect(userServiceMock.delete).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.delete).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { softDelete: true, userAgentId: userAgent.clientId });
+			expect(exceptionsMock.internal).toHaveBeenCalledWith({ message: 'User not deleted' });
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(userPreferenceServiceMock.delete).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.delete).toHaveBeenCalledWith('b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { softDelete: true });
-			expect(result).toEqual(false);
 		});
 	});
 

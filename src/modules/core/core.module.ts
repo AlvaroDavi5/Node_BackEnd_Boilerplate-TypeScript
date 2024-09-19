@@ -5,9 +5,10 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { GraphQLFormattedError } from 'graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { SentryModule } from '@sentry/nestjs/setup';
+import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { join } from 'path';
 import KnownExceptionFilter from '@api/filters/KnownException.filter';
 import RequestRateConstants from '@common/constants/RequestRate.constants';
@@ -71,6 +72,7 @@ const requestRateConstants = new RequestRateConstants();
 			},
 			include: [],
 		}),
+		SentryModule.forRoot(),
 		DevtoolsModule.register({
 			http: appConfigs.environment === EnvironmentsEnum.DEVELOPMENT,
 			port: appConfigs.nestDevToolsPort,

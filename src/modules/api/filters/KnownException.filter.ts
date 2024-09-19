@@ -1,14 +1,17 @@
 import { Catch, ExceptionFilter, ArgumentsHost, HttpException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { AxiosError } from 'axios';
+import { captureException as captureOnSentry } from '@sentry/nestjs';
 import LoggerService from '@core/logging/Logger.service';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import externalErrorParser from '@common/utils/externalErrorParser.util';
 import { getObjValues, isNullOrUndefined } from '@common/utils/dataValidations.util';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
+
 
 type errorResponseType = ErrorInterface & { description?: string };
 
@@ -16,6 +19,7 @@ type errorResponseType = ErrorInterface & { description?: string };
 export default class KnownExceptionFilter implements ExceptionFilter<HttpException | AxiosError | Error> {
 	private readonly showStack: boolean;
 	private readonly knownExceptions: string[];
+	private readonly errorsToIgnore: number[];
 
 	constructor(
 		private readonly logger: LoggerService,
@@ -25,20 +29,30 @@ export default class KnownExceptionFilter implements ExceptionFilter<HttpExcepti
 		this.logger.setContextName(KnownExceptionFilter.name);
 
 		this.knownExceptions = getObjValues<ExceptionsEnum>(ExceptionsEnum).map((exc) => exc.toString());
+		this.errorsToIgnore = [
+			HttpStatusEnum.I_AM_A_TEAPOT,
+			HttpStatusEnum.INVALID_TOKEN,
+			HttpStatusEnum.UNAUTHORIZED,
+			HttpStatusEnum.TOO_MANY_REQUESTS,
+			HttpStatusEnum.BAD_REQUEST,
+			HttpStatusEnum.FORBIDDEN,
+		];
 
 		const appConfigs = this.configService.get<ConfigsInterface['application']>('application')!;
 		this.showStack = appConfigs.showDetailedLogs;
 	}
 
-	public catch(exception: HttpException | AxiosError | Error, host: ArgumentsHost) {
-		const context = host.switchToHttp();
-		const request = context.getRequest<RequestInterface>();
-		const response = context.getResponse<ResponseInterface>();
-
-		if (request.id)
-			this.logger.setRequestId(request.id);
+	private capture(exception: unknown): void {
 		this.logger.error(exception);
 
+		const shouldIgnoreHttpException = exception instanceof HttpException && this.errorsToIgnore.includes(exception.getStatus());
+		const shouldIgnoreAxiosError = exception instanceof AxiosError && !!exception.status && this.errorsToIgnore.includes(exception.status);
+
+		if (!shouldIgnoreHttpException && !shouldIgnoreAxiosError)
+			captureOnSentry(exception);
+	}
+
+	private buildErrorResponse(exception: HttpException | AxiosError | Error): { status: number, errorResponse: errorResponseType } {
 		let status: number;
 		let errorResponse: errorResponseType = {
 			name: exception.name,
@@ -73,8 +87,20 @@ export default class KnownExceptionFilter implements ExceptionFilter<HttpExcepti
 			errorResponse.cause = error.cause;
 		}
 
-		response
-			.status(status)
-			.json(errorResponse);
+		return { status, errorResponse };
+	}
+
+	public catch(exception: HttpException | AxiosError | Error, host: ArgumentsHost) {
+		const context = host.switchToHttp();
+		const request = context.getRequest<RequestInterface>();
+		const response = context.getResponse<ResponseInterface>();
+
+		if (request.id)
+			this.logger.setRequestId(request.id);
+
+		this.capture(exception);
+		const { status, errorResponse } = this.buildErrorResponse(exception);
+
+		response.status(status).json(errorResponse);
 	}
 }

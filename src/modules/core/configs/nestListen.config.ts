@@ -49,6 +49,17 @@ export default (nestApp: INestApplication): void => {
 	}));
 
 	initSentry({
+		enabled: environment === EnvironmentsEnum.PRODUCTION,
+		environment: environment,
+		dsn: process.env.SENTRY_DNS,
+		integrations: [
+			nodeProfilingIntegration(),
+			captureConsoleIntegration(),
+		],
+		profilesSampleRate: 1.0,
+		enableTracing: true,
+		tracesSampleRate: 1.0,
+		sendDefaultPii: true,
 	});
 };
 

@@ -185,12 +185,14 @@ ___
 
 ### TO DO
 
+[Backstage](https://backstage.io/docs/overview/what-is-backstage/)
 - **Clustering**
 	- [x] Clusters
 		- [x] Kubernetes
 		- [ ] Load Balancing
 - **Monitoring**
 	- [ ] Logs Monitor
+		> Grafana + Sentry or DataDog (container)
 - **CI/CD**
 	- [ ] Jenkins
 - **Deployment**

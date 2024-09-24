@@ -1,9 +1,7 @@
 import { Catch, ExceptionFilter, ArgumentsHost, HttpException } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { AxiosError } from 'axios';
 import { captureException as captureOnSentry } from '@sentry/nestjs';
 import LoggerService from '@core/logging/Logger.service';
-import { ConfigsInterface } from '@core/configs/envs.config';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
@@ -17,13 +15,11 @@ type errorResponseType = ErrorInterface & { description?: string };
 
 @Catch(HttpException, AxiosError, Error)
 export default class KnownExceptionFilter implements ExceptionFilter<HttpException | AxiosError | Error> {
-	private readonly showStack: boolean;
 	private readonly knownExceptions: string[];
 	private readonly errorsToIgnore: number[];
 
 	constructor(
 		private readonly logger: LoggerService,
-		private readonly configService: ConfigService,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
 		this.logger.setContextName(KnownExceptionFilter.name);
@@ -37,9 +33,6 @@ export default class KnownExceptionFilter implements ExceptionFilter<HttpExcepti
 			HttpStatusEnum.BAD_REQUEST,
 			HttpStatusEnum.FORBIDDEN,
 		];
-
-		const appConfigs = this.configService.get<ConfigsInterface['application']>('application')!;
-		this.showStack = appConfigs.showDetailedLogs;
 	}
 
 	private capture(exception: unknown): void {
@@ -57,7 +50,6 @@ export default class KnownExceptionFilter implements ExceptionFilter<HttpExcepti
 		let errorResponse: errorResponseType = {
 			name: exception.name,
 			message: exception.message,
-			stack: this.showStack ? exception.stack : undefined,
 		};
 
 		if (exception instanceof HttpException) {

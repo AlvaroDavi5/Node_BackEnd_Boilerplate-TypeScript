@@ -1,65 +1,37 @@
 import { HttpException } from '@nestjs/common';
 import { AxiosError } from 'axios';
 import Exceptions from '@core/errors/Exceptions';
+import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
-import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
-type exceptionGeneratorType = (error: ErrorInterface) => HttpException;
-
-export default function externalErrorParser(error: any): HttpException {
-	const exceptions = new Exceptions();
-
-	const exceptionSelector = (statusCode: number | undefined): exceptionGeneratorType => {
-		let exceptionGenerator: exceptionGeneratorType;
-
-		switch (statusCode) {
-			case HttpStatusEnum.BAD_REQUEST:
-				exceptionGenerator = exceptions.contract;
-				break;
-			case HttpStatusEnum.FORBIDDEN:
-				exceptionGenerator = exceptions.business;
-				break;
-			case HttpStatusEnum.INVALID_TOKEN:
-				exceptionGenerator = exceptions.invalidToken;
-				break;
-			case HttpStatusEnum.UNAUTHORIZED:
-				exceptionGenerator = exceptions.unauthorized;
-				break;
-			case HttpStatusEnum.TOO_MANY_REQUESTS:
-				exceptionGenerator = exceptions.manyRequests;
-				break;
-			case HttpStatusEnum.CONFLICT:
-				exceptionGenerator = exceptions.conflict;
-				break;
-			case HttpStatusEnum.NOT_FOUND:
-				exceptionGenerator = exceptions.notFound;
-				break;
-			case HttpStatusEnum.SERVICE_UNAVAILABLE:
-				exceptionGenerator = exceptions.integration;
-				break;
-			default:
-				exceptionGenerator = exceptions.internal;
-				break;
-		}
-
-		return exceptionGenerator;
+function exceptionsMapper(statusCode: number) {
+	const mapper: Record<number, ExceptionsEnum> = {
+		[HttpStatusEnum.BAD_REQUEST]: ExceptionsEnum.CONTRACT,
+		[HttpStatusEnum.FORBIDDEN]: ExceptionsEnum.BUSINESS,
+		[HttpStatusEnum.INVALID_TOKEN]: ExceptionsEnum.INVALID_TOKEN,
+		[HttpStatusEnum.UNAUTHORIZED]: ExceptionsEnum.UNAUTHORIZED,
+		[HttpStatusEnum.TOO_MANY_REQUESTS]: ExceptionsEnum.TOO_MANY_REQUESTS,
+		[HttpStatusEnum.CONFLICT]: ExceptionsEnum.CONFLICT,
+		[HttpStatusEnum.NOT_FOUND]: ExceptionsEnum.NOT_FOUND,
+		[HttpStatusEnum.SERVICE_UNAVAILABLE]: ExceptionsEnum.INTEGRATION,
+		[HttpStatusEnum.INTERNAL_SERVER_ERROR]: ExceptionsEnum.INTERNAL,
 	};
 
-	let exception: exceptionGeneratorType;
-	if (error instanceof AxiosError)
-		exception = exceptionSelector(error.status ?? error.response?.status);
-	else if (error instanceof HttpException)
-		exception = exceptionSelector(error.getStatus());
-	else if (error instanceof Error)
-		exception = exceptionSelector(500);
-	else {
-		exception = () => exceptions.internal({
-			message: error?.message,
-			details: error?.details,
-			cause: error?.cause,
-		});
-	}
+	return mapper[Number(statusCode)] ?? ExceptionsEnum.INTERNAL;
+}
 
-	return exception(error);
+export default function externalErrorParser(error: any): HttpException {
+
+	const exceptions = new Exceptions();
+	let exceptionName: ExceptionsEnum;
+
+	if (error instanceof HttpException)
+		exceptionName = exceptionsMapper(error.getStatus());
+	else if (error instanceof AxiosError)
+		exceptionName = exceptionsMapper(error.status ?? error.response?.status ?? 500);
+	else // instanceof Error
+		exceptionName = exceptionsMapper(500);
+
+	return exceptions[String(exceptionName) as ExceptionsEnum](error);
 }

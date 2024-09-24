@@ -1,11 +1,11 @@
 import {
 	Inject,
-	Controller, Req, ParseUUIDPipe,
+	Controller, Req, Res, ParseUUIDPipe,
 	Param, Query, Body,
 	Get, Post, Put, Patch, Delete,
 	UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse, ApiNoContentResponse } from '@nestjs/swagger';
 import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import UserEntity, { IViewUser } from '@domain/entities/User.entity';
 import UserListEntity from '@domain/entities/generic/UserList.entity';
@@ -21,14 +21,15 @@ import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import { ListQueryValidatorPipe } from '@api/pipes/QueryValidator.pipe';
 import { ListQueryInputDto } from '@api/dto/QueryInput.dto';
+import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
+import { PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
+import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 import CreateUserValidatorPipe from '../pipes/CreateUserValidator.pipe';
 import UpdateUserValidatorPipe from '../pipes/UpdateUserValidator.pipe';
 import LoginUserValidatorPipe from '../pipes/LoginUserValidator.pipe';
 import CreateUserInputDto from '../dto/user/CreateUserInput.dto';
 import UpdateUserInputDto from '../dto/user/UpdateUserInput.dto';
 import LoginUserInputDto from '../dto/user/LoginUserInput.dto';
-import { RequestInterface } from '@shared/internal/interfaces/endpointInterface';
-import { PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
 
 @ApiTags('Users')
@@ -68,18 +69,13 @@ export default class UserController {
 	public async listUsers(
 		@Query(ListQueryValidatorPipe) query: ListQueryInputDto,
 	): Promise<PaginationInterface<IViewUser>> {
-		try {
-			const { content, ...listInfo } = await this.listUsersUseCase.execute(query);
-			const mappedContent = content.map((entity) => entity.getAttributes());
+		const { content, ...listInfo } = await this.listUsersUseCase.execute(query);
+		const mappedContent = content.map((entity) => entity.getAttributes());
 
-			return {
-				content: mappedContent,
-				...listInfo,
-			};
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return {
+			content: mappedContent,
+			...listInfo,
+		};
 	}
 
 	@UseGuards(AuthGuard)
@@ -97,16 +93,11 @@ export default class UserController {
 		@Req() request: RequestInterface,
 		@Body(CreateUserValidatorPipe) body: CreateUserInputDto,
 	): Promise<IViewUser> {
-		try {
-			const { user } = request;
+		const { user } = request;
 
-			const result = await this.createUserUseCase.execute(body, user);
+		const result = await this.createUserUseCase.execute(body, user);
 
-			return result.getAttributes();
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return result.getAttributes();
 	}
 
 	@ApiOperation({
@@ -121,14 +112,9 @@ export default class UserController {
 	public async loginUser(
 		@Body(LoginUserValidatorPipe) body: LoginUserInputDto,
 	): Promise<IViewUser & { token: string }> {
-		try {
-			const { user, token } = await this.loginUserUseCase.execute(body);
+		const { user, token } = await this.loginUserUseCase.execute(body);
 
-			return { ...user.getAttributes(), token };
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return { ...user.getAttributes(), token };
 	}
 
 	@UseGuards(AuthGuard)
@@ -146,16 +132,11 @@ export default class UserController {
 		@Req() request: RequestInterface,
 		@Param('userId', ParseUUIDPipe) userId: string,
 	): Promise<IViewUser> {
-		try {
-			const { user } = request;
+		const { user } = request;
 
-			const result = await this.getUserUseCase.execute(userId, user);
+		const result = await this.getUserUseCase.execute(userId, user);
 
-			return result.getAttributes();
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return result.getAttributes();
 	}
 
 	@UseGuards(AuthGuard)
@@ -174,16 +155,11 @@ export default class UserController {
 		@Param('userId', ParseUUIDPipe) userId: string,
 		@Body(UpdateUserValidatorPipe) body: UpdateUserInputDto,
 	): Promise<IViewUser> {
-		try {
-			const { user } = request;
+		const { user } = request;
 
-			const result = await this.updateUserUseCase.execute(userId, body, user);
+		const result = await this.updateUserUseCase.execute(userId, body, user);
 
-			return result.getAttributes();
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return result.getAttributes();
 	}
 
 	@UseGuards(AuthGuard)
@@ -194,22 +170,18 @@ export default class UserController {
 		deprecated: false,
 	})
 	@Delete('/:userId')
-	@ApiOkResponse({ schema: { example: { result: true } } })
+	@ApiNoContentResponse({})
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async deleteUser(
 		@Req() request: RequestInterface,
+		@Res() response: ResponseInterface,
 		@Param('userId', ParseUUIDPipe) userId: string,
-	): Promise<[affectedCount: number] | unknown> {
-		try {
-			const { user } = request;
+	): Promise<void> {
+		const { user } = request;
 
-			const result = await this.deleteUserUseCase.execute(userId, user);
+		await this.deleteUserUseCase.execute(userId, user);
 
-			return { result };
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		response.status(HttpStatusEnum.NO_CONTENT).send(undefined);
 	}
 }

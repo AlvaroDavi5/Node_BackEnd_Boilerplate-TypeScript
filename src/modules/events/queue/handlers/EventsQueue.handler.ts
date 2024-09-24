@@ -1,4 +1,4 @@
-import { Injectable, Inject, OnModuleInit, ArgumentMetadata } from '@nestjs/common';
+import { Injectable, OnModuleInit, ArgumentMetadata } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { Message } from '@aws-sdk/client-sqs';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
@@ -6,7 +6,7 @@ import WebhookService from '@app/hook/services/Webhook.service';
 import MongoClient from '@core/infra/data/Mongo.client';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import LoggerService, { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
+import LoggerService from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
 import { EventsEnum } from '@domain/enums/events.enum';
 import { WebSocketRoomsEnum } from '@domain/enums/webSocketEvents.enum';
@@ -18,17 +18,15 @@ export default class EventsQueueHandler implements OnModuleInit {
 	private subscriptionService!: SubscriptionService;
 	private webhookService!: WebhookService;
 	private readonly schemaValidator: SchemaValidator;
-	private readonly logger: LoggerService;
 
 	constructor(
 		private readonly moduleRef: ModuleRef,
 		private readonly mongoClient: MongoClient,
 		private readonly dataParserHelper: DataParserHelper,
-		@Inject(SINGLETON_LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
 		private readonly exceptions: Exceptions,
+		private readonly logger: LoggerService,
 	) {
-		this.logger = this.loggerProvider.getLogger(EventsQueueHandler.name);
+		this.logger.setContextName(EventsQueueHandler.name);
 		this.schemaValidator = new SchemaValidator(this.exceptions, this.logger);
 	}
 

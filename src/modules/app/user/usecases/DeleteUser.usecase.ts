@@ -16,7 +16,7 @@ export default class DeleteUserUseCase {
 		private readonly exceptions: Exceptions,
 	) { }
 
-	public async execute(id: string, userAgent?: UserAuthInterface): Promise<boolean> {
+	public async execute(id: string, userAgent?: UserAuthInterface): Promise<void> {
 		if (!userAgent?.clientId)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid userAgent',
@@ -35,7 +35,11 @@ export default class DeleteUserUseCase {
 			userAgentId: userAgent.clientId,
 		});
 
-		return softDeletedUser;
+		if (!softDeletedUser) {
+			throw this.exceptions.internal({
+				message: 'User not deleted',
+			});
+		}
 	}
 
 	private validatePermissionToDeleteUser(userAgent: UserAuthInterface, user: UserEntity): void {

@@ -4,7 +4,7 @@ import {
 	Put, Query,
 	UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiCreatedResponse, ApiNotAcceptableResponse } from '@nestjs/swagger';
 import { Response } from 'express';
 import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import WebhookService from '@app/hook/services/Webhook.service';
@@ -39,10 +39,17 @@ export default class HookController {
 		deprecated: false,
 	})
 	@Put('/')
-	@ApiOkResponse({
+	@ApiCreatedResponse({
 		schema: {
 			example: {
-				statusMessage: 'Event hook register created successfully.',
+				statusMessage: 'Hook event register created successfully.',
+			},
+		}
+	})
+	@ApiNotAcceptableResponse({
+		schema: {
+			example: {
+				statusMessage: 'Hook event register is not acceptable!',
 			},
 		}
 	})
@@ -52,22 +59,20 @@ export default class HookController {
 		@Query(RegisterEventHookValidatorPipe) query: RegisterEventHookInputDto,
 		@Res({ passthrough: true }) response: Response,
 	): Promise<{ statusMessage: string }> {
-		try {
-			if (query.responseSchema.length) {
-				await this.webHookService.save(query.responseSchema, query);
+		const resourceName = 'Hook event register';
 
-				return {
-					statusMessage: response.statusMessage ?? this.httpConstants.messages.created('Hook event register'),
-				};
-			} else {
-				response.status(HttpStatusEnum.CONFLICT);
-				return {
-					statusMessage: response.statusMessage ?? this.httpConstants.messages.notCreated('Hook event register'),
-				};
-			}
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
+		if (query.responseSchema.length) {
+			await this.webHookService.save(query.responseSchema, query);
+
+			response.status(HttpStatusEnum.CREATED);
+			return {
+				statusMessage: response.statusMessage ?? this.httpConstants.messages.created(resourceName),
+			};
+		} else {
+			response.status(HttpStatusEnum.NOT_ACCEPTABLE);
+			return {
+				statusMessage: response.statusMessage ?? this.httpConstants.messages.notAcceptable(resourceName),
+			};
 		}
 	}
 }

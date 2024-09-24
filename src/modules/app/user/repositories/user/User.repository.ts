@@ -6,9 +6,9 @@ import Exceptions from '@core/errors/Exceptions';
 import AbstractRepository from '@core/infra/database/repositories/AbstractRepository.repository';
 import UsersModel from '@core/infra/database/models/Users.model';
 import UserEntity from '@domain/entities/User.entity';
+import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import userMapper from './user.mapper';
 import { userQueryParamsBuilder, UserBuildParamsInterface } from './user.query';
-import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
 
 @Injectable()

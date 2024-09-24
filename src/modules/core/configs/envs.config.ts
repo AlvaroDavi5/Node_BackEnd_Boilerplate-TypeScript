@@ -12,6 +12,7 @@ export interface ConfigsInterface {
 		environment: string, // app env
 		appPort: number, // app port
 		nestDevToolsPort: number, // dev tools port
+		sentryDsn: string, // error tracker DSN
 		url: string, // app url
 		socketEnv: boolean, // enable websocket
 		showDetailedLogs: boolean, // enable app error stack and debug levels logging
@@ -139,6 +140,7 @@ export default (): ConfigsInterface => ({
 		environment: process.env.NODE_ENV ?? 'dev',
 		appPort: parseInt(process.env.APP_PORT ?? '3000', 10),
 		nestDevToolsPort: parseInt(process.env.NESTDEV_PORT ?? '8000', 10),
+		sentryDsn: process.env.SENTRY_DSN ?? '',
 		url: process.env.APP_URL ?? 'http://localhost:3000/',
 		socketEnv: process.env.SOCKET_ENV === 'enabled',
 		showDetailedLogs: process.env.SHOW_DETAILED_LOGS === 'true',

@@ -5,9 +5,10 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { GraphQLModule } from '@nestjs/graphql';
-import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
-import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { GraphQLFormattedError } from 'graphql';
+import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
+import { SentryModule } from '@sentry/nestjs/setup';
+import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { join } from 'path';
 import KnownExceptionFilter from '@api/filters/KnownException.filter';
 import RequestRateConstants from '@common/constants/RequestRate.constants';
@@ -19,7 +20,7 @@ import GraphQlModule from '@graphql/graphql.module';
 import envsConfig from './configs/envs.config';
 import LifecycleService from './start/Lifecycle.service';
 import Exceptions from './errors/Exceptions';
-import LoggerService, { SingletonLoggerProvider, RequestLoggerProvider } from './logging/Logger.service';
+import LoggerService, { RequestLoggerProvider } from './logging/Logger.service';
 import CryptographyService from './security/Cryptography.service';
 import DatabaseConnectionProvider from './infra/database/connection';
 import RedisClient from './infra/cache/Redis.client';
@@ -71,6 +72,7 @@ const requestRateConstants = new RequestRateConstants();
 			},
 			include: [],
 		}),
+		SentryModule.forRoot(),
 		DevtoolsModule.register({
 			http: appConfigs.environment === EnvironmentsEnum.DEVELOPMENT,
 			port: appConfigs.nestDevToolsPort,
@@ -85,12 +87,11 @@ const requestRateConstants = new RequestRateConstants();
 		{
 			provide: APP_FILTER,
 			useClass: KnownExceptionFilter,
-			scope: Scope.DEFAULT,
+			scope: Scope.TRANSIENT,
 		},
 		LifecycleService,
 		Exceptions,
 		LoggerService,
-		SingletonLoggerProvider,
 		RequestLoggerProvider,
 		CryptographyService,
 		DatabaseConnectionProvider,
@@ -107,7 +108,6 @@ const requestRateConstants = new RequestRateConstants();
 	exports: [
 		Exceptions,
 		LoggerService,
-		SingletonLoggerProvider,
 		RequestLoggerProvider,
 		CryptographyService,
 		DatabaseConnectionProvider,

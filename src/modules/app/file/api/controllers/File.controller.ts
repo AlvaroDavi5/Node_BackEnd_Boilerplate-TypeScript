@@ -54,19 +54,14 @@ export default class FileController {
 		@Headers('filePath') filePathHeader: string,
 		@Res({ passthrough: true }) response: Response,
 	): Promise<Buffer | StreamableFile | string> {
-		try {
-			const { content, contentType, fileName } = await this.fileService.downloadFile(fileNameHeader, filePathHeader, headers.accept);
+		const { content, contentType, fileName } = await this.fileService.downloadFile(fileNameHeader, filePathHeader, headers.accept);
 
-			response.set({
-				'Content-Type': contentType,
-				'Content-Disposition': `attachment; filename="${fileName}"`,
-			});
+		response.set({
+			'Content-Type': contentType,
+			'Content-Disposition': `attachment; filename="${fileName}"`,
+		});
 
-			return content;
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return content;
 	}
 
 	@ApiOperation({
@@ -112,11 +107,6 @@ export default class FileController {
 		fileContentType: string,
 		uploadTag: string,
 	}> {
-		try {
-			return await this.fileService.uploadFile(file, fileNameHeader, headers.accept);
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return await this.fileService.uploadFile(file, fileNameHeader, headers.accept);
 	}
 }

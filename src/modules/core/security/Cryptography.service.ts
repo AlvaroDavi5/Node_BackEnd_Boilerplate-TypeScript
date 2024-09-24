@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import crypto from 'crypto';
 import { genSaltSync } from 'bcrypt';
-import { sign, verify, JwtPayload, JsonWebTokenError } from 'jsonwebtoken';
+import { sign, verify, JwtPayload, JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { v4 as uuidV4 } from 'uuid';
 import { ConfigsInterface } from '@core/configs/envs.config';
 
@@ -40,24 +40,32 @@ export default class CryptographyService {
 		invalidSignature: boolean, expired: boolean,
 	} {
 		try {
-			const decoded = verify(token,
-				this.secret,
-				{
-					algorithms: ['HS256'],
-					ignoreExpiration: false,
-				}
-			);
+			const decoded = verify(token, this.secret, {
+				algorithms: ['HS256'],
+				ignoreExpiration: false,
+			});
+
 			return {
 				content: decoded,
 				invalidSignature: false,
 				expired: false,
 			};
 		} catch (error) {
-			const jwtError = error as JsonWebTokenError;
+			const content = null;
+			let expired = false;
+			let invalidSignature = false;
+
+			if (error instanceof TokenExpiredError)
+				expired = true;
+			if (!expired && error instanceof JsonWebTokenError) {
+				invalidSignature = error.message === 'invalid signature';
+				expired = error.message === 'jwt expired';
+			}
+
 			return {
-				content: null,
-				invalidSignature: jwtError.message === 'invalid signature', // REVIEW - do not compare with error message string
-				expired: jwtError.message === 'jwt expired', // REVIEW - do not compare with error message string
+				content,
+				invalidSignature,
+				expired,
 			};
 		}
 	}

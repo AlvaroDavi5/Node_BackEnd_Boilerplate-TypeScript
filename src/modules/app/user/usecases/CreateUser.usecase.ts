@@ -25,7 +25,7 @@ export default class CreateUserUseCase {
 			});
 
 		const newUser = new UserEntity(data);
-		const existentUser = await this.userService.getByEmail(newUser.getEmail());
+		const existentUser = await this.getUserByEmail(newUser.getEmail());
 		if (existentUser)
 			throw this.exceptions.conflict({
 				message: this.httpConstants.messages.conflict('User'),
@@ -46,5 +46,13 @@ export default class CreateUserUseCase {
 			foundedUser?.setPreference(foundedPreference);
 
 		return foundedUser;
+	}
+
+	private async getUserByEmail(email: string): Promise<UserEntity | null> {
+		try {
+			return await this.userService.getByEmail(email);
+		} catch (error) {
+			return null;
+		}
 	}
 }

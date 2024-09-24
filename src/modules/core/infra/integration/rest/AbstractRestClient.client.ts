@@ -1,7 +1,7 @@
 import axios, { AxiosInstance, AxiosResponse } from 'axios';
 import axiosRetry from 'axios-retry';
 import LoggerService from '@core/logging/Logger.service';
-import catchError from '@common/utils/externalErrorParser.util';
+import externalErrorParser from '@common/utils/externalErrorParser.util';
 import { requestMethodType } from '@shared/internal/types/restClientTypes';
 import { RestClientResponseInterface } from '@shared/external/interfaces/RestClientInterface';
 
@@ -70,7 +70,7 @@ export default abstract class AbstractRestClient {
 			return { data, status, headers };
 		} catch (error) {
 			this.logger.error(error);
-			throw catchError(error);
+			throw externalErrorParser(error);
 		}
 	}
 }

@@ -1,23 +1,20 @@
-import { Injectable, Inject, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { Observable } from 'rxjs';
 import { Socket as ServerSocket } from 'socket.io';
 import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
 import Exceptions from '@core/errors/Exceptions';
-import LoggerService, { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
+import LoggerService from '@core/logging/Logger.service';
 import { getObjKeys, getObjValues } from '@common/utils/dataValidations.util';
 
 
 @Injectable()
 export default class EventsGuard implements CanActivate {
-	private readonly logger: LoggerService;
-
 	constructor(
 		private readonly exceptions: Exceptions,
-		@Inject(SINGLETON_LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
+		private readonly logger: LoggerService,
 	) {
-		this.logger = this.loggerProvider.getLogger(EventsGuard.name);
+		this.logger.setContextName(EventsGuard.name);
 	}
 
 	public canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {

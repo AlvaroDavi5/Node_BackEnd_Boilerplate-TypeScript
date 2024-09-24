@@ -50,6 +50,9 @@
 	"powermode.shake.enabled": false,
 	"material-icon-theme.activeIconPack": "nest",
 	"vsicons.presets.nestjs": true,
+	"vsicons.presets.angular": true,
+	"vsicons.presets.tsOfficial": true,
+	"vsicons.presets.jsOfficial": true,
 	"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
 	"vsintellicode.features.python.deepLearning": "enabled",
 	"editorconfig.generateAuto": true,
@@ -63,6 +66,7 @@
 	],
 	"debug.allowBreakpointsEverywhere": true,
 	"debug.console.closeOnEnd": true,
+	"debug.onTaskErrors": "debugAnyway",
 	"diffEditor.ignoreTrimWhitespace": false,
 	"tabnine.experimentalAutoImports": true,
 	"git.autofetch": true,
@@ -132,23 +136,22 @@
 	"docker.images.sortBy": "Label",
 	"docker.containers.groupBy": "Compose Project Name",
 	"docker.containers.sortBy": "Label",
-	"debug.onTaskErrors": "debugAnyway",
 	"problems.showCurrentInStatus": true,
-	"javascript.updateImportsOnFileMove.enabled": "always",
-	"typescript.updateImportsOnFileMove.enabled": "always",
 	"javascript.suggest.autoImports": true,
 	"javascript.suggestionActions.enabled": true,
+	"javascript.updateImportsOnFileMove.enabled": "always",
 	"typescript.suggest.autoImports": true,
 	"typescript.suggestionActions.enabled": true,
+	"typescript.updateImportsOnFileMove.enabled": "always",
 	"typescript.enablePromptUseWorkspaceTsdk": true,
 	"typescript.tsserver.maxTsServerMemory": 1536,
 	"typescript.tsserver.watchOptions": {},
 	"github.copilot.enable": {
 		"*": true,
 		"yaml": true,
-		"plaintext": false,
 		"markdown": true,
-		"java": true
+		"java": true,
+		"plaintext": false
 	},
 	"[jsonc]": {
 		"editor.defaultFormatter": "vscode.json-language-features"
@@ -228,32 +231,32 @@
 			"scope": "file"
 		},
 		"TODO": {
-			"iconColor": "orange",
+			"iconColor": "#ffb300",
 			"highlightColor": "#ffb300",
 			"scope": "workspace"
 		},
 		"FIXME": {
-			"iconColor": "red",
+			"iconColor": "#f44336",
 			"highlightColor": "#f44336",
 			"scope": "workspace"
 		},
 		"STUB": {
-			"iconColor": "purple",
+			"iconColor": "#ba68c8",
 			"highlightColor": "#ba68c8",
 			"scope": "file"
 		},
 		"NOTE": {
-			"iconColor": "blue",
+			"iconColor": "#47acff",
 			"highlightColor": "#47acff",
 			"scope": "file"
 		},
 		"REVIEW": {
-			"iconColor": "green",
+			"iconColor": "#64dd17",
 			"highlightColor": "#64dd17",
 			"scope": "workspace"
 		},
 		"SECTION": {
-			"iconColor": "blurple",
+			"iconColor": "#3811ff",
 			"highlightColor": "#3811ff",
 			"scope": "workspace",
 			"behavior": "region"
@@ -268,6 +271,7 @@
 	"files.associations": {
 		"*.apib": "apiblueprint",
 		"*.dbml": "dbml",
+		"**/CODEOWNERS": "markdown",
 		"*.rmd": "markdown"
 	},
 	"json.schemas": [

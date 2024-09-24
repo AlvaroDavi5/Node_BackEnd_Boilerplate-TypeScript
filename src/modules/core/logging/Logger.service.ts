@@ -164,25 +164,3 @@ export const RequestLoggerProvider: Provider = {
 
 	durable: false,
 };
-
-export const SINGLETON_LOGGER_PROVIDER = Symbol('SingletonLoggerProvider');
-export interface LoggerProviderInterface {
-	getLogger: (context: string) => LoggerService,
-}
-export const SingletonLoggerProvider: Provider = {
-	provide: SINGLETON_LOGGER_PROVIDER,
-	scope: Scope.DEFAULT,
-
-	inject: [
-		ConfigService,
-		DataParserHelper,
-	],
-	useFactory: (
-		configService: ConfigService,
-		dataParserHelper: DataParserHelper,
-	): LoggerProviderInterface => ({
-		getLogger: (context: string): LoggerService => new LoggerService(context, configService, dataParserHelper),
-	}),
-
-	durable: false,
-};

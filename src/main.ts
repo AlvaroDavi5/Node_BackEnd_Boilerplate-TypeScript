@@ -14,7 +14,7 @@ import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 async function startNestApplication() {
 	const nestApp = await NestFactory.create(CoreModule, createNestApplicationOptions);
-	nestListenConfig(nestApp);
+	await nestListenConfig(nestApp);
 
 	nestApiConfig(nestApp);
 	swaggerDocConfig(nestApp);

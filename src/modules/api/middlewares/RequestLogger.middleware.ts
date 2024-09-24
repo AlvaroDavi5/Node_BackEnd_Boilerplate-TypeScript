@@ -21,22 +21,22 @@ export default class RequestLoggerMiddleware implements NestMiddleware {
 		request.id = requestId;
 
 		const { method, originalUrl } = request;
-		const pathParams = JSON.stringify(this.maskSensibleData(request.params));
-		const queryParams = JSON.stringify(this.maskSensibleData(request.query));
-		const body = JSON.stringify(this.maskSensibleData(request.body));
+		const pathParams = JSON.stringify(this.maskSensitiveData(request.params));
+		const queryParams = JSON.stringify(this.maskSensitiveData(request.query));
+		const body = JSON.stringify(this.maskSensitiveData(request.body));
 
 		this.logger.http(`REQUESTED - [${method}] ${originalUrl} { path: ${pathParams}, query: ${queryParams}, body: ${body} }`);
 
 		next();
 	}
 
-	private maskSensibleData(data: object) {
-		const sensibleDataFields: string[] = ['password', 'newPassword', 'cvv', 'pin'];
+	private maskSensitiveData(data: object) {
+		const sensitiveDataFields: string[] = ['password', 'newPassword', 'cvv', 'pin'];
 
-		const hasSensibleData: boolean = checkFieldsExistence(data, sensibleDataFields as (keyof object)[]);
-		if (hasSensibleData) {
+		const hasSensitiveData: boolean = checkFieldsExistence(data, sensitiveDataFields as (keyof object)[]);
+		if (hasSensitiveData) {
 			const newData = structuredClone(data);
-			return replaceFields(newData, sensibleDataFields as (keyof object)[], '***');
+			return replaceFields(newData, sensitiveDataFields as (keyof object)[], '***');
 		}
 
 		return data;

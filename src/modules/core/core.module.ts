@@ -20,7 +20,7 @@ import GraphQlModule from '@graphql/graphql.module';
 import envsConfig from './configs/envs.config';
 import LifecycleService from './start/Lifecycle.service';
 import Exceptions from './errors/Exceptions';
-import LoggerService, { SingletonLoggerProvider, RequestLoggerProvider } from './logging/Logger.service';
+import LoggerService, { RequestLoggerProvider } from './logging/Logger.service';
 import CryptographyService from './security/Cryptography.service';
 import DatabaseConnectionProvider from './infra/database/connection';
 import RedisClient from './infra/cache/Redis.client';
@@ -92,7 +92,6 @@ const requestRateConstants = new RequestRateConstants();
 		LifecycleService,
 		Exceptions,
 		LoggerService,
-		SingletonLoggerProvider,
 		RequestLoggerProvider,
 		CryptographyService,
 		DatabaseConnectionProvider,
@@ -109,7 +108,6 @@ const requestRateConstants = new RequestRateConstants();
 	exports: [
 		Exceptions,
 		LoggerService,
-		SingletonLoggerProvider,
 		RequestLoggerProvider,
 		CryptographyService,
 		DatabaseConnectionProvider,

@@ -2,7 +2,7 @@ import { INestApplication, NestApplicationOptions } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { init as initSentry, captureException as captureOnSentry, captureConsoleIntegration } from '@sentry/nestjs';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
-import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
+import LoggerService from '@core/logging/Logger.service';
 import { ProcessEventsEnum, ProcessSignalsEnum } from '@common/enums/processEvents.enum';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { getObjValues } from '@common/utils/dataValidations.util';
@@ -27,7 +27,9 @@ export const createNestApplicationOptions: NestApplicationOptions = {
 export default (nestApp: INestApplication): void => {
 	nestApp.enableShutdownHooks();
 
-	const logger = nestApp.get<LoggerProviderInterface>(SINGLETON_LOGGER_PROVIDER, { strict: false }).getLogger('NestApplication');
+	const logger = nestApp.get<LoggerService>(LoggerService, { strict: false });
+	logger.setContextName('NestApplication');
+
 	const { environment } = nestApp.get<ConfigService>(ConfigService, { strict: false }).get<ConfigsInterface['application']>('application')!;
 
 	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error: Error, origin: string) => {

@@ -40,7 +40,7 @@ export default async (nestApp: INestApplication): Promise<void> => {
 			logger = console;
 		});
 
-	const { environment } = nestApp.get<ConfigService>(ConfigService, { strict: false }).get<ConfigsInterface['application']>('application')!;
+	const { environment, sentryDsn } = nestApp.get<ConfigService>(ConfigService, { strict: false }).get<ConfigsInterface['application']>('application')!;
 
 	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error: Error, origin: string) => {
 		logger.error(`App received ${ProcessEventsEnum.UNCAUGHT_EXCEPTION}`, `origin: ${origin}`, `error: ${error}`);
@@ -58,7 +58,7 @@ export default async (nestApp: INestApplication): Promise<void> => {
 	initSentry({
 		enabled: environment === EnvironmentsEnum.PRODUCTION,
 		environment: environment,
-		dsn: process.env.SENTRY_DNS,
+		dsn: sentryDsn,
 		integrations: [
 			nodeProfilingIntegration(),
 			captureConsoleIntegration(),

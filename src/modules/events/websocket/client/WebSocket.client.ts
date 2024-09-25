@@ -15,8 +15,6 @@ export default class WebSocketClient {
 		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
-		this.logger.setContextName(WebSocketClient.name);
-
 		const configs = this.configService.get<ConfigsInterface['application']>('application')!;
 		const socketUrl = configs.url;
 

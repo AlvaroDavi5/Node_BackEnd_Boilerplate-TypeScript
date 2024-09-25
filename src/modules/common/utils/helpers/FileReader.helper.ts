@@ -15,7 +15,6 @@ export default class FileReaderHelper {
 		private readonly dataParserHelper: DataParserHelper,
 	) {
 		this.logger = new LoggerService(FileReaderHelper.name, this.configService, this.dataParserHelper);
-		this.logger.setContextName(FileReaderHelper.name);
 	}
 
 	public readFile(filePath: string, encoding?: BufferEncoding): string | undefined {
@@ -24,7 +23,7 @@ export default class FileReaderHelper {
 		try {
 			content = readFileSync(join(process.cwd(), filePath), { encoding: encoding ?? 'utf8' });
 		} catch (error) {
-			this.logger.warn('File read error:', error);
+			this.logger.error('File read error:', error);
 		}
 
 		return content;
@@ -36,7 +35,7 @@ export default class FileReaderHelper {
 		try {
 			readStream = createReadStream(join(process.cwd(), filePath), { encoding: encoding ?? 'utf8' });
 		} catch (error) {
-			this.logger.warn('File read stream error:', error);
+			this.logger.error('File read stream error:', error);
 		}
 
 		return readStream;

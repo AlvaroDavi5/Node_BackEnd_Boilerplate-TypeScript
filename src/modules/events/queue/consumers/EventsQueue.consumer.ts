@@ -50,7 +50,6 @@ export default class EventsQueueConsumer {
 		private readonly logger: LoggerService,
 	) {
 		this.name = eventsQueueName;
-		this.logger.setContextName(EventsQueueConsumer.name);
 		this.logger.debug(`Created ${this.name} consumer`);
 	}
 

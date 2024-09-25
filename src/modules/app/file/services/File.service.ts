@@ -108,7 +108,7 @@ export default class FileService {
 					uploadTag: '',
 				};
 
-			const { uploadTag, filePath } = await this.uploadService.uploadReport(fullFileName, file);
+			const { uploadTag, filePath } = await this.uploadService.uploadFile(fullFileName, file);
 
 			return {
 				filePath,

@@ -41,7 +41,7 @@ export default class UploadService {
 		}
 	}
 
-	public async uploadReport(fileName: string, file: Express.Multer.File): Promise<{ filePath: string, uploadTag: string }> {
+	public async uploadFile(fileName: string, file: Express.Multer.File): Promise<{ filePath: string, uploadTag: string }> {
 		let uploadTag = '';
 		const fileEncoding = this.fileStrategy.defineEncoding(fileName, file.mimetype);
 		const fileContent = this.fileReaderHelper.readFile(file.path, fileEncoding) ?? '';

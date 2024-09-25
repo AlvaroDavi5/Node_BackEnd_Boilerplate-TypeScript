@@ -22,8 +22,6 @@ export default class KnownExceptionFilter implements ExceptionFilter<HttpExcepti
 		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
-		this.logger.setContextName(KnownExceptionFilter.name);
-
 		this.knownExceptions = getObjValues<ExceptionsEnum>(ExceptionsEnum).map((exc) => exc.toString());
 		this.errorsToIgnore = [
 			HttpStatusEnum.I_AM_A_TEAPOT,

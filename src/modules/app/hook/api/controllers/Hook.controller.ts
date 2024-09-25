@@ -1,12 +1,10 @@
 import {
-	Inject,
 	Controller, Res,
 	Put, Query,
 	UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiCreatedResponse, ApiNotAcceptableResponse } from '@nestjs/swagger';
 import { Response } from 'express';
-import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import WebhookService from '@app/hook/services/Webhook.service';
 import { RegisterEventHookValidatorPipe } from '@app/hook/api/pipes/HookValidator.pipe';
 import { RegisterEventHookInputDto } from '@app/hook/api/dto/HookInput.dto';
@@ -27,11 +25,7 @@ export default class HookController {
 	constructor(
 		private readonly httpConstants: HttpConstants,
 		private readonly webHookService: WebhookService,
-		@Inject(REQUEST_LOGGER_PROVIDER)
-		private readonly logger: LoggerService,
-	) {
-		this.logger.setContextName(HookController.name);
-	}
+	) { }
 
 	@ApiOperation({
 		summary: 'Register Event Hook',

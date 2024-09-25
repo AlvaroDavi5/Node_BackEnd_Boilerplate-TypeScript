@@ -1,12 +1,10 @@
 import {
-	Inject,
 	Controller, Req, Res, ParseUUIDPipe,
 	Param, Query, Body,
 	Get, Post, Put, Patch, Delete,
 	UseGuards,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse, ApiNoContentResponse } from '@nestjs/swagger';
-import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import UserEntity, { IViewUser } from '@domain/entities/User.entity';
 import UserListEntity from '@domain/entities/generic/UserList.entity';
 import LoginUserUseCase from '@app/user/usecases/LoginUser.usecase';
@@ -44,11 +42,7 @@ export default class UserController {
 		private readonly getUserUseCase: GetUserUseCase,
 		private readonly updateUserUseCase: UpdateUserUseCase,
 		private readonly deleteUserUseCase: DeleteUserUseCase,
-		@Inject(REQUEST_LOGGER_PROVIDER)
-		private readonly logger: LoggerService,
-	) {
-		this.logger.setContextName(UserController.name);
-	}
+	) { }
 
 	@UseGuards(AuthGuard)
 	@authSwaggerDecorator()

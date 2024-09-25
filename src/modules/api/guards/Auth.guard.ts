@@ -12,9 +12,7 @@ export default class AuthGuard implements CanActivate {
 		private readonly cryptographyService: CryptographyService,
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
-	) {
-		this.logger.setContextName(AuthGuard.name);
-	}
+	) { }
 
 	public canActivate(context: ExecutionContext): boolean {
 		this.logger.verbose(`Running guard in '${context.getType()}' context`);

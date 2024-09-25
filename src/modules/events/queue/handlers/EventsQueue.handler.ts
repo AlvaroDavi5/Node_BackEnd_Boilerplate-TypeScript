@@ -26,7 +26,6 @@ export default class EventsQueueHandler implements OnModuleInit {
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 	) {
-		this.logger.setContextName(EventsQueueHandler.name);
 		this.schemaValidator = new SchemaValidator(this.exceptions, this.logger);
 	}
 

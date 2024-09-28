@@ -57,8 +57,8 @@ export default class EventsQueueConsumer {
 	public async handleMessageBatch(messages: Message[]): Promise<void> {
 		for (const message of messages) {
 			this.logger.info(`New message received from ${this.name}`);
-			const wasProcessed = await this.eventsQueueHandler.execute(message);
-			if (wasProcessed)
+			const done = await this.eventsQueueHandler.execute(message);
+			if (done)
 				await this.sqsClient.deleteMessage(eventsQueueUrl, message);
 			this.errorsCount = 0;
 		}

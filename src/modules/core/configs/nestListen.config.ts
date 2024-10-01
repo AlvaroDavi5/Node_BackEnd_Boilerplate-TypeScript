@@ -57,7 +57,7 @@ export default async (nestApp: INestApplication): Promise<void> => {
 
 	initSentry({
 		enabled: environment === EnvironmentsEnum.PRODUCTION,
-		environment: environment,
+		environment,
 		dsn: sentryDsn,
 		integrations: [
 			nodeProfilingIntegration(),

@@ -196,7 +196,7 @@ ___
 - **CI/CD**
 	- [ ] Jenkins
 - **Deployment**
-	- [ ] Heroku
+	- [x] Heroku
 - **Tests**
 	* _Integration_
 		- [ ] Modules

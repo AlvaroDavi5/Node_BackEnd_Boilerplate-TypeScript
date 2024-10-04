@@ -7,10 +7,8 @@ services:
   # Application
   app:
     container_name: App_Node
-    #image: node:alpine
     # Refered Dockerfile
     build: ./
-    #user: root
     env_file: ./envs/.env.development
     #working_dir: /app
     #command: ['./init.sh']
@@ -20,6 +18,7 @@ services:
     networks:
       - default_network
     volumes:
+      # host_path:container_path
       - ./package.json:/app/package.json
       - ./yarn.lock:/app/yarn.lock
       - ./tsconfig.build.json:/app/tsconfig.build.json
@@ -46,7 +45,6 @@ services:
     networks:
       - default_network
     volumes:
-      # host_path:container_path
       - db_volume:/var/lib/postgresql/
   # Relational DataBase Admin
   database_admin:
@@ -114,10 +112,10 @@ services:
     container_name: Cloud_LocalStack
     image: localstack/localstack:latest
     environment:
-      - AWS_DEFAULT_REGION=us-east-1
-      - EDGE_PORT=4566
-      - SERVICES=sqs,sns,s3,cognito
-      - SKIP_SSL_CERT_DOWNLOAD=1
+      AWS_DEFAULT_REGION: us-east-1
+      EDGE_PORT: 4566
+      SERVICES: sqs,sns,s3,cognito
+      SKIP_SSL_CERT_DOWNLOAD: 1
     ports:
       - 4566:4566
       - 4510-4559:4510-4559
@@ -132,34 +130,34 @@ services:
     container_name: CI_Jenkins
     image: jenkins/jenkins:latest
     environment:
-      - DOCKER_TLS_CERTDIR=certs
+      DOCKER_TLS_CERTDIR: certs
     ports:
       - 9000:8080
+    networks:
+      - default_network
     volumes:
       - ci_volume:/var/jenkins_home
-    networks:
-      - monitoring_network
 
   # Code Quality
   quality:
     container_name: Quality_SonarQube
     image: sonarqube:latest
     environment:
-      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: true
     ports:
       - 9001:9000
       - 9092:9092
     networks:
       - default_network
+      - monitoring_network
 
   # Monitoring
-  graph_monitor:
+  monitoring:
     container_name: Monitoring_Grafana
     image: grafana/grafana:latest
     ports:
       - 9002:3000
     networks:
-      - default_network
       - monitoring_network
 
 # Networks for Containers

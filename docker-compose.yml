@@ -159,6 +159,35 @@ services:
       - 9002:3000
     networks:
       - monitoring_network
+    depends_on:
+      - logs_tracker
+      - log_monitor
+  # Logs Monitor
+  log_monitor:
+    container_name: Logs_Grafana_Loki
+    image: grafana/loki:latest
+    user: root
+    ports:
+      - 9003:3100
+    networks:
+      - default_network
+      - monitoring_network
+    volumes:
+      - ./infra/loki-config.yaml:/etc/loki/local-config.yaml
+  # Loki Logs Agent
+  logs_tracker:
+    container_name: Logs_Loki_Promtail
+    image: grafana/promtail:latest
+    command:
+      - -config.file=/etc/loki/promtail.yaml
+    networks:
+      - default_network
+    volumes:
+      - ./infra/promtail-config.yaml:/etc/loki/promtail.yaml
+      - /var/log:/var/log
+      - /var/lib/docker/containers:/var/lib/docker/containers
+    depends_on:
+      - log_monitor
 
 # Networks for Containers
 networks:

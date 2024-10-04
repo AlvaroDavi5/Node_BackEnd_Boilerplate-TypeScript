@@ -1,6 +1,6 @@
 import { Catch, ExceptionFilter, ArgumentsHost, HttpException } from '@nestjs/common';
 import { AxiosError } from 'axios';
-import { captureException as captureOnSentry } from '@sentry/nestjs';
+import { captureError } from '@core/errors/trackers';
 import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
@@ -22,16 +22,11 @@ export default class KnownExceptionFilter implements ExceptionFilter<HttpExcepti
 		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
-		this.logger.setContextName(KnownExceptionFilter.name);
-
 		this.knownExceptions = getObjValues<ExceptionsEnum>(ExceptionsEnum).map((exc) => exc.toString());
 		this.errorsToIgnore = [
 			HttpStatusEnum.I_AM_A_TEAPOT,
 			HttpStatusEnum.INVALID_TOKEN,
-			HttpStatusEnum.UNAUTHORIZED,
 			HttpStatusEnum.TOO_MANY_REQUESTS,
-			HttpStatusEnum.BAD_REQUEST,
-			HttpStatusEnum.FORBIDDEN,
 		];
 	}
 
@@ -42,7 +37,7 @@ export default class KnownExceptionFilter implements ExceptionFilter<HttpExcepti
 		const shouldIgnoreAxiosError = exception instanceof AxiosError && !!exception.status && this.errorsToIgnore.includes(exception.status);
 
 		if (!shouldIgnoreHttpException && !shouldIgnoreAxiosError)
-			captureOnSentry(exception);
+			captureError(exception);
 	}
 
 	private buildErrorResponse(exception: HttpException | AxiosError | Error): { status: number, errorResponse: errorResponseType } {

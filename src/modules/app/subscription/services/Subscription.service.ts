@@ -30,8 +30,6 @@ export default class SubscriptionService implements OnModuleInit {
 		private readonly logger: LoggerService,
 		private readonly cacheAccessHelper: CacheAccessHelper,
 	) {
-		this.logger.setContextName(SubscriptionService.name);
-
 		const { datalake: { db, collections: { subscriptions } } } = this.mongoClient.databases;
 		this.datalakeDatabase = db;
 		this.subscriptionsCollection = this.mongoClient.getCollection(this.datalakeDatabase, subscriptions);

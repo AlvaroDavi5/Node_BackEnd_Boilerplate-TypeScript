@@ -11,9 +11,7 @@ export default class RequestLoggerMiddleware implements NestMiddleware {
 		@Inject(REQUEST_LOGGER_PROVIDER)
 		private readonly logger: LoggerService,
 		private readonly cryptographyService: CryptographyService,
-	) {
-		this.logger.setContextName(RequestLoggerMiddleware.name);
-	}
+	) { }
 
 	public use(request: RequestInterface, _response: ResponseInterface, next: NextFunctionInterface) {
 		const requestId = this.cryptographyService.generateUuid();

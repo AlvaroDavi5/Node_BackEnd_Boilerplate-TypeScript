@@ -13,9 +13,7 @@ export default class EventsGuard implements CanActivate {
 	constructor(
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
-	) {
-		this.logger.setContextName(EventsGuard.name);
-	}
+	) { }
 
 	public canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
 		const socket = context.getArgs()[0] as ServerSocket;

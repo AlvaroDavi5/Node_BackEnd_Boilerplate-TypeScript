@@ -26,7 +26,6 @@ export default class EventsQueueHandler implements OnModuleInit {
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 	) {
-		this.logger.setContextName(EventsQueueHandler.name);
 		this.schemaValidator = new SchemaValidator(this.exceptions, this.logger);
 	}
 
@@ -45,9 +44,11 @@ export default class EventsQueueHandler implements OnModuleInit {
 
 				if (value.payload.event === EventsEnum.NEW_CONNECTION) {
 					this.subscriptionService.emit(value, WebSocketRoomsEnum.NEW_CONNECTIONS);
-					await this.webhookService.pullHook(value.payload.event, value.payload);
-				} else
+				} else {
 					this.subscriptionService.broadcast(value);
+					await this.webhookService.pullHook(value.payload.event, value.payload)
+						.catch((err: unknown) => this.logger.error(err));
+				}
 
 				return true;
 			}

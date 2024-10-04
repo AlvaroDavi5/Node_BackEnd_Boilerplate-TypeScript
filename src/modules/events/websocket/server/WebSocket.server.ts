@@ -36,9 +36,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 		private readonly eventsQueueProducer: EventsQueueProducer,
 		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
-	) {
-		this.logger.setContextName(WebSocketServer.name);
-	}
+	) { }
 
 	public onModuleInit(): void {
 		this.subscriptionService = this.moduleRef.get(SubscriptionService, { strict: false });

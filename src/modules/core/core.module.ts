@@ -87,7 +87,7 @@ const requestRateConstants = new RequestRateConstants();
 		{
 			provide: APP_FILTER,
 			useClass: KnownExceptionFilter,
-			scope: Scope.TRANSIENT,
+			scope: Scope.DEFAULT,
 		},
 		LifecycleService,
 		Exceptions,

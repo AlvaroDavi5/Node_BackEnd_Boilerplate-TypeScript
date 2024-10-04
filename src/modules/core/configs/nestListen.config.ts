@@ -1,14 +1,12 @@
 import { INestApplication, NestApplicationOptions } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { init as initSentry, captureException as captureOnSentry, captureConsoleIntegration } from '@sentry/nestjs';
-import { nodeProfilingIntegration } from '@sentry/profiling-node';
+import { captureError, configureTrackers } from '@core/errors/trackers';
 import LoggerService from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
 import { ProcessEventsEnum, ProcessSignalsEnum } from '@common/enums/processEvents.enum';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { getObjValues } from '@common/utils/dataValidations.util';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
-import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ConfigsInterface } from './envs.config';
 
 
@@ -55,19 +53,7 @@ export default async (nestApp: INestApplication): Promise<void> => {
 		await nestApp.close();
 	}));
 
-	initSentry({
-		enabled: environment === EnvironmentsEnum.PRODUCTION,
-		environment,
-		dsn: sentryDsn,
-		integrations: [
-			nodeProfilingIntegration(),
-			captureConsoleIntegration(),
-		],
-		profilesSampleRate: 1.0,
-		enableTracing: true,
-		tracesSampleRate: 1.0,
-		sendDefaultPii: true,
-	});
+	configureTrackers(environment, { sentryDsn });
 };
 
 export function validateKnownExceptions(error: ErrorInterface | Error): void {
@@ -78,7 +64,7 @@ export function validateKnownExceptions(error: ErrorInterface | Error): void {
 		newError.name = error.name;
 		newError.stack = error.stack;
 
-		captureOnSentry(newError);
+		captureError(newError);
 		throw newError;
 	}
 }

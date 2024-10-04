@@ -190,9 +190,6 @@ ___
 	- [x] Clusters
 		- [x] Kubernetes
 		- [ ] Load Balancing
-- **Monitoring**
-	- [ ] Logs Monitor
-		> Grafana + Sentry or DataDog (container)
 - **CI/CD**
 	- [ ] Jenkins
 - **Deployment**

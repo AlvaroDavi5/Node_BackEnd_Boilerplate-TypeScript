@@ -168,7 +168,7 @@ services:
     image: grafana/loki:latest
     user: root
     ports:
-      - 9003:3100
+      - 9003:9003
     networks:
       - default_network
       - monitoring_network
@@ -184,6 +184,7 @@ services:
       - default_network
     volumes:
       - ./infra/promtail-config.yaml:/etc/loki/promtail.yaml
+      - ./logs/logs.log:/app/logs.log
       - /var/log:/var/log
       - /var/lib/docker/containers:/var/lib/docker/containers
     depends_on:

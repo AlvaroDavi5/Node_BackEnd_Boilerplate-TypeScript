@@ -47,7 +47,7 @@ export default class EventsQueueHandler implements OnModuleInit {
 				} else {
 					this.subscriptionService.broadcast(value);
 					await this.webhookService.pullHook(value.payload.event, value.payload)
-						.catch((err) => this.logger.error(err));
+						.catch((err: unknown) => this.logger.error(err));
 				}
 
 				return true;

@@ -2,12 +2,11 @@ import 'reflect-metadata';
 import { Provider, Scope } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { Logger } from 'winston';
-import { dbConfig } from './db.config';
 import LoggerService from '@core/logging/Logger.service';
-import { LoggerInterface } from '@core/logging/logger';
+import { dbConfig } from './db.config';
 
 
-export async function testConnection(connection: DataSource, logger?: Logger | LoggerInterface | Console): Promise<boolean> {
+export async function testConnection(connection: DataSource, logger?: Logger | LoggerService | Console): Promise<boolean> {
 	try {
 		if (connection.isInitialized) {
 			logger?.info(`Database connection with '${dbConfig.database}' database is initialized successfully`);
@@ -15,21 +14,19 @@ export async function testConnection(connection: DataSource, logger?: Logger | L
 		}
 
 		return false;
-	}
-	catch (error) {
+	} catch (error) {
 		logger?.warn('Unable to connect to the database:');
 		logger?.error(error);
 		return false;
 	}
 }
 
-export async function syncConnection(connection: DataSource, logger?: Logger | LoggerInterface | Console): Promise<void> {
+export async function syncConnection(connection: DataSource, logger?: Logger | LoggerService | Console): Promise<void> {
 	try {
 		await connection.synchronize(false).then(() => {
 			logger?.debug(`Database synced: ${dbConfig.database}`);
 		});
-	}
-	catch (error) {
+	} catch (error) {
 		logger?.warn('Unable to sync to the database:');
 		logger?.error(error);
 	}
@@ -46,16 +43,21 @@ const databaseConnectionProvider: Provider = {
 	],
 	useFactory: async (
 		logger: LoggerService,
-		...args: any[]
+		..._args: unknown[]
 	): Promise<DataSource> => {
 		const connection = new DataSource(dbConfig);
 		logger.setContextName('DatabaseConnectionProvider');
 
-		const isInitialized = await testConnection(connection, logger);
+		try {
+			const isInitialized = await testConnection(connection, logger);
 
-		if (isInitialized)
-			return connection;
-		return await connection.initialize();
+			if (isInitialized)
+				return connection;
+			return await connection.initialize();
+		} catch (error) {
+			logger.error(error);
+			throw error;
+		}
 	},
 	/*
 			? Provider Use Options

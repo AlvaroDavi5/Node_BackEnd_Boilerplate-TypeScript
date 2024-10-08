@@ -1,10 +1,11 @@
 
+// eslint-disable-next-line max-classes-per-file
 export class Server {
-	httpServer: any;
-	options!: any;
-	public readonly sockets: { fetchSockets: () => any[] };
+	httpServer: unknown;
+	options!: unknown;
+	public readonly sockets: { fetchSockets: () => unknown[] };
 
-	constructor(httpServer?: any, options?: any) {
+	constructor(httpServer?: unknown, options?: unknown) {
 		this.httpServer = httpServer || null;
 		this.options = options || {};
 
@@ -16,17 +17,17 @@ export class Server {
 		};
 	}
 
-	public setMaxListeners(listenersNumber: number): this {
+	public setMaxListeners(_listenersNumber: number): this {
 		return this;
 	}
 
-	public on(ev: string, listener?: ((...args: any[]) => void)): this {
+	public on(_ev: string, _listener?: ((...args: unknown[]) => void)): this {
 		return this;
 	}
 
-	public to(socketIdsOrRooms: string | string[]) {
+	public to(_socketIdsOrRooms: string | string[]) {
 		return {
-			emit: (ev: string, ...args: any[]): boolean => {
+			emit: (_ev: string, ..._args: unknown[]): boolean => {
 				return true;
 			},
 		};
@@ -37,10 +38,11 @@ export class Server {
 	}
 }
 
+// eslint-disable-next-line max-classes-per-file
 export class ServerSocket {
 	public readonly id: string;
 	public connected: boolean;
-	public broadcast: { emit: (ev: string, ...args: any[]) => boolean; };
+	public broadcast: { emit: (ev: string, ...args: unknown[]) => boolean; };
 
 	constructor() {
 		this.id = 'mockedSocket';
@@ -50,15 +52,15 @@ export class ServerSocket {
 		};
 	}
 
-	public on(ev: string, listener?: ((...args: any[]) => void)): this {
+	public on(_ev: string, _listener?: ((...args: unknown[]) => void)): this {
 		return this;
 	}
 
-	public off(eventName: string | symbol, listener: (...args: any[]) => void): this {
+	public off(_eventName: string | symbol, _listener: (...args: unknown[]) => void): this {
 		return this;
 	}
 
-	public emit(ev: string, ...args: any[]): boolean {
+	public emit(_ev: string, ..._args: unknown[]): boolean {
 		return true;
 	}
 

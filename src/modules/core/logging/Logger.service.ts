@@ -2,14 +2,9 @@ import { INQUIRER } from '@nestjs/core';
 import { Injectable, Inject, Provider, Scope } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createLogger, Logger } from 'winston';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import {
-	LoggerInterface, LogLevelEnum, MetadataInterface,
-	getLoggerOptions, getDefaultFormat, getMessageFormatter
-} from './logger';
-import { wrapperType } from '@shared/types/constructorType';
-import { dataParserHelperMock } from '@dev/mocks/mockedModules';
+import { LoggerInterface, LogLevelEnum, MetadataInterface, getLoggerOptions } from './logger';
 
 
 @Injectable({ scope: Scope.TRANSIENT })
@@ -28,19 +23,12 @@ export default class LoggerService implements LoggerInterface {
 	) {
 		const applicationConfigs = this.configService.get<ConfigsInterface['application']>('application')!;
 
-		const messageFormatter = getMessageFormatter(this.dataParserHelper.toString);
-
-		const defaultFormat = getDefaultFormat(
-			applicationConfigs.stackErrorVisible === 'true',
-			messageFormatter,
-		);
-
 		const loggerOptions = getLoggerOptions(
 			applicationConfigs.name,
 			applicationConfigs.environment,
 			undefined as any,
 			applicationConfigs.logsPath,
-			defaultFormat,
+			applicationConfigs.showDetailedLogs,
 		);
 
 		this.logger = createLogger(loggerOptions);
@@ -62,40 +50,42 @@ export default class LoggerService implements LoggerInterface {
 		this.requestId = requestId;
 	}
 
-	private buildLog(args: any[]): { message: string, meta: MetadataInterface } {
+	private buildLog(args: unknown[]): { message: string, meta: MetadataInterface } {
 		const inquirerName = typeof this.inquirer === 'string'
 			? this.inquirer
 			: this.inquirer?.constructor?.name;
 		const contextName = this.getContextName() ?? inquirerName;
 		this.setContextName(contextName);
 
-		let message = '';
 		const metadata: MetadataInterface = {
 			context: this.getContextName(),
 			requestId: this.getRequestId(),
 		};
 
-		const separator = args.length > 1 ? ' ' : '';
-		args.forEach(arg => {
+		const errorStacks: string[] = [];
+		args.forEach((arg: unknown) => {
 			if (arg instanceof Error) {
-				const errorName = arg.name.length > 0 ? `\x1b[0;30m${arg.name}\x1b[0m - ` : '';
-				message += `${errorName}${arg.message}${separator}`;
-				if (arg.stack)
-					metadata.stack = arg.stack;
+				const blackConsoleColor = '\x1b[0;30m';
+				const defaultConsoleColor = '\x1b[0m';
+
+				if (arg.stack) {
+					if (Array.isArray(arg.stack)) {
+						const strStack: string[] = arg.stack.map((stack) => (`${blackConsoleColor}${stack}${defaultConsoleColor}`));
+						errorStacks.push(...strStack);
+					} else
+						errorStacks.push(`${blackConsoleColor}${arg.stack}${defaultConsoleColor}`);
+				}
 			}
-			else if (typeof arg === 'string')
-				message += `${arg}${separator}`;
-			else
-				message += `${this.dataParserHelper.toString(arg)}${separator}`;
 		});
+		metadata.stack = errorStacks.length > 0 ? errorStacks : undefined;
 
 		return {
-			message,
+			message: this.dataParserHelper.toString(args),
 			meta: metadata,
 		};
 	}
 
-	[LogLevelEnum.ERROR](...args: any[]): void {
+	[LogLevelEnum.ERROR](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -105,7 +95,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.WARN](...args: any[]): void {
+	[LogLevelEnum.WARN](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -115,7 +105,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.INFO](...args: any[]): void {
+	[LogLevelEnum.INFO](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -125,7 +115,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.HTTP](...args: any[]): void {
+	[LogLevelEnum.HTTP](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -135,7 +125,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.VERBOSE](...args: any[]): void {
+	[LogLevelEnum.VERBOSE](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -145,7 +135,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.DEBUG](...args: any[]): void {
+	[LogLevelEnum.DEBUG](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -164,37 +154,13 @@ export const RequestLoggerProvider: Provider = {
 	inject: [
 		INQUIRER,
 		ConfigService,
+		DataParserHelper,
 	],
 	useFactory: (
 		inquirer: string | object,
 		configService: ConfigService,
-	): LoggerInterface => {
-		return new LoggerService(inquirer, configService, dataParserHelperMock as any);
-	},
-
-	durable: false,
-};
-
-export const SINGLETON_LOGGER_PROVIDER = Symbol('SingletonLoggerProvider');
-export interface LoggerProviderInterface {
-	getLogger: (context: string) => LoggerInterface,
-}
-export const SingletonLoggerProvider: Provider = {
-	provide: SINGLETON_LOGGER_PROVIDER,
-	scope: Scope.DEFAULT,
-
-	inject: [
-		ConfigService,
-	],
-	useFactory: (
-		configService: ConfigService,
-	): LoggerProviderInterface => {
-		return {
-			getLogger: (context: string): LoggerInterface => {
-				return new LoggerService(context, configService, dataParserHelperMock as any);
-			},
-		};
-	},
+		dataParserHelper: DataParserHelper,
+	): LoggerService => new LoggerService(inquirer, configService, dataParserHelper),
 
 	durable: false,
 };

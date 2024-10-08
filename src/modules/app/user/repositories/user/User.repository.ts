@@ -6,48 +6,40 @@ import Exceptions from '@core/errors/Exceptions';
 import AbstractRepository from '@core/infra/database/repositories/AbstractRepository.repository';
 import UsersModel from '@core/infra/database/models/Users.model';
 import UserEntity from '@domain/entities/User.entity';
-import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
+import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import userMapper from './user.mapper';
-import { userQueryParamsBuilder } from './user.query';
-import { ListQueryInterface, PaginationInterface } from '@shared/interfaces/listPaginationInterface';
+import { userQueryParamsBuilder, UserBuildParamsInterface } from './user.query';
 
 
 @Injectable()
-export default class UserRepository extends AbstractRepository<UsersModel, UserEntity> {
+export default class UserRepository extends AbstractRepository<UsersModel, UserEntity, UserBuildParamsInterface> {
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER)
 			connection: DataSource,
 			exceptions: Exceptions,
 			logger: LoggerService,
-			dateGeneratorHelper: DateGeneratorHelper,
 	) {
 		logger.setContextName(UserRepository.name);
 		super({
-			connection: connection,
+			connection,
 			DomainEntity: UserEntity,
 			ResourceModel: UsersModel,
 			ResourceRepo: UsersModel.getRepository(),
 			resourceMapper: userMapper,
 			queryParamsBuilder: userQueryParamsBuilder,
-			dateGeneratorHelper: dateGeneratorHelper,
-			exceptions: exceptions,
-			logger: logger,
+			exceptions,
+			logger,
 		});
 	}
 
 	public async getById(id: string, withoutPassword = true): Promise<UserEntity | null> {
 		try {
-			let result: UsersModel | null = null;
-
-			if (withoutPassword) {
-				result = await this.ResourceRepo.findOne({ where: { id } });
-			}
-			else {
-				result = await this.ResourceRepo.createQueryBuilder()
-					.addSelect('password')
-					.where({ id })
-					.getOne();
-			}
+			const buildedQuery = this.queryParamsBuilder.buildParams({
+				id,
+				withoutSensitiveData: false,
+				withoutPassword,
+			});
+			const result = await this.ResourceRepo.findOne(buildedQuery);
 			if (!result) return null;
 
 			return this.resourceMapper.toDomainEntity(result);
@@ -58,22 +50,12 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 
 	public async list(query?: ListQueryInterface, withoutSensitiveData = true): Promise<PaginationInterface<UserEntity>> {
 		try {
-			const buildedQuery = this.queryParamsBuilder.buildParams(query);
-
-			let result!: [UsersModel[], number];
-			if (withoutSensitiveData) {
-				result = await this.ResourceRepo.findAndCount(buildedQuery);
-			}
-			else {
-				result = await this.ResourceRepo.createQueryBuilder()
-					.addSelect('password')
-					.addSelect('document')
-					.addSelect('phone')
-					.where(buildedQuery)
-					.getManyAndCount();
-			}
-
-			const { 0: rows, 1: count } = result;
+			const buildedQuery = this.queryParamsBuilder.buildParams({
+				...(query ?? {}),
+				withoutSensitiveData,
+				withoutPassword: true,
+			});
+			const { 0: rows, 1: count } = await this.ResourceRepo.findAndCount(buildedQuery);
 
 			const totalItems = count;
 			const totalPages = Math.ceil(totalItems / (query?.limit ?? 1)) || 1;
@@ -82,9 +64,7 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 
 			let content: UserEntity[] = [];
 			if (rows.length) {
-				content = rows.map((register) =>
-					this.resourceMapper.toDomainEntity(register)
-				);
+				content = rows.map((register) => this.resourceMapper.toDomainEntity(register));
 			}
 
 			return {
@@ -102,19 +82,24 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 	public async deleteOne(id: string, softDelete = true, agentId: string | null = null): Promise<boolean> {
 		try {
 			const query: FindOneOptions<UsersModel> = {
-				where: { id } as any,
+				where: { id },
 			};
 
 			let result: UpdateResult | UsersModel | null = null;
 			if (softDelete) {
-				const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
+				const timestamp = this.getISODateNow();
 				result = await this.ResourceRepo.update(id, {
 					deletedAt: timestamp,
 					deletedBy: agentId,
-				} as any);
-				return result !== null && result !== undefined;
-			}
-			else {
+				});
+				if (result !== null && result !== undefined) {
+					const res = result.affected
+						? result.affected > 0
+						: true;
+					return res;
+				} else
+					return false;
+			} else {
 				const register = await this.ResourceRepo.findOne(query);
 				if (register) {
 					result = await register.remove();
@@ -131,18 +116,17 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 		try {
 			const query: FindManyOptions<UsersModel> = {
 				where: { id: In(ids) }
-			} as any;
+			};
 
 			let result: UpdateResult | UsersModel | null = null;
 			if (softDelete) {
-				const timestamp = this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true);
+				const timestamp = this.getISODateNow();
 				result = await this.ResourceRepo.update(ids, {
 					deletedAt: timestamp,
 					deletedBy: agentId,
-				} as any);
+				});
 				return Number(result.affected);
-			}
-			else {
+			} else {
 				const registers = await this.ResourceRepo.find(query);
 				if (!registers) return 0;
 

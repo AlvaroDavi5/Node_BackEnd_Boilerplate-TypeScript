@@ -1,40 +1,42 @@
 
-# Owners responsible for everything in the repos
+# Owners responsible for everything in the repo
 *                                     @AlvaroDavi5
 
 
 # Owners responsible for docs
 /docs/*                               @AlvaroDavi5
-CHANGELOG.md                          @AlvaroDavi5
 /.github/*.md                         @AlvaroDavi5
 /.github/*.txt                        @AlvaroDavi5
 /.github/CODEOWNERS                   @AlvaroDavi5
+LICENSE.txt                           @AlvaroDavi5
+CHANGELOG.md                          @AlvaroDavi5
 
 
 # Owners responsible for infra
-/envs/*                               @AlvaroDavi5
-/logs/*                               @AlvaroDavi5
-/src/modules/core/infra/database/*    @AlvaroDavi5
-.sequelizerc                          @AlvaroDavi5
+/infra/*                              @AlvaroDavi5
 .dockerignore                         @AlvaroDavi5
-docker-compose.yml                    @AlvaroDavi5
 Dockerfile                            @AlvaroDavi5
+docker-compose.yml                    @AlvaroDavi5
+init.sh                               @AlvaroDavi5
+/envs/*                               @AlvaroDavi5
+/src/modules/core/infra/*             @AlvaroDavi5
+/logs/*                               @AlvaroDavi5
 
 
 # Owners responsible for workflows, CI/CD and deploy
 /.github/workflows/*                  @AlvaroDavi5
+.releaserc.*                          @AlvaroDavi5
 /.husky/*                             @AlvaroDavi5
-init.sh                               @AlvaroDavi5
 Jenkinsfile                           @AlvaroDavi5
 Procfile                              @AlvaroDavi5
 
 
 # Owners responsible for source code
 /src/*                                @AlvaroDavi5
-.sequelizerc                          @AlvaroDavi5
-babel.config.js                       @AlvaroDavi5
-nest-cli.json                         @AlvaroDavi5
 tsconfig.*                            @AlvaroDavi5
+nest-cli.json                         @AlvaroDavi5
+.swcrc                                @AlvaroDavi5
+babel.config.js                       @AlvaroDavi5
 webpack.config.js                     @AlvaroDavi5
 package.json                          @AlvaroDavi5
 yarn.lock                             @AlvaroDavi5
@@ -50,11 +52,10 @@ jest.*                                @AlvaroDavi5
 /.vscode/*                            @AlvaroDavi5
 .gitignore                            @AlvaroDavi5
 .eslintignore                         @AlvaroDavi5
-.eslintrc.js                          @AlvaroDavi5
+.eslintrc.json                        @AlvaroDavi5
 .prettierrc                           @AlvaroDavi5
-commitlint.config.js                  @AlvaroDavi5
 .editorconfig                         @AlvaroDavi5
+commitlint.config.js                  @AlvaroDavi5
 nodemon*                              @AlvaroDavi5
-release.config.js                     @AlvaroDavi5
 sonar-project.properties              @AlvaroDavi5
 TODO*                                 @AlvaroDavi5

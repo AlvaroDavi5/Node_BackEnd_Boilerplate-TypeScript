@@ -1,4 +1,4 @@
-import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, JoinColumn, OneToOne } from 'typeorm';
+import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, JoinColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, OneToOne } from 'typeorm';
 import UsersModel from './Users.model';
 
 
@@ -31,7 +31,7 @@ export default class UserPreferencesModel extends BaseEntity {
 	})
 	public defaultTheme!: string | null;
 
-	@Column({
+	@CreateDateColumn({
 		name: 'createdAt',
 		type: 'timestamp without time zone',
 		nullable: false,
@@ -40,16 +40,16 @@ export default class UserPreferencesModel extends BaseEntity {
 	})
 	public readonly createdAt!: Date;
 
-	@Column({
+	@UpdateDateColumn({
 		name: 'updatedAt',
 		type: 'timestamp without time zone',
-		nullable: true,
-		default: null,
+		nullable: false,
+		default: 'NOW()',
 		comment: 'User updated timestamp',
 	})
-	public updatedAt!: Date | null;
+	public updatedAt!: Date;
 
-	@Column({
+	@DeleteDateColumn({
 		name: 'deletedAt',
 		type: 'timestamp without time zone',
 		nullable: true,

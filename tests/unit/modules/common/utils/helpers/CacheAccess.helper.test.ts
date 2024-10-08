@@ -1,4 +1,4 @@
-import CacheAccessHelper from '../../../../../../src/modules/common/utils/helpers/CacheAccess.helper';
+import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 
 
 describe('Modules :: Common :: Utils :: Helpers :: CacheAccessHelper', () => {

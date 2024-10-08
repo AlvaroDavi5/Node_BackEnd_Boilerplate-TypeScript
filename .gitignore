@@ -53,6 +53,4 @@ temp/
 
 !.vscode/settings.json
 !.vscode/launch.json
-!envs/.env.development.local
-!envs/.env.production.local
 !TODO-example.txt

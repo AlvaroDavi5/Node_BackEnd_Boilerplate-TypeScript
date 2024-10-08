@@ -3,11 +3,12 @@ import { ConfigService } from '@nestjs/config';
 import { Readable } from 'stream';
 import {
 	S3Client as S3AWSClient, S3ClientConfig, NotificationConfiguration,
-	ListBucketsCommand, CreateBucketCommand, DeleteBucketCommand, PutBucketNotificationConfigurationCommand, PutObjectCommand, GetObjectCommand, DeleteObjectCommand,
+	ListBucketsCommand, CreateBucketCommand, DeleteBucketCommand,
+	PutBucketNotificationConfigurationCommand, PutObjectCommand, GetObjectCommand, DeleteObjectCommand,
 	PutObjectCommandInput, GetObjectCommandInput, DeleteObjectCommandInput,
 } from '@aws-sdk/client-s3';
 import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 
@@ -23,16 +24,16 @@ export default class S3Client {
 
 	constructor(
 		private readonly configService: ConfigService,
-		private readonly logger: LoggerService,
 		private readonly exceptions: Exceptions,
+		private readonly logger: LoggerService,
 	) {
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
-		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
+		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
 		const {
-			region, sessionToken,
+			region, endpoint, sessionToken,
 			accessKeyId, secretAccessKey,
 		} = awsConfigs.credentials;
-		const { bucketName, filesExpiration, endpoint, apiVersion } = awsConfigs.s3;
+		const { bucketName, filesExpiration, apiVersion } = awsConfigs.s3;
 		this.filesExpiration = filesExpiration;
 
 		this.awsConfig = {
@@ -45,7 +46,7 @@ export default class S3Client {
 				sessionToken,
 			},
 			forcePathStyle: true,
-			logger: logging === 'true' ? this.logger : undefined,
+			logger: showExternalLogs ? this.logger : undefined,
 		};
 		this.bucketName = bucketName;
 		this.s3Client = new S3AWSClient(this.awsConfig);
@@ -92,13 +93,14 @@ export default class S3Client {
 				});
 		} catch (error) {
 			this.logger.error('List Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return list;
 	}
 
 	public async createBucket(bucketName: string): Promise<string> {
-		let location: any = '';
+		let location = '';
 
 		try {
 			const result = await this.s3Client.send(new CreateBucketCommand({
@@ -110,40 +112,47 @@ export default class S3Client {
 				location = '';
 		} catch (error) {
 			this.logger.error('Create Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return location;
 	}
 
 	public async deleteBucket(bucketName: string): Promise<number> {
-		let httpStatusCode = 0;
+		let statusCode = 0;
 
 		try {
 			const result = await this.s3Client.send(new DeleteBucketCommand({ Bucket: bucketName }));
-			if (result?.$metadata?.httpStatusCode)
-				httpStatusCode = result.$metadata.httpStatusCode;
+
+			const { httpStatusCode } = result.$metadata;
+			if (httpStatusCode)
+				statusCode = httpStatusCode;
 		} catch (error) {
 			this.logger.error('Delete Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
-		return httpStatusCode;
+		return statusCode;
 	}
 
 	public async putBucketNotification(bucketName: string, configuration: NotificationConfiguration | undefined): Promise<number> {
-		let httpStatusCode = 0;
+		let statusCode = 0;
 
 		try {
 			const result = await this.s3Client.send(new PutBucketNotificationConfigurationCommand({
 				Bucket: bucketName,
 				NotificationConfiguration: configuration,
 			}));
-			if (result?.$metadata?.httpStatusCode)
-				httpStatusCode = result.$metadata.httpStatusCode;
+
+			const { httpStatusCode } = result.$metadata;
+			if (httpStatusCode)
+				statusCode = httpStatusCode;
 		} catch (error) {
 			this.logger.error('Configure Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
-		return httpStatusCode;
+		return statusCode;
 	}
 
 	public async uploadFile(bucketName: string, fileName: string, fileContent: s3FileContentType, expirationDate?: Date): Promise<string> {
@@ -155,25 +164,29 @@ export default class S3Client {
 				tag = result.ETag;
 		} catch (error) {
 			this.logger.error('Upload Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return tag;
 	}
 
 	public async downloadFile(bucketName: string, objectKey: string): Promise<{ content: s3FileContentType | undefined, contentLength: number; }> {
-		let content: s3FileContentType | undefined = undefined;
+		let content: s3FileContentType | undefined;
 		let contentLength = 0;
 
 		try {
 			const result = await this.s3Client.send(new GetObjectCommand(this.getObjectParams(bucketName, objectKey)));
 			if (!result.Body || !result.ContentLength) {
-				throw this.exceptions.internal({ message: 'Empty body' });
+				throw this.exceptions.internal({
+					message: 'Empty body',
+				});
 			}
 
 			content = result.Body;
 			contentLength = result.ContentLength;
 		} catch (error) {
 			this.logger.error('Download Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return {
@@ -193,6 +206,7 @@ export default class S3Client {
 			link = signedUrl;
 		} catch (error) {
 			this.logger.error('Get URL Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return link;
@@ -207,6 +221,7 @@ export default class S3Client {
 				marker = result.DeleteMarker;
 		} catch (error) {
 			this.logger.error('Delete Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return marker;

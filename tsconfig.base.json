@@ -34,8 +34,13 @@
 		/* Modules */
 		"module": "CommonJS",
 		"moduleResolution": "node",
-		"rootDir": "./",
 		"baseUrl": "./",
+		"rootDir": "./",
+		"rootDirs": [
+			"src",
+			"scripts",
+			"tests"
+		],
 		"paths": {
 			"@dev/*": [
 				"src/dev/*"
@@ -65,11 +70,6 @@
 				"src/shared/*"
 			]
 		},
-		"rootDirs": [
-			"src",
-			"scripts",
-			"tests"
-		],
 		// "typeRoots": [],
 		// "types": [],
 		// "allowUmdGlobalAccess": true,
@@ -135,19 +135,24 @@
 		"pretty": true
 	},
 	"include": [
-		"src/**/*.d.ts",
 		"src/**/*.ts",
-		"src/**/*.tsx",
-		"src/**/*.js",
-		"src/**/*.jsx"
+		"src/**/*.js"
 	],
 	"exclude": [
 		"node_modules",
 		"build",
+		"scripts",
 		"tests",
 		"**/*.test.ts",
-		"**/*.spec.ts"
+		"**/*.spec.ts",
+		"**/*.test.js",
+		"**/*.spec.js"
 	],
+	"ts-node": {
+		"require": [
+			"tsconfig-paths/register"
+		]
+	},
 	"typeAcquisition": {
 		"include": [
 			"jest"

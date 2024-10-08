@@ -8,13 +8,9 @@ import { ClientSocket } from './mocks/webSocket/socket.io-client';
 dotenv.config({ path: '.env.test' });
 
 // * backing services and dependencies mocks
-jest.mock('src/modules/core/logging/Logger.service.ts', () =>
-	jest.requireActual('./mocks/logging/Logger.service')
-);
+jest.mock('src/modules/core/logging/Logger.service.ts', () => jest.requireActual('./mocks/logging/Logger.service'));
 
-jest.mock('src/modules/core/infra/integration/rest/RestMockedService.client.ts', () =>
-	jest.requireActual('./mocks/rest/RestMockedService.client')
-);
+jest.mock('src/modules/core/infra/providers/RestMockedService.provider.ts', () => jest.requireActual('./mocks/rest/RestMockedService.provider'));
 
 /*
 jest.mock('src/modules/core/infra/database/connection', () => {
@@ -23,16 +19,16 @@ jest.mock('src/modules/core/infra/database/connection', () => {
 	return {
 		__esModule: true,
 		connection: {
-			authenticate: async (options?: any) => {
+			authenticate: async (_options?: unknown) => {
 				isConnected = true;
 			},
-			sync: async (options?: any) => ({}),
+			sync: async (_options?: unknown) => ({}),
 			close: async () => { isConnected = false; },
 		},
-		syncConnection: async (connection: any, logger?: any) => {
+		syncConnection: async (_connection: unknown, _logger?: unknown) => {
 			isConnected = !!isConnected;
 		},
-		testConnection: async (connection: any, logger?: any) => (isConnected),
+		testConnection: async (_connection: unknown, _logger?: unknown) => (isConnected),
 	};
 });
 */
@@ -49,7 +45,7 @@ jest.mock('socket.io-client', () => {
 	return {
 		__esModule: true,
 		Socket: ClientSocket,
-		io: (uri: string, opts?: any) => (new ClientSocket()),
+		io: (_uri: string, _opts?: unknown) => (new ClientSocket()),
 	};
 });
 

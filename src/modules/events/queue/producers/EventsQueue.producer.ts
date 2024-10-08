@@ -1,12 +1,12 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
-import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService from '@core/logging/Logger.service';
 import CryptographyService from '@core/security/Cryptography.service';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import { EventSchemaInterface } from '@events/queue/handlers/schemas/event.schema';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import { fromDateTimeToISO, getDateTimeNow } from '@common/utils/dates.util';
 
 
 interface EventDispatchInterface {
@@ -20,7 +20,6 @@ interface EventDispatchInterface {
 
 @Injectable()
 export default class EventsQueueProducer {
-	private readonly logger: LoggerInterface;
 	private readonly credentials: {
 		queueName: string,
 		queueUrl: string,
@@ -32,11 +31,8 @@ export default class EventsQueueProducer {
 		private readonly configService: ConfigService,
 		private readonly cryptographyService: CryptographyService,
 		private readonly sqsClient: SqsClient,
-		@Inject(SINGLETON_LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
-		private readonly dateGeneratorHelper: DateGeneratorHelper,
+		private readonly logger: LoggerService,
 	) {
-		this.logger = this.loggerProvider.getLogger(EventsQueueProducer.name);
 		const { queueName, queueUrl } = this.configService.get<ConfigsInterface['integration']['aws']['sqs']['eventsQueue']>('integration.aws.sqs.eventsQueue')!;
 		this.credentials = {
 			queueName,
@@ -46,19 +42,19 @@ export default class EventsQueueProducer {
 		this.applicationName = String(appName);
 	}
 
-	private _buildMessageBody({ payload, schema }: { payload: any, schema?: string }): EventSchemaInterface {
+	private buildMessageBody({ payload, schema }: { payload: any, schema?: string }): EventSchemaInterface {
 		return {
 			id: this.cryptographyService.generateUuid(),
 			schema: schema || 'EVENTS',
 			schemaVersion: 1.0,
 			payload,
 			source: 'BOILERPLATE',
-			timestamp: this.dateGeneratorHelper.getDate(new Date(), 'jsDate', true),
+			timestamp: fromDateTimeToISO(getDateTimeNow(TimeZonesEnum.America_SaoPaulo)),
 		};
 	}
 
 	public async dispatch({ payload, schema, author, title }: EventDispatchInterface): Promise<string | null> {
-		const message = this._buildMessageBody({ payload, schema });
+		const message = this.buildMessageBody({ payload, schema });
 
 		try {
 			const messageId = await this.sqsClient.sendMessage(

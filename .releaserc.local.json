@@ -1,0 +1,66 @@
+{
+	"$schema": "https://json.schemastore.org/semantic-release.json",
+	"repositoryUrl": "git@github.com:AlvaroDavi5/Node_BackEnd_Boilerplate-TypeScript.git",
+	"tagFormat": "v${version}",
+	"ci": false,
+	"dryRun": true,
+	"branches": [
+		"develop",
+		"main",
+		"release"
+	],
+	"plugins": [
+		[
+			"@semantic-release/commit-analyzer",
+			{
+				"preset": "conventionalcommits",
+				"releaseRules": [
+					{
+						"scope": "no-release",
+						"release": false
+					},
+					{
+						"type": "build",
+						"scope": "release",
+						"release": "minor"
+					},
+					{
+						"type": "refactor",
+						"scope": "perf*",
+						"release": "minor"
+					},
+					{
+						"type": "chore",
+						"scope": "build",
+						"release": "minor"
+					},
+					{
+						"type": "chore",
+						"scope": "fix",
+						"release": "patch"
+					},
+					{
+						"type": "ci",
+						"scope": "fix",
+						"release": "patch"
+					}
+				]
+			}
+		],
+		[
+			"@semantic-release/release-notes-generator",
+			{
+				"preset": "conventionalcommits"
+			}
+		],
+		[
+			"@semantic-release/git",
+			{
+				"assets": [
+					"build.zip"
+				],
+				"message": "docs(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+			}
+		]
+	]
+}

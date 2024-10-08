@@ -1,30 +1,14 @@
-import CryptographyService from '../../../../../src/modules/core/security/Cryptography.service';
-import configs from '../../../../../src/modules/core/configs/configs.config';
+import { ConfigService } from '@nestjs/config';
+import CryptographyService from '@core/security/Cryptography.service';
+import { configServiceMock } from '@dev/mocks/mockedModules';
 
 
-describe('Modules :: Core :: Infra :: Security :: CryptographyService', () => {
-	// // mocks
-	const configServiceMock = {
-		get: (propertyPath?: string): any => {
-			if (propertyPath) {
-				const splitedPaths = propertyPath.split('.');
-				let scopedProperty: any = configs();
+describe('Modules :: Core :: Security :: CryptographyService', () => {
+	const cryptographyService = new CryptographyService(configServiceMock as unknown as ConfigService);
 
-				for (let i = 0; i < splitedPaths.length; i++) {
-					const scopedPath = splitedPaths[i];
-
-					if (scopedPath.length)
-						scopedProperty = scopedProperty[scopedPath];
-				}
-
-				return scopedProperty;
-			}
-			else
-				return configs();
-		},
-	};
-
-	const cryptographyService = new CryptographyService(configServiceMock as any);
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
 
 	describe('# Encoding and Hashing', () => {
 		test('Should change encoding from UTF-8 to other encodings', () => {
@@ -35,11 +19,18 @@ describe('Modules :: Core :: Infra :: Security :: CryptographyService', () => {
 		});
 
 		test('Should generate JWT', () => {
-			const data = { name: 'Alvaro' };
+			const data = { name: 'Tester' };
 			const token = cryptographyService.encodeJwt(data, 'utf8');
+			const decoded = {
+				content: {
+					name: 'Tester',
+				},
+				expired: false,
+				invalidSignature: false,
+			};
 
 			expect(token.length).toBe(149);
-			expect(cryptographyService.decodeJwt(token)).toMatchObject(data);
+			expect(cryptographyService.decodeJwt(token)).toMatchObject(decoded);
 		});
 
 		test('Should generate UUID', () => {
@@ -96,8 +87,8 @@ describe('Modules :: Core :: Infra :: Security :: CryptographyService', () => {
 		const iv = '2a19dd220ef09ff472b59447';
 		let encrypted = '';
 		let decrypted = '';
-		let enc: { encrypted: string | null, iv: string } | undefined = undefined;
-		let dec: { decrypted: string | null, iv: string } | undefined = undefined;
+		let enc: { encrypted: string | null, iv: string } | undefined;
+		let dec: { decrypted: string | null, iv: string } | undefined;
 
 		test('Should encrypt', () => {
 			enc = cryptographyService.symmetricAESEncrypt(plainText, 'utf8', key1, 'base64', iv);

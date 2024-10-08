@@ -46,7 +46,7 @@ export default class DefaultController {
 				},
 				body: {},
 				statusCode: 200,
-				statusMessage: 'Endpoint finded successfully.',
+				statusMessage: 'Endpoint founded successfully.',
 			},
 		}
 	})
@@ -76,9 +76,9 @@ export default class DefaultController {
 				connection: headers.connection,
 				accept: headers.accept,
 			},
-			pathParams: pathParams,
-			queryParams: queryParams,
-			body: body,
+			pathParams,
+			queryParams,
+			body,
 			statusCode: response.statusCode,
 			statusMessage: response.statusMessage ?? this.httpConstants.messages.found('Endpoint'),
 		};

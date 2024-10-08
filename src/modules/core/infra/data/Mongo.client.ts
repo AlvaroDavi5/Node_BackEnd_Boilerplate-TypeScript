@@ -5,7 +5,7 @@ import {
 	Db, Document, Collection, ObjectId,
 	InsertOneResult, InsertManyResult, UpdateResult, DeleteResult,
 } from 'mongodb';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
 
 
@@ -63,7 +63,7 @@ export default class MongoClient {
 			this.isConnected = false;
 			throw this.exceptions.integration({
 				message: 'Error to connect mongo client',
-				details: (error as any)?.message,
+				details: (error as Error)?.message,
 			});
 		}
 		return this.isConnected;

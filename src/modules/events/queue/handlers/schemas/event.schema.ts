@@ -14,10 +14,12 @@ export interface EventSchemaInterface {
 	timestamp: Date | string,
 }
 
-export default Joi.object().keys({
+const eventSchema: Joi.Schema<EventSchemaInterface> = Joi.object({
 	id: Joi.alternatives().try(Joi.number(), Joi.string()),
 	timestamp: Joi.alternatives().try(Joi.date(), Joi.string()),
 	payload: Joi.object({
 		event: Joi.string().valid(...Object.values(EventsEnum)).required(),
 	}).unknown(true).required(),
-}).unknown(true).required() as Joi.Schema<EventSchemaInterface>;
+}).unknown(true).required();
+
+export default eventSchema;

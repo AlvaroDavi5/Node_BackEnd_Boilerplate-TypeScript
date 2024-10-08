@@ -1,22 +1,19 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsDate } from 'class-validator';
+import { IsString, IsDate, IsUUID } from 'class-validator';
 import { Type } from 'class-transformer';
-import AbstractEntity, { AbstractEntityList } from '@domain/entities/AbstractEntity.entity';
-import UserPreferenceEntity, { CreateUserPreferenceInterface, UserPreferenceInterface, returingUserPreferenceEntity } from './UserPreference.entity';
-import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
-import { returingString, returingDate } from '@shared/types/returnTypeFunc';
+import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
+import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
+import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
+import UserPreferenceEntity, { ICreateUserPreference, UserPreferenceInterface, returingUserPreferenceEntity } from './UserPreference.entity';
 
-
-const dateGeneratorHelper = new DateGeneratorHelper();
-const dateExample = dateGeneratorHelper.getDate('2024-06-10T03:52:50.885Z', 'iso-8601', true, TimeZonesEnum.SaoPaulo);
 
 export interface UserInterface<UP = UserPreferenceInterface> {
 	id?: string,
-	fullName?: string,
-	email?: string,
-	password?: string,
+	fullName: string,
+	email: string,
+	password: string,
 	phone?: string,
 	docType?: string,
 	document?: string,
@@ -28,35 +25,45 @@ export interface UserInterface<UP = UserPreferenceInterface> {
 	deletedBy?: string,
 }
 
-export type CreateUserInterface = Omit<UserInterface<CreateUserPreferenceInterface>, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
-export type UpdateUserInterface = Partial<CreateUserInterface>;
-export type ViewUserInterface = UserInterface;
-export type ViewUserWithoutPasswordInterface = Omit<UserInterface, 'password'>;
-export type ViewUserWithoutSensitiveDataInterface = Omit<UserInterface, 'password' | 'phone' | 'document'>;
+export type ICreateUser = Omit<UserInterface<ICreateUserPreference>, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
+export type IUpdateUser = Partial<ICreateUser>;
+export type IViewUser = UserInterface;
+export type IViewUserWithoutPassword = Omit<UserInterface, 'password'>;
+export type IViewUserWithoutSensitiveData = Omit<UserInterface, 'password' | 'phone' | 'document'>;
+
+const dateTimeExample = fromISOToDateTime('2024-06-10T03:52:50.885Z', false, TimeZonesEnum.America_SaoPaulo);
+const dateExample = fromDateTimeToJSDate(dateTimeExample, false);
+const getDateNow = () => fromDateTimeToJSDate(getDateTimeNow(TimeZonesEnum.America_SaoPaulo));
 
 @ObjectType({
 	description: 'user entity',
 })
 export default class UserEntity extends AbstractEntity<UserInterface> {
-	@ApiProperty({ type: String, example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', default: '', nullable: false, required: false, description: 'Database register ID' })
+	@ApiProperty({
+		type: String,
+		example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+		default: '', nullable: false, required: false,
+		description: 'Database register ID',
+	})
 	@Field(returingString, { defaultValue: '', nullable: false, description: 'Database register ID' })
 	@IsString()
+	@IsUUID()
 	private id!: string;
 
 	@ApiProperty({ type: String, example: 'User Default', default: null, nullable: true, required: true, description: 'User name' })
 	@Field(returingString, { defaultValue: null, nullable: true, description: 'User name' })
 	@IsString()
-	public fullName: string | null = null;
+	public fullName!: string;
 
 	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: null, nullable: true, required: true, description: 'User email' })
 	@Field(returingString, { defaultValue: null, nullable: true, description: 'User email' })
 	@IsString()
-	private email: string | null = null;
+	private email!: string;
 
 	@ApiProperty({ type: String, example: 'cGFzczEyMw==', default: null, nullable: true, required: true, description: 'User password' })
 	@Field(returingString, { defaultValue: null, nullable: true, description: 'User password' })
 	@IsString()
-	private password: string | null = null;
+	private password!: string;
 
 	@ApiProperty({ type: String, example: '+0000000000000', default: null, nullable: true, required: true, description: 'User phone number' })
 	@Field(returingString, { defaultValue: null, nullable: true, description: 'User phone number' })
@@ -79,18 +86,21 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	public fu: string | null = null;
 
 	@ApiProperty({
-		type: UserPreferenceEntity, example: (new UserPreferenceEntity({ imagePath: './image.png', defaultTheme: 'DEFAULT' })), default: null, nullable: true, required: true, description: 'User preference'
+		type: UserPreferenceEntity,
+		example: (new UserPreferenceEntity({ imagePath: './image.png', defaultTheme: 'DEFAULT' })),
+		default: null, nullable: true, required: true,
+		description: 'User preference',
 	})
 	@Type(returingUserPreferenceEntity)
 	@Field(returingUserPreferenceEntity, { defaultValue: null, nullable: true, description: 'User preference' })
 	private preference: UserPreferenceEntity | null = null;
 
-	@ApiProperty({ type: Date, example: dateExample, default: dateExample, nullable: false, required: false, description: 'User creation timestamp' })
-	@Field(returingDate, { defaultValue: dateGeneratorHelper.getDate(new Date(), 'jsDate', true), nullable: false, description: 'User creation timestamp' })
+	@ApiProperty({ type: Date, example: dateExample, default: getDateNow(), nullable: false, required: false, description: 'User creation timestamp' })
+	@Field(returingDate, { defaultValue: getDateNow(), nullable: false, description: 'User creation timestamp' })
 	@IsDate()
 	public readonly createdAt: Date;
 
-	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: true, description: 'User updated timestamp' })
+	@ApiProperty({ type: Date, example: null, default: null, nullable: true, required: false, description: 'User updated timestamp' })
 	@Field(returingDate, { defaultValue: null, nullable: true, description: 'User updated timestamp' })
 	@IsDate()
 	public updatedAt: Date | null = null;
@@ -122,12 +132,12 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 		this.createdAt = this.exists(dataValues?.createdAt) ? this.getDate(dataValues.createdAt) : this.getDate();
 	}
 
-	public getAttributes(): UserInterface {
+	public getAttributes(): IViewUser {
 		return {
 			id: this.id,
-			fullName: this.fullName ?? undefined,
-			email: this.email ?? undefined,
-			password: this.password ?? undefined,
+			fullName: this.fullName,
+			email: this.email,
+			password: this.password,
 			phone: this.phone ?? undefined,
 			docType: this.docType ?? undefined,
 			document: this.document ?? undefined,
@@ -150,20 +160,19 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 		this.updatedAt = this.getDate();
 	}
 
-	public getLogin(): { fullName: string | null, email: string | null } {
-		return {
-			fullName: this.fullName,
-			email: this.email,
-		};
+	public getFullName(): string { return this.fullName; }
+	public setFullName(fullName: string): void {
+		this.fullName = fullName;
+		this.updatedAt = this.getDate();
 	}
 
-	public setLogin(email: string, fullName: string): void {
-		this.fullName = fullName;
+	public getEmail(): string { return this.email; }
+	public setEmail(email: string): void {
 		this.email = email;
 		this.updatedAt = this.getDate();
 	}
 
-	public getPassword(): string | null { return this.password; }
+	public getPassword(): string { return this.password; }
 	public setPassword(password: string): void {
 		this.password = password;
 		this.updatedAt = this.getDate();
@@ -205,32 +214,4 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	public setPreference(preference: UserPreferenceEntity): void {
 		this.preference = preference;
 	}
-}
-
-export const returingUserEntityArray = () => Array<UserEntity>;
-
-export class UserEntityList extends AbstractEntityList<UserEntity> {
-	@ApiProperty({
-		type: UserEntity,
-		isArray: true,
-		example: ([
-			new UserEntity({
-				fullName: 'User Default',
-				docType: 'INVALID',
-				fu: 'UF',
-				preference: new UserPreferenceEntity({
-					imagePath: './image.png',
-					defaultTheme: 'DEFAULT',
-				}),
-				createdAt: dateExample,
-				updatedAt: dateExample,
-			}),
-		]),
-		default: [],
-		nullable: false,
-		description: 'User list content',
-	})
-	@Type(returingUserEntityArray)
-	@Field(returingUserEntityArray, { defaultValue: [], nullable: false, description: 'User list content' })
-	public content: UserEntity[] = [];
 }

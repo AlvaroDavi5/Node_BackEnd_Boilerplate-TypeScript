@@ -1,25 +1,23 @@
 import { v4 as uuidV4 } from 'uuid';
-import configs from 'src/modules/core/configs/configs.config';
-import { LoggerInterface } from 'src/modules/core/logging/logger';
+import envsConfig, { ConfigsInterface } from '@core/configs/envs.config';
+import { LoggerInterface } from '@core/logging/logger';
 
 
 export const configServiceMock = {
 	get: (propertyPath?: string): any => {
+		let scopedProperty = envsConfig();
+
 		if (propertyPath) {
-			const splitedPaths = propertyPath.split('.');
-			let scopedProperty: any = configs();
+			const splitedPaths = propertyPath.split('.') as (keyof ConfigsInterface)[];
 
-			for (let i = 0; i < splitedPaths.length; i++) {
-				const scopedPath = splitedPaths[i];
-
+			for (const scopedPath of splitedPaths) {
 				if (scopedPath.length)
-					scopedProperty = scopedProperty[scopedPath];
+					scopedProperty = scopedProperty[String(scopedPath) as keyof ConfigsInterface] as unknown as ConfigsInterface;
 			}
 
 			return scopedProperty;
-		}
-		else
-			return configs();
+		} else
+			return scopedProperty;
 	},
 };
 
@@ -45,36 +43,39 @@ export const loggerProviderMock: LoggerInterface & {
 
 export const dataParserHelperMock = {
 	toString: (data: unknown): string => {
-		let result = null;
+		let result = '';
 
 		switch (typeof data) {
-		case 'bigint':
-			result = data.toString();
-			break;
-		case 'number':
-			result = data.toString();
-			break;
-		case 'boolean':
-			result = data.toString();
-			break;
-		case 'string':
-			result = data;
-			break;
-		case 'object':
-			if (!data)
-				result = '';
-			else
-				result = (JSON.stringify(data) || data?.toString()) ?? '';
-			break;
-		case 'symbol':
-			result = data.toString();
-			break;
-		case 'function':
-			result = data.toString();
-			break;
-		default:
-			result = '';
-			break;
+			case 'bigint':
+				result = data.toString();
+				break;
+			case 'number':
+				result = data.toString();
+				break;
+			case 'boolean':
+				result = data.toString();
+				break;
+			case 'string':
+				result = data;
+				break;
+			case 'object':
+				if (!data)
+					result = '';
+				else if (Array.isArray(data))
+					result = `${data.join(', ')}`;
+				else if (data instanceof Error)
+					result = data.toString();
+				else
+					result = (JSON.stringify(data) || data?.toString()) ?? '';
+				break;
+			case 'symbol':
+				result = data.toString();
+				break;
+			case 'function':
+				result = data.toString();
+				break;
+			default:
+				break;
 		}
 
 		return result;

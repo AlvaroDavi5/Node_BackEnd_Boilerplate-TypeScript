@@ -1,36 +1,46 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
-import { IsString, IsBoolean, IsDate } from 'class-validator';
-import AbstractEntity from '@domain/entities/AbstractEntity.entity';
-import DateGeneratorHelper from '@common/utils/helpers/DateGenerator.helper';
+import { IsString, IsBoolean, IsDate, IsUUID } from 'class-validator';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
-import { returingString, returingBoolean, returingDate } from '@shared/types/returnTypeFunc';
+import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
+import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
+import { returingString, returingBoolean, returingDate } from '@shared/internal/types/returnTypeFunc';
 
 
-const dateGeneratorHelper = new DateGeneratorHelper();
-const dateExample = dateGeneratorHelper.getDate('2024-06-10T03:52:50.885Z', 'iso-8601', true, TimeZonesEnum.SaoPaulo);
+const dateTimeExample = fromISOToDateTime('2024-06-10T03:52:50.885Z', false, TimeZonesEnum.America_SaoPaulo);
+const dateExample = fromDateTimeToJSDate(dateTimeExample, false);
+const getDateNow = () => fromDateTimeToJSDate(getDateTimeNow(TimeZonesEnum.America_SaoPaulo));
 
 export interface SubscriptionInterface {
 	id?: string,
 	subscriptionId?: string,
-	dataValues?: {
+	dataValues: {
 		clientId?: string,
-		[key: string]: any | undefined,
+		[key: string]: unknown | undefined,
 		readonly createdAt: Date,
 		updatedAt?: Date,
 	},
-	listen?: {
-		newConnections?: boolean,
-		[key: string]: boolean | undefined,
+	listen: {
+		newConnections: boolean,
 	},
 }
 
+export type ICreateSubscription = Omit<SubscriptionInterface, 'id' | 'subscriptionId'>;
+export type IUpdateSubscription = Partial<ICreateSubscription> & { subscriptionId?: string };
+export type IViewSubscription = SubscriptionInterface;
+
 @ObjectType()
 export default class SubscriptionEntity extends AbstractEntity<SubscriptionInterface> {
-	@ApiProperty({ type: String, example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', default: '', nullable: false, required: false, description: 'Database register ID' })
+	@ApiProperty({
+		type: String,
+		example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+		default: '', nullable: false, required: false,
+		description: 'Database register ID',
+	})
 	@Field(returingString, { defaultValue: '', nullable: false, description: 'Database register ID' })
 	@IsString()
-	private databaseId = '';
+	@IsUUID()
+	private databaseId!: string;
 
 	@ApiProperty({ type: String, example: 'WKt2b2RWrMXogTfKAAAD', default: '', nullable: false, required: true, description: 'WebSocket ID' })
 	@Field(returingString, { defaultValue: '', nullable: false, description: 'WebSocket ID' })
@@ -43,7 +53,7 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 	private clientId: string | null = null;
 
 	@ApiProperty({ type: Date, example: dateExample, default: dateExample, nullable: false, required: false, description: 'User creation timestamp' })
-	@Field(returingDate, { defaultValue: dateGeneratorHelper.getDate(new Date(), 'jsDate', true), nullable: false, description: 'User creation timestamp' })
+	@Field(returingDate, { defaultValue: getDateNow(), nullable: false, description: 'User creation timestamp' })
 	@IsDate()
 	public readonly createdAt: Date;
 

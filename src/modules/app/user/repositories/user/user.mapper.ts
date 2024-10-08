@@ -4,14 +4,17 @@ import userPreferenceMapper from '@app/user/repositories/userPreference/userPref
 
 
 const toDomainEntity = (dataValues: UsersModel): UserEntity => {
-	const preferenceDataValues = {
-		...dataValues?.preference ?? {},
-		userId: dataValues?.id,
-	};
-
-	const userPreference = userPreferenceMapper.toDomainEntity(preferenceDataValues as any);
 	const user = new UserEntity(dataValues);
-	user.setPreference(userPreference);
+
+	if (!user.getPreference()) {
+		const preferenceDataValues = {
+			...(dataValues?.preference ?? {}),
+			userId: dataValues?.id,
+		};
+
+		const userPreference = userPreferenceMapper.toDomainEntity(preferenceDataValues as any);
+		user.setPreference(userPreference);
+	}
 
 	return user;
 };
@@ -20,7 +23,7 @@ const toDatabaseEntity = (entity: UserEntity): any => {
 	if (!(entity.validate().valid))
 		return null;
 
-	const { id, preference, ...userAttributes } = entity.getAttributes();
+	const { id: _id, preference: _preference, ...userAttributes } = entity.getAttributes();
 
 	return userAttributes;
 };

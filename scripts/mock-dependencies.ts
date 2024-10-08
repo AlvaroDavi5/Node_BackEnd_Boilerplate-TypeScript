@@ -1,7 +1,7 @@
-import createQueue from '../src/dev/localstack/queues/createQueue';
-import createBucket from '../src/dev/localstack/storage/createBucket';
-import MockedExternalServers from '../src/dev/mockedExternalServers/index';
-import { configServiceMock } from '../src/dev/mocks/mockedModules';
+import createQueue from '@dev/localstack/queues/createQueue';
+import createBucket from '@dev/localstack/storage/createBucket';
+import MockedExternalServers from '@dev/mockedExternalServers/index';
+import { configServiceMock } from '@dev/mocks/mockedModules';
 
 
 const eventsQueue = configServiceMock.get('integration.aws.sqs.eventsQueue');

@@ -6,8 +6,9 @@ charset = utf-8
 indent_style = tab
 indent_size = 2
 tab_width = 2
+quote_type = single
+max_line_length = 160
 trim_trailing_whitespace = true
-max_line_length = 80
 end_of_line = lf
 insert_final_newline = true
 

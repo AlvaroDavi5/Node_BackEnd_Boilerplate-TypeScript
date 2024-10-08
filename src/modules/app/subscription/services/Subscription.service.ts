@@ -1,15 +1,15 @@
-import { Injectable, Inject, OnModuleInit } from '@nestjs/common';
+import { Injectable, OnModuleInit } from '@nestjs/common';
 import { ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { Collection, Db, ObjectId } from 'mongodb';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import WebSocketClient from '@events/websocket/client/WebSocket.client';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
-import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
-import { LoggerInterface } from '@core/logging/logger';
-import SubscriptionEntity, { SubscriptionInterface } from '@domain/entities/Subscription.entity';
+import LoggerService from '@core/logging/Logger.service';
+import Exceptions from '@core/errors/Exceptions';
+import SubscriptionEntity, { ICreateSubscription, IUpdateSubscription } from '@domain/entities/Subscription.entity';
 import { CacheEnum } from '@domain/enums/cache.enum';
 import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
 
@@ -17,7 +17,6 @@ import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
 @Injectable()
 export default class SubscriptionService implements OnModuleInit {
 	private webSocketClient!: WebSocketClient;
-	private readonly logger: LoggerInterface;
 	public readonly subscriptionsTimeToLive: number;
 	public readonly datalakeDatabase: Db;
 	public readonly subscriptionsCollection: Collection;
@@ -27,16 +26,16 @@ export default class SubscriptionService implements OnModuleInit {
 		private readonly configService: ConfigService,
 		private readonly mongoClient: MongoClient,
 		private readonly redisClient: RedisClient,
-		@Inject(SINGLETON_LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
+		private readonly exceptions: Exceptions,
+		private readonly logger: LoggerService,
 		private readonly cacheAccessHelper: CacheAccessHelper,
 	) {
 		const { datalake: { db, collections: { subscriptions } } } = this.mongoClient.databases;
 		this.datalakeDatabase = db;
 		this.subscriptionsCollection = this.mongoClient.getCollection(this.datalakeDatabase, subscriptions);
 
-		this.logger = this.loggerProvider.getLogger(SubscriptionService.name);
-		const subscriptionsExpirationTime = this.configService.get<ConfigsInterface['cache']['expirationTime']['subscriptions']>('cache.expirationTime.subscriptions')!;
+		const subscriptionsExpirationTime = this.configService
+			.get<ConfigsInterface['cache']['expirationTime']['subscriptions']>('cache.expirationTime.subscriptions')!;
 		this.subscriptionsTimeToLive = subscriptionsExpirationTime;
 	}
 
@@ -44,70 +43,70 @@ export default class SubscriptionService implements OnModuleInit {
 		this.webSocketClient = this.moduleRef.get(WebSocketClient, { strict: false });
 	}
 
-	public async get(subscriptionId: string): Promise<SubscriptionEntity | null> {
+	public async get(subscriptionId: string): Promise<SubscriptionEntity> {
 		let subscription = await this.getFromCache(subscriptionId);
 		if (!subscription) {
-			const findedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
+			const foundedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
 				subscriptionId,
 			});
-			subscription = findedSubscription;
+			subscription = foundedSubscription;
 		}
 		if (!subscription)
-			return null;
+			throw this.exceptions.notFound({
+				message: 'Subscription not found!',
+			});
 
 		await this.saveOnCache(subscriptionId, subscription);
 
 		return new SubscriptionEntity(subscription);
 	}
 
-	public async save(subscriptionId: string, data: SubscriptionInterface): Promise<SubscriptionEntity | null> {
-		let findedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
+	public async save(subscriptionId: string, data: ICreateSubscription | IUpdateSubscription): Promise<SubscriptionEntity> {
+		let foundedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
 			subscriptionId,
 		});
-		let subscriptionDatabaseId: ObjectId | null | undefined = findedSubscription?._id;
+		let subscriptionDatabaseId: ObjectId | null | undefined = foundedSubscription?._id;
 
 		if (!subscriptionDatabaseId) {
 			// ? create
 			const savedSubscription = await this.mongoClient.insertOne(this.subscriptionsCollection, data);
 			subscriptionDatabaseId = savedSubscription.insertedId;
-		}
-		else
+		} else
 			// ? update
 			await this.mongoClient.updateOne(this.subscriptionsCollection, subscriptionDatabaseId, data);
 
 		if (subscriptionDatabaseId) {
-			findedSubscription = await this.mongoClient.get(this.subscriptionsCollection, subscriptionDatabaseId);
-			await this.saveOnCache(subscriptionId, findedSubscription);
-		}
-		else
-			return null;
+			foundedSubscription = await this.mongoClient.get(this.subscriptionsCollection, subscriptionDatabaseId);
+			await this.saveOnCache(subscriptionId, foundedSubscription);
+		} else
+			throw this.exceptions.conflict({
+				message: 'Subscription not created or updated!',
+			});
 
-		return new SubscriptionEntity(findedSubscription);
+		return new SubscriptionEntity(foundedSubscription);
 	}
 
 	public async delete(subscriptionId: string): Promise<boolean> {
 		let deletedSubscription = false;
-		const findedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
+		const foundedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
 			subscriptionId,
 		});
 
-		if (findedSubscription?._id) {
+		if (foundedSubscription?._id) {
 			await this.deleteFromCache(subscriptionId);
-			deletedSubscription = (await this.mongoClient.deleteOne(this.subscriptionsCollection, findedSubscription._id)).deletedCount > 0;
+			deletedSubscription = (await this.mongoClient.deleteOne(this.subscriptionsCollection, foundedSubscription._id)).deletedCount > 0;
 		}
 
 		return deletedSubscription;
 	}
 
 	public async list(useCache = true): Promise<SubscriptionEntity[]> {
-		let findedSubscriptions = await this.listFromCache();
+		let foundedSubscriptions = await this.listFromCache();
 
-		if (!useCache || !findedSubscriptions.length)
-			findedSubscriptions = await this.mongoClient.findMany(this.subscriptionsCollection, {});
+		if (!useCache || !foundedSubscriptions.length)
+			foundedSubscriptions = await this.mongoClient.findMany(this.subscriptionsCollection, {});
 
-		return findedSubscriptions.map((subscription: any) => {
-			return new SubscriptionEntity(subscription);
-		});
+		return foundedSubscriptions.map((subscription) => new SubscriptionEntity(subscription));
 	}
 
 	public emit(msg: unknown, socketIdsOrRooms: string | string[]): void {
@@ -133,7 +132,7 @@ export default class SubscriptionService implements OnModuleInit {
 		return await this.redisClient.get(key);
 	}
 
-	private async saveOnCache(subscriptionId: string, data: any): Promise<string> {
+	private async saveOnCache(subscriptionId: string, data: unknown): Promise<string> {
 		const key = this.cacheAccessHelper.generateKey(subscriptionId, CacheEnum.SUBSCRIPTIONS);
 		return await this.redisClient.set(key, data, this.subscriptionsTimeToLive);
 	}

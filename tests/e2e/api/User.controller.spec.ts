@@ -1,8 +1,8 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import { createNestApplicationOptions, startNestApplication } from '../support/mocks/setupUtils';
-import CoreModule from '../../../src/modules/core/core.module';
+import CoreModule from '@core/core.module';
+import { createNestTestApplicationOptions, startNestApplication } from 'tests/e2e/support/mocks/setupUtils';
 
 
 jest.setTimeout(1.2 * 5000);
@@ -13,27 +13,36 @@ describe('API :: UserController', () => {
 	// ? build test app
 	beforeAll(async () => {
 		nestTestingModule = await Test.createTestingModule({
-			imports: [CoreModule]
+			imports: [CoreModule],
 		}).compile();
 
-		nestTestApp = nestTestingModule.createNestApplication(createNestApplicationOptions);
+		nestTestApp = nestTestingModule.createNestApplication(createNestTestApplicationOptions);
 		await startNestApplication(nestTestApp);
 		await nestTestApp.init();
 	});
 
+	afterEach(() => {
+		jest.clearAllMocks();
+	});
+	afterAll(async () => {
+		await nestTestApp.close();
+		await nestTestingModule.close();
+	});
+
 	describe('# [GET] /api/users', () => {
-		test('Should get success', async () => {
+		test('Success response', async () => {
 			const response = await request(await nestTestApp.getHttpServer())
 				.get('/api/users')
-				.set('Authorization', 'Bearer ' + process.env.MOCKED_SERVICE_TOKEN);
+				.set('Authorization', `Bearer ${process.env.MOCKED_SERVICE_TOKEN}`);
 
 			expect(response.statusCode).toBe(200);
 			expect(response.body).toMatchObject({
 				content: [
 					{
-						fullName: 'Tester',
+						fullName: 'Tester User',
 						fu: 'SP',
-						docType: 'invalid',
+						docType: 'CPF',
+						document: '12312312345',
 						preference: {
 							defaultTheme: 'DARK',
 							imagePath: './generic.png',
@@ -47,21 +56,40 @@ describe('API :: UserController', () => {
 			});
 		});
 
-		test('Should get unauthorized', async () => {
+		test('Invalid Token response', async () => {
 			const response = await request(await nestTestApp.getHttpServer())
 				.get('/api/users');
 
-			expect(response.statusCode).toBe(401);
+			expect(response.statusCode).toBe(498);
 			expect(response.body).toEqual({
-				error: 'Unauthorized',
+				error: 'Invalid Token',
 				message: 'Authorization token is required',
-				statusCode: 401,
+				statusCode: 498,
 			});
 		});
 	});
 
-	afterAll(async () => {
-		await nestTestApp.close();
-		await nestTestingModule.close();
+	describe('# [POST] /api/users', () => {
+		// TODO - Success response
+
+		test('Bad Request response', async () => {
+			const response = await request(await nestTestApp.getHttpServer())
+				.post('/api/users')
+				.set('Authorization', `Bearer ${process.env.MOCKED_SERVICE_TOKEN}`)
+				.send({
+					fullName: 'Tester User',
+					email: 'user.tester@nomail.com',
+				});
+
+			expect(response.statusCode).toBe(400);
+			expect(response.body).toEqual({
+				error: 'Bad Request',
+				message: [
+					'password should not be empty',
+					'password must be a string',
+				],
+				statusCode: 400,
+			});
+		});
 	});
 });

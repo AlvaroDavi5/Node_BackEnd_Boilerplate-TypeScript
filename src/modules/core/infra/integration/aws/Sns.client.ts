@@ -6,8 +6,9 @@ import {
 	SubscribeCommand, UnsubscribeCommand, PublishCommand,
 	CreateTopicCommandInput, SubscribeCommandInput, PublishCommandInput,
 } from '@aws-sdk/client-sns';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import CryptographyService from '@core/security/Cryptography.service';
+import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
@@ -26,16 +27,17 @@ export default class SnsClient {
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly cryptographyService: CryptographyService,
+		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
-		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
+		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
 		const {
-			region, sessionToken,
+			region, endpoint, sessionToken,
 			accessKeyId, secretAccessKey,
 		} = awsConfigs.credentials;
-		const { endpoint, apiVersion } = awsConfigs.sns;
+		const { apiVersion } = awsConfigs.sns;
 
 		this.awsConfig = {
 			endpoint,
@@ -46,14 +48,14 @@ export default class SnsClient {
 				secretAccessKey: String(secretAccessKey),
 				sessionToken,
 			},
-			logger: logging === 'true' ? this.logger : undefined,
+			logger: showExternalLogs ? this.logger : undefined,
 		};
 		this.messageGroupId = 'DefaultGroup';
 		this.snsClient = new SNSClient(this.awsConfig);
 	}
 
 
-	private formatMessageBeforeSend(message: any = {}): string {
+	private formatMessageBeforeSend(message: unknown = {}): string {
 		return this.dataParserHelper.toString(message);
 	}
 
@@ -93,16 +95,16 @@ export default class SnsClient {
 		};
 
 		switch (protocol) {
-		case 'email':
-			publishData.Subject = subject;
-			break;
-		case 'sms':
-			publishData.PhoneNumber = phoneNumber;
-			break;
-		default: // application | sqs | lambda | http(s)
-			publishData.TopicArn = topicArn;
-			publishData.TargetArn = topicArn;
-			break;
+			case 'email':
+				publishData.Subject = subject;
+				break;
+			case 'sms':
+				publishData.PhoneNumber = phoneNumber;
+				break;
+			default: // application | sqs | lambda | http(s)
+				publishData.TopicArn = topicArn;
+				publishData.TargetArn = topicArn;
+				break;
 		}
 
 		return publishData;
@@ -125,6 +127,7 @@ export default class SnsClient {
 				list = result?.Topics;
 		} catch (error) {
 			this.logger.error('List Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return list;
@@ -141,6 +144,7 @@ export default class SnsClient {
 				topicArn = result.TopicArn;
 		} catch (error) {
 			this.logger.error('Create Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return topicArn;
@@ -157,6 +161,7 @@ export default class SnsClient {
 				isDeleted = true;
 		} catch (error) {
 			this.logger.error('Delete Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return isDeleted;
@@ -173,25 +178,29 @@ export default class SnsClient {
 				subscriptionArn = result.SubscriptionArn;
 		} catch (error) {
 			this.logger.error('Subscribe Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return subscriptionArn;
 	}
 
 	public async unsubscribeTopic(subscriptionArn: string): Promise<number> {
-		let httpStatusCode = 0;
+		let statusCode = 0;
 
 		try {
 			const result = await this.snsClient.send(new UnsubscribeCommand({
 				SubscriptionArn: subscriptionArn
 			}));
-			if (result?.$metadata?.httpStatusCode)
-				httpStatusCode = result.$metadata.httpStatusCode;
+
+			const { httpStatusCode } = result.$metadata;
+			if (httpStatusCode)
+				statusCode = httpStatusCode;
 		} catch (error) {
 			this.logger.error('Unsubscribe Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
-		return httpStatusCode;
+		return statusCode;
 	}
 
 	public async publishMessage(protocol: protocolType, topicArn: string, topicName: string, message: string, destination: DestinationInterface): Promise<string> {
@@ -205,6 +214,7 @@ export default class SnsClient {
 				messageId = result.MessageId;
 		} catch (error) {
 			this.logger.error('Publish Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return messageId;

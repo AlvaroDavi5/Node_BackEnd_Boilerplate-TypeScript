@@ -1,8 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import IORedis from 'ioredis';
-import { ScanStreamOptions } from 'ioredis/built/types';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
@@ -19,12 +18,12 @@ export default class RedisClient {
 		private readonly dataParserHelper: DataParserHelper,
 	) {
 		const { host, port } = this.configService.get<ConfigsInterface['cache']['redis']>('cache.redis')!;
-		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
+		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
 
 		this.redisClient = new IORedis({
 			host: String(host),
 			port: Number(port),
-			showFriendlyErrorStack: logging === 'true',
+			showFriendlyErrorStack: showExternalLogs,
 			maxRetriesPerRequest: 3,
 		});
 
@@ -36,6 +35,11 @@ export default class RedisClient {
 		}
 
 		this.isConnected = true;
+	}
+
+	private parseValue<VT = unknown>(strValue: string): VT | null {
+		const { data } = this.dataParserHelper.toObject<VT>(strValue);
+		return data;
 	}
 
 	public getClient(): IORedis {
@@ -52,7 +56,7 @@ export default class RedisClient {
 			this.isConnected = false;
 			throw this.exceptions.integration({
 				message: 'Error to connect redis client',
-				details: (error as any)?.message,
+				details: (error as Error)?.message,
 			});
 		}
 		return this.isConnected;
@@ -84,12 +88,12 @@ export default class RedisClient {
 
 	public async get<VT = any>(key: string): Promise<any> {
 		const value = await this.redisClient.get(String(key));
-		const result = value ? this.dataParserHelper.toObject(value) : null;
+		const result = value ? this.parseValue(value) : null;
 
 		return result as (VT | null);
 	}
 
-	public async set(key: string, value: object, ttl = 30): Promise<string> {
+	public async set(key: string, value: unknown, ttl = 30): Promise<string> {
 		const result = await this.redisClient.set(String(key), this.dataParserHelper.toString(value));
 		await this.redisClient.expire(String(key), Number(ttl)); // [key] expires in [ttl] seconds
 		return result;
@@ -102,7 +106,7 @@ export default class RedisClient {
 		const keys = await this.redisClient.keys(pattern);
 		const getByKeyPromises = keys.map(
 			async (key: string) => {
-				const value = this.dataParserHelper.toObject(String(await this.redisClient.get(key))) as (VT | null);
+				const value = this.parseValue<VT>(String(await this.redisClient.get(key)));
 
 				return {
 					key,
@@ -112,7 +116,7 @@ export default class RedisClient {
 		);
 		const result = await Promise.allSettled(getByKeyPromises);
 
-		return result.map(({ status, ...args }) => ({ ...((args as any)?.value ?? {}) }));
+		return result.map(({ status: _, ...args }) => ({ ...((args as any)?.value ?? {}) }));
 	}
 
 	public async getValuesByKeyPattern<VT = any>(key: string): Promise<(VT | null)[]> {
@@ -125,7 +129,7 @@ export default class RedisClient {
 		const caches = await this.redisClient.mget(keys);
 
 		return caches.map((cache) => {
-			return this.dataParserHelper.toObject(String(cache)) as (VT | null);
+			return this.parseValue<VT>(String(cache));
 		});
 	}
 
@@ -140,7 +144,7 @@ export default class RedisClient {
 		return result;
 	}
 
-	public async remove(keyPattern: ScanStreamOptions | object | string): Promise<void> {
+	public async remove(keyPattern: string): Promise<void> {
 		const scanValue: string | any = `${keyPattern}:*`;
 		const stream = this.redisClient.scanStream(scanValue);
 

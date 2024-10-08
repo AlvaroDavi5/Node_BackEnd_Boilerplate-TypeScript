@@ -1,15 +1,16 @@
+import { ConfigService } from '@nestjs/config';
+import { configServiceMock, cryptographyServiceMock, dataParserHelperMock, loggerProviderMock } from '@dev/mocks/mockedModules';
 import SqsClient from './SqsClient';
-import { configServiceMock, cryptographyServiceMock, dataParserHelperMock, loggerProviderMock } from '../../mocks/mockedModules';
 
 
-export default (queueName: string, queueUrl: string, payload: any, title: string, author: string): void => {
-	const sqsClient = new SqsClient(configServiceMock as any, cryptographyServiceMock, loggerProviderMock, dataParserHelperMock);
+export default (queueName: string, queueUrl: string, payload: unknown, title: string, author: string): void => {
+	const sqsClient = new SqsClient(configServiceMock as unknown as ConfigService, cryptographyServiceMock, loggerProviderMock, dataParserHelperMock);
 
 	const message = {
 		id: cryptographyServiceMock.generateUuid(),
 		schema: 'INVALID',
 		schemaVersion: 1,
-		payload: payload,
+		payload,
 		source: 'SCRIPT',
 		timestamp: new Date('2024-06-10T03:52:50.885Z'),
 	};

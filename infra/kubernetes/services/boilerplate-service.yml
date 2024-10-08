@@ -15,4 +15,3 @@ spec:
       protocol: TCP
       port: 3000
       targetPort: 3000
-# to connect CONTAINER:HOST ports run: "kubectl port-forward -n boilerplate-namespace services/boilerplate-service 3000"

@@ -8,6 +8,7 @@
 - ...
 
 ### [X.Y.Z] - YYYY-MM-DD
+<!-- major.minor.patch -->
 
 #### Added
 - Added...
@@ -24,7 +25,7 @@
 
 ## [Released]
 
-### [X.Y.Z] - YYYY-MM-DD
+### [X.Y.Z](https://github.com/AlvaroDavi5/Node_BackEnd_Boilerplate-TypeScript/compare/vX.Y.Z...vX.Y.Z) (YYYY-MM-DD)
 
 #### Added
 - Added...
@@ -34,6 +35,7 @@
 
 #### Fixed
 - Fixed...
+- **scope:** code fixed ([commit_hash](https://github.com/AlvaroDavi5/Node_BackEnd_Boilerplate-TypeScript/commit/commit_hash))
 
 #### Removed
 - Updated...

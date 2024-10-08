@@ -31,8 +31,8 @@ Table UserPreferences as PREF {
 	deletedAt timestamp [default: `null`]
 }
 
-// entities references
-//  > : Many-to-One
-//  < : One-to-Many
-//  - : One-to-One
+// * Entities References
+// ? > : Many-to-One
+// ? < : One-to-Many
+// ? - : One-to-One
 Ref: USR.id - PREF.userId [update: cascade, delete: cascade]

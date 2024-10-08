@@ -1,22 +1,19 @@
 import { io, Socket as ClientSocket } from 'socket.io-client';
-import { ConfigsInterface } from 'src/modules/core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
+import { LoggerInterface } from '@core/logging/logger';
 import { dataParserHelperMock } from '../mocks/mockedModules';
 
 
 export default class WebSocketClient {
 	private readonly clientSocket!: ClientSocket;
-	private readonly logger: Console;
+	private readonly logger: LoggerInterface;
 
-	constructor({
-		configs,
-		logger,
-	}: any) {
-		const appConfigs: ConfigsInterface['application'] = configs.application;
+	constructor({ configs, logger }: { configs: ConfigsInterface, logger: LoggerInterface }) {
+		const appConfigs = configs.application;
 		const socketUrl = appConfigs.url;
-		const isSocketEnvEnabled = appConfigs.socketEnv === 'enabled';
 
 		this.logger = logger;
-		if (isSocketEnvEnabled) {
+		if (appConfigs.socketEnv) {
 			this.clientSocket = io(socketUrl, {
 				autoConnect: true,
 				closeOnBeforeunload: true,

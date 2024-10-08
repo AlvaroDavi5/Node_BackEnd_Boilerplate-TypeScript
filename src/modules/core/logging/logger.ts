@@ -3,6 +3,7 @@ import { dataParserHelperMock } from '@dev/mocks/mockedModules';
 
 
 export enum LogLevelEnum {
+	// NOTE - ordered by level priority
 	ERROR = 'error',
 	WARN = 'warn',
 	INFO = 'info',
@@ -12,105 +13,93 @@ export enum LogLevelEnum {
 }
 
 export interface LoggerInterface {
-	error: (...args: any) => void;
-	warn: (...args: any) => void;
-	info: (...args: any) => void;
-	http: (...args: any) => void;
-	verbose: (...args: any) => void;
-	debug: (...args: any) => void;
+	error: (...args: unknown[]) => void;
+	warn: (...args: unknown[]) => void;
+	info: (...args: unknown[]) => void;
+	http: (...args: unknown[]) => void;
+	verbose: (...args: unknown[]) => void;
+	debug: (...args: unknown[]) => void;
 }
 
 export interface MetadataInterface {
 	context?: string,
 	requestId?: string,
 	details?: string | object | object[],
-	stack?: string | string[] | object[],
+	stack?: unknown | unknown[],
 }
 
-export function generateLogger(context: string): Logger {
+function getMessageFormatter() {
+	const levelFormatter = (level: string): string => format.colorize().colorize(level, level.toUpperCase());
+	const purpleConsoleColor = '\x1b[0;35m';
+	const defaultConsoleColor = '\x1b[0m';
+	const contextFormatter = (ctx: string): string => (`${purpleConsoleColor}${ctx}${defaultConsoleColor}`);
 
-	const messageFormatter = format.printf((info) => {
-		const { level, message, timestamp, stack, context, meta } = info;
-		const logContext = (context || meta?.context) ?? 'DefaultContext';
+	return format.printf((info) => {
+		const { level, message, timestamp, stack: errorStack, context, meta } = info;
+		const logLevel = levelFormatter(level);
+		const logContext = contextFormatter((context || meta?.context) ?? 'DefaultContext');
 		const requestId = meta?.requestId;
-		const logStack = stack ?? meta?.stack;
+		const logStack = errorStack ?? meta?.stack;
 
 		let log = `${dataParserHelperMock.toString(message)}`;
 
 		if (requestId)
 			log += ` - requestId: ${requestId}`;
-		if (logStack)
-			log += `\n${logStack}`;
+		if (logStack) {
+			if (Array.isArray(logStack))
+				logStack.forEach((stack) => {
+					log += `\n${stack}`;
+				});
+			else
+				log += `\n${logStack}`;
+		}
 
-		return `${timestamp} | ${level} [${logContext}]: ${log}`;
+		return `${timestamp} | ${logLevel} [${logContext}]: ${log}`;
 	});
+}
 
-	const defaultFormat = getDefaultFormat(
-		(process.env.SHOW_ERROR_STACK ?? 'true') === 'true',
+export function getLoggerOptions(serviceName: string, environment: string, context: string, logsPath: string, showDetailedLogs: boolean) {
+	const messageFormatter = getMessageFormatter();
+	const defaultFormat = format.combine(
+		format.timestamp(),
+		format.errors({ stack: showDetailedLogs }),
 		messageFormatter,
 	);
 
-	const loggerOptions = getLoggerOptions(
-		(process.env.APP_NAME ?? 'Node Boilerplate'),
-		(process.env.NODE_ENV ?? 'dev'),
-		context,
-		(process.env.APP_LOGS_PATH ?? './logs/logs.log'),
-		defaultFormat,
-	);
-
-	return createLogger(loggerOptions);
-}
-
-export function getMessageFormatter(parser: (data: unknown) => string) {
-	return format.printf((info) => {
-		const { level, message, timestamp, stack, context, meta } = info;
-		const logContext = (context || meta?.context) ?? 'DefaultContext';
-		const requestId = meta?.requestId;
-		const logStack = stack ?? meta?.stack;
-
-		let log = `${parser(message)}`;
-
-		if (requestId)
-			log += ` - requestId: ${requestId}`;
-		if (logStack)
-			log += `\n${logStack}`;
-
-		return `${timestamp} | ${level} [${logContext}]: ${log}`;
-	});
-}
-
-export function getDefaultFormat(stackErrorVisible: boolean, defaultMessageFormatter: any) {
-	return format.combine(
-		format.timestamp(),
-		format.errors({ stack: stackErrorVisible }),
-		defaultMessageFormatter,
-	);
-}
-
-export function getLoggerOptions(serviceName: string, environment: string, context: string, logsPath: string, defaultFormat: any) {
+	const consoleMaxLevel = showDetailedLogs === true ? LogLevelEnum.DEBUG : LogLevelEnum.HTTP;
+	const fileMaxLevel = showDetailedLogs === true ? LogLevelEnum.HTTP : LogLevelEnum.WARN;
 	return {
 		format: format.combine(
 			defaultFormat,
 			format.json(),
 		),
 		defaultMeta: {
-			context: context,
+			context,
 			service: serviceName,
 			env: environment,
 		},
 		transports: [
 			new transports.Console({
-				level: 'debug', // error,warn,info,debug
-				format: format.combine(
-					format.colorize(),
-					defaultFormat,
-				),
+				level: consoleMaxLevel,
+				format: defaultFormat,
 			}),
 			new transports.File({
-				level: 'info',
+				level: fileMaxLevel,
 				filename: logsPath,
 			}),
 		],
 		exitOnError: false,
 	};
+}
+
+export function generateLogger(loggerContext: string): Logger {
+	const loggerOptions = getLoggerOptions(
+		(process.env.APP_NAME ?? 'Node Boilerplate'),
+		(process.env.NODE_ENV ?? 'dev'),
+		loggerContext,
+		(process.env.APP_LOGS_PATH ?? './logs/logs.log'),
+		(process.env.SHOW_DETAILED_LOGS ?? 'true') === 'true',
+	);
+
+	return createLogger(loggerOptions);
 }

@@ -2,8 +2,8 @@ import { Injectable } from '@nestjs/common';
 import { Cron, CronExpression, SchedulerRegistry } from '@nestjs/schedule';
 import LoggerService from '@core/logging/Logger.service';
 import SyncCronTask from '@core/cron/tasks/SyncCron.task';
-import { CronJobsEnum } from '../cronJobs.enum';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import { CronJobsEnum } from '../cronJobs.enum';
 
 
 @Injectable()
@@ -34,7 +34,7 @@ export default class SyncCronJob {
 	@Cron('0 */5 * * * *', {
 		// // first second every 5 minutes
 		name: CronJobsEnum.SyncCron,
-		timeZone: TimeZonesEnum.SaoPaulo,
+		timeZone: TimeZonesEnum.America_SaoPaulo,
 		disabled: false,
 		unrefTimeout: false,
 	})

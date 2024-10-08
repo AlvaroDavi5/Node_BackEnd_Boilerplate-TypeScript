@@ -2,7 +2,12 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import RequestLoggerMiddleware from '@api/middlewares/RequestLogger.middleware';
 import UserController from './api/controllers/User.controller';
 import UserStrategy from './strategies/User.strategy';
-import UserOperation from './operations/User.operation';
+import LoginUserUseCase from './usecases/LoginUser.usecase';
+import ListUsersUseCase from './usecases/ListUsers.usecase';
+import CreateUserUseCase from './usecases/CreateUser.usecase';
+import GetUserUseCase from './usecases/GetUser.usecase';
+import UpdateUserUseCase from './usecases/UpdateUser.usecase';
+import DeleteUserUseCase from './usecases/DeleteUser.usecase';
 import UserService from './services/User.service';
 import UserPreferenceService from './services/UserPreference.service';
 import UserRepository from './repositories/user/User.repository';
@@ -16,7 +21,12 @@ import UserPreferenceRepository from './repositories/userPreference/UserPreferen
 	],
 	providers: [
 		UserStrategy,
-		UserOperation,
+		LoginUserUseCase,
+		ListUsersUseCase,
+		CreateUserUseCase,
+		GetUserUseCase,
+		UpdateUserUseCase,
+		DeleteUserUseCase,
 		UserService,
 		UserPreferenceService,
 		UserRepository,

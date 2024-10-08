@@ -1,4 +1,3 @@
-
 export class ClientSocket {
 	public connected: boolean;
 
@@ -6,15 +5,15 @@ export class ClientSocket {
 		this.connected = true;
 	}
 
-	public on(ev: string, listener?: ((...args: any[]) => void)): this {
+	public on(_ev: string, _listener?: ((...args: unknown[]) => void)): this {
 		return this;
 	}
 
-	public off(ev?: string, listener?: ((...args: any[]) => void)): this {
+	public off(_ev?: string, _listener?: ((...args: unknown[]) => void)): this {
 		return this;
 	}
 
-	public emit(ev: string, ...args: any[]): this {
+	public emit(_ev: string, ..._args: unknown[]): this {
 		return this;
 	}
 

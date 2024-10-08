@@ -5,8 +5,9 @@
 	"entryFile": "main",
 	"language": "ts",
 	"compilerOptions": {
-		"deleteOutDir": true,
+		"tsConfigPath": "tsconfig.build.json",
+		"typeCheck": true,
 		"builder": "swc",
-		"typeCheck": true
+		"deleteOutDir": true
 	}
 }

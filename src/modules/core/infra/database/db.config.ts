@@ -1,25 +1,25 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
-import configs from 'src/modules/core/configs/configs.config';
+import envsConfig from '@core/configs/envs.config';
 import UsersModel from './models/Users.model';
 import UserPreferencesModel from './models/UserPreferences.model';
 
 
 function getDialect(dialect: string): 'mysql' | 'postgres' | 'sqlite' | 'mssql' {
 	switch (dialect?.toLowerCase()) {
-	case 'mysql':
-		return 'mysql';
-	case 'postgres':
-		return 'postgres';
-	case 'sqlite':
-		return 'sqlite';
-	case 'mssql':
-		return 'mssql';
-	default:
-		return 'mysql';
+		case 'mysql':
+			return 'mysql';
+		case 'postgres':
+			return 'postgres';
+		case 'sqlite':
+			return 'sqlite';
+		case 'mssql':
+			return 'mssql';
+		default:
+			return 'mysql';
 	}
 }
 
-const { application: app, database: db } = configs();
+const { application: app, database: db } = envsConfig();
 
 export const dbConfig: DataSourceOptions = {
 	name: 'dbConfig',
@@ -27,18 +27,17 @@ export const dbConfig: DataSourceOptions = {
 	username: db.username,
 	password: db.password,
 	host: db.host,
-	port: parseInt(db.port),
+	port: parseInt(db.port, 10),
 	type: getDialect(db.dialect),
 	charset: db.charset,
 	timezone: db.timezone,
-	logging: app.logging === 'true',
+	logging: app.showExternalLogs,
 	entities: [
 		UsersModel,
 		UserPreferencesModel,
 	],
 	migrations: [
-		'build/modules/core/infra/database/migrations/**.js',
-		'build/modules/core/infra/database/seeders/**.js',
+		'build/modules/core/infra/database/migrations/**/*{.ts,.js}',
 	],
 	subscribers: [],
 	pool: {

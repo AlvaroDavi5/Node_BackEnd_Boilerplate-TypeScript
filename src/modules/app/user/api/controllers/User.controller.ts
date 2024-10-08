@@ -1,40 +1,51 @@
 import {
-	Inject,
-	Controller, Req, ParseUUIDPipe,
+	Controller, Req, Res, ParseUUIDPipe,
 	Param, Query, Body,
 	Get, Post, Put, Patch, Delete,
 	UseGuards,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
-import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
-import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
-import UserEntity, { UserEntityList, ViewUserInterface } from '@domain/entities/User.entity';
-import UserOperation from '@app/user/operations/User.operation';
+import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse, ApiNoContentResponse } from '@nestjs/swagger';
+import UserEntity, { IViewUser } from '@domain/entities/User.entity';
+import UserListEntity from '@domain/entities/generic/UserList.entity';
+import LoginUserUseCase from '@app/user/usecases/LoginUser.usecase';
+import ListUsersUseCase from '@app/user/usecases/ListUsers.usecase';
+import CreateUserUseCase from '@app/user/usecases/CreateUser.usecase';
+import GetUserUseCase from '@app/user/usecases/GetUser.usecase';
+import UpdateUserUseCase from '@app/user/usecases/UpdateUser.usecase';
+import DeleteUserUseCase from '@app/user/usecases/DeleteUser.usecase';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
+import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
+import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import { ListQueryValidatorPipe } from '@api/pipes/QueryValidator.pipe';
-import { ListQueryInputDto } from '@api/pipes/dto/QueryInput.dto';
-import { CreateUserValidatorPipe, UpdateUserValidatorPipe, LoginUserValidatorPipe } from '@app/user/api/pipes/UserValidator.pipe';
-import { CreateUserInputDto, UpdateUserInputDto, LoginUserInputDto } from '@app/user/api/dto/UserInput.dto';
-import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
-import { RequestInterface } from '@shared/interfaces/endpointInterface';
-import { PaginationInterface } from '@shared/interfaces/listPaginationInterface';
+import { ListQueryInputDto } from '@api/dto/QueryInput.dto';
+import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
+import { PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
+import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
+import CreateUserValidatorPipe from '../pipes/CreateUserValidator.pipe';
+import UpdateUserValidatorPipe from '../pipes/UpdateUserValidator.pipe';
+import LoginUserValidatorPipe from '../pipes/LoginUserValidator.pipe';
+import CreateUserInputDto from '../dto/user/CreateUserInput.dto';
+import UpdateUserInputDto from '../dto/user/UpdateUserInput.dto';
+import LoginUserInputDto from '../dto/user/LoginUserInput.dto';
 
 
 @ApiTags('Users')
 @Controller('/users')
-@UseGuards(CustomThrottlerGuard, AuthGuard)
-@authSwaggerDecorator()
+@UseGuards(CustomThrottlerGuard)
 @exceptionsResponseDecorator()
 export default class UserController {
 	constructor(
-		private readonly userOperation: UserOperation,
-		@Inject(REQUEST_LOGGER_PROVIDER)
-		private readonly logger: LoggerService,
-	) {
-		this.logger.setContextName(UserController.name);
-	}
+		private readonly loginUserUseCase: LoginUserUseCase,
+		private readonly listUsersUseCase: ListUsersUseCase,
+		private readonly createUserUseCase: CreateUserUseCase,
+		private readonly getUserUseCase: GetUserUseCase,
+		private readonly updateUserUseCase: UpdateUserUseCase,
+		private readonly deleteUserUseCase: DeleteUserUseCase,
+	) { }
 
+	@UseGuards(AuthGuard)
+	@authSwaggerDecorator()
 	@ApiOperation({
 		summary: 'List Users',
 		description: 'List all users from cache or database',
@@ -42,30 +53,27 @@ export default class UserController {
 	})
 	@Get('/')
 	@ApiOkResponse({
-		type: UserEntityList,
+		type: UserListEntity,
 		schema: {
-			example: (new UserEntityList()),
+			example: (new UserListEntity()),
 		},
 	})
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async listUsers(
 		@Query(ListQueryValidatorPipe) query: ListQueryInputDto,
-	): Promise<PaginationInterface<ViewUserInterface>> {
-		try {
-			const { content, ...listInfo } = await this.userOperation.listUsers(query);
-			const mappedContent = content.map((entity) => entity.getAttributes());
+	): Promise<PaginationInterface<IViewUser>> {
+		const { content, ...listInfo } = await this.listUsersUseCase.execute(query);
+		const mappedContent = content.map((entity) => entity.getAttributes());
 
-			return {
-				content: mappedContent,
-				...listInfo,
-			};
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return {
+			content: mappedContent,
+			...listInfo,
+		};
 	}
 
+	@UseGuards(AuthGuard)
+	@authSwaggerDecorator()
 	@ApiOperation({
 		summary: 'Create User',
 		description: 'Create a new user',
@@ -78,17 +86,12 @@ export default class UserController {
 	public async createUser(
 		@Req() request: RequestInterface,
 		@Body(CreateUserValidatorPipe) body: CreateUserInputDto,
-	): Promise<ViewUserInterface> {
-		try {
-			const { user } = request;
+	): Promise<IViewUser> {
+		const { user } = request;
 
-			const result = await this.userOperation.createUser(body, user);
+		const result = await this.createUserUseCase.execute(body, user);
 
-			return result.getAttributes();
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return result.getAttributes();
 	}
 
 	@ApiOperation({
@@ -102,17 +105,14 @@ export default class UserController {
 	@ApiProduces('application/json')
 	public async loginUser(
 		@Body(LoginUserValidatorPipe) body: LoginUserInputDto,
-	): Promise<ViewUserInterface & { token: string }> {
-		try {
-			const { user, token } = await this.userOperation.loginUser(body);
+	): Promise<IViewUser & { token: string }> {
+		const { user, token } = await this.loginUserUseCase.execute(body);
 
-			return { ...user.getAttributes(), token };
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return { ...user.getAttributes(), token };
 	}
 
+	@UseGuards(AuthGuard)
+	@authSwaggerDecorator()
 	@ApiOperation({
 		summary: 'Get User',
 		description: 'Get user by ID',
@@ -125,19 +125,16 @@ export default class UserController {
 	public async getUser(
 		@Req() request: RequestInterface,
 		@Param('userId', ParseUUIDPipe) userId: string,
-	): Promise<ViewUserInterface> {
-		try {
-			const { user } = request;
+	): Promise<IViewUser> {
+		const { user } = request;
 
-			const result = await this.userOperation.getUser(userId, user);
+		const result = await this.getUserUseCase.execute(userId, user);
 
-			return result.getAttributes();
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return result.getAttributes();
 	}
 
+	@UseGuards(AuthGuard)
+	@authSwaggerDecorator()
 	@ApiOperation({
 		summary: 'Update User',
 		description: 'Update registered user',
@@ -151,41 +148,34 @@ export default class UserController {
 		@Req() request: RequestInterface,
 		@Param('userId', ParseUUIDPipe) userId: string,
 		@Body(UpdateUserValidatorPipe) body: UpdateUserInputDto,
-	): Promise<ViewUserInterface> {
-		try {
-			const { user } = request;
+	): Promise<IViewUser> {
+		const { user } = request;
 
-			const result = await this.userOperation.updateUser(userId, body, user);
+		const result = await this.updateUserUseCase.execute(userId, body, user);
 
-			return result.getAttributes();
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		return result.getAttributes();
 	}
 
+	@UseGuards(AuthGuard)
+	@authSwaggerDecorator()
 	@ApiOperation({
 		summary: 'Delete User',
 		description: 'Delete a user',
 		deprecated: false,
 	})
 	@Delete('/:userId')
-	@ApiOkResponse({ schema: { example: { result: true } } })
+	@ApiNoContentResponse({})
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async deleteUser(
 		@Req() request: RequestInterface,
+		@Res() response: ResponseInterface,
 		@Param('userId', ParseUUIDPipe) userId: string,
-	): Promise<[affectedCount: number] | unknown> {
-		try {
-			const { user } = request;
+	): Promise<void> {
+		const { user } = request;
 
-			const result = await this.userOperation.deleteUser(userId, user);
+		await this.deleteUserUseCase.execute(userId, user);
 
-			return { result };
-		} catch (error) {
-			this.logger.error(error);
-			throw error;
-		}
+		response.status(HttpStatusEnum.NO_CONTENT).send(undefined);
 	}
 }

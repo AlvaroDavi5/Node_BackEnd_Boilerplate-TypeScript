@@ -1,5 +1,5 @@
 import { ModuleRef } from '@nestjs/core';
-import { Inject, OnModuleInit, UseGuards } from '@nestjs/common';
+import { OnModuleInit, UseGuards } from '@nestjs/common';
 import {
 	WebSocketGateway, SubscribeMessage, MessageBody,
 	WebSocketServer as Server, ConnectedSocket,
@@ -11,17 +11,17 @@ import { WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/webSocket
 import SubscriptionService from '@app/subscription/services/Subscription.service';
 import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
 import EventsGuard from '@events/websocket/guards/Events.guard';
-import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
+import { getObjValues } from '@common/utils/dataValidations.util';
 
 
 @WebSocketGateway({
 	cors: {
 		origin: '*',
 		allowedHeaders: '*',
-		methods: Object.values(HttpMethodsEnum),
+		methods: getObjValues<HttpMethodsEnum>(HttpMethodsEnum),
 	}
 })
 @UseGuards(EventsGuard)
@@ -30,24 +30,20 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 	private server!: SocketIoServer;
 
 	private subscriptionService!: SubscriptionService;
-	private readonly logger: LoggerInterface;
 
 	constructor(
 		private readonly moduleRef: ModuleRef,
 		private readonly eventsQueueProducer: EventsQueueProducer,
-		@Inject(SINGLETON_LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
+		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
-	) {
-		this.logger = this.loggerProvider.getLogger(WebSocketServer.name);
-	}
+	) { }
 
 	public onModuleInit(): void {
 		this.subscriptionService = this.moduleRef.get(SubscriptionService, { strict: false });
 	}
 
 	private formatMessageAfterReceiveHelper(message: string): object | string | null {
-		return this.dataParserHelper.toObject(message) ?? message;
+		return this.dataParserHelper.toObject(message).data ?? message;
 	}
 
 	private formatMessageBeforeSendHelper(message: unknown): string {
@@ -129,14 +125,14 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 
 	@SubscribeMessage(WebSocketEventsEnum.EMIT_PRIVATE)
 	public emitPrivate(
-		@ConnectedSocket() socket: ServerSocket,
+		@ConnectedSocket() _socket: ServerSocket,
 		@MessageBody() msg: string,
 	): void { // listen 'emit_private' order event from client
-		const { socketIdsOrRooms, ...message }: { [key: string]: any, socketIdsOrRooms?: string | string[] } = this.formatMessageAfterReceiveHelper(msg) as any;
+		const { socketIdsOrRooms, ...message } = this.formatMessageAfterReceiveHelper(msg) as { [key: string]: unknown, socketIdsOrRooms?: string | string[] };
 		const msgContent = this.formatMessageBeforeSendHelper(message);
 
 		if (!socketIdsOrRooms) {
-			this.logger.warn('Invalid socketIds or Rooms to emit');
+			this.logger.warn('Invalid socket IDs or Rooms to emit');
 			return;
 		}
 

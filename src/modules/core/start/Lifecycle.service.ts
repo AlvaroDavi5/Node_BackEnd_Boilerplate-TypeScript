@@ -12,7 +12,7 @@ import S3Client from '@core/infra/integration/aws/S3.client';
 import SyncCronJob from '@core/cron/jobs/SyncCron.job';
 import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import LoggerService from '@core/logging/Logger.service';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 

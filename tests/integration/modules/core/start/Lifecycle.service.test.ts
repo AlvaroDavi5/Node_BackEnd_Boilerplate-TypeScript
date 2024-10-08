@@ -1,22 +1,22 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { HttpAdapterHost } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import LifecycleService from '../../../../../src/modules/core/start/Lifecycle.service';
-import configs from '../../../../../src/modules/core/configs/configs.config';
-import { DATABASE_CONNECTION_PROVIDER } from '../../../../../src/modules/core/infra/database/connection';
-import WebSocketServer from '../../../../../src/modules/events/websocket/server/WebSocket.server';
-import SyncCronJob from '../../../../../src/modules/core/cron/jobs/SyncCron.job';
-import MongoClient from '../../../../../src/modules/core/infra/data/Mongo.client';
-import RedisClient from '../../../../../src/modules/core/infra/cache/Redis.client';
-import SqsClient from '../../../../../src/modules/core/infra/integration/aws/Sqs.client';
-import SnsClient from '../../../../../src/modules/core/infra/integration/aws/Sns.client';
-import S3Client from '../../../../../src/modules/core/infra/integration/aws/S3.client';
-import CognitoClient from '../../../../../src/modules/core/infra/integration/aws/Cognito.client';
-import { configServiceMock } from '../../../../../src/dev/mocks/mockedModules';
-import LoggerService from '../../../support/mocks/logging/Logger.service';
-import { mockObservable } from '../../../support/mocks/mockObservable';
+import LifecycleService from '@core/start/Lifecycle.service';
+import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
+import WebSocketServer from '@events/websocket/server/WebSocket.server';
+import SyncCronJob from '@core/cron/jobs/SyncCron.job';
+import MongoClient from '@core/infra/data/Mongo.client';
+import RedisClient from '@core/infra/cache/Redis.client';
+import SqsClient from '@core/infra/integration/aws/Sqs.client';
+import SnsClient from '@core/infra/integration/aws/Sns.client';
+import S3Client from '@core/infra/integration/aws/S3.client';
+import CognitoClient from '@core/infra/integration/aws/Cognito.client';
+import { configServiceMock } from '@dev/mocks/mockedModules';
+import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
+import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
 
-describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
+// eslint-disable-next-line no-console
+describe('Modules :: Core :: Start :: LifecycleService', () => {
 	let nestTestingModule: TestingModule;
 	// // mocks
 	const databaseConnectionMock = {
@@ -51,6 +51,9 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 	const awsClientMock = {
 		destroy: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
 	};
+	const mockObservable: MockObservableInterface<void, unknown[]> = {
+		call: jest.fn((..._args: unknown[]): void => (undefined)),
+	};
 	const loggerServiceMock = new LoggerService(mockObservable);
 
 	// ? build test app
@@ -70,8 +73,12 @@ describe('Modules :: Core :: Infra :: Start :: LifecycleService', () => {
 				{ provide: CognitoClient, useValue: awsClientMock },
 				{ provide: LoggerService, useValue: loggerServiceMock },
 				LifecycleService,
-			]
+			],
 		}).compile();
+	});
+
+	afterEach(() => {
+		jest.clearAllMocks();
 	});
 
 	describe('# Build and Close Application', () => {

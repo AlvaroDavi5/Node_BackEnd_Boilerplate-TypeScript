@@ -2,10 +2,12 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
 	CognitoIdentityProviderClient, CognitoIdentityProviderClientConfig, UserPoolDescriptionType,
-	ListUserPoolsCommand, CreateUserPoolCommand, DeleteUserPoolCommand, CreateUserPoolClientCommand, DeleteUserPoolClientCommand, AdminCreateUserCommand, AdminGetUserCommand, AdminDeleteUserCommand, SignUpCommand, AdminConfirmSignUpCommand,
+	ListUserPoolsCommand, CreateUserPoolCommand, DeleteUserPoolCommand, CreateUserPoolClientCommand, DeleteUserPoolClientCommand,
+	AdminCreateUserCommand, AdminGetUserCommand, AdminDeleteUserCommand, SignUpCommand, AdminConfirmSignUpCommand,
 	SignUpCommandInput,
 } from '@aws-sdk/client-cognito-identity-provider';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
+import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 
 
@@ -19,16 +21,16 @@ export default class CognitoClient {
 
 	constructor(
 		private readonly configService: ConfigService,
+		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 	) {
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
-		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
+		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
 		const {
-			region, sessionToken,
+			region, endpoint, sessionToken,
 			accessKeyId, secretAccessKey,
 		} = awsConfigs.credentials;
-		const { userPoolName, userPoolId, clientId,
-			endpoint, apiVersion } = awsConfigs.congito;
+		const { userPoolName, userPoolId, clientId, apiVersion } = awsConfigs.congito;
 
 		this.awsConfig = {
 			endpoint,
@@ -39,7 +41,7 @@ export default class CognitoClient {
 				secretAccessKey: String(secretAccessKey),
 				sessionToken,
 			},
-			logger: logging === 'true' ? this.logger : undefined,
+			logger: showExternalLogs ? this.logger : undefined,
 		};
 		this.userPoolName = userPoolName;
 		this.userPoolId = userPoolId;
@@ -81,6 +83,7 @@ export default class CognitoClient {
 				list = result.UserPools;
 		} catch (error) {
 			this.logger.error('List User Pools Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return list;
@@ -97,25 +100,29 @@ export default class CognitoClient {
 				userPoolId = result.UserPool.Id;
 		} catch (error) {
 			this.logger.error('Create User Pool Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return userPoolId;
 	}
 
 	public async deleteUserPool(userPoolId: string): Promise<number> {
-		let httpStatusCode = 0;
+		let statusCode = 0;
 
 		try {
 			const result = await this.cognitoClient.send(new DeleteUserPoolCommand({
 				UserPoolId: userPoolId,
 			}));
-			if (result?.$metadata?.httpStatusCode)
-				httpStatusCode = result.$metadata.httpStatusCode;
+
+			const { httpStatusCode } = result.$metadata;
+			if (httpStatusCode)
+				statusCode = httpStatusCode;
 		} catch (error) {
 			this.logger.error('Delete User Pool Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
-		return httpStatusCode;
+		return statusCode;
 	}
 
 	public async createClient(userPoolName: string, userPoolId: string): Promise<string> {
@@ -130,26 +137,30 @@ export default class CognitoClient {
 				clientId = result.UserPoolClient.ClientId;
 		} catch (error) {
 			this.logger.error('Create Client Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return clientId;
 	}
 
 	public async deleteClient(clientId: string, userPoolId: string): Promise<number> {
-		let httpStatusCode = 0;
+		let statusCode = 0;
 
 		try {
 			const result = await this.cognitoClient.send(new DeleteUserPoolClientCommand({
 				ClientId: clientId,
 				UserPoolId: userPoolId,
 			}));
-			if (result?.$metadata?.httpStatusCode)
-				httpStatusCode = result.$metadata.httpStatusCode;
+
+			const { httpStatusCode } = result.$metadata;
+			if (httpStatusCode)
+				statusCode = httpStatusCode;
 		} catch (error) {
 			this.logger.error('Delete Client Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
-		return httpStatusCode;
+		return statusCode;
 	}
 
 	public async createUser(userName: string, userPoolId: string): Promise<string> {
@@ -164,6 +175,7 @@ export default class CognitoClient {
 				userStatus = result.User.UserStatus;
 		} catch (error) {
 			this.logger.error('Create User Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return userStatus;
@@ -181,26 +193,30 @@ export default class CognitoClient {
 				userEnabled = result.Enabled;
 		} catch (error) {
 			this.logger.error('Get User Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return userEnabled;
 	}
 
 	public async deleteUser(userName: string, userPoolId: string): Promise<number> {
-		let httpStatusCode = 0;
+		let statusCode = 0;
 
 		try {
 			const result = await this.cognitoClient.send(new AdminDeleteUserCommand({
 				Username: userName,
 				UserPoolId: userPoolId,
 			}));
-			if (result?.$metadata?.httpStatusCode)
-				httpStatusCode = result.$metadata.httpStatusCode;
+
+			const { httpStatusCode } = result.$metadata;
+			if (httpStatusCode)
+				statusCode = httpStatusCode;
 		} catch (error) {
 			this.logger.error('Delete User Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
-		return httpStatusCode;
+		return statusCode;
 	}
 
 	public async signUp(userName: string, userEmail: string, password: string): Promise<boolean> {
@@ -212,25 +228,29 @@ export default class CognitoClient {
 				userConfirmed = result.UserConfirmed;
 		} catch (error) {
 			this.logger.error('signUp Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
 		return userConfirmed;
 	}
 
 	public async confirmSignUp(userName: string, userPoolId: string): Promise<number> {
-		let httpStatusCode = 0;
+		let statusCode = 0;
 
 		try {
 			const result = await this.cognitoClient.send(new AdminConfirmSignUpCommand({
 				Username: userName,
 				UserPoolId: userPoolId,
 			}));
-			if (result.$metadata.httpStatusCode)
-				httpStatusCode = result.$metadata.httpStatusCode;
+
+			const { httpStatusCode } = result.$metadata;
+			if (httpStatusCode)
+				statusCode = httpStatusCode;
 		} catch (error) {
 			this.logger.error('SignUp Confirm Error:', error);
+			throw this.exceptions.integration(error as Error);
 		}
 
-		return httpStatusCode;
+		return statusCode;
 	}
 }

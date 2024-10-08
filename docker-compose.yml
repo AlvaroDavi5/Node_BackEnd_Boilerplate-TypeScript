@@ -7,28 +7,28 @@ services:
   # Application
   app:
     container_name: App_Node
-    #image: node:alpine
     # Refered Dockerfile
     build: ./
-    #user: root
-    env_file: ./envs/.env.development.local
+    env_file: ./envs/.env.development
     #working_dir: /app
     #command: ['./init.sh']
     ports:
+      # network_port:host_port
       - 3000:3000
     networks:
       - default_network
     volumes:
+      # host_path:container_path
       - ./package.json:/app/package.json
       - ./yarn.lock:/app/yarn.lock
-      - ./tsconfig.json:/app/tsconfig.json
+      - ./tsconfig.build.json:/app/tsconfig.build.json
       - ./src:/app/src
       - ./init.sh:/app/init.sh
       - /node_modules
     depends_on:
-      - cache
-      - cloud
       - database
+      - cloud
+      - cache
       - data
 
   # Relational DataBase
@@ -45,7 +45,6 @@ services:
     networks:
       - default_network
     volumes:
-      # host_path:container_path
       - db_volume:/var/lib/postgresql/
   # Relational DataBase Admin
   database_admin:
@@ -113,10 +112,10 @@ services:
     container_name: Cloud_LocalStack
     image: localstack/localstack:latest
     environment:
-      - AWS_DEFAULT_REGION=us-east-1
-      - EDGE_PORT=4566
-      - SERVICES=sqs,sns,s3,cognito
-      - SKIP_SSL_CERT_DOWNLOAD=1
+      AWS_DEFAULT_REGION: us-east-1
+      EDGE_PORT: 4566
+      SERVICES: sqs,sns,s3,cognito
+      SKIP_SSL_CERT_DOWNLOAD: 1
     ports:
       - 4566:4566
       - 4510-4559:4510-4559
@@ -126,26 +125,83 @@ services:
       - ${TMPDIR:-/tmp/localstack}:/var/lib/localstack
       - /var/run/docker.sock:/var/run/docker.sock
 
+  # CI
+  pipeline:
+    container_name: CI_Jenkins
+    image: jenkins/jenkins:latest
+    environment:
+      DOCKER_TLS_CERTDIR: certs
+    ports:
+      - 9000:8080
+    networks:
+      - default_network
+    volumes:
+      - ci_volume:/var/jenkins_home
+
   # Code Quality
   quality:
     container_name: Quality_SonarQube
     image: sonarqube:latest
     environment:
-      - SONAR_ES_BOOTSTRAP_CHECKS_DISABLE=true
+      SONAR_ES_BOOTSTRAP_CHECKS_DISABLE: true
     ports:
-      - 9000:9000
+      - 9001:9000
       - 9092:9092
     networks:
       - default_network
+      - monitoring_network
+
+  # Monitoring
+  monitoring:
+    container_name: Monitoring_Grafana
+    image: grafana/grafana:latest
+    ports:
+      - 9002:3000
+    networks:
+      - monitoring_network
+    depends_on:
+      - logs_tracker
+      - log_monitor
+  # Logs Monitor
+  log_monitor:
+    container_name: Logs_Grafana_Loki
+    image: grafana/loki:latest
+    user: root
+    ports:
+      - 9003:9003
+    networks:
+      - default_network
+      - monitoring_network
+    volumes:
+      - ./infra/loki-config.yaml:/etc/loki/local-config.yaml
+  # Loki Logs Agent
+  logs_tracker:
+    container_name: Logs_Loki_Promtail
+    image: grafana/promtail:latest
+    command:
+      - -config.file=/etc/loki/promtail.yaml
+    networks:
+      - default_network
+    volumes:
+      - ./infra/promtail-config.yaml:/etc/loki/promtail.yaml
+      - ./logs/logs.log:/app/logs.log
+      - /var/log:/var/log
+      - /var/lib/docker/containers:/var/lib/docker/containers
+    depends_on:
+      - log_monitor
 
 # Networks for Containers
 networks:
   default_network:
+    driver: bridge
+  monitoring_network:
     driver: bridge
 
 # Volumes for Containers
 volumes:
   db_volume:
     name: db_volume
+    driver: local
   ci_volume:
     name: ci_volume
+    driver: local

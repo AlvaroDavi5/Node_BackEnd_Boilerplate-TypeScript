@@ -7,13 +7,13 @@ import { generateLogger } from '@core/logging/logger';
 
 
 export class RegisterEventHookValidatorPipe implements PipeTransform<RegisterEventHookInputDto, RegisterEventHookInterface> {
-	private readonly schemaValidator: SchemaValidator<RegisterEventHookInterface>;
+	private readonly schemaValidator: SchemaValidator;
 
 	constructor() {
-		this.schemaValidator = new SchemaValidator<RegisterEventHookInterface>(new Exceptions(), generateLogger(RegisterEventHookValidatorPipe.name));
+		this.schemaValidator = new SchemaValidator(new Exceptions(), generateLogger(RegisterEventHookValidatorPipe.name));
 	}
 
 	public transform(value: RegisterEventHookInputDto, metadata: ArgumentMetadata): RegisterEventHookInterface {
-		return this.schemaValidator.validate(value, metadata, registerEventHookSchema);
+		return this.schemaValidator.validate<RegisterEventHookInterface>(value, metadata, registerEventHookSchema);
 	}
 }

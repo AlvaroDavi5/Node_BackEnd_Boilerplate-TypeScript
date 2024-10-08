@@ -1,12 +1,14 @@
 import Joi from 'joi';
-import { ListQueryInterface } from '@shared/interfaces/listPaginationInterface';
+import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
 
-export default Joi.object().keys({
+const listQuerySchema: Joi.Schema<ListQueryInterface> = Joi.object({
 	limit: Joi.number(),
 	page: Joi.number(),
 	order: Joi.string().valid('ASC', 'DESC'),
 	sortBy: Joi.string().valid('createdAt', 'updatedAt', 'deletedAt'),
 	searchTerm: Joi.string(),
 	selectSoftDeleted: Joi.boolean(),
-}).unknown(true) as Joi.Schema<ListQueryInterface>;
+}).unknown(true);
+
+export default listQuerySchema;

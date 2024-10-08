@@ -1,29 +1,24 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { io, Socket as ClientSocket } from 'socket.io-client';
-import { SINGLETON_LOGGER_PROVIDER, LoggerProviderInterface } from '@core/logging/Logger.service';
-import { LoggerInterface } from '@core/logging/logger';
+import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 
 
 @Injectable()
 export default class WebSocketClient {
 	private readonly clientSocket!: ClientSocket;
-	private readonly logger: LoggerInterface;
 
 	constructor(
 		private readonly configService: ConfigService,
-		@Inject(SINGLETON_LOGGER_PROVIDER)
-		private readonly loggerProvider: LoggerProviderInterface,
+		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
 		const configs = this.configService.get<ConfigsInterface['application']>('application')!;
 		const socketUrl = configs.url;
-		const isSocketEnvEnabled = configs.socketEnv === 'enabled';
 
-		this.logger = this.loggerProvider.getLogger(WebSocketClient.name);
-		if (isSocketEnvEnabled) {
+		if (configs.socketEnv) {
 			this.clientSocket = io(socketUrl, {
 				autoConnect: true,
 				closeOnBeforeunload: true,

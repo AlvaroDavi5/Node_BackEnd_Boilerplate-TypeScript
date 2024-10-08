@@ -2,9 +2,9 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import crypto from 'crypto';
 import { genSaltSync } from 'bcrypt';
-import { sign, decode, JwtPayload } from 'jsonwebtoken';
+import { sign, verify, JwtPayload, JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { v4 as uuidV4 } from 'uuid';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 
 
 type hashAlgorithmType = 'md5' | 'sha256' | 'sha512'
@@ -12,21 +12,19 @@ type hashAlgorithmType = 'md5' | 'sha256' | 'sha512'
 @Injectable()
 export default class CryptographyService {
 	private readonly secret: string;
-	private readonly IV: string;
 
 	constructor(
 		private readonly configService: ConfigService,
 	) {
 		const { secretKey } = this.configService.get<ConfigsInterface['security']>('security')!;
 		this.secret = secretKey;
-		this.IV = crypto.randomBytes(12).toString('hex');
 	}
 
 	public changeBufferEncoding(data: string, encoding: BufferEncoding, decoding: BufferEncoding): string {
 		return Buffer.from(data, encoding).toString(decoding);
 	}
 
-	public encodeJwt(payload: any, inputEncoding: BufferEncoding, expiration = '7d'): string {
+	public encodeJwt<PT extends object = any>(payload: string | Buffer | PT, inputEncoding: BufferEncoding, expiration = '7d'): string {
 		return sign(payload,
 			this.secret,
 			{
@@ -37,8 +35,39 @@ export default class CryptographyService {
 		);
 	}
 
-	public decodeJwt(token: string): JwtPayload | string | null {
-		return decode(token);
+	public decodeJwt(token: string): {
+		content: JwtPayload | string | null,
+		invalidSignature: boolean, expired: boolean,
+	} {
+		try {
+			const decoded = verify(token, this.secret, {
+				algorithms: ['HS256'],
+				ignoreExpiration: false,
+			});
+
+			return {
+				content: decoded,
+				invalidSignature: false,
+				expired: false,
+			};
+		} catch (error) {
+			const content = null;
+			let expired = false;
+			let invalidSignature = false;
+
+			if (error instanceof TokenExpiredError)
+				expired = true;
+			if (!expired && error instanceof JsonWebTokenError) {
+				invalidSignature = error.message === 'invalid signature';
+				expired = error.message === 'jwt expired';
+			}
+
+			return {
+				content,
+				invalidSignature,
+				expired,
+			};
+		}
 	}
 
 	public generateUuid(): string {
@@ -86,25 +115,25 @@ export default class CryptographyService {
 
 	public contentDSASign(data: string, inputEncoding: BufferEncoding, privateKeyContent: string, algorithm: hashAlgorithmType, outputFormat: crypto.BinaryToTextEncoding): string | null {
 		try {
-			const sign = crypto.createSign(algorithm);
-			sign.update(data, inputEncoding);
-			return sign.sign(privateKeyContent, outputFormat);
+			const dsaSign = crypto.createSign(algorithm);
+			dsaSign.update(data, inputEncoding);
+			return dsaSign.sign(privateKeyContent, outputFormat);
 		} catch (error) {
 			return null;
 		}
 	}
 
 	public symmetricAESEncrypt(data: string, inputEncoding: BufferEncoding, keyContent: string, outputEncoding: BufferEncoding, iv?: string): { encrypted: string | null, iv: string } {
-		const defIV = iv ?? this.IV;
+		const IV = iv ?? crypto.randomBytes(12).toString('hex');
 
 		try {
-			const cipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(keyContent, 'hex'), Buffer.from(defIV, 'hex'));
+			const cipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(keyContent, 'hex'), Buffer.from(IV, 'hex'));
 			const hexEncrypted = cipher.update(data, inputEncoding, 'hex') + cipher.final('hex');
 			const encrypted = Buffer.from(hexEncrypted, 'hex').toString(outputEncoding);
 
-			return { encrypted, iv: defIV };
+			return { encrypted, iv: IV };
 		} catch (error) {
-			return { encrypted: null, iv: defIV };
+			return { encrypted: null, iv: IV };
 		}
 	}
 

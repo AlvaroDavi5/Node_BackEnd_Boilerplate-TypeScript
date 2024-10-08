@@ -14,8 +14,8 @@
 		},
 		"baseUrl": "./",
 		"paths": {
-			"src/shared/types/*": [
-				"src/shared/types/*"
+			"src/shared/internal/*": [
+				"src/shared/internal/*"
 			]
 		},
 		"keepClassNames": true,

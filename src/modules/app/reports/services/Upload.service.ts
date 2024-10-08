@@ -2,7 +2,7 @@ import { Injectable, Scope } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Readable } from 'stream';
 import S3Client, { s3FileContentType } from '@core/infra/integration/aws/S3.client';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
 import FileStrategy from '@app/file/strategies/File.strategy';
 import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
@@ -26,23 +26,22 @@ export default class UploadService {
 	private async parseToBuffer(content: s3FileContentType, inputEncoding: BufferEncoding): Promise<Buffer> {
 		if (Buffer.isBuffer(content)) {
 			return content;
-		}
-		else if (typeof content === 'string') {
+		} else if (typeof content === 'string') {
 			return Buffer.from(content, inputEncoding);
-		}
-		else if (content instanceof Readable) {
+		} else if (content instanceof Readable) {
 			const chunks: Uint8Array[] = [];
 			for await (const chunk of content) {
 				chunks.push(chunk);
 			}
 			return Buffer.concat(chunks);
-		}
-		else {
-			throw this.exceptions.internal({ message: 'Unsupported content type' });
+		} else {
+			throw this.exceptions.internal({
+				message: 'Unsupported content type',
+			});
 		}
 	}
 
-	public async uploadReport(fileName: string, file: Express.Multer.File): Promise<{ filePath: string, uploadTag: string }> {
+	public async uploadFile(fileName: string, file: Express.Multer.File): Promise<{ filePath: string, uploadTag: string }> {
 		let uploadTag = '';
 		const fileEncoding = this.fileStrategy.defineEncoding(fileName, file.mimetype);
 		const fileContent = this.fileReaderHelper.readFile(file.path, fileEncoding) ?? '';

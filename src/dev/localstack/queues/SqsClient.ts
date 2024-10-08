@@ -3,9 +3,10 @@ import {
 	SQSClient, SQSClientConfig, Message,
 	ListQueuesCommand, CreateQueueCommand, DeleteQueueCommand,
 	SendMessageCommand, ReceiveMessageCommand, DeleteMessageCommand,
-	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput, DeleteMessageCommandInput,
+	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput,
 } from '@aws-sdk/client-sqs';
-import { ConfigsInterface } from 'src/modules/core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
+import { LoggerInterface } from '@core/logging/logger';
 
 
 export default class SqsClient {
@@ -15,18 +16,17 @@ export default class SqsClient {
 
 	constructor(
 		private readonly configService: ConfigService,
-		private readonly cryptographyService: any,
-		private readonly logger: any,
-		private readonly dataParserHelper: any,
+		private readonly cryptographyService: { generateUuid: () => string },
+		private readonly logger: LoggerInterface,
+		private readonly dataParserHelper: { toString: (data: unknown) => string },
 	) {
-		this.logger.setContextName(SqsClient.name);
 		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
-		const logging = this.configService.get<ConfigsInterface['application']['logging']>('application.logging')!;
+		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
 		const {
-			region, sessionToken,
+			region, endpoint, sessionToken,
 			accessKeyId, secretAccessKey,
 		} = awsConfigs.credentials;
-		const { endpoint, apiVersion } = awsConfigs.sqs;
+		const { apiVersion } = awsConfigs.sqs;
 
 		this.awsConfig = {
 			endpoint,
@@ -37,14 +37,14 @@ export default class SqsClient {
 				secretAccessKey: String(secretAccessKey),
 				sessionToken,
 			},
-			logger: logging === 'true' ? this.logger : undefined,
+			logger: showExternalLogs ? this.logger : undefined,
 		};
 		this.messageGroupId = 'DefaultGroup';
 		this.sqsClient = new SQSClient(this.awsConfig);
 	}
 
 
-	private formatMessageBeforeSend(message: any = {}): string {
+	private formatMessageBeforeSend(message: unknown = {}): string {
 		return this.dataParserHelper.toString(message);
 	}
 
@@ -63,7 +63,7 @@ export default class SqsClient {
 		return params;
 	}
 
-	private msgParams(queueUrl: string, message: any, title: string, author: string): SendMessageCommandInput {
+	private msgParams(queueUrl: string, message: unknown, title: string, author: string): SendMessageCommandInput {
 		const isFifoQueue: boolean = queueUrl?.includes('.fifo');
 		const messageBody = this.formatMessageBeforeSend(message);
 
@@ -156,7 +156,7 @@ export default class SqsClient {
 		return isDeleted;
 	}
 
-	public async sendMessage(queueUrl: string, title: string, author: string, message: any): Promise<string> {
+	public async sendMessage(queueUrl: string, title: string, author: string, message: unknown): Promise<string> {
 		let messageId = '';
 
 		try {
@@ -172,8 +172,8 @@ export default class SqsClient {
 		return messageId;
 	}
 
-	public async getMessages(queueUrl: string): Promise<Array<Message>> {
-		const messages: Array<Message> = [];
+	public async getMessages(queueUrl: string): Promise<Message[]> {
+		const messages: Message[] = [];
 
 		try {
 			const result = await this.sqsClient.send(new ReceiveMessageCommand(

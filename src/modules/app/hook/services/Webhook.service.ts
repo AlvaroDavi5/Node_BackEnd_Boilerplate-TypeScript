@@ -1,13 +1,15 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ConfigsInterface } from '@core/configs/configs.config';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import CryptographyService from '@core/security/Cryptography.service';
-import RestMockedServiceClient from '@core/infra/integration/rest/RestMockedService.client';
+import RestMockedServiceProvider from '@core/infra/providers/RestMockedService.provider';
 import RedisClient from '@core/infra/cache/Redis.client';
-import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
-import { RegisterEventHookInputDto } from '@app/hook/api/dto/HookInput.dto';
 import { CacheEnum } from '@domain/enums/cache.enum';
-import { requestMethodType } from '@shared/types/restClientTypes';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
+import { fromDateTimeToEpoch, fromJSDateToDateTime, getDateTimeNow } from '@common/utils/dates.util';
+import { requestMethodType } from '@shared/internal/types/restClientTypes';
+import { RegisterEventHookInterface } from '../api/schemas/registerEventHook.schema';
 
 
 @Injectable()
@@ -17,7 +19,7 @@ export default class WebhookService {
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly cryptographyService: CryptographyService,
-		private readonly restMockedServiceClient: RestMockedServiceClient,
+		private readonly restMockedServiceProvider: RestMockedServiceProvider,
 		private readonly redisClient: RedisClient,
 		private readonly cacheAccessHelper: CacheAccessHelper,
 	) {
@@ -25,27 +27,52 @@ export default class WebhookService {
 		this.hooksTimeToLive = hooksExpirationTime;
 	}
 
-	public async pullHook(hookSchema: string, data: unknown): Promise<any> {
+	public async pullHook(hookSchema: string, data: unknown): Promise<void> {
 		const hookSchemaList = await this.list(hookSchema);
+		const mockedServiceBaseUrl = this.configService
+			.get<ConfigsInterface['integration']['rest']['mockedService']['baseUrl']>('integration.rest.mockedService.baseUrl')!;
 
-		const mockedServiceBaseUrl = this.configService.get<ConfigsInterface['integration']['rest']['mockedService']['baseUrl']>('integration.rest.mockedService.baseUrl')!;
-		hookSchemaList.forEach(async ({ value }) => {
-			const responseEndpoint = value?.responseEndpoint ?? mockedServiceBaseUrl;
-			const responseMethod = value?.responseMethod?.toLowerCase() as requestMethodType;
+		const hooksToPull: Promise<unknown>[] = [];
+		const hooksToDelete: Promise<unknown>[] = [];
+		const epochDateNow = fromDateTimeToEpoch(getDateTimeNow(TimeZonesEnum.America_SaoPaulo), false, false);
 
-			await this.restMockedServiceClient.requestHook(responseEndpoint, responseMethod, data);
-		});
+		for (const { key, value: hook } of hookSchemaList) {
+			const epochSentAt = hook?.sendAt
+				? fromDateTimeToEpoch(fromJSDateToDateTime(hook.sendAt, TimeZonesEnum.America_SaoPaulo), false, false)
+				: 0;
+
+			if (epochDateNow > epochSentAt) {
+				const responseEndpoint = hook?.responseEndpoint ?? mockedServiceBaseUrl;
+				const responseMethod = hook?.responseMethod?.toLowerCase() as requestMethodType;
+
+				hooksToPull.push(this.restMockedServiceProvider.requestHook<void>(
+					responseMethod, responseEndpoint,
+					{}, data as any
+				));
+
+				const hookId = this.cacheAccessHelper.getId(
+					this.cacheAccessHelper.getId(key, CacheEnum.HOOKS),
+					hookSchema);
+				hooksToDelete.push(this.delete(hookId, hookSchema));
+			}
+		}
+
+		await Promise.all(hooksToDelete);
+		await Promise.all(hooksToPull);
 	}
 
-	public async get(hookId: string, hookSchema: string): Promise<any> {
+	public async get(hookId: string, hookSchema: string): Promise<RegisterEventHookInterface> {
 		const key = this.cacheAccessHelper.generateKey(`${hookSchema}:${hookId}`, CacheEnum.HOOKS);
 
-		return await this.redisClient.get(key);
+		const result = await this.redisClient.get(key);
+		return this.payloadBuilder(result);
 	}
 
-	public async save(hookSchema: string, data: any): Promise<string> {
+	public async save(hookSchema: string, data: RegisterEventHookInterface): Promise<string> {
 		const hookId = this.cryptographyService.generateUuid();
 		const key = this.cacheAccessHelper.generateKey(`${hookSchema}:${hookId}`, CacheEnum.HOOKS);
+
+		data = this.payloadBuilder(data);
 
 		return await this.redisClient.set(key, data, this.hooksTimeToLive);
 	}
@@ -60,9 +87,17 @@ export default class WebhookService {
 
 	public async list(additionalPattern = ''): Promise<{
 		key: string;
-		value: RegisterEventHookInputDto | null;
+		value: RegisterEventHookInterface | null;
 	}[]> {
 		const pattern = `${CacheEnum.HOOKS}:${additionalPattern}*`;
-		return await this.redisClient.getByKeyPattern<RegisterEventHookInputDto>(pattern);
+		const result = await this.redisClient.getByKeyPattern<RegisterEventHookInterface>(pattern);
+		return result.map(({ key, value }) => ({ key, value: this.payloadBuilder(value as RegisterEventHookInterface) }));
+	}
+
+	private payloadBuilder(data: RegisterEventHookInterface): RegisterEventHookInterface {
+		if (data?.sendAt && typeof data.sendAt === 'string')
+			data.sendAt = new Date(data.sendAt);
+
+		return data;
 	}
 }

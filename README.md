@@ -156,7 +156,7 @@ kubectl delete -f=<resource_config_path> # or kubectl delete -n <resource_namesp
 ## Running Locally
 
 ```shell
-yarn run db:migration-run # create database entities and populate database registers
+yarn run db:migration-run && yarn run db:seed # create database entities and populate database registers
 yarn run mock-dependencies # create message queue and storager and start external services mock
 yarn run start:dev # start application in development mode
 yarn run receive-messages # create websocket client and start connection to receive events

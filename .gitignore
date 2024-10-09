@@ -15,6 +15,7 @@ dist/
 out-tsc/
 bazel-out/
 *.tsbuildinfo
+next-env.d.ts
 # deploy
 .vercel
 # debug and logs

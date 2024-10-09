@@ -82,9 +82,7 @@
 		"typeorm:cli": "ts-node --project tsconfig.build.json ./node_modules/typeorm/cli -d ./src/modules/core/infra/database/db.config.ts",
 		"commit": "git-cz",
 		"versioning": "semantic-release",
-		"postinstall": "husky install",
-		"clean": "rm -rf build/ dist/ temp/ coverage/ .scannerwork/ test-report.xml",
-		"clean:all": "rm -rf build/ dist/ temp/ coverage/ .scannerwork/ test-report.xml node_modules/ .tool-versions .env* logs/logs.log"
+		"postinstall": "husky install"
 	},
 	"config": {
 		"commitizen": {

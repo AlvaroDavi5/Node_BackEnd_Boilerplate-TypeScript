@@ -33,7 +33,7 @@
 		// "useDefineForClassFields": true,
 		/* Modules */
 		"module": "CommonJS",
-		"moduleResolution": "node",
+		"moduleResolution": "Node",
 		"baseUrl": "./",
 		"rootDir": "./",
 		"rootDirs": [

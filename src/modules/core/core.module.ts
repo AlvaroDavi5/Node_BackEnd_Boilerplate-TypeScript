@@ -10,7 +10,6 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { SentryModule } from '@sentry/nestjs/setup';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { join } from 'path';
-import AppExceptionsFilter from '@api/filters/KnownException.filter';
 import RequestRateConstants from '@common/constants/RequestRate.constants';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import CommonModule from '@common/common.module';
@@ -32,6 +31,7 @@ import CognitoClient from './infra/integration/aws/Cognito.client';
 import RestMockedServiceProvider from './infra/providers/RestMockedService.provider';
 import SyncCronJob from './cron/jobs/SyncCron.job';
 import SyncCronTask from './cron/tasks/SyncCron.task';
+import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
 
 
 const { application: appConfigs } = envsConfig();
@@ -86,7 +86,7 @@ const requestRateConstants = new RequestRateConstants();
 	providers: [
 		{
 			provide: APP_FILTER,
-			useClass: AppExceptionsFilter,
+			useClass: HttpExceptionsFilter,
 			scope: Scope.DEFAULT,
 		},
 		LifecycleService,

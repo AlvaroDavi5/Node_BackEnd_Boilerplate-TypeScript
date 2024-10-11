@@ -1,4 +1,5 @@
-import { Catch, ExceptionFilter, ArgumentsHost, HttpException } from '@nestjs/common';
+import { HttpException } from '@nestjs/common';
+import { WsException } from '@nestjs/websockets';
 import { AxiosError } from 'axios';
 import { captureError } from '@core/errors/trackers';
 import LoggerService from '@core/logging/Logger.service';
@@ -8,36 +9,43 @@ import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import externalErrorParser from '@common/utils/externalErrorParser.util';
 import { getObjValues, isNullOrUndefined } from '@common/utils/dataValidations.util';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
-import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
-type ErrorOrException = HttpException | AxiosError | Error;
-type errorResponseType = ErrorInterface & { description?: string, timestamp: string };
+export type ErrorOrExceptionToFilter = HttpException | WsException | AxiosError | Error;
+type httpErrorResponseType = ErrorInterface & {
+	description?: string,
+	timestamp: string,
+};
+type wsErrorResponseType = ErrorInterface & {
+	receivedEvent: string,
+	receivedData: unknown,
+	timestamp: string,
+};
 
-@Catch(HttpException, AxiosError, Error)
-export default class AppExceptionsFilter implements ExceptionFilter<ErrorOrException> {
+export default abstract class AppExceptionsFilter {
 	private readonly knownExceptions: string[];
 	private readonly exceptionsToIgnore: string[];
 	private readonly errorsToIgnore: number[];
 
 	constructor(
-		private readonly logger: LoggerService,
-		private readonly dataParserHelper: DataParserHelper,
+		protected readonly logger: LoggerService,
+		protected readonly dataParserHelper: DataParserHelper,
 	) {
 		this.knownExceptions = getObjValues<ExceptionsEnum>(ExceptionsEnum).map((exc) => exc.toString());
-		this.errorsToIgnore = [
-			HttpStatusEnum.TOO_MANY_REQUESTS,
-			HttpStatusEnum.INVALID_TOKEN,
-			HttpStatusEnum.I_AM_A_TEAPOT,
-		];
+
 		this.exceptionsToIgnore = [
 			ExceptionsEnum.TOO_MANY_REQUESTS,
 			ExceptionsEnum.INVALID_TOKEN,
 			ExceptionsEnum.CONTRACT,
 		];
+		this.errorsToIgnore = [
+			HttpStatusEnum.TOO_MANY_REQUESTS,
+			HttpStatusEnum.INVALID_TOKEN,
+			HttpStatusEnum.I_AM_A_TEAPOT,
+		];
 	}
 
-	private capture(exception: unknown): void {
+	protected capture(exception: unknown): void {
 		this.logger.error(exception);
 
 		const shouldIgnoreKnownException = exception instanceof HttpException
@@ -55,11 +63,11 @@ export default class AppExceptionsFilter implements ExceptionFilter<ErrorOrExcep
 			captureError(exception);
 	}
 
-	private buildErrorResponse(exception: ErrorOrException): { status: number, errorResponse: errorResponseType } {
+	protected buildHttpErrorResponse(exception: unknown): { status: number, errorResponse: httpErrorResponseType } {
 		let status: number;
-		let errorResponse: errorResponseType = {
-			name: exception.name,
-			message: exception.message,
+		let errorResponse: httpErrorResponseType = {
+			name: (exception as ErrorOrExceptionToFilter)?.name,
+			message: (exception as ErrorOrExceptionToFilter)?.message,
 			timestamp: new Date().toISOString(),
 		};
 
@@ -82,25 +90,44 @@ export default class AppExceptionsFilter implements ExceptionFilter<ErrorOrExcep
 			const error = externalErrorParser(exception);
 			status = error.getStatus();
 
-			errorResponse.description = (error.getResponse() as errorResponseType).description ?? errorResponse.description;
-			errorResponse.details = (error.getResponse() as errorResponseType).details ?? errorResponse.details;
+			errorResponse.description = (error.getResponse() as httpErrorResponseType).description ?? errorResponse.description;
+			errorResponse.details = (error.getResponse() as httpErrorResponseType).details ?? errorResponse.details;
 			errorResponse.cause = error.cause;
 		}
 
 		return { status, errorResponse };
 	}
 
-	public catch(exception: ErrorOrException, host: ArgumentsHost): void {
-		const context = host.switchToHttp();
-		const request = context.getRequest<RequestInterface>();
-		const response = context.getResponse<ResponseInterface>();
+	protected buildWsErrorResponse(exception: unknown, event: string, data: unknown): { errorEvent: string, errorResponse: httpErrorResponseType } {
+		let errorResponse: wsErrorResponseType = {
+			name: (exception as ErrorOrExceptionToFilter)?.name,
+			message: (exception as ErrorOrExceptionToFilter)?.message,
+			receivedEvent: event,
+			receivedData: data,
+			timestamp: new Date().toISOString(),
+		};
 
-		if (request.id)
-			this.logger.setRequestId(request.id);
+		if (exception instanceof WsException) {
+			const error = exception.getError();
 
-		this.capture(exception);
-		const { status, errorResponse } = this.buildErrorResponse(exception);
+			if (typeof error === 'object' && !isNullOrUndefined(error)) {
+				errorResponse = {
+					...error,
+					...errorResponse,
+				};
+			} else {
+				const strData = this.dataParserHelper.toString(error);
+				errorResponse.details = strData;
+			}
+		} else {
+			const error = externalErrorParser(exception);
 
-		response.status(status).json(errorResponse);
+			errorResponse.name = error.name;
+			errorResponse.message = error.message;
+			errorResponse.code = error.getStatus();
+			errorResponse.details = error.cause;
+		}
+
+		return { errorEvent: 'ERROR', errorResponse };
 	}
 }

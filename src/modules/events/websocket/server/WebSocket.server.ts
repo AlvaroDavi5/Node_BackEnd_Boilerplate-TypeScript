@@ -86,13 +86,13 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 		this.server?.close();
 	}
 
+	public disconnectAllSockets(): void {
+		this.server?.disconnectSockets();
+	}
+
 	public async getSocketsIds(): Promise<string[]> {
 		const socketsList = await this.server?.sockets.fetchSockets();
 		return socketsList?.map((socket) => socket?.id) ?? [];
-	}
-
-	public disconnectAllSockets(): void {
-		this.server?.disconnectSockets();
 	}
 
 	@SubscribeMessage(WebSocketEventsEnum.RECONNECT)

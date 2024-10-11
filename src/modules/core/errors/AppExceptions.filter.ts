@@ -3,6 +3,7 @@ import { WsException } from '@nestjs/websockets';
 import { AxiosError } from 'axios';
 import { captureError } from '@core/errors/trackers';
 import LoggerService from '@core/logging/Logger.service';
+import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
@@ -128,6 +129,6 @@ export default abstract class AppExceptionsFilter {
 			errorResponse.details = error.cause;
 		}
 
-		return { errorEvent: 'ERROR', errorResponse };
+		return { errorEvent: WebSocketEventsEnum.ERROR, errorResponse };
 	}
 }

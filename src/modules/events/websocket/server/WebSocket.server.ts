@@ -63,25 +63,16 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 	// listen 'connection' event from client
 	public async handleConnection(socket: Socket, ...args: unknown[]): Promise<void> {
 		this.logger.info(`Client connected: ${socket.id} - ${args}`);
-		await this.subscriptionService.save(socket.id, {
-			subscriptionId: socket.id,
-		});
-		await this.eventsQueueProducer.dispatch({
-			title: 'New Client Connected',
-			author: 'Websocket Server',
-			payload: {
-				subscriptionId: socket.id,
-				event: EventsEnum.NEW_CONNECTION,
-			},
-			schema: WebSocketEventsEnum.CONNECT,
-		});
+
+		await this.saveAndDispatchConnection(socket.id);
 	}
 
 	// listen 'disconnect' event from client
 	public async handleDisconnect(socket: Socket): Promise<void> {
 		this.logger.info(`Client disconnected: ${socket.id}`);
 		await socket.leave(WebSocketRoomsEnum.NEW_CONNECTIONS);
-		await this.subscriptionService.delete(socket.id);
+
+		await this.deleteConnection(socket.id);
 	}
 
 	public disconnect(): void {
@@ -104,16 +95,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 	): Promise<void> { // listen reconnect event from client
 		this.logger.info(`Client reconnected: ${socket.id}`);
 
-		const message = this.formatMessageAfterReceiveHelper(msg);
-		if (message && typeof message === 'object') {
-			const subscription = await this.subscriptionService.save(socket.id, {
-				...message,
-				subscriptionId: socket.id,
-			});
-
-			if (subscription?.newConnectionsListen === true)
-				await socket.join(WebSocketRoomsEnum.NEW_CONNECTIONS);
-		}
+		await this.updateConnection(socket, msg);
 	}
 
 	@SubscribeMessage(WebSocketEventsEnum.BROADCAST)
@@ -140,8 +122,44 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 
 		this.logger.info(`Emiting message to: ${socketIdsOrRooms}`);
 		this.server?.to(socketIdsOrRooms).emit(
-			String(WebSocketEventsEnum.EMIT),
+			WebSocketEventsEnum.EMIT,
 			String(msgContent),
 		); // emit to specific clients or rooms
+	}
+
+	private async saveAndDispatchConnection(socketId: string): Promise<void> {
+		await this.subscriptionService.save(socketId, {
+			subscriptionId: socketId,
+		});
+
+		await this.eventsQueueProducer.dispatch({
+			title: 'New Client Connected',
+			author: 'Websocket Server',
+			payload: {
+				subscriptionId: socketId,
+				event: EventsEnum.NEW_CONNECTION,
+			},
+			schema: WebSocketEventsEnum.CONNECT,
+		});
+	}
+
+	private async updateConnection(socket: Socket, message: string): Promise<void> {
+		const data = this.formatMessageAfterReceiveHelper(message);
+
+		if (typeof data === 'object' && !!data) {
+			const subscription = await this.subscriptionService.save(socket.id, {
+				...data,
+				subscriptionId: socket.id,
+			});
+
+			if (subscription.newConnectionsListen === true)
+				await socket.join(WebSocketRoomsEnum.NEW_CONNECTIONS);
+			else
+				await socket.leave(WebSocketRoomsEnum.NEW_CONNECTIONS);
+		}
+	}
+
+	private async deleteConnection(socketId: string): Promise<void> {
+		await this.subscriptionService.delete(socketId);
 	}
 }

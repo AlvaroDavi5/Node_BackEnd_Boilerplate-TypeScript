@@ -16,6 +16,7 @@ import CommonModule from '@common/common.module';
 import AppModule from '@app/app.module';
 import EventsModule from '@events/events.module';
 import GraphQlModule from '@graphql/graphql.module';
+import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
 import envsConfig from './configs/envs.config';
 import LifecycleService from './start/Lifecycle.service';
 import Exceptions from './errors/Exceptions';
@@ -31,7 +32,6 @@ import CognitoClient from './infra/integration/aws/Cognito.client';
 import RestMockedServiceProvider from './infra/providers/RestMockedService.provider';
 import SyncCronJob from './cron/jobs/SyncCron.job';
 import SyncCronTask from './cron/tasks/SyncCron.task';
-import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
 
 
 const { application: appConfigs } = envsConfig();

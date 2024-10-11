@@ -1,7 +1,7 @@
 import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { Observable } from 'rxjs';
-import { Socket as ServerSocket } from 'socket.io';
+import { Socket } from 'socket.io';
 import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
@@ -16,7 +16,7 @@ export default class EventsGuard implements CanActivate {
 	) { }
 
 	public canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-		const socket = context.getArgs()[0] as ServerSocket;
+		const socket = context.getArgs()[0] as Socket;
 		const message = context.getArgs()[1] as unknown;
 		const event = context.getArgs()[3] as WebSocketEventsEnum;
 

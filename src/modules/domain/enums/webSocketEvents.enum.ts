@@ -7,6 +7,7 @@ export enum WebSocketEventsEnum {
 	// ? External Events
 	RECONNECT = 'reconnect',
 	EMIT = 'emit',
+	ERROR = 'error',
 
 	// ? Internal Events
 	EMIT_PRIVATE = 'emit_private',

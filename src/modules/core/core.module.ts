@@ -10,7 +10,7 @@ import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { SentryModule } from '@sentry/nestjs/setup';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { join } from 'path';
-import KnownExceptionFilter from '@api/filters/KnownException.filter';
+import AppExceptionsFilter from '@api/filters/KnownException.filter';
 import RequestRateConstants from '@common/constants/RequestRate.constants';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import CommonModule from '@common/common.module';
@@ -86,7 +86,7 @@ const requestRateConstants = new RequestRateConstants();
 	providers: [
 		{
 			provide: APP_FILTER,
-			useClass: KnownExceptionFilter,
+			useClass: AppExceptionsFilter,
 			scope: Scope.DEFAULT,
 		},
 		LifecycleService,

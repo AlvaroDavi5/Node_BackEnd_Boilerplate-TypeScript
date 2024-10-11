@@ -11,11 +11,13 @@ import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
-type errorResponseType = ErrorInterface & { description?: string };
+type ErrorOrException = HttpException | AxiosError | Error;
+type errorResponseType = ErrorInterface & { description?: string, timestamp: string };
 
 @Catch(HttpException, AxiosError, Error)
-export default class KnownExceptionFilter implements ExceptionFilter<HttpException | AxiosError | Error> {
+export default class AppExceptionsFilter implements ExceptionFilter<ErrorOrException> {
 	private readonly knownExceptions: string[];
+	private readonly exceptionsToIgnore: string[];
 	private readonly errorsToIgnore: number[];
 
 	constructor(
@@ -24,44 +26,55 @@ export default class KnownExceptionFilter implements ExceptionFilter<HttpExcepti
 	) {
 		this.knownExceptions = getObjValues<ExceptionsEnum>(ExceptionsEnum).map((exc) => exc.toString());
 		this.errorsToIgnore = [
-			HttpStatusEnum.I_AM_A_TEAPOT,
-			HttpStatusEnum.INVALID_TOKEN,
 			HttpStatusEnum.TOO_MANY_REQUESTS,
+			HttpStatusEnum.INVALID_TOKEN,
+			HttpStatusEnum.I_AM_A_TEAPOT,
+		];
+		this.exceptionsToIgnore = [
+			ExceptionsEnum.TOO_MANY_REQUESTS,
+			ExceptionsEnum.INVALID_TOKEN,
+			ExceptionsEnum.CONTRACT,
 		];
 	}
 
 	private capture(exception: unknown): void {
 		this.logger.error(exception);
 
-		const shouldIgnoreHttpException = exception instanceof HttpException && this.errorsToIgnore.includes(exception.getStatus());
-		const shouldIgnoreAxiosError = exception instanceof AxiosError && !!exception.status && this.errorsToIgnore.includes(exception.status);
+		const shouldIgnoreKnownException = exception instanceof HttpException
+			&& this.knownExceptions.includes(exception.name)
+			&& this.exceptionsToIgnore.includes(exception.name);
 
-		if (!shouldIgnoreHttpException && !shouldIgnoreAxiosError)
+		const shouldIgnoreHttpException = exception instanceof HttpException
+			&& this.errorsToIgnore.includes(exception.getStatus());
+
+		const shouldIgnoreAxiosError = exception instanceof AxiosError
+			&& !!exception.status
+			&& this.errorsToIgnore.includes(exception.status);
+
+		if (!shouldIgnoreKnownException && !shouldIgnoreHttpException && !shouldIgnoreAxiosError)
 			captureError(exception);
 	}
 
-	private buildErrorResponse(exception: HttpException | AxiosError | Error): { status: number, errorResponse: errorResponseType } {
+	private buildErrorResponse(exception: ErrorOrException): { status: number, errorResponse: errorResponseType } {
 		let status: number;
 		let errorResponse: errorResponseType = {
 			name: exception.name,
 			message: exception.message,
+			timestamp: new Date().toISOString(),
 		};
 
 		if (exception instanceof HttpException) {
 			status = exception.getStatus();
 			const exceptionResponse = exception.getResponse();
 
-			if (this.knownExceptions.includes(exception.name)) {
-				if (typeof exceptionResponse === 'object' && !isNullOrUndefined(exceptionResponse)) {
-					const { description, details } = exceptionResponse as errorResponseType;
-					errorResponse.description = description;
-					errorResponse.details = details;
-				} else {
-					const strData = this.dataParserHelper.toString(exceptionResponse);
-					errorResponse.details = strData;
-				}
+			if (typeof exceptionResponse === 'object' && !isNullOrUndefined(exceptionResponse)) {
+				errorResponse = {
+					...exceptionResponse,
+					...errorResponse,
+				};
 			} else {
-				errorResponse = exceptionResponse as errorResponseType;
+				const strData = this.dataParserHelper.toString(exceptionResponse);
+				errorResponse.details = strData;
 			}
 
 			errorResponse.cause = exception.cause;
@@ -77,7 +90,7 @@ export default class KnownExceptionFilter implements ExceptionFilter<HttpExcepti
 		return { status, errorResponse };
 	}
 
-	public catch(exception: HttpException | AxiosError | Error, host: ArgumentsHost) {
+	public catch(exception: ErrorOrException, host: ArgumentsHost): void {
 		const context = host.switchToHttp();
 		const request = context.getRequest<RequestInterface>();
 		const response = context.getResponse<ResponseInterface>();

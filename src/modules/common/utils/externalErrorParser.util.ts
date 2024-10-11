@@ -33,5 +33,5 @@ export default function externalErrorParser(error: any): HttpException {
 	else // instanceof Error
 		exceptionName = exceptionsMapper(500);
 
-	return exceptions[String(exceptionName) as ExceptionsEnum](error);
+	return exceptions[String(exceptionName) as ExceptionsEnum](error, true);
 }

@@ -44,21 +44,23 @@ export default class SubscriptionService implements OnModuleInit {
 	}
 
 	public async get(subscriptionId: string): Promise<SubscriptionEntity> {
-		let subscription = await this.getFromCache(subscriptionId);
-		if (!subscription) {
+		let savedSubscription = await this.getFromCache(subscriptionId);
+		if (!savedSubscription) {
 			const foundedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
 				subscriptionId,
 			});
-			subscription = foundedSubscription;
+			savedSubscription = foundedSubscription;
 		}
-		if (!subscription)
+
+		if (!savedSubscription)
 			throw this.exceptions.notFound({
 				message: 'Subscription not found!',
 			});
+		const subscription = new SubscriptionEntity(savedSubscription);
 
-		await this.saveOnCache(subscriptionId, subscription);
+		await this.saveOnCache(subscriptionId, subscription.getAttributes());
 
-		return new SubscriptionEntity(subscription);
+		return subscription;
 	}
 
 	public async save(subscriptionId: string, data: ICreateSubscription | IUpdateSubscription): Promise<SubscriptionEntity> {
@@ -67,17 +69,18 @@ export default class SubscriptionService implements OnModuleInit {
 		});
 		let subscriptionDatabaseId: ObjectId | null | undefined = foundedSubscription?._id;
 
+		const subscriptionData = new SubscriptionEntity(data).getAttributes();
 		if (!subscriptionDatabaseId) {
 			// ? create
-			const savedSubscription = await this.mongoClient.insertOne(this.subscriptionsCollection, data);
+			const savedSubscription = await this.mongoClient.insertOne(this.subscriptionsCollection, subscriptionData);
 			subscriptionDatabaseId = savedSubscription.insertedId;
 		} else
 			// ? update
-			await this.mongoClient.updateOne(this.subscriptionsCollection, subscriptionDatabaseId, data);
+			await this.mongoClient.updateOne(this.subscriptionsCollection, subscriptionDatabaseId, subscriptionData);
 
 		if (subscriptionDatabaseId) {
 			foundedSubscription = await this.mongoClient.get(this.subscriptionsCollection, subscriptionDatabaseId);
-			await this.saveOnCache(subscriptionId, foundedSubscription);
+			await this.saveOnCache(subscriptionId, new SubscriptionEntity(foundedSubscription).getAttributes());
 		} else
 			throw this.exceptions.conflict({
 				message: 'Subscription not created or updated!',
@@ -93,9 +96,9 @@ export default class SubscriptionService implements OnModuleInit {
 		});
 
 		if (foundedSubscription?._id) {
-			await this.deleteFromCache(subscriptionId);
 			deletedSubscription = (await this.mongoClient.deleteOne(this.subscriptionsCollection, foundedSubscription._id)).deletedCount > 0;
 		}
+		await this.deleteFromCache(subscriptionId);
 
 		return deletedSubscription;
 	}

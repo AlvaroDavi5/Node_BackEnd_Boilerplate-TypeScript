@@ -38,16 +38,9 @@ export default class UserService {
 		}
 	}
 
-	public async getByEmail(email: string): Promise<UserEntity> {
+	public async getByEmail(email: string): Promise<UserEntity | null> {
 		try {
-			const user = await this.userRepository.findOne({ where: { email } });
-
-			if (!user)
-				throw this.exceptions.notFound({
-					message: 'User not founded by email!',
-				});
-
-			return user;
+			return await this.userRepository.findOne({ where: { email } });
 		} catch (error) {
 			throw this.caughtError(error);
 		}
@@ -63,7 +56,10 @@ export default class UserService {
 
 			entity.setPassword(this.protectPassword(userPassword));
 
-			return await this.userRepository.create(entity);
+			const createdUser = await this.userRepository.create(entity);
+
+			createdUser.setPassword('');
+			return createdUser;
 		} catch (error) {
 			throw this.caughtError(error);
 		}
@@ -77,14 +73,15 @@ export default class UserService {
 			if (userPassword?.length)
 				userData.password = this.protectPassword(userPassword);
 
-			const user = await this.userRepository.update(id, userData);
+			const updatedUser = await this.userRepository.update(id, userData);
 
-			if (!user)
+			if (!updatedUser)
 				throw this.exceptions.conflict({
 					message: 'User not updated!',
 				});
 
-			return user;
+			updatedUser.setPassword('');
+			return updatedUser;
 		} catch (error) {
 			throw this.caughtError(error);
 		}

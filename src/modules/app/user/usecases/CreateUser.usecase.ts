@@ -4,7 +4,7 @@ import UserEntity from '@domain/entities/User.entity';
 import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
 import UserService from '@app/user/services/User.service';
 import UserPreferenceService from '@app/user/services/UserPreference.service';
-import HttpConstants from '@common/constants/Http.constants';
+import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 import CreateUserInputDto from '../api/dto/user/CreateUserInput.dto';
 
@@ -14,7 +14,7 @@ export default class CreateUserUseCase {
 	constructor(
 		private readonly userService: UserService,
 		private readonly userPreferenceService: UserPreferenceService,
-		private readonly httpConstants: HttpConstants,
+		private readonly httpMessagesConstants: HttpMessagesConstants,
 		private readonly exceptions: Exceptions,
 	) { }
 
@@ -28,7 +28,7 @@ export default class CreateUserUseCase {
 		const existentUser = await this.getUserByEmail(newUser.getEmail());
 		if (existentUser)
 			throw this.exceptions.conflict({
-				message: this.httpConstants.messages.conflict('User'),
+				message: this.httpMessagesConstants.messages.conflict('User'),
 			});
 
 		const createdUser = await this.userService.create(newUser);

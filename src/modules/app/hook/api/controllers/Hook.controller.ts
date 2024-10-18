@@ -13,7 +13,7 @@ import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.deco
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
-import HttpConstants from '@common/constants/Http.constants';
+import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 
 
 @ApiTags('Webhooks')
@@ -23,7 +23,7 @@ import HttpConstants from '@common/constants/Http.constants';
 @exceptionsResponseDecorator()
 export default class HookController {
 	constructor(
-		private readonly httpConstants: HttpConstants,
+		private readonly httpMessagesConstants: HttpMessagesConstants,
 		private readonly webHookService: WebhookService,
 	) { }
 
@@ -60,12 +60,12 @@ export default class HookController {
 
 			response.status(HttpStatusEnum.CREATED);
 			return {
-				statusMessage: response.statusMessage ?? this.httpConstants.messages.created(resourceName),
+				statusMessage: response.statusMessage ?? this.httpMessagesConstants.messages.created(resourceName),
 			};
 		} else {
 			response.status(HttpStatusEnum.NOT_ACCEPTABLE);
 			return {
-				statusMessage: response.statusMessage ?? this.httpConstants.messages.notAcceptable(resourceName),
+				statusMessage: response.statusMessage ?? this.httpMessagesConstants.messages.notAcceptable(resourceName),
 			};
 		}
 	}

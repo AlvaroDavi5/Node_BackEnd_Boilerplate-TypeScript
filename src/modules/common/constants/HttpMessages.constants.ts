@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 
 
 @Injectable()
-export default class HttpConstants {
+export default class HttpMessagesConstants {
 	public readonly messages = {
 		found: (element: string) => `${element} founded successfully.`,
 		notFound: (element: string) => `${element} not found!`,

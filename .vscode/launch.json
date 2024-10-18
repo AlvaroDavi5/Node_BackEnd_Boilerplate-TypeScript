@@ -58,13 +58,6 @@
 			"skipFiles": [
 				"<node_internals>/**"
 			]
-		},
-		{
-			"name": "Chrome: Launch against localhost",
-			"type": "chrome",
-			"request": "launch",
-			"webRoot": "${workspaceFolder}",
-			"url": "http://localhost:3000/"
 		}
 	]
 }

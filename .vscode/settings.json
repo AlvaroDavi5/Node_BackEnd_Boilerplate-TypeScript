@@ -43,7 +43,7 @@
 	"sync.autoUpload": true,
 	"sync.autoDownload": true,
 	"bracket-pair-colorizer-2.depreciation-notice": false,
-	"bookmarks.saveBookmarksInProject": false,
+	"bookmarks.saveBookmarksInProject": true,
 	"powermode.enabled": true,
 	"powermode.presets": "flames",
 	"powermode.combo.location": "editor",

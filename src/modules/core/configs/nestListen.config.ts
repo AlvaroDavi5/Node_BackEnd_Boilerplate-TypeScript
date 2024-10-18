@@ -1,8 +1,9 @@
-import { INestApplication, NestApplicationOptions } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { INestApplication, NestApplicationOptions } from '@nestjs/common';
 import { captureError, configureTrackers } from '@core/errors/trackers';
 import LoggerService from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
+import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
 import { ProcessEventsEnum, ProcessSignalsEnum } from '@common/enums/processEvents.enum';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { getObjValues } from '@common/utils/dataValidations.util';
@@ -39,6 +40,7 @@ export default async (nestApp: INestApplication): Promise<void> => {
 		});
 
 	const { environment, sentryDsn } = nestApp.get<ConfigService>(ConfigService, { strict: false }).get<ConfigsInterface['application']>('application')!;
+	const httpExceptionsFilter = nestApp.get<HttpExceptionsFilter>(HttpExceptionsFilter, { strict: false });
 
 	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error: Error, origin: string) => {
 		logger.error(`App received ${ProcessEventsEnum.UNCAUGHT_EXCEPTION}`, `origin: ${origin}`, `error: ${error}`);
@@ -53,7 +55,7 @@ export default async (nestApp: INestApplication): Promise<void> => {
 		await nestApp.close();
 	}));
 
-	configureTrackers(environment, { sentryDsn });
+	configureTrackers(nestApp, httpExceptionsFilter, { environment, sentryDsn });
 };
 
 export function validateKnownExceptions(error: ErrorInterface | Error): void {

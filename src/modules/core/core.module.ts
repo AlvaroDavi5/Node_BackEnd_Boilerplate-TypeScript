@@ -91,6 +91,7 @@ const requestRateConstants = new RequestRateConstants();
 		},
 		LifecycleService,
 		Exceptions,
+		HttpExceptionsFilter,
 		LoggerService,
 		RequestLoggerProvider,
 		CryptographyService,

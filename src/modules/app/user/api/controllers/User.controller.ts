@@ -100,7 +100,14 @@ export default class UserController {
 		deprecated: false,
 	})
 	@Put('/')
-	@ApiOkResponse({ type: UserEntity })
+	@ApiOkResponse({
+		schema: {
+			example: {
+				token: 'XXX',
+				...(new UserEntity({})).getAttributes(),
+			},
+		}
+	})
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public async loginUser(

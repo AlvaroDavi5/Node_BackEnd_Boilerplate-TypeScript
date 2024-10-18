@@ -3,7 +3,7 @@ import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import DefaultController from '@api/controllers/Default.controller';
-import HttpConstants from '@common/constants/Http.constants';
+import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
 
 
@@ -19,14 +19,14 @@ describe('Modules :: API :: DefaultController', () => {
 				DefaultController,
 			],
 			providers: [
-				HttpConstants,
+				HttpMessagesConstants,
 			],
 			exports: [],
 		})
 			.overrideGuard(CustomThrottlerGuard).useValue({
 				handleRequest: (..._args: unknown[]): Promise<boolean> => { return Promise.resolve(true); },
 			})
-			.overrideProvider(HttpConstants).useValue({
+			.overrideProvider(HttpMessagesConstants).useValue({
 				messages: {
 					found: (element: string) => `${element} founded successfully.`,
 				},

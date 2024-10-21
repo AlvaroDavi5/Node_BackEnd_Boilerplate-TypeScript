@@ -7,6 +7,7 @@ on:
     branches: [develop]
   schedule:
     - cron: "0 0 */3 * *" # every 3 days
+    - branches: [develop]
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

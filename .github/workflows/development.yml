@@ -6,8 +6,7 @@ on:
   pull_request:
     branches: [develop]
   schedule:
-    cron: "0 0 */3 * *" # every 3 days
-    branches: [develop]
+    - cron: "0 0 */3 * *" # every 3 days
 
 env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}

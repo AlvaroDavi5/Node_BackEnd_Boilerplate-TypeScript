@@ -1,6 +1,5 @@
 import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import dotenv from 'dotenv';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import nestListenConfig, { validateKnownExceptions } from '@core/configs/nestListen.config';
 import nestApiConfig from '@core/configs/nestApi.config';
@@ -15,14 +14,12 @@ export const createNestTestApplicationOptions = {
 };
 
 export async function startNestApplication(nestApp: INestApplication) {
-	dotenv.config({ path: '.env.test' });
-
 	nestListenConfig(nestApp);
 
 	nestApiConfig(nestApp);
 
-	const appConfigs = nestApp.get<ConfigService>(ConfigService, {}).get<ConfigsInterface['application']>('application')!;
+	const { appPort } = nestApp.get<ConfigService>(ConfigService, {}).get<ConfigsInterface['application']>('application')!;
 
-	await nestApp.listen(Number(appConfigs.appPort))
+	await nestApp.listen(Number(appPort))
 		.catch((error: ErrorInterface | Error) => { validateKnownExceptions(error); });
 }

@@ -1,6 +1,4 @@
 import { INestApplication } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { ConfigsInterface } from '@core/configs/envs.config';
 import { validateKnownExceptions } from '@core/configs/nestListen.config';
 import nestApiConfig from '@core/configs/nestApi.config';
 import { ProcessEventsEnum } from '@common/enums/processEvents.enum';
@@ -28,8 +26,6 @@ export async function startNestApplication(nestApp: INestApplication) {
 
 	nestApiConfig(nestApp);
 
-	const { appPort } = nestApp.get<ConfigService>(ConfigService, {}).get<ConfigsInterface['application']>('application')!;
-
-	await nestApp.listen(Number(appPort))
+	await nestApp.listen(parseInt(process.env.APP_PORT ?? '3000', 10))
 		.catch((error: ErrorInterface | Error) => { validateKnownExceptions(error); });
 }

@@ -128,6 +128,8 @@ export interface ConfigsInterface {
 				serviceName: string,
 				baseUrl: string,
 				timeout: number, // request timeout in milliseconds
+				maxRedirects: number, // maximum redirections
+				maxRetries: number, // maximum retries
 			},
 		},
 	},
@@ -250,7 +252,9 @@ export default (): ConfigsInterface => ({
 			mockedService: {
 				serviceName: process.env.MOCKED_SERVICE_NAME ?? 'Mocked Service',
 				baseUrl: process.env.MOCKED_SERVICE_URL ?? 'http://localhost:4000/',
-				timeout: 1000,
+				timeout: (30 * 1000),
+				maxRedirects: 2,
+				maxRetries: 3,
 			},
 		},
 	},

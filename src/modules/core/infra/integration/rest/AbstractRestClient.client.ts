@@ -12,12 +12,11 @@ export default abstract class AbstractRestClient {
 	protected readonly logger: LoggerService;
 
 	constructor({
-		serviceName,
-		baseUrl,
-		timeout,
+		serviceName, baseUrl,
+		timeout, maxRetries, maxRedirects,
 		logger,
 	}: {
-		baseUrl: string, serviceName: string, timeout: number,
+		baseUrl: string, serviceName: string, timeout: number, maxRetries: number, maxRedirects: number,
 		logger: LoggerService,
 	}) {
 		this.logger = logger;
@@ -25,14 +24,17 @@ export default abstract class AbstractRestClient {
 		this.serviceName = serviceName;
 		this.client = axios.create({
 			baseURL: baseUrl,
-			timeout,
+			timeout, maxRedirects,
+			beforeRedirect: (options, responseDetails): void => {
+				this.logger.warn('Request redirected - ', options, responseDetails);
+			},
 		});
 
 		axiosRetry(this.client, {
-			retries: 3,
-			retryDelay: (retryCount: number) => {
+			retries: maxRetries,
+			retryDelay: (retryCount: number): number => {
 				this.logger.warn(`Request failed - attempt: ${retryCount}`);
-				return retryCount * 2000;
+				return timeout / (retryCount || 1);
 			},
 		});
 	}

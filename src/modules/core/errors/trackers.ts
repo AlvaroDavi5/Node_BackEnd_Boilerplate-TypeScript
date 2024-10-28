@@ -1,7 +1,7 @@
+import { HttpAdapterHost, BaseExceptionFilter } from '@nestjs/core';
 import { INestApplication } from '@nestjs/common';
 import { init as initSentry, captureException as captureOnSentry, captureConsoleIntegration, setupNestErrorHandler as setupSentryNestErrorHandler } from '@sentry/nestjs';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
-import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
 import readPackageInfo from '@common/utils/packageInfoReader.util';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 
@@ -12,12 +12,12 @@ export const captureError = (error: unknown): void => {
 
 export const configureTrackers = (
 	nestApp: INestApplication,
-	httpExceptionsFilter: HttpExceptionsFilter,
 	{ environment, sentryDsn }: {
 		environment: string,
 		sentryDsn?: string,
 	}): void => {
 	const { name: packageName, version: packageVersion } = readPackageInfo();
+	const httpAdapterHost = nestApp.get(HttpAdapterHost, {});
 
 	initSentry({
 		enabled: environment === EnvironmentsEnum.PRODUCTION,
@@ -33,5 +33,5 @@ export const configureTrackers = (
 		debug: environment === EnvironmentsEnum.HOMOLOG,
 		release: `${packageName}@${packageVersion}`,
 	});
-	setupSentryNestErrorHandler(nestApp, httpExceptionsFilter);
+	setupSentryNestErrorHandler(nestApp, new BaseExceptionFilter(httpAdapterHost.httpAdapter));
 };

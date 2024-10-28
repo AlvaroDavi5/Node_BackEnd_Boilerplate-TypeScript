@@ -12,7 +12,7 @@ export const createNestTestApplicationOptions = {
 	forceCloseConnections: true,
 };
 
-export async function startNestApplication(nestApp: INestApplication) {
+export async function startNestApplication(nestApp: INestApplication): Promise<void> {
 	nestApp.enableShutdownHooks();
 
 	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error: Error, origin: string) => {

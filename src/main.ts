@@ -12,19 +12,19 @@ import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
-async function startNestApplication() {
+async function startNestApplication(): Promise<void> {
 	const nestApp = await NestFactory.create(CoreModule, createNestApplicationOptions);
 	await nestListenConfig(nestApp);
 
 	nestApiConfig(nestApp);
 	swaggerDocConfig(nestApp);
 
-	const appConfigs = nestApp.get<ConfigService>(ConfigService, {}).get<ConfigsInterface['application']>('application')!;
+	const { environment, appPort } = nestApp.get<ConfigService>(ConfigService, {}).get<ConfigsInterface['application']>('application')!;
 
-	if (appConfigs?.environment === EnvironmentsEnum.DEVELOPMENT)
+	if (environment === EnvironmentsEnum.DEVELOPMENT)
 		writeFileSync('./docs/nestGraph.json', nestApp.get(SerializedGraph).toString());
 
-	await nestApp.listen(Number(appConfigs.appPort))
+	await nestApp.listen(Number(appPort))
 		.catch((error: ErrorInterface | Error) => { validateKnownExceptions(error); });
 }
 

@@ -13,8 +13,8 @@ export const createNestTestApplicationOptions = {
 	forceCloseConnections: true,
 };
 
-export async function startNestApplication(nestApp: INestApplication) {
-	nestListenConfig(nestApp);
+export async function startNestApplication(nestApp: INestApplication): Promise<void> {
+	await nestListenConfig(nestApp);
 
 	nestApiConfig(nestApp);
 

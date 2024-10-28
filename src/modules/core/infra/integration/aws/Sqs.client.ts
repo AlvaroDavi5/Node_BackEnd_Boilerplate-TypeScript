@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
-	SQSClient, SQSClientConfig, Message,
+	SQSClient, Message,
 	ListQueuesCommand, CreateQueueCommand, DeleteQueueCommand,
 	SendMessageCommand, ReceiveMessageCommand, DeleteMessageCommand,
 	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput,
@@ -15,7 +15,6 @@ import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
 @Injectable()
 export default class SqsClient {
-	private readonly awsConfig: SQSClientConfig;
 	private readonly messageGroupId: string;
 	private readonly sqsClient: SQSClient;
 
@@ -26,27 +25,18 @@ export default class SqsClient {
 		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
-		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
+		const { sqs: { apiVersion, maxAttempts }, credentials: {
+			region, endpoint, accessKeyId, secretAccessKey, sessionToken,
+		} } = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
-		const {
-			region, endpoint, sessionToken,
-			accessKeyId, secretAccessKey,
-		} = awsConfigs.credentials;
-		const { apiVersion } = awsConfigs.sqs;
 
-		this.awsConfig = {
-			endpoint,
-			region,
-			apiVersion,
-			credentials: {
-				accessKeyId: String(accessKeyId),
-				secretAccessKey: String(secretAccessKey),
-				sessionToken,
-			},
-			logger: showExternalLogs ? this.logger : undefined,
-		};
 		this.messageGroupId = 'DefaultGroup';
-		this.sqsClient = new SQSClient(this.awsConfig);
+
+		this.sqsClient = new SQSClient({
+			endpoint, region, apiVersion, maxAttempts,
+			credentials: { accessKeyId, secretAccessKey, sessionToken },
+			logger: showExternalLogs ? this.logger : undefined,
+		});
 	}
 
 

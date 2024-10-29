@@ -120,7 +120,8 @@ export default class UserService {
 
 		const toHash = salt + passwordToValidate + this.secret;
 		const newHash = this.cryptographyService.hashing(toHash, 'ascii', 'sha256', 'base64url');
-		if (newHash !== hash)
+
+		if (!this.isSameHash(hash, newHash))
 			throw this.exceptions.unauthorized({
 				message: 'Incorrect password',
 				details: 'Password hash is different from database',
@@ -145,6 +146,12 @@ export default class UserService {
 		const result = `${salt}|${hash}`;
 
 		return result;
+	}
+
+	private isSameHash(h1: string | null, h2: string | null): boolean {
+		const hash1 = Buffer.from(h1 ?? 'h1');
+		const hash2 = Buffer.from(h2 ?? 'h2');
+		return this.cryptographyService.compareBuffer(hash1, hash2);
 	}
 
 	private caughtError(error: any): Error {

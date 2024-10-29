@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 
@@ -26,3 +27,4 @@ export class CreateDatabaseSchema1716537514967 implements MigrationInterface {
 		await queryRunner.query('DROP TABLE "UserPreferences"');
 	}
 }
+/* eslint-enable max-len */

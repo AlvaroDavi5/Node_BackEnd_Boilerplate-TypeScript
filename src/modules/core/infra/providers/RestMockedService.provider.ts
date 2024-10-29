@@ -13,7 +13,10 @@ export default class RestMockedServiceProvider extends AbstractRestClient {
 		configService: ConfigService,
 		logger: LoggerService,
 	) {
-		const { baseUrl, serviceName, timeout, maxRetries, maxRedirects } = configService.get<ConfigsInterface['integration']['rest']['mockedService']>('integration.rest.mockedService')!;
+		const {
+			baseUrl, serviceName,
+			timeout, maxRetries, maxRedirects
+		} = configService.get<ConfigsInterface['integration']['rest']['mockedService']>('integration.rest.mockedService')!;
 
 		super({
 			serviceName, baseUrl,

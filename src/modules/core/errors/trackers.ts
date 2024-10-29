@@ -1,6 +1,9 @@
 import { HttpAdapterHost, BaseExceptionFilter } from '@nestjs/core';
 import { INestApplication } from '@nestjs/common';
-import { init as initSentry, captureException as captureOnSentry, captureConsoleIntegration, setupNestErrorHandler as setupSentryNestErrorHandler } from '@sentry/nestjs';
+import {
+	init as initSentry, captureException as captureOnSentry,
+	captureConsoleIntegration, setupNestErrorHandler as setupSentryNestErrorHandler
+} from '@sentry/nestjs';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
 import { GraphQLFormattedError } from 'graphql';
 import readPackageInfo from '@common/utils/packageInfoReader.util';

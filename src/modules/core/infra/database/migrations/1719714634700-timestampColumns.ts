@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 
@@ -22,3 +23,4 @@ export class TimestampColumns1719714634700 implements MigrationInterface {
 		await queryRunner.query('ALTER TABLE "UserPreferences" ALTER COLUMN "createdAt" SET DEFAULT \'2024-06-30 02:24:41.028771\'');
 	}
 }
+/* eslint-enable max-len */

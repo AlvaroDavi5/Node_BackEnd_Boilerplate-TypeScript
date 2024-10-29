@@ -71,7 +71,9 @@ export default class SnsClient {
 		};
 	}
 
-	private publishParams(protocol: protocolType, topicArn: string, topicName: string, message: string, { subject, phoneNumber }: DestinationInterface): PublishCommandInput {
+	private publishParams(
+		protocol: protocolType, topicArn: string, topicName: string,
+		message: string, { subject, phoneNumber }: DestinationInterface): PublishCommandInput {
 		const isFifoTopic: boolean = topicName?.includes('.fifo');
 		const messageBody = this.formatMessageBeforeSend(message);
 
@@ -191,7 +193,9 @@ export default class SnsClient {
 		return statusCode;
 	}
 
-	public async publishMessage(protocol: protocolType, topicArn: string, topicName: string, message: string, destination: DestinationInterface): Promise<string> {
+	public async publishMessage(
+		protocol: protocolType, topicArn: string, topicName: string,
+		message: string, destination: DestinationInterface): Promise<string> {
 		let messageId = '';
 
 		try {

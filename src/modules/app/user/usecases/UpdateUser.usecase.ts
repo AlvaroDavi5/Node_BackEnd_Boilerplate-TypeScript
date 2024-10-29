@@ -6,7 +6,6 @@ import UserPreferenceService from '@app/user/services/UserPreference.service';
 import UserEntity, { IUpdateUser, IViewUser } from '@domain/entities/User.entity';
 import { IUpdateUserPreference, IViewUserPreference } from '@domain/entities/UserPreference.entity';
 import UpdateUserInputDto from '@app/user/api/dto/user/UpdateUserInput.dto';
-import { UserPreferenceInputDto } from '@app/user/api/dto/userPreference/UserPreferenceInput.dto';
 import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 
 
@@ -31,10 +30,12 @@ export default class UpdateUserUseCase {
 		this.validatePermissionToUpdateUser(userAgent, user);
 
 		const mustUpdateUser = this.userStrategy.mustUpdate<IViewUser, IUpdateUser>(user.getAttributes(), data);
-		const mustUpdateUserPreference = this.userStrategy.mustUpdate<IViewUserPreference, IUpdateUserPreference>(preference.getAttributes(), data.preference as UserPreferenceInputDto);
+		const mustUpdateUserPreference = !!data.preference
+			&& this.userStrategy.mustUpdate<IViewUserPreference, IUpdateUserPreference>(preference.getAttributes(), data.preference);
+
 		if (mustUpdateUser)
 			await this.userService.update(user.getId(), data);
-		if (data.preference !== undefined && mustUpdateUserPreference)
+		if (!!data.preference && mustUpdateUserPreference)
 			await this.userPreferenceService.update(preference.getId(), data.preference);
 
 		const [foundedUser, foundedPreference] = await Promise.all([

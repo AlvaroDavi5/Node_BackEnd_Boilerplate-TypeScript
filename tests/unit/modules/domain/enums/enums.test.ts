@@ -59,6 +59,7 @@ describe('Modules :: Domain :: Enums', () => {
 				'DISCONNECT',
 				'RECONNECT',
 				'EMIT',
+				'ERROR',
 				'EMIT_PRIVATE',
 				'BROADCAST',
 			]);
@@ -72,6 +73,7 @@ describe('Modules :: Domain :: Enums', () => {
 				'disconnect',
 				'reconnect',
 				'emit',
+				'error',
 				'emit_private',
 				'broadcast',
 			]);

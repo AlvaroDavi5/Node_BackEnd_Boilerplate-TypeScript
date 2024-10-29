@@ -6,7 +6,7 @@ import {
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
-import HttpConstants from '@common/constants/Http.constants';
+import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import { ApiVersionsEnum } from '@common/enums/apiVersions.enum';
 
@@ -16,7 +16,7 @@ import { ApiVersionsEnum } from '@common/enums/apiVersions.enum';
 @exceptionsResponseDecorator()
 export default class DefaultController {
 	constructor(
-		private readonly httpConstants: HttpConstants,
+		private readonly httpMessagesConstants: HttpMessagesConstants,
 	) { }
 
 	@ApiTags('HealthCheck')
@@ -80,7 +80,7 @@ export default class DefaultController {
 			queryParams,
 			body,
 			statusCode: response.statusCode,
-			statusMessage: response.statusMessage ?? this.httpConstants.messages.found('Endpoint'),
+			statusMessage: response.statusMessage ?? this.httpMessagesConstants.messages.found('Endpoint'),
 		};
 	}
 

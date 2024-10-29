@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { Readable } from 'stream';
 import {
-	S3Client as S3AWSClient, S3ClientConfig, NotificationConfiguration,
+	S3Client as S3AWSClient, NotificationConfiguration,
 	ListBucketsCommand, CreateBucketCommand, DeleteBucketCommand,
 	PutBucketNotificationConfigurationCommand, PutObjectCommand, GetObjectCommand, DeleteObjectCommand,
 	PutObjectCommandInput, GetObjectCommandInput, DeleteObjectCommandInput,
@@ -17,7 +17,6 @@ export type s3FileContentType = string | Uint8Array | Buffer | Readable | Readab
 
 @Injectable()
 export default class S3Client {
-	private readonly awsConfig: S3ClientConfig;
 	private readonly s3Client: S3AWSClient;
 	public readonly bucketName: string;
 	private readonly filesExpiration: number;
@@ -27,29 +26,20 @@ export default class S3Client {
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 	) {
-		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
+		const { s3: { apiVersion, maxAttempts, bucketName, filesExpiration }, credentials: {
+			region, endpoint, accessKeyId, secretAccessKey, sessionToken,
+		} } = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
-		const {
-			region, endpoint, sessionToken,
-			accessKeyId, secretAccessKey,
-		} = awsConfigs.credentials;
-		const { bucketName, filesExpiration, apiVersion } = awsConfigs.s3;
+
+		this.bucketName = bucketName;
 		this.filesExpiration = filesExpiration;
 
-		this.awsConfig = {
-			endpoint,
-			region,
-			apiVersion,
-			credentials: {
-				accessKeyId: String(accessKeyId),
-				secretAccessKey: String(secretAccessKey),
-				sessionToken,
-			},
+		this.s3Client = new S3AWSClient({
 			forcePathStyle: true,
+			endpoint, region, apiVersion, maxAttempts,
+			credentials: { accessKeyId, secretAccessKey, sessionToken },
 			logger: showExternalLogs ? this.logger : undefined,
-		};
-		this.bucketName = bucketName;
-		this.s3Client = new S3AWSClient(this.awsConfig);
+		});
 	}
 
 	private uploadParams(bucketName: string, fileName: string, fileContent: s3FileContentType, expirationDate?: Date): PutObjectCommandInput {

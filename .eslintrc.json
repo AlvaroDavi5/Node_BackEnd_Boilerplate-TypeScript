@@ -337,7 +337,10 @@
 				"@typescript-eslint"
 			],
 			"rules": {
+				"security/detect-possible-timing-attacks": "error",
 				"security/detect-object-injection": "error",
+				"security/detect-non-literal-fs-filename": "warn",
+				"security/detect-non-literal-regexp": "warn",
 				"import/order": [
 					"error",
 					{

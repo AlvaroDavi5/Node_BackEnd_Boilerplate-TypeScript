@@ -6,9 +6,18 @@ node_modules/
 package-lock.json
 .pnp/
 .pnp.js
-# production
+# build and output
 build/
 dist/
+.next/
+.angular/
+.sass-cache/
+out-tsc/
+bazel-out/
+*.tsbuildinfo
+next-env.d.ts
+# deploy
+.vercel
 # debug and logs
 npm-debug.log*
 yarn-debug.log*
@@ -23,8 +32,6 @@ tests/database.sqlite/
 # sonar
 test-report.xml
 .scannerwork/
-# vercel
-.vercel
 # misc
 .DS_Store
 *.pem
@@ -39,18 +46,27 @@ envs/
 **/__snapshots__
 # Docker files
 .docker/
-# VS Code and ASDF settings
+# IDE and ASDF settings
 .vscode/*
+.idea/*
+.history/*
+.project
+.classpath
+.c9/
+*.launch
+.settings/*
+*.sublime-workspace
 .tool-versions
 # others
 docs/nestGraph.json
 TODO*.txt
-*.tsbuildinfo
-.idea
 temp/
+tmp/
 
 # --------- except ---------
 
 !.vscode/settings.json
 !.vscode/launch.json
+!.vscode/tasks.json
+!.vscode/extensions.json
 !TODO-example.txt

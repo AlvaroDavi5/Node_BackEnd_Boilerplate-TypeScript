@@ -4,7 +4,7 @@ import createWebSocketClient from '@dev/websocket/createWebSocketClient';
 import { loggerProviderMock } from '@dev/mocks/mockedModules';
 
 
-function formatMessageAfterReceiveHelper(message: unknown) {
+function formatMessageAfterReceiveHelper(message: unknown): string {
 	let msg = '';
 	try {
 		msg = JSON.parse(message as unknown as string);
@@ -27,6 +27,10 @@ function createSocketClient() {
 	webSocketClient.listen(WebSocketEventsEnum.EMIT, (msg: unknown, ..._args: unknown[]) => {
 		const message = formatMessageAfterReceiveHelper(msg);
 		console.info(message);
+	});
+	webSocketClient.listen(WebSocketEventsEnum.ERROR, (msg: unknown, ..._args: unknown[]) => {
+		const message = formatMessageAfterReceiveHelper(msg);
+		console.error(message);
 	});
 	webSocketClient.send(WebSocketEventsEnum.RECONNECT, {
 		dataValues: {

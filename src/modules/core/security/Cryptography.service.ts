@@ -24,6 +24,10 @@ export default class CryptographyService {
 		return Buffer.from(data, encoding).toString(decoding);
 	}
 
+	public compareBuffer(b1: Buffer, b2: Buffer): boolean {
+		return crypto.timingSafeEqual(b1, b2);
+	}
+
 	public encodeJwt<PT extends object = any>(payload: string | Buffer | PT, inputEncoding: BufferEncoding, expiration = '7d'): string {
 		return sign(payload,
 			this.secret,
@@ -113,7 +117,10 @@ export default class CryptographyService {
 		}
 	}
 
-	public contentDSASign(data: string, inputEncoding: BufferEncoding, privateKeyContent: string, algorithm: hashAlgorithmType, outputFormat: crypto.BinaryToTextEncoding): string | null {
+	public contentDSASign(
+		data: string, inputEncoding: BufferEncoding,
+		privateKeyContent: string, algorithm: hashAlgorithmType,
+		outputFormat: crypto.BinaryToTextEncoding): string | null {
 		try {
 			const dsaSign = crypto.createSign(algorithm);
 			dsaSign.update(data, inputEncoding);
@@ -123,7 +130,9 @@ export default class CryptographyService {
 		}
 	}
 
-	public symmetricAESEncrypt(data: string, inputEncoding: BufferEncoding, keyContent: string, outputEncoding: BufferEncoding, iv?: string): { encrypted: string | null, iv: string } {
+	public symmetricAESEncrypt(
+		data: string, inputEncoding: BufferEncoding, keyContent: string,
+		outputEncoding: BufferEncoding, iv?: string): { encrypted: string | null, iv: string } {
 		const IV = iv ?? crypto.randomBytes(12).toString('hex');
 
 		try {
@@ -137,7 +146,10 @@ export default class CryptographyService {
 		}
 	}
 
-	public symmetricAESDecrypt(data: string, inputEncoding: BufferEncoding, keyContent: string, iv: string, outputEncoding: BufferEncoding): { decrypted: string | null, iv: string } {
+	public symmetricAESDecrypt(
+		data: string, inputEncoding: BufferEncoding,
+		keyContent: string, iv: string,
+		outputEncoding: BufferEncoding): { decrypted: string | null, iv: string } {
 		try {
 			const decipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(keyContent, 'hex'), Buffer.from(iv, 'hex'));
 			const hexDecrypted = decipher.update(data, inputEncoding, 'hex') + decipher.final('hex');
@@ -149,7 +161,10 @@ export default class CryptographyService {
 		}
 	}
 
-	public asymmetricRSAEncrypt(data: string, inputEncoding: BufferEncoding, keyType: 'public' | 'private', keyContent: string, outputEncoding: BufferEncoding): string | null {
+	public asymmetricRSAEncrypt(
+		data: string, inputEncoding: BufferEncoding,
+		keyType: 'public' | 'private', keyContent: string,
+		outputEncoding: BufferEncoding): string | null {
 		try {
 			const dataBuffer = Buffer.from(data, inputEncoding);
 			const key: crypto.RsaPrivateKey | crypto.RsaPublicKey = {
@@ -164,7 +179,10 @@ export default class CryptographyService {
 		}
 	}
 
-	public asymmetricRSADecrypt(data: string, inputEncoding: BufferEncoding, keyType: 'public' | 'private', keyContent: string, outputEncoding: BufferEncoding): string | null {
+	public asymmetricRSADecrypt(
+		data: string, inputEncoding: BufferEncoding,
+		keyType: 'public' | 'private', keyContent: string,
+		outputEncoding: BufferEncoding): string | null {
 		try {
 			const dataBuffer = Buffer.from(data, inputEncoding);
 			const key: crypto.RsaPrivateKey | crypto.RsaPublicKey = {

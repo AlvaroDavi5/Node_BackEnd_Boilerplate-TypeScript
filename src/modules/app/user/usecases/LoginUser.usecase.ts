@@ -17,7 +17,7 @@ export default class LoginUserUseCase {
 	) { }
 
 	public async execute(data: { email: string, password: string }): Promise<{ user: UserEntity, token: string }> {
-		const foundedUser = await this.getUserByEmail(data.email);
+		const foundedUser = await this.userService.getByEmail(data.email);
 
 		if (!foundedUser)
 			throw this.exceptions.notFound({
@@ -39,13 +39,5 @@ export default class LoginUserUseCase {
 		const token = this.cryptographyService.encodeJwt(userAuthToEncode, 'utf8', '1d');
 
 		return { user, token };
-	}
-
-	private async getUserByEmail(email: string): Promise<UserEntity | null> {
-		try {
-			return await this.userService.getByEmail(email);
-		} catch (error) {
-			return null;
-		}
 	}
 }

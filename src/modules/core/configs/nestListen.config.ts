@@ -1,5 +1,5 @@
-import { INestApplication, NestApplicationOptions } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { INestApplication, NestApplicationOptions } from '@nestjs/common';
 import { captureError, configureTrackers } from '@core/errors/trackers';
 import LoggerService from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
@@ -26,6 +26,10 @@ export const createNestApplicationOptions: NestApplicationOptions = {
 export default async (nestApp: INestApplication): Promise<void> => {
 	nestApp.enableShutdownHooks();
 
+	const { environment, sentryDsn } = nestApp.get<ConfigService>(ConfigService, { strict: false }).get<ConfigsInterface['application']>('application')!;
+
+	configureTrackers(nestApp, { environment, sentryDsn });
+
 	let logger: LoggerInterface | Console;
 	await nestApp.resolve<LoggerService>(LoggerService)
 		.then((loggerService) => {
@@ -37,8 +41,6 @@ export default async (nestApp: INestApplication): Promise<void> => {
 			console.error(err);
 			logger = console;
 		});
-
-	const { environment, sentryDsn } = nestApp.get<ConfigService>(ConfigService, { strict: false }).get<ConfigsInterface['application']>('application')!;
 
 	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error: Error, origin: string) => {
 		logger.error(`App received ${ProcessEventsEnum.UNCAUGHT_EXCEPTION}`, `origin: ${origin}`, `error: ${error}`);
@@ -52,8 +54,6 @@ export default async (nestApp: INestApplication): Promise<void> => {
 		logger.warn(`App received signal: ${signal}`);
 		await nestApp.close();
 	}));
-
-	configureTrackers(environment, { sentryDsn });
 };
 
 export function validateKnownExceptions(error: ErrorInterface | Error): void {

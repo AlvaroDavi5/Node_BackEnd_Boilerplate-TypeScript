@@ -5,21 +5,21 @@ import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { GraphQLModule } from '@nestjs/graphql';
-import { GraphQLFormattedError } from 'graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { SentryModule } from '@sentry/nestjs/setup';
 import { DevtoolsModule } from '@nestjs/devtools-integration';
 import { join } from 'path';
-import KnownExceptionFilter from '@api/filters/KnownException.filter';
 import RequestRateConstants from '@common/constants/RequestRate.constants';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import CommonModule from '@common/common.module';
 import AppModule from '@app/app.module';
 import EventsModule from '@events/events.module';
 import GraphQlModule from '@graphql/graphql.module';
+import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
 import envsConfig from './configs/envs.config';
 import LifecycleService from './start/Lifecycle.service';
 import Exceptions from './errors/Exceptions';
+import { formatGraphQlError } from './errors/trackers';
 import LoggerService, { RequestLoggerProvider } from './logging/Logger.service';
 import CryptographyService from './security/Cryptography.service';
 import DatabaseConnectionProvider from './infra/database/connection';
@@ -40,36 +40,25 @@ const requestRateConstants = new RequestRateConstants();
 @Global()
 @Module({
 	imports: [
-		ConfigModule.forRoot({
-			isGlobal: true,
-			load: [envsConfig],
-		}),
-		ScheduleModule.forRoot(),
 		EventEmitterModule.forRoot({
 			maxListeners: 10,
 			verboseMemoryLeak: true,
 		}),
+		ScheduleModule.forRoot(),
 		ThrottlerModule.forRoot([
 			requestRateConstants.short,
 			requestRateConstants.medium,
 			requestRateConstants.long,
 		]),
+		ConfigModule.forRoot({
+			isGlobal: true,
+			load: [envsConfig],
+		}),
 		GraphQLModule.forRoot<ApolloDriverConfig>({
 			driver: ApolloDriver,
 			playground: appConfigs.environment === EnvironmentsEnum.DEVELOPMENT,
 			autoSchemaFile: join(process.cwd(), 'src/modules/graphql/schemas/schema.gql'),
-			formatError: ({ message, extensions, path }: GraphQLFormattedError, error: any) => {
-				const graphQLFormattedError: GraphQLFormattedError = {
-					message: message ?? error?.message,
-					path: path ?? error?.path,
-					extensions: {
-						code: extensions?.code,
-						originalError: extensions?.originalError,
-					},
-				};
-
-				return graphQLFormattedError;
-			},
+			formatError: formatGraphQlError,
 			include: [],
 		}),
 		SentryModule.forRoot(),
@@ -86,11 +75,12 @@ const requestRateConstants = new RequestRateConstants();
 	providers: [
 		{
 			provide: APP_FILTER,
-			useClass: KnownExceptionFilter,
+			useClass: HttpExceptionsFilter,
 			scope: Scope.DEFAULT,
 		},
 		LifecycleService,
 		Exceptions,
+		HttpExceptionsFilter,
 		LoggerService,
 		RequestLoggerProvider,
 		CryptographyService,

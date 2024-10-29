@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
-	CognitoIdentityProviderClient, CognitoIdentityProviderClientConfig, UserPoolDescriptionType,
+	CognitoIdentityProviderClient, UserPoolDescriptionType,
 	ListUserPoolsCommand, CreateUserPoolCommand, DeleteUserPoolCommand, CreateUserPoolClientCommand, DeleteUserPoolClientCommand,
 	AdminCreateUserCommand, AdminGetUserCommand, AdminDeleteUserCommand, SignUpCommand, AdminConfirmSignUpCommand,
 	SignUpCommandInput,
@@ -13,9 +13,6 @@ import LoggerService from '@core/logging/Logger.service';
 
 @Injectable()
 export default class CognitoClient {
-	private readonly awsConfig: CognitoIdentityProviderClientConfig;
-	public readonly userPoolName: string;
-	public readonly userPoolId: string;
 	private readonly clientId: string;
 	private readonly cognitoClient: CognitoIdentityProviderClient;
 
@@ -24,29 +21,18 @@ export default class CognitoClient {
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 	) {
-		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
+		const { congito: { apiVersion, maxAttempts, clientId }, credentials: {
+			region, endpoint, accessKeyId, secretAccessKey, sessionToken,
+		} } = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
-		const {
-			region, endpoint, sessionToken,
-			accessKeyId, secretAccessKey,
-		} = awsConfigs.credentials;
-		const { userPoolName, userPoolId, clientId, apiVersion } = awsConfigs.congito;
 
-		this.awsConfig = {
-			endpoint,
-			region,
-			apiVersion,
-			credentials: {
-				accessKeyId: String(accessKeyId),
-				secretAccessKey: String(secretAccessKey),
-				sessionToken,
-			},
-			logger: showExternalLogs ? this.logger : undefined,
-		};
-		this.userPoolName = userPoolName;
-		this.userPoolId = userPoolId;
 		this.clientId = clientId;
-		this.cognitoClient = new CognitoIdentityProviderClient(this.awsConfig);
+
+		this.cognitoClient = new CognitoIdentityProviderClient({
+			endpoint, region, apiVersion, maxAttempts,
+			credentials: { accessKeyId, secretAccessKey, sessionToken },
+			logger: showExternalLogs ? this.logger : undefined,
+		});
 	}
 
 	private signUpParams(userName: string, userEmail: string, password: string): SignUpCommandInput {

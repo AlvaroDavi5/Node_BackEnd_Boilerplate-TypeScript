@@ -33,11 +33,9 @@ export default class EventsQueueProducer {
 		private readonly sqsClient: SqsClient,
 		private readonly logger: LoggerService,
 	) {
-		const { queueName, queueUrl } = this.configService.get<ConfigsInterface['integration']['aws']['sqs']['eventsQueue']>('integration.aws.sqs.eventsQueue')!;
-		this.credentials = {
-			queueName,
-			queueUrl,
-		};
+		const { sqs: { eventsQueue } } = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
+		this.credentials = eventsQueue;
+
 		const appName = this.configService.get<ConfigsInterface['application']['name']>('application.name')!;
 		this.applicationName = String(appName);
 	}

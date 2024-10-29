@@ -93,10 +93,10 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 				clientId: this.clientId ?? undefined,
 				createdAt: this.createdAt,
 				updatedAt: this.updatedAt ?? undefined,
-			} ?? undefined,
+			},
 			listen: {
 				newConnections: this.newConnectionsListen,
-			} ?? undefined,
+			},
 		};
 	}
 

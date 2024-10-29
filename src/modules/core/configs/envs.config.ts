@@ -93,6 +93,7 @@ export interface ConfigsInterface {
 				clientName: string,
 				clientId: string,
 				apiVersion: string,
+				maxAttempts: number,
 			},
 			// * Message Queues Service
 			sqs: {
@@ -101,6 +102,7 @@ export interface ConfigsInterface {
 					queueUrl: string,
 				},
 				apiVersion: string,
+				maxAttempts: number,
 			},
 			// * Notification Topics Service
 			sns: {
@@ -110,12 +112,14 @@ export interface ConfigsInterface {
 					topicProtocol: string,
 				},
 				apiVersion: string,
+				maxAttempts: number,
 			},
 			// * Storage Service
 			s3: {
 				bucketName: string,
 				filesExpiration: number, // files expiration in seconds
 				apiVersion: string,
+				maxAttempts: number,
 			},
 		},
 		rest: {
@@ -124,6 +128,8 @@ export interface ConfigsInterface {
 				serviceName: string,
 				baseUrl: string,
 				timeout: number, // request timeout in milliseconds
+				maxRedirects: number, // maximum redirections
+				maxRetries: number, // maximum retries
 			},
 		},
 	},
@@ -216,13 +222,15 @@ export default (): ConfigsInterface => ({
 				clientName: process.env.AWS_COGNITO_USER_POOL_CLIENT_NAME ?? 'defaultClient',
 				clientId: process.env.AWS_COGNITO_USER_POOL_CLIENT_ID ?? 'xxx',
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
+				maxAttempts: 3,
 			},
 			sqs: {
 				eventsQueue: {
 					queueName: process.env.AWS_SQS_EVENTS_QUEUE_NAME ?? 'eventsQueue.fifo',
-					queueUrl: process.env.AWS_SQS_EVENTS_QUEUE_URL ?? 'http://sqs.us-east-1.Cloud_LocalStack.localstack.cloud:4566/000000000000/eventsQueue.fifo',
+					queueUrl: process.env.AWS_SQS_EVENTS_QUEUE_URL ?? 'http://sqs.us-east-1.Cloud_LocalStack.localstack.cloud:4566/0000/eventsQueue.fifo',
 				},
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
+				maxAttempts: 2,
 			},
 			sns: {
 				defaultTopic: {
@@ -231,18 +239,22 @@ export default (): ConfigsInterface => ({
 					topicProtocol: process.env.AWS_TOPIC_PROTOCOL ?? 'email',
 				},
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
+				maxAttempts: 2,
 			},
 			s3: {
 				bucketName: process.env.AWS_S3_BUCKET_NAME ?? 'defaultbucket',
 				filesExpiration: (5 * 60),
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
+				maxAttempts: 3,
 			},
 		},
 		rest: {
 			mockedService: {
 				serviceName: process.env.MOCKED_SERVICE_NAME ?? 'Mocked Service',
 				baseUrl: process.env.MOCKED_SERVICE_URL ?? 'http://localhost:4000/',
-				timeout: 1000,
+				timeout: (30 * 1000),
+				maxRedirects: 2,
+				maxRetries: 3,
 			},
 		},
 	},

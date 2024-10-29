@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
-	SNSClient, SNSClientConfig, Topic,
+	SNSClient, Topic,
 	ListTopicsCommand, CreateTopicCommand, DeleteTopicCommand,
 	SubscribeCommand, UnsubscribeCommand, PublishCommand,
 	CreateTopicCommandInput, SubscribeCommandInput, PublishCommandInput,
@@ -20,7 +20,6 @@ interface DestinationInterface {
 
 @Injectable()
 export default class SnsClient {
-	private readonly awsConfig: SNSClientConfig;
 	private readonly messageGroupId: string;
 	private readonly snsClient: SNSClient;
 
@@ -31,27 +30,18 @@ export default class SnsClient {
 		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
-		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
+		const { sns: { apiVersion, maxAttempts }, credentials: {
+			region, endpoint, accessKeyId, secretAccessKey, sessionToken,
+		} } = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
-		const {
-			region, endpoint, sessionToken,
-			accessKeyId, secretAccessKey,
-		} = awsConfigs.credentials;
-		const { apiVersion } = awsConfigs.sns;
 
-		this.awsConfig = {
-			endpoint,
-			region,
-			apiVersion,
-			credentials: {
-				accessKeyId: String(accessKeyId),
-				secretAccessKey: String(secretAccessKey),
-				sessionToken,
-			},
-			logger: showExternalLogs ? this.logger : undefined,
-		};
 		this.messageGroupId = 'DefaultGroup';
-		this.snsClient = new SNSClient(this.awsConfig);
+
+		this.snsClient = new SNSClient({
+			endpoint, region, apiVersion, maxAttempts,
+			credentials: { accessKeyId, secretAccessKey, sessionToken },
+			logger: showExternalLogs ? this.logger : undefined,
+		});
 	}
 
 
@@ -74,16 +64,16 @@ export default class SnsClient {
 	}
 
 	private subscribeParams(protocol: protocolType, topicArn: string, to: string): SubscribeCommandInput {
-		const endpoint = to || this.awsConfig.endpoint;
-
 		return {
 			Protocol: protocol,
 			TopicArn: topicArn,
-			Endpoint: String(endpoint),
+			Endpoint: to,
 		};
 	}
 
-	private publishParams(protocol: protocolType, topicArn: string, topicName: string, message: string, { subject, phoneNumber }: DestinationInterface): PublishCommandInput {
+	private publishParams(
+		protocol: protocolType, topicArn: string, topicName: string,
+		message: string, { subject, phoneNumber }: DestinationInterface): PublishCommandInput {
 		const isFifoTopic: boolean = topicName?.includes('.fifo');
 		const messageBody = this.formatMessageBeforeSend(message);
 
@@ -203,7 +193,9 @@ export default class SnsClient {
 		return statusCode;
 	}
 
-	public async publishMessage(protocol: protocolType, topicArn: string, topicName: string, message: string, destination: DestinationInterface): Promise<string> {
+	public async publishMessage(
+		protocol: protocolType, topicArn: string, topicName: string,
+		message: string, destination: DestinationInterface): Promise<string> {
 		let messageId = '';
 
 		try {

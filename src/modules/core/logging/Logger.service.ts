@@ -85,7 +85,7 @@ export default class LoggerService implements LoggerInterface {
 		};
 	}
 
-	[LogLevelEnum.ERROR](...args: unknown[]): void {
+	public [LogLevelEnum.ERROR](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -95,7 +95,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.WARN](...args: unknown[]): void {
+	public [LogLevelEnum.WARN](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -105,7 +105,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.INFO](...args: unknown[]): void {
+	public [LogLevelEnum.INFO](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -115,7 +115,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.HTTP](...args: unknown[]): void {
+	public [LogLevelEnum.HTTP](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -125,7 +125,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.VERBOSE](...args: unknown[]): void {
+	public [LogLevelEnum.VERBOSE](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({
@@ -135,7 +135,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	[LogLevelEnum.DEBUG](...args: unknown[]): void {
+	public [LogLevelEnum.DEBUG](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
 		this.logger.log({

@@ -22,7 +22,7 @@ async function startNestApplication(): Promise<void> {
 	const { environment, appPort } = nestApp.get<ConfigService>(ConfigService, {}).get<ConfigsInterface['application']>('application')!;
 
 	if (environment === EnvironmentsEnum.DEVELOPMENT)
-		writeFileSync('./docs/nestGraph.json', nestApp.get(SerializedGraph).toString());
+		writeFileSync('./docs/nestGraph.json', nestApp.get(SerializedGraph, {}).toString());
 
 	await nestApp.listen(Number(appPort))
 		.catch((error: ErrorInterface | Error) => { validateKnownExceptions(error); });

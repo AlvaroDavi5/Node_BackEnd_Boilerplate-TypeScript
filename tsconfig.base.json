@@ -94,7 +94,7 @@
 		"sourceRoot": "src",
 		// "mapRoot": "",
 		// "inlineSourceMap": true,
-		// "inlineSources": true,
+		"inlineSources": true,
 		// "emitBOM": true,
 		// "newLine": "crlf",
 		// "stripInternal": true,

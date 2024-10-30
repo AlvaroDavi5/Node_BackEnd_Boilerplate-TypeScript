@@ -1,8 +1,5 @@
-import { HttpAdapterHost, BaseExceptionFilter } from '@nestjs/core';
-import { INestApplication } from '@nestjs/common';
 import {
-	init as initSentry, captureException as captureOnSentry,
-	captureConsoleIntegration, setupNestErrorHandler as setupSentryNestErrorHandler
+	init as initSentry, captureException as captureOnSentry, captureConsoleIntegration,
 } from '@sentry/nestjs';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
 import { GraphQLFormattedError } from 'graphql';
@@ -15,13 +12,11 @@ export const captureError = (error: unknown): void => {
 };
 
 export const configureTrackers = (
-	nestApp: INestApplication,
 	{ environment, sentryDsn }: {
 		environment: string,
 		sentryDsn?: string,
 	}): void => {
 	const { name: packageName, version: packageVersion } = readPackageInfo();
-	const httpAdapterHost = nestApp.get(HttpAdapterHost, {});
 
 	initSentry({
 		enabled: environment === EnvironmentsEnum.PRODUCTION,
@@ -37,7 +32,6 @@ export const configureTrackers = (
 		debug: environment === EnvironmentsEnum.HOMOLOG,
 		release: `${packageName}@${packageVersion}`,
 	});
-	setupSentryNestErrorHandler(nestApp, new BaseExceptionFilter(httpAdapterHost.httpAdapter));
 };
 
 export const formatGraphQlError = ({ message, extensions, path }: GraphQLFormattedError, error: any): GraphQLFormattedError => {

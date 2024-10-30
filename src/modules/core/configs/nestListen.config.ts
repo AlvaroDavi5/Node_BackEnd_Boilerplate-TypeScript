@@ -28,7 +28,7 @@ export default async (nestApp: INestApplication): Promise<void> => {
 
 	const { environment, sentryDsn } = nestApp.get<ConfigService>(ConfigService, { strict: false }).get<ConfigsInterface['application']>('application')!;
 
-	configureTrackers(nestApp, { environment, sentryDsn });
+	configureTrackers({ environment, sentryDsn });
 
 	let logger: LoggerInterface | Console;
 	await nestApp.resolve<LoggerService>(LoggerService)

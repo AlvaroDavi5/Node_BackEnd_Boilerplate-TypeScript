@@ -1,19 +1,63 @@
-import { Catch, ArgumentsHost, WsExceptionFilter, HttpException } from '@nestjs/common';
+import { Catch, ArgumentsHost, WsExceptionFilter } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-import { AxiosError } from 'axios';
-import AppExceptionsFilter, { ErrorOrExceptionToFilter } from '@core/errors/AppExceptions.filter';
+import AbstractExceptionsFilter, { ErrorOrExceptionToFilter } from '@core/errors/AbstractExceptions.filter';
 import LoggerService from '@core/logging/Logger.service';
+import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import { isNullOrUndefined } from '@common/utils/dataValidations.util';
+import externalErrorParser from '@common/utils/externalErrorParser.util';
+import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
-@Catch(HttpException, WsException, AxiosError, Error)
-export class WebSocketExceptionsFilter extends AppExceptionsFilter implements WsExceptionFilter<ErrorOrExceptionToFilter> {
+type wsErrorResponseType = ErrorInterface & {
+	receivedEvent: string,
+	receivedData: unknown,
+	timestamp: string,
+};
+
+@Catch()
+export class WebSocketExceptionsFilter extends AbstractExceptionsFilter implements WsExceptionFilter<ErrorOrExceptionToFilter> {
 	constructor(
 		protected readonly logger: LoggerService,
 		protected readonly dataParserHelper: DataParserHelper,
 	) {
 		super(logger, dataParserHelper);
+	}
+
+	private buildWsErrorResponse(exception: unknown, event: string, data: unknown): {
+		errorEvent: string, errorResponse: ErrorInterface & { timestamp: string },
+	} {
+		let errorResponse: wsErrorResponseType = {
+			name: (exception as ErrorOrExceptionToFilter)?.name,
+			message: (exception as ErrorOrExceptionToFilter)?.message,
+			receivedEvent: event,
+			receivedData: data,
+			timestamp: new Date().toISOString(),
+		};
+
+		if (exception instanceof WsException) {
+			const error = exception.getError();
+
+			if (typeof error === 'object' && !isNullOrUndefined(error)) {
+				errorResponse = {
+					...error,
+					...errorResponse,
+				};
+			} else {
+				const strData = this.dataParserHelper.toString(error);
+				errorResponse.details = strData;
+			}
+		} else {
+			const error = externalErrorParser(exception);
+
+			errorResponse.name = error.name;
+			errorResponse.message = error.message;
+			errorResponse.code = error.getStatus();
+			errorResponse.details = error.cause;
+		}
+
+		return { errorEvent: WebSocketEventsEnum.ERROR, errorResponse };
 	}
 
 	public catch(exception: unknown, host: ArgumentsHost): void {

@@ -54,12 +54,14 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 
 	describe('# Main Flux', () => {
 		test('Should validate password', async () => {
+			// eslint-disable-next-line max-len
+			const mockedToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIuZGVmYXVsdEBub21haWwuZGV2IiwiY2xpZW50SWQiOiIxODZlN2RhYS1kMmRmLTQ0YWYtYmE4Yy00ZjIwNDM1NmQwZjkiLCJpYXQiOjE3MTgxNTY2MjQsImV4cCI6MTcxODI0MzAyNH0.4gmn_kp7YaZq4XGvKxe2i6QgWZh-f2iNaJg40md6agQ';
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test', password: 'admin' });
 			userServiceMock.getById.mockResolvedValueOnce(userEntity);
 			userServiceMock.getByEmail.mockResolvedValueOnce(userEntity);
 			userServiceMock.validatePassword.mockImplementationOnce((_entity: UserEntity, _passwordToValidate: string) => { return undefined; });
 			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(new UserPreferenceEntity({ userId: userEntity.getId() }));
-			cryptographyServiceMock.encodeJwt.mockReturnValueOnce('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIuZGVmYXVsdEBub21haWwuZGV2IiwiY2xpZW50SWQiOiIxODZlN2RhYS1kMmRmLTQ0YWYtYmE4Yy00ZjIwNDM1NmQwZjkiLCJpYXQiOjE3MTgxNTY2MjQsImV4cCI6MTcxODI0MzAyNH0.4gmn_kp7YaZq4XGvKxe2i6QgWZh-f2iNaJg40md6agQ');
+			cryptographyServiceMock.encodeJwt.mockReturnValueOnce(mockedToken);
 
 			const result = await loginUserUseCase.execute({ email: 'user.test@nomail.test', password: 'admin' });
 			expect(userServiceMock.getByEmail).toHaveBeenCalledTimes(1);
@@ -72,7 +74,7 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(cryptographyServiceMock.encodeJwt).toHaveBeenCalledTimes(1);
 			expect(cryptographyServiceMock.encodeJwt).toHaveBeenCalledWith({ clientId: userEntity.getId(), username: userEntity.getEmail() }, 'utf8', '1d');
-			expect(result.token).toBe('eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIuZGVmYXVsdEBub21haWwuZGV2IiwiY2xpZW50SWQiOiIxODZlN2RhYS1kMmRmLTQ0YWYtYmE4Yy00ZjIwNDM1NmQwZjkiLCJpYXQiOjE3MTgxNTY2MjQsImV4cCI6MTcxODI0MzAyNH0.4gmn_kp7YaZq4XGvKxe2i6QgWZh-f2iNaJg40md6agQ');
+			expect(result.token).toBe(mockedToken);
 			expect(result.user.getEmail()).toBe('user.test@nomail.test');
 			expect(result.user.getPassword()).toBe('');
 		});

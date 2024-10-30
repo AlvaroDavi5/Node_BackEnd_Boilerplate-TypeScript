@@ -14,10 +14,11 @@ export interface PaginationOptionsInterface<M extends BaseEntity> {
 	skip?: number, // offset
 	order?: FindOptionsOrder<M>,
 }
-export type BuildParamsInterface<I = any> = ListQueryInterface & Partial<I>;
+export type BuildParamsInterface<I = unknown> = ListQueryInterface & Partial<I>;
 
 type ModelType<E extends BaseEntity> = constructorType<E> & typeof BaseEntity;
 
+/* eslint-disable @typescript-eslint/no-explicit-any */
 export default abstract class AbstractRepository<M extends BaseEntity, E extends AbstractEntity, BI extends BuildParamsInterface> {
 	// ? ------ Attributes ------
 	protected DomainEntity: constructorType<E>;
@@ -256,7 +257,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 		}
 	}
 
-	public async executeQuery(sqlQuery: string): Promise<any> {
+	public async executeQuery(sqlQuery: string): Promise<unknown> {
 		try {
 			const result = await this.ResourceRepo.query(sqlQuery);
 			return result;
@@ -265,3 +266,4 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 		}
 	}
 }
+/* eslint-enable @typescript-eslint/no-explicit-any */

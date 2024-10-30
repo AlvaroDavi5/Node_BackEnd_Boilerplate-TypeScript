@@ -28,7 +28,7 @@ export default class CryptographyService {
 		return crypto.timingSafeEqual(b1, b2);
 	}
 
-	public encodeJwt<PT extends object = any>(payload: string | Buffer | PT, inputEncoding: BufferEncoding, expiration = '7d'): string {
+	public encodeJwt<PT extends object = object>(payload: string | Buffer | PT, inputEncoding: BufferEncoding, expiration = '7d'): string {
 		return sign(payload,
 			this.secret,
 			{
@@ -97,6 +97,7 @@ export default class CryptographyService {
 	}
 
 	public generateDSAKeyPair(keySize: 1024 | 2048): crypto.KeyPairSyncResult<string, string> {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const { publicKey, privateKey } = crypto.generateKeyPairSync('dsa' as any, {
 			modulusLength: keySize,
 			namedCurve: 'secp256k1',

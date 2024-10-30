@@ -27,7 +27,7 @@ export default class WebhookService {
 		this.hooksTimeToLive = hooksExpirationTime;
 	}
 
-	public async pullHook(hookSchema: string, data: unknown): Promise<void> {
+	public async pullHook(hookSchema: string, data: { [key: string]: unknown; }): Promise<void> {
 		const hookSchemaList = await this.list(hookSchema);
 		const mockedServiceBaseUrl = this.configService
 			.get<ConfigsInterface['integration']['rest']['mockedService']['baseUrl']>('integration.rest.mockedService.baseUrl')!;
@@ -47,7 +47,7 @@ export default class WebhookService {
 
 				hooksToPull.push(this.restMockedServiceProvider.requestHook<void>(
 					responseMethod, responseEndpoint,
-					{}, data as any
+					{}, data
 				));
 
 				const hookId = this.cacheAccessHelper.getId(
@@ -64,8 +64,8 @@ export default class WebhookService {
 	public async get(hookId: string, hookSchema: string): Promise<RegisterEventHookInterface> {
 		const key = this.cacheAccessHelper.generateKey(`${hookSchema}:${hookId}`, CacheEnum.HOOKS);
 
-		const result = await this.redisClient.get(key);
-		return this.payloadBuilder(result);
+		const result = await this.redisClient.get<RegisterEventHookInterface>(key);
+		return this.payloadBuilder(result as RegisterEventHookInterface);
 	}
 
 	public async save(hookSchema: string, data: RegisterEventHookInterface): Promise<string> {

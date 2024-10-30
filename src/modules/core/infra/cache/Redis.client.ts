@@ -86,7 +86,7 @@ export default class RedisClient {
 		return result;
 	}
 
-	public async get<VT = any>(key: string): Promise<any> {
+	public async get<VT = unknown>(key: string): Promise<VT | null> {
 		const value = await this.redisClient.get(String(key));
 		const result = value ? this.parseValue(value) : null;
 
@@ -99,7 +99,7 @@ export default class RedisClient {
 		return result;
 	}
 
-	public async getByKeyPattern<VT = any>(pattern: string): Promise<{
+	public async getByKeyPattern<VT = unknown>(pattern: string): Promise<{
 		key: string,
 		value: VT | null,
 	}[]> {
@@ -116,10 +116,11 @@ export default class RedisClient {
 		);
 		const result = await Promise.allSettled(getByKeyPromises);
 
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		return result.map(({ status: _, ...args }) => ({ ...((args as any)?.value ?? {}) }));
 	}
 
-	public async getValuesByKeyPattern<VT = any>(key: string): Promise<(VT | null)[]> {
+	public async getValuesByKeyPattern<VT = unknown>(key: string): Promise<(VT | null)[]> {
 		const keys = await this.redisClient.keys(key);
 
 		if (!keys || keys?.length < 1) {
@@ -145,8 +146,9 @@ export default class RedisClient {
 	}
 
 	public async remove(keyPattern: string): Promise<void> {
-		const scanValue: string | any = `${keyPattern}:*`;
-		const stream = this.redisClient.scanStream(scanValue);
+		const scanValue = `${keyPattern}:*`;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const stream = this.redisClient.scanStream(scanValue as any);
 
 		stream.on('data', (keys: string[]) => {
 			if (keys.length) {

@@ -25,7 +25,7 @@ export default class Exceptions {
 		errorDetails: unknown, errorCode?: string | number,
 		errorCause?: unknown, errorStack?: string,
 	): HttpException {
-		const responsePayload: string | Record<string, any> = {
+		const responsePayload: string | Record<string, unknown> = {
 			error: errorName,
 			message: errorMessage,
 			statusCode,

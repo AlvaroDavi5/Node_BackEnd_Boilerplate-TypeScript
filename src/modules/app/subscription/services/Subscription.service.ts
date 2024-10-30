@@ -115,7 +115,7 @@ export default class SubscriptionService implements OnModuleInit {
 	public emit(msg: unknown, socketIdsOrRooms: string | string[]): void {
 		this.logger.info('Emiting event');
 		this.webSocketClient.send(WebSocketEventsEnum.EMIT_PRIVATE, {
-			...msg as any,
+			...(msg as object),
 			socketIdsOrRooms,
 		});
 	}
@@ -125,12 +125,12 @@ export default class SubscriptionService implements OnModuleInit {
 		this.webSocketClient.send(WebSocketEventsEnum.BROADCAST, msg);
 	}
 
-	private async listFromCache(): Promise<any[]> {
+	private async listFromCache(): Promise<unknown[]> {
 		const pattern = `${CacheEnum.SUBSCRIPTIONS}:*`;
 		return await this.redisClient.getByKeyPattern(pattern);
 	}
 
-	private async getFromCache(subscriptionId: string): Promise<any> {
+	private async getFromCache(subscriptionId: string): Promise<unknown> {
 		const key = this.cacheAccessHelper.generateKey(subscriptionId, CacheEnum.SUBSCRIPTIONS);
 		return await this.redisClient.get(key);
 	}

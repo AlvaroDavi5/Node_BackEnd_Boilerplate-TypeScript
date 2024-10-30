@@ -73,7 +73,9 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 
 	describe('# Get User Preference', () => {
 		test('Should find a user preference successfully', async () => {
-			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' });
+			const userPreferenceEntity = new UserPreferenceEntity({
+				id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+			});
 			userPreferenceRepositoryMock.findOne.mockResolvedValueOnce(userPreferenceEntity);
 
 			const userPreference = await userPreferenceService.getByUserId('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
@@ -93,12 +95,15 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 
 	describe('# Update User Preference', () => {
 		test('Should update a user preference successfully', async () => {
-			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', defaultTheme: 'DEFAULT' });
-			userPreferenceRepositoryMock.update.mockImplementationOnce(async (id: string, dataValues: Partial<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => {
-				if (dataValues?.defaultTheme) userPreferenceEntity.setDefaultTheme(dataValues.defaultTheme);
-				if (dataValues?.imagePath) userPreferenceEntity.setImagePath(dataValues.imagePath);
-				return userPreferenceEntity;
+			const userPreferenceEntity = new UserPreferenceEntity({
+				id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', defaultTheme: 'DEFAULT',
 			});
+			userPreferenceRepositoryMock.update.mockImplementationOnce(
+				async (_id: string, dataValues: Partial<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => {
+					if (dataValues?.defaultTheme) userPreferenceEntity.setDefaultTheme(dataValues.defaultTheme);
+					if (dataValues?.imagePath) userPreferenceEntity.setImagePath(dataValues.imagePath);
+					return userPreferenceEntity;
+				});
 
 			const updatedUserPreference = await userPreferenceService.update('b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', new UserPreferenceEntity({
 				defaultTheme: 'DARK',

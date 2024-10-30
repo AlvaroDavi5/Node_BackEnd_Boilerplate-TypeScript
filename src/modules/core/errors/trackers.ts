@@ -34,6 +34,7 @@ export const configureTrackers = (
 	});
 };
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const formatGraphQlError = ({ message, extensions, path }: GraphQLFormattedError, error: any): GraphQLFormattedError => {
 	const graphQLFormattedError: GraphQLFormattedError = {
 		message: message ?? error?.message,

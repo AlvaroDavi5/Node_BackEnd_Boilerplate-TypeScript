@@ -154,6 +154,7 @@ export default class UserService {
 		return this.cryptographyService.compareBuffer(hash1, hash2);
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private caughtError(error: any): Error {
 		const errorDetails: string | undefined = error?.message ?? error?.cause ?? error?.original;
 		return this.exceptions.internal({

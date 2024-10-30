@@ -11,7 +11,7 @@ import { fromDateTimeToISO, getDateTimeNow } from '@common/utils/dates.util';
 
 interface EventDispatchInterface {
 	payload: {
-		[key: string]: any,
+		[key: string]: unknown,
 	},
 	schema: string,
 	author?: string,
@@ -40,6 +40,7 @@ export default class EventsQueueProducer {
 		this.applicationName = String(appName);
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private buildMessageBody({ payload, schema }: { payload: any, schema?: string }): EventSchemaInterface {
 		return {
 			id: this.cryptographyService.generateUuid(),

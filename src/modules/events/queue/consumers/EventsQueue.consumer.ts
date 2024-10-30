@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { SqsMessageHandler, SqsConsumerEventHandler } from '@ssut/nestjs-sqs';
 import { SqsConsumerOptions } from '@ssut/nestjs-sqs/dist/sqs.types';
 import { Message } from '@aws-sdk/client-sqs';
@@ -17,7 +18,7 @@ const appConfigs = envsConfig();
 const { region: awsRegion } = appConfigs.integration.aws.credentials;
 const { queueName: eventsQueueName, queueUrl: eventsQueueUrl } = appConfigs.integration.aws.sqs.eventsQueue;
 const sqsClientMock = new SqsClientMock(
-	configServiceMock as any,
+	configServiceMock as unknown as ConfigService,
 	cryptographyServiceMock,
 	loggerProviderMock,
 	dataParserHelperMock,

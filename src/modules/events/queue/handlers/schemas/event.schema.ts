@@ -8,7 +8,7 @@ export interface EventSchemaInterface {
 	schemaVersion?: number,
 	payload: {
 		event: EventsEnum,
-		[key: string]: any,
+		[key: string]: unknown,
 	},
 	source?: string,
 	timestamp: Date | string,

@@ -21,7 +21,7 @@ function exceptionsMapper(statusCode: number) {
 	return mapper[Number(statusCode)] ?? ExceptionsEnum.INTERNAL;
 }
 
-export default function externalErrorParser(error: any): HttpException {
+export default function externalErrorParser(error: unknown): HttpException {
 
 	const exceptions = new Exceptions();
 	let exceptionName: ExceptionsEnum;
@@ -33,5 +33,6 @@ export default function externalErrorParser(error: any): HttpException {
 	else // instanceof Error
 		exceptionName = exceptionsMapper(500);
 
-	return exceptions[String(exceptionName) as ExceptionsEnum](error, true);
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	return exceptions[String(exceptionName) as ExceptionsEnum](error as any, true);
 }

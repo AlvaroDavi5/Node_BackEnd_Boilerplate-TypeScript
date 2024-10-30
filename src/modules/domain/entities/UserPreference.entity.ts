@@ -77,6 +77,7 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 	@IsDate()
 	public deletedAt: Date | null = null;
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	constructor(dataValues: any) {
 		super();
 		if (this.exists(dataValues?.id)) this.id = dataValues.id;

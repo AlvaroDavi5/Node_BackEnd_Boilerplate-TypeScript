@@ -9,6 +9,7 @@ import { ConfigsInterface } from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
 
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export type documentObjectType = { [key: string]: any }
 
 @Injectable()

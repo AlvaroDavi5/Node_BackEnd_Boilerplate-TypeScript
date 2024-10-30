@@ -87,7 +87,9 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 			await nestTestingModule.close();
 
 			expect(mockObservable.call).toHaveBeenCalledWith('Builded host module');
-			expect(mockObservable.call).toHaveBeenCalledWith('Closing HTTP server, disconnecting websocket clients, stopping crons and destroying cloud integrations');
+			expect(mockObservable.call).toHaveBeenCalledWith(
+				'Closing HTTP server, disconnecting websocket clients, stopping crons and destroying cloud integrations'
+			);
 			expect(httpAdapterHostMock.httpAdapter.close).toHaveBeenCalledTimes(1);
 			expect(webSocketServerMock.disconnectAllSockets).toHaveBeenCalledTimes(1);
 			expect(webSocketServerMock.disconnect).toHaveBeenCalledTimes(1);

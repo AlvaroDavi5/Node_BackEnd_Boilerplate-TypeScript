@@ -26,7 +26,7 @@ export default class LoggerService implements LoggerInterface {
 		const loggerOptions = getLoggerOptions(
 			applicationConfigs.name,
 			applicationConfigs.environment,
-			undefined as any,
+			undefined as unknown as string,
 			applicationConfigs.logsPath,
 			applicationConfigs.showDetailedLogs,
 		);

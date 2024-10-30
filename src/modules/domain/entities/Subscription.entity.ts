@@ -67,14 +67,17 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 	@IsBoolean()
 	public newConnectionsListen = false;
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	constructor(dataValues: any) {
 		super();
 		const newDataValues = { ...dataValues, ...dataValues?.value };
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const values: any = {
 			...newDataValues,
 			...newDataValues?.listen,
 			...newDataValues.dataValues,
 		};
+
 		if (this.exists(values?._id)) this.databaseId = values._id;
 		if (this.exists(values?.id)) this.databaseId = values.id;
 		if (this.exists(values?.subscriptionId)) this.subscriptionId = values.subscriptionId;

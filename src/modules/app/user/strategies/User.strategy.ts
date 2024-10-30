@@ -16,7 +16,7 @@ export default class UserStrategy {
 		return false;
 	}
 
-	public mustUpdate<EA = any, IA = any>(entityAttributes: EA, inputAttributes: IA): boolean {
+	public mustUpdate<EA = unknown, IA = unknown>(entityAttributes: EA, inputAttributes: IA): boolean {
 		if (!entityAttributes || !inputAttributes)
 			return false;
 		const attributesToUpdate = getObjKeys<IA>(inputAttributes);

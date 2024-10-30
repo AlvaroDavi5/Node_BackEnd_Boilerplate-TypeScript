@@ -115,6 +115,7 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	@IsString()
 	private deletedBy: string | null = null;
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	constructor(dataValues: any) {
 		super();
 		if (this.exists(dataValues?.id)) this.id = dataValues.id;

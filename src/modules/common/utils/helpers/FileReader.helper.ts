@@ -21,6 +21,7 @@ export default class FileReaderHelper {
 		let content: string | undefined;
 
 		try {
+			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			content = readFileSync(join(process.cwd(), filePath), { encoding: encoding ?? 'utf8' });
 		} catch (error) {
 			this.logger.error('File read error:', error);
@@ -33,6 +34,7 @@ export default class FileReaderHelper {
 		let readStream: ReadStream | undefined;
 
 		try {
+			// eslint-disable-next-line security/detect-non-literal-fs-filename
 			readStream = createReadStream(join(process.cwd(), filePath), { encoding: encoding ?? 'utf8' });
 		} catch (error) {
 			this.logger.error('File read stream error:', error);

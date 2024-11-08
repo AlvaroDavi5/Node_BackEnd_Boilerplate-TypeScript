@@ -185,7 +185,6 @@ ___
 
 ### TO DO
 
-[Backstage](https://backstage.io/docs/overview/what-is-backstage/)
 - **Clustering**
 	- [x] Clusters
 		- [x] Kubernetes

@@ -17,7 +17,10 @@
 	"editor.autoClosingBrackets": "always",
 	"editor.defaultFormatter": "vscode.typescript-language-features",
 	"editor.codeActionsOnSave": {
-		"source.fixAll.eslint": "never"
+		"source.fixAll": "explicit",
+		"source.organizeImports": "never",
+		"source.removeUnusedImports": "always",
+		"source.removeUnused.ts": "never"
 	},
 	"editor.unicodeHighlight.invisibleCharacters": false,
 	"editor.unicodeHighlight.ambiguousCharacters": false,

@@ -38,30 +38,30 @@ export default abstract class AbstractRestClient {
 		});
 	}
 
-	protected async get<RI = unknown>(endpoint: string, query?: requestQueryType): Promise<RestClientResponseInterface<RI, Error>> {
+	protected async get<RI = unknown>(endpoint: string, query?: requestQueryType): Promise<RestClientResponseInterface<RI>> {
 		return await this.makeRequest<RI>('get', endpoint, query);
 	}
 
-	protected async post<RI = unknown>(endpoint: string, body?: requestBodyType, query?: requestQueryType): Promise<RestClientResponseInterface<RI, Error>> {
+	protected async post<RI = unknown>(endpoint: string, body?: requestBodyType, query?: requestQueryType): Promise<RestClientResponseInterface<RI>> {
 		return await this.makeRequest<RI>('post', endpoint, query, body);
 	}
 
-	protected async put<RI = unknown>(endpoint: string, body?: requestBodyType, query?: requestQueryType): Promise<RestClientResponseInterface<RI, Error>> {
+	protected async put<RI = unknown>(endpoint: string, body?: requestBodyType, query?: requestQueryType): Promise<RestClientResponseInterface<RI>> {
 		return await this.makeRequest<RI>('put', endpoint, query, body);
 	}
 
-	protected async patch<RI = unknown>(endpoint: string, body?: requestBodyType, query?: requestQueryType): Promise<RestClientResponseInterface<RI, Error>> {
+	protected async patch<RI = unknown>(endpoint: string, body?: requestBodyType, query?: requestQueryType): Promise<RestClientResponseInterface<RI>> {
 		return await this.makeRequest<RI>('patch', endpoint, query, body);
 	}
 
-	protected async delete<RI = unknown>(endpoint: string, query?: requestQueryType): Promise<RestClientResponseInterface<RI, Error>> {
+	protected async delete<RI = unknown>(endpoint: string, query?: requestQueryType): Promise<RestClientResponseInterface<RI>> {
 		return await this.makeRequest<RI>('delete', endpoint, query);
 	}
 
 	protected async makeRequest<RI = unknown>(
 		method: requestMethodType, endpoint: string,
 		query?: requestQueryType, body?: requestBodyType
-	): Promise<RestClientResponseInterface<RI, Error>> {
+	): Promise<RestClientResponseInterface<RI>> {
 		try {
 			this.logger.http(`REQUESTING - ${this.serviceName}: [${method.toUpperCase()}] '${endpoint}'`);
 			const { data, status, headers } = await this.client.request<RI>({

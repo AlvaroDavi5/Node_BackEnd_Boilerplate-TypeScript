@@ -28,17 +28,14 @@ export default class RestMockedServiceProvider extends AbstractRestClient {
 	public async healthcheck() {
 		this.logger.info('Requesting healthcheck endpoint');
 
-		const request = await this.get<{
+		const { data } = await this.get<{
 			url: string, statusCode: number, method: string,
 			params: { [key: string]: unknown },
 			query: { [key: string]: unknown },
 			body: { [key: string]: unknown },
 		}>('mockedService/api/check');
 
-		if (request.status !== 200)
-			return request.error;
-
-		return request.data;
+		return data;
 	}
 
 	public async requestHook<RI = unknown>(
@@ -47,8 +44,8 @@ export default class RestMockedServiceProvider extends AbstractRestClient {
 	): Promise<RestClientResponseInterface<RI>> {
 		this.logger.info('Requesting webhook endpoint');
 
-		const { data, status, headers, error } = await this.makeRequest<RI>(requestMethod, requestEndpoint, queryParams, body);
+		const { data, status, headers } = await this.makeRequest<RI>(requestMethod, requestEndpoint, queryParams, body);
 
-		return { data, status, headers, error };
+		return { data, status, headers };
 	}
 }

@@ -45,10 +45,11 @@ export default class WebhookService {
 				const responseEndpoint = hook?.responseEndpoint ?? mockedServiceBaseUrl;
 				const responseMethod = hook?.responseMethod?.toLowerCase() as requestMethodType;
 
-				hooksToPull.push(this.restMockedServiceProvider.requestHook<void>(
-					responseMethod, responseEndpoint,
-					{}, data
-				));
+				if (!!responseMethod && !!responseEndpoint)
+					hooksToPull.push(this.restMockedServiceProvider.requestHook<void>(
+						responseMethod, responseEndpoint,
+						{}, data
+					));
 
 				const hookId = this.cacheAccessHelper.getId(
 					this.cacheAccessHelper.getId(key, CacheEnum.HOOKS),

@@ -1,15 +1,15 @@
-import axios, { AxiosInstance, AxiosResponse } from 'axios';
+import axios, { AxiosInstance } from 'axios';
 import axiosRetry from 'axios-retry';
 import LoggerService from '@core/logging/Logger.service';
 import externalErrorParser from '@common/utils/externalErrorParser.util';
-import { requestMethodType } from '@shared/internal/types/restClientTypes';
+import { requestMethodType, requestQueryType, requestBodyType } from '@shared/internal/types/restClientTypes';
 import { RestClientResponseInterface } from '@shared/external/interfaces/RestClientInterface';
 
 
 export default abstract class AbstractRestClient {
-	protected readonly serviceName: string;
-	protected readonly client: AxiosInstance;
 	protected readonly logger: LoggerService;
+	protected readonly client: AxiosInstance;
+	protected readonly serviceName: string;
 
 	constructor({
 		serviceName, baseUrl,
@@ -20,8 +20,8 @@ export default abstract class AbstractRestClient {
 		logger: LoggerService,
 	}) {
 		this.logger = logger;
-
 		this.serviceName = serviceName;
+
 		this.client = axios.create({
 			baseURL: baseUrl,
 			timeout, maxRedirects,
@@ -29,7 +29,6 @@ export default abstract class AbstractRestClient {
 				this.logger.warn('Request redirected - ', options, responseDetails);
 			},
 		});
-
 		axiosRetry(this.client, {
 			retries: maxRetries,
 			retryDelay: (retryCount: number): number => {
@@ -39,36 +38,36 @@ export default abstract class AbstractRestClient {
 		});
 	}
 
+	protected async get<RI = unknown>(endpoint: string, query?: requestQueryType): Promise<RestClientResponseInterface<RI, Error>> {
+		return await this.makeRequest<RI>('get', endpoint, query);
+	}
+
+	protected async post<RI = unknown>(endpoint: string, body?: requestBodyType, query?: requestQueryType): Promise<RestClientResponseInterface<RI, Error>> {
+		return await this.makeRequest<RI>('post', endpoint, query, body);
+	}
+
+	protected async put<RI = unknown>(endpoint: string, body?: requestBodyType, query?: requestQueryType): Promise<RestClientResponseInterface<RI, Error>> {
+		return await this.makeRequest<RI>('put', endpoint, query, body);
+	}
+
+	protected async patch<RI = unknown>(endpoint: string, body?: requestBodyType, query?: requestQueryType): Promise<RestClientResponseInterface<RI, Error>> {
+		return await this.makeRequest<RI>('patch', endpoint, query, body);
+	}
+
+	protected async delete<RI = unknown>(endpoint: string, query?: requestQueryType): Promise<RestClientResponseInterface<RI, Error>> {
+		return await this.makeRequest<RI>('delete', endpoint, query);
+	}
+
 	protected async makeRequest<RI = unknown>(
-		requestMethod: requestMethodType, requestEndpoint: string,
-		query?: { [key: string]: unknown }, body?: { [key: string]: unknown },
+		method: requestMethodType, endpoint: string,
+		query?: requestQueryType, body?: requestBodyType
 	): Promise<RestClientResponseInterface<RI, Error>> {
-		let requestCaller: Promise<AxiosResponse<RI, unknown>>;
-
-		switch (requestMethod) {
-			case 'get':
-				requestCaller = this.client.get<RI>(requestEndpoint, { params: query });
-				break;
-			case 'post':
-				requestCaller = this.client.post<RI>(requestEndpoint, body, { params: query });
-				break;
-			case 'put':
-				requestCaller = this.client.put<RI>(requestEndpoint, body, { params: query });
-				break;
-			case 'patch':
-				requestCaller = this.client.patch<RI>(requestEndpoint, body, { params: query });
-				break;
-			case 'delete':
-				requestCaller = this.client.delete<RI>(requestEndpoint, { params: query });
-				break;
-			default:
-				requestCaller = this.client.get<RI>(requestEndpoint, { params: query, data: body });
-				break;
-		}
-
 		try {
-			this.logger.http(`REQUESTING - ${this.serviceName}: [${requestMethod.toUpperCase()}] '${requestEndpoint}'`);
-			const { data, status, headers } = await requestCaller;
+			this.logger.http(`REQUESTING - ${this.serviceName}: [${method.toUpperCase()}] '${endpoint}'`);
+			const { data, status, headers } = await this.client.request<RI>({
+				method, url: endpoint,
+				params: query, data: body,
+			});
 			return { data, status, headers };
 		} catch (error) {
 			this.logger.error(error);

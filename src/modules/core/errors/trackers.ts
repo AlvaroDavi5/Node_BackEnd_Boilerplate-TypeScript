@@ -1,5 +1,6 @@
 import {
-	init as initSentry, captureException as captureOnSentry, captureConsoleIntegration,
+	init as initSentry, captureException as captureOnSentry,
+	consoleIntegration, captureConsoleIntegration,
 } from '@sentry/nestjs';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
 import { GraphQLFormattedError } from 'graphql';
@@ -24,6 +25,7 @@ export const configureTrackers = (
 		dsn: sentryDsn,
 		integrations: [
 			nodeProfilingIntegration(),
+			consoleIntegration(),
 			captureConsoleIntegration(),
 		],
 		profilesSampleRate: 1.0,

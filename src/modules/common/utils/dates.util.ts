@@ -55,3 +55,19 @@ export function setDateUnits(dateTime: DateTime, units: DateObjectUnits): DateTi
 	const isoDate = fromDateTimeToISO(dateTime.set(units), false);
 	return fromISOToDateTime(isoDate, true, dateTime.zone.name as TimeZonesEnum);
 }
+
+export function secondsToMilliseconds(s: number): number {
+	return (s ?? 0) * 1000;
+}
+
+export function minutesToSeconds(n: number): number {
+	return (n ?? 0) * 60;
+}
+
+export function hoursToSeconds(n: number): number {
+	return minutesToSeconds((n ?? 0) * 60);
+}
+
+export function daysToSeconds(n: number): number {
+	return hoursToSeconds((n ?? 0) * 24);
+}

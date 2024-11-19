@@ -11,6 +11,7 @@ import { LoggerInterface, LogLevelEnum, MetadataInterface, getLoggerOptions } fr
 export default class LoggerService implements LoggerInterface {
 	private contextName!: string;
 	private requestId?: string;
+	private ip?: string;
 	private readonly logger: Logger;
 
 	constructor(
@@ -50,6 +51,14 @@ export default class LoggerService implements LoggerInterface {
 		this.requestId = requestId;
 	}
 
+	public getIp(): string | undefined {
+		return this.ip;
+	}
+
+	public setIp(ip: string | undefined): void {
+		this.ip = ip;
+	}
+
 	private buildLog(args: unknown[]): { message: string, meta: MetadataInterface } {
 		const inquirerName = typeof this.inquirer === 'string'
 			? this.inquirer
@@ -60,6 +69,7 @@ export default class LoggerService implements LoggerInterface {
 		const metadata: MetadataInterface = {
 			context: this.getContextName(),
 			requestId: this.getRequestId(),
+			ip: this.getIp(),
 		};
 
 		const errorStacks: string[] = [];

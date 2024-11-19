@@ -15,8 +15,11 @@ export default class RequestLoggerMiddleware implements NestMiddleware {
 
 	public use(request: RequestInterface, _response: ResponseInterface, next: NextFunctionInterface) {
 		const requestId = this.cryptographyService.generateUuid();
-		this.logger.setRequestId(requestId);
 		request.id = requestId;
+		this.logger.setRequestId(requestId);
+
+		const ip = request.socket.remoteAddress;
+		this.logger.setIp(ip);
 
 		const { method, originalUrl } = request;
 		const pathParams = JSON.stringify(this.maskSensitiveData(request.params));

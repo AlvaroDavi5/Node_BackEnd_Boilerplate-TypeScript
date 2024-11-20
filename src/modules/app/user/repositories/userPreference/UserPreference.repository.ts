@@ -1,7 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
-import LoggerService from '@core/logging/Logger.service';
+import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
 import AbstractRepository from '@core/infra/database/repositories/AbstractRepository.repository';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
@@ -14,8 +14,8 @@ import { userPreferenceQueryParamsBuilder, UserPreferenceBuildParamsInterface } 
 export default class UserPreferenceRepository extends AbstractRepository<UserPreferencesModel, UserPreferenceEntity, UserPreferenceBuildParamsInterface> {
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER) connection: DataSource,
+		@Inject(REQUEST_LOGGER_PROVIDER) logger: LoggerService,
 			exceptions: Exceptions,
-			logger: LoggerService,
 	) {
 		logger.setContextName(UserPreferenceRepository.name);
 		super({

@@ -7,11 +7,10 @@ import { RequestInterface } from '@shared/internal/interfaces/endpointInterface'
 
 @Injectable()
 export default class AuthGuard implements CanActivate {
-
 	constructor(
 		private readonly cryptographyService: CryptographyService,
-		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
+		private readonly exceptions: Exceptions,
 	) { }
 
 	public canActivate(context: ExecutionContext): boolean {

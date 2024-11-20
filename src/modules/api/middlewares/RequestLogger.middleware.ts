@@ -8,8 +8,7 @@ import { RequestInterface, ResponseInterface, NextFunctionInterface } from '@sha
 @Injectable({ scope: Scope.DEFAULT })
 export default class RequestLoggerMiddleware implements NestMiddleware {
 	constructor(
-		@Inject(REQUEST_LOGGER_PROVIDER)
-		private readonly logger: LoggerService,
+		@Inject(REQUEST_LOGGER_PROVIDER) private readonly logger: LoggerService,
 		private readonly cryptographyService: CryptographyService,
 	) { }
 

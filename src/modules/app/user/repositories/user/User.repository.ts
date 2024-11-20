@@ -14,8 +14,7 @@ import { userQueryParamsBuilder, UserBuildParamsInterface } from './user.query';
 @Injectable()
 export default class UserRepository extends AbstractRepository<UsersModel, UserEntity, UserBuildParamsInterface> {
 	constructor(
-		@Inject(DATABASE_CONNECTION_PROVIDER)
-			connection: DataSource,
+		@Inject(DATABASE_CONNECTION_PROVIDER) connection: DataSource,
 			exceptions: Exceptions,
 			logger: LoggerService,
 	) {

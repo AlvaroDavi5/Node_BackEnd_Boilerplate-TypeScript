@@ -13,8 +13,7 @@ import { userPreferenceQueryParamsBuilder, UserPreferenceBuildParamsInterface } 
 @Injectable()
 export default class UserPreferenceRepository extends AbstractRepository<UserPreferencesModel, UserPreferenceEntity, UserPreferenceBuildParamsInterface> {
 	constructor(
-		@Inject(DATABASE_CONNECTION_PROVIDER)
-			connection: DataSource,
+		@Inject(DATABASE_CONNECTION_PROVIDER) connection: DataSource,
 			exceptions: Exceptions,
 			logger: LoggerService,
 	) {

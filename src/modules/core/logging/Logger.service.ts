@@ -15,8 +15,7 @@ export default class LoggerService implements LoggerInterface {
 	private readonly logger: Logger;
 
 	constructor(
-		@Inject(INQUIRER) // ? get inquirer class
-		private readonly inquirer: string | object,
+		@Inject(INQUIRER) private readonly inquirer: string | object, // ? get inquirer class
 		private readonly configService: ConfigService,
 		// @Inject(forwardRef(() => DataParserHelper)) // ? resolve circular dependency
 		// private readonly dataParserHelper: wrapperType<DataParserHelper>,

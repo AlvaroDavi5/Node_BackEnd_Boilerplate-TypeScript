@@ -16,8 +16,8 @@ type httpErrorResponseType = ErrorInterface & {
 @Catch()
 export class HttpExceptionsFilter extends AbstractExceptionsFilter implements ExceptionFilter<ErrorOrExceptionToFilter> {
 	constructor(
-		protected readonly logger: LoggerService,
 		protected readonly dataParserHelper: DataParserHelper,
+		protected readonly logger: LoggerService,
 	) {
 		super(logger, dataParserHelper);
 	}

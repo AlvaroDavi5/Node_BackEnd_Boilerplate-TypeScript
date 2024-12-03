@@ -1,20 +1,24 @@
 {
-	"editor.inlineSuggest.enabled": true,
-	"editor.suggestSelection": "first",
-	"editor.fontFamily": "Fira Code",
-	"editor.fontLigatures": true,
-	"editor.fontSize": 15,
-	"editor.fontWeight": "400",
-	"editor.tabSize": 2,
+	// Workflow
+	"security.workspace.trust.untrustedFiles": "open",
+	"problems.showCurrentInStatus": true,
+	"terminal.integrated.defaultProfile.linux": "zsh",
+	"terminal.integrated.defaultProfile.windows": "Ubuntu-20.04 (WSL)",
+	"http.proxy": "",
+	"http.proxySupport": "off",
+	"http.proxyAuthorization": null,
+	"http.proxyStrictSSL": false,
+	"sync.gist": "31d051020e1fe66435b53f28a0ed30ee",
+	"sync.forceUpload": true,
+	"sync.quietSync": true,
+	"sync.forceDownload": true,
+	"sync.autoUpload": true,
+	"sync.autoDownload": true,
+	// Editor
 	"editor.insertSpaces": false,
+	"editor.tabSize": 2,
 	"editor.formatOnSave": true,
 	"editor.wordWrap": "off",
-	"editor.bracketPairColorization.enabled": true,
-	"editor.guides.bracketPairs": "active",
-	"editor.pasteAs.enabled": false,
-	"editor.pasteAs.showPasteSelector": "never",
-	"editor.stickyScroll.enabled": false,
-	"editor.autoClosingBrackets": "always",
 	"editor.defaultFormatter": "vscode.typescript-language-features",
 	"editor.codeActionsOnSave": {
 		"source.fixAll": "explicit",
@@ -22,42 +26,54 @@
 		"source.removeUnusedImports": "always",
 		"source.removeUnused.ts": "never"
 	},
+	"editor.fontFamily": "Fira Code",
+	"editor.fontSize": 15,
+	"editor.fontWeight": "400",
+	"editor.fontLigatures": true,
+	"editor.bracketPairColorization.enabled": true,
+	"editor.guides.bracketPairs": "active",
+	"editor.inlineSuggest.enabled": true,
+	"editor.suggestSelection": "first",
+	"editor.pasteAs.enabled": false,
+	"editor.pasteAs.showPasteSelector": "never",
+	"editor.stickyScroll.enabled": false,
+	"editor.autoClosingBrackets": "always",
 	"editor.unicodeHighlight.invisibleCharacters": false,
 	"editor.unicodeHighlight.ambiguousCharacters": false,
+	// Workbench
+	"workbench.colorTheme": "Dracula Theme",
+	"workbench.iconTheme": "material-icon-theme",
+	"workbench.productIconTheme": "material-product-icons",
+	"workbench.tree.indent": 15,
+	"workbench.sideBar.location": "left",
+	"workbench.editor.restoreViewState": true,
+	// Editor Tabs
 	"explorer.autoReveal": true,
 	"explorer.confirmDragAndDrop": false,
 	"scm.defaultViewMode": "tree",
 	"scm.showHistoryGraph": false,
-	"workbench.productIconTheme": "material-product-icons",
-	"workbench.sideBar.location": "left",
-	"workbench.tree.indent": 15,
-	"workbench.colorTheme": "Dracula Theme",
-	"workbench.iconTheme": "material-icon-theme",
-	"workbench.editor.restoreViewState": true,
-	"terminal.integrated.defaultProfile.linux": "zsh",
-	"terminal.integrated.defaultProfile.windows": "Ubuntu-20.04 (WSL)",
-	"security.workspace.trust.untrustedFiles": "open",
+	// Git
+	"git.autofetch": true,
+	"git.enableSmartCommit": true,
+	"git.openRepositoryInParentFolders": "always",
+	// Debug
+	"debug.allowBreakpointsEverywhere": true,
+	"debug.console.closeOnEnd": true,
+	"debug.onTaskErrors": "debugAnyway",
+	// Extensions
 	"extensions.closeExtensionDetailsOnViewChange": false,
 	"extensions.ignoreRecommendations": true,
-	"sync.gist": "31d051020e1fe66435b53f28a0ed30ee",
-	"sync.forceUpload": true,
-	"sync.quietSync": true,
-	"sync.forceDownload": true,
-	"sync.autoUpload": true,
-	"sync.autoDownload": true,
-	"bracket-pair-colorizer-2.depreciation-notice": false,
-	"bookmarks.saveBookmarksInProject": true,
-	"powermode.enabled": true,
-	"powermode.presets": "flames",
-	"powermode.combo.location": "editor",
-	"powermode.shake.enabled": false,
 	"material-icon-theme.activeIconPack": "nest",
 	"vsicons.presets.nestjs": true,
 	"vsicons.presets.angular": false,
 	"vsicons.presets.tsOfficial": true,
 	"vsicons.presets.jsOfficial": true,
-	"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-	"vsintellicode.features.python.deepLearning": "enabled",
+	"bookmarks.saveBookmarksInProject": true,
+	"powermode.enabled": true,
+	"powermode.presets": "flames",
+	"powermode.combo.location": "editor",
+	"powermode.shake.enabled": false,
+	"bracket-pair-colorizer-2.depreciation-notice": false,
 	"editorconfig.generateAuto": true,
 	"editorconfig.template": "default",
 	"eslint.format.enable": true,
@@ -67,14 +83,10 @@
 		"typescript",
 		"typescriptreact"
 	],
-	"debug.allowBreakpointsEverywhere": true,
-	"debug.console.closeOnEnd": true,
-	"debug.onTaskErrors": "debugAnyway",
-	"diffEditor.ignoreTrimWhitespace": false,
+	"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+	"vsintellicode.features.python.deepLearning": "enabled",
 	"tabnine.experimentalAutoImports": true,
-	"git.autofetch": true,
-	"git.enableSmartCommit": true,
-	"git.openRepositoryInParentFolders": "always",
+	"diffEditor.ignoreTrimWhitespace": false,
 	"git-graph.repository.commits.fetchAvatars": true,
 	"gitlens.defaultDateFormat": null,
 	"gitlens.views.remotes.branches.layout": "list",
@@ -139,7 +151,6 @@
 	"docker.images.sortBy": "Label",
 	"docker.containers.groupBy": "Compose Project Name",
 	"docker.containers.sortBy": "Label",
-	"problems.showCurrentInStatus": true,
 	"javascript.suggest.autoImports": true,
 	"javascript.suggestionActions.enabled": true,
 	"javascript.updateImportsOnFileMove.enabled": "always",
@@ -156,6 +167,15 @@
 		"java": true,
 		"plaintext": false
 	},
+	"json.schemas": [
+		{
+			"fileMatch": [
+				"/package.json"
+			],
+			"url": "https://json.schemastore.org/package",
+			"schema": true
+		}
+	],
 	"[jsonc]": {
 		"editor.defaultFormatter": "vscode.json-language-features"
 	},
@@ -276,18 +296,5 @@
 		"*.dbml": "dbml",
 		"**/CODEOWNERS": "markdown",
 		"*.rmd": "markdown"
-	},
-	"json.schemas": [
-		{
-			"fileMatch": [
-				"/package.json"
-			],
-			"url": "https://json.schemastore.org/package",
-			"schema": true
-		}
-	],
-	"http.proxy": "",
-	"http.proxySupport": "off",
-	"http.proxyAuthorization": null,
-	"http.proxyStrictSSL": false
+	}
 }

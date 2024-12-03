@@ -53,7 +53,7 @@
 	"powermode.shake.enabled": false,
 	"material-icon-theme.activeIconPack": "nest",
 	"vsicons.presets.nestjs": true,
-	"vsicons.presets.angular": true,
+	"vsicons.presets.angular": false,
 	"vsicons.presets.tsOfficial": true,
 	"vsicons.presets.jsOfficial": true,
 	"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",

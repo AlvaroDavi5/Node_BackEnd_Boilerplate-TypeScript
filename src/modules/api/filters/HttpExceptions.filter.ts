@@ -62,8 +62,13 @@ export class HttpExceptionsFilter extends AbstractExceptionsFilter implements Ex
 		const request = context.getRequest<RequestInterface>();
 		const response = context.getResponse<ResponseInterface>();
 
-		if (request.id)
-			this.logger.setRequestId(request.id);
+		const requestId = request?.id;
+		const clientIp = request?.socket?.remoteAddress;
+
+		if (requestId)
+			this.logger.setRequestId(requestId);
+		if (clientIp)
+			this.logger.setClientIp(clientIp);
 
 		this.capture(exception);
 

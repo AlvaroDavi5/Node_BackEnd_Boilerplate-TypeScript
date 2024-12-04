@@ -1,11 +1,11 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, Scope } from '@nestjs/common';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 import CryptographyService from '@core/security/Cryptography.service';
 import { RequestInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
-@Injectable()
+@Injectable({ scope: Scope.DEFAULT })
 export default class AuthGuard implements CanActivate {
 	constructor(
 		private readonly cryptographyService: CryptographyService,
@@ -14,10 +14,17 @@ export default class AuthGuard implements CanActivate {
 	) { }
 
 	public canActivate(context: ExecutionContext): boolean {
-		this.logger.verbose(`Running guard in '${context.getType()}' context`);
-
 		const request = context.switchToHttp().getRequest<RequestInterface>();
+		const requestId = request?.id;
+		const clientIp = request?.socket?.remoteAddress;
 		const authorization = request?.headers?.authorization;
+
+		if (requestId)
+			this.logger.setRequestId(requestId);
+		if (clientIp)
+			this.logger.setClientIp(clientIp);
+
+		this.logger.verbose(`Running guard in '${context.getType()}' context`);
 
 		if (!authorization) {
 			this.logger.warn('Request without authorization token');

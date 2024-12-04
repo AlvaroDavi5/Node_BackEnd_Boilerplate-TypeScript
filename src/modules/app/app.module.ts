@@ -1,5 +1,5 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import RequestLoggerMiddleware from '@api/middlewares/RequestLogger.middleware';
+import RequestMiddleware from '@api/middlewares/Request.middleware';
 import DefaultController from '@api/controllers/Default.controller';
 import UserModule from './user/user.module';
 import SubscriptionModule from './subscription/subscription.module';
@@ -23,7 +23,7 @@ import FileModule from './file/file.module';
 export default class AppModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
 		consumer
-			.apply(RequestLoggerMiddleware)
+			.apply(RequestMiddleware)
 			.forRoutes(
 				DefaultController,
 			);

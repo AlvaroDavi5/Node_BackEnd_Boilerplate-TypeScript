@@ -4,11 +4,14 @@ import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { isNullOrUndefined } from '@common/utils/dataValidations.util';
 import externalErrorParser from '@common/utils/externalErrorParser.util';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import { getDateTimeNow, fromDateTimeToISO } from '@common/utils/dates.util';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 type httpErrorResponseType = ErrorInterface & {
+	error: string,
 	description?: string,
 	timestamp: string,
 };
@@ -16,20 +19,22 @@ type httpErrorResponseType = ErrorInterface & {
 @Catch()
 export class HttpExceptionsFilter extends AbstractExceptionsFilter implements ExceptionFilter<ErrorOrExceptionToFilter> {
 	constructor(
-		protected readonly logger: LoggerService,
 		protected readonly dataParserHelper: DataParserHelper,
+		protected readonly logger: LoggerService,
 	) {
 		super(logger, dataParserHelper);
 	}
 
 	private buildHttpErrorResponse(exception: unknown): { status: number, errorResponse: httpErrorResponseType } {
-		let status: number;
+		const excep = exception as ErrorOrExceptionToFilter & { response: Record<string, string> };
 		let errorResponse: httpErrorResponseType = {
-			name: (exception as ErrorOrExceptionToFilter)?.name,
-			message: (exception as ErrorOrExceptionToFilter)?.message,
-			timestamp: new Date().toISOString(),
+			error: excep.name,
+			name: excep.response.error ?? excep.name,
+			message: excep.response.message ?? excep.message,
+			timestamp: fromDateTimeToISO(getDateTimeNow(TimeZonesEnum.America_SaoPaulo), true),
 		};
 
+		let status: number;
 		if (exception instanceof HttpException) {
 			status = exception.getStatus();
 			const exceptionResponse = exception.getResponse();
@@ -62,8 +67,13 @@ export class HttpExceptionsFilter extends AbstractExceptionsFilter implements Ex
 		const request = context.getRequest<RequestInterface>();
 		const response = context.getResponse<ResponseInterface>();
 
-		if (request.id)
-			this.logger.setRequestId(request.id);
+		const requestId = request?.id;
+		const clientIp = request?.socket?.remoteAddress;
+
+		if (requestId)
+			this.logger.setRequestId(requestId);
+		if (clientIp)
+			this.logger.setClientIp(clientIp);
 
 		this.capture(exception);
 

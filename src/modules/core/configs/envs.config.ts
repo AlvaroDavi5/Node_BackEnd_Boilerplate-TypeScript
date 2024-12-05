@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import { daysToSeconds, hoursToSeconds, minutesToSeconds, secondsToMilliseconds } from '@common/utils/dates.util';
 
 
 // dotenv.config({ path: (process.cwd() + '/envs/.env.development') });
@@ -177,8 +178,8 @@ export default (): ConfigsInterface => ({
 			min: 0,
 			max: 5,
 			fifo: true,
-			acquire: (2 * 1000),
-			idle: (2 * 1000),
+			acquire: secondsToMilliseconds(2),
+			idle: secondsToMilliseconds(2),
 		},
 	},
 	data: {
@@ -203,8 +204,8 @@ export default (): ConfigsInterface => ({
 			port: process.env.REDIS_PORT ?? '6379',
 		},
 		expirationTime: {
-			subscriptions: (12 * 60 * 60),
-			hooks: (5 * 60),
+			subscriptions: hoursToSeconds(12),
+			hooks: daysToSeconds(1),
 		},
 	},
 	integration: {
@@ -243,7 +244,7 @@ export default (): ConfigsInterface => ({
 			},
 			s3: {
 				bucketName: process.env.AWS_S3_BUCKET_NAME ?? 'defaultbucket',
-				filesExpiration: (5 * 60),
+				filesExpiration: minutesToSeconds(5),
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
 				maxAttempts: 3,
 			},
@@ -252,7 +253,7 @@ export default (): ConfigsInterface => ({
 			mockedService: {
 				serviceName: process.env.MOCKED_SERVICE_NAME ?? 'Mocked Service',
 				baseUrl: process.env.MOCKED_SERVICE_URL ?? 'http://localhost:4000/',
-				timeout: (30 * 1000),
+				timeout: secondsToMilliseconds(30),
 				maxRedirects: 2,
 				maxRetries: 3,
 			},

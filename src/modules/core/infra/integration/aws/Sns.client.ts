@@ -14,9 +14,6 @@ import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
 
 export type protocolType = 'email' | 'sms' | 'http' | 'https' | 'sqs' | 'lambda' | 'application'
-interface DestinationInterface {
-	[key: string]: string | undefined,
-}
 
 @Injectable()
 export default class SnsClient {
@@ -71,9 +68,8 @@ export default class SnsClient {
 		};
 	}
 
-	private publishParams(
-		protocol: protocolType, topicArn: string, topicName: string,
-		message: string, { subject, phoneNumber }: DestinationInterface): PublishCommandInput {
+	private publishParams(topicArn: string, topicName: string,
+		protocol: protocolType, message: string, { subject, phoneNumber }: Record<string, string | undefined>): PublishCommandInput {
 		const isFifoTopic: boolean = topicName?.includes('.fifo');
 		const messageBody = this.formatMessageBeforeSend(message);
 
@@ -109,106 +105,87 @@ export default class SnsClient {
 	}
 
 	public async listTopics(): Promise<Topic[]> {
-		let list: Topic[] = [];
-
 		try {
 			const result = await this.snsClient.send(new ListTopicsCommand({}));
-			if (result?.Topics)
-				list = result?.Topics;
-		} catch (error) {
-			this.logger.error('List Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
 
-		return list;
+			return result?.Topics ?? [];
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
 	public async createTopic(topicName: string): Promise<string> {
-		let topicArn = '';
-
 		try {
-			const result = await this.snsClient.send(new CreateTopicCommand(
-				this.createParams(topicName)
-			));
-			if (result?.TopicArn)
-				topicArn = result.TopicArn;
-		} catch (error) {
-			this.logger.error('Create Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
+			const result = await this.snsClient.send(new CreateTopicCommand(this.createParams(topicName)));
 
-		return topicArn;
+			if (!result?.TopicArn)
+				throw this.exceptions.internal({ message: 'Topic not created' });
+
+			return result.TopicArn;
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
 	public async deleteTopic(topicArn: string): Promise<boolean> {
-		let isDeleted = false;
-
 		try {
 			const result = await this.snsClient.send(new DeleteTopicCommand({
 				TopicArn: topicArn,
 			}));
-			if (result.$metadata?.httpStatusCode && String(result.$metadata?.httpStatusCode)[2] === '2')
-				isDeleted = true;
-		} catch (error) {
-			this.logger.error('Delete Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
 
-		return isDeleted;
+			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
+			return statusCode >= 200 && statusCode < 300;
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
 	public async subscribeTopic(protocol: protocolType, topicArn: string, to: string): Promise<string> {
-		let subscriptionArn = '';
-
 		try {
 			const result = await this.snsClient.send(new SubscribeCommand(
 				this.subscribeParams(protocol, topicArn, to)
 			));
-			if (result?.SubscriptionArn)
-				subscriptionArn = result.SubscriptionArn;
-		} catch (error) {
-			this.logger.error('Subscribe Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
 
-		return subscriptionArn;
+			if (!result?.SubscriptionArn)
+				throw this.exceptions.internal({ message: 'Not Subscribed in topic' });
+
+			return result.SubscriptionArn;
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
-	public async unsubscribeTopic(subscriptionArn: string): Promise<number> {
-		let statusCode = 0;
-
+	public async unsubscribeTopic(subscriptionArn: string): Promise<boolean> {
 		try {
 			const result = await this.snsClient.send(new UnsubscribeCommand({
 				SubscriptionArn: subscriptionArn
 			}));
 
-			const { httpStatusCode } = result.$metadata;
-			if (httpStatusCode)
-				statusCode = httpStatusCode;
+			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
+			return statusCode >= 200 && statusCode < 300;
 		} catch (error) {
-			this.logger.error('Unsubscribe Error:', error);
-			throw this.exceptions.integration(error as Error);
+			throw this.caughtError(error);
 		}
-
-		return statusCode;
 	}
 
-	public async publishMessage(
-		protocol: protocolType, topicArn: string, topicName: string,
-		message: string, destination: DestinationInterface): Promise<string> {
-		let messageId = '';
-
+	public async publishMessage(topicArn: string, topicName: string,
+		protocol: protocolType, message: string, destination: Record<string, string | undefined>): Promise<string> {
 		try {
 			const result = await this.snsClient.send(new PublishCommand(
-				this.publishParams(protocol, topicArn, topicName, message, destination)
+				this.publishParams(topicArn, topicName, protocol, message, destination)
 			));
-			if (result?.MessageId)
-				messageId = result.MessageId;
-		} catch (error) {
-			this.logger.error('Publish Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
 
-		return messageId;
+			if (!result?.MessageId)
+				throw this.exceptions.internal({ message: 'Message not published' });
+
+			return result.MessageId;
+		} catch (error) {
+			throw this.caughtError(error);
+		}
+	}
+
+	private caughtError(error: unknown): Error {
+		this.logger.error(error);
+		return this.exceptions.integration(error as Error);
 	}
 }

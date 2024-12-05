@@ -11,11 +11,12 @@ import { LoggerInterface, LogLevelEnum, MetadataInterface, getLoggerOptions } fr
 export default class LoggerService implements LoggerInterface {
 	private contextName!: string;
 	private requestId?: string;
+	private socketId?: string;
+	private clientIp?: string;
 	private readonly logger: Logger;
 
 	constructor(
-		@Inject(INQUIRER) // ? get inquirer class
-		private readonly inquirer: string | object,
+		@Inject(INQUIRER) private readonly inquirer: string | object, // ? get inquirer class
 		private readonly configService: ConfigService,
 		// @Inject(forwardRef(() => DataParserHelper)) // ? resolve circular dependency
 		// private readonly dataParserHelper: wrapperType<DataParserHelper>,
@@ -50,6 +51,22 @@ export default class LoggerService implements LoggerInterface {
 		this.requestId = requestId;
 	}
 
+	public getSocketId(): string | undefined {
+		return this.socketId;
+	}
+
+	public setSocketId(socketId: string | undefined): void {
+		this.socketId = socketId;
+	}
+
+	public getClientIp(): string | undefined {
+		return this.clientIp;
+	}
+
+	public setClientIp(clientIp: string | undefined): void {
+		this.clientIp = clientIp;
+	}
+
 	private buildLog(args: unknown[]): { message: string, meta: MetadataInterface } {
 		const inquirerName = typeof this.inquirer === 'string'
 			? this.inquirer
@@ -60,6 +77,8 @@ export default class LoggerService implements LoggerInterface {
 		const metadata: MetadataInterface = {
 			context: this.getContextName(),
 			requestId: this.getRequestId(),
+			socketId: this.getSocketId(),
+			ip: this.getClientIp(),
 		};
 
 		const errorStacks: string[] = [];

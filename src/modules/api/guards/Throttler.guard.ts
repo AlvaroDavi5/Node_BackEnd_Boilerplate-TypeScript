@@ -1,11 +1,11 @@
-import { Injectable, ExecutionContext } from '@nestjs/common';
+import { Injectable, ExecutionContext, Scope } from '@nestjs/common';
 import { ThrottlerGuard, ThrottlerOptions } from '@nestjs/throttler';
 import { Logger } from 'winston';
 import Exceptions from '@core/errors/Exceptions';
 import { generateLogger } from '@core/logging/logger';
 
 
-@Injectable()
+@Injectable({ scope: Scope.DEFAULT })
 export default class CustomThrottlerGuard extends ThrottlerGuard {
 	private readonly exceptions: Exceptions = new Exceptions();
 	private readonly logger: Logger = generateLogger(CustomThrottlerGuard.name);

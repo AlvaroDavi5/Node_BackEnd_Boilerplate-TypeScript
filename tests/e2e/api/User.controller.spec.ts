@@ -42,7 +42,6 @@ describe('API :: UserController', () => {
 						fullName: 'Tester User',
 						fu: 'SP',
 						docType: 'CPF',
-						document: '12312312345',
 						preference: {
 							defaultTheme: 'DARK',
 							imagePath: './generic.png',
@@ -61,8 +60,9 @@ describe('API :: UserController', () => {
 				.get('/api/users');
 
 			expect(response.statusCode).toBe(498);
-			expect(response.body).toEqual({
-				error: 'Invalid Token',
+			expect(response.body).toMatchObject({
+				error: 'invalidToken',
+				name: 'Invalid Token',
 				message: 'Authorization token is required',
 				statusCode: 498,
 			});
@@ -82,8 +82,9 @@ describe('API :: UserController', () => {
 				});
 
 			expect(response.statusCode).toBe(400);
-			expect(response.body).toEqual({
-				error: 'Bad Request',
+			expect(response.body).toMatchObject({
+				error: 'BadRequestException',
+				name: 'Bad Request',
 				message: [
 					'password should not be empty',
 					'password must be a string',

@@ -38,12 +38,14 @@ async function seedDatabase() {
 	);
 
 	const testUser = await userRepository.create({
-		email: 'tester.user@nomail.com',
+		document: '12312312345', docType: 'CPF', fu: 'SP',
+		fullName: 'Tester User', email: 'tester.user@nomail.com',
 		password: '$2b$10$KuaNFAgwY.RJfRLhS0kDVu|D73SxsNl_H6yaDzjE_-ZAJCorFvEnN1WG3bn8ICGA-Y',
 	}).save();
 	await userPreferenceRepository.create({
 		user: { id: testUser.id },
-		defaultTheme: 'INVALID',
+		defaultTheme: 'DARK',
+		imagePath: './generic.png',
 	}).save();
 }
 

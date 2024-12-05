@@ -1,5 +1,5 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import RequestLoggerMiddleware from '@api/middlewares/RequestLogger.middleware';
+import RequestMiddleware from '@api/middlewares/Request.middleware';
 import UserController from './api/controllers/User.controller';
 import UserStrategy from './strategies/User.strategy';
 import LoginUserUseCase from './usecases/LoginUser.usecase';
@@ -37,7 +37,7 @@ import UserPreferenceRepository from './repositories/userPreference/UserPreferen
 export default class UserModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
 		consumer
-			.apply(RequestLoggerMiddleware)
+			.apply(RequestMiddleware)
 			.forRoutes(
 				UserController,
 			);

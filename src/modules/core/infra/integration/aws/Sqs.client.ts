@@ -85,15 +85,11 @@ export default class SqsClient {
 	private receiveParam(queueUrl: string): ReceiveMessageCommandInput {
 		return {
 			QueueUrl: queueUrl,
-			AttributeNames: [
-				'CreatedTimestamp'
-			],
+			AttributeNames: ['CreatedTimestamp'],
+			MessageAttributeNames: ['All'],
 			MaxNumberOfMessages: 10,
-			MessageAttributeNames: [
-				'All'
-			],
-			VisibilityTimeout: 20,
 			WaitTimeSeconds: 0,
+			VisibilityTimeout: 10,
 		};
 	}
 
@@ -105,72 +101,60 @@ export default class SqsClient {
 		this.sqsClient.destroy();
 	}
 
-	public async listQueues(): Promise<string[]> {
-		let list: string[] = [];
+	public async listQueues(max = 200): Promise<string[]> {
 
 		try {
 			const result = await this.sqsClient.send(new ListQueuesCommand({
-				MaxResults: 200,
+				MaxResults: max,
 			}));
-			if (result?.QueueUrls)
-				list = result.QueueUrls;
-		} catch (error) {
-			this.logger.error('List Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
 
-		return list;
+			return result?.QueueUrls ?? [];
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
 	public async createQueue(queueName: string): Promise<string> {
-		let queueUrl = '';
-
 		try {
 			const result = await this.sqsClient.send(new CreateQueueCommand(
 				this.createParams(queueName)
 			));
-			if (result?.QueueUrl)
-				queueUrl = result.QueueUrl;
-		} catch (error) {
-			this.logger.error('Create Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
 
-		return queueUrl;
+			if (!result?.QueueUrl)
+				throw this.exceptions.internal({ message: 'Queue not created' });
+
+			return result.QueueUrl;
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
 	public async deleteQueue(queueUrl: string): Promise<boolean> {
-		let isDeleted = false;
-
 		try {
 			const result = await this.sqsClient.send(new DeleteQueueCommand({
 				QueueUrl: queueUrl,
 			}));
-			if (result.$metadata?.httpStatusCode && String(result.$metadata?.httpStatusCode)[2] === '2')
-				isDeleted = true;
-		} catch (error) {
-			this.logger.error('Delete Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
 
-		return isDeleted;
+			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
+			return statusCode >= 200 && statusCode < 300;
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
 	public async sendMessage(queueUrl: string, title: string, author: string, message: unknown): Promise<string> {
-		let messageId = '';
-
 		try {
 			const result = await this.sqsClient.send(new SendMessageCommand(
 				this.msgParams(queueUrl, message, title, author)
 			));
-			if (result?.MessageId)
-				messageId = result.MessageId;
-		} catch (error) {
-			this.logger.error('Send Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
 
-		return messageId;
+			if (!result?.MessageId)
+				throw this.exceptions.internal({ message: 'Message not sended' });
+
+			return result.MessageId;
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
 	public async getMessages(queueUrl: string): Promise<Message[]> {
@@ -180,35 +164,34 @@ export default class SqsClient {
 			const result = await this.sqsClient.send(new ReceiveMessageCommand(
 				this.receiveParam(queueUrl)
 			));
-			if (result?.Messages) {
-				for (const message of result?.Messages) {
+
+			if (result?.Messages?.length)
+				result.Messages.forEach((message) => {
 					messages.push(message);
 					this.deleteMessage(queueUrl, message);
-				}
-			}
+				});
 		} catch (error) {
-			this.logger.error('Receive Error:', error);
-			throw this.exceptions.integration(error as Error);
+			throw this.caughtError(error);
 		}
 
 		return messages;
 	}
 
 	public async deleteMessage(queueUrl: string, message: Message): Promise<boolean> {
-		let isDeleted = false;
-
 		try {
 			const result = await this.sqsClient.send(new DeleteMessageCommand({
 				QueueUrl: queueUrl,
 				ReceiptHandle: `${message?.ReceiptHandle}`,
 			}));
-			if (result.$metadata?.httpStatusCode && String(result.$metadata?.httpStatusCode)[2] === '2')
-				isDeleted = true;
+			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
+			return statusCode >= 200 && statusCode < 300;
 		} catch (error) {
-			this.logger.error('Error to Delete Message:', error);
-			throw this.exceptions.integration(error as Error);
+			throw this.caughtError(error);
 		}
+	}
 
-		return isDeleted;
+	private caughtError(error: unknown): Error {
+		this.logger.error(error);
+		return this.exceptions.integration(error as Error);
 	}
 }

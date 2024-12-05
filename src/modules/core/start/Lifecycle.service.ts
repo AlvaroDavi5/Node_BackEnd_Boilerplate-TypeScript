@@ -24,8 +24,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 	constructor(
 		private readonly httpAdapterHost: HttpAdapterHost,
 		private readonly configService: ConfigService,
-		@Inject(DATABASE_CONNECTION_PROVIDER)
-		private readonly connection: DataSource,
+		@Inject(DATABASE_CONNECTION_PROVIDER) private readonly connection: DataSource,
 		private readonly mongoClient: MongoClient,
 		private readonly redisClient: RedisClient,
 		private readonly cognitoClient: CognitoClient,

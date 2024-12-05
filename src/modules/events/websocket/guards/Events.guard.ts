@@ -16,15 +16,17 @@ export default class EventsGuard implements CanActivate {
 	) { }
 
 	public canActivate(context: ExecutionContext): boolean | Promise<boolean> | Observable<boolean> {
-		const socket = context.getArgs()[0] as Socket;
-		const message = context.getArgs()[1] as unknown;
-		const event = context.getArgs()[3] as WebSocketEventsEnum;
+		const [socket, message, _, event] = context.getArgs() as [Socket, unknown, unknown, WebSocketEventsEnum];
 
-		this.logger.verbose(`Running guard to '${event}' event for '${socket.id}' socket`);
+		const socketId = socket?.id;
+
+		if (socketId)
+			this.logger.setSocketId(socketId);
+
+		this.logger.verbose(`Running guard to '${event}' event for '${socketId}' socket`);
 
 		if (!getObjValues<WebSocketEventsEnum>(WebSocketEventsEnum).includes(event) || !getObjKeys(message).length) {
-			this.logger.warn(`Invalid event: '${event}' or message, disconnecting socket`);
-			socket.disconnect(true);
+			this.logger.warn(`Invalid event: '${event}' or message`);
 			throw new WsException(this.exceptions.internal({
 				message: 'Invalid message',
 			}));

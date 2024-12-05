@@ -1,5 +1,5 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import RequestLoggerMiddleware from '@api/middlewares/RequestLogger.middleware';
+import RequestMiddleware from '@api/middlewares/Request.middleware';
 import HookController from './api/controllers/Hook.controller';
 import WebhookService from './services/Webhook.service';
 
@@ -17,7 +17,7 @@ import WebhookService from './services/Webhook.service';
 export default class HookModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
 		consumer
-			.apply(RequestLoggerMiddleware)
+			.apply(RequestMiddleware)
 			.forRoutes(
 				HookController,
 			);

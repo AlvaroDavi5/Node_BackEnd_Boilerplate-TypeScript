@@ -1,6 +1,7 @@
 import { io, Socket as ClientSocket } from 'socket.io-client';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import { LoggerInterface } from '@core/logging/logger';
+import { secondsToMilliseconds } from '@common/utils/dates.util';
 import { dataParserHelperMock } from '../mocks/mockedModules';
 
 
@@ -18,8 +19,8 @@ export default class WebSocketClient {
 				autoConnect: true,
 				closeOnBeforeunload: true,
 				reconnectionAttempts: 3,
-				timeout: (1 * 1000),
-				ackTimeout: (2 * 1000),
+				timeout: secondsToMilliseconds(1),
+				ackTimeout: secondsToMilliseconds(2),
 			});
 		}
 	}

@@ -3,7 +3,8 @@ import { ConfigService } from '@nestjs/config';
 import { io, Socket as ClientSocket } from 'socket.io-client';
 import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import { ConfigsInterface } from '@core/configs/envs.config';
+import { secondsToMilliseconds } from '@common/utils/dates.util';
+import type { ConfigsInterface } from '@core/configs/envs.config';
 
 
 @Injectable()
@@ -23,8 +24,8 @@ export default class WebSocketClient {
 				autoConnect: true,
 				closeOnBeforeunload: true,
 				reconnectionAttempts: 3,
-				timeout: (1 * 1000),
-				ackTimeout: (2 * 1000),
+				timeout: secondsToMilliseconds(1),
+				ackTimeout: secondsToMilliseconds(2),
 			});
 		}
 	}

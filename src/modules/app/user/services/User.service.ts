@@ -115,7 +115,7 @@ export default class UserService {
 		if (!salt?.length || !hash?.length)
 			throw this.exceptions.internal({
 				message: 'Error to get password',
-				details: 'Invalid salt or hash from database',
+				details: 'Invalid salt or hash',
 			});
 
 		const toHash = salt + passwordToValidate + this.secret;

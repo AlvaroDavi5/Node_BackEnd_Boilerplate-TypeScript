@@ -36,7 +36,7 @@ export default class AuthGuard implements CanActivate {
 		const token = authorization.replace('Bearer ', '');
 		const { content, invalidSignature, expired } = this.cryptographyService.decodeJwt(token);
 
-		if (!content || typeof content === 'string') {
+		if (!content || typeof content !== 'object') {
 			if (expired) {
 				this.logger.warn('Request with expired authorization token');
 				throw this.exceptions.invalidToken({

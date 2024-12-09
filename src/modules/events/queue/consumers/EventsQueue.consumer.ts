@@ -3,13 +3,14 @@ import { ConfigService } from '@nestjs/config';
 import { SqsMessageHandler, SqsConsumerEventHandler } from '@ssut/nestjs-sqs';
 import { SqsConsumerOptions } from '@ssut/nestjs-sqs/dist/sqs.types';
 import { Message } from '@aws-sdk/client-sqs';
-import MongoClient from '@core/infra/data/Mongo.client';
-import LoggerService from '@core/logging/Logger.service';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
-import { ProcessEventsEnum } from '@common/enums/processEvents.enum';
-import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
-import envsConfig from '@core/configs/envs.config';
+import MongoClient from '@core/infra/data/Mongo.client';
 import Exceptions from '@core/errors/Exceptions';
+import LoggerService from '@core/logging/Logger.service';
+import envsConfig from '@core/configs/envs.config';
+import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
+import { ProcessEventsEnum } from '@common/enums/processEvents.enum';
+import { secondsToMilliseconds } from '@common/utils/dates.util';
 import SqsClientMock from '@dev/localstack/queues/SqsClient';
 import { configServiceMock, cryptographyServiceMock, dataParserHelperMock, loggerProviderMock } from '@dev/mocks/mockedModules';
 
@@ -34,8 +35,8 @@ export const eventsQueueConsumerConfigs: SqsConsumerOptions = {
 	pollingWaitTimeMs: 10,
 	waitTimeSeconds: 20,
 	visibilityTimeout: 20,
-	handleMessageTimeout: (1 * 1000),
-	authenticationErrorTimeout: (10 * 1000),
+	handleMessageTimeout: secondsToMilliseconds(1),
+	authenticationErrorTimeout: secondsToMilliseconds(10),
 };
 
 @Injectable()

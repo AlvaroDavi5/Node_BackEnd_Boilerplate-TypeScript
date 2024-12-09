@@ -93,9 +93,16 @@ export default class RedisClient {
 		return result as (VT | null);
 	}
 
+	/**
+	@brief [key] expires in [ttl] seconds
+	@param key string
+	@param value unknown
+	@param ttl number
+	@return 'OK'
+	**/
 	public async set(key: string, value: unknown, ttl = 30): Promise<string> {
 		const result = await this.redisClient.set(String(key), this.dataParserHelper.toString(value));
-		await this.redisClient.expire(String(key), Number(ttl)); // [key] expires in [ttl] seconds
+		await this.redisClient.expire(String(key), Number(ttl));
 		return result;
 	}
 

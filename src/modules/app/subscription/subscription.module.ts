@@ -1,5 +1,5 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import RequestLoggerMiddleware from '@api/middlewares/RequestLogger.middleware';
+import RequestMiddleware from '@api/middlewares/Request.middleware';
 import SubscriptionController from './api/controllers/Subscription.controller';
 import SubscriptionService from './services/Subscription.service';
 
@@ -19,7 +19,7 @@ import SubscriptionService from './services/Subscription.service';
 export default class SubscriptionModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {
 		consumer
-			.apply(RequestLoggerMiddleware)
+			.apply(RequestMiddleware)
 			.forRoutes(
 				SubscriptionController,
 			);

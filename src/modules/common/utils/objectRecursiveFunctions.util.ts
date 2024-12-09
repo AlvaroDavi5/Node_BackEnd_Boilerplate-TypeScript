@@ -1,6 +1,25 @@
 import { isNullOrUndefined, getObjKeys } from './dataValidations.util';
 
 
+export function cloneObject<OT extends object = object>(obj: OT): OT {
+	try {
+		return structuredClone(obj);
+	} catch (error) {
+		const newObj = {} as OT;
+
+		Object.keys(obj).forEach((key) => {
+			let value = obj[key as keyof OT];
+
+			if (typeof value === 'object' && !!value && !Array.isArray(value))
+				value = cloneObject(value);
+
+			newObj[key as keyof OT] = value;
+		});
+
+		return newObj;
+	}
+}
+
 export function checkFieldsExistence<OT extends object = object>(obj: OT, fieldsToApply: (keyof OT)[]): boolean {
 	if (isNullOrUndefined(obj))
 		return false;

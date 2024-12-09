@@ -6,6 +6,7 @@ import { ErrorInterface } from './errorInterface';
 
 export interface RequestInterface extends Request {
 	id?: string,
+	createdAt?: number,
 	user?: UserAuthInterface,
 }
 export type ResponseInterface = Response

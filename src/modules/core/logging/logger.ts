@@ -24,6 +24,8 @@ export interface LoggerInterface {
 export interface MetadataInterface {
 	context?: string,
 	requestId?: string,
+	socketId?: string,
+	ip?: string,
 	details?: string | object | object[],
 	stack?: unknown | unknown[],
 }
@@ -39,12 +41,19 @@ function getMessageFormatter() {
 		const logLevel = levelFormatter(level);
 		const logContext = contextFormatter((context || meta?.context) ?? 'DefaultContext');
 		const requestId = meta?.requestId;
+		const socketId = meta?.socketId;
+		const ip = meta?.ip;
 		const logStack = errorStack ?? meta?.stack;
 
 		let log = `${dataParserHelperMock.toString(message)}`;
 
+		if (ip)
+			log += ` - IP: ${ip}`;
 		if (requestId)
 			log += ` - requestId: ${requestId}`;
+		if (socketId)
+			log += ` - socketId: ${socketId}`;
+
 		if (logStack) {
 			if (Array.isArray(logStack))
 				logStack.forEach((stack) => {

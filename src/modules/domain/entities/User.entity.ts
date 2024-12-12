@@ -110,8 +110,8 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	@IsDate()
 	public deletedAt: Date | null = null;
 
-	@ApiProperty({ type: String, example: null, default: null, nullable: true, required: true, description: 'Delete userAgent' })
-	@Field(returingString, { defaultValue: null, nullable: true, description: 'Delete userAgent' })
+	@ApiProperty({ type: String, example: null, default: null, nullable: true, required: true, description: 'Deleted by agentUser' })
+	@Field(returingString, { defaultValue: null, nullable: true, description: 'Deleted by agentUser' })
 	@IsString()
 	private deletedBy: string | null = null;
 

@@ -6,9 +6,9 @@ import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface
 
 @Injectable()
 export default class UserStrategy {
-	public isAllowedToManageUser(userAgent: UserAuthInterface, userData: UserEntity): boolean {
-		const isTheSameUsername = userAgent?.username === userData.getEmail();
-		const isTheSameId = userAgent?.clientId === userData.getId();
+	public isAllowedToManageUser(agentUser: UserAuthInterface, userData: UserEntity): boolean {
+		const isTheSameUsername = agentUser?.username === userData.getEmail();
+		const isTheSameId = agentUser?.clientId === userData.getId();
 
 		if (isTheSameUsername && isTheSameId)
 			return true;

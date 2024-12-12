@@ -29,7 +29,7 @@ export default () => {
 			schema: { example: buildErrorResponse(ExceptionsEnum.CONTRACT) },
 		}),
 		ApiUnauthorizedResponse({
-			description: 'Operation not allowed to the userAgent (Authorization).',
+			description: 'Operation not allowed to the agentUser (Authorization).',
 			schema: { example: buildErrorResponse(ExceptionsEnum.UNAUTHORIZED) },
 		}),
 		ApiForbiddenResponse({

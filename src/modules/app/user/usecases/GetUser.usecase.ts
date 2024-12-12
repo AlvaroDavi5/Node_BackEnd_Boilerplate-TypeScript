@@ -14,10 +14,10 @@ export default class GetUserUseCase {
 		private readonly exceptions: Exceptions,
 	) { }
 
-	public async execute(id: string, userAgent?: UserAuthInterface): Promise<UserEntity> {
-		if (!userAgent?.clientId)
+	public async execute(id: string, agentUser?: UserAuthInterface): Promise<UserEntity> {
+		if (!agentUser?.clientId)
 			throw this.exceptions.unauthorized({
-				message: 'Invalid userAgent',
+				message: 'Invalid agentUser',
 			});
 
 		const [foundedUser, foundedPreference] = await Promise.all([

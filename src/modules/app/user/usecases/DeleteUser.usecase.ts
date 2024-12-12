@@ -16,23 +16,23 @@ export default class DeleteUserUseCase {
 		private readonly exceptions: Exceptions,
 	) { }
 
-	public async execute(id: string, userAgent?: UserAuthInterface): Promise<void> {
-		if (!userAgent?.clientId)
+	public async execute(id: string, agentUser?: UserAuthInterface): Promise<void> {
+		if (!agentUser?.clientId)
 			throw this.exceptions.unauthorized({
-				message: 'Invalid userAgent',
+				message: 'Invalid agentUser',
 			});
 
 		const user = await this.userService.getById(id, true);
 		const preference = await this.userPreferenceService.getByUserId(id);
 
-		this.validatePermissionToDeleteUser(userAgent, user);
+		this.validatePermissionToDeleteUser(agentUser, user);
 
 		await this.userPreferenceService.delete(preference.getId(), {
 			softDelete: true,
 		});
 		const softDeletedUser = await this.userService.delete(user.getId(), {
 			softDelete: true,
-			userAgentId: userAgent.clientId,
+			agentUserId: agentUser.clientId,
 		});
 
 		if (!softDeletedUser) {
@@ -42,11 +42,11 @@ export default class DeleteUserUseCase {
 		}
 	}
 
-	private validatePermissionToDeleteUser(userAgent: UserAuthInterface, user: UserEntity): void {
-		const isAllowedToDeleteUser = this.userStrategy.isAllowedToManageUser(userAgent, user);
+	private validatePermissionToDeleteUser(agentUser: UserAuthInterface, user: UserEntity): void {
+		const isAllowedToDeleteUser = this.userStrategy.isAllowedToManageUser(agentUser, user);
 		if (!isAllowedToDeleteUser)
 			throw this.exceptions.business({
-				message: 'userAgent not allowed to delete this user!',
+				message: 'agentUser not allowed to delete this user!',
 			});
 	}
 }

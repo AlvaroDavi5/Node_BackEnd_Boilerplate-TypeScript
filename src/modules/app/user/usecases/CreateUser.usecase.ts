@@ -18,10 +18,10 @@ export default class CreateUserUseCase {
 		private readonly exceptions: Exceptions,
 	) { }
 
-	public async execute(data: CreateUserInputDto, userAgent?: UserAuthInterface): Promise<UserEntity> {
-		if (!userAgent?.clientId)
+	public async execute(data: CreateUserInputDto, agentUser?: UserAuthInterface): Promise<UserEntity> {
+		if (!agentUser?.clientId)
 			throw this.exceptions.unauthorized({
-				message: 'Invalid userAgent',
+				message: 'Invalid agentUser',
 			});
 
 		const newUser = new UserEntity(data);

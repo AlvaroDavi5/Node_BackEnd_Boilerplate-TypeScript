@@ -18,16 +18,16 @@ export default class UpdateUserUseCase {
 		private readonly exceptions: Exceptions,
 	) { }
 
-	public async execute(id: string, data: UpdateUserInputDto, userAgent?: UserAuthInterface): Promise<UserEntity> {
-		if (!userAgent?.clientId)
+	public async execute(id: string, data: UpdateUserInputDto, agentUser?: UserAuthInterface): Promise<UserEntity> {
+		if (!agentUser?.clientId)
 			throw this.exceptions.unauthorized({
-				message: 'Invalid userAgent',
+				message: 'Invalid agentUser',
 			});
 
 		const user = await this.userService.getById(id, true);
 		const preference = await this.userPreferenceService.getByUserId(id);
 
-		this.validatePermissionToUpdateUser(userAgent, user);
+		this.validatePermissionToUpdateUser(agentUser, user);
 
 		const mustUpdateUser = this.userStrategy.mustUpdate<IViewUser, IUpdateUser>(user.getAttributes(), data);
 		const mustUpdateUserPreference = !!data.preference
@@ -49,11 +49,11 @@ export default class UpdateUserUseCase {
 		return foundedUser;
 	}
 
-	private validatePermissionToUpdateUser(userAgent: UserAuthInterface, user: UserEntity): void {
-		const isAllowedToUpdateUser = this.userStrategy.isAllowedToManageUser(userAgent, user);
+	private validatePermissionToUpdateUser(agentUser: UserAuthInterface, user: UserEntity): void {
+		const isAllowedToUpdateUser = this.userStrategy.isAllowedToManageUser(agentUser, user);
 		if (!isAllowedToUpdateUser)
 			throw this.exceptions.business({
-				message: 'userAgent not allowed to update this user!',
+				message: 'agentUser not allowed to update this user!',
 			});
 	}
 }

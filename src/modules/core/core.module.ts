@@ -76,12 +76,12 @@ const requestRateConstants = new RequestRateConstants();
 	providers: [
 		{
 			provide: APP_FILTER,
-			useClass: HttpExceptionsFilter,
+			useClass: HttpExceptionsFilter, // UseFilter
 			scope: Scope.DEFAULT,
 		},
 		{
 			provide: APP_INTERCEPTOR,
-			useClass: ResponseInterceptor,
+			useClass: ResponseInterceptor, // UseInterceptor
 			scope: Scope.DEFAULT,
 		},
 		LifecycleService,

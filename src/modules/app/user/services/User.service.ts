@@ -87,9 +87,9 @@ export default class UserService {
 		}
 	}
 
-	public async delete(id: string, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean> {
+	public async delete(id: string, data: { softDelete: boolean, agentUserId?: string }): Promise<boolean> {
 		try {
-			return await this.userRepository.deleteOne(id, Boolean(data.softDelete), String(data.userAgentId));
+			return await this.userRepository.deleteOne(id, Boolean(data.softDelete), String(data.agentUserId));
 		} catch (error) {
 			throw this.caughtError(error);
 		}

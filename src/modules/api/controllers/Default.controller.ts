@@ -1,18 +1,22 @@
 import {
 	Controller, Req, Res, Version,
 	Get, Headers, Param, Query, Body,
-	UseGuards,
+	UseGuards, UseFilters, UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse } from '@nestjs/swagger';
 import { Request, Response } from 'express';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
+import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
+import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import { ApiVersionsEnum } from '@common/enums/apiVersions.enum';
 
 
 @Controller()
 @UseGuards(CustomThrottlerGuard)
+@UseFilters(HttpExceptionsFilter)
+@UseInterceptors(ResponseInterceptor)
 @exceptionsResponseDecorator()
 export default class DefaultController {
 	constructor(

@@ -1,23 +1,27 @@
 import {
 	Controller, Res,
 	Get, Post, Headers,
-	UseInterceptors, UseGuards,
+	UseInterceptors, UseGuards, UseFilters,
 	UploadedFile, StreamableFile, ParseFilePipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiBody, ApiHeaders, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Multer as _Multer } from 'multer';
 import { Response } from 'express';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
+import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
+import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import FileService from '@app/file/services/File.service';
+import { RequestFileInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @ApiTags('Files')
 @Controller('/files')
 @UseGuards(CustomThrottlerGuard, AuthGuard)
+@UseFilters(HttpExceptionsFilter)
+@UseInterceptors(ResponseInterceptor)
 @authSwaggerDecorator()
 @exceptionsResponseDecorator()
 export default class FileController {
@@ -95,7 +99,7 @@ export default class FileController {
 	public async uploadFile(
 		@Headers() headers: { [key: string]: string | undefined },
 		@Headers('fileName') fileNameHeader: string,
-		@UploadedFile(new ParseFilePipe()) file: Express.Multer.File,
+		@UploadedFile(new ParseFilePipe()) file: RequestFileInterface,
 	): Promise<{
 		filePath: string,
 		fileContentType: string,

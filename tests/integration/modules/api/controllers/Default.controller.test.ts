@@ -5,11 +5,27 @@ import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import DefaultController from '@api/controllers/Default.controller';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
+import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
+import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
 
 
 describe('Modules :: API :: DefaultController', () => {
 	let nestTestApp: INestApplication;
 	let nestTestingModule: TestingModule;
+	// // mocks
+	const customThrottlerGuardMock = {
+		handleRequest: jest.fn((..._args: unknown[]): Promise<boolean> => { return Promise.resolve(true); }),
+	};
+	const httpMessagesConstantsMock = {
+		messages: {
+			found: (element: string) => `${element} founded successfully.`,
+		},
+	};
+	const mockObservable: MockObservableInterface<void, unknown[]> = {
+		call: jest.fn((..._args: unknown[]): void => (undefined)),
+	};
+	const loggerServiceMock = new LoggerService(mockObservable);
 
 	// ? build test app
 	beforeAll(async () => {
@@ -20,17 +36,13 @@ describe('Modules :: API :: DefaultController', () => {
 			],
 			providers: [
 				HttpMessagesConstants,
+				DataParserHelper,
+				{ provide: LoggerService, useValue: loggerServiceMock },
 			],
 			exports: [],
 		})
-			.overrideGuard(CustomThrottlerGuard).useValue({
-				handleRequest: (..._args: unknown[]): Promise<boolean> => { return Promise.resolve(true); },
-			})
-			.overrideProvider(HttpMessagesConstants).useValue({
-				messages: {
-					found: (element: string) => `${element} founded successfully.`,
-				},
-			})
+			.overrideGuard(CustomThrottlerGuard).useValue(customThrottlerGuardMock)
+			.overrideProvider(HttpMessagesConstants).useValue(httpMessagesConstantsMock)
 			.compile();
 
 		nestTestApp = nestTestingModule.createNestApplication(createNestTestApplicationOptions);

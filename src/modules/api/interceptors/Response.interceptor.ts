@@ -15,7 +15,7 @@ export default class ResponseInterceptor implements NestInterceptor {
 		private readonly dataParserHelper: DataParserHelper,
 	) { }
 
-	intercept(context: ExecutionContext, next: CallHandler<unknown>): Observable<unknown> | Promise<Observable<unknown>> {
+	public intercept(context: ExecutionContext, next: CallHandler<unknown>): Observable<unknown> | Promise<Observable<unknown>> {
 		const httpContext = context.switchToHttp();
 		const request = httpContext.getRequest<RequestInterface>();
 		const response = httpContext.getResponse<ResponseInterface>();

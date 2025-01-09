@@ -15,7 +15,7 @@ import { configServiceMock } from '@dev/mocks/mockedModules';
 import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
 import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
 
-// eslint-disable-next-line no-console
+
 describe('Modules :: Core :: Start :: LifecycleService', () => {
 	let nestTestingModule: TestingModule;
 	// // mocks

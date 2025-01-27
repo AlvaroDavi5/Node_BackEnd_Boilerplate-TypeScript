@@ -2,7 +2,6 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import Exceptions from '@core/errors/Exceptions';
-import { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
 import UserController from '@app/user/api/controllers/User.controller';
@@ -14,9 +13,11 @@ import UpdateUserUseCase from '@app/user/usecases/UpdateUser.usecase';
 import DeleteUserUseCase from '@app/user/usecases/DeleteUser.usecase';
 import UserEntity from '@domain/entities/User.entity';
 import UserListEntity from '@domain/entities/generic/UserList.entity';
+import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
 import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
-import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
+import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
+import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
 
 describe('Modules :: App :: User :: API :: UserController', () => {
@@ -33,6 +34,10 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 		execute: jest.fn((_query: ListQueryInterface): Promise<UserListEntity> => { throw new Error('GenericError'); }),
 	};
 	const exceptions = new Exceptions();
+	const mockObservable: MockObservableInterface<void, unknown[]> = {
+		call: jest.fn((..._args: unknown[]): void => (undefined)),
+	};
+	const loggerServiceMock = new LoggerService(mockObservable);
 
 	// ? build test app
 	beforeAll(async () => {
@@ -42,28 +47,19 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 				UserController,
 			],
 			providers: [
-				LoginUserUseCase,
-				ListUsersUseCase,
-				CreateUserUseCase,
-				GetUserUseCase,
-				UpdateUserUseCase,
-				DeleteUserUseCase,
-				{
-					provide: REQUEST_LOGGER_PROVIDER,
-					useValue: new LoggerService(),
-				},
+				{ provide: LoginUserUseCase, useValue: {} },
+				{ provide: ListUsersUseCase, useValue: listUsersUseCaseMock },
+				{ provide: CreateUserUseCase, useValue: {} },
+				{ provide: GetUserUseCase, useValue: {} },
+				{ provide: UpdateUserUseCase, useValue: {} },
+				{ provide: DeleteUserUseCase, useValue: {} },
+				DataParserHelper,
+				{ provide: LoggerService, useValue: loggerServiceMock },
 			],
 			exports: [],
 		})
 			.overrideGuard(CustomThrottlerGuard).useValue(customThrottlerGuardMock)
 			.overrideGuard(AuthGuard).useValue(authGuardMock)
-			.overrideProvider(LoginUserUseCase).useValue({})
-			.overrideProvider(ListUsersUseCase).useValue(listUsersUseCaseMock)
-			.overrideProvider(CreateUserUseCase).useValue({})
-			.overrideProvider(GetUserUseCase).useValue({})
-			.overrideProvider(UpdateUserUseCase).useValue({})
-			.overrideProvider(DeleteUserUseCase).useValue({})
-			.overrideProvider(REQUEST_LOGGER_PROVIDER).useValue(new LoggerService())
 			.compile();
 
 		nestTestApp = nestTestingModule.createNestApplication(createNestTestApplicationOptions);
@@ -136,8 +132,9 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 				.get('/api/users');
 
 			expect(response.statusCode).toBe(498);
-			expect(response.body).toEqual({
-				error: 'Invalid Token',
+			expect(response.body).toMatchObject({
+				error: 'invalidToken',
+				name: 'Invalid Token',
 				message: 'Authorization token is required',
 				statusCode: 498,
 			});
@@ -157,8 +154,9 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 				});
 
 			expect(response.statusCode).toBe(400);
-			expect(response.body).toEqual({
-				error: 'Bad Request',
+			expect(response.body).toMatchObject({
+				error: 'BadRequestException',
+				name: 'Bad Request',
 				message: [
 					'password should not be empty',
 					'password must be a string',

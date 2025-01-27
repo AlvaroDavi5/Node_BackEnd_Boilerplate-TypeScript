@@ -2,6 +2,7 @@
 	// Workflow
 	"security.workspace.trust.untrustedFiles": "open",
 	"problems.showCurrentInStatus": true,
+	"update.showReleaseNotes": false,
 	"terminal.integrated.defaultProfile.linux": "zsh",
 	"terminal.integrated.defaultProfile.windows": "Ubuntu-20.04 (WSL)",
 	"http.proxy": "",
@@ -84,7 +85,6 @@
 		"typescriptreact"
 	],
 	"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-	"vsintellicode.features.python.deepLearning": "enabled",
 	"tabnine.experimentalAutoImports": true,
 	"diffEditor.ignoreTrimWhitespace": false,
 	"git-graph.repository.commits.fetchAvatars": true,
@@ -164,7 +164,6 @@
 		"*": true,
 		"yaml": true,
 		"markdown": true,
-		"java": true,
 		"plaintext": false
 	},
 	"json.schemas": [

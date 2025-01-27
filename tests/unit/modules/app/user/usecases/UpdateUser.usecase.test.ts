@@ -22,7 +22,7 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 		conflict: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
 	};
 	const userStrategyMock = {
-		isAllowedToManageUser: jest.fn((_userAgent: UserAuthInterface, _userData: UserEntity): boolean => (false)),
+		isAllowedToManageUser: jest.fn((_agentUser: UserAuthInterface, _userData: UserEntity): boolean => (false)),
 		mustUpdate: jest.fn((_entityAttributes: unknown, _inputAttributes: unknown): boolean => (false)),
 	};
 	const userServiceMock = {
@@ -30,7 +30,7 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 		getById: jest.fn(async (_id: string, _withoutPassword = true): Promise<UserEntity> => { throw new Error('GenericError'); }),
 		create: jest.fn(async (_entity: UserEntity): Promise<UserEntity> => { throw new Error('GenericError'); }),
 		update: jest.fn(async (_id: string, _data: IUpdateUser): Promise<UserEntity> => { throw new Error('GenericError'); }),
-		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, userAgentId?: string }): Promise<boolean> => (false)),
+		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, agentUserId?: string }): Promise<boolean> => (false)),
 		list: jest.fn(async (_query: ListQueryInterface, _withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => {
 			return { content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 };
 		}),
@@ -44,7 +44,7 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 		delete: jest.fn(async (_id: string, _data: { softDelete: boolean }): Promise<boolean> => (false)),
 	};
 
-	const userAgent = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' };
+	const agentUser = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' };
 	const updateUserUseCase = new UpdateUserUseCase(
 		userServiceMock as unknown as UserService,
 		userPreferenceServiceMock as unknown as UserPreferenceService,
@@ -91,7 +91,7 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 			const result = await updateUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
 				phone: '+55999999999',
 				preference: { defaultTheme: ThemesEnum.DEFAULT }
-			}, userAgent);
+			}, agentUser);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(2);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(2);
 			expect(userServiceMock.update).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
@@ -123,7 +123,7 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 			await expect(updateUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
 				phone: '+55999999999',
 				preference: { defaultTheme: ThemesEnum.DEFAULT }
-			}, userAgent))
+			}, agentUser))
 				.rejects.toMatchObject(new Error('User not updated!'));
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
@@ -140,17 +140,17 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 		test('Should throw a business error', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: userEntity.getId() });
-			const otherUserAgent = { username: 'test', clientId: '1' };
+			const otheragentUser = { username: 'test', clientId: '1' };
 			userServiceMock.getById.mockResolvedValueOnce(userEntity);
 			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
 
 			await expect(updateUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
 				phone: '+55999999999',
 				preference: { defaultTheme: ThemesEnum.DEFAULT }
-			}, otherUserAgent))
-				.rejects.toMatchObject(new Error('userAgent not allowed to update this user!'));
+			}, otheragentUser))
+				.rejects.toMatchObject(new Error('agentUser not allowed to update this user!'));
 			expect(exceptionsMock.business).toHaveBeenCalledWith({
-				message: 'userAgent not allowed to update this user!'
+				message: 'agentUser not allowed to update this user!'
 			});
 		});
 
@@ -162,7 +162,7 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 			await expect(updateUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
 				phone: '+55999999999',
 				preference: { defaultTheme: ThemesEnum.DEFAULT }
-			}, userAgent))
+			}, agentUser))
 				.rejects.toMatchObject(new Error('User not founded by ID!'));
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
@@ -174,9 +174,9 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 
 		test('Should throw a unauthorized error', async () => {
 			await expect(updateUserUseCase.execute('', {}))
-				.rejects.toMatchObject(new Error('Invalid userAgent'));
+				.rejects.toMatchObject(new Error('Invalid agentUser'));
 			expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
-				message: 'Invalid userAgent'
+				message: 'Invalid agentUser'
 			});
 		});
 	});

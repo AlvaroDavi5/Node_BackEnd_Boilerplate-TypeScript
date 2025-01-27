@@ -48,8 +48,7 @@ export default class WebhookService {
 				if (!!responseMethod && !!responseEndpoint)
 					hooksToPull.push(this.restMockedServiceProvider.requestHook<void>(
 						responseMethod, responseEndpoint,
-						{}, data
-					));
+						{}, data));
 
 				const hookId = this.cacheAccessHelper.getId(
 					this.cacheAccessHelper.getId(key, CacheEnum.HOOKS),

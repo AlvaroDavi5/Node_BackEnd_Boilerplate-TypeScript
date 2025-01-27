@@ -2,7 +2,7 @@ import {
 	Controller, Req, Res, ParseUUIDPipe,
 	Param, Query, Body,
 	Get, Post, Put, Patch, Delete,
-	UseGuards,
+	UseGuards, UseFilters, UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse, ApiNoContentResponse } from '@nestjs/swagger';
 import UserEntity, { IViewUser } from '@domain/entities/User.entity';
@@ -15,6 +15,8 @@ import UpdateUserUseCase from '@app/user/usecases/UpdateUser.usecase';
 import DeleteUserUseCase from '@app/user/usecases/DeleteUser.usecase';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
+import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
+import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import { ListQueryValidatorPipe } from '@api/pipes/QueryValidator.pipe';
@@ -33,6 +35,8 @@ import LoginUserInputDto from '../dto/user/LoginUserInput.dto';
 @ApiTags('Users')
 @Controller('/users')
 @UseGuards(CustomThrottlerGuard)
+@UseFilters(HttpExceptionsFilter)
+@UseInterceptors(ResponseInterceptor)
 @exceptionsResponseDecorator()
 export default class UserController {
 	constructor(

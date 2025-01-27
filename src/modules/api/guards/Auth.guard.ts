@@ -3,6 +3,7 @@ import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 import CryptographyService from '@core/security/Cryptography.service';
 import { RequestInterface } from '@shared/internal/interfaces/endpointInterface';
+import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 
 
 @Injectable({ scope: Scope.DEFAULT })
@@ -34,7 +35,7 @@ export default class AuthGuard implements CanActivate {
 		}
 
 		const token = authorization.replace('Bearer ', '');
-		const { content, invalidSignature, expired } = this.cryptographyService.decodeJwt(token);
+		const { content, invalidSignature, expired } = this.cryptographyService.decodeJwt<UserAuthInterface>(token);
 
 		if (!content || typeof content !== 'object') {
 			if (expired) {

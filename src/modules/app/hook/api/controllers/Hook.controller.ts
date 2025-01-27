@@ -1,7 +1,7 @@
 import {
 	Controller, Res,
 	Put, Query,
-	UseGuards,
+	UseGuards, UseFilters, UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiCreatedResponse, ApiNotAcceptableResponse } from '@nestjs/swagger';
 import { Response } from 'express';
@@ -12,6 +12,8 @@ import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
+import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
+import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 
@@ -19,6 +21,8 @@ import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 @ApiTags('Webhooks')
 @Controller('/hook')
 @UseGuards(CustomThrottlerGuard, AuthGuard)
+@UseFilters(HttpExceptionsFilter)
+@UseInterceptors(ResponseInterceptor)
 @authSwaggerDecorator()
 @exceptionsResponseDecorator()
 export default class HookController {

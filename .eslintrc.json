@@ -138,10 +138,7 @@
 			"error",
 			"never"
 		],
-		"func-call-spacing": [
-			"error",
-			"never"
-		],
+		"func-call-spacing": "off",
 		"yield-star-spacing": [
 			"error",
 			{

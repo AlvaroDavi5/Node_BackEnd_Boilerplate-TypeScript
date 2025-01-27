@@ -1,5 +1,4 @@
-import { APP_FILTER, APP_INTERCEPTOR } from '@nestjs/core';
-import { Module, Global, Scope } from '@nestjs/common';
+import { Module, Global } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
@@ -15,8 +14,6 @@ import CommonModule from '@common/common.module';
 import AppModule from '@app/app.module';
 import EventsModule from '@events/events.module';
 import GraphQlModule from '@graphql/graphql.module';
-import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
-import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import envsConfig from './configs/envs.config';
 import LifecycleService from './start/Lifecycle.service';
 import Exceptions from './errors/Exceptions';
@@ -74,16 +71,6 @@ const requestRateConstants = new RequestRateConstants();
 	],
 	controllers: [],
 	providers: [
-		{
-			provide: APP_FILTER,
-			useClass: HttpExceptionsFilter,
-			scope: Scope.DEFAULT,
-		},
-		{
-			provide: APP_INTERCEPTOR,
-			useClass: ResponseInterceptor,
-			scope: Scope.DEFAULT,
-		},
 		LifecycleService,
 		Exceptions,
 		LoggerService,

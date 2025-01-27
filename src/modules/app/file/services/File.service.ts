@@ -8,6 +8,7 @@ import ReportsModule from '@app/reports/reports.module';
 import UploadService from '@app/reports/services/Upload.service';
 import ContentTypeConstants from '@common/constants/ContentType.constants';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
+import { RequestFileInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @Injectable()
@@ -69,7 +70,7 @@ export default class FileService {
 		}
 	}
 
-	public async uploadFile(file: Express.Multer.File, fileNameHeader: string, acceptHeader = ''): Promise<{
+	public async uploadFile(file: RequestFileInterface, fileNameHeader: string, acceptHeader = ''): Promise<{
 		filePath: string,
 		fileContentType: string,
 		uploadTag: string,

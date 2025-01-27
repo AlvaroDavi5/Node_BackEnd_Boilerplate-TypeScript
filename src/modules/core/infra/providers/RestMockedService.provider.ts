@@ -7,6 +7,13 @@ import { requestMethodType, requestQueryType, requestBodyType } from '@shared/in
 import { RestClientResponseInterface } from '@shared/external/interfaces/RestClientInterface';
 
 
+interface HealthCheckResponseInterface {
+	url: string, statusCode: number, method: string,
+	params: { [key: string]: unknown },
+	query: { [key: string]: unknown },
+	body: { [key: string]: unknown },
+}
+
 @Injectable()
 export default class RestMockedServiceProvider extends AbstractRestClient {
 	constructor(
@@ -25,15 +32,10 @@ export default class RestMockedServiceProvider extends AbstractRestClient {
 		});
 	}
 
-	public async healthcheck() {
+	public async healthcheck(): Promise<HealthCheckResponseInterface> {
 		this.logger.info('Requesting healthcheck endpoint');
 
-		const { data } = await this.get<{
-			url: string, statusCode: number, method: string,
-			params: { [key: string]: unknown },
-			query: { [key: string]: unknown },
-			body: { [key: string]: unknown },
-		}>('mockedService/api/check');
+		const { data } = await this.get<HealthCheckResponseInterface>('mockedService/api/check');
 
 		return data;
 	}

@@ -36,7 +36,7 @@ export default class LoginUserUseCase {
 			username: user.getEmail(),
 			clientId: user.getId(),
 		};
-		const token = this.cryptographyService.encodeJwt(userAuthToEncode, 'utf8', '1d');
+		const token = this.cryptographyService.encodeJwt(userAuthToEncode, 'utf8', '1D');
 
 		return { user, token };
 	}

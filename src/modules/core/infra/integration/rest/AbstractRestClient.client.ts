@@ -68,9 +68,11 @@ export default abstract class AbstractRestClient {
 				method, url: endpoint,
 				params: query, data: body,
 			});
+
+			this.logger.verbose(`RESPONSE - ${this.serviceName}: [${method.toUpperCase()}] '${endpoint}'`, { data, status, headers });
 			return { data, status, headers };
 		} catch (error) {
-			this.logger.error(error);
+			this.logger.error(`REQUEST ERROR - ${this.serviceName}: [${method.toUpperCase()}] '${endpoint}'`, error);
 			throw externalErrorParser(error);
 		}
 	}

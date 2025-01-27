@@ -6,6 +6,7 @@ import { ConfigsInterface } from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
 import FileStrategy from '@app/file/strategies/File.strategy';
 import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
+import { RequestFileInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @Injectable({ scope: Scope.TRANSIENT })
@@ -41,7 +42,7 @@ export default class UploadService {
 		}
 	}
 
-	public async uploadFile(fileName: string, file: Express.Multer.File): Promise<{ filePath: string, uploadTag: string }> {
+	public async uploadFile(fileName: string, file: RequestFileInterface): Promise<{ filePath: string, uploadTag: string }> {
 		let uploadTag = '';
 		const fileEncoding = this.fileStrategy.defineEncoding(fileName, file.mimetype);
 		const fileContent = this.fileReaderHelper.readFile(file.path, fileEncoding) ?? '';

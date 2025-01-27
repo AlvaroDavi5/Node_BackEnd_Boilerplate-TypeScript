@@ -7,7 +7,7 @@ type logLevelType = 'error' | 'warn' | 'info' | 'debug' | 'log';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export default class LoggerService implements LoggerInterface {
-	private readonly showLogs = Boolean(process.env.SHOW_LOGS);
+	private readonly showLogs = process.env.SHOW_LOGS === 'true';
 
 	constructor(
 		private readonly mockObservable?: MockObservableInterface<void, unknown[]>,
@@ -24,21 +24,21 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	public getContextName(): string {
-		return 'LoggerServiceMock';
-	}
+	public getContextName(): string { return 'LoggerServiceMock'; }
 
-	public setContextName(context: string): void {
-		context.trim();
-	}
+	public setContextName(contextName: string): void { contextName.trim(); }
 
-	public getRequestId(): string {
-		return 'LoggerServiceMock';
-	}
+	public getRequestId(): string | undefined { return 'request_id'; }
 
-	public setRequestId(requestId: string): void {
-		requestId.trim();
-	}
+	public setRequestId(requestId: string | undefined): void { requestId?.trim(); }
+
+	public getSocketId(): string | undefined { return 'socket_id'; }
+
+	public setSocketId(socketId: string | undefined): void { socketId?.trim(); }
+
+	public getClientIp(): string | undefined { return 'client_ip'; }
+
+	public setClientIp(clientIp: string | undefined): void { clientIp?.trim(); }
 
 	public error(...args: unknown[]): void { this.log('error', args); }
 	public warn(...args: unknown[]): void { this.log('warn', args); }
@@ -55,22 +55,6 @@ export const RequestLoggerProvider: Provider = {
 
 	inject: [],
 	useFactory: (): LoggerService => new LoggerService(),
-
-	durable: false,
-};
-
-export const SINGLETON_LOGGER_PROVIDER = Symbol('SingletonLoggerProvider');
-export interface LoggerProviderInterface {
-	getLogger: (context: string) => LoggerService,
-}
-export const SingletonLoggerProvider: Provider = {
-	provide: SINGLETON_LOGGER_PROVIDER,
-	scope: Scope.DEFAULT,
-
-	inject: [],
-	useFactory: (): LoggerProviderInterface => ({
-		getLogger: (_context: string): LoggerService => new LoggerService(),
-	}),
 
 	durable: false,
 };

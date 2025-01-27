@@ -28,7 +28,7 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 		getById: jest.fn(async (_id: string, _withoutPassword = true): Promise<UserEntity> => { throw new Error('GenericError'); }),
 		create: jest.fn(async (_entity: UserEntity): Promise<UserEntity> => { throw new Error('GenericError'); }),
 		update: jest.fn(async (_id: string, _data: IUpdateUser): Promise<UserEntity> => { throw new Error('GenericError'); }),
-		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, userAgentId?: string }): Promise<boolean> => (false)),
+		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, agentUserId?: string }): Promise<boolean> => (false)),
 		list: jest.fn(async (_query: ListQueryInterface, _withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => {
 			return { content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 };
 		}),
@@ -42,7 +42,7 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 		delete: jest.fn(async (_id: string, _data: { softDelete: boolean }): Promise<boolean> => (false)),
 	};
 
-	const userAgent = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' };
+	const agentUser = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' };
 	const createUserUseCase = new CreateUserUseCase(
 		userServiceMock as unknown as UserService,
 		userPreferenceServiceMock as unknown as UserPreferenceService,
@@ -65,7 +65,7 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 			userServiceMock.getById.mockResolvedValueOnce(userEntity);
 			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
 
-			const result = await createUserUseCase.execute(userEntity.getAttributes(), userAgent);
+			const result = await createUserUseCase.execute(userEntity.getAttributes(), agentUser);
 			expect(userServiceMock.create).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.create).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
@@ -90,7 +90,7 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 				message: 'User not founded by ID!',
 			}));
 
-			await expect(createUserUseCase.execute(userEntity.getAttributes(), userAgent))
+			await expect(createUserUseCase.execute(userEntity.getAttributes(), agentUser))
 				.rejects.toMatchObject(new Error('User not founded by ID!'));
 			expect(userServiceMock.create).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.create).toHaveBeenCalledTimes(1);
@@ -107,7 +107,7 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
 			userServiceMock.getByEmail.mockResolvedValueOnce(userEntity);
 
-			await expect(createUserUseCase.execute(userEntity.getAttributes(), userAgent))
+			await expect(createUserUseCase.execute(userEntity.getAttributes(), agentUser))
 				.rejects.toMatchObject(new Error('User already exists!'));
 			expect(userServiceMock.create).not.toHaveBeenCalled();
 			expect(userPreferenceServiceMock.create).not.toHaveBeenCalled();
@@ -121,9 +121,9 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 
 		test('Should throw a unauthorized error', async () => {
 			await expect(createUserUseCase.execute({} as unknown as CreateUserInputDto))
-				.rejects.toMatchObject(new Error('Invalid userAgent'));
+				.rejects.toMatchObject(new Error('Invalid agentUser'));
 			expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
-				message: 'Invalid userAgent'
+				message: 'Invalid agentUser'
 			});
 		});
 	});

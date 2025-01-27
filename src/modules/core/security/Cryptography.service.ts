@@ -2,9 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import crypto from 'crypto';
 import { genSaltSync } from 'bcrypt';
-import { sign, verify, JwtPayload, JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
+import { sign, verify, JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { v4 as uuidV4 } from 'uuid';
 import { ConfigsInterface } from '@core/configs/envs.config';
+import { jwtExpirationType, jwtEncode, jwtDecode } from '@shared/internal/types/jwtParamsTypes';
 
 
 type hashAlgorithmType = 'md5' | 'sha256' | 'sha512'
@@ -28,19 +29,16 @@ export default class CryptographyService {
 		return crypto.timingSafeEqual(b1, b2);
 	}
 
-	public encodeJwt<PT extends object = object>(payload: string | Buffer | PT, inputEncoding: BufferEncoding, expiration = '7d'): string {
-		return sign(payload,
-			this.secret,
-			{
-				algorithm: 'HS256',
-				encoding: inputEncoding,
-				expiresIn: expiration,
-			}
-		);
+	public encodeJwt<PT extends object = object>(payload: jwtEncode<PT>, inputEncoding: BufferEncoding, expiration?: jwtExpirationType): string {
+		return sign(payload, this.secret, {
+			algorithm: 'HS256',
+			encoding: inputEncoding,
+			expiresIn: expiration ?? '1d',
+		});
 	}
 
-	public decodeJwt(token: string): {
-		content: JwtPayload | string | null,
+	public decodeJwt<CT extends object = object>(token: string): {
+		content: jwtDecode<CT> | null,
 		invalidSignature: boolean, expired: boolean,
 	} {
 		try {
@@ -50,7 +48,7 @@ export default class CryptographyService {
 			});
 
 			return {
-				content: decoded,
+				content: decoded as jwtDecode<CT>,
 				invalidSignature: false,
 				expired: false,
 			};

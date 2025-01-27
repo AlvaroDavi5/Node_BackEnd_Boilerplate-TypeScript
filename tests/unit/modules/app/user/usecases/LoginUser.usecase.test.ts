@@ -73,7 +73,7 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(cryptographyServiceMock.encodeJwt).toHaveBeenCalledTimes(1);
-			expect(cryptographyServiceMock.encodeJwt).toHaveBeenCalledWith({ clientId: userEntity.getId(), username: userEntity.getEmail() }, 'utf8', '1d');
+			expect(cryptographyServiceMock.encodeJwt).toHaveBeenCalledWith({ clientId: userEntity.getId(), username: userEntity.getEmail() }, 'utf8', '1D');
 			expect(result.token).toBe(mockedToken);
 			expect(result.user.getEmail()).toBe('user.test@nomail.test');
 			expect(result.user.getPassword()).toBe('');

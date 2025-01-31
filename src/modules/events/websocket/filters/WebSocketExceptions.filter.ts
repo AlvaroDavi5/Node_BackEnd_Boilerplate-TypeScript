@@ -71,7 +71,9 @@ export class WebSocketExceptionsFilter extends AbstractExceptionsFilter implemen
 		if (socketId)
 			this.logger.setSocketId(socketId);
 
-		this.capture(exception);
+		this.capture(exception, {
+			data: { socketId, event, payload: data },
+		});
 
 		const { errorEvent, errorResponse } = this.buildWsErrorResponse(exception, event, data);
 		socket.emit(errorEvent, errorResponse);

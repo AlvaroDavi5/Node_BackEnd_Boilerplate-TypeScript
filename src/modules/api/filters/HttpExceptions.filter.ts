@@ -75,7 +75,14 @@ export class HttpExceptionsFilter extends AbstractExceptionsFilter implements Ex
 		if (clientIp)
 			this.logger.setClientIp(clientIp);
 
-		this.capture(exception);
+		this.capture(exception, {
+			data: { requestId },
+			user: {
+				ip_address: clientIp,
+				username: request.user?.username as string,
+				id: request.user?.clientId as string,
+			}
+		});
 
 		const { status, errorResponse } = this.buildHttpErrorResponse(exception);
 		response.status(status).json(errorResponse);

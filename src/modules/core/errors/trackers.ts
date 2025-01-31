@@ -1,7 +1,6 @@
 import {
 	init as initSentry, consoleIntegration, captureConsoleIntegration,
-	captureException as captureSentryException, captureMessage as captureSentryMessage,
-	User
+	captureException as captureSentryException, captureMessage as captureSentryMessage
 } from '@sentry/nestjs';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
 import { GraphQLFormattedError } from 'graphql';
@@ -11,15 +10,15 @@ import readPackageInfo from '@common/utils/packageInfoReader.util';
 import { parseExceptionStatusCodeToSentrySeverity, parseLogLevelToSentrySeverity } from '@common/utils/sentrySeverity.util';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { LogLevelEnum } from '@core/logging/logger';
+import { ExceptionMetadataInterface } from '@shared/internal/interfaces/errorInterface';
 
-
-export function captureException(error: unknown, meta?: { data?: unknown, user?: User }): void {
+export function captureException(error: unknown, metadata?: ExceptionMetadataInterface): void {
 	const errorStatus = externalErrorParser(error).getStatus();
 
 	captureSentryException(error, {
 		level: parseExceptionStatusCodeToSentrySeverity(errorStatus),
-		data: meta?.data as undefined,
-		user: meta?.user,
+		data: metadata?.data as undefined,
+		user: metadata?.user,
 	});
 }
 

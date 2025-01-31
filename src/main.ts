@@ -2,7 +2,6 @@ import { NestFactory, SerializedGraph, PartialGraphHost } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { writeFileSync } from 'fs';
 import CoreModule from '@core/core.module';
-import { captureError } from '@core/errors/trackers';
 import nestListenConfig, { createNestApplicationOptions, validateKnownExceptions } from '@core/configs/nestListen.config';
 import nestApiConfig from '@core/configs/nestApi.config';
 import swaggerDocConfig from '@core/configs/swaggerDoc.config';
@@ -31,7 +30,6 @@ async function startNestApplication(): Promise<void> {
 startNestApplication().catch((error: Error) => {
 	// eslint-disable-next-line no-console
 	console.error(error);
-	captureError(error);
 	if (process.env.NODE_ENV === EnvironmentsEnum.DEVELOPMENT)
 		writeFileSync('./docs/nestGraph.json', PartialGraphHost.toString() ?? '');
 	process.exit(ProcessExitStatusEnum.FAILURE);

@@ -1,7 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { AxiosError } from 'axios';
-import { captureError } from '@core/errors/trackers';
+import { captureException } from '@core/errors/trackers';
 import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
@@ -49,6 +49,6 @@ export default abstract class AbstractExceptionsFilter {
 			&& this.errorsToIgnore.includes(exception.status);
 
 		if (!shouldIgnoreKnownException && !shouldIgnoreHttpException && !shouldIgnoreAxiosError)
-			captureError(exception);
+			captureException(exception);
 	}
 }

@@ -1,8 +1,8 @@
 import { PipeTransform, ArgumentMetadata } from '@nestjs/common';
-import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import Exceptions from '@core/errors/Exceptions';
 import { generateLogger } from '@core/logging/logger';
 import loginUserSchema, { LoginUserSchemaInterface } from '@app/user/api/schemas/user/loginUser.schema';
+import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import LoginUserInputDto from '../dto/user/LoginUserInput.dto';
 
 

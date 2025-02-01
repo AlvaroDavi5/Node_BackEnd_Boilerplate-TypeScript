@@ -1,10 +1,10 @@
 import Exceptions from '@core/errors/Exceptions';
+import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
+import UserPreferenceEntity, { IUpdateUserPreference } from '@domain/entities/UserPreference.entity';
 import DeleteUserUseCase from '@app/user/usecases/DeleteUser.usecase';
 import UserStrategy from '@app/user/strategies/User.strategy';
 import UserService from '@app/user/services/User.service';
 import UserPreferenceService from '@app/user/services/UserPreference.service';
-import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
-import UserPreferenceEntity, { IUpdateUserPreference } from '@domain/entities/UserPreference.entity';
 import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';

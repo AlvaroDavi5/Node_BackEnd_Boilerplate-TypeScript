@@ -2,10 +2,10 @@ import { Injectable, Inject } from '@nestjs/common';
 import { DataSource } from 'typeorm';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
-import WebSocketServer from '@events/websocket/server/WebSocket.server';
-import WebSocketClient from '@events/websocket/client/WebSocket.client';
 import LoggerService from '@core/logging/Logger.service';
 import { DATABASE_CONNECTION_PROVIDER, testConnection, syncConnection } from '@core/infra/database/connection';
+import WebSocketServer from '@events/websocket/server/WebSocket.server';
+import WebSocketClient from '@events/websocket/client/WebSocket.client';
 
 
 @Injectable()

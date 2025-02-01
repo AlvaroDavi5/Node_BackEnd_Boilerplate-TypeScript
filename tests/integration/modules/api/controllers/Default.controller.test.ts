@@ -4,10 +4,10 @@ import request from 'supertest';
 import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import DefaultController from '@api/controllers/Default.controller';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
-import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
 import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
+import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
+import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
 
 
 describe('Modules :: API :: DefaultController', () => {

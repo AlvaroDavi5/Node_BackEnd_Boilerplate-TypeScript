@@ -1,6 +1,6 @@
+import { writeFileSync } from 'fs';
 import { NestFactory, SerializedGraph, PartialGraphHost } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
-import { writeFileSync } from 'fs';
 import CoreModule from '@core/core.module';
 import nestListenConfig, { createNestApplicationOptions, validateKnownExceptions } from '@core/configs/nestListen.config';
 import nestApiConfig from '@core/configs/nestApi.config';

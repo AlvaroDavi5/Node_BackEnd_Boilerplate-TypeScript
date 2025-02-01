@@ -3,7 +3,6 @@ import { HttpAdapterHost } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import LifecycleService from '@core/start/Lifecycle.service';
 import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
-import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import SyncCronJob from '@core/cron/jobs/SyncCron.job';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
@@ -11,9 +10,10 @@ import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import SnsClient from '@core/infra/integration/aws/Sns.client';
 import S3Client from '@core/infra/integration/aws/S3.client';
 import CognitoClient from '@core/infra/integration/aws/Cognito.client';
+import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import { configServiceMock } from '@dev/mocks/mockedModules';
-import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
 import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
+import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
 
 
 describe('Modules :: Core :: Start :: LifecycleService', () => {

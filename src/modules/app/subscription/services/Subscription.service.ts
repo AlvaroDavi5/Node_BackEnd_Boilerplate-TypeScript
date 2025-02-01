@@ -3,15 +3,15 @@ import { ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { Collection, Db, ObjectId } from 'mongodb';
 import { ConfigsInterface } from '@core/configs/envs.config';
-import WebSocketClient from '@events/websocket/client/WebSocket.client';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
-import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 import LoggerService from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
 import SubscriptionEntity, { ICreateSubscription, IUpdateSubscription } from '@domain/entities/Subscription.entity';
 import { CacheEnum } from '@domain/enums/cache.enum';
 import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
+import WebSocketClient from '@events/websocket/client/WebSocket.client';
+import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 
 
 @Injectable()

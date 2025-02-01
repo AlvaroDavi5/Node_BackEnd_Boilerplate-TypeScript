@@ -2,7 +2,6 @@ import { Injectable, Inject, OnModuleInit, OnApplicationBootstrap, OnModuleDestr
 import { HttpAdapterHost } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { DataSource } from 'typeorm';
-import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CognitoClient from '@core/infra/integration/aws/Cognito.client';
@@ -13,6 +12,7 @@ import SyncCronJob from '@core/cron/jobs/SyncCron.job';
 import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import LoggerService from '@core/logging/Logger.service';
 import { ConfigsInterface } from '@core/configs/envs.config';
+import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 

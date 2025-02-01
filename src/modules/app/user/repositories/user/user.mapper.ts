@@ -1,6 +1,6 @@
-import UserEntity from '@domain/entities/User.entity';
 import UsersModel from '@core/infra/database/models/Users.model';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
+import UserEntity from '@domain/entities/User.entity';
 import userPreferenceMapper from '@app/user/repositories/userPreference/userPreference.mapper';
 
 

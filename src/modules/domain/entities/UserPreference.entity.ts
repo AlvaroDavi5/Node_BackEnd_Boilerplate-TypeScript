@@ -4,9 +4,9 @@ import { IsString, IsDate, IsEnum, IsUUID } from 'class-validator';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
+import { getObjValues } from '@common/utils/dataValidations.util';
 import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
 import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
-import { getObjValues } from '@common/utils/dataValidations.util';
 
 
 const dateTimeExample = fromISOToDateTime('2024-06-10T03:52:50.885Z', false, TimeZonesEnum.America_SaoPaulo);

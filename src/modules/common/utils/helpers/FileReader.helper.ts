@@ -1,7 +1,7 @@
-import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import { readFileSync, createReadStream, ReadStream } from 'fs';
 import { join } from 'path';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from './DataParser.helper';
 

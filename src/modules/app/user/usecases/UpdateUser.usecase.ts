@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import Exceptions from '@core/errors/Exceptions';
+import UserEntity, { IUpdateUser, IViewUser } from '@domain/entities/User.entity';
+import { IUpdateUserPreference, IViewUserPreference } from '@domain/entities/UserPreference.entity';
 import UserStrategy from '@app/user/strategies/User.strategy';
 import UserService from '@app/user/services/User.service';
 import UserPreferenceService from '@app/user/services/UserPreference.service';
-import UserEntity, { IUpdateUser, IViewUser } from '@domain/entities/User.entity';
-import { IUpdateUserPreference, IViewUserPreference } from '@domain/entities/UserPreference.entity';
 import UpdateUserInputDto from '@app/user/api/dto/user/UpdateUserInput.dto';
 import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 

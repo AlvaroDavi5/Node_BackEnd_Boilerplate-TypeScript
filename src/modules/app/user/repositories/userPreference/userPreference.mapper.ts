@@ -1,5 +1,5 @@
-import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
+import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
 
 
 const toDomainEntity = (dataValues: UserPreferencesModel): UserPreferenceEntity => {

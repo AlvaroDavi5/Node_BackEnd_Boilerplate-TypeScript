@@ -4,7 +4,7 @@ import { io, Socket as ClientSocket } from 'socket.io-client';
 import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { secondsToMilliseconds } from '@common/utils/dates.util';
-import type { ConfigsInterface } from '@core/configs/envs.config';
+import type { ConfigsInterface } from 'src/modules/core/configs/envs.config';
 
 
 @Injectable()

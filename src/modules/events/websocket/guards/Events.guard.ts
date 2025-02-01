@@ -2,9 +2,9 @@ import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { Observable } from 'rxjs';
 import { Socket } from 'socket.io';
-import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
+import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
 import { getObjKeys, getObjValues } from '@common/utils/dataValidations.util';
 
 

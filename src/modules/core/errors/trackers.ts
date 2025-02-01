@@ -5,11 +5,11 @@ import {
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
 import { GraphQLFormattedError } from 'graphql';
 import envsConfig from '@core/configs/envs.config';
+import { LogLevelEnum } from '@core/logging/logger';
 import externalErrorParser from '@common/utils/externalErrorParser.util';
 import readPackageInfo from '@common/utils/packageInfoReader.util';
 import { parseExceptionStatusCodeToSentrySeverity, parseLogLevelToSentrySeverity } from '@common/utils/sentrySeverity.util';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
-import { LogLevelEnum } from '@core/logging/logger';
 import { ExceptionMetadataInterface } from '@shared/internal/interfaces/errorInterface';
 
 export function captureException(error: unknown, metadata?: ExceptionMetadataInterface): void {

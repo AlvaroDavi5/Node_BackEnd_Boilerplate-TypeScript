@@ -342,23 +342,17 @@
 					"error",
 					{
 						"groups": [
-							[
-								"builtin",
-								"external"
-							],
+							"builtin",
+							"external",
 							"internal",
-							"sibling",
 							"parent",
+							"sibling",
 							"index",
 							"object",
 							"type"
 						],
-						"pathGroupsExcludedImportTypes": [
-							"builtin",
-							"external"
-						],
-						"distinctGroup": false,
 						"newlines-between": "never",
+						"distinctGroup": true,
 						"pathGroups": [
 							{
 								"pattern": "@core/**",
@@ -406,6 +400,7 @@
 								"position": "after"
 							}
 						],
+						"pathGroupsExcludedImportTypes": [],
 						"alphabetize": {
 							"order": "ignore",
 							"caseInsensitive": true

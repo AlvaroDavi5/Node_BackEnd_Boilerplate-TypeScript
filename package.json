@@ -40,7 +40,7 @@
 		"start:prod": "node build/main.js",
 		"start:webpack": "node build/webpack.js",
 		"start:dev": "cross-env NODE_PATH=. NODE_ENV=dev nodemon --config nodemon.json",
-		"start:debug": "cross-env NODE_PATH=. NODE_ENV=dev nodemon --config nodemon-debug.json",
+		"start:debug": "cross-env NODE_PATH=. NODE_ENV=dev nest start --debug --watch",
 		"security-check": "node ./scripts/security-check.js",
 		"mock-dependencies": "cross-env NODE_PATH=. ts-node --project tsconfig.json ./scripts/mock-dependencies.ts",
 		"receive-messages": "cross-env NODE_PATH=. ts-node --project tsconfig.json scripts/receive-messages.ts",

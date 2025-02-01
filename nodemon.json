@@ -8,5 +8,6 @@
 		"**/*.test.ts",
 		"**/*.spec.ts"
 	],
-	"exec": "ts-node -r tsconfig-paths/register src/main.ts"
+	"exec": "ts-node -r tsconfig-paths/register src/main.ts",
+	"exec:alt": "node --inspect-brk -r ts-node/register src/main.ts"
 }

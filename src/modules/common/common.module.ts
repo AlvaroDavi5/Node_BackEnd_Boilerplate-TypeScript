@@ -1,6 +1,6 @@
 import { Module, Global } from '@nestjs/common';
 import HttpMessagesConstants from './constants/HttpMessages.constants';
-import RequestRateConstants from './constants/RequestRate.constants';
+import RequestRateLimitConstants from './constants/RequestRateLimit.constants';
 import ContentTypeConstants from './constants/ContentType.constants';
 import RegExConstants from './constants/Regex.constants';
 import DataParserHelper from './utils/helpers/DataParser.helper';
@@ -14,8 +14,8 @@ import FileReaderHelper from './utils/helpers/FileReader.helper';
 	controllers: [],
 	providers: [
 		HttpMessagesConstants,
+		RequestRateLimitConstants,
 		ContentTypeConstants,
-		RequestRateConstants,
 		RegExConstants,
 		DataParserHelper,
 		CacheAccessHelper,
@@ -23,8 +23,8 @@ import FileReaderHelper from './utils/helpers/FileReader.helper';
 	],
 	exports: [
 		HttpMessagesConstants,
+		RequestRateLimitConstants,
 		ContentTypeConstants,
-		RequestRateConstants,
 		RegExConstants,
 		DataParserHelper,
 		CacheAccessHelper,

@@ -4,7 +4,7 @@ import { secondsToMilliseconds } from '@common/utils/dates.util';
 
 
 @Injectable()
-export default class RequestRateConstants {
+export default class RequestRateLimitConstants {
 	// * 3 calls per second
 	public readonly short: ThrottlerOptions = {
 		name: 'short',

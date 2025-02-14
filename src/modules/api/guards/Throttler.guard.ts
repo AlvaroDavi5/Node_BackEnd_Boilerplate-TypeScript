@@ -17,7 +17,7 @@ export default class CustomThrottlerGuard extends ThrottlerGuard {
 		throttler: ThrottlerOptions,
 	): Promise<boolean> {
 		const throttlerName = throttler.name ?? 'defaultThrottler';
-		this.logger.verbose(`Running guard with '${throttlerName}' throttler`);
+		this.logger.verbose(`Running guard with '${throttlerName}' throttler for ${throttler.limit} requests in ${throttler.ttl} ms`);
 
 		const { req, res } = this.getRequestResponse(context);
 

@@ -47,7 +47,7 @@ export default class FileController {
 		{ name: 'accept', allowEmptyValue: true },
 	])
 	public async downloadFile(
-		@Headers() headers: { [key: string]: string | undefined },
+		@Headers() headers: Record<string, string | undefined>,
 		@Headers('fileName') fileNameHeader: string,
 		@Headers('filePath') filePathHeader: string,
 		@Res({ passthrough: true }) response: Response,
@@ -97,7 +97,7 @@ export default class FileController {
 	})
 	@UseInterceptors(FileInterceptor('file', { dest: './temp', preservePath: true, limits: {} }))
 	public async uploadFile(
-		@Headers() headers: { [key: string]: string | undefined },
+		@Headers() headers: Record<string, string | undefined>,
 		@Headers('fileName') fileNameHeader: string,
 		@UploadedFile(new ParseFilePipe()) file: RequestFileInterface,
 	): Promise<{

@@ -9,9 +9,9 @@ import { RestClientResponseInterface } from '@shared/external/interfaces/RestCli
 
 interface HealthCheckResponseInterface {
 	url: string, statusCode: number, method: string,
-	params: { [key: string]: unknown },
-	query: { [key: string]: unknown },
-	body: { [key: string]: unknown },
+	params: Record<string, unknown>,
+	query: Record<string, unknown>,
+	body: Record<string, unknown>,
 }
 
 @Injectable()

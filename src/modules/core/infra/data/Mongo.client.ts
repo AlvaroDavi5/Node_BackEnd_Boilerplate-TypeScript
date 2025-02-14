@@ -10,7 +10,7 @@ import Exceptions from '@core/errors/Exceptions';
 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export type documentObjectType = { [key: string]: any }
+type documentObjectType = Record<string, any>
 
 @Injectable()
 export default class MongoClient {

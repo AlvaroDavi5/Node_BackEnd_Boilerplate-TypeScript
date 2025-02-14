@@ -58,15 +58,15 @@ export default class DefaultController {
 	@ApiProduces('application/json')
 	public healthCheck(
 		@Req() request: Request,
-		@Headers() headers: { [key: string]: string | undefined },
-		@Param() pathParams: { [key: string]: unknown },
+		@Headers() headers: Record<string, string | undefined>,
+		@Param() pathParams: Record<string, unknown>,
 		@Query() queryParams: unknown,
 		@Body() body: unknown,
 		@Res({ passthrough: true }) response: Response,
 	): {
 		baseUrl: string, url: string, method: string,
-		headers: { [key: string]: string | undefined },
-		pathParams: { [key: string]: unknown }, queryParams: unknown, body: unknown,
+		headers: Record<string, string | undefined>,
+		pathParams: Record<string, unknown>, queryParams: unknown, body: unknown,
 		statusCode: number, statusMessage: string,
 	} {
 		// [METHOD]:{STATUS_CODE} http://url/:param1/:param2?query1=X&query2=Y { 'body': {} }

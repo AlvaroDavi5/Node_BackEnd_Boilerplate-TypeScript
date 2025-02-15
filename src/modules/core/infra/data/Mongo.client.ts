@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
 	MongoClient as MongoDBClient, WithId, ServerApiVersion,
-	Db, Document, Collection, ObjectId,
+	Db, Document as MongoDocument, Collection, ObjectId,
 	InsertOneResult, InsertManyResult, UpdateResult, DeleteResult,
 } from 'mongodb';
 import { ConfigsInterface } from '@core/configs/envs.config';
@@ -33,6 +33,7 @@ export default class MongoClient {
 	) {
 		const { mongo, databases } = this.configService.get<ConfigsInterface['data']>('data')!;
 
+		this.isConnected = false;
 		this.mongoClient = new MongoDBClient(String(mongo.uri), {
 			maxConnecting: mongo.maxConnecting,
 			maxPoolSize: mongo.maxPoolSize,
@@ -42,7 +43,9 @@ export default class MongoClient {
 				deprecationErrors: true,
 			}
 		});
-		this.isConnected = true;
+
+		this.mongoClient.on('open', () => { this.isConnected = true; });
+		this.mongoClient.on('topologyClosed', () => { this.isConnected = false; });
 
 		this.databases = {
 			datalake: {
@@ -59,21 +62,19 @@ export default class MongoClient {
 	public async connect(): Promise<boolean> {
 		try {
 			await this.mongoClient.connect();
-			this.isConnected = true;
 		} catch (error) {
-			this.isConnected = false;
 			throw this.exceptions.integration({
 				message: 'Error to connect mongo client',
 				details: (error as Error)?.message,
 			});
 		}
+
 		return this.isConnected;
 	}
 
 	public async disconnect(): Promise<boolean> {
 		try {
 			await this.mongoClient.close();
-			this.isConnected = false;
 
 			return true;
 		} catch (error) {
@@ -81,7 +82,7 @@ export default class MongoClient {
 		}
 	}
 
-	public runCommand(database: Db, command: documentObjectType): Promise<Document> {
+	public runCommand(database: Db, command: documentObjectType): Promise<MongoDocument> {
 		if (!database) {
 			throw this.exceptions.conflict({
 				message: 'Database unexistent',
@@ -102,22 +103,22 @@ export default class MongoClient {
 		return collectionNames;
 	}
 
-	public getCollection(database: Db, collectionName: string): Collection<Document> {
+	public getCollection(database: Db, collectionName: string): Collection<MongoDocument> {
 		if (!database) {
 			throw this.exceptions.conflict({
 				message: 'Database unexistent',
 			});
 		}
-		return database.collection<Document>(collectionName);
+		return database.collection<MongoDocument>(collectionName);
 	}
 
-	public async createCollection(database: Db, collectionName: string): Promise<Collection<Document>> {
+	public async createCollection(database: Db, collectionName: string): Promise<Collection<MongoDocument>> {
 		if (!database) {
 			throw this.exceptions.conflict({
 				message: 'Database unexistent',
 			});
 		}
-		return await database.createCollection<Document>(collectionName);
+		return await database.createCollection<MongoDocument>(collectionName);
 	}
 
 	public async dropCollection(database: Db, collectionName: string): Promise<boolean> {
@@ -129,39 +130,42 @@ export default class MongoClient {
 		return await database.dropCollection(collectionName);
 	}
 
-	public async insertOne(collection: Collection<Document>, data: documentObjectType): Promise<InsertOneResult<Document>> {
+	public async insertOne(collection: Collection<MongoDocument>, data: documentObjectType): Promise<InsertOneResult<MongoDocument>> {
 		return await collection.insertOne(data);
 	}
 
-	public async insertMany(collection: Collection<Document>, dataList: documentObjectType[]): Promise<InsertManyResult<Document>> {
+	public async insertMany(collection: Collection<MongoDocument>, dataList: documentObjectType[]): Promise<InsertManyResult<MongoDocument>> {
 		return await collection.insertMany(dataList);
 	}
 
-	public async get(collection: Collection<Document>, id: ObjectId): Promise<WithId<Document> | null> {
+	public async get(collection: Collection<MongoDocument>, id: ObjectId): Promise<WithId<MongoDocument> | null> {
 		return await collection.findOne({ _id: id });
 	}
 
-	public async findOne(collection: Collection<Document>, filterData: documentObjectType): Promise<WithId<Document> | null> {
+	public async findOne(collection: Collection<MongoDocument>, filterData: documentObjectType): Promise<WithId<MongoDocument> | null> {
 		return await collection.findOne(filterData);
 	}
 
-	public async findMany(collection: Collection<Document>, filterData: documentObjectType): Promise<WithId<Document>[]> {
+	public async findMany(collection: Collection<MongoDocument>, filterData: documentObjectType): Promise<WithId<MongoDocument>[]> {
 		return collection.find(filterData).toArray();
 	}
 
-	public async updateOne(collection: Collection<Document>, id: ObjectId, newData: documentObjectType): Promise<UpdateResult<Document>> {
+	public async updateOne(collection: Collection<MongoDocument>, id: ObjectId, newData: documentObjectType): Promise<UpdateResult<MongoDocument>> {
 		return await collection.updateOne({ _id: id }, { $set: newData });
 	}
 
-	public async updateMany(collection: Collection<Document>, filterData: documentObjectType, newData: documentObjectType): Promise<UpdateResult<Document>> {
+	public async updateMany(
+		collection: Collection<MongoDocument>,
+		filterData: documentObjectType, newData: documentObjectType
+	): Promise<UpdateResult<MongoDocument>> {
 		return await collection.updateMany(filterData, { $set: newData });
 	}
 
-	public async deleteOne(collection: Collection<Document>, id: ObjectId): Promise<DeleteResult> {
+	public async deleteOne(collection: Collection<MongoDocument>, id: ObjectId): Promise<DeleteResult> {
 		return await collection.deleteOne({ _id: id });
 	}
 
-	public async deleteMany(collection: Collection<Document>, filterData: documentObjectType): Promise<DeleteResult> {
+	public async deleteMany(collection: Collection<MongoDocument>, filterData: documentObjectType): Promise<DeleteResult> {
 		return await collection.deleteMany(filterData);
 	}
 }

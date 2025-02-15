@@ -49,22 +49,22 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 	public onModuleDestroy(): void {
 		this.logger.warn('Closing HTTP server, disconnecting websocket clients, stopping crons and destroying cloud integrations');
 		try {
-			this.syncCronJob.stopCron();
+			this.httpAdapterHost?.httpAdapter?.close();
 			this.webSocketServer.disconnectAllSockets();
 			this.webSocketServer.disconnect();
-			this.httpAdapterHost?.httpAdapter?.close();
+			this.syncCronJob.stopCron();
+			this.cognitoClient.destroy();
 			this.sqsClient.destroy();
 			this.snsClient.destroy();
 			this.s3Client.destroy();
-			this.cognitoClient.destroy();
 		} catch (error) {
 			this.logger.error(error);
 		}
 	}
 
 	public async beforeApplicationShutdown(): Promise<void> {
-		this.logger.warn('Closing cache and database connections');
-		if (this.redisClient.isConnected === true)
+		this.logger.warn('Closing cache and databases connections');
+		if (this.redisClient.isConnected() === true)
 			try {
 				await this.redisClient.disconnect();
 			} catch (error) {
@@ -87,7 +87,10 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 
 	public onApplicationShutdown(): void {
 		this.logger.warn('Exiting Application');
-		if (this.appConfigs.environment !== EnvironmentsEnum.TEST)
+
+		const shouldExit = this.appConfigs.environment !== EnvironmentsEnum.TEST;
+
+		if (shouldExit)
 			process.exit(ProcessExitStatusEnum.SUCCESS);
 	}
 }

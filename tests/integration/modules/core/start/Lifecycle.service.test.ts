@@ -42,10 +42,11 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 		}),
 	};
 	const redisClientMock = {
-		isConnected: true,
+		_isConnected: true,
+		isConnected: jest.fn((): boolean => { return redisClientMock._isConnected; }),
 		disconnect: jest.fn((...args: unknown[]): void => {
 			args.forEach((arg) => console.log(arg));
-			redisClientMock.isConnected = false;
+			redisClientMock._isConnected = false;
 		}),
 	};
 	const awsClientMock = {
@@ -94,7 +95,7 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 			expect(webSocketServerMock.disconnectAllSockets).toHaveBeenCalledTimes(1);
 			expect(webSocketServerMock.disconnect).toHaveBeenCalledTimes(1);
 			expect(syncCronJobMock.stopCron).toHaveBeenCalledTimes(1);
-			expect(mockObservable.call).toHaveBeenCalledWith('Closing cache and database connections');
+			expect(mockObservable.call).toHaveBeenCalledWith('Closing cache and databases connections');
 			expect(mongoClientMock.disconnect).toHaveBeenCalledTimes(1);
 			expect(redisClientMock.disconnect).toHaveBeenCalledTimes(1);
 			expect(databaseConnectionMock.destroy).toHaveBeenCalledTimes(1);

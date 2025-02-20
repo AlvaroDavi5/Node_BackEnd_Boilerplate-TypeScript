@@ -49,6 +49,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 	public onModuleDestroy(): void {
 		this.logger.warn('Closing HTTP server, disconnecting websocket clients, stopping crons and destroying cloud integrations');
 		try {
+			// NOTE - gracefull shutdown
 			this.httpAdapterHost?.httpAdapter?.close();
 			this.webSocketServer.disconnectAllSockets();
 			this.webSocketServer.disconnect();

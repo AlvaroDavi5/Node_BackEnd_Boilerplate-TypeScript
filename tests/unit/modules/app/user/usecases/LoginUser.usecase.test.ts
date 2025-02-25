@@ -1,10 +1,10 @@
 import Exceptions from '@core/errors/Exceptions';
 import CryptographyService from '@core/security/Cryptography.service';
+import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
+import UserPreferenceEntity, { IUpdateUserPreference } from '@domain/entities/UserPreference.entity';
 import LoginUserUseCase from '@app/user/usecases/LoginUser.usecase';
 import UserService from '@app/user/services/User.service';
 import UserPreferenceService from '@app/user/services/UserPreference.service';
-import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
-import UserPreferenceEntity, { IUpdateUserPreference } from '@domain/entities/UserPreference.entity';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 

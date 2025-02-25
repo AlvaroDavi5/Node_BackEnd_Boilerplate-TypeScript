@@ -1,9 +1,9 @@
 import { PipeTransform, ArgumentMetadata } from '@nestjs/common';
-import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import Exceptions from '@core/errors/Exceptions';
 import { generateLogger } from '@core/logging/logger';
-import updateUserSchema from '@app/user/api/schemas/user/updateUser.schema';
 import { IUpdateUser } from '@domain/entities/User.entity';
+import updateUserSchema from '@app/user/api/schemas/user/updateUser.schema';
+import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import UpdateUserInputDto from '../dto/user/UpdateUserInput.dto';
 
 

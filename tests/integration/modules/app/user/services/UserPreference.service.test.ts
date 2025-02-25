@@ -2,10 +2,10 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { FindOneOptions } from 'typeorm';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
-import UserPreferenceService from '@app/user/services/UserPreference.service';
-import UserPreferenceRepository from '@app/user/repositories/userPreference/UserPreference.repository';
 import Exceptions from '@core/errors/Exceptions';
 import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
+import UserPreferenceService from '@app/user/services/UserPreference.service';
+import UserPreferenceRepository from '@app/user/repositories/userPreference/UserPreference.repository';
 import { configServiceMock } from '@dev/mocks/mockedModules';
 
 

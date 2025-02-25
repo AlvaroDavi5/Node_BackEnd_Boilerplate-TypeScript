@@ -27,7 +27,7 @@ export default class WebhookService {
 		this.hooksTimeToLive = hooksExpirationTime;
 	}
 
-	public async pullHook(hookSchema: string, data: { [key: string]: unknown; }): Promise<void> {
+	public async pullHook(hookSchema: string, data: Record<string, unknown>): Promise<void> {
 		const hookSchemaList = await this.list(hookSchema);
 		const mockedServiceBaseUrl = this.configService
 			.get<ConfigsInterface['integration']['rest']['mockedService']['baseUrl']>('integration.rest.mockedService.baseUrl')!;

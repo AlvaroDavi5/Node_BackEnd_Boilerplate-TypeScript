@@ -2,7 +2,6 @@ import { Injectable, Inject, OnModuleInit, OnApplicationBootstrap, OnModuleDestr
 import { HttpAdapterHost } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { DataSource } from 'typeorm';
-import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
 import CognitoClient from '@core/infra/integration/aws/Cognito.client';
@@ -13,6 +12,7 @@ import SyncCronJob from '@core/cron/jobs/SyncCron.job';
 import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import LoggerService from '@core/logging/Logger.service';
 import { ConfigsInterface } from '@core/configs/envs.config';
+import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 
@@ -49,22 +49,23 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 	public onModuleDestroy(): void {
 		this.logger.warn('Closing HTTP server, disconnecting websocket clients, stopping crons and destroying cloud integrations');
 		try {
-			this.syncCronJob.stopCron();
+			// NOTE - gracefull shutdown
+			this.httpAdapterHost?.httpAdapter?.close();
 			this.webSocketServer.disconnectAllSockets();
 			this.webSocketServer.disconnect();
-			this.httpAdapterHost?.httpAdapter?.close();
+			this.syncCronJob.stopCron();
+			this.cognitoClient.destroy();
 			this.sqsClient.destroy();
 			this.snsClient.destroy();
 			this.s3Client.destroy();
-			this.cognitoClient.destroy();
 		} catch (error) {
 			this.logger.error(error);
 		}
 	}
 
 	public async beforeApplicationShutdown(): Promise<void> {
-		this.logger.warn('Closing cache and database connections');
-		if (this.redisClient.isConnected === true)
+		this.logger.warn('Closing cache and databases connections');
+		if (this.redisClient.isConnected() === true)
 			try {
 				await this.redisClient.disconnect();
 			} catch (error) {
@@ -87,7 +88,10 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 
 	public onApplicationShutdown(): void {
 		this.logger.warn('Exiting Application');
-		if (this.appConfigs.environment !== EnvironmentsEnum.TEST)
+
+		const shouldExit = this.appConfigs.environment !== EnvironmentsEnum.TEST;
+
+		if (shouldExit)
 			process.exit(ProcessExitStatusEnum.SUCCESS);
 	}
 }

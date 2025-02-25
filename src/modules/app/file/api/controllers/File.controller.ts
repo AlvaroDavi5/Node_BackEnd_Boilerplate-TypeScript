@@ -7,13 +7,13 @@ import {
 import { ApiOperation, ApiTags, ApiBody, ApiHeaders, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
-import CustomThrottlerGuard from '@api/guards/Throttler.guard';
+import FileService from '@app/file/services/File.service';
 import AuthGuard from '@api/guards/Auth.guard';
 import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
 import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
-import FileService from '@app/file/services/File.service';
+import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import { RequestFileInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
@@ -47,7 +47,7 @@ export default class FileController {
 		{ name: 'accept', allowEmptyValue: true },
 	])
 	public async downloadFile(
-		@Headers() headers: { [key: string]: string | undefined },
+		@Headers() headers: Record<string, string | undefined>,
 		@Headers('fileName') fileNameHeader: string,
 		@Headers('filePath') filePathHeader: string,
 		@Res({ passthrough: true }) response: Response,
@@ -97,7 +97,7 @@ export default class FileController {
 	})
 	@UseInterceptors(FileInterceptor('file', { dest: './temp', preservePath: true, limits: {} }))
 	public async uploadFile(
-		@Headers() headers: { [key: string]: string | undefined },
+		@Headers() headers: Record<string, string | undefined>,
 		@Headers('fileName') fileNameHeader: string,
 		@UploadedFile(new ParseFilePipe()) file: RequestFileInterface,
 	): Promise<{

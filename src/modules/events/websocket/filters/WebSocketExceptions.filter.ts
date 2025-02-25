@@ -1,9 +1,9 @@
 import { Catch, ArgumentsHost, WsExceptionFilter } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
-import AbstractExceptionsFilter, { ErrorOrExceptionToFilter } from '@core/errors/AbstractExceptions.filter';
 import LoggerService from '@core/logging/Logger.service';
 import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
+import AbstractExceptionsFilter, { ErrorOrExceptionToFilter } from '@common/filters/AbstractExceptions.filter';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { isNullOrUndefined } from '@common/utils/dataValidations.util';
 import externalErrorParser from '@common/utils/externalErrorParser.util';
@@ -71,7 +71,9 @@ export class WebSocketExceptionsFilter extends AbstractExceptionsFilter implemen
 		if (socketId)
 			this.logger.setSocketId(socketId);
 
-		this.capture(exception);
+		this.capture(exception, {
+			data: { socketId, event, payload: data },
+		});
 
 		const { errorEvent, errorResponse } = this.buildWsErrorResponse(exception, event, data);
 		socket.emit(errorEvent, errorResponse);

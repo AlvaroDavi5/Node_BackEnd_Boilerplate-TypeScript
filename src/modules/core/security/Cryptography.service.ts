@@ -1,6 +1,6 @@
+import crypto from 'crypto';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import crypto from 'crypto';
 import { genSaltSync } from 'bcrypt';
 import { sign, verify, JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { v4 as uuidV4 } from 'uuid';

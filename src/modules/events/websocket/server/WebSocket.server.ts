@@ -6,13 +6,14 @@ import {
 	OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Server as SocketIoServer, Socket } from 'socket.io';
+import LoggerService from '@core/logging/Logger.service';
 import { EventsEnum } from '@domain/enums/events.enum';
 import { WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/webSocketEvents.enum';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
 import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
 import EventsGuard from '@events/websocket/guards/Events.guard';
 import { WebSocketExceptionsFilter } from '@events/websocket/filters/WebSocketExceptions.filter';
-import LoggerService from '@core/logging/Logger.service';
+import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 import { getObjValues } from '@common/utils/dataValidations.util';
@@ -26,7 +27,7 @@ import { getObjValues } from '@common/utils/dataValidations.util';
 	}
 })
 @UseFilters(WebSocketExceptionsFilter)
-@UseGuards(EventsGuard)
+@UseGuards(CustomThrottlerGuard, EventsGuard)
 export default class WebSocketServer implements OnModuleInit, OnGatewayInit<SocketIoServer>, OnGatewayConnection<Socket>, OnGatewayDisconnect<Socket> {
 	@Server()
 	private server!: SocketIoServer;

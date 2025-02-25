@@ -1,7 +1,7 @@
+import { Console } from 'console';
 import { ArgumentMetadata } from '@nestjs/common';
 import { Schema } from 'joi';
 import { Logger } from 'winston';
-import { Console } from 'console';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 

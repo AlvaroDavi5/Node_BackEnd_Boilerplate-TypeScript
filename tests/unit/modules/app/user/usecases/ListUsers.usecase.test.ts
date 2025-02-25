@@ -1,6 +1,6 @@
+import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
 import ListUsersUseCase from '@app/user/usecases/ListUsers.usecase';
 import UserService from '@app/user/services/User.service';
-import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
 

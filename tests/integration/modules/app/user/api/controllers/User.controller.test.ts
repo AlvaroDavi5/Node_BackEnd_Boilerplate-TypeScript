@@ -2,8 +2,8 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import Exceptions from '@core/errors/Exceptions';
-import CustomThrottlerGuard from '@api/guards/Throttler.guard';
-import AuthGuard from '@api/guards/Auth.guard';
+import UserEntity from '@domain/entities/User.entity';
+import UserListEntity from '@domain/entities/generic/UserList.entity';
 import UserController from '@app/user/api/controllers/User.controller';
 import LoginUserUseCase from '@app/user/usecases/LoginUser.usecase';
 import ListUsersUseCase from '@app/user/usecases/ListUsers.usecase';
@@ -11,13 +11,13 @@ import CreateUserUseCase from '@app/user/usecases/CreateUser.usecase';
 import GetUserUseCase from '@app/user/usecases/GetUser.usecase';
 import UpdateUserUseCase from '@app/user/usecases/UpdateUser.usecase';
 import DeleteUserUseCase from '@app/user/usecases/DeleteUser.usecase';
-import UserEntity from '@domain/entities/User.entity';
-import UserListEntity from '@domain/entities/generic/UserList.entity';
-import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
-import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
-import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
-import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
+import AuthGuard from '@api/guards/Auth.guard';
+import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
+import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
+import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
+import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
 
 describe('Modules :: App :: User :: API :: UserController', () => {

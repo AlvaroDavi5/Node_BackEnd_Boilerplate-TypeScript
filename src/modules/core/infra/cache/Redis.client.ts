@@ -10,8 +10,6 @@ import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 export default class RedisClient {
 	private readonly redisClient: IORedis;
 
-	public isConnected: boolean;
-
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly exceptions: Exceptions,
@@ -33,8 +31,6 @@ export default class RedisClient {
 				message: 'Error to instance redis client',
 			});
 		}
-
-		this.isConnected = true;
 	}
 
 	private parseValue<VT = unknown>(strValue: string): VT | null {
@@ -46,32 +42,30 @@ export default class RedisClient {
 		return this.redisClient;
 	}
 
-	public async connect(): Promise<boolean> {
+	public isConnected(): boolean {
 		const connectedStatus = ['connect', 'ready'];
 
+		return connectedStatus.includes(this.redisClient.status);
+	}
+
+	public async connect(): Promise<boolean> {
 		try {
 			await this.redisClient.connect();
-			this.isConnected = connectedStatus.includes(this.redisClient.status);
 		} catch (error) {
-			this.isConnected = false;
 			throw this.exceptions.integration({
 				message: 'Error to connect redis client',
 				details: (error as Error)?.message,
 			});
 		}
-		return this.isConnected;
+
+		return this.isConnected();
 	}
 
 	public async disconnect(): Promise<boolean> {
 		const disconnectedStatus = ['wait', 'close', 'end'];
 
 		try {
-			const wasClosed = await this.redisClient.quit() === 'OK' || disconnectedStatus.includes(this.redisClient.status);
-
-			if (wasClosed)
-				this.isConnected = false;
-
-			return wasClosed;
+			return await this.redisClient.quit() === 'OK' && disconnectedStatus.includes(this.redisClient.status);
 		} catch (error) {
 			return false;
 		}

@@ -30,7 +30,7 @@ export default class ResponseInterceptor implements NestInterceptor {
 		if (clientIp)
 			this.logger.setClientIp(clientIp);
 
-		const { method, originalUrl } = request;
+		const { method, path } = request;
 		const responseDateMs = fromDateTimeToEpoch(getDateTimeNow(TimeZonesEnum.America_SaoPaulo), true, true);
 		const timestamp = !isNullOrUndefined(request.createdAt)
 			? Math.abs(responseDateMs - request.createdAt!)
@@ -41,11 +41,11 @@ export default class ResponseInterceptor implements NestInterceptor {
 			.pipe(
 				tap((responseData: unknown): void => {
 					const resData = this.dataParserHelper.toString(responseData);
-					this.logger.http(`RESPONDING - ${timestamp} ms: [${method.toUpperCase()}] '${originalUrl}' ${resData}`);
+					this.logger.http(`RESPONDING - ${timestamp} ms: [${method.toUpperCase()}] '${path}' ${resData}`);
 				}),
 				catchError((responseError: Error): Observable<void> => {
 					const resErr = this.dataParserHelper.toString(responseError);
-					this.logger.http(`RESPONDING ERROR - ${timestamp} ms: [${method.toUpperCase()}] '${originalUrl}' ${resErr}`);
+					this.logger.http(`RESPONDING ERROR - ${timestamp} ms: [${method.toUpperCase()}] '${path}' ${resErr}`);
 					throw responseError;
 				})
 			);

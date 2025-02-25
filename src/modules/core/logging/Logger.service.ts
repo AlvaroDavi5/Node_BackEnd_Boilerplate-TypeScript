@@ -3,6 +3,7 @@ import { Injectable, Inject, Provider, Scope } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createLogger, Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/envs.config';
+import { captureLog } from '@core/errors/trackers';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { LoggerInterface, LogLevelEnum, MetadataInterface, getLoggerOptions } from './logger';
 
@@ -116,6 +117,8 @@ export default class LoggerService implements LoggerInterface {
 
 	public [LogLevelEnum.WARN](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
+
+		captureLog(message, LogLevelEnum.WARN);
 
 		this.logger.log({
 			level: LogLevelEnum.WARN,

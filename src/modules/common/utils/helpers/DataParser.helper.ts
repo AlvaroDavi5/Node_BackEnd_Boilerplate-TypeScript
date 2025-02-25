@@ -3,7 +3,6 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export default class DataParserHelper {
-
 	public toString(data: unknown): string {
 		let result = '';
 

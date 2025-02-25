@@ -1,4 +1,4 @@
-import { Injectable, StreamableFile } from '@nestjs/common';
+import { Injectable, OnModuleInit, StreamableFile } from '@nestjs/common';
 import { LazyModuleLoader } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import CryptographyService from '@core/security/Cryptography.service';
@@ -12,9 +12,9 @@ import { RequestFileInterface } from '@shared/internal/interfaces/endpointInterf
 
 
 @Injectable()
-export default class FileService {
+export default class FileService implements OnModuleInit {
 	private uploadService!: UploadService;
-	private readonly isTestEnv: boolean; // ! lazy loads not works in test environment
+	private readonly isTestEnv: boolean; // NOTE - feature flag
 
 	constructor(
 		private readonly lazyModuleLoader: LazyModuleLoader,
@@ -28,7 +28,7 @@ export default class FileService {
 	}
 
 	public async onModuleInit(): Promise<void> {
-		if (!this.isTestEnv) {
+		if (!this.isTestEnv) { // ! lazy loads not works in test environment
 			const reportsModuleRef = await this.lazyModuleLoader.load(() => ReportsModule);
 			this.uploadService = await reportsModuleRef.resolve(UploadService, { id: 1 });
 		}

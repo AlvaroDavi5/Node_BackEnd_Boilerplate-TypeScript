@@ -1,12 +1,12 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import UsersModel from '@core/infra/database/models/Users.model';
-import { configServiceMock } from '@dev/mocks/mockedModules';
-import UserService from '@app/user/services/User.service';
-import UserRepository from '@app/user/repositories/user/User.repository';
 import Exceptions from '@core/errors/Exceptions';
 import CryptographyService from '@core/security/Cryptography.service';
 import UserEntity from '@domain/entities/User.entity';
+import UserRepository from '@app/user/repositories/user/User.repository';
+import UserService from '@app/user/services/User.service';
+import { configServiceMock } from '@dev/mocks/mockedModules';
 
 
 describe('Modules :: App :: User :: Services :: UserService', () => {

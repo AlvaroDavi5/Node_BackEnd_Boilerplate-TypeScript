@@ -1,10 +1,10 @@
 import Exceptions from '@core/errors/Exceptions';
+import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
+import UserPreferenceEntity, { IUpdateUserPreference } from '@domain/entities/UserPreference.entity';
 import CreateUserUseCase from '@app/user/usecases/CreateUser.usecase';
 import UserService from '@app/user/services/User.service';
 import UserPreferenceService from '@app/user/services/UserPreference.service';
 import CreateUserInputDto from '@app/user/api/dto/user/CreateUserInput.dto';
-import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
-import UserPreferenceEntity, { IUpdateUserPreference } from '@domain/entities/UserPreference.entity';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';

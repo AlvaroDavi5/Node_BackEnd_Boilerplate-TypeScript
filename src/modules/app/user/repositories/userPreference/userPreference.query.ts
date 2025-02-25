@@ -1,8 +1,8 @@
 import { Equal, Like, In, And, FindManyOptions, FindOptionsWhere, FindOptionsSelect } from 'typeorm';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
+import { BuildParamsInterface } from '@core/infra/database/repositories/AbstractRepository.repository';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 import { UserPreferenceInterface } from '@domain/entities/UserPreference.entity';
-import { BuildParamsInterface } from '@core/infra/database/repositories/AbstractRepository.repository';
 import { getObjValues } from '@common/utils/dataValidations.util';
 
 

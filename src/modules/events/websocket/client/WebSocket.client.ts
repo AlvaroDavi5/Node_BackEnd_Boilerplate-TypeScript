@@ -4,7 +4,7 @@ import { io, Socket as ClientSocket } from 'socket.io-client';
 import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { secondsToMilliseconds } from '@common/utils/dates.util';
-import type { ConfigsInterface } from '@core/configs/envs.config';
+import type { ConfigsInterface } from 'src/modules/core/configs/envs.config';
 
 
 @Injectable()
@@ -44,22 +44,16 @@ export default class WebSocketClient {
 
 	// listen event messages from the server
 	public listen(event: string, callback: (...args: unknown[]) => void): void {
-		this.logger.info(`Listenned event '${event}' from the WebSocket server`);
+		this.logger.info(`Listenning event '${event}' from the WebSocket server`);
 
-		this.clientSocket.on(
-			String(event),
-			callback,
-		);
+		this.clientSocket.on(String(event), callback);
 	}
 
 	// ignore listenned event messages from the server
 	public ignore(event: string, callback: (...args: unknown[]) => void): void {
-		this.logger.info(`Ignored event '${event}' from the WebSocket server`);
+		this.logger.info(`Ignoring event '${event}' from the WebSocket server`);
 
-		this.clientSocket.off(
-			String(event),
-			callback,
-		);
+		this.clientSocket.off(String(event), callback);
 	}
 
 	public isConnected(): boolean {

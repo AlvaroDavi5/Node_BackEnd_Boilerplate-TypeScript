@@ -1,8 +1,8 @@
 import { Not, IsNull, Equal, Like, In, And, FindManyOptions, FindOptionsWhere, FindOptionsSelect } from 'typeorm';
 import UsersModel from '@core/infra/database/models/Users.model';
+import { BuildParamsInterface, PaginationOptionsInterface } from '@core/infra/database/repositories/AbstractRepository.repository';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 import { UserInterface } from '@domain/entities/User.entity';
-import { BuildParamsInterface, PaginationOptionsInterface } from '@core/infra/database/repositories/AbstractRepository.repository';
 import { getObjValues } from '@common/utils/dataValidations.util';
 
 

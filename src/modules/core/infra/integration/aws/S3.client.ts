@@ -1,6 +1,6 @@
+import { Readable } from 'stream';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Readable } from 'stream';
 import {
 	S3Client as S3AWSClient, NotificationConfiguration,
 	ListBucketsCommand, CreateBucketCommand, DeleteBucketCommand,

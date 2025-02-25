@@ -2,9 +2,9 @@ import { Injectable, Inject, Scope, NestMiddleware } from '@nestjs/common';
 import CryptographyService from '@core/security/Cryptography.service';
 import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import { cloneObject, checkFieldsExistence, replaceFields } from '@common/utils/objectRecursiveFunctions.util';
-import { RequestInterface, ResponseInterface, NextFunctionInterface } from '@shared/internal/interfaces/endpointInterface';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { getDateTimeNow, fromDateTimeToEpoch } from '@common/utils/dates.util';
+import { RequestInterface, ResponseInterface, NextFunctionInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @Injectable({ scope: Scope.REQUEST })
@@ -25,12 +25,12 @@ export default class RequestMiddleware implements NestMiddleware {
 		request.id = requestId;
 		request.createdAt = requestDateMs;
 
-		const { method, originalUrl } = request;
+		const { method, path } = request;
 		const pathParams = JSON.stringify(this.maskSensitiveData(request?.params));
 		const queryParams = JSON.stringify(this.maskSensitiveData(request?.query));
 		const body = JSON.stringify(this.maskSensitiveData(request?.body));
 
-		this.logger.http(`REQUESTED - [${method}] ${originalUrl} { path: ${pathParams}, query: ${queryParams}, body: ${body} }`);
+		this.logger.http(`REQUESTED - [${method.toUpperCase()}] ${path} { path: ${pathParams}, query: ${queryParams}, body: ${body} }`);
 
 		next();
 	}

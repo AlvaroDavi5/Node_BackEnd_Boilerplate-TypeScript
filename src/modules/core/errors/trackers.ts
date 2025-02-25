@@ -1,28 +1,45 @@
 import {
-	init as initSentry, captureException as captureOnSentry,
-	consoleIntegration, captureConsoleIntegration,
+	init as initSentry, consoleIntegration, captureConsoleIntegration,
+	captureException as captureSentryException, captureMessage as captureSentryMessage
 } from '@sentry/nestjs';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
 import { GraphQLFormattedError } from 'graphql';
+import envsConfig from '@core/configs/envs.config';
+import { LogLevelEnum } from '@core/logging/logger';
+import externalErrorParser from '@common/utils/externalErrorParser.util';
 import readPackageInfo from '@common/utils/packageInfoReader.util';
+import { parseExceptionStatusCodeToSentrySeverity, parseLogLevelToSentrySeverity } from '@common/utils/sentrySeverity.util';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
+import { ExceptionMetadataInterface } from '@shared/internal/interfaces/errorInterface';
 
+export function captureException(error: unknown, metadata?: ExceptionMetadataInterface): void {
+	const errorStatus = externalErrorParser(error).getStatus();
 
-export const captureError = (error: unknown): void => {
-	captureOnSentry(error);
-};
+	captureSentryException(error, {
+		level: parseExceptionStatusCodeToSentrySeverity(errorStatus),
+		data: metadata?.data as undefined,
+		user: metadata?.user,
+	});
+}
 
-export const configureTrackers = (
+export function captureLog(message: string, level: LogLevelEnum): void {
+	captureSentryMessage(message, {
+		level: parseLogLevelToSentrySeverity(level),
+	});
+}
+
+export function configureTrackers(
 	{ environment, sentryDsn }: {
 		environment: string,
 		sentryDsn?: string,
-	}): void => {
+	}): void {
 	const { name: packageName, version: packageVersion } = readPackageInfo();
+	const { application: { showExternalLogs } } = envsConfig();
 
 	initSentry({
+		dsn: sentryDsn,
 		enabled: environment === EnvironmentsEnum.PRODUCTION,
 		environment,
-		dsn: sentryDsn,
 		integrations: [
 			nodeProfilingIntegration(),
 			consoleIntegration(),
@@ -31,13 +48,13 @@ export const configureTrackers = (
 		profilesSampleRate: 1.0,
 		tracesSampleRate: 1.0,
 		sendDefaultPii: true,
-		debug: environment === EnvironmentsEnum.HOMOLOG,
 		release: `${packageName}@${packageVersion}`,
+		debug: showExternalLogs,
 	});
-};
+}
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-export const formatGraphQlError = ({ message, extensions, path }: GraphQLFormattedError, error: any): GraphQLFormattedError => {
+export function formatGraphQlError({ message, extensions, path }: GraphQLFormattedError, error: any): GraphQLFormattedError {
 	const graphQLFormattedError: GraphQLFormattedError = {
 		message: message ?? error?.message,
 		path: path ?? error?.path,
@@ -48,4 +65,4 @@ export const formatGraphQlError = ({ message, extensions, path }: GraphQLFormatt
 	};
 
 	return graphQLFormattedError;
-};
+}

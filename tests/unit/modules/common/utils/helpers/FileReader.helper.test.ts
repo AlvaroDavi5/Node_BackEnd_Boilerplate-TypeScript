@@ -1,5 +1,5 @@
-import { ConfigService } from '@nestjs/config';
 import { ReadStream } from 'fs';
+import { ConfigService } from '@nestjs/config';
 import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { configServiceMock } from '@dev/mocks/mockedModules';

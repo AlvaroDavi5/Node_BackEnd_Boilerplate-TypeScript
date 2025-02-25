@@ -1,6 +1,6 @@
 import { ConfigService } from '@nestjs/config';
 import { INestApplication, NestApplicationOptions } from '@nestjs/common';
-import { captureError, configureTrackers } from '@core/errors/trackers';
+import { captureException, configureTrackers } from '@core/errors/trackers';
 import LoggerService from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
 import { ProcessEventsEnum, ProcessSignalsEnum } from '@common/enums/processEvents.enum';
@@ -64,7 +64,7 @@ export function validateKnownExceptions(error: ErrorInterface | Error): void {
 		newError.name = error.name;
 		newError.stack = error.stack;
 
-		captureError(newError);
+		captureException(newError);
 		throw newError;
 	}
 }

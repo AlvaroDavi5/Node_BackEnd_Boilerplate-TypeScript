@@ -1,5 +1,5 @@
-import { Injectable, Inject, Scope, ExecutionContext, CanActivate } from '@nestjs/common';
-import { getOptionsToken, Resolvable, ThrottlerModuleOptions, ThrottlerOptions, ThrottlerStorage } from '@nestjs/throttler';
+import { Injectable, Scope, ExecutionContext, CanActivate } from '@nestjs/common';
+import { InjectThrottlerStorage, ThrottlerStorage, InjectThrottlerOptions, ThrottlerModuleOptions, ThrottlerOptions, Resolvable } from '@nestjs/throttler';
 import { HttpArgumentsHost, WsArgumentsHost } from '@nestjs/common/interfaces';
 import { Socket } from 'socket.io-client';
 import Exceptions from '@core/errors/Exceptions';
@@ -8,20 +8,18 @@ import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces
 
 @Injectable({ scope: Scope.DEFAULT })
 export default class CustomThrottlerGuard implements CanActivate {
-	private readonly storageService: ThrottlerStorage;
 	private readonly throttlers: ThrottlerOptions[];
 	private readonly headerPrefix: string;
 
 	constructor(
-		@Inject(getOptionsToken()) private readonly throttlerModuleOptions: ThrottlerModuleOptions,
-		private readonly throttlerStorage: ThrottlerStorage,
+		@InjectThrottlerOptions() private readonly throttlerModuleOptions: ThrottlerModuleOptions,
+		@InjectThrottlerStorage() private readonly throttlerStorage: ThrottlerStorage,
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 	) {
 		this.throttlers = Array.isArray(this.throttlerModuleOptions)
 			? this.throttlerModuleOptions
 			: this.throttlerModuleOptions.throttlers;
-		this.storageService = this.throttlerStorage;
 		this.headerPrefix = 'X-RateLimit';
 	}
 
@@ -33,7 +31,7 @@ export default class CustomThrottlerGuard implements CanActivate {
 			const { name: throttlerName, limit, ttl } = await this.getThrottlerData(context, throttler);
 			const { skipIf } = throttler;
 
-			this.logger.verbose(`Running guard with '${throttlerName}' throttler for ${limit} requests in ${ttl} ms`);
+			this.logger.verbose(`Running guard with '${throttlerName}' throttler in ${contextType} for ${limit} requests in ${ttl} ms`);
 
 			if (!!skipIf && skipIf(context) === true) {
 				continues.push(true);
@@ -62,7 +60,7 @@ export default class CustomThrottlerGuard implements CanActivate {
 		const ip = req.ip ?? req?.socket?.remoteAddress ?? '_';
 		const route = this.getRoute(req);
 		const key = this.generateKey(ip, route, throttlerName);
-		const { totalHits, timeToExpire } = await this.storageService.increment(key, ttl);
+		const { totalHits, timeToExpire } = await this.throttlerStorage.increment(key, ttl);
 
 		res.header(`${this.headerPrefix}-Limit-${throttlerName}`, `${limit}`);
 		res.header(`${this.headerPrefix}-Remaining-${throttlerName}`, `${Math.max(0, limit - totalHits)}`);
@@ -82,7 +80,7 @@ export default class CustomThrottlerGuard implements CanActivate {
 
 		const socketId = socket.id ?? '_';
 		const key = this.generateKey(socketId, event, throttlerName);
-		const { totalHits, timeToExpire } = await this.storageService.increment(key, ttl);
+		const { totalHits, timeToExpire } = await this.throttlerStorage.increment(key, ttl);
 
 		if (totalHits > limit) {
 			this.throwException(key, socketId, limit, ttl, timeToExpire, totalHits);

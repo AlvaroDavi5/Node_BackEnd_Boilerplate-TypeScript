@@ -1,6 +1,6 @@
 import { Catch, ArgumentsHost, HttpException, ExceptionFilter } from '@nestjs/common';
-import AbstractExceptionsFilter, { ErrorOrExceptionToFilter } from '@core/errors/AbstractExceptions.filter';
 import LoggerService from '@core/logging/Logger.service';
+import AbstractExceptionsFilter, { ErrorOrExceptionToFilter } from '@common/filters/AbstractExceptions.filter';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { isNullOrUndefined } from '@common/utils/dataValidations.util';
 import externalErrorParser from '@common/utils/externalErrorParser.util';

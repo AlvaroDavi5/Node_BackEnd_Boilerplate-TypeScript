@@ -1,4 +1,4 @@
-import { Injectable, ExecutionContext, Scope, CanActivate, Inject } from '@nestjs/common';
+import { Injectable, Inject, Scope, ExecutionContext, CanActivate } from '@nestjs/common';
 import { getOptionsToken, Resolvable, ThrottlerModuleOptions, ThrottlerOptions, ThrottlerStorage } from '@nestjs/throttler';
 import { HttpArgumentsHost, WsArgumentsHost } from '@nestjs/common/interfaces';
 import { Socket } from 'socket.io-client';

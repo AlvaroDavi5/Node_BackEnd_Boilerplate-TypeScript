@@ -29,8 +29,7 @@ function createSocketClient() {
 		console.info(message);
 	});
 	webSocketClient.listen(WebSocketEventsEnum.ERROR, (msg: unknown, ..._args: unknown[]) => {
-		const message = formatMessageAfterReceiveHelper(msg);
-		console.error(message);
+		console.error(msg);
 	});
 	webSocketClient.send(WebSocketEventsEnum.RECONNECT, {
 		dataValues: {

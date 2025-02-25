@@ -25,12 +25,12 @@ export default class RequestMiddleware implements NestMiddleware {
 		request.id = requestId;
 		request.createdAt = requestDateMs;
 
-		const { method, originalUrl } = request;
+		const { method, path } = request;
 		const pathParams = JSON.stringify(this.maskSensitiveData(request?.params));
 		const queryParams = JSON.stringify(this.maskSensitiveData(request?.query));
 		const body = JSON.stringify(this.maskSensitiveData(request?.body));
 
-		this.logger.http(`REQUESTED - [${method}] ${originalUrl} { path: ${pathParams}, query: ${queryParams}, body: ${body} }`);
+		this.logger.http(`REQUESTED - [${method.toUpperCase()}] ${path} { path: ${pathParams}, query: ${queryParams}, body: ${body} }`);
 
 		next();
 	}

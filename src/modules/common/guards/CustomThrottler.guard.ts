@@ -59,7 +59,7 @@ export default class CustomThrottlerGuard implements CanActivate {
 
 		const ip = req.ip ?? req?.socket?.remoteAddress ?? '_';
 		const route = this.getRoute(req);
-		const key = this.generateKey(ip, route, throttlerName);
+		const key = this.generateKey(throttlerName, 'http', ip, route);
 		const { totalHits, timeToExpire } = await this.throttlerStorage.increment(key, ttl);
 
 		res.header(`${this.headerPrefix}-Limit-${throttlerName}`, `${limit}`);
@@ -79,7 +79,7 @@ export default class CustomThrottlerGuard implements CanActivate {
 		const event = wsContext.getPattern();
 
 		const socketId = socket.id ?? '_';
-		const key = this.generateKey(socketId, event, throttlerName);
+		const key = this.generateKey(throttlerName, 'ws', socketId, event);
 		const { totalHits, timeToExpire } = await this.throttlerStorage.increment(key, ttl);
 
 		if (totalHits > limit) {
@@ -93,8 +93,8 @@ export default class CustomThrottlerGuard implements CanActivate {
 		return `[${req.method.toUpperCase()}]${req.path}`;
 	}
 
-	private generateKey(ipOrSocketId: string, routeOrEvent: string, throttlerName: string): string {
-		return `${CustomThrottlerGuard.name}:${throttlerName}:${ipOrSocketId}:${routeOrEvent}`;
+	private generateKey(throttlerName: string, clientContext: string, clientId: string, callCode: string): string {
+		return `${CustomThrottlerGuard.name}:${throttlerName}:${clientContext}:${clientId}:${callCode}`;
 	}
 
 	private async getThrottlerData(context: ExecutionContext, throttler: ThrottlerOptions): Promise<{ name: string, limit: number, ttl: number }> {

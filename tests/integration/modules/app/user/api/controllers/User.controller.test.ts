@@ -12,7 +12,7 @@ import GetUserUseCase from '@app/user/usecases/GetUser.usecase';
 import UpdateUserUseCase from '@app/user/usecases/UpdateUser.usecase';
 import DeleteUserUseCase from '@app/user/usecases/DeleteUser.usecase';
 import AuthGuard from '@api/guards/Auth.guard';
-import CustomThrottlerGuard from '@api/guards/Throttler.guard';
+import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
 import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';

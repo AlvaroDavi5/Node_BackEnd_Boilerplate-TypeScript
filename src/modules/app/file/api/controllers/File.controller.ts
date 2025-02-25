@@ -8,12 +8,12 @@ import { ApiOperation, ApiTags, ApiBody, ApiHeaders, ApiProduces, ApiConsumes, A
 import { FileInterceptor } from '@nestjs/platform-express';
 import { Response } from 'express';
 import FileService from '@app/file/services/File.service';
-import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
 import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
 import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
+import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import { RequestFileInterface } from '@shared/internal/interfaces/endpointInterface';
 
 

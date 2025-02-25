@@ -10,10 +10,10 @@ import { RegisterEventHookValidatorPipe } from '@app/hook/api/pipes/HookValidato
 import { RegisterEventHookInputDto } from '@app/hook/api/dto/HookInput.dto';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
-import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
 import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
 import ResponseInterceptor from '@api/interceptors/Response.interceptor';
+import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 

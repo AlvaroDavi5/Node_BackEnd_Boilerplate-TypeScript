@@ -2,12 +2,12 @@ import { Controller, Get, ParseBoolPipe, Query, UseFilters, UseGuards, UseInterc
 import { ApiOperation, ApiTags, ApiOkResponse, ApiProduces, ApiConsumes } from '@nestjs/swagger';
 import SubscriptionEntity, { SubscriptionInterface } from '@domain/entities/Subscription.entity';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
-import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
 import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
 import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
+import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 
 
 @ApiTags('Subscriptions')

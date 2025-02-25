@@ -1,8 +1,8 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import DefaultController from '@api/controllers/Default.controller';
+import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';

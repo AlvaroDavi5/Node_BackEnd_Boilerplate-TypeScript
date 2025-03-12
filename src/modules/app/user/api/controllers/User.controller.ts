@@ -20,8 +20,10 @@ import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import { ListQueryValidatorPipe } from '@api/pipes/QueryValidator.pipe';
 import { ListQueryInputDto } from '@api/dto/QueryInput.dto';
+import { customThrottlerDecorator } from '@api/decorators/customThrottler.decorator';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
+import { secondsToMilliseconds } from '@common/utils/dates.util';
 import { PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 import CreateUserValidatorPipe from '../pipes/CreateUserValidator.pipe';
@@ -104,6 +106,7 @@ export default class UserController {
 		deprecated: false,
 	})
 	@Put('/')
+	@customThrottlerDecorator({ name: 'login', limit: 4, ttl: secondsToMilliseconds(10) })
 	@ApiOkResponse({
 		schema: {
 			example: {

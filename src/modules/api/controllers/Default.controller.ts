@@ -37,18 +37,10 @@ export default class DefaultController {
 				baseUrl: '/',
 				url: '/api/check?test=oi',
 				method: 'GET',
-				headers: {
-					host: 'localhost:3000',
-					connection: 'keep-alive',
-					accept: 'application/json',
-				},
-				params: {
-					id: 1,
-				},
-				query: {
-					key: 'value',
-				},
-				body: {},
+				headers: { host: 'localhost:3000', connection: 'keep-alive', accept: 'application/json' },
+				params: { id: 1 },
+				query: { key: 'value' },
+				body: { payload: {} },
 				statusCode: 200,
 				statusMessage: 'Endpoint founded successfully.',
 			},
@@ -98,26 +90,12 @@ export default class DefaultController {
 	@Version(ApiVersionsEnum.V1)
 	@ApiOkResponse({
 		schema: {
-			example: {
-				baseUrl: '/',
-				method: 'GET',
-				statusCode: 200,
-			},
+			example: 'OK',
 		}
 	})
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
-	public healthCheckV1(
-		@Req() request: Request,
-		@Res({ passthrough: true }) response: Response,
-	): {
-		baseUrl: string, method: string,
-		statusCode: number,
-	} {
-		return {
-			baseUrl: request?.baseUrl,
-			method: request?.method,
-			statusCode: response.statusCode,
-		};
+	public healthCheckV1(): string {
+		return 'OK';
 	}
 }

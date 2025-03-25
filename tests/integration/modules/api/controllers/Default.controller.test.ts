@@ -1,6 +1,6 @@
-import { INestApplication } from '@nestjs/common';
+import { INestApplication } from "@nestjs/common";
 import { Test, TestingModule } from '@nestjs/testing';
-import request from 'supertest';
+
 import DefaultController from '@api/controllers/Default.controller';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
@@ -8,7 +8,7 @@ import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
 import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
-
+import request from 'supertest';
 
 describe('Modules :: API :: DefaultController', () => {
 	let nestTestApp: INestApplication;
@@ -97,11 +97,7 @@ describe('Modules :: API :: DefaultController', () => {
 				});
 
 			expect(response.statusCode).toBe(200);
-			expect(response.body).toEqual({
-				method: 'GET',
-				baseUrl: '',
-				statusCode: 200,
-			});
+			expect(response.text).toEqual('OK');
 		});
 	});
 });

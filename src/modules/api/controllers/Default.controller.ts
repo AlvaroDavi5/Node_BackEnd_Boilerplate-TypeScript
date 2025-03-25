@@ -93,8 +93,8 @@ export default class DefaultController {
 			example: 'OK',
 		}
 	})
-	@ApiConsumes('application/json')
-	@ApiProduces('application/json')
+	@ApiConsumes('text/plain')
+	@ApiProduces('text/plain')
 	public healthCheckV1(): string {
 		return 'OK';
 	}

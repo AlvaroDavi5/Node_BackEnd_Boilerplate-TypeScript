@@ -1,5 +1,5 @@
 import envsConfig from '@core/configs/envs.config';
-import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
+import { WebSocketEventsEnum } from '@domain/enums/events.enum';
 import createWebSocketClient from '@dev/websocket/createWebSocketClient';
 import { loggerProviderMock } from '@dev/mocks/mockedModules';
 

@@ -1,6 +1,5 @@
 import { CacheEnum } from '@domain/enums/cache.enum';
-import { EventsEnum } from '@domain/enums/events.enum';
-import { WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/webSocketEvents.enum';
+import { QueueEventsEnum, WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/events.enum';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 
 
@@ -21,18 +20,17 @@ describe('Modules :: Domain :: Enums', () => {
 		});
 	});
 
-	describe('# EventsEnum', () => {
+	describe('# QueueEventsEnum', () => {
 		test('Should return keys', () => {
-			expect(Object.keys(EventsEnum)).toEqual(['INVALID', 'NEW_CONNECTION']);
+			expect(Object.keys(QueueEventsEnum)).toEqual(['INVALID', 'NEW_CONNECTION']);
 		});
 
 		test('Should return values', () => {
-			expect(Object.values(EventsEnum)).toEqual(['INVALID', 'NEW_CONNECTION']);
+			expect(Object.values(QueueEventsEnum)).toEqual(['INVALID', 'NEW_CONNECTION']);
 		});
 
 		test('Should return value', () => {
-			expect(EventsEnum.INVALID).toBe('INVALID');
-			expect(EventsEnum.NEW_CONNECTION).toBe('NEW_CONNECTION');
+			expect(QueueEventsEnum.INVALID).toBe('INVALID');
 		});
 	});
 

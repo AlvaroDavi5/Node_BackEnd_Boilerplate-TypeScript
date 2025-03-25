@@ -2,7 +2,7 @@ import { Catch, ArgumentsHost, WsExceptionFilter } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { Socket } from 'socket.io';
 import LoggerService from '@core/logging/Logger.service';
-import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
+import { WebSocketEventsEnum } from '@domain/enums/events.enum';
 import AbstractExceptionsFilter, { ErrorOrExceptionToFilter } from '@common/filters/AbstractExceptions.filter';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { isNullOrUndefined } from '@common/utils/dataValidations.util';

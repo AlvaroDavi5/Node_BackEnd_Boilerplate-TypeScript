@@ -5,6 +5,7 @@ import {
 	UseGuards, UseFilters, UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse, ApiNoContentResponse } from '@nestjs/swagger';
+import Exceptions from '@core/errors/Exceptions';
 import UserEntity, { IViewUser } from '@domain/entities/User.entity';
 import UserListEntity from '@domain/entities/generic/UserList.entity';
 import LoginUserUseCase from '@app/user/usecases/LoginUser.usecase';
@@ -41,6 +42,8 @@ import LoginUserInputDto from '../dto/user/LoginUserInput.dto';
 @UseInterceptors(ResponseInterceptor)
 @exceptionsResponseDecorator()
 export default class UserController {
+	private loginDisabled: boolean; // ANCHOR - feature flag
+
 	constructor(
 		private readonly loginUserUseCase: LoginUserUseCase,
 		private readonly listUsersUseCase: ListUsersUseCase,
@@ -48,7 +51,10 @@ export default class UserController {
 		private readonly getUserUseCase: GetUserUseCase,
 		private readonly updateUserUseCase: UpdateUserUseCase,
 		private readonly deleteUserUseCase: DeleteUserUseCase,
-	) { }
+		private readonly exceptions: Exceptions,
+	) {
+		this.loginDisabled = false;
+	}
 
 	@UseGuards(AuthGuard)
 	@authSwaggerDecorator()
@@ -120,6 +126,10 @@ export default class UserController {
 	public async loginUser(
 		@Body(LoginUserValidatorPipe) body: LoginUserInputDto,
 	): Promise<IViewUser & { token: string }> {
+		// NOTE - gracefull degradation
+		if (this.loginDisabled)
+			this.throwMaintenanceException();
+
 		const { user, token } = await this.loginUserUseCase.execute(body);
 
 		return { ...user.getAttributes(), token };
@@ -191,5 +201,11 @@ export default class UserController {
 		await this.deleteUserUseCase.execute(userId, user);
 
 		response.status(HttpStatusEnum.NO_CONTENT).send(undefined);
+	}
+
+	private throwMaintenanceException(): void {
+		throw this.exceptions.integration({
+			message: 'Resource temporarily under maintenance. Please, try again later',
+		});
 	}
 }

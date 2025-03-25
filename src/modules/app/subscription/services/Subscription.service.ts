@@ -9,7 +9,7 @@ import LoggerService from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
 import SubscriptionEntity, { ICreateSubscription, IUpdateSubscription } from '@domain/entities/Subscription.entity';
 import { CacheEnum } from '@domain/enums/cache.enum';
-import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
+import { WebSocketEventsEnum } from '@domain/enums/events.enum';
 import WebSocketClient from '@events/websocket/client/WebSocket.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 

@@ -1,0 +1,31 @@
+# Refer for explanation to following link:
+# https://lefthook.dev/configuration/
+
+commit-msg:
+  jobs:
+    - name: Run commitlint to validate Conventional Commits
+      run: yarn commitlint --edit $1
+
+pre-commit:
+  parallel: true
+  jobs:
+    - name: Run TypeScript check
+      run: yarn typecheck
+
+    - name: Run linter for Git staged files
+      run: yarn eslint {staged_files}
+      glob: '*.{js,ts,jsx,tsx}'
+
+pre-push:
+  jobs:
+    - name: Run application build
+      run: yarn run build
+
+    - name: Run dependencies security check
+      run: yarn run security-check
+
+    - name: Run unit tests
+      run: yarn run test:unit
+
+    - name: Run integration tests
+      run: yarn run test:integration

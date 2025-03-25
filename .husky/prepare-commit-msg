@@ -57,4 +57,4 @@ call_lefthook()
   fi
 }
 
-call_lefthook run "pre-push" "$@"
+call_lefthook run "prepare-commit-msg" "$@"

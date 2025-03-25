@@ -1,6 +1,7 @@
 
 export enum QueueEventsEnum {
 	INVALID = 'INVALID',
+	NEW_CONNECTION = 'NEW_CONNECTION',
 }
 
 export enum EmitterEventsEnum {
@@ -20,7 +21,6 @@ export enum WebSocketEventsEnum {
 	// ? Internal Events
 	EMIT_PRIVATE = 'emit_private',
 	BROADCAST = 'broadcast',
-	NEW_CONNECTION = 'new_connection',
 }
 export enum WebSocketRoomsEnum {
 	NEW_CONNECTIONS = 'new_connections',

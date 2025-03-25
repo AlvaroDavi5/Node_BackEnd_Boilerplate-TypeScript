@@ -4,8 +4,7 @@ import { Message } from '@aws-sdk/client-sqs';
 import MongoClient from '@core/infra/data/Mongo.client';
 import LoggerService from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
-import { EventsEnum } from '@domain/enums/events.enum';
-import { WebSocketRoomsEnum } from '@domain/enums/webSocketEvents.enum';
+import { QueueEventsEnum, WebSocketRoomsEnum } from '@domain/enums/events.enum';
 import WebhookService from '@app/hook/services/Webhook.service';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
@@ -59,7 +58,7 @@ export default class EventsQueueHandler implements OnModuleInit {
 			const bodyMetadata: ArgumentMetadata = { type: 'custom', data: message.Body, metatype: String };
 			const value = this.schemaValidator.validate<EventSchemaInterface>(data, bodyMetadata, eventSchema);
 
-			if (value.payload.event === EventsEnum.NEW_CONNECTION) {
+			if (value.payload.event === QueueEventsEnum.NEW_CONNECTION) {
 				this.subscriptionService.emit(value, WebSocketRoomsEnum.NEW_CONNECTIONS);
 			} else {
 				this.subscriptionService.broadcast(value);

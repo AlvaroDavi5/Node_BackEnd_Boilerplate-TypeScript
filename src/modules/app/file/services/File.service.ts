@@ -14,7 +14,7 @@ import { RequestFileInterface } from '@shared/internal/interfaces/endpointInterf
 @Injectable()
 export default class FileService implements OnModuleInit {
 	private uploadService!: UploadService;
-	private readonly isTestEnv: boolean; // NOTE - feature flag
+	private readonly isTestEnv: boolean; // ANCHOR - feature flag
 
 	constructor(
 		private readonly lazyModuleLoader: LazyModuleLoader,

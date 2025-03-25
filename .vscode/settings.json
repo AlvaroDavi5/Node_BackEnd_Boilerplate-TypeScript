@@ -57,6 +57,7 @@
 	"git.autofetch": true,
 	"git.enableSmartCommit": true,
 	"git.openRepositoryInParentFolders": "always",
+	"git.discardUntrackedChangesToTrash": false,
 	// Debug
 	"debug.allowBreakpointsEverywhere": true,
 	"debug.console.closeOnEnd": true,

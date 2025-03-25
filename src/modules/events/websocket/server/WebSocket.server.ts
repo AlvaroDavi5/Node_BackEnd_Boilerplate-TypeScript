@@ -7,7 +7,7 @@ import {
 } from '@nestjs/websockets';
 import { Server as SocketIoServer, Socket } from 'socket.io';
 import LoggerService from '@core/logging/Logger.service';
-import { WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/events.enum';
+import { QueueEventsEnum, WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/events.enum';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
 import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
 import EventsGuard from '@events/websocket/guards/Events.guard';
@@ -137,7 +137,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 			author: 'Websocket Server',
 			payload: {
 				subscriptionId: socketId,
-				event: WebSocketEventsEnum.NEW_CONNECTION,
+				event: QueueEventsEnum.NEW_CONNECTION,
 			},
 			schema: WebSocketEventsEnum.CONNECT,
 		});

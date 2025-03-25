@@ -4,12 +4,13 @@ import { Message } from '@aws-sdk/client-sqs';
 import MongoClient from '@core/infra/data/Mongo.client';
 import LoggerService from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
-import { QueueEventsEnum, WebSocketRoomsEnum } from '@domain/enums/events.enum';
+import { EmitterEventsEnum, QueueDomainEventsEnum, QueueSchemasEnum, WebSocketRoomsEnum } from '@domain/enums/events.enum';
 import WebhookService from '@app/hook/services/Webhook.service';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
+import EventEmitterClient from '@events/emitter/EventEmitter.client';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
-import eventSchema, { EventSchemaInterface } from './schemas/event.schema';
+import eventPayloadSchema, { EventPayloadInterface } from './schemas/eventPayload.schema';
 
 
 @Injectable()
@@ -21,6 +22,7 @@ export default class EventsQueueHandler implements OnModuleInit {
 	constructor(
 		private readonly moduleRef: ModuleRef,
 		private readonly mongoClient: MongoClient,
+		private readonly eventEmitterClient: EventEmitterClient,
 		private readonly dataParserHelper: DataParserHelper,
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
@@ -33,7 +35,7 @@ export default class EventsQueueHandler implements OnModuleInit {
 		this.webhookService = this.moduleRef.get(WebhookService, { strict: false });
 	}
 
-	private getMessageData(message: Message): unknown {
+	private getMessageBody(message: Message): unknown {
 		if (!message?.Body)
 			throw this.exceptions.internal({
 				message: 'Invalid message body',
@@ -50,21 +52,46 @@ export default class EventsQueueHandler implements OnModuleInit {
 		return data;
 	}
 
+	private async handleBySchema(value: EventPayloadInterface): Promise<void> {
+		switch (value.schema) {
+			case QueueSchemasEnum.DOMAIN_EVENT:
+				await this.handleByDomainEvent(value);
+				break;
+			case QueueSchemasEnum.BROADCAST:
+				this.subscriptionService.broadcast(value);
+				break;
+			case QueueSchemasEnum.NEW_CONNECTION:
+				this.subscriptionService.emit(value, WebSocketRoomsEnum.NEW_CONNECTIONS);
+				break;
+			case QueueSchemasEnum.DISABLE_ALL_ROUTES:
+				this.eventEmitterClient.send(EmitterEventsEnum.DISABLE_ALL_ROUTES, true, value);
+				break;
+			default:
+				this.logger.warn('Unhandled event:', value);
+				throw this.exceptions.internal({ message: 'Unhandled event', details: value });
+		}
+	}
+
+	private async handleByDomainEvent(value: EventPayloadInterface): Promise<void> {
+		switch (value.payload.event) {
+			case QueueDomainEventsEnum.NEW_HOOK:
+				await this.webhookService.pullHook(value.payload.event, value.payload);
+				break;
+			default:
+				this.logger.warn('Unhandled event:', value);
+				throw this.exceptions.internal({ message: 'Unhandled event', details: value });
+		}
+	}
+
 	public async execute(message: Message): Promise<boolean> {
 		const { datalake } = this.mongoClient.databases;
 
 		try {
-			const data = this.getMessageData(message);
+			const data = this.getMessageBody(message);
 			const bodyMetadata: ArgumentMetadata = { type: 'custom', data: message.Body, metatype: String };
-			const value = this.schemaValidator.validate<EventSchemaInterface>(data, bodyMetadata, eventSchema);
+			const payload = this.schemaValidator.validate<EventPayloadInterface>(data, bodyMetadata, eventPayloadSchema);
 
-			if (value.payload.event === QueueEventsEnum.NEW_CONNECTION) {
-				this.subscriptionService.emit(value, WebSocketRoomsEnum.NEW_CONNECTIONS);
-			} else {
-				this.subscriptionService.broadcast(value);
-				await this.webhookService.pullHook(value.payload.event, value.payload)
-					.catch((err: unknown) => this.logger.error(err));
-			}
+			await this.handleBySchema(payload);
 
 			return true;
 		} catch (error) {

@@ -12,6 +12,7 @@ import GetUserUseCase from '@app/user/usecases/GetUser.usecase';
 import UpdateUserUseCase from '@app/user/usecases/UpdateUser.usecase';
 import DeleteUserUseCase from '@app/user/usecases/DeleteUser.usecase';
 import AuthGuard from '@api/guards/Auth.guard';
+import EventEmitterClient from '@events/emitter/EventEmitter.client';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
@@ -33,11 +34,11 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 	const listUsersUseCaseMock = {
 		execute: jest.fn((_query: ListQueryInterface): Promise<UserListEntity> => { throw new Error('GenericError'); }),
 	};
-	const exceptions = new Exceptions();
 	const mockObservable: MockObservableInterface<void, unknown[]> = {
 		call: jest.fn((..._args: unknown[]): void => (undefined)),
 	};
 	const loggerServiceMock = new LoggerService(mockObservable);
+	const exceptions = new Exceptions();
 
 	// ? build test app
 	beforeAll(async () => {
@@ -53,7 +54,9 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 				{ provide: GetUserUseCase, useValue: {} },
 				{ provide: UpdateUserUseCase, useValue: {} },
 				{ provide: DeleteUserUseCase, useValue: {} },
+				EventEmitterClient,
 				DataParserHelper,
+				Exceptions,
 				{ provide: LoggerService, useValue: loggerServiceMock },
 			],
 			exports: [],

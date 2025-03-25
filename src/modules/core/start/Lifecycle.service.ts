@@ -1,6 +1,7 @@
 import { Injectable, Inject, OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown } from '@nestjs/common';
-import { HttpAdapterHost } from '@nestjs/core';
+import { HttpAdapterHost, ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
+import { ExpressAdapter } from '@nestjs/platform-express';
 import { DataSource } from 'typeorm';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
@@ -12,7 +13,9 @@ import SyncCronJob from '@core/cron/jobs/SyncCron.job';
 import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import LoggerService from '@core/logging/Logger.service';
 import { ConfigsInterface } from '@core/configs/envs.config';
+import { EmitterEventsEnum } from '@domain/enums/events.enum';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
+import EventEmitterClient from '@events/emitter/EventEmitter.client';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 
@@ -20,9 +23,11 @@ import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 @Injectable()
 export default class LifecycleService implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown {
 	private readonly appConfigs: ConfigsInterface['application'];
+	private eventEmitterClient: EventEmitterClient;
 
 	constructor(
-		private readonly httpAdapterHost: HttpAdapterHost,
+		private readonly moduleRef: ModuleRef,
+		private readonly httpAdapterHost: HttpAdapterHost<ExpressAdapter>,
 		private readonly configService: ConfigService,
 		@Inject(DATABASE_CONNECTION_PROVIDER) private readonly connection: DataSource,
 		private readonly mongoClient: MongoClient,
@@ -35,6 +40,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 		private readonly syncCronJob: SyncCronJob,
 		private readonly logger: LoggerService,
 	) {
+		this.eventEmitterClient = this.moduleRef.get(EventEmitterClient, { strict: false });
 		this.appConfigs = this.configService.get<ConfigsInterface['application']>('application')!;
 	}
 
@@ -44,6 +50,14 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 
 	public onApplicationBootstrap(): void {
 		this.logger.verbose(`\tApp started with PID: ${process.pid} on URL: ${this.appConfigs.url}`);
+
+		this.eventEmitterClient.listen(EmitterEventsEnum.DISABLE_ALL_ROUTES, (disabled: unknown, data: unknown) => {
+			if (typeof disabled === 'boolean' && disabled === true) {
+				// NOTE - circuit breaker
+				this.logger.warn(`Closing HTTP server due '${EmitterEventsEnum.DISABLE_ALL_ROUTES}' event, received data:`, data);
+				this.httpAdapterHost?.httpAdapter?.close();
+			}
+		});
 	}
 
 	public onModuleDestroy(): void {
@@ -90,7 +104,6 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 		this.logger.warn('Exiting Application');
 
 		const shouldExit = this.appConfigs.environment !== EnvironmentsEnum.TEST;
-
 		if (shouldExit)
 			process.exit(ProcessExitStatusEnum.SUCCESS);
 	}

@@ -8,11 +8,11 @@ export default (queueName: string, queueUrl: string, payload: unknown, title: st
 
 	const message = {
 		id: cryptographyServiceMock.generateUuid(),
-		schema: 'INVALID',
-		schemaVersion: 1,
 		payload,
-		source: 'SCRIPT',
-		timestamp: new Date('2024-06-10T03:52:50.885Z'),
+		schema: 'BROADCAST',
+		schemaVersion: 0.1,
+		source: 'script',
+		timestamp: new Date('2024-06-10T03:52:50.885Z').toISOString(),
 	};
 
 	sqsClient.sendMessage(

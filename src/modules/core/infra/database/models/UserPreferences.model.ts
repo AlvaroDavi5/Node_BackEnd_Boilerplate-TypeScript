@@ -61,12 +61,11 @@ export default class UserPreferencesModel extends BaseEntity {
 	@OneToOne(() => UsersModel, (user: UsersModel) => user.preference, {
 		createForeignKeyConstraints: true,
 		nullable: true,
-		onUpdate: 'CASCADE',
-		onDelete: 'CASCADE',
+		onUpdate: 'NO ACTION',
+		onDelete: 'NO ACTION',
 	})
 	@JoinColumn({
 		name: 'userId',
-		foreignKeyConstraintName: 'user_id',
 		referencedColumnName: 'id',
 	})
 	public user!: UsersModel | null;

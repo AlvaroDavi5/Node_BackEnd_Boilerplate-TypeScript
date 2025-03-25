@@ -13,7 +13,7 @@ pre-commit:
       run: yarn typecheck
 
     - name: Run linter for Git staged files
-      run: yarn eslint {staged_files}
+      run: yarn eslint {staged_files} --quiet --fix
       glob: '*.{js,ts,jsx,tsx}'
 
 pre-push:

@@ -10,6 +10,7 @@ import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import SnsClient from '@core/infra/integration/aws/Sns.client';
 import S3Client from '@core/infra/integration/aws/S3.client';
 import CognitoClient from '@core/infra/integration/aws/Cognito.client';
+import EventEmitterClient from '@events/emitter/EventEmitter.client';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import { configServiceMock } from '@dev/mocks/mockedModules';
 import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
@@ -73,6 +74,7 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 				{ provide: S3Client, useValue: awsClientMock },
 				{ provide: CognitoClient, useValue: awsClientMock },
 				{ provide: LoggerService, useValue: loggerServiceMock },
+				EventEmitterClient,
 				LifecycleService,
 			],
 		}).compile();
@@ -101,7 +103,7 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 			expect(databaseConnectionMock.destroy).toHaveBeenCalledTimes(1);
 			expect(awsClientMock.destroy).toHaveBeenCalledTimes(4);
 			expect(mockObservable.call).toHaveBeenCalledWith('Exiting Application');
-			expect(mockObservable.call).toHaveBeenCalledTimes(5);
+			expect(mockObservable.call).toHaveBeenCalledTimes(6);
 		});
 	});
 });

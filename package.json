@@ -82,7 +82,7 @@
 		"typeorm:cli": "ts-node --project tsconfig.build.json ./node_modules/typeorm/cli -d ./src/modules/core/infra/database/db.config.ts",
 		"commit": "git-cz",
 		"versioning": "semantic-release",
-		"postinstall": "husky install"
+		"postinstall": "lefthook install"
 	},
 	"config": {
 		"commitizen": {

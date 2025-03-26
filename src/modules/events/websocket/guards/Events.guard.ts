@@ -4,7 +4,7 @@ import { Observable } from 'rxjs';
 import { Socket } from 'socket.io';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
-import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
+import { WebSocketEventsEnum } from '@domain/enums/events.enum';
 import { getObjKeys, getObjValues } from '@common/utils/dataValidations.util';
 
 

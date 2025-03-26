@@ -4,7 +4,8 @@ import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import LoggerService from '@core/logging/Logger.service';
 import CryptographyService from '@core/security/Cryptography.service';
 import { ConfigsInterface } from '@core/configs/envs.config';
-import { EventSchemaInterface } from '@events/queue/handlers/schemas/event.schema';
+import { QueueSchemasEnum } from '@domain/enums/events.enum';
+import { EventPayloadInterface } from '@events/queue/handlers/schemas/eventPayload.schema';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { fromDateTimeToISO, getDateTimeNow } from '@common/utils/dates.util';
 
@@ -13,7 +14,7 @@ interface EventDispatchInterface {
 	payload: {
 		[key: string]: unknown,
 	},
-	schema: string,
+	schema: QueueSchemasEnum,
 	author?: string,
 	title?: string,
 }
@@ -41,13 +42,13 @@ export default class EventsQueueProducer {
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	private buildMessageBody({ payload, schema }: { payload: any, schema?: string }): EventSchemaInterface {
+	private buildMessageBody({ payload, schema }: { payload: any, schema: QueueSchemasEnum }): EventPayloadInterface {
 		return {
 			id: this.cryptographyService.generateUuid(),
-			schema: schema || 'EVENTS',
-			schemaVersion: 1.0,
 			payload,
-			source: 'BOILERPLATE',
+			schema,
+			schemaVersion: 1.0,
+			source: EventsQueueProducer.name,
 			timestamp: fromDateTimeToISO(getDateTimeNow(TimeZonesEnum.America_SaoPaulo)),
 		};
 	}

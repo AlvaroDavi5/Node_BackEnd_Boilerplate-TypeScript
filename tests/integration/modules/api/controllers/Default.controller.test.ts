@@ -9,7 +9,6 @@ import { MockObservableInterface } from 'tests/integration/support/mocks/mockObs
 import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
 
-
 describe('Modules :: API :: DefaultController', () => {
 	let nestTestApp: INestApplication;
 	let nestTestingModule: TestingModule;
@@ -97,11 +96,7 @@ describe('Modules :: API :: DefaultController', () => {
 				});
 
 			expect(response.statusCode).toBe(200);
-			expect(response.body).toEqual({
-				method: 'GET',
-				baseUrl: '',
-				statusCode: 200,
-			});
+			expect(response.text).toEqual('OK');
 		});
 	});
 });

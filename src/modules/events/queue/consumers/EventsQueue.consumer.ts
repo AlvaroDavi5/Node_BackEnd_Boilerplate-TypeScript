@@ -66,20 +66,6 @@ export default class EventsQueueConsumer {
 		}
 	}
 
-	private checkError(error: Error): void {
-		if (this.errorsCount < 20)
-			return;
-
-		const newError = this.exceptions.integration({
-			name: error.name,
-			message: error.message,
-			stack: error.stack,
-		});
-		newError.name = `${newError.name}.QueueError`;
-
-		throw newError;
-	}
-
 	@SqsConsumerEventHandler(eventsQueueName, ProcessEventsEnum.PROCESSING_ERROR)
 	public async onProcessingError(error: Error, message: Message): Promise<void> {
 		this.logger.error(`Processing error from ${this.name} - MessageId: ${message?.MessageId}. Error: ${error.message}`);
@@ -105,5 +91,19 @@ export default class EventsQueueConsumer {
 		this.logger.error(`Timeout error from ${this.name}: ${error.message}`);
 		this.errorsCount += 1;
 		this.checkError(error);
+	}
+
+	private checkError(error: Error): void {
+		if (this.errorsCount < 20)
+			return;
+
+		const newError = this.exceptions.integration({
+			name: error.name,
+			message: error.message,
+			stack: error.stack,
+		});
+		newError.name = `${newError.name}.QueueError`;
+
+		throw newError;
 	}
 }

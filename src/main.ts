@@ -23,7 +23,7 @@ async function startNestApplication(): Promise<void> {
 	if (environment === EnvironmentsEnum.DEVELOPMENT)
 		writeFileSync('./docs/nestGraph.json', nestApp.get(SerializedGraph, {}).toString());
 
-	await nestApp.listen(Number(appPort))
+	await nestApp.listen(appPort)
 		.catch((error: ErrorInterface | Error) => { validateKnownExceptions(error); });
 }
 

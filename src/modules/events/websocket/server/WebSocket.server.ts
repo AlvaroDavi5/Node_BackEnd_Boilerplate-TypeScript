@@ -7,8 +7,7 @@ import {
 } from '@nestjs/websockets';
 import { Server as SocketIoServer, Socket } from 'socket.io';
 import LoggerService from '@core/logging/Logger.service';
-import { EventsEnum } from '@domain/enums/events.enum';
-import { WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/webSocketEvents.enum';
+import { QueueSchemasEnum, WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/events.enum';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
 import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
 import EventsGuard from '@events/websocket/guards/Events.guard';
@@ -136,11 +135,11 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 		await this.eventsQueueProducer.dispatch({
 			title: 'New Client Connected',
 			author: 'Websocket Server',
+			schema: QueueSchemasEnum.NEW_CONNECTION,
 			payload: {
 				subscriptionId: socketId,
-				event: EventsEnum.NEW_CONNECTION,
+				event: QueueSchemasEnum.NEW_CONNECTION,
 			},
-			schema: WebSocketEventsEnum.CONNECT,
 		});
 	}
 

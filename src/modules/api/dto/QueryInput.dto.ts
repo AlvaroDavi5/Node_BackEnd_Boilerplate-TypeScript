@@ -5,18 +5,18 @@ import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationIn
 
 export class ListQueryInputDto implements ListQueryInterface {
 	@ApiProperty({ type: Number, example: 5, default: undefined, nullable: false, required: false, description: 'Results amount by page' })
-	@IsNumberString()
 	@IsOptional()
+	@IsNumberString()
 	public limit?: number;
 
 	@ApiProperty({ type: Number, example: 1, default: undefined, nullable: false, required: false, description: 'Page index' })
-	@IsNumberString()
 	@IsOptional()
+	@IsNumberString()
 	public page?: number;
 
 	@ApiProperty({ type: String, enum: ['ASC', 'DESC'], example: 'ASC', default: undefined, nullable: false, required: false, description: 'List order' })
-	@IsEnum(['ASC', 'DESC'])
 	@IsOptional()
+	@IsEnum(['ASC', 'DESC'])
 	public order?: 'ASC' | 'DESC';
 
 	@ApiProperty({
@@ -24,17 +24,17 @@ export class ListQueryInputDto implements ListQueryInterface {
 		default: undefined, nullable: false, required: false,
 		description: 'Sort by attribute'
 	})
-	@IsEnum(['createdAt', 'updatedAt', 'deletedAt'])
 	@IsOptional()
+	@IsEnum(['createdAt', 'updatedAt', 'deletedAt'])
 	public sortBy?: 'createdAt' | 'updatedAt' | 'deletedAt';
 
 	@ApiProperty({ type: String, example: 'My Name', default: undefined, nullable: false, required: false, description: 'Term for search' })
-	@IsString()
 	@IsOptional()
+	@IsString()
 	public searchTerm?: string;
 
 	@ApiProperty({ type: Boolean, example: true, default: undefined, nullable: false, required: false, description: 'Filter just soft-deleted registers' })
-	@IsBooleanString()
 	@IsOptional()
+	@IsBooleanString()
 	public selectSoftDeleted?: boolean;
 }

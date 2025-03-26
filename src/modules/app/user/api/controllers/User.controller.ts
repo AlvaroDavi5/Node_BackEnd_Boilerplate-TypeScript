@@ -1,12 +1,16 @@
 import {
+	OnModuleInit,
 	Controller, Req, Res, ParseUUIDPipe,
 	Param, Query, Body,
 	Get, Post, Put, Patch, Delete,
 	UseGuards, UseFilters, UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse, ApiNoContentResponse } from '@nestjs/swagger';
+import { ModuleRef } from '@nestjs/core';
+import Exceptions from '@core/errors/Exceptions';
 import UserEntity, { IViewUser } from '@domain/entities/User.entity';
 import UserListEntity from '@domain/entities/generic/UserList.entity';
+import { EmitterEventsEnum } from '@domain/enums/events.enum';
 import LoginUserUseCase from '@app/user/usecases/LoginUser.usecase';
 import ListUsersUseCase from '@app/user/usecases/ListUsers.usecase';
 import CreateUserUseCase from '@app/user/usecases/CreateUser.usecase';
@@ -20,8 +24,11 @@ import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import { ListQueryValidatorPipe } from '@api/pipes/QueryValidator.pipe';
 import { ListQueryInputDto } from '@api/dto/QueryInput.dto';
+import { customThrottlerDecorator } from '@api/decorators/customThrottler.decorator';
+import EventEmitterClient from '@events/emitter/EventEmitter.client';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
+import { secondsToMilliseconds } from '@common/utils/dates.util';
 import { PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 import CreateUserValidatorPipe from '../pipes/CreateUserValidator.pipe';
@@ -38,15 +45,30 @@ import LoginUserInputDto from '../dto/user/LoginUserInput.dto';
 @UseFilters(HttpExceptionsFilter)
 @UseInterceptors(ResponseInterceptor)
 @exceptionsResponseDecorator()
-export default class UserController {
+export default class UserController implements OnModuleInit {
+	private loginDisabled: boolean; // ANCHOR - feature flag
+
 	constructor(
+		private readonly moduleRef: ModuleRef,
 		private readonly loginUserUseCase: LoginUserUseCase,
 		private readonly listUsersUseCase: ListUsersUseCase,
 		private readonly createUserUseCase: CreateUserUseCase,
 		private readonly getUserUseCase: GetUserUseCase,
 		private readonly updateUserUseCase: UpdateUserUseCase,
 		private readonly deleteUserUseCase: DeleteUserUseCase,
-	) { }
+		private readonly exceptions: Exceptions,
+	) {
+		this.loginDisabled = false;
+	}
+
+	public onModuleInit(): void {
+		const eventEmitterClient = this.moduleRef.get(EventEmitterClient, { strict: false });
+
+		eventEmitterClient.listen(EmitterEventsEnum.DISABLE_LOGIN, (disabled: unknown) => {
+			if (typeof disabled === 'boolean')
+				this.loginDisabled = disabled;
+		});
+	}
 
 	@UseGuards(AuthGuard)
 	@authSwaggerDecorator()
@@ -104,6 +126,7 @@ export default class UserController {
 		deprecated: false,
 	})
 	@Put('/')
+	@customThrottlerDecorator({ name: 'login', limit: 4, ttl: secondsToMilliseconds(10) })
 	@ApiOkResponse({
 		schema: {
 			example: {
@@ -117,6 +140,10 @@ export default class UserController {
 	public async loginUser(
 		@Body(LoginUserValidatorPipe) body: LoginUserInputDto,
 	): Promise<IViewUser & { token: string }> {
+		// NOTE - gracefull degradation
+		if (this.loginDisabled)
+			this.throwMaintenanceException();
+
 		const { user, token } = await this.loginUserUseCase.execute(body);
 
 		return { ...user.getAttributes(), token };
@@ -188,5 +215,11 @@ export default class UserController {
 		await this.deleteUserUseCase.execute(userId, user);
 
 		response.status(HttpStatusEnum.NO_CONTENT).send(undefined);
+	}
+
+	private throwMaintenanceException(): void {
+		throw this.exceptions.integration({
+			message: 'Resource temporarily under maintenance. Please, try again later',
+		});
 	}
 }

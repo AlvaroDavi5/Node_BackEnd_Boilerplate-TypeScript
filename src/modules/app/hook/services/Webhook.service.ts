@@ -89,7 +89,7 @@ export default class WebhookService {
 		key: string;
 		value: RegisterEventHookInterface | null;
 	}[]> {
-		const pattern = `${CacheEnum.HOOKS}:${additionalPattern}*`;
+		const pattern = `${CacheEnum.HOOKS}:${additionalPattern}:*`;
 		const result = await this.redisClient.getByKeyPattern<RegisterEventHookInterface>(pattern);
 		return result.map(({ key, value }) => ({ key, value: this.payloadBuilder(value as RegisterEventHookInterface) }));
 	}

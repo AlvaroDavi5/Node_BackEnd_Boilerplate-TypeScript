@@ -1,5 +1,5 @@
-import { Injectable, Inject, OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown } from '@nestjs/common';
 import { HttpAdapterHost, ModuleRef } from '@nestjs/core';
+import { Injectable, Inject, OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { ExpressAdapter } from '@nestjs/platform-express';
 import { DataSource } from 'typeorm';
@@ -46,25 +46,31 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 
 	public onModuleInit(): void {
 		this.logger.debug('Builded host module');
-	}
 
-	public onApplicationBootstrap(): void {
-		this.logger.verbose(`\tApp started with PID: ${process.pid} on URL: ${this.appConfigs.url}`);
-
-		this.eventEmitterClient.listen(EmitterEventsEnum.DISABLE_ALL_ROUTES, (disabled: unknown, data: unknown) => {
-			if (typeof disabled === 'boolean' && disabled === true) {
+		this.eventEmitterClient.listen(EmitterEventsEnum.DISABLE_ALL_ROUTES, (disabled: unknown) => {
+			if (typeof disabled === 'boolean') {
 				// NOTE - circuit breaker
-				this.logger.warn(`Closing HTTP server due '${EmitterEventsEnum.DISABLE_ALL_ROUTES}' event, received data:`, data);
-				this.httpAdapterHost?.httpAdapter?.close();
+				if (disabled === true) {
+					this.logger.warn(`Closing HTTP server due '${EmitterEventsEnum.DISABLE_ALL_ROUTES}' event`);
+					this.httpAdapterHost.httpAdapter.close();
+				} else {
+					this.logger.warn(`Restarting HTTP server due '${EmitterEventsEnum.DISABLE_ALL_ROUTES}' event`);
+					this.httpAdapterHost.httpAdapter.listen(this.appConfigs.appPort);
+				}
 			}
 		});
 	}
 
+	public onApplicationBootstrap(): void {
+		this.logger.verbose(`\tApp started with PID: ${process.pid} on URL: ${this.appConfigs.url}`);
+	}
+
 	public onModuleDestroy(): void {
 		this.logger.warn('Closing HTTP server, disconnecting websocket clients, stopping crons and destroying cloud integrations');
+
 		try {
 			// NOTE - gracefull shutdown
-			this.httpAdapterHost?.httpAdapter?.close();
+			this.httpAdapterHost.httpAdapter.close();
 			this.webSocketServer.disconnectAllSockets();
 			this.webSocketServer.disconnect();
 			this.syncCronJob.stopCron();
@@ -79,6 +85,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 
 	public async beforeApplicationShutdown(): Promise<void> {
 		this.logger.warn('Closing cache and databases connections');
+
 		if (this.redisClient.isConnected() === true)
 			try {
 				await this.redisClient.disconnect();

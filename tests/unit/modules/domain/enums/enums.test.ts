@@ -22,11 +22,11 @@ describe('Modules :: Domain :: Enums', () => {
 
 	describe('# QueueSchemasEnum', () => {
 		test('Should return keys', () => {
-			expect(Object.keys(QueueSchemasEnum)).toEqual(['DOMAIN_EVENT', 'BROADCAST', 'NEW_CONNECTION', 'DISABLE_ALL_ROUTES']);
+			expect(Object.keys(QueueSchemasEnum)).toEqual(['DOMAIN_EVENT', 'BROADCAST', 'NEW_CONNECTION', 'DISABLE_LOGIN', 'DISABLE_ALL_ROUTES']);
 		});
 
 		test('Should return values', () => {
-			expect(Object.values(QueueSchemasEnum)).toEqual(['DOMAIN_EVENT', 'BROADCAST', 'NEW_CONNECTION', 'DISABLE_ALL_ROUTES']);
+			expect(Object.values(QueueSchemasEnum)).toEqual(['DOMAIN_EVENT', 'BROADCAST', 'NEW_CONNECTION', 'DISABLE_LOGIN', 'DISABLE_ALL_ROUTES']);
 		});
 
 		test('Should return value', () => {

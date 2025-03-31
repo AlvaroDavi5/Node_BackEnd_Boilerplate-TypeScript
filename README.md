@@ -52,7 +52,7 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 - **Joi**: Schema validator library;
 - **Jest**: Testing Framework;
 - **ESLint**: JavaScript/TypeScript linter and formatter;
-- **Huksy**: Git hooks tool used to check tests, format the code and the commits;
+- **Lefthook**: Git hooks tool used to check tests, format the code and the commits;
 
 ---
 

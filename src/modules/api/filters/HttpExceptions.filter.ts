@@ -29,8 +29,8 @@ export class HttpExceptionsFilter extends AbstractExceptionsFilter implements Ex
 		const excep = exception as ErrorOrExceptionToFilter & { response: Record<string, string> };
 		let errorResponse: httpErrorResponseType = {
 			error: excep.name,
-			name: excep.response.error ?? excep.name,
-			message: excep.response.message ?? excep.message,
+			name: excep?.response?.error ?? excep.name,
+			message: excep?.response?.message ?? excep.message,
 			timestamp: fromDateTimeToISO(getDateTimeNow(TimeZonesEnum.America_SaoPaulo), true),
 		};
 

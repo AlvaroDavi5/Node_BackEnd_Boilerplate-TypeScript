@@ -7,6 +7,8 @@ import AbstractExceptionsFilter, { ErrorOrExceptionToFilter } from '@common/filt
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { isNullOrUndefined } from '@common/utils/dataValidations.util';
 import externalErrorParser from '@common/utils/externalErrorParser.util';
+import { fromDateTimeToISO, getDateTimeNow } from '@common/utils/dates.util';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
@@ -33,7 +35,7 @@ export class WebSocketExceptionsFilter extends AbstractExceptionsFilter implemen
 			message: (exception as ErrorOrExceptionToFilter)?.message,
 			receivedEvent: event,
 			receivedData: data,
-			timestamp: new Date().toISOString(),
+			timestamp: fromDateTimeToISO(getDateTimeNow(TimeZonesEnum.America_SaoPaulo), true),
 		};
 
 		if (exception instanceof WsException) {

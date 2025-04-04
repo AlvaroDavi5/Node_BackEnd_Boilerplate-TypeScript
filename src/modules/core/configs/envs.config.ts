@@ -284,7 +284,7 @@ export default (): ConfigsInterface => ({
 		version: process.env.npm_package_version,
 		license: process.env.npm_package_license,
 		author: `${process.env.npm_package_author_name} - ${process.env.npm_package_author_email}`,
-		repository: process.env.npm_package_repository_url,
+		repository: process.env.npm_package_repository,
 		private: process.env.npm_package_private === 'true',
 		engines: {
 			node: process.env.npm_package_engines_node,

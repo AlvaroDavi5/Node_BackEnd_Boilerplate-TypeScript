@@ -20,7 +20,7 @@ services:
     volumes:
       # host_path:container_path
       - ./package.json:/app/package.json
-      - ./yarn.lock:/app/yarn.lock
+      - ./package-lock.json:/app/package-lock.json
       - ./tsconfig.build.json:/app/tsconfig.build.json
       - ./src:/app/src
       - ./init.sh:/app/init.sh

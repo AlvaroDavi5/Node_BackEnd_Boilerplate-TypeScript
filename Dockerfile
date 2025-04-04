@@ -19,7 +19,7 @@ WORKDIR /app
 
 #COPY --from=build /app /app
 COPY package.json ./package.json
-COPY yarn.lock ./yarn.lock
+COPY package-lock.json ./package-lock.json
 COPY tsconfig* ./
 COPY nodemon* ./
 COPY webpack.config.js ./webpack.config.js
@@ -32,8 +32,8 @@ COPY scripts ./scripts
 COPY jest* ./
 COPY init.sh ./init.sh
 
-RUN yarn install
-RUN yarn run build
+RUN npm install
+RUN npm run build
 RUN chmod +x init.sh
 CMD [ "./init.sh" ]
 

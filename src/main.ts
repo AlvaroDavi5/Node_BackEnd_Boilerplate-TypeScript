@@ -1,3 +1,4 @@
+import 'src/modules/core/errors/setup';
 import { writeFileSync } from 'fs';
 import { NestFactory, SerializedGraph, PartialGraphHost } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';

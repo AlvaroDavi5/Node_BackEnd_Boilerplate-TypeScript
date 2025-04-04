@@ -1,13 +1,11 @@
-import { ConfigService } from '@nestjs/config';
 import { INestApplication, NestApplicationOptions } from '@nestjs/common';
-import { captureException, configureTrackers } from '@core/errors/trackers';
+import { captureException } from '@core/errors/trackers';
 import LoggerService from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
 import { ProcessEventsEnum, ProcessSignalsEnum } from '@common/enums/processEvents.enum';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { getObjValues } from '@common/utils/dataValidations.util';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
-import { ConfigsInterface } from './envs.config';
 
 
 export const createNestApplicationOptions: NestApplicationOptions = {
@@ -25,10 +23,6 @@ export const createNestApplicationOptions: NestApplicationOptions = {
 
 export default async (nestApp: INestApplication): Promise<void> => {
 	nestApp.enableShutdownHooks();
-
-	const { environment, sentryDsn } = nestApp.get<ConfigService>(ConfigService, { strict: false }).get<ConfigsInterface['application']>('application')!;
-
-	configureTrackers({ environment, sentryDsn });
 
 	let logger: LoggerInterface | Console;
 	await nestApp.resolve<LoggerService>(LoggerService)

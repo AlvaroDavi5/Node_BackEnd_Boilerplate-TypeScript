@@ -2,17 +2,11 @@ import {
 	init as initSentry, consoleIntegration, captureConsoleIntegration
 } from '@sentry/nestjs';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
-import dotenv from 'dotenv';
+import envsConfig from '@core/configs/envs.config';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 
 
-dotenv.config();
-
-const environment = process.env.NODE_ENV;
-const packageName = process.env.npm_package_name;
-const packageVersion = process.env.npm_package_version;
-const sentryDsn = process.env.SENTRY_DSN;
-const showExternalLogs = process.env.SHOW_EXTERNAL_LOGS === 'true';
+const { application: { environment, showExternalLogs, sentryDsn }, package: { name: packageName, version: packageVersion } } = envsConfig();
 
 initSentry({
 	dsn: sentryDsn,

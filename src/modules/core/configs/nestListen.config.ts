@@ -1,10 +1,10 @@
 import { INestApplication, NestApplicationOptions } from '@nestjs/common';
-import { captureException } from '@core/errors/trackers';
 import LoggerService from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
 import { ProcessEventsEnum, ProcessSignalsEnum } from '@common/enums/processEvents.enum';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { getObjValues } from '@common/utils/dataValidations.util';
+import { captureException } from '@common/utils/sentryCalls.util';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 

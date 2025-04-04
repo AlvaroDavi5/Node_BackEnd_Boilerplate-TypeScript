@@ -138,6 +138,21 @@ export interface ConfigsInterface {
 	security: {
 		secretKey: string,
 	},
+	// ? NPM Package
+	package: {
+		name?: string,
+		description?: string,
+		version?: string,
+		license?: string,
+		author?: string,
+		repository?: string,
+		private?: boolean,
+		engines?: {
+			node?: string,
+			npm?: string,
+			yarn?: string,
+		},
+	},
 }
 
 // eslint-disable-next-line complexity
@@ -261,5 +276,20 @@ export default (): ConfigsInterface => ({
 	},
 	security: {
 		secretKey: process.env.SECRET ?? 'pass_phrase',
+	},
+	// ? NPM Package
+	package: {
+		name: process.env.npm_package_name,
+		description: process.env.npm_package_description,
+		version: process.env.npm_package_version,
+		license: process.env.npm_package_license,
+		author: `${process.env.npm_package_author_name} - ${process.env.npm_package_author_email}`,
+		repository: process.env.npm_package_repository_url,
+		private: process.env.npm_package_private === 'true',
+		engines: {
+			node: process.env.npm_package_engines_node,
+			npm: process.env.npm_package_engines_npm,
+			yarn: process.env.npm_package_engines_yarn,
+		},
 	},
 });

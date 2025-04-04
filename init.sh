@@ -38,11 +38,11 @@ if [ $NODE_ENV != 'prod' ]; then
 	fi
 fi;
 
-if command -v yarn &> /dev/null
+if command -v npm &> /dev/null
 then
 	log "Starting Application...";
 	mkdir -p docs;
-	yarn run $EXEC_COMMAND;
+	npm run $EXEC_COMMAND;
 	if [ $? -ne 0 ]; then
 		err "Error starting application.";
 	fi

@@ -38,12 +38,14 @@ function getMessageFormatter() {
 
 	return format.printf((info) => {
 		const { level, message, timestamp, stack: errorStack, context, meta } = info;
+		const metadata = meta as any;
+
 		const logLevel = levelFormatter(level);
-		const logContext = contextFormatter((context || meta?.context) ?? 'DefaultContext');
-		const requestId = meta?.requestId;
-		const socketId = meta?.socketId;
-		const ip = meta?.ip;
-		const logStack = errorStack ?? meta?.stack;
+		const logContext = contextFormatter((context || metadata?.context) ?? 'DefaultContext');
+		const requestId = metadata?.requestId;
+		const socketId = metadata?.socketId;
+		const ip = metadata?.ip;
+		const logStack = errorStack ?? metadata?.stack;
 
 		let log = `${dataParserHelperMock.toString(message)}`;
 

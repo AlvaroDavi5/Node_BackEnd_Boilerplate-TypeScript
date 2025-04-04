@@ -60,7 +60,7 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 
 1. Install project dependencies  
 ```shell
-yarn install
+npm install
 ```
 
 2. Install [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
@@ -156,11 +156,11 @@ kubectl delete -f=<resource_config_path> # or kubectl delete -n <resource_namesp
 ## Running Locally
 
 ```shell
-yarn run db:migration-run && yarn run db:seed # create database entities and populate database registers
-yarn run mock-dependencies # create message queue and storager and start external services mock
-yarn run start:dev # start application in development mode
-yarn run receive-messages # create websocket client and start connection to receive events
-yarn run send-message # send event message to queue
+npm run db:migration-run && npm run db:seed # create database entities and populate database registers
+npm run mock-dependencies # create message queue and storager and start external services mock
+npm run start:dev # start application in development mode
+npm run receive-messages # create websocket client and start connection to receive events
+npm run send-message # send event message to queue
 ```
 
 ## Interface

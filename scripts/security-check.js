@@ -5,33 +5,30 @@ const { exec } = require('child_process');
 function runAudit() {
 	const callback = (error, stdout, stderr) => {
 		console.log(stdout);
+
 		if (error) {
 			const lines = stdout?.split('\n');
+			let shouldThrow = true;
 
 			for (const line of lines) {
 				if (line?.startsWith('Severity: ')) {
-					if (
-						line?.includes('High')
-						|| line?.includes('Critical')
-					) {
-						console.error('Security check failed, High or Critical vulnerability found');
-						throw new Error('Security check failed, High or Critical vulnerability found');
-					} else if (
-						line.includes('Info')
-						|| line.includes('Low')
-						|| line.includes('Moderate')
-					) {
+					if (line?.includes('critical') || line?.includes('high')) {
+						const errorMsg = 'Security check failed, High or Critical vulnerability found';
+						console.error(errorMsg);
+						throw new Error(errorMsg);
+					} else if (line?.includes('moderate') || line?.includes('low') || line?.includes('info')) {
 						console.warn('Security check passed, but Info, Low or Moderate vulnerability found');
-						return;
+						shouldThrow = false;
 					}
 				}
 			}
 
-			throw new Error(`Error occurred: \n${stderr}`);
+			if (shouldThrow)
+				throw new Error(`Error occurred: \n${stderr}`);
 		}
 	};
 
-	exec('yarn audit', callback);
+	exec('npm audit', callback);
 }
 
 runAudit();

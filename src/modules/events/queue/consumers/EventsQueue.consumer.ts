@@ -32,6 +32,7 @@ export const eventsQueueConsumerConfigs: SqsConsumerOptions = {
 	region: awsRegion,
 	batchSize: 10,
 	shouldDeleteMessages: false,
+	// suppressFifoWarning: true,
 	pollingWaitTimeMs: 10,
 	waitTimeSeconds: 20,
 	visibilityTimeout: 20,

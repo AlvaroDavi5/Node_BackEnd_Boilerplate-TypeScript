@@ -69,19 +69,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "yarn"
+          cache: "npm"
 
       - name: Installing Dependencies
-        run: yarn install
+        run: npm install
 
       - name: Checking Dependencies Security
-        run: yarn run security-check
+        run: npm run security-check
 
       - name: Checking Type
-        run: yarn run typecheck
+        run: npm run typecheck
 
       - name: Building
-        run: yarn run build
+        run: npm run build
 
       - name: Testing Modules
-        run: yarn run test:unit
+        run: npm run test:unit

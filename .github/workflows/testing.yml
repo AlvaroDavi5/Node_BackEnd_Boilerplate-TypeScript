@@ -41,29 +41,29 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "yarn"
+          cache: "npm"
 
       - name: Installing Dependencies
-        run: yarn install
+        run: npm install
 
       - name: Checking Dependencies Security
-        run: yarn run security-check
+        run: npm run security-check
 
       - name: Checking Type
-        run: yarn run typecheck
+        run: npm run typecheck
 
       - name: Building
-        run: yarn run build
+        run: npm run build
 
       - name: Packing
-        run: yarn run build:webpack
+        run: npm run build:webpack
 
       - name: Testing Modules
-        run: yarn run test:unit
+        run: npm run test:unit
       - name: Testing Integration
-        run: yarn run test:integration
+        run: npm run test:integration
       # - name: Testing API
-      #   run: yarn run test:e2e
+      #   run: npm run test:e2e
 
   sonarqube:
     name: SonarQube Analyze
@@ -80,10 +80,10 @@ jobs:
           path: coverage
 
       - name: Installing Dependencies
-        run: yarn install
+        run: npm install
 
       - name: Preparing Coverage Files
-        run: yarn run sonar:prepare
+        run: npm run sonar:prepare
 
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master

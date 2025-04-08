@@ -16,9 +16,9 @@ export default class AuthGuard implements CanActivate {
 
 	public canActivate(context: ExecutionContext): boolean {
 		const request = context.switchToHttp().getRequest<RequestInterface>();
+
 		const requestId = request?.id;
-		const clientIp = request?.socket?.remoteAddress;
-		const authorization = request?.headers?.authorization;
+		const clientIp = request?.ip ?? request?.socket?.remoteAddress;
 
 		if (requestId)
 			this.logger.setRequestId(requestId);
@@ -27,6 +27,7 @@ export default class AuthGuard implements CanActivate {
 
 		this.logger.verbose(`Running guard in '${context.getType()}' context`);
 
+		const authorization = request?.headers?.authorization;
 		if (!authorization) {
 			this.logger.warn('Request without authorization token');
 			throw this.exceptions.invalidToken({

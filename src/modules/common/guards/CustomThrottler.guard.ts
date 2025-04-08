@@ -60,7 +60,7 @@ export default class CustomThrottlerGuard implements CanActivate {
 	private async handleHttpRequest(httpContext: HttpArgumentsHost, throttlerName: string, limit: number, ttl: number): Promise<boolean> {
 		const { req, res } = this.getRequestResponse(httpContext);
 
-		const ip = req.ip ?? req?.socket?.remoteAddress ?? '_';
+		const ip = req?.ip ?? req?.socket?.remoteAddress ?? '_';
 		const route = this.getRoute(req);
 		const key = this.generateKey(throttlerName, 'http', ip, route);
 		const { totalHits, timeToExpire } = await this.throttlerStorage.increment(key, ttl);

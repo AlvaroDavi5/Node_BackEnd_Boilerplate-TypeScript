@@ -10,7 +10,15 @@ export class UserPreferenceInputDto implements IUpdateUserPreference {
 	@IsOptional()
 	public imagePath?: string;
 
-	@ApiProperty({ type: ThemesEnum, enum: ThemesEnum, example: ThemesEnum.DEFAULT, default: undefined, nullable: false, required: false })
+	@ApiProperty({
+		type: ThemesEnum,
+		enumName: String(ThemesEnum),
+		enum: ThemesEnum,
+		example: ThemesEnum.DEFAULT,
+		default: undefined,
+		nullable: false,
+		required: false,
+	})
 	@IsEnum(ThemesEnum)
 	@IsOptional()
 	public defaultTheme?: ThemesEnum;

@@ -10,7 +10,15 @@ export class RegisterEventHookInputDto implements RegisterEventHookInterface {
 	@IsNotEmpty()
 	public responseEndpoint!: string;
 
-	@ApiProperty({ type: HttpMethodsEnum, enum: HttpMethodsEnum, example: HttpMethodsEnum.POST, default: HttpMethodsEnum.GET, nullable: false, required: true })
+	@ApiProperty({
+		type: HttpMethodsEnum,
+		enumName: String(HttpMethodsEnum),
+		enum: HttpMethodsEnum,
+		example: HttpMethodsEnum.POST,
+		default: HttpMethodsEnum.GET,
+		nullable: false,
+		required: true,
+	})
 	@IsEnum(HttpMethodsEnum)
 	@IsNotEmpty()
 	public responseMethod!: HttpMethodsEnum;

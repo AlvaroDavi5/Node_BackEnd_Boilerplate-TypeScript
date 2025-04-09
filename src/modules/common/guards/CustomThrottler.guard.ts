@@ -31,7 +31,7 @@ export default class CustomThrottlerGuard implements CanActivate {
 
 		const continues: boolean[] = [];
 		for (const throttler of [...this.globalThrottlers, ...this.getCustomThrottlers(context)]) {
-			const { name: throttlerName, limit, ttl } = await this.getThrottlerData(context, throttler);
+			const { name: throttlerName, limit, ttl, blockDuration } = await this.getThrottlerData(context, throttler);
 			const { skipIf } = throttler;
 
 			this.logger.verbose(`Running guard with '${throttlerName}' throttler in ${contextType} for ${limit} requests in ${ttl} ms`);
@@ -43,10 +43,10 @@ export default class CustomThrottlerGuard implements CanActivate {
 
 			switch (contextType) {
 				case 'http':
-					continues.push(await this.handleHttpRequest(context.switchToHttp(), throttlerName, limit, ttl));
+					continues.push(await this.handleHttpRequest(context.switchToHttp(), throttlerName, ttl, limit, blockDuration));
 					break;
 				case 'ws':
-					continues.push(await this.handleWsEvent(context.switchToWs(), throttlerName, limit, ttl));
+					continues.push(await this.handleWsEvent(context.switchToWs(), throttlerName, ttl, limit, blockDuration));
 					break;
 				default:
 					continues.push(false);
@@ -57,36 +57,42 @@ export default class CustomThrottlerGuard implements CanActivate {
 		return continues.every((cont) => cont);
 	}
 
-	private async handleHttpRequest(httpContext: HttpArgumentsHost, throttlerName: string, limit: number, ttl: number): Promise<boolean> {
+	private async handleHttpRequest(
+		httpContext: HttpArgumentsHost,
+		throttlerName: string,
+		ttl: number,
+		limit: number,
+		blockDuration: number
+	): Promise<boolean> {
 		const { req, res } = this.getRequestResponse(httpContext);
 
 		const ip = req?.ip ?? req?.socket?.remoteAddress ?? '_';
 		const route = this.getRoute(req);
 		const key = this.generateKey(throttlerName, 'http', ip, route);
-		const { totalHits, timeToExpire } = await this.throttlerStorage.increment(key, ttl);
+		const { totalHits, timeToExpire, isBlocked, timeToBlockExpire } = await this.throttlerStorage.increment(key, ttl, limit, blockDuration, throttlerName);
 
 		res.header(`${this.headerPrefix}-Limit-${throttlerName}`, `${limit}`);
 		res.header(`${this.headerPrefix}-Remaining-${throttlerName}`, `${Math.max(0, limit - totalHits)}`);
 		res.header(`${this.headerPrefix}-Reset-${throttlerName}`, `${timeToExpire}`);
 
-		if (totalHits > limit) {
-			res.header('Retry-After', `${timeToExpire}`);
-			this.throwException(key, ip, limit, ttl, timeToExpire, totalHits);
+		if (isBlocked) {
+			res.header('Retry-After', `${timeToBlockExpire}`);
+			this.throwException(key, ip, ttl, limit, totalHits, timeToExpire, timeToBlockExpire);
 		}
 
 		return true;
 	}
 
-	private async handleWsEvent(wsContext: WsArgumentsHost, throttlerName: string, limit: number, ttl: number): Promise<boolean> {
+	private async handleWsEvent(wsContext: WsArgumentsHost, throttlerName: string, ttl: number, limit: number, blockDuration: number): Promise<boolean> {
 		const socket = wsContext.getClient<Socket>();
 		const event = wsContext.getPattern();
 
 		const socketId = socket.id ?? '_';
 		const key = this.generateKey(throttlerName, 'ws', socketId, event);
-		const { totalHits, timeToExpire } = await this.throttlerStorage.increment(key, ttl);
+		const { totalHits, timeToExpire, isBlocked, timeToBlockExpire } = await this.throttlerStorage.increment(key, ttl, limit, blockDuration, throttlerName);
 
-		if (totalHits > limit) {
-			this.throwException(key, socketId, limit, ttl, timeToExpire, totalHits);
+		if (isBlocked) {
+			this.throwException(key, socketId, ttl, limit, totalHits, timeToExpire, timeToBlockExpire);
 		}
 
 		return true;
@@ -112,15 +118,21 @@ export default class CustomThrottlerGuard implements CanActivate {
 		return throttlers;
 	}
 
-	private async getThrottlerData(context: ExecutionContext, throttler: ThrottlerOptions): Promise<{ name: string, limit: number, ttl: number }> {
+	private async getThrottlerData(context: ExecutionContext, throttler: ThrottlerOptions): Promise<{
+		name: string,
+		ttl: number,
+		limit: number,
+		blockDuration: number,
+	}> {
 		const name = throttler.name ?? 'default';
-		const limit = await this.resolveValue(context, throttler.limit);
-		const ttl = await this.resolveValue(context, throttler.ttl);
+		const limit = await this.resolveValue<number>(context, throttler.limit);
+		const ttl = await this.resolveValue<number>(context, throttler.ttl);
+		const blockDuration = await this.resolveValue<number>(context, throttler.blockDuration as number);
 
-		return { name, limit, ttl };
+		return { name, ttl, limit, blockDuration };
 	}
 
-	private async resolveValue(context: ExecutionContext, resolvableValue: Resolvable<number>): Promise<number> {
+	private async resolveValue<T extends number | string | boolean>(context: ExecutionContext, resolvableValue: Resolvable<T>): Promise<T> {
 		return typeof resolvableValue === 'function' ? resolvableValue(context) : resolvableValue;
 	}
 
@@ -131,10 +143,10 @@ export default class CustomThrottlerGuard implements CanActivate {
 		};
 	}
 
-	private throwException(key: string, tracker: string, limit: number, ttl: number, timeToExpire: number, totalHits: number): void {
+	private throwException(key: string, tracker: string, ttl: number, limit: number, totalHits: number, timeToExpire: number, timeToBlockExpire: number): void {
 		throw this.exceptions.manyRequests({
 			message: 'Too Many Requests/Events/Retries',
-			details: { key, tracker, limit, ttl, timeToExpire, totalHits },
+			details: { key, tracker, ttl, limit, totalHits, timeToExpire, timeToBlockExpire },
 		});
 	}
 }

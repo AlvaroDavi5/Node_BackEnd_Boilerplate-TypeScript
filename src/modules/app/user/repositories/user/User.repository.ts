@@ -16,7 +16,7 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER) connection: DataSource,
 		@Inject(REQUEST_LOGGER_PROVIDER) logger: LoggerService,
-		exceptions: Exceptions,
+			exceptions: Exceptions,
 	) {
 		logger.setContextName(UserRepository.name);
 		super({

@@ -11,6 +11,14 @@
 	],
 	"plugins": [
 		[
+			"@semantic-release/npm",
+			{
+				"npmPublish": false,
+				"pkgRoot": ".",
+				"tarballDir": "./"
+			}
+		],
+		[
 			"@semantic-release/commit-analyzer",
 			{
 				"preset": "conventionalcommits",

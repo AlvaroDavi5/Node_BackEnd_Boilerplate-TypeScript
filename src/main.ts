@@ -1,7 +1,9 @@
 import 'src/modules/core/errors/setup';
 import { writeFileSync } from 'fs';
 import { NestFactory, SerializedGraph, PartialGraphHost } from '@nestjs/core';
+import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { Express } from 'express';
 import CoreModule from '@core/core.module';
 import nestListenConfig, { createNestApplicationOptions, validateKnownExceptions } from '@core/configs/nestListen.config';
 import nestApiConfig from '@core/configs/nestApi.config';
@@ -13,7 +15,7 @@ import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
 async function startNestApplication(): Promise<void> {
-	const nestApp = await NestFactory.create(CoreModule, createNestApplicationOptions);
+	const nestApp = await NestFactory.create<INestApplication<Express>>(CoreModule, createNestApplicationOptions);
 	await nestListenConfig(nestApp);
 
 	nestApiConfig(nestApp);

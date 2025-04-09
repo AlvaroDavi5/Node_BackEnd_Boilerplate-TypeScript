@@ -21,7 +21,7 @@ export default class ResponseInterceptor implements NestInterceptor {
 		const response = httpContext.getResponse<ResponseInterface>();
 
 		const requestId = request?.id;
-		const clientIp = request?.socket?.remoteAddress;
+		const clientIp = request?.ip ?? request?.socket?.remoteAddress;
 
 		if (requestId) {
 			this.logger.setRequestId(requestId);

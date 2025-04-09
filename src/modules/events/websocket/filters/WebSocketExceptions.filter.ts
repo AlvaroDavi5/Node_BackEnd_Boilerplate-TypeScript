@@ -69,12 +69,16 @@ export class WebSocketExceptionsFilter extends AbstractExceptionsFilter implemen
 		const socket = context.getClient<Socket>();
 
 		const socketId = socket?.id;
+		const clientIp = socket?.handshake?.address;
 
 		if (socketId)
 			this.logger.setSocketId(socketId);
+		if (clientIp)
+			this.logger.setClientIp(clientIp);
 
 		this.capture(exception, {
 			data: { socketId, event, payload: data },
+			user: { socketId, ip_address: clientIp },
 		});
 
 		const { errorEvent, errorResponse } = this.buildWsErrorResponse(exception, event, data);

@@ -19,9 +19,12 @@ export default class EventsGuard implements CanActivate {
 		const [socket, message, _, event] = context.getArgs() as [Socket, unknown, unknown, WebSocketEventsEnum];
 
 		const socketId = socket?.id;
+		const clientIp = socket?.handshake?.address;
 
 		if (socketId)
 			this.logger.setSocketId(socketId);
+		if (clientIp)
+			this.logger.setClientIp(clientIp);
 
 		this.logger.verbose(`Running guard to '${event}' event for '${socketId}' socket`);
 

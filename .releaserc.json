@@ -10,14 +10,6 @@
 	],
 	"plugins": [
 		[
-			"@semantic-release/npm",
-			{
-				"npmPublish": false,
-				"pkgRoot": ".",
-				"tarballDir": "./"
-			}
-		],
-		[
 			"@semantic-release/commit-analyzer",
 			{
 				"preset": "conventionalcommits",
@@ -57,7 +49,18 @@
 		[
 			"@semantic-release/release-notes-generator",
 			{
-				"preset": "conventionalcommits"
+				"preset": "conventionalcommits",
+				"parserOpts": {
+					"mergePattern": "^$"
+				}
+			}
+		],
+		[
+			"@semantic-release/npm",
+			{
+				"npmPublish": false,
+				"pkgRoot": ".",
+				"tarballDir": "./"
 			}
 		],
 		[
@@ -66,13 +69,18 @@
 				"assets": [
 					{
 						"path": "build.zip",
-						"name": "node_backend_boilerplate-v4.8.4.zip",
-						"label": "Application WebPack"
+						"name": "node_backend_boilerplate-v${nextRelease.version}.zip",
+						"label": "Application WebPack - v${nextRelease.version}"
+					},
+					{
+						"path": "node_backend_boilerplate-${nextRelease.version}.tgz",
+						"name": "node_backend_boilerplate-v${nextRelease.version}.tgz",
+						"label": "Application TarBall - v${nextRelease.version}"
 					},
 					{
 						"path": "CHANGELOG.md",
-						"name": "CHANGELOG-node_backend_boilerplate.md",
-						"label": "Application CHANGELOG"
+						"name": "CHANGELOG-node_backend_boilerplate-v${nextRelease.version}.md",
+						"label": "Application CHANGELOG - v${nextRelease.version}"
 					}
 				]
 			}

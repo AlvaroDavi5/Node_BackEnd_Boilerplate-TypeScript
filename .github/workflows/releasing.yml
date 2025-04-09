@@ -97,4 +97,4 @@ jobs:
         run: zip -r build.zip build
 
       - name: Versioning Release
-        run: export LEFTHOOK=0 && npm run versioning
+        run: npm run versioning

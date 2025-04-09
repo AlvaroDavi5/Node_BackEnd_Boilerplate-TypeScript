@@ -44,14 +44,14 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 - **PostgreSQL**: Relational (SQL) database;
 - **MongoDB**: Schematic and document-oriented NoSQL database;
 - **Redis**: Cache and in-memory key-value NoSQL database;
-- **Docker**: Services isolation and process resources management with containers;
-- **Kubernetes**: Containers orchestration system;
-- **SonarQube**: Test coverage and code quality analyzer;
-- **Sentry**: Errors capture, tracing and metrics;
-- **Grafana**: Containers data visualization and dashboards;
 - **Winston**: Custom logger with transports;
 - **Joi**: Schema validator library;
 - **Jest**: Testing Framework;
+- **Docker**: Services isolation and process resources management with containers;
+- **Kubernetes**: Containers orchestration system;
+- **Grafana**: Containers data visualization and dashboards;
+- **Sentry**: Errors capture, tracing and metrics;
+- **SonarQube**: Test coverage and code quality analyzer;
 - **ESLint**: JavaScript/TypeScript linter and formatter;
 - **Lefthook**: Git hooks tool used to check tests, format the code and the commits;
 

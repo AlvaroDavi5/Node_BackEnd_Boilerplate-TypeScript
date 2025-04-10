@@ -51,7 +51,8 @@
 			"@semantic-release/release-notes-generator",
 			{
 				"preset": "conventionalcommits",
-				"parserOpts": {}
+				"parserOpts": {},
+				"writerOpts": {}
 			}
 		],
 		[

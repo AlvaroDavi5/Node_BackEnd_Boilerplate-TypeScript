@@ -68,7 +68,7 @@
 			"@semantic-release/git",
 			{
 				"assets": [
-					"node_backend_boilerplate-v${nextRelease.version}.tgz"
+					"build/*.tgz"
 				],
 				"message": "docs(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
 			}

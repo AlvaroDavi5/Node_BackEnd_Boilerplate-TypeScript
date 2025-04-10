@@ -11,17 +11,10 @@
 	],
 	"plugins": [
 		[
-			"@semantic-release/npm",
-			{
-				"npmPublish": false,
-				"pkgRoot": ".",
-				"tarballDir": "./"
-			}
-		],
-		[
 			"@semantic-release/commit-analyzer",
 			{
 				"preset": "conventionalcommits",
+				"parserOpts": {},
 				"releaseRules": [
 					{
 						"scope": "no-release",
@@ -58,14 +51,24 @@
 		[
 			"@semantic-release/release-notes-generator",
 			{
-				"preset": "conventionalcommits"
+				"preset": "conventionalcommits",
+				"parserOpts": {},
+				"writerOpts": {}
+			}
+		],
+		[
+			"@semantic-release/npm",
+			{
+				"npmPublish": false,
+				"pkgRoot": ".",
+				"tarballDir": "./"
 			}
 		],
 		[
 			"@semantic-release/git",
 			{
 				"assets": [
-					"build.zip"
+					"build/*.tgz"
 				],
 				"message": "docs(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
 			}

@@ -10,16 +10,6 @@
 		"Álvaro Davi Santos Alves <alvaro.davisa@gmail.com>"
 	],
 	"repository": "https://github.com/AlvaroDavi5/Node_BackEnd_Boilerplate-TypeScript.git",
-	"release": {
-		"repositoryUrl": "https://github.com/AlvaroDavi5/Node_BackEnd_Boilerplate-TypeScript",
-		"tagFormat": "v${version}",
-		"ci": true,
-		"dryRun": false,
-		"branches": [
-			"main",
-			"release"
-		]
-	},
 	"main": "./src/main.ts",
 	"engineStrict": true,
 	"engines": {

@@ -9,8 +9,9 @@ on:
     - cron: "0 0 */3 * *" # every 3 days
 
 env:
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  CI: true
   LEFTHOOK: 0
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   codeql_analysis:

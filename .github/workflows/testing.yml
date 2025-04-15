@@ -10,10 +10,11 @@ permissions:
   contents: read
 
 env:
+  CI: true
+  LEFTHOOK: 0
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
-  LEFTHOOK: 0
 
 jobs:
   node_build:

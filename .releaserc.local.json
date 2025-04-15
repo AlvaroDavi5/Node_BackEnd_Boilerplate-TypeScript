@@ -14,7 +14,13 @@
 			"@semantic-release/commit-analyzer",
 			{
 				"preset": "conventionalcommits",
-				"parserOpts": {},
+				"presetConfig": {},
+				"parserOpts": {
+					"noteKeywords": [
+						"BREAKING CHANGE",
+						"BREAKING CHANGES"
+					]
+				},
 				"releaseRules": [
 					{
 						"scope": "no-release",
@@ -52,8 +58,67 @@
 			"@semantic-release/release-notes-generator",
 			{
 				"preset": "conventionalcommits",
-				"parserOpts": {},
-				"writerOpts": {}
+				"presetConfig": {
+					"types": [
+						{
+							"type": "feat",
+							"section": "🚀 Features",
+							"hidden": false
+						},
+						{
+							"type": "fix",
+							"section": "🐛 Bug Fixes",
+							"hidden": false
+						},
+						{
+							"type": "perf",
+							"section": "⚡️ Performance",
+							"hidden": false
+						},
+						{
+							"type": "refactor",
+							"section": "🔨 Code Refactoring",
+							"hidden": true
+						},
+						{
+							"type": "chore",
+							"section": "🔧 Chore",
+							"hidden": true
+						},
+						{
+							"type": "build",
+							"section": "📦 Build",
+							"hidden": true
+						},
+						{
+							"type": "docs",
+							"section": "📚 Documentation",
+							"hidden": true
+						},
+						{
+							"type": "test",
+							"section": "🧪 Tests",
+							"hidden": true
+						},
+						{
+							"type": "style",
+							"section": "🎨 Style Changes",
+							"hidden": true
+						}
+					]
+				},
+				"parserOpts": {
+					"noteKeywords": [
+						"BREAKING CHANGE",
+						"BREAKING CHANGES"
+					]
+				},
+				"writerOpts": {
+					"commitsSort": [
+						"subject",
+						"scope"
+					]
+				}
 			}
 		],
 		[

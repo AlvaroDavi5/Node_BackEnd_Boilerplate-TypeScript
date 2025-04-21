@@ -215,8 +215,8 @@ ___
 				- [ ] Cron
 					- [ ] Tasks
 				- [ ] Infra
-						- [ ] Models
-						- [ ] Repositories
+					- [ ] Models
+					- [ ] Repositories
 					- [ ] Integration
 						- [ ] Rest
 				- [ ] Logging

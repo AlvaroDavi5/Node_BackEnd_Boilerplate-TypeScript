@@ -5,9 +5,9 @@ import CryptographyService from '@core/security/Cryptography.service';
 import RestMockedServiceProvider from '@core/infra/providers/RestMockedService.provider';
 import RedisClient from '@core/infra/cache/Redis.client';
 import { CacheEnum } from '@domain/enums/cache.enum';
-import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 import { fromDateTimeToEpoch, fromJSDateToDateTime, getDateTimeNow } from '@common/utils/dates.util';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { requestMethodType } from '@shared/internal/types/restClientTypes';
 import { RegisterEventHookInterface } from '../api/schemas/registerEventHook.schema';
 

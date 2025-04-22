@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon';
-import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 
 
 export default abstract class AbstractEntity<I = unknown> {

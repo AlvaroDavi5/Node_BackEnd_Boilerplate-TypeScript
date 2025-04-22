@@ -1,8 +1,8 @@
 import { Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { fromISOToDateTime, fromDateTimeToJSDate } from '@common/utils/dates.util';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import AbstractEntityList from '@shared/internal/classes/AbstractListEntity.entity';
 import UserEntity from '../User.entity';
 import UserPreferenceEntity from '../UserPreference.entity';

@@ -2,8 +2,8 @@ import { Injectable, Inject, Scope, NestMiddleware } from '@nestjs/common';
 import CryptographyService from '@core/security/Cryptography.service';
 import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import { cloneObject, checkFieldsExistence, replaceFields } from '@common/utils/objectRecursiveFunctions.util';
-import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { getDateTimeNow, fromDateTimeToEpoch } from '@common/utils/dates.util';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { RequestInterface, ResponseInterface, NextFunctionInterface } from '@shared/internal/interfaces/endpointInterface';
 
 

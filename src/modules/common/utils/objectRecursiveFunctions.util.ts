@@ -38,7 +38,7 @@ export function checkFieldsExistence<OT extends object = object>(obj: OT, fields
 	objectKeys.forEach((key) => {
 		const value = obj[key as keyof OT];
 
-		if (value && typeof value === 'object')
+		if (!!value && typeof value === 'object')
 			result = checkFieldsExistence(value as OT, fieldsToApply);
 	});
 

@@ -13,23 +13,23 @@ import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import { ApiVersionsEnum } from '@common/enums/apiVersions.enum';
 
 
-@Controller()
+@ApiTags('HealthCheck')
+@Controller('/check')
 @UseGuards(CustomThrottlerGuard)
 @UseFilters(HttpExceptionsFilter)
 @UseInterceptors(ResponseInterceptor)
 @exceptionsResponseDecorator()
-export default class DefaultController {
+export default class HealthController {
 	constructor(
 		private readonly httpMessagesConstants: HttpMessagesConstants,
 	) { }
 
-	@ApiTags('HealthCheck')
 	@ApiOperation({
 		summary: 'Check API',
 		description: 'Check if API is working',
 		deprecated: false,
 	})
-	@Get('/check')
+	@Get()
 	@Version(ApiVersionsEnum.DEFAULT)
 	@ApiOkResponse({
 		schema: {
@@ -80,13 +80,12 @@ export default class DefaultController {
 		};
 	}
 
-	@ApiTags('HealthCheck')
 	@ApiOperation({
 		summary: 'Check API',
 		description: 'Check if API is working (v1)',
 		deprecated: true,
 	})
-	@Get('/check')
+	@Get()
 	@Version(ApiVersionsEnum.V1)
 	@ApiOkResponse({
 		schema: {

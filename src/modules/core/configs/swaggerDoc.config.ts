@@ -13,8 +13,8 @@ export default (nestApp: INestApplication): void => {
 		.setDescription(apiDescription ?? 'API Boilerplate created with Nest.js')
 		.setVersion(packageVersion ?? '1.0.0')
 		.setContact('Álvaro Alves', 'https://github.com/AlvaroDavi5', 'alvaro.davisa@gmail.com')
-		.addServer('http://localhost:3000', 'Main Server', {})
-		.addServer('http://localhost:4000', 'Mocked Server', {})
+		.addServer('http://localhost:3000', 'HTTP Main Server', {})
+		.addServer('https://localhost:3000', 'HTTPS Main Server', {})
 		.addBearerAuth({
 			type: 'http',
 			scheme: 'bearer',

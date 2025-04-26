@@ -1,16 +1,17 @@
 import {
 	Controller, Req, Res, Version,
-	Get, Headers, Param, Query, Body,
+	Sse, Get, Headers, Param, Query, Body,
 	UseGuards, UseFilters, UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse } from '@nestjs/swagger';
-import { Request, Response } from 'express';
+import { interval, map, Observable } from 'rxjs';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
 import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import { ApiVersionsEnum } from '@common/enums/apiVersions.enum';
+import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @ApiTags('HealthCheck')
@@ -49,12 +50,12 @@ export default class HealthController {
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public healthCheck(
-		@Req() request: Request,
+		@Req() request: RequestInterface,
 		@Headers() headers: Record<string, string | undefined>,
 		@Param() pathParams: Record<string, unknown>,
 		@Query() queryParams: unknown,
 		@Body() body: unknown,
-		@Res({ passthrough: true }) response: Response,
+		@Res({ passthrough: true }) response: ResponseInterface,
 	): {
 		baseUrl: string, url: string, method: string,
 		headers: Record<string, string | undefined>,
@@ -96,5 +97,25 @@ export default class HealthController {
 	@ApiProduces('text/plain')
 	public healthCheckV1(): string {
 		return 'OK';
+	}
+
+	@ApiOperation({
+		summary: 'Server-Sent Events',
+		description: 'Send to Client the Server events',
+		deprecated: false,
+	})
+	@Sse('sse')
+	@Version(ApiVersionsEnum.DEFAULT)
+	@ApiOkResponse({
+		schema: {
+			example: { number: 1, text: 'OK' },
+		}
+	})
+	@ApiConsumes('text/plain')
+	@ApiProduces('text/event-stream')
+	sse(): Observable<Partial<MessageEvent<{ number: number, text: string }>>> {
+		return interval(1000).pipe(map<number, Partial<MessageEvent<{ number: number, text: string }>>>((n) => ({
+			data: { number: n, text: 'OK' },
+		})));
 	}
 }

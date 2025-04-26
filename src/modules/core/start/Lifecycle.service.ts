@@ -23,7 +23,7 @@ import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 @Injectable()
 export default class LifecycleService implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown {
 	private readonly appConfigs: ConfigsInterface['application'];
-	private eventEmitterClient: EventEmitterClient;
+	private eventEmitterClient!: EventEmitterClient;
 
 	constructor(
 		private readonly moduleRef: ModuleRef,
@@ -40,29 +40,19 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 		private readonly syncCronJob: SyncCronJob,
 		private readonly logger: LoggerService,
 	) {
-		this.eventEmitterClient = this.moduleRef.get(EventEmitterClient, { strict: false });
 		this.appConfigs = this.configService.get<ConfigsInterface['application']>('application')!;
 	}
 
 	public onModuleInit(): void {
-		this.logger.debug('Builded host module');
+		this.eventEmitterClient = this.moduleRef.get(EventEmitterClient, { strict: false });
 
-		this.eventEmitterClient.listen(EmitterEventsEnum.DISABLE_ALL_ROUTES, (disabled: unknown) => {
-			if (typeof disabled === 'boolean') {
-				// NOTE - circuit breaker
-				if (disabled === true) {
-					this.logger.warn(`Closing HTTP server due '${EmitterEventsEnum.DISABLE_ALL_ROUTES}' event`);
-					this.httpAdapterHost.httpAdapter.close();
-				} else {
-					this.logger.warn(`Restarting HTTP server due '${EmitterEventsEnum.DISABLE_ALL_ROUTES}' event`);
-					this.httpAdapterHost.httpAdapter.listen(this.appConfigs.appPort);
-				}
-			}
-		});
+		this.logger.debug('Builded host module');
 	}
 
 	public onApplicationBootstrap(): void {
 		this.logger.verbose(`\tApp started with PID: ${process.pid} on URL: ${this.appConfigs.url}`);
+
+		this.listenEvents();
 	}
 
 	public onModuleDestroy(): void {
@@ -113,5 +103,20 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 		const shouldExit = this.appConfigs.environment !== EnvironmentsEnum.TEST;
 		if (shouldExit)
 			process.exit(ProcessExitStatusEnum.SUCCESS);
+	}
+
+	private listenEvents(): void {
+		this.eventEmitterClient.listen(EmitterEventsEnum.DISABLE_ALL_ROUTES, (disabled: unknown) => {
+			if (typeof disabled === 'boolean') {
+				// NOTE - circuit breaker
+				if (disabled === true) {
+					this.logger.warn(`Closing HTTP server due '${EmitterEventsEnum.DISABLE_ALL_ROUTES}' event`);
+					this.httpAdapterHost.httpAdapter.close();
+				} else {
+					this.logger.warn(`Restarting HTTP server due '${EmitterEventsEnum.DISABLE_ALL_ROUTES}' event`);
+					this.httpAdapterHost.httpAdapter.listen(this.appConfigs.appPort);
+				}
+			}
+		});
 	}
 }

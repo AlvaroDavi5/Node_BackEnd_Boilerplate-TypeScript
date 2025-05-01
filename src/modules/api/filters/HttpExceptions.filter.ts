@@ -4,8 +4,8 @@ import AbstractExceptionsFilter, { ErrorOrExceptionToFilter } from '@common/filt
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { isNullOrUndefined } from '@common/utils/dataValidations.util';
 import externalErrorParser from '@common/utils/externalErrorParser.util';
-import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { getDateTimeNow, fromDateTimeToISO } from '@common/utils/dates.util';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 

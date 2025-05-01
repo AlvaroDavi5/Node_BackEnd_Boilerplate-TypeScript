@@ -1,3 +1,4 @@
+import { readFileSync } from 'fs';
 import { INestApplication, NestApplicationOptions } from '@nestjs/common';
 import LoggerService from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
@@ -8,17 +9,25 @@ import { captureException } from '@common/utils/sentryCalls.util';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
+function getHttpsOptions(): Pick<NestApplicationOptions, 'httpsOptions'> {
+	try {
+		return {
+			httpsOptions: {
+				key: readFileSync('key.pem'),
+				cert: readFileSync('cert.pem'),
+			}
+		};
+	} catch (error) {
+		return { httpsOptions: undefined };
+	}
+}
+
 export const createNestApplicationOptions: NestApplicationOptions = {
 	abortOnError: false,
 	snapshot: true,
 	preview: false,
 	forceCloseConnections: true,
-	/*
-	httpsOptions: {
-		key: '',
-		cert: '',
-	},
-	*/
+	...getHttpsOptions(),
 };
 
 export default async (nestApp: INestApplication): Promise<void> => {

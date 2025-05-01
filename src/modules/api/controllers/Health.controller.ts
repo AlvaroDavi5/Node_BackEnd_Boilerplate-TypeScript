@@ -1,35 +1,36 @@
 import {
 	Controller, Req, Res, Version,
-	Get, Headers, Param, Query, Body,
+	Sse, Get, Headers, Param, Query, Body,
 	UseGuards, UseFilters, UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse } from '@nestjs/swagger';
-import { Request, Response } from 'express';
+import { interval, map, Observable } from 'rxjs';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
 import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import { ApiVersionsEnum } from '@common/enums/apiVersions.enum';
+import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
-@Controller()
+@ApiTags('HealthCheck')
+@Controller('/check')
 @UseGuards(CustomThrottlerGuard)
 @UseFilters(HttpExceptionsFilter)
 @UseInterceptors(ResponseInterceptor)
 @exceptionsResponseDecorator()
-export default class DefaultController {
+export default class HealthController {
 	constructor(
 		private readonly httpMessagesConstants: HttpMessagesConstants,
 	) { }
 
-	@ApiTags('HealthCheck')
 	@ApiOperation({
 		summary: 'Check API',
 		description: 'Check if API is working',
 		deprecated: false,
 	})
-	@Get('/check')
+	@Get()
 	@Version(ApiVersionsEnum.DEFAULT)
 	@ApiOkResponse({
 		schema: {
@@ -49,12 +50,12 @@ export default class DefaultController {
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
 	public healthCheck(
-		@Req() request: Request,
+		@Req() request: RequestInterface,
 		@Headers() headers: Record<string, string | undefined>,
 		@Param() pathParams: Record<string, unknown>,
 		@Query() queryParams: unknown,
 		@Body() body: unknown,
-		@Res({ passthrough: true }) response: Response,
+		@Res({ passthrough: true }) response: ResponseInterface,
 	): {
 		baseUrl: string, url: string, method: string,
 		headers: Record<string, string | undefined>,
@@ -80,13 +81,12 @@ export default class DefaultController {
 		};
 	}
 
-	@ApiTags('HealthCheck')
 	@ApiOperation({
 		summary: 'Check API',
 		description: 'Check if API is working (v1)',
 		deprecated: true,
 	})
-	@Get('/check')
+	@Get()
 	@Version(ApiVersionsEnum.V1)
 	@ApiOkResponse({
 		schema: {
@@ -97,5 +97,25 @@ export default class DefaultController {
 	@ApiProduces('text/plain')
 	public healthCheckV1(): string {
 		return 'OK';
+	}
+
+	@ApiOperation({
+		summary: 'Server-Sent Events',
+		description: 'Send to Client the Server events',
+		deprecated: false,
+	})
+	@Sse('sse')
+	@Version(ApiVersionsEnum.DEFAULT)
+	@ApiOkResponse({
+		schema: {
+			example: { number: 1, text: 'OK' },
+		}
+	})
+	@ApiConsumes('text/plain')
+	@ApiProduces('text/event-stream')
+	sse(): Observable<Partial<MessageEvent<{ number: number, text: string }>>> {
+		return interval(1000).pipe(map<number, Partial<MessageEvent<{ number: number, text: string }>>>((n) => ({
+			data: { number: n, text: 'OK' },
+		})));
 	}
 }

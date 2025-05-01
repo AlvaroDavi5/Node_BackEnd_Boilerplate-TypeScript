@@ -1,7 +1,7 @@
 import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
-import DefaultController from '@api/controllers/Default.controller';
+import HealthController from '@api/controllers/Health.controller';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
@@ -9,7 +9,7 @@ import { MockObservableInterface } from 'tests/integration/support/mocks/mockObs
 import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
 
-describe('Modules :: API :: DefaultController', () => {
+describe('Modules :: API :: HealthController', () => {
 	let nestTestApp: INestApplication;
 	let nestTestingModule: TestingModule;
 	// // mocks
@@ -31,7 +31,7 @@ describe('Modules :: API :: DefaultController', () => {
 		nestTestingModule = await Test.createTestingModule({
 			imports: [],
 			controllers: [
-				DefaultController,
+				HealthController,
 			],
 			providers: [
 				HttpMessagesConstants,

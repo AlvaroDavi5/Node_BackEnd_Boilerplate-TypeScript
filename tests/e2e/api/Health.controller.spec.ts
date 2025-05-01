@@ -6,7 +6,7 @@ import { createNestTestApplicationOptions, startNestApplication } from 'tests/e2
 
 
 jest.setTimeout(5000);
-describe('API :: DefaultController', () => {
+describe('API :: HealthController', () => {
 	let nestTestApp: INestApplication;
 	let nestTestingModule: TestingModule;
 
@@ -68,11 +68,7 @@ describe('API :: DefaultController', () => {
 				});
 
 			expect(response.statusCode).toBe(200);
-			expect(response.body).toEqual({
-				method: 'GET',
-				baseUrl: '',
-				statusCode: 200,
-			});
+			expect(response.text).toEqual('OK');
 		});
 	});
 });

@@ -1,8 +1,8 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsBoolean, IsDate, IsUUID } from 'class-validator';
-import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
 import { returingString, returingBoolean, returingDate } from '@shared/internal/types/returnTypeFunc';
 

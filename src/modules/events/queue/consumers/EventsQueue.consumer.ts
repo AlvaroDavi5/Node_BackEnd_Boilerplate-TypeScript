@@ -1,4 +1,5 @@
 import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
 import { SqsMessageHandler, SqsConsumerEventHandler } from '@ssut/nestjs-sqs';
 import { Message } from '@aws-sdk/client-sqs';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
@@ -12,53 +13,51 @@ import AbstractQueueConsumer from './AbstractConsumer.consumer';
 
 
 const appConfigs = envsConfig();
-const { queueName: eventsQueueName, queueUrl: eventsQueueUrl } = appConfigs.integration.aws.sqs.eventsQueue;
+const { queueName: eventsQueueName } = appConfigs.integration.aws.sqs.eventsQueue;
 
 export const EVENTS_QUEUE_NAME = eventsQueueName ?? 'EVENTS_QUEUE_NAME';
 
 @Injectable()
 export default class EventsQueueConsumer extends AbstractQueueConsumer {
-	private readonly name: string;
-
 	constructor(
+		eventsQueueHandler: EventsQueueHandler,
+		configService: ConfigService,
 		sqsClient: SqsClient,
 		mongoClient: MongoClient,
 		exceptions: Exceptions,
-		private readonly logger: LoggerService,
-		private readonly eventsQueueHandler: EventsQueueHandler,
+		logger: LoggerService,
 	) {
-		super(sqsClient, mongoClient, exceptions);
-		this.name = EVENTS_QUEUE_NAME;
-		this.logger.debug(`Created ${this.name} consumer`);
+		super(
+			EventsQueueConsumer.name,
+			'eventsQueue',
+			eventsQueueHandler,
+			configService,
+			sqsClient,
+			mongoClient,
+			exceptions,
+			logger,
+		);
 	}
 
 	@SqsMessageHandler(EVENTS_QUEUE_NAME, true)
 	public async handleMessageBatch(messages: Message[]): Promise<void> {
 		for (const message of messages) {
-			this.logger.info(`New message received from ${this.name}`);
-			const done = await this.eventsQueueHandler.execute(message);
-			if (done)
-				await this.deleteMessage(eventsQueueUrl, message);
-			this.resetErrorsCount();
+			this.handleMessage(message);
 		}
 	}
 
 	@SqsConsumerEventHandler(EVENTS_QUEUE_NAME, ProcessEventsEnum.PROCESSING_ERROR)
 	public async onProcessingError(error: Error, message: Message): Promise<void> {
-		this.logger.error(`Processing error from ${this.name} - MessageId: ${message?.MessageId}. Error: ${error.message}`);
-		await this.saveUnprocessedMessage(eventsQueueUrl, message);
-		this.increaseError(error);
+		await this.handleProcessingError(error, message);
 	}
 
 	@SqsConsumerEventHandler(EVENTS_QUEUE_NAME, ProcessEventsEnum.ERROR)
 	public onError(error: Error): void {
-		this.logger.error(`Consume error from ${this.name}: ${error.message}`);
-		this.increaseError(error);
+		this.handleError(error);
 	}
 
 	@SqsConsumerEventHandler(EVENTS_QUEUE_NAME, ProcessEventsEnum.TIMEOUT_ERROR)
 	public onTimeoutError(error: Error): void {
-		this.logger.error(`Timeout error from ${this.name}: ${error.message}`);
-		this.increaseError(error);
+		this.handleTimeoutError(error);
 	}
 }

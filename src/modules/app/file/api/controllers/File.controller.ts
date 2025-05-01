@@ -37,7 +37,7 @@ export default class FileController {
 	@Get('/download')
 	@ApiOkResponse({
 		schema: {
-			example: 'MIT License Copyright (c) 2022 Álvaro Alves <alvaro.davisa@gmail.com> ...',
+			example: 'MIT License Copyright (c) 2022 ...',
 		},
 		description: 'Downloadable file',
 	})

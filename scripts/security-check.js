@@ -2,33 +2,52 @@
 const { exec } = require('child_process');
 
 
-function runAudit() {
-	const callback = (error, stdout, stderr) => {
-		console.log(stdout);
+exec('npm audit --json', (error, stdout, stderr) => {
+	if (error && !stdout) {
+		console.error('Error running npm audit:', stderr);
+		process.exit(1);
+	}
 
-		if (error) {
-			const lines = stdout?.split('\n');
-			let shouldThrow = true;
+	let auditResult;
+	try {
+		auditResult = JSON.parse(stdout);
+	} catch (parseError) {
+		console.error('Failed to parse npm audit output:', parseError.message);
+		process.exit(1);
+	}
 
-			for (const line of lines) {
-				if (line?.startsWith('Severity: ')) {
-					if (line?.includes('critical') || line?.includes('high')) {
-						const errorMsg = 'Security check failed, High or Critical vulnerability found';
-						console.error(errorMsg);
-						throw new Error(errorMsg);
-					} else if (line?.includes('moderate') || line?.includes('low') || line?.includes('info')) {
-						console.warn('Security check passed, but Info, Low or Moderate vulnerability found');
-						shouldThrow = false;
-					}
-				}
-			}
+	const vulnerabilities = auditResult.metadata?.vulnerabilities;
 
-			if (shouldThrow)
-				throw new Error(`Error occurred: \n${stderr}`);
-		}
-	};
+	if (!vulnerabilities) {
+		console.info('No vulnerabilities found.');
+		process.exit(0);
+	}
 
-	exec('npm audit', callback);
-}
+	const { critical = 0, high = 0, moderate = 0, low = 0, info = 0, total = 0 } = vulnerabilities;
 
-runAudit();
+	console.log('Vulnerability summary:');
+	console.log(`Critical: ${critical}`);
+	console.log(`High:     ${high}`);
+	console.log(`Moderate: ${moderate}`);
+	console.log(`Low:      ${low}`);
+	console.log(`Info:     ${info}`);
+	console.log(`Total:    ${total}`);
+
+	if (critical > 0 || high > 0) {
+		console.error('Critical or High vulnerabilities found!');
+		process.exit(1);
+	}
+
+	if (total > 10) {
+		console.warn('More than 10 total vulnerabilities detected!');
+		process.exit(1);
+	}
+
+	if (moderate > 0 || low > 0) {
+		console.warn('Moderate or Low vulnerabilities found!');
+		process.exit(0);
+	}
+
+	console.info('No vulnerabilities found.');
+	process.exit(0);
+});

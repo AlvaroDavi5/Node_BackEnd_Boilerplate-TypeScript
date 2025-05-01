@@ -1,5 +1,5 @@
 
-FROM node:alpine as build
+FROM node:alpine AS build
 LABEL name="Node Back-End Boilerplate Image"
 LABEL description="Docker Image for Node.js Back-End Boilerplate"
 LABEL maintainer="Alvaro alvaro.davsa@gmail.com"
@@ -11,7 +11,7 @@ LABEL version="1.0"
 ENV buildTag="1.0"
 ENV IS_ON_CONTAINER="TRUE"
 ENV NODE_PATH=.
-ENV NODE_ENV=${NODE_ENV:-"prod"}
+ENV NODE_ENV="prod"
 ENV APP_PORT=3000
 
 USER root

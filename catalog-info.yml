@@ -1,5 +1,5 @@
-
 apiVersion: backstage.io/v1alpha1
+
 kind: Component
 metadata:
   name: node_backend_boilerplate
@@ -28,7 +28,6 @@ spec:
     - resource:default/postgres-db
     - component:default/logger-lib
 
-apiVersion: backstage.io/v1alpha1
 kind: Location
 metadata:
   name: node_backend_boilerplate-docs
@@ -37,7 +36,6 @@ spec:
   type: url
   target: ./docs/backstage
 
-apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
   name: boilerplate-api
@@ -50,7 +48,6 @@ spec:
   definition:
     $text: ./docs/swagger.yaml
 
-apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
   name: backend-boilerplate-system

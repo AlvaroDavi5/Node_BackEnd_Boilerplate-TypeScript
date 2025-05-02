@@ -5,13 +5,13 @@ metadata:
   description: Node.js Boilerplate for Back-End using TypeScript
   annotations:
     github.com/project-slug: AlvaroDavi5/Node_BackEnd_Boilerplate-TypeScript
-    backstage.io/techdocs-ref: url:https://github.com/AlvaroDavi5/Node_BackEnd_Boilerplate-TypeScript/tree/main/docs/backstage
+    backstage.io/techdocs-ref: dir:.
   tags:
     - backend
     - node
 spec:
   type: service
-  lifecycle: experimental
+  lifecycle: experimental # experimental | production
   owner: devs
   system: backend-boilerplate-system
   ci:

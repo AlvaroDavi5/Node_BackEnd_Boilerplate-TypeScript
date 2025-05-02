@@ -181,6 +181,7 @@ npm run send-message # send event message to queue
 - [localhost:9000](http://localhost:9000/) - Jenkins Page  
 - [localhost:9001](http://localhost:9001/) - SonarQube Page  
 - [localhost:9002](http://localhost:9002/) - Grafana Page  
+- [localhost:9003](http://localhost:9003/) - BackStage Page  
 
 ___
 

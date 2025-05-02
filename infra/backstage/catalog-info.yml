@@ -30,7 +30,7 @@ spec:
 # apiVersion: backstage.io/v1alpha1
 # kind: Location
 # metadata:
-#   name: node_backend_boilerplate-docs
+#   name: boilerplate_docs
 #   description: Node.js Boilerplate Documentation
 # spec:
 #   type: url

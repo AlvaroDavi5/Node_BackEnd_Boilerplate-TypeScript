@@ -6,7 +6,7 @@ metadata:
   description: Node.js Boilerplate for Back-End using TypeScript
   annotations:
     github.com/project-slug: AlvaroDavi5/Node_BackEnd_Boilerplate-TypeScript
-    backstage.io/techdocs-ref: dir:.
+    backstage.io/techdocs-ref: dir:./docs/backstage
   tags:
     - backend
     - node
@@ -28,13 +28,13 @@ spec:
     - resource:default/postgres-db
     - component:default/logger-lib
 
-kind: Location
-metadata:
-  name: node_backend_boilerplate-docs
-  description: Node.js Boilerplate Documentation
-spec:
-  type: url
-  target: ./docs/backstage
+# kind: Location
+# metadata:
+#   name: node_backend_boilerplate-docs
+#   description: Node.js Boilerplate Documentation
+# spec:
+#   type: url
+#   target: ./docs/backstage
 
 kind: API
 metadata:

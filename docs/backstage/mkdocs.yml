@@ -1,4 +1,4 @@
-site_name: Example Service Docs
+site_name: Service Docs
 nav:
   - Home: index.md
   - Architecture: architecture.md

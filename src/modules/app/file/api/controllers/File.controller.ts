@@ -6,7 +6,6 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiBody, ApiHeaders, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Response } from 'express';
 import FileService from '@app/file/services/File.service';
 import AuthGuard from '@api/guards/Auth.guard';
 import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
@@ -14,7 +13,7 @@ import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
-import { RequestFileInterface } from '@shared/internal/interfaces/endpointInterface';
+import { RequestFileInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @ApiTags('Files')
@@ -50,7 +49,7 @@ export default class FileController {
 		@Headers() headers: Record<string, string | undefined>,
 		@Headers('fileName') fileNameHeader: string,
 		@Headers('filePath') filePathHeader: string,
-		@Res({ passthrough: true }) response: Response,
+		@Res({ passthrough: true }) response: ResponseInterface,
 	): Promise<Buffer | StreamableFile | string> {
 		const { content, contentType, fileName } = await this.fileService.downloadFile(fileNameHeader, filePathHeader, headers.accept);
 

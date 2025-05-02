@@ -4,7 +4,6 @@ import {
 	UseGuards, UseFilters, UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiCreatedResponse, ApiNotAcceptableResponse } from '@nestjs/swagger';
-import { Response } from 'express';
 import WebhookService from '@app/hook/services/Webhook.service';
 import { RegisterEventHookValidatorPipe } from '@app/hook/api/pipes/HookValidator.pipe';
 import { RegisterEventHookInputDto } from '@app/hook/api/dto/HookInput.dto';
@@ -16,6 +15,7 @@ import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
+import { ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @ApiTags('Webhooks')
@@ -55,7 +55,7 @@ export default class HookController {
 	@ApiProduces('application/json')
 	public async registerEventHook(
 		@Query(RegisterEventHookValidatorPipe) query: RegisterEventHookInputDto,
-		@Res({ passthrough: true }) response: Response,
+		@Res({ passthrough: true }) response: ResponseInterface,
 	): Promise<{ statusMessage: string }> {
 		const resourceName = 'Hook event register';
 

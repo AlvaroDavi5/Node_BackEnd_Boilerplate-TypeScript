@@ -60,6 +60,7 @@ envs/
 # others
 docs/nestGraph.json
 TODO*.txt
+site/
 temp/
 tmp/
 

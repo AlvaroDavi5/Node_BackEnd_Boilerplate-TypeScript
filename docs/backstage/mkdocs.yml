@@ -1,0 +1,7 @@
+site_name: Example Service Docs
+nav:
+  - Home: index.md
+  - Architecture: architecture.md
+  - System Overview: system-overview.md
+plugins:
+  - techdocs-core

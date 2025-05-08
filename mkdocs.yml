@@ -1,4 +1,4 @@
-#Backstage Docs
+# Backstage Docs
 site_name: 'Service Docs'
 docs_dir: docs
 nav:

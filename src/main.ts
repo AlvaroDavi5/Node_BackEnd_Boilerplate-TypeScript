@@ -3,7 +3,6 @@ import { writeFileSync } from 'fs';
 import { NestFactory, SerializedGraph, PartialGraphHost } from '@nestjs/core';
 import { INestApplication } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Express } from 'express';
 import CoreModule from '@core/core.module';
 import nestListenConfig, { createNestApplicationOptions, validateKnownExceptions } from '@core/configs/nestListen.config';
 import nestApiConfig from '@core/configs/nestApi.config';
@@ -12,6 +11,7 @@ import { ConfigsInterface } from '@core/configs/envs.config';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
+import type { Express } from 'express';
 
 
 async function startNestApplication(): Promise<void> {

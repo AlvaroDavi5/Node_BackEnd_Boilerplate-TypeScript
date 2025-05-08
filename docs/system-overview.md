@@ -12,7 +12,7 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 - **Nest.js**: TypeScript Framework for Back-End;
 - **Express**: Robust tooling for HTTP servers;
 - **Socket.io**: WebSocket library;
-- **AWS-SDK**: A Node.js SDK to access AWS resources, such as:
+- **AWS-SDK**: A Node.js SDK to access AWS resources, such as:  
 	> _SQS_: Queue management service;  
 	> _SNS_: Topic notification service;  
 	> _S3_: Files storage service;  
@@ -35,12 +35,12 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 ### Interface
 
 - [localhost:3000](http://localhost:3000/) - Application Interface (API)  
-	* `/` - WebSocket Root Endpoint
-	* `/api` - REST Root Endpoint
-		- `/api/docs` - Swagger API Documentation (Page)
-		- `/api/docs.yml` - Swagger API Documentation (YAML)
-		- `/api/docs.json` - Swagger API Documentation (JSON)
-	* `/graphql` - GraphQL Endpoint
+	* `/` - WebSocket Root Endpoint  
+	* `/api` - REST Root Endpoint  
+		- `/api/docs` - Swagger API Documentation (Page)  
+		- `/api/docs.yml` - Swagger API Documentation (YAML)  
+		- `/api/docs.json` - Swagger API Documentation (JSON)  
+	* `/graphql` - GraphQL Endpoint  
 - [localhost:4000](http://localhost:4000/) - Mocked Service Page  
 - [localhost:8000](http://localhost:8000/) - Nest.js DevTools Page  
 - [localhost:8080](http://localhost:8080/) - Adminer Page  

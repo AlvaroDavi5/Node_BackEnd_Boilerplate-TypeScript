@@ -72,6 +72,7 @@
 		"coverage:merge:prepare": "cp coverage/unit/coverage-final.json coverage/unit.json && cp coverage/integration/coverage-final.json coverage/integration.json && cp coverage/e2e/coverage-final.json coverage/e2e.json",
 		"coverage:merge:unify": "nyc merge coverage/ coverage/coverage-final.json",
 		"coverage:merge:report": "nyc report -t coverage/ --report-dir coverage/ --reporter=html --reporter=cobertura",
+		"backstage:generate-docs": "@techdocs/cli build && @techdocs/cli serve",
 		"lint": "npm run ts:lint && npm run js:lint",
 		"lint:fix": "npm run ts:lint --quiet --fix && npm run js:lint --quiet --fix",
 		"ts:lint": "eslint --ext .ts \"{src,tests,scripts}/**/*.ts\"",

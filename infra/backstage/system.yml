@@ -1,10 +1,12 @@
 apiVersion: backstage.io/v1alpha1
 kind: System
 metadata:
-  name: backend-boilerplate-system
+  name: node-backend-boilerplate-system
+  description: Node.js Backend Boilerplate System
   tags:
       - container
       - docker
       - linux
+      - node
 spec:
   owner: devs

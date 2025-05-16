@@ -6,6 +6,7 @@ import MongoClient from '@core/infra/data/Mongo.client';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 import { ConfigsInterface } from '@core/configs/envs.config';
+import { captureException } from '@common/utils/sentryCalls.util';
 
 
 type queueCredentialsKeyType = Exclude<keyof ConfigsInterface['integration']['aws']['sqs'], 'apiVersion' | 'maxAttempts'>;
@@ -61,8 +62,15 @@ export default abstract class AbstractQueueConsumer {
 
 	protected async handleProcessingError(error: Error, message: Message): Promise<void> {
 		this.logger.error(`Processing error from ${this.queueName} - MessageId: ${message?.MessageId}. Error: ${error.message}`);
-		await this.saveUnprocessedMessage(message);
-		this.increaseError(error);
+
+		const messageData = { originalPayload: message.Body, messageId: message.MessageId };
+		const consumerData = { consumer: this.consumerName, queueUrl: this.queueUrl };
+		try {
+			captureException(error, { data: messageData, user: consumerData });
+			await this.saveUnprocessedMessage(message);
+		} catch (err) {
+			captureException(err, { data: messageData, user: consumerData });
+		}
 	}
 
 	protected handleError(error: Error): void {
@@ -82,7 +90,7 @@ export default abstract class AbstractQueueConsumer {
 		const wasStored = (await this.mongoClient.insertOne(unprocessedMessagesCollection, message)).insertedId;
 		if (wasStored) {
 			// REVIEW - behavior will change if DLQ is enabled
-			await this.sqsClient.deleteMessage(this.queueUrl, message);
+			await this.deleteMessage(message);
 		}
 	}
 
@@ -92,17 +100,11 @@ export default abstract class AbstractQueueConsumer {
 
 	private increaseError(error: Error): void {
 		this.errorsCount += 1;
-		if (this.errorsCount < 20)
+		if (this.errorsCount < 10)
 			return;
 
-		const newError = this.exceptions.integration({
-			name: error.name,
-			message: error.message,
-			stack: error.stack,
-		});
-		newError.name = `${newError.name}.QueueError`;
-
-		throw newError;
+		captureException(error, { user: { consumer: this.consumerName, queueUrl: this.queueUrl } });
+		throw error;
 	}
 
 	private resetErrorsCount(): void {

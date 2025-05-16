@@ -1,13 +1,13 @@
 apiVersion: backstage.io/v1alpha1
 kind: API
 metadata:
-  name: boilerplate-api
-  description: Node.js Boilerplate API
+  name: node-backend-boilerplate-api
+  description: Node.js Backend Boilerplate API
 spec:
-  type: openapi
-  lifecycle: production
   owner: devs
-  system: backend-boilerplate-system
+  system: node-backend-boilerplate-system
+  lifecycle: production
+  type: openapi
   definition: |
     openapi: 3.0.0
     info:
@@ -2244,4 +2244,3 @@ spec:
               nullable: false
               allOf:
                 - $ref: '#/components/schemas/UserPreferenceInputDto'
-

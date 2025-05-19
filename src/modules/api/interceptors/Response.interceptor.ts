@@ -8,7 +8,7 @@ import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
-@Injectable({ scope: Scope.DEFAULT })
+@Injectable({ scope: Scope.REQUEST })
 export default class ResponseInterceptor implements NestInterceptor {
 	constructor(
 		private readonly logger: LoggerService,

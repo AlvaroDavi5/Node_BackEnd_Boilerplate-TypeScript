@@ -2,9 +2,9 @@ import { ConfigService } from '@nestjs/config';
 import { SqsConsumerOptions } from '@ssut/nestjs-sqs/dist/sqs.types';
 import envsConfig from '@core/configs/envs.config';
 import { secondsToMilliseconds } from '@common/utils/dates.util';
+import { QueueNamesEnum } from '@common/enums/queueNames.enum';
 import SqsClientMock from '@dev/localstack/queues/SqsClient';
 import { configServiceMock, cryptographyServiceMock, dataParserHelperMock, loggerProviderMock } from '@dev/mocks/mockedModules';
-import { EVENTS_QUEUE_NAME } from './queue/consumers/EventsQueue.consumer';
 
 
 export function sqsConsumersFactory(): SqsConsumerOptions[] {
@@ -34,7 +34,7 @@ export function sqsConsumersFactory(): SqsConsumerOptions[] {
 	return [
 		{
 			...globalSqsConsumerOptions,
-			name: EVENTS_QUEUE_NAME,
+			name: QueueNamesEnum.EVENTS_QUEUE,
 			queueUrl: eventsQueueUrl,
 		},
 	];

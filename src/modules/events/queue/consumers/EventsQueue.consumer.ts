@@ -6,16 +6,13 @@ import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import MongoClient from '@core/infra/data/Mongo.client';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
-import envsConfig from '@core/configs/envs.config';
 import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
 import { ProcessEventsEnum } from '@common/enums/processEvents.enum';
+import { QueueNamesEnum } from '@common/enums/queueNames.enum';
 import AbstractQueueConsumer from './AbstractConsumer.consumer';
 
 
-const appConfigs = envsConfig();
-const { queueName: eventsQueueName } = appConfigs.integration.aws.sqs.eventsQueue;
-
-export const EVENTS_QUEUE_NAME = eventsQueueName ?? 'EVENTS_QUEUE_NAME';
+const EVENTS_QUEUE_NAME = QueueNamesEnum.EVENTS_QUEUE;
 
 @Injectable()
 export default class EventsQueueConsumer extends AbstractQueueConsumer {

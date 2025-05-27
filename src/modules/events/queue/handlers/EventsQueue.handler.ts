@@ -52,14 +52,15 @@ export default class EventsQueueHandler implements OnModuleInit {
 				details: { messageId: message?.MessageId },
 			});
 
-		const { data, error } = this.dataParserHelper.toObject(message.Body);
-		if (!data && !!error)
+		try {
+			return this.dataParserHelper.toObject(message.Body);
+
+		} catch (error) {
 			throw this.exceptions.internal({
 				message: 'Invalid message parsing',
-				details: { ...error },
+				details: error,
 			});
-
-		return data;
+		}
 	}
 
 	public async execute(message: Message): Promise<boolean> {

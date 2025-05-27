@@ -34,8 +34,11 @@ export default class RedisClient {
 	}
 
 	private parseValue<VT = unknown>(strValue: string): VT | null {
-		const { data } = this.dataParserHelper.toObject<VT>(strValue);
-		return data;
+		try {
+			return this.dataParserHelper.toObject<VT>(strValue);
+		} catch (error) {
+			return null;
+		}
 	}
 
 	public getClient(): IORedis {

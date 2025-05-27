@@ -1,3 +1,4 @@
+import { Readable } from 'stream';
 import { v4 as uuidV4 } from 'uuid';
 import envsConfig, { ConfigsInterface } from '@core/configs/envs.config';
 import { LoggerInterface } from '@core/logging/logger';
@@ -81,11 +82,60 @@ export const dataParserHelperMock = {
 		return result;
 	},
 
-	toObject: (data: string): object | null => {
-		try {
-			return JSON.parse(data);
-		} catch (error) {
-			return null;
+	toObject: <OT = object>(data: string): OT => {
+		return JSON.parse(data);
+	},
+
+	toBuffer: async (data: string | Uint8Array | Buffer | Readable | ReadableStream | Blob, encoding: BufferEncoding): Promise<Buffer> => {
+		if (Buffer.isBuffer(data)) {
+			return data;
 		}
-	}
+
+		if (typeof data === 'string') {
+			return Buffer.from(data, encoding);
+		}
+
+		if (data instanceof Uint8Array) {
+			return Buffer.from(data);
+		}
+
+		if (data instanceof Readable) {
+			const chunks: Uint8Array[] = [];
+
+			for await (const chunk of data) {
+				chunks.push(chunk);
+			}
+
+			return Buffer.concat(chunks);
+		}
+
+		if (typeof Blob !== 'undefined' && data instanceof Blob) {
+			const arrayBuffer = await data.arrayBuffer();
+			return Buffer.from(arrayBuffer);
+		}
+
+		if (typeof ReadableStream !== 'undefined' && data instanceof ReadableStream && typeof data?.getReader === 'function') {
+			const reader = data.getReader();
+			const chunks = [];
+			let totalLength = 0;
+
+			while (true) {
+				const { done, value } = await reader.read();
+				if (done) break;
+				chunks.push(value);
+				totalLength += value.length;
+			}
+
+			const combined = new Uint8Array(totalLength);
+			let offset = 0;
+			for (const chunk of chunks) {
+				combined.set(chunk, offset);
+				offset += chunk.length;
+			}
+
+			return Buffer.from(combined);
+		}
+
+		throw new Error('Unsupported body type');
+	},
 };

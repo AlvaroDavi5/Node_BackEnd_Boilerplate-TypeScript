@@ -1,4 +1,3 @@
-import { Readable } from 'stream';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
@@ -11,10 +10,9 @@ import { getSignedUrl } from '@aws-sdk/s3-request-presigner';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
+import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { isNullOrUndefined } from '@common/utils/dataValidations.util';
 
-
-export type s3FileContentType = string | Uint8Array | Buffer | Readable | ReadableStream | Blob;
 
 @Injectable()
 export default class S3Client {
@@ -24,6 +22,7 @@ export default class S3Client {
 
 	constructor(
 		private readonly configService: ConfigService,
+		private readonly dataParserHelper: DataParserHelper,
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 	) {
@@ -43,7 +42,7 @@ export default class S3Client {
 		});
 	}
 
-	private uploadParams(bucketName: string, fileName: string, fileContent: s3FileContentType, expirationDate?: Date): PutObjectCommandInput {
+	private uploadParams(bucketName: string, fileName: string, fileContent: Buffer, expirationDate?: Date): PutObjectCommandInput {
 		const params: PutObjectCommandInput = {
 			Bucket: bucketName,
 			Key: fileName,
@@ -129,7 +128,7 @@ export default class S3Client {
 		}
 	}
 
-	public async uploadFile(bucketName: string, fileName: string, fileContent: s3FileContentType, expirationDate?: Date): Promise<string> {
+	public async uploadFile(bucketName: string, fileName: string, fileContent: Buffer, expirationDate?: Date): Promise<string> {
 		try {
 			const result = await this.s3Client.send(new PutObjectCommand(this.uploadParams(bucketName, fileName, fileContent, expirationDate)));
 
@@ -142,9 +141,9 @@ export default class S3Client {
 		}
 	}
 
-	public async downloadFile(bucketName: string, objectKey: string): Promise<{ content: s3FileContentType, contentLength: number; }> {
-		let content: s3FileContentType;
+	public async downloadFile(bucketName: string, objectKey: string): Promise<{ content: Buffer, contentLength: number; }> {
 		let contentLength = 0;
+		let content: Buffer;
 
 		try {
 			const result = await this.s3Client.send(new GetObjectCommand(this.getObjectParams(bucketName, objectKey)));
@@ -152,8 +151,8 @@ export default class S3Client {
 			if (!result.Body || !result.ContentLength)
 				throw this.exceptions.internal({ message: 'Empty body' });
 
-			content = result.Body;
 			contentLength = result.ContentLength;
+			content = await this.dataParserHelper.toBuffer(result.Body, 'utf8');
 		} catch (error) {
 			throw this.caughtError(error);
 		}

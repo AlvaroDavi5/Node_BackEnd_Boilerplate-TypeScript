@@ -20,12 +20,12 @@ export default class ResponseInterceptor implements NestInterceptor {
 		const request = httpContext.getRequest<RequestInterface>();
 		const response = httpContext.getResponse<ResponseInterface>();
 
-		const requestId = request?.id;
+		const requestId = request?.get('x-request-id') ?? request?.id;
 		const clientIp = request?.ip ?? request?.socket?.remoteAddress;
 
 		if (requestId) {
 			this.logger.setRequestId(requestId);
-			response.setHeader('REQ_ID', requestId);
+			response.setHeader('x-request-id', requestId);
 		}
 		if (clientIp)
 			this.logger.setClientIp(clientIp);

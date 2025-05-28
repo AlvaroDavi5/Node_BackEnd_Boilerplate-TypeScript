@@ -6,7 +6,10 @@ import envsConfig from '@core/configs/envs.config';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 
 
-const { application: { environment, showExternalLogs, sentryDsn }, package: { name: packageName, version: packageVersion } } = envsConfig();
+const {
+	application: { environment, showExternalLogs, sentryDsn },
+	package: { name: packageName, version: packageVersion },
+} = envsConfig();
 
 initSentry({
 	dsn: sentryDsn,
@@ -14,19 +17,24 @@ initSentry({
 	environment,
 	integrations: [
 		nodeProfilingIntegration(),
-		consoleIntegration(),
 		captureConsoleIntegration(),
+		consoleIntegration(),
 	],
 	profilesSampleRate: 0.1,
 	tracesSampleRate: 0.1,
+	tracePropagationTargets: [],
 	sendDefaultPii: true,
 	release: `${packageName}@${packageVersion}`,
 	debug: showExternalLogs,
-	beforeSend(event) {
+	beforeSend(event, _hint) {
 		return event;
 	},
-	beforeSendTransaction(event) {
+	beforeSendTransaction(event, _hint) {
 		return event;
 	},
+	beforeBreadcrumb(breadcrumb, _hint) {
+		return breadcrumb;
+	},
+	_experiments: { enableLogs: true },
 });
 

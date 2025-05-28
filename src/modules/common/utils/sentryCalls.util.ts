@@ -1,5 +1,5 @@
 import {
-	SeverityLevel,
+	EventHint, SeverityLevel,
 	captureException as captureSentryException, captureMessage as captureSentryMessage
 } from '@sentry/nestjs';
 import { LogLevelEnum } from '@core/logging/logger';
@@ -43,7 +43,7 @@ export function captureException(error: unknown, metadata?: ExceptionMetadataInt
 
 	captureSentryException(error, {
 		level: parseExceptionStatusCodeToSentrySeverity(errorStatus),
-		data: metadata?.data as undefined,
+		data: (metadata as EventHint)?.data,
 		user: metadata?.user,
 	});
 }

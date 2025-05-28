@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { createLogger, Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import { captureLog } from '@common/utils/sentryCalls.util';
+import { captureMessage } from '@common/utils/sentryCalls.util';
 import { LoggerInterface, LogLevelEnum, MetadataInterface, getLoggerOptions } from './logger';
 
 
@@ -118,13 +118,13 @@ export default class LoggerService implements LoggerInterface {
 	public [LogLevelEnum.WARN](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
 
-		captureLog(message, LogLevelEnum.WARN);
-
 		this.logger.log({
 			level: LogLevelEnum.WARN,
 			message,
 			meta,
 		});
+
+		captureMessage(message, LogLevelEnum.WARN);
 	}
 
 	public [LogLevelEnum.INFO](...args: unknown[]): void {

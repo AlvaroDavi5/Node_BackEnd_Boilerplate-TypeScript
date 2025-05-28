@@ -1,5 +1,5 @@
 import {
-	EventHint, SeverityLevel,
+	EventHint, SeverityLevel, logger as sentryLogger,
 	captureException as captureSentryException, captureMessage as captureSentryMessage
 } from '@sentry/nestjs';
 import { LogLevelEnum } from '@core/logging/logger';
@@ -9,18 +9,20 @@ import { ExceptionMetadataInterface } from '@shared/internal/interfaces/errorInt
 
 
 function parseLogLevelToSentrySeverity(logLevel: LogLevelEnum): SeverityLevel {
-	if (logLevel === LogLevelEnum.DEBUG)
-		return 'debug';
-	if (logLevel === LogLevelEnum.HTTP)
-		return 'info';
-	if (logLevel === LogLevelEnum.INFO)
-		return 'info';
-	if (logLevel === LogLevelEnum.WARN)
-		return 'warning';
-	if (logLevel === LogLevelEnum.ERROR)
-		return 'error';
-
-	return 'log';
+	switch (logLevel) {
+		case LogLevelEnum.DEBUG:
+			return 'debug';
+		case LogLevelEnum.HTTP:
+			return 'info';
+		case LogLevelEnum.INFO:
+			return 'info';
+		case LogLevelEnum.WARN:
+			return 'warning';
+		case LogLevelEnum.ERROR:
+			return 'error';
+		default:
+			return 'log';
+	}
 }
 
 function parseExceptionStatusCodeToSentrySeverity(statusCode: number): SeverityLevel {
@@ -48,8 +50,33 @@ export function captureException(error: unknown, metadata?: ExceptionMetadataInt
 	});
 }
 
-export function captureLog(message: string, level: LogLevelEnum): void {
+export function captureMessage(message: string, level: LogLevelEnum): void {
 	captureSentryMessage(message, {
 		level: parseLogLevelToSentrySeverity(level),
 	});
+}
+
+export function captureLog(message: string, level: LogLevelEnum): void {
+	const sentryLevel = parseLogLevelToSentrySeverity(level);
+
+	switch (sentryLevel) {
+		case 'debug':
+			sentryLogger.debug(message);
+			break;
+		case 'info':
+			sentryLogger.info(message);
+			break;
+		case 'warning':
+			sentryLogger.warn(message);
+			break;
+		case 'error':
+			sentryLogger.error(message);
+			break;
+		case 'fatal':
+			sentryLogger.fatal(message);
+			break;
+		default:
+			sentryLogger.trace(message);
+			break;
+	}
 }

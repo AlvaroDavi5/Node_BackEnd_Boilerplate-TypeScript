@@ -1,4 +1,4 @@
-import { User } from '@sentry/nestjs';
+import { User, EventHint } from '@sentry/nestjs';
 
 
 export interface ErrorInterface {
@@ -11,6 +11,6 @@ export interface ErrorInterface {
 }
 
 export interface ExceptionMetadataInterface {
-	data?: unknown,
+	data?: EventHint['data'],
 	user?: User,
 }

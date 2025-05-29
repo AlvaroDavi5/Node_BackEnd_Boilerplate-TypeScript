@@ -16,7 +16,7 @@ export default class RequestMiddleware implements NestMiddleware {
 
 	public use(request: RequestInterface, _response: ResponseInterface, next: NextFunctionInterface) {
 		const requestDateMs = fromDateTimeToEpoch(getDateTimeNow(TimeZonesEnum.America_SaoPaulo), true, true);
-		const requestId = request?.id ?? this.cryptographyService.generateUuid();
+		const requestId = request?.get('x-request-id') ?? request?.id ?? this.cryptographyService.generateUuid();
 		const clientIp = request?.ip ?? request?.socket?.remoteAddress;
 
 		if (clientIp)

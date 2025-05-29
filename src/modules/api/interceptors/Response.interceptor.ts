@@ -8,7 +8,7 @@ import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
-@Injectable({ scope: Scope.DEFAULT })
+@Injectable({ scope: Scope.REQUEST })
 export default class ResponseInterceptor implements NestInterceptor {
 	constructor(
 		private readonly logger: LoggerService,
@@ -20,12 +20,12 @@ export default class ResponseInterceptor implements NestInterceptor {
 		const request = httpContext.getRequest<RequestInterface>();
 		const response = httpContext.getResponse<ResponseInterface>();
 
-		const requestId = request?.id;
+		const requestId = request?.get('x-request-id') ?? request?.id;
 		const clientIp = request?.ip ?? request?.socket?.remoteAddress;
 
 		if (requestId) {
 			this.logger.setRequestId(requestId);
-			response.setHeader('REQ_ID', requestId);
+			response.setHeader('x-request-id', requestId);
 		}
 		if (clientIp)
 			this.logger.setClientIp(clientIp);

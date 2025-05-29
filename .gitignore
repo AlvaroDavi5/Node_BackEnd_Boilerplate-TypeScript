@@ -26,6 +26,8 @@ lerna-debug.log*
 **/npm-debug.log
 logs/
 *.log
+# ci
+.husky/
 # testing
 coverage/
 tests/database.sqlite/

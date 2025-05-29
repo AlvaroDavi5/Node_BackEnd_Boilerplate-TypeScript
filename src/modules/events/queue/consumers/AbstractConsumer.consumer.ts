@@ -7,6 +7,7 @@ import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import { captureException } from '@common/utils/sentryCalls.util';
+import { QueueNamesEnum } from '@common/enums/queueNames.enum';
 
 
 type queueCredentialsKeyType = Exclude<keyof ConfigsInterface['integration']['aws']['sqs'], 'apiVersion' | 'maxAttempts'>;
@@ -20,7 +21,7 @@ export default abstract class AbstractQueueConsumer {
 	protected exceptions: Exceptions;
 	protected logger: LoggerService;
 	protected consumerName: string;
-	protected queueName: string;
+	protected queueName: QueueNamesEnum;
 	protected queueUrl: string;
 	private errorsCount = 0;
 

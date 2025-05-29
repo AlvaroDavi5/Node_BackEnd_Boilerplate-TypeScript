@@ -4,7 +4,7 @@ import { ConfigService } from '@nestjs/config';
 import { createLogger, Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import { captureLog } from '@common/utils/sentryCalls.util';
+import { captureMessage, captureLog } from '@common/utils/sentryCalls.util';
 import { LoggerInterface, LogLevelEnum, MetadataInterface, getLoggerOptions } from './logger';
 
 
@@ -113,18 +113,21 @@ export default class LoggerService implements LoggerInterface {
 			message,
 			meta,
 		});
+
+		captureLog(message, LogLevelEnum.ERROR);
 	}
 
 	public [LogLevelEnum.WARN](...args: unknown[]): void {
 		const { message, meta } = this.buildLog(args);
-
-		captureLog(message, LogLevelEnum.WARN);
 
 		this.logger.log({
 			level: LogLevelEnum.WARN,
 			message,
 			meta,
 		});
+
+		captureLog(message, LogLevelEnum.WARN);
+		captureMessage(message, LogLevelEnum.WARN);
 	}
 
 	public [LogLevelEnum.INFO](...args: unknown[]): void {
@@ -135,6 +138,8 @@ export default class LoggerService implements LoggerInterface {
 			message,
 			meta,
 		});
+
+		captureLog(message, LogLevelEnum.INFO);
 	}
 
 	public [LogLevelEnum.HTTP](...args: unknown[]): void {
@@ -145,6 +150,8 @@ export default class LoggerService implements LoggerInterface {
 			message,
 			meta,
 		});
+
+		captureLog(message, LogLevelEnum.HTTP);
 	}
 
 	public [LogLevelEnum.VERBOSE](...args: unknown[]): void {
@@ -155,6 +162,8 @@ export default class LoggerService implements LoggerInterface {
 			message,
 			meta,
 		});
+
+		captureLog(message, LogLevelEnum.VERBOSE);
 	}
 
 	public [LogLevelEnum.DEBUG](...args: unknown[]): void {
@@ -165,6 +174,8 @@ export default class LoggerService implements LoggerInterface {
 			message,
 			meta,
 		});
+
+		captureLog(message, LogLevelEnum.DEBUG);
 	}
 }
 

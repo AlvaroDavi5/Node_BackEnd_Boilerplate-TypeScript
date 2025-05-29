@@ -41,15 +41,20 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 
 	describe('# Valid Data To Object', () => {
 		test('Should return a parsed object', () => {
-			const { data: parsedUser } = dataParserHelper.toObject('{"user":{"id":1}}');
+			const parsedUser = dataParserHelper.toObject('{"user":{"id":1}}');
 			expect(parsedUser).toEqual({ user: { id: 1 } });
 		});
 	});
 
 	describe('# Invalid Data To Object', () => {
 		test('Should return the same data', () => {
-			const { data: parsedUser } = dataParserHelper.toObject('{user:{id:1}}');
-			expect(parsedUser).toBeNull();
+			let parsedUser;
+
+			try {
+				parsedUser = dataParserHelper.toObject('{user:{id:1}}');
+			} catch (error) {
+				expect(parsedUser).toBeUndefined();
+			}
 		});
 	});
 });

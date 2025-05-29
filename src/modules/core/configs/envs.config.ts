@@ -1,5 +1,6 @@
 import dotenv from 'dotenv';
 import { daysToSeconds, hoursToSeconds, minutesToSeconds, secondsToMilliseconds } from '@common/utils/dates.util';
+import { QueueNamesEnum } from '@common/enums/queueNames.enum';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 
 
@@ -99,7 +100,7 @@ export interface ConfigsInterface {
 			// * Message Queues Service
 			sqs: {
 				eventsQueue: {
-					queueName: string,
+					queueName: QueueNamesEnum,
 					queueUrl: string,
 				},
 				apiVersion: string,
@@ -242,7 +243,7 @@ export default (): ConfigsInterface => ({
 			},
 			sqs: {
 				eventsQueue: {
-					queueName: process.env.AWS_SQS_EVENTS_QUEUE_NAME ?? 'eventsQueue.fifo',
+					queueName: QueueNamesEnum.EVENTS_QUEUE,
 					queueUrl: process.env.AWS_SQS_EVENTS_QUEUE_URL ?? 'http://sqs.us-east-1.Cloud_LocalStack.localstack.cloud:4566/0000/eventsQueue.fifo',
 				},
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',

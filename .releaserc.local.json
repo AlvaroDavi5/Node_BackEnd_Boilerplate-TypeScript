@@ -78,21 +78,21 @@
 						{
 							"type": "refactor",
 							"section": "🔨 Code Refactoring",
-							"hidden": true
+							"hidden": false
 						},
 						{
 							"type": "chore",
 							"section": "🔧 Chore",
-							"hidden": true
-						},
-						{
-							"type": "build",
-							"section": "📦 Build",
-							"hidden": true
+							"hidden": false
 						},
 						{
 							"type": "docs",
 							"section": "📚 Documentation",
+							"hidden": false
+						},
+						{
+							"type": "build",
+							"section": "📦 Build",
 							"hidden": true
 						},
 						{

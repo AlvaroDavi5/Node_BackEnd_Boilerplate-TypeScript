@@ -40,7 +40,7 @@ jobs:
           cache: "npm"
 
       - name: Installing Dependencies
-        run: npm install
+        run: npm install --ignore-scripts
 
       - name: Checking Dependencies Security
         run: npm run security-check
@@ -78,7 +78,7 @@ jobs:
           path: coverage
 
       - name: Installing Dependencies
-        run: npm install
+        run: npm install --ignore-scripts
 
       - name: Preparing Coverage Files
         run: npm run sonar:prepare

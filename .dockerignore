@@ -8,7 +8,7 @@
 .gitignore
 # dependencies
 node_modules/
-package-lock.json
+yarn.lock
 .pnp/
 .pnp.js
 # production

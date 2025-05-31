@@ -27,7 +27,7 @@ npm run receive-messages # create websocket client and start connection to recei
 npm run send-message # send event message to queue
 ```
 
-## Execution Steps
+### Execution Steps
 
 1. Start Docker containers or Kubernetes cluster;
 1. Mock external services;
@@ -37,7 +37,7 @@ npm run send-message # send event message to queue
 1. Send message to Queue;
 1. Receive message from Queue;
 
-### What to do if the service goes down
+#### What to do if the service goes down
 
 - Check the logs;
 - Test the dependencies and execution locally;
@@ -61,17 +61,18 @@ docker-compose up -d cloud database data cache
 # or
 # create and run all docker containers in background
 docker-compose up -d
-
+# and
 # delete all containers and volumes
 docker-compose down -v
+
+# build locally application docker image
+docker build -t boilerplate-image:1.0 . # replace './Dockerfile' to 'infra/docker/Dockerfile.prod'
+docker run --name boilerplate-container -d --env TZ=America/Sao_Paulo --memory=2g --cpus=1 boilerplate-image:1.0
 ```
 
-3. Prepare Kubernetes cluster locally.
+3. Prepare Kubernetes cluster locally (optional).
 
 ```shell
-# build locally application docker image
-docker build -t boilerplate-image:1.0 . # replate './Dockerfile' to 'infra/docker/Dockerfile.prod'
-
 # create Kind cluster (only for tests/development)
 kind create cluster --config=infra/kubernetes/cluster/boilerplate-cluster-kind.yml
 # load application docker image on Kind (only for tests/development)

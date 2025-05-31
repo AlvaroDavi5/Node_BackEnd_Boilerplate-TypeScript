@@ -1,62 +1,61 @@
+# Tests
 
-# Testes
-
-por _Álvaro Alves_
+by _Álvaro Alves_
 
 ---
 
-# Tipos de Testes
+# Types of Tests
 
-## Estáticos
-Testes responsáveis por checar a aplicação sem precisar executá-la, como testes de linting e tipagem.  
-> Rápidos e fáceis de testar em toda a aplicação, podem ser considerados como o mínimo para a execução do projeto.  
+## Static
+Tests responsible for checking the application without running it, such as linting and type checking tests.  
+> Fast and easy to run across the entire application, they can be considered as the minimum required to run the project.  
 
-## Unitários
-Testes responsáveis por testar uma unidade ou módulo de código. Nesse tipo de teste podemos focar em testar cada linha de código e ter o máximo de cobertura possível para seus casos, validando todo o comportamento do código (lógicas, validações, definições, retornos).  
-
-### Mocks
-Por testar apenas uma unidade, acabam por depender muito de mocks para o teste de diferentes cenários.  
-O ideal é evitar utilizar qualquer recurso que atrapalhe a assertividade dos testes, como bibliotecas, funções de frameworks ou mocks com desvios condicionais.  
-
-### Valor x Custo
-Uma vez que seu escopo se limita às unidades testadas e possuem muitos mocks, os testes unitários possuem pouco **valor** de apuração e exigem grande esforço de criação e manutenção (**custo**).  
-> Ideais para testar trechos muito utilizados em diferentes contextos com diferentes inputs.  
-
-## Integração
-Testes responsáveis por testar a integração entre diversas unidades ou módulos do código. Nesse tipo de teste devemos focar em testar diversos fluxos e como cada fluxo impacta na integração dos módulos que compõem o objeto de teste (fluxos, possíveis erros, definições, retornos).  
+## Unit
+Tests responsible for testing a single unit or code module. In this type of test, we can focus on testing each line of code and achieving maximum coverage for its scenarios, validating the entire behavior of the code (logic, validations, definitions, outputs).  
 
 ### Mocks
-Por testar um conjunto de unidades, costumam depender menos de mocks do que os testes unitários, porém ainda precisam de mocks, principalmente se tratando de conexões com backing services.  
-Se tratando de testes que buscam se aproximar o máximo da aplicação como um todo, é comum a utilização de recursos como bibliotecas, funções de frameworks ou mocks de serviços externos que podem causar com desvios de fluxo (algo que precisamos testar).  
+Since only one unit is being tested, these tests tend to rely heavily on mocks for different scenarios.  
+Ideally, avoid using any resource that hinders the accuracy of tests, such as libraries, framework functions, or mocks with conditional deviations.  
 
-### Valor x Custo
-Uma vez que seu escopo não se limita a apenas uma unidade por teste e possuem poucos mocks, os testes de integração possuem um bom **valor** de apuração e têm um menor **custo** de criação e manutenção.  
-> Ideais para testar vários fluxos da aplicação fazendo o caminho quase completo.  
+### Value x Cost
+Since its scope is limited to the tested units and includes many mocks, unit tests provide little **value** for verification and require significant creation and maintenance effort (**cost**).  
+> Ideal for testing highly used code segments in different contexts with various inputs.  
+
+## Integration
+Tests responsible for checking the integration between various units or code modules. In this type of test, we should focus on testing multiple flows and how each flow impacts the integration of the modules that compose the test subject (flows, possible errors, definitions, outputs).  
+
+### Mocks
+For testing a set of units, they tend to depend less on mocks than unit tests, yet still require mocks, especially for connections with backing services.  
+Since these tests aim to closely resemble the entire application, it’s common to use libraries, framework functions, or mocks of external services that may cause flow deviations (something that needs testing).  
+
+### Value x Cost
+Since its scope is not limited to one unit and uses few mocks, integration tests offer good **value** for verification and incur a lower **cost** for creation and maintenance.  
+> Ideal for testing various application flows almost end-to-end.  
 
 ## End-to-End
-Testes responsáveis por testar todo um fluxo da aplicação, do início ao fim. Nesse tipo de teste o foco é testar um ou mais fluxos de forma completa, focando menos em cobertura e mais em resultado (requisições, validações, respostas).  
+Tests responsible for checking an entire application flow, from start to finish. In this type of test, the focus is on testing one or more flows completely, focusing less on coverage and more on outcomes (requests, validations, responses).  
 
 - Vertical  
-Tem como foco testar todas as camadas da aplicação e pode se limitar a um único fluxo (o caminho feliz).  
+Focuses on testing all layers of the application and may be limited to a single flow (the happy path).  
 
 - Horizontal  
-Tem como foco testar diversos fluxos em um contexto da aplicação e pode ignorar algumas camadas mais internas (já validadas nos testes unitários).  
+Focuses on testing several flows within an application context and may ignore some inner layers (already validated by unit tests).  
 
 ### Mocks
-Por ser um teste de ponta-a-ponta, não deve-se utilizar de mocks para funcionar.  
-O ideal é utilizar a mesma codebase e um ambiente que simule o ambiente de produção.  
+Since it is an end-to-end test, mocks should not be used.  
+Ideally, use the same codebase and an environment that simulates production.  
 
-### Valor x Custo
-Uma vez que faz parte de seu escopo testar todo um fluxo da aplicação, os testes end-to-end (ou E2E) possuem o mais alto **valor** de apuração e possuem um menor **custo** de criação e manutenção.  
-> Ideais para testar requisições de diversos fluxos da aplicação.  
+### Value x Cost
+Since its scope includes testing an entire application flow, end-to-end (or E2E) tests offer the highest **value** for verification and incur the lowest **cost** for creation and maintenance.  
+> Ideal for testing requests from various application flows.  
 
-# Coverage Recomendado
+# Recommended Coverage
 
-- Unit.: 80% - 90%  
-- Integ.: 60% - 70%  
-- E2E.: 20% - 40%  
+- Unit: 80% - 90%  
+- Integration: 60% - 70%  
+- E2E: 20% - 40%  
 
-# Referências
+# References
 
 [Static, Unit, Integration and End-to-End Tests Explained](https://medium.com/@lucas.paganini/static-unit-integration-and-end-to-end-tests-explained-f87a0ac40ca5)  
 [End-to-End Testing Overview](https://aloa.co/blog/end-to-end-testing-overview)  

@@ -2,12 +2,12 @@
 
 [Back-End Architecture](https://google.com)  
 
----
-
-![DB diagram](./img/database.png)  
 <div align='center'>
+	<br>
 	<a href='https://dbdiagram.io/d/6338e5857b3d2034ff03a8c4'>
-		DataBase Diagram
+	<img src='./img/database.png' alt='db diagram' height='300hv' width='500wv'>
+	<br>
+	DataBase Diagram
 	</a>
 </div>
 

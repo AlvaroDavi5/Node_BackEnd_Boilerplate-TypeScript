@@ -16,7 +16,7 @@ log() {
 	echo "${green} \n[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $@\n ${default}";
 }
 
-if [ ! -e .env -a "$IS_ON_CONTAINER" != "TRUE" ]; then
+if [ ! -e .env -a "$CI" != "true" ]; then
 	log "Copying Dotenv File...";
 	cp envs/.env.development.local .env > /dev/null 2>&1;
 	if [ $? -ne 0 ]; then

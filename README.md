@@ -118,7 +118,7 @@ docker-compose down -v
 
 ```shell
 # build locally application docker image
-docker build -t boilerplate-image:1.0 . # replate './Dockerfile' to 'infra/docker/Dockerfile.prod'
+docker build -t boilerplate-image:1.0 . # replace './Dockerfile' to 'infra/docker/Dockerfile.prod'
 
 # create Kind cluster (only for tests/development)
 kind create cluster --config=infra/kubernetes/cluster/boilerplate-cluster-kind.yml

@@ -81,7 +81,7 @@
 		"typeorm:cli": "ts-node --project tsconfig.build.json ./node_modules/typeorm/cli -d ./src/modules/core/infra/database/db.config.ts",
 		"commit": "git-cz",
 		"versioning": "semantic-release",
-		"postinstall": "lefthook install"
+		"postinstall": "node ./scripts/postinstall.js"
 	},
 	"config": {
 		"commitizen": {
@@ -120,7 +120,7 @@
 		"aws-sdk": "^2.1413.0",
 		"axios": "^1.4.0",
 		"axios-retry": "^3.5.0",
-		"bcrypt": "^5.1.0",
+		"bcrypt": "^6.0.0",
 		"class-transformer": "^0.5.1",
 		"class-validator": "^0.14.0",
 		"compression": "^1.7.4",

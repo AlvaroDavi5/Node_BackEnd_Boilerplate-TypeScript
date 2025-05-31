@@ -5,11 +5,12 @@
 	"update.showReleaseNotes": false,
 	"terminal.integrated.defaultProfile.linux": "zsh",
 	"terminal.integrated.defaultProfile.windows": "Ubuntu-20.04 (WSL)",
+	"chat.commandCenter.enabled": true,
 	"http.proxy": "",
 	"http.proxySupport": "off",
 	"http.proxyAuthorization": null,
 	"http.proxyStrictSSL": false,
-	"sync.gist": "31d051020e1fe66435b53f28a0ed30ee",
+	"sync.gist": "",
 	"sync.forceUpload": true,
 	"sync.quietSync": true,
 	"sync.forceDownload": true,
@@ -42,13 +43,20 @@
 	"editor.unicodeHighlight.invisibleCharacters": false,
 	"editor.unicodeHighlight.ambiguousCharacters": false,
 	// Workbench
+	"workbench.editor.restoreViewState": true,
 	"workbench.colorTheme": "Dracula Theme",
-	"workbench.iconTheme": "material-icon-theme",
+	"workbench.preferredHighContrastColorTheme": "Monokai",
+	"workbench.preferredHighContrastLightColorTheme": "Default Light Modern",
+	"workbench.preferredLightColorTheme": "Solarized Light",
 	"workbench.productIconTheme": "material-product-icons",
+	"workbench.iconTheme": "material-icon-theme",
 	"workbench.tree.indent": 15,
 	"workbench.sideBar.location": "left",
-	"workbench.editor.restoreViewState": true,
+	"workbench.activityBar.orientation": "vertical",
+	"window.customTitleBarVisibility": "auto",
+	"window.commandCenter": true,
 	// Editor Tabs
+	"editor.minimap.enabled": true,
 	"explorer.autoReveal": true,
 	"explorer.confirmDragAndDrop": false,
 	"scm.defaultViewMode": "tree",
@@ -65,9 +73,19 @@
 	// Extensions
 	"extensions.closeExtensionDetailsOnViewChange": false,
 	"extensions.ignoreRecommendations": true,
+	"containers.containers.groupBy": "Compose Project Name",
+	"containers.containers.sortBy": "Label",
+	"containers.images.groupBy": "RepositoryName",
+	"containers.images.sortBy": "Label",
+	"docker.commands.composeUpSubset": [
+		{
+			"label": "Compose Up",
+			"template": "${composeCommand} ${profileList} ${configurationFile} up ${detached} ${build} ${serviceList}"
+		}
+	],
 	"material-icon-theme.activeIconPack": "nest",
 	"vsicons.presets.nestjs": true,
-	"vsicons.presets.angular": false,
+	"vsicons.presets.angular": true,
 	"vsicons.presets.tsOfficial": true,
 	"vsicons.presets.jsOfficial": true,
 	"bookmarks.saveBookmarksInProject": true,
@@ -86,6 +104,7 @@
 		"typescriptreact"
 	],
 	"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
+	"vsintellicode.features.python.deepLearning": "enabled",
 	"tabnine.experimentalAutoImports": true,
 	"diffEditor.ignoreTrimWhitespace": false,
 	"git-graph.repository.commits.fetchAvatars": true,
@@ -165,6 +184,7 @@
 		"*": true,
 		"yaml": true,
 		"markdown": true,
+		"java": false,
 		"plaintext": false
 	},
 	"json.schemas": [

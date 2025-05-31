@@ -42,7 +42,11 @@ const requestRateLimitConstants = new RequestRateLimitConstants();
 			maxListeners: 10,
 			verboseMemoryLeak: true,
 		}),
-		ScheduleModule.forRoot(),
+		ScheduleModule.forRoot({
+			cronJobs: true,
+			intervals: true,
+			timeouts: true,
+		}),
 		ThrottlerModule.forRoot([
 			requestRateLimitConstants.short,
 			requestRateLimitConstants.medium,

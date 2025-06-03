@@ -27,6 +27,8 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 ![Nest Modules Graph](./docs/img/graph.png)  
 ![Nest Classes](./docs/img/classes.png)  
 
+---
+
 ### Main technologies
 
 - **JavaScript**: Web programming language;
@@ -35,7 +37,7 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 - **Nest.js**: TypeScript Framework for Back-End;
 - **Express**: Robust tooling for HTTP servers;
 - **Socket.io**: WebSocket library;
-- **AWS-SDK**: A Node.js SDK to access AWS resources, such as:
+- **AWS-SDK**: A Node.js SDK to access AWS resources, such as:  
 	> _SQS_: Queue management service;  
 	> _SNS_: Topic notification service;  
 	> _S3_: Files storage service;  
@@ -55,9 +57,26 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 - **ESLint**: JavaScript/TypeScript linter and formatter;
 - **Lefthook**: Git hooks tool used to check tests, format the code and the commits;
 
----
+### Services
 
-### Install dependencies
+- [localhost:3000](http://localhost:3000/) - Application Interface (API)  
+	* `/` - WebSocket Root Endpoint  
+	* `/api` - REST Root Endpoint  
+		- `/api/docs` - Swagger API Documentation (Page)  
+		- `/api/docs.yml` - Swagger API Documentation (YAML)  
+		- `/api/docs.json` - Swagger API Documentation (JSON)  
+	* `/graphql` - GraphQL Endpoint  
+- [localhost:4000](http://localhost:4000/) - Mocked Service Page  
+- [localhost:8000](http://localhost:8000/) - Nest.js DevTools Page  
+- [localhost:8080](http://localhost:8080/) - Adminer Page  
+- [localhost:8081](http://localhost:8081/) - Mongo Express Page  
+- [localhost:8082](http://localhost:8082/) - Redis Commander Page  
+- [localhost:9000](http://localhost:9000/) - Jenkins Page  
+- [localhost:9001](http://localhost:9001/) - SonarQube Page  
+- [localhost:9002](http://localhost:9002/) - Grafana Page  
+- [localhost:9003](http://localhost:9003/) - BackStage Page  
+
+## Running Locally
 
 1. Install project dependencies  
 ```shell
@@ -73,6 +92,15 @@ $ aws configure
 > AWS Secret Access Key [****]: mock
 > Default region name [us-east-1]: us-east-1
 > Default output format [table]: json
+```
+
+4. Run scripts
+```shell
+npm run db:migration-run && npm run db:seed # create database entities and populate database registers
+npm run mock-dependencies # create message queue and storager and start external services mock
+npm run start:dev # start application in development mode
+npm run receive-messages # create websocket client and start connection to receive events
+npm run send-message # send event message to queue
 ```
 
 ### Execution Steps
@@ -109,17 +137,18 @@ docker-compose up -d cloud database data cache
 # or
 # create and run all docker containers in background
 docker-compose up -d
-
+# and
 # delete all containers and volumes
 docker-compose down -v
+
+# build locally application docker image
+docker build -t boilerplate-image:1.0 . # replace './Dockerfile' to 'infra/docker/Dockerfile.prod'
+docker run --name boilerplate-container -d --env TZ=America/Sao_Paulo --memory=2g --cpus=1 boilerplate-image:1.0
 ```
 
-3. Prepare Kubernetes cluster locally.
+3. Prepare Kubernetes cluster locally (optional).
 
 ```shell
-# build locally application docker image
-docker build -t boilerplate-image:1.0 . # replate './Dockerfile' to 'infra/docker/Dockerfile.prod'
-
 # create Kind cluster (only for tests/development)
 kind create cluster --config=infra/kubernetes/cluster/boilerplate-cluster-kind.yml
 # load application docker image on Kind (only for tests/development)
@@ -154,38 +183,9 @@ kind delete cluster --name boilerplate-cluster
 kubectl delete -f=<resource_config_path> # or kubectl delete -n <resource_namespace> <resource_type> <resource_name>
 ```
 
-## Running Locally
-
-```shell
-npm run db:migration-run && npm run db:seed # create database entities and populate database registers
-npm run mock-dependencies # create message queue and storager and start external services mock
-npm run start:dev # start application in development mode
-npm run receive-messages # create websocket client and start connection to receive events
-npm run send-message # send event message to queue
-```
-
-## Interface
-
-- [localhost:3000](http://localhost:3000/) - Application Interface (API)  
-	* `/` - WebSocket Root Endpoint
-	* `/api` - REST Root Endpoint
-		- `/api/docs` - Swagger API Documentation (Page)
-		- `/api/docs.yml` - Swagger API Documentation (YAML)
-		- `/api/docs.json` - Swagger API Documentation (JSON)
-	* `/graphql` - GraphQL Endpoint
-- [localhost:4000](http://localhost:4000/) - Mocked Service Page  
-- [localhost:8000](http://localhost:8000/) - Nest.js DevTools Page  
-- [localhost:8080](http://localhost:8080/) - Adminer Page  
-- [localhost:8081](http://localhost:8081/) - Mongo Express Page  
-- [localhost:8082](http://localhost:8082/) - Redis Commander Page  
-- [localhost:9000](http://localhost:9000/) - Jenkins Page  
-- [localhost:9001](http://localhost:9001/) - SonarQube Page  
-- [localhost:9002](http://localhost:9002/) - Grafana Page  
-- [localhost:9003](http://localhost:9003/) - BackStage Page  
-
 ___
 
-### TO DO
+## TO DO
 
 - **Clustering**
 	- [x] Clusters

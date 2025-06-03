@@ -10,6 +10,8 @@ services:
     # Refered Dockerfile
     build: ./
     env_file: ./envs/.env.development
+    environment:
+      TZ: America/Sao_Paulo
     #working_dir: /app
     #command: ['./init.sh']
     ports:
@@ -17,14 +19,15 @@ services:
       - 3000:3000
     networks:
       - default_network
-    volumes:
-      # host_path:container_path
-      - ./package.json:/app/package.json
-      - ./package-lock.json:/app/package-lock.json
-      - ./tsconfig.build.json:/app/tsconfig.build.json
-      - ./src:/app/src
-      - ./init.sh:/app/init.sh
-      - /node_modules
+    # volumes:
+    #   # host_path:container_path
+    #   - ./package.json:/app/package.json
+    #   - ./package-lock.json:/app/package-lock.json
+    #   - ./tsconfig.build.json:/app/tsconfig.build.json
+    #   - ./scripts:/app/scripts
+    #   - ./src:/app/src
+    #   - ./init.sh:/app/init.sh
+    #   - /node_modules
     depends_on:
       - database
       - cloud
@@ -73,7 +76,6 @@ services:
   data_admin:
     container_name: DataAdmin_MongoExpress
     image: mongo-express:latest
-    restart: always
     environment:
       ME_CONFIG_MONGODB_ADMINUSERNAME: admin
       ME_CONFIG_MONGODB_ADMINPASSWORD: pass

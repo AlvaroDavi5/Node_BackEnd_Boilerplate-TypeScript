@@ -37,11 +37,12 @@ function getMessageFormatter() {
 	const contextFormatter = (ctx: string): string => (`${purpleConsoleColor}${ctx}${defaultConsoleColor}`);
 
 	return format.printf((info) => {
-		const { level, message, timestamp, stack: errorStack, context, meta } = info;
-		const metadata = meta as any;
+		const { level, message, timestamp, stack: errorStack, context: ctx, meta } = info;
+		const metadata = meta as Record<string, unknown>;
+		const context = (ctx ?? metadata?.context) as string;
 
 		const logLevel = levelFormatter(level);
-		const logContext = contextFormatter((context || metadata?.context) ?? 'DefaultContext');
+		const logContext = contextFormatter(context ?? 'DefaultContext');
 		const requestId = metadata?.requestId;
 		const socketId = metadata?.socketId;
 		const ip = metadata?.ip;

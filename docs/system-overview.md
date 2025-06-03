@@ -32,7 +32,7 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 - **ESLint**: JavaScript/TypeScript linter and formatter;
 - **Lefthook**: Git hooks tool used to check tests, format the code and the commits;
 
-### Interface
+### Services
 
 - [localhost:3000](http://localhost:3000/) - Application Interface (API)  
 	* `/` - WebSocket Root Endpoint  

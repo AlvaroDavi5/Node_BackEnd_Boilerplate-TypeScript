@@ -41,7 +41,7 @@ fi;
 if command -v npm &> /dev/null
 then
 	log "Starting Application...";
-	mkdir -p docs;
+	mkdir -p docs temp > /dev/null 2>&1;
 	npm run $EXEC_COMMAND;
 	if [ $? -ne 0 ]; then
 		err "Error starting application.";

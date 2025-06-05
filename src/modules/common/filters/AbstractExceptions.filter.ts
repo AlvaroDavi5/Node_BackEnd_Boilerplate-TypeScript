@@ -1,6 +1,7 @@
 import { HttpException } from '@nestjs/common';
 import { WsException } from '@nestjs/websockets';
 import { AxiosError } from 'axios';
+import { SentryExceptionCaptured } from '@sentry/nestjs';
 import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
@@ -35,6 +36,7 @@ export default abstract class AbstractExceptionsFilter {
 		];
 	}
 
+	@SentryExceptionCaptured()
 	protected capture(exception: unknown, metadata?: ExceptionMetadataInterface): void {
 		this.logger.error(exception);
 

@@ -3,7 +3,7 @@ import { ApiOperation, ApiTags, ApiOkResponse, ApiProduces, ApiConsumes } from '
 import SubscriptionEntity, { SubscriptionInterface } from '@domain/entities/Subscription.entity';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
 import AuthGuard from '@api/guards/Auth.guard';
-import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
+import HttpExceptionsFilter from '@api/filters/HttpExceptions.filter';
 import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';

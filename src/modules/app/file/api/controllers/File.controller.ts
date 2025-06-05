@@ -8,7 +8,7 @@ import { ApiOperation, ApiTags, ApiBody, ApiHeaders, ApiProduces, ApiConsumes, A
 import { FileInterceptor } from '@nestjs/platform-express';
 import FileService from '@app/file/services/File.service';
 import AuthGuard from '@api/guards/Auth.guard';
-import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
+import HttpExceptionsFilter from '@api/filters/HttpExceptions.filter';
 import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';

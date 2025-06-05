@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { ConnectionResolver } from './resolvers/connection.resolver';
+import ConnectionResolver from './resolvers/connection.resolver';
 import ConnectionService from './services/Connection.service';
 
 

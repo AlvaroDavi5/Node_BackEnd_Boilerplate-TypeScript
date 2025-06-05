@@ -6,7 +6,7 @@ import { generateLogger } from '@core/logging/logger';
 
 type dateInputType = (string | Date) | (() => string | Date) | undefined | null
 
-export class ParseDatePipe implements PipeTransform<dateInputType, Date> {
+export default class ParseDatePipe implements PipeTransform<dateInputType, Date> {
 	private readonly exceptions: Exceptions;
 	private readonly logger: Logger;
 

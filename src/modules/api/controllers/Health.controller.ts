@@ -6,7 +6,7 @@ import {
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse } from '@nestjs/swagger';
 import { interval, map, Observable } from 'rxjs';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
-import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
+import HttpExceptionsFilter from '@api/filters/HttpExceptions.filter';
 import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';

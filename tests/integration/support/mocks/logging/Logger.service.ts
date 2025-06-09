@@ -1,6 +1,6 @@
 import { Injectable, Provider, Scope } from '@nestjs/common';
 import { LoggerInterface } from '@core/logging/logger';
-import { MockObservableInterface } from '../mockObservable';
+import { mockObservable } from '../mockObservable';
 
 
 type logLevelType = 'error' | 'warn' | 'info' | 'debug' | 'log';
@@ -9,16 +9,12 @@ type logLevelType = 'error' | 'warn' | 'info' | 'debug' | 'log';
 export default class LoggerService implements LoggerInterface {
 	private readonly showLogs = process.env.SHOW_LOGS === 'true';
 
-	constructor(
-		private readonly mockObservable?: MockObservableInterface<void, unknown[]>,
-	) { }
-
 	private log(level: logLevelType, args: unknown[]): void {
 		const shouldLog = (this.showLogs === true) && (['error', 'warn'].includes(level));
 
 		args.forEach((arg: unknown) => {
-			if (this.mockObservable?.call)
-				this.mockObservable.call(arg);
+			if (mockObservable?.call)
+				mockObservable.call(arg);
 			if (shouldLog)
 				console[String(level) as logLevelType](arg);
 		});

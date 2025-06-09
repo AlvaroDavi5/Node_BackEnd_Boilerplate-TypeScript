@@ -1,4 +1,4 @@
 
-export interface MockObservableInterface<R = void, A extends unknown[] = unknown[]> {
-	call: jest.Mock<R, A, unknown>;
-}
+export const mockObservable = {
+	call: jest.fn<void, unknown[], unknown>((..._args: unknown[]): void => (undefined)),
+};

@@ -1,9 +1,9 @@
+import { Readable } from 'stream';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
 
 describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 	const dataParserHelper = new DataParserHelper();
-
 	describe('# Valid Data To String', () => {
 		test('Should return the same string', () => {
 			expect(dataParserHelper.toString('ABC')).toBe('ABC');
@@ -57,4 +57,41 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 			}
 		});
 	});
+
+	describe('# Parse to Buffer', () => {
+		test('Should parse base64 to string', async () => {
+			const buffer = await dataParserHelper.toBuffer('QUJD', 'base64');
+			expect(buffer.toString('utf8')).toBe('ABC');
+		});
+
+		test('Should parse blob to string', async () => {
+			const blob = new Blob(['TEST'], { type: 'text/plain' });
+			const buffer = await dataParserHelper.toBuffer(blob, 'utf8');
+			expect(buffer.toString('utf8')).toBe('TEST');
+		});
+
+		test('Should parse uint8 array to string', async () => {
+			const uint8Array = new Uint8Array([65, 66, 67]);
+			const buffer = await dataParserHelper.toBuffer(uint8Array, 'utf8');
+			expect(buffer.toString('utf8')).toBe('ABC');
+		});
+
+		test('Should parse readable to string', async () => {
+			const readableStream = Readable.from([Buffer.from('Hello'), Buffer.from(' '), Buffer.from('World')]);
+			const buffer = await dataParserHelper.toBuffer(readableStream, 'utf8');
+			expect(buffer.toString('utf8')).toBe('Hello World');
+		});
+
+		test('Should parse readable stream to string', async () => {
+			const readableStream = new ReadableStream({
+				start(controller) {
+					controller.enqueue(new TextEncoder().encode('Hello World'));
+					controller.close();
+				}
+			});
+			const buffer = await dataParserHelper.toBuffer(readableStream, 'utf8');
+			expect(buffer.toString('utf8')).toBe('Hello World');
+		});
+	});
+
 });

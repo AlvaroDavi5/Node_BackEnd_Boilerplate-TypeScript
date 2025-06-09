@@ -5,7 +5,7 @@ import { ThemesEnum } from '@domain/enums/themes.enum';
 import { getObjValues } from '@common/utils/dataValidations.util';
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
-import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
+import AbstractEntity from '@common/classes/AbstractEntity.entity';
 import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
 
 

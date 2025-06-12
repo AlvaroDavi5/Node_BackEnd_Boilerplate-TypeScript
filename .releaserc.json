@@ -60,6 +60,11 @@
 				"presetConfig": {
 					"types": [
 						{
+							"type": "revert",
+							"section": "⏪ Reverts",
+							"hidden": false
+						},
+						{
 							"type": "feat",
 							"section": "🚀 Features",
 							"hidden": false
@@ -71,17 +76,22 @@
 						},
 						{
 							"type": "perf",
-							"section": "⚡️ Performance",
+							"section": "⚡️ Performance Improvements",
 							"hidden": false
 						},
 						{
-							"type": "refactor",
-							"section": "🔨 Code Refactoring",
+							"type": "ci",
+							"section": "🔧 CI/CD",
 							"hidden": false
 						},
 						{
 							"type": "chore",
-							"section": "🔧 Chore",
+							"section": "🔨 Chore",
+							"hidden": false
+						},
+						{
+							"type": "refactor",
+							"section": "🧹 Code Refactoring",
 							"hidden": false
 						},
 						{
@@ -90,18 +100,18 @@
 							"hidden": false
 						},
 						{
-							"type": "build",
-							"section": "📦 Build",
-							"hidden": true
-						},
-						{
 							"type": "test",
 							"section": "🧪 Tests",
-							"hidden": true
+							"hidden": false
 						},
 						{
 							"type": "style",
 							"section": "🎨 Style Changes",
+							"hidden": true
+						},
+						{
+							"type": "build",
+							"section": "📦 Build",
 							"hidden": true
 						}
 					]

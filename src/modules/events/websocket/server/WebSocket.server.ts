@@ -11,7 +11,7 @@ import { QueueSchemasEnum, WebSocketEventsEnum, WebSocketRoomsEnum } from '@doma
 import SubscriptionService from '@app/subscription/services/Subscription.service';
 import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
 import EventsGuard from '@events/websocket/guards/Events.guard';
-import { WebSocketExceptionsFilter } from '@events/websocket/filters/WebSocketExceptions.filter';
+import WebSocketExceptionsFilter from '@events/websocket/filters/WebSocketExceptions.filter';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';

@@ -15,7 +15,6 @@ import AuthGuard from '@api/guards/Auth.guard';
 import EventEmitterClient from '@events/emitter/EventEmitter.client';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
 import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
 import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
@@ -34,10 +33,7 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 	const listUsersUseCaseMock = {
 		execute: jest.fn((_query: ListQueryInterface): Promise<UserListEntity> => { throw new Error('GenericError'); }),
 	};
-	const mockObservable: MockObservableInterface<void, unknown[]> = {
-		call: jest.fn((..._args: unknown[]): void => (undefined)),
-	};
-	const loggerServiceMock = new LoggerService(mockObservable);
+	const loggerServiceMock = new LoggerService();
 	const exceptions = new Exceptions();
 
 	// ? build test app

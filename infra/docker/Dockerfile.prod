@@ -31,8 +31,8 @@ COPY init.sh ./
 COPY src ./src
 
 RUN npm run build
+RUN mkdir -p docs temp
 RUN chmod +x init.sh
-RUN chmod 644 ./src/modules/graphql/schemas/schema.gql
 
 RUN groupadd -r appgroup && useradd -r -g appgroup -d /app -s /sbin/nologin appuser
 RUN chown -R appuser:appgroup /app

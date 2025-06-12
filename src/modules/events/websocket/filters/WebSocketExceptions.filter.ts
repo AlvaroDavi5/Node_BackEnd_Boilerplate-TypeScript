@@ -19,7 +19,7 @@ type wsErrorResponseType = ErrorInterface & {
 };
 
 @Catch()
-export class WebSocketExceptionsFilter extends AbstractExceptionsFilter implements WsExceptionFilter<ErrorOrExceptionToFilter> {
+export default class WebSocketExceptionsFilter extends AbstractExceptionsFilter implements WsExceptionFilter<ErrorOrExceptionToFilter> {
 	constructor(
 		protected readonly logger: LoggerService,
 		protected readonly dataParserHelper: DataParserHelper,

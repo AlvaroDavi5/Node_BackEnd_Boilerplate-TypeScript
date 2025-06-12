@@ -6,7 +6,7 @@ import { RegisterEventHookInputDto } from '@app/hook/api/dto/HookInput.dto';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 
 
-export class RegisterEventHookValidatorPipe implements PipeTransform<RegisterEventHookInputDto, RegisterEventHookInterface> {
+export default class RegisterEventHookValidatorPipe implements PipeTransform<RegisterEventHookInputDto, RegisterEventHookInterface> {
 	private readonly schemaValidator: SchemaValidator;
 
 	constructor() {

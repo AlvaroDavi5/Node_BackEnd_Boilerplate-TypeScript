@@ -4,7 +4,7 @@ import { IsString, IsDate, IsUUID } from 'class-validator';
 import { Type } from 'class-transformer';
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
-import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
+import AbstractEntity from '@common/classes/AbstractEntity.entity';
 import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
 import UserPreferenceEntity, { ICreateUserPreference, UserPreferenceInterface, returingUserPreferenceEntity } from './UserPreference.entity';
 

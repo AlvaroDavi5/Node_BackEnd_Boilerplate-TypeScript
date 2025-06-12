@@ -3,7 +3,7 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsBoolean, IsDate, IsUUID } from 'class-validator';
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
-import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
+import AbstractEntity from '@common/classes/AbstractEntity.entity';
 import { returingString, returingBoolean, returingDate } from '@shared/internal/types/returnTypeFunc';
 
 

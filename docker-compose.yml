@@ -9,7 +9,7 @@ services:
     container_name: App_Node
     # Refered Dockerfile
     build: ./
-    env_file: ./envs/.env.development
+    env_file: .env
     environment:
       TZ: America/Sao_Paulo
     #working_dir: /app
@@ -21,13 +21,8 @@ services:
       - default_network
     # volumes:
     #   # host_path:container_path
-    #   - ./package.json:/app/package.json
     #   - ./package-lock.json:/app/package-lock.json
-    #   - ./tsconfig.build.json:/app/tsconfig.build.json
-    #   - ./scripts:/app/scripts
     #   - ./src:/app/src
-    #   - ./init.sh:/app/init.sh
-    #   - /node_modules
     depends_on:
       - database
       - cloud

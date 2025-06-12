@@ -22,7 +22,7 @@ export default class DataParserHelper {
 				break;
 			case 'object':
 				if (!data)
-					result = '';
+					break;
 				else if (Array.isArray(data)) {
 					const parsedData = data.map((d) => this.toString(d));
 					result = `${parsedData.join(', ')}`;

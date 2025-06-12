@@ -6,7 +6,7 @@ import UpdateConnectionInputDto from '../dto/UpdateConnectionInput.dto';
 
 
 @Resolver(() => SubscriptionEntity)
-export class ConnectionResolver {
+export default class ConnectionResolver {
 	constructor(
 		private readonly connectionsService: ConnectionsService,
 	) { }

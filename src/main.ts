@@ -19,9 +19,11 @@ async function startNestApplication(): Promise<void> {
 	await nestListenConfig(nestApp);
 
 	nestApiConfig(nestApp);
-	swaggerDocConfig(nestApp);
 
 	const { environment, appPort } = nestApp.get<ConfigService>(ConfigService, {}).get<ConfigsInterface['application']>('application')!;
+
+	if (environment !== EnvironmentsEnum.PRODUCTION)
+		swaggerDocConfig(nestApp);
 
 	if (environment === EnvironmentsEnum.DEVELOPMENT)
 		writeFileSync('./docs/nestGraph.json', nestApp.get(SerializedGraph, {}).toString());

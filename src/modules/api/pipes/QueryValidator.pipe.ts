@@ -7,7 +7,7 @@ import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationIn
 import { ListQueryInputDto } from '../dto/QueryInput.dto';
 
 
-export class ListQueryValidatorPipe implements PipeTransform<ListQueryInputDto, ListQueryInterface> {
+export default class ListQueryValidatorPipe implements PipeTransform<ListQueryInputDto, ListQueryInterface> {
 	private readonly schemaValidator: SchemaValidator;
 
 	constructor() {

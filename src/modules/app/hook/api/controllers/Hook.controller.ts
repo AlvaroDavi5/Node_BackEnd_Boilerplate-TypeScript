@@ -5,12 +5,12 @@ import {
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiCreatedResponse, ApiNotAcceptableResponse } from '@nestjs/swagger';
 import WebhookService from '@app/hook/services/Webhook.service';
-import { RegisterEventHookValidatorPipe } from '@app/hook/api/pipes/HookValidator.pipe';
+import RegisterEventHookValidatorPipe from '@app/hook/api/pipes/HookValidator.pipe';
 import { RegisterEventHookInputDto } from '@app/hook/api/dto/HookInput.dto';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import AuthGuard from '@api/guards/Auth.guard';
-import { HttpExceptionsFilter } from '@api/filters/HttpExceptions.filter';
+import HttpExceptionsFilter from '@api/filters/HttpExceptions.filter';
 import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';

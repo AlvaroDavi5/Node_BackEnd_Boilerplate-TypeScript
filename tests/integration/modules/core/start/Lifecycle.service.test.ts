@@ -13,7 +13,7 @@ import CognitoClient from '@core/infra/integration/aws/Cognito.client';
 import EventEmitterClient from '@events/emitter/EventEmitter.client';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import { configServiceMock } from '@dev/mocks/mockedModules';
-import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
+import { mockObservable } from 'tests/integration/support/mocks/mockObservable';
 import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
 
 
@@ -53,10 +53,7 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 	const awsClientMock = {
 		destroy: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
 	};
-	const mockObservable: MockObservableInterface<void, unknown[]> = {
-		call: jest.fn((..._args: unknown[]): void => (undefined)),
-	};
-	const loggerServiceMock = new LoggerService(mockObservable);
+	const loggerServiceMock = new LoggerService();
 
 	// ? build test app
 	beforeAll(async () => {

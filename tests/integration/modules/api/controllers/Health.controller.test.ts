@@ -5,7 +5,6 @@ import HealthController from '@api/controllers/Health.controller';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import { MockObservableInterface } from 'tests/integration/support/mocks/mockObservable';
 import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
 
@@ -21,10 +20,7 @@ describe('Modules :: API :: HealthController', () => {
 			found: (element: string) => `${element} founded successfully.`,
 		},
 	};
-	const mockObservable: MockObservableInterface<void, unknown[]> = {
-		call: jest.fn((..._args: unknown[]): void => (undefined)),
-	};
-	const loggerServiceMock = new LoggerService(mockObservable);
+	const loggerServiceMock = new LoggerService();
 
 	// ? build test app
 	beforeAll(async () => {

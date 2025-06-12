@@ -4,7 +4,7 @@ import LoggerService from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
 import { fromDateTimeToISO, getDateTimeNow } from '@common/utils/dates.util';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
-import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
+import AbstractEntity from '@common/classes/AbstractEntity.entity';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import { constructorType } from '@shared/internal/types/constructorType';
 

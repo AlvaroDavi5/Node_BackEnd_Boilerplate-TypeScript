@@ -1,26 +1,22 @@
 import LoggerService from '@core/logging/Logger.service';
 import { requestMethodType, requestQueryType, requestBodyType } from '@shared/internal/types/restClientTypes';
 import { RestClientResponseInterface } from '@shared/external/interfaces/RestClientInterface';
-import { MockObservableInterface } from '../mockObservable';
+import { mockObservable } from '../mockObservable';
 
 
 export default abstract class AbstractRestClient {
 	protected readonly logger: LoggerService;
 	protected readonly serviceName: string;
-	protected readonly mockObservable: MockObservableInterface<RestClientResponseInterface<unknown>, unknown[]>;
 
 	constructor({
 		serviceName,
 		logger,
-		mockObservable,
 	}: {
 		serviceName: string,
 		logger: LoggerService,
-		mockObservable: MockObservableInterface<RestClientResponseInterface<unknown>, unknown[]>,
 	}) {
 		this.logger = logger;
 		this.serviceName = serviceName;
-		this.mockObservable = mockObservable;
 	}
 
 	protected get(endpoint: string, query?: requestQueryType): RestClientResponseInterface<unknown> {
@@ -49,7 +45,8 @@ export default abstract class AbstractRestClient {
 	): RestClientResponseInterface<unknown> {
 		try {
 			this.logger.http(`REQUESTING - ${this.serviceName}: [${method.toUpperCase()}] '${endpoint}'`);
-			return this.mockObservable.call({ method, url: endpoint, params: query, data: body });
+			mockObservable.call({ method, url: endpoint, params: query, data: body });
+			return { data: {}, status: 202, headers: {} };
 		} catch (error) {
 			this.logger.error(error);
 			throw error;

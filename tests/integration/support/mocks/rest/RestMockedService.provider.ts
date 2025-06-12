@@ -4,7 +4,6 @@ import { ConfigsInterface } from '@core/configs/envs.config';
 import LoggerService from '@core/logging/Logger.service';
 import { requestMethodType, requestQueryType, requestBodyType } from '@shared/internal/types/restClientTypes';
 import { RestClientResponseInterface } from '@shared/external/interfaces/RestClientInterface';
-import { MockObservableInterface } from '../mockObservable';
 import AbstractRestClient from './AbstractRestClient.client';
 
 
@@ -13,14 +12,12 @@ export default class RestMockedServiceProvider extends AbstractRestClient {
 	constructor(
 		configService: ConfigService,
 		logger: LoggerService,
-		mockObservable: MockObservableInterface<RestClientResponseInterface<unknown>, unknown[]>,
 	) {
 		const { serviceName } = configService.get<ConfigsInterface['integration']['rest']['mockedService']>('integration.rest.mockedService')!;
 
 		super({
 			serviceName,
 			logger,
-			mockObservable,
 		});
 	}
 

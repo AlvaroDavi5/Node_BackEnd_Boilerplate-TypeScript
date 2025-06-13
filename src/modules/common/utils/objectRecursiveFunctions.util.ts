@@ -10,7 +10,7 @@ export function cloneObject<OT extends object = object>(obj: OT): OT {
 		getObjKeys<OT>(obj).forEach((key) => {
 			let value = obj[key as keyof OT];
 
-			if (typeof value === 'object' && !!value && !Array.isArray(value))
+			if (typeof value === 'object' && value && !Array.isArray(value))
 				value = cloneObject(value);
 
 			newObj[key as keyof OT] = value;
@@ -38,7 +38,7 @@ export function checkFieldsExistence<OT extends object = object>(obj: OT, fields
 	objectKeys.forEach((key) => {
 		const value = obj[key as keyof OT];
 
-		if (!!value && typeof value === 'object') {
+		if (value && typeof value === 'object') {
 			if (Array.isArray(value))
 				result = result || value.some((item) => checkFieldsExistence(item as OT, fieldsToApply));
 			else

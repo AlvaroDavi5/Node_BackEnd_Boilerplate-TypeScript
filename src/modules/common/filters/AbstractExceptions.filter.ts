@@ -48,7 +48,7 @@ export default abstract class AbstractExceptionsFilter {
 			&& this.errorsToIgnore.includes(exception.getStatus());
 
 		const shouldIgnoreAxiosError = exception instanceof AxiosError
-			&& !!exception.status
+			&& exception.status
 			&& this.errorsToIgnore.includes(exception.status);
 
 		if (!shouldIgnoreKnownException && !shouldIgnoreHttpException && !shouldIgnoreAxiosError)

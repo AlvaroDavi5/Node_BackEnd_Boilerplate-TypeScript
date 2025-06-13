@@ -36,7 +36,7 @@ export default class CustomThrottlerGuard implements CanActivate {
 
 			this.logger.verbose(`Running guard with '${throttlerName}' throttler in ${contextType} for ${limit} requests in ${ttl} ms`);
 
-			if (!!skipIf && skipIf(context) === true) {
+			if (skipIf && skipIf(context) === true) {
 				continues.push(true);
 				continue;
 			}
@@ -112,8 +112,8 @@ export default class CustomThrottlerGuard implements CanActivate {
 		const methodCustomThrottler = this.reflector.get<ThrottlerOptions, string>(CUSTOM_THROTTLER_DECORATOR, context.getHandler());
 		const classCustomThrottler = this.reflector.get<ThrottlerOptions, string>(CUSTOM_THROTTLER_DECORATOR, context.getClass());
 
-		if (!!methodCustomThrottler) throttlers.push(methodCustomThrottler);
-		if (!!classCustomThrottler) throttlers.push(classCustomThrottler);
+		if (methodCustomThrottler) throttlers.push(methodCustomThrottler);
+		if (classCustomThrottler) throttlers.push(classCustomThrottler);
 
 		return throttlers;
 	}

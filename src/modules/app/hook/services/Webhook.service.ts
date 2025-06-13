@@ -45,7 +45,7 @@ export default class WebhookService {
 				const responseEndpoint = hook?.responseEndpoint ?? mockedServiceBaseUrl;
 				const responseMethod = hook?.responseMethod?.toLowerCase() as requestMethodType;
 
-				if (!!responseMethod && !!responseEndpoint)
+				if (responseMethod && responseEndpoint)
 					hooksToPull.push(this.restMockedServiceProvider.requestHook<void>(
 						responseMethod, responseEndpoint,
 						{}, data));
@@ -82,7 +82,7 @@ export default class WebhookService {
 
 		const deleted = await this.redisClient.delete(key);
 
-		return !!deleted;
+		return deleted > 0;
 	}
 
 	public async list(additionalPattern = ''): Promise<{

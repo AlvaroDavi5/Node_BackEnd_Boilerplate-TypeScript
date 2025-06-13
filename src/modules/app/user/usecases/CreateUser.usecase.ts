@@ -26,7 +26,7 @@ export default class CreateUserUseCase {
 
 		const newUser = new UserEntity(data);
 		const existentUser = await this.userService.getByEmail(newUser.getEmail());
-		if (!!existentUser)
+		if (existentUser)
 			throw this.exceptions.conflict({
 				message: this.httpMessagesConstants.messages.conflict('User'),
 			});

@@ -45,7 +45,6 @@
 		"db:seed": "cross-env NODE_PATH=. ts-node --project tsconfig.json ./scripts/seed.ts",
 		"db:create": "typeorm-extension db:create -d build/modules/core/infra/database/db.config.js",
 		"db:drop": "typeorm-extension db:drop -d build/modules/core/infra/database/db.config.js",
-		"db:setup": "npm run db:schema-drop && npm run db:schema-sync",
 		"db:schema-sync": "typeorm schema:sync -d build/modules/core/infra/database/db.config.js",
 		"db:schema-drop": "typeorm schema:drop -d build/modules/core/infra/database/db.config.js",
 		"db:schema-log": "typeorm schema:log -d build/modules/core/infra/database/db.config.js",

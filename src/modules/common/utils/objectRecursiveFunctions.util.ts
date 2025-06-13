@@ -26,7 +26,7 @@ export function checkFieldsExistence<OT extends object = object>(obj: OT, fields
 
 	const check = (payload: OT): boolean => {
 		const payloadKeys = getObjKeys<OT>(payload);
-		return payloadKeys.some((key): boolean => fieldsToApply.includes(key as keyof OT));
+		return payloadKeys.some((key): boolean => fieldsToApply.includes(key));
 	};
 
 	let result = false;
@@ -36,7 +36,7 @@ export function checkFieldsExistence<OT extends object = object>(obj: OT, fields
 
 	const objectKeys = getObjKeys<OT>(obj);
 	objectKeys.forEach((key) => {
-		const value = obj[key as keyof OT];
+		const value = obj[String(key) as keyof OT];
 
 		if (value && typeof value === 'object') {
 			if (Array.isArray(value))
@@ -65,7 +65,7 @@ export function replaceFields<OT extends object = object>(obj: OT, fieldsToApply
 
 	const objectKey = getObjKeys<OT>(obj);
 	objectKey.forEach((key) => {
-		const value = obj[key as keyof OT];
+		const value = obj[String(key) as keyof OT];
 
 		if (value && typeof value === 'object')
 			replaceFields(value as OT, fieldsToApply, valueToReplace);

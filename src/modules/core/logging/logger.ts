@@ -18,7 +18,7 @@ export interface MetadataInterface {
 	socketId?: string,
 	ip?: string,
 	details?: string | object | object[],
-	stack?: unknown | unknown[],
+	stack?: unknown,
 }
 
 function getMessageFormatter() {

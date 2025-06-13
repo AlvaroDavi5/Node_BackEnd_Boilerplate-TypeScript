@@ -16,7 +16,7 @@ export interface SubscriptionInterface {
 	subscriptionId?: string,
 	dataValues: {
 		clientId?: string,
-		[key: string]: unknown | undefined,
+		[key: string]: unknown,
 		readonly createdAt: Date,
 		updatedAt?: Date,
 	},

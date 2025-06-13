@@ -8,12 +8,12 @@ export function cloneObject<OT extends object = object>(obj: OT): OT {
 		const newObj = {} as OT;
 
 		getObjKeys<OT>(obj).forEach((key) => {
-			let value = obj[key as keyof OT];
+			let value = obj[String(key) as keyof OT];
 
 			if (typeof value === 'object' && value && !Array.isArray(value))
 				value = cloneObject(value);
 
-			newObj[key as keyof OT] = value;
+			newObj[String(key) as keyof OT] = value;
 		});
 
 		return newObj;

@@ -34,11 +34,11 @@ export default class WebhookService {
 
 		const hooksToPull: Promise<unknown>[] = [];
 		const hooksToDelete: Promise<unknown>[] = [];
-		const epochDateNow = fromDateTimeToEpoch(getDateTimeNow(TimeZonesEnum.America_SaoPaulo), false, false);
+		const epochDateNow = fromDateTimeToEpoch(getDateTimeNow(TimeZonesEnum.America_SaoPaulo), 'seconds', false);
 
 		for (const { key, value: hook } of hookSchemaList) {
 			const epochSentAt = hook?.sendAt
-				? fromDateTimeToEpoch(fromJSDateToDateTime(hook.sendAt, TimeZonesEnum.America_SaoPaulo), false, false)
+				? fromDateTimeToEpoch(fromJSDateToDateTime(hook.sendAt, TimeZonesEnum.America_SaoPaulo), 'seconds', false)
 				: 0;
 
 			if (epochDateNow > epochSentAt) {

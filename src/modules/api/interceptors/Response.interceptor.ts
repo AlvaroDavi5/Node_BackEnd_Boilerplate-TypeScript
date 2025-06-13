@@ -31,7 +31,7 @@ export default class ResponseInterceptor implements NestInterceptor {
 			this.logger.setClientIp(clientIp);
 
 		const { method, path } = request;
-		const responseDateMs = fromDateTimeToEpoch(getDateTimeNow(TimeZonesEnum.America_SaoPaulo), true, true);
+		const responseDateMs = fromDateTimeToEpoch(getDateTimeNow(TimeZonesEnum.America_SaoPaulo), 'milliseconds', true);
 		const timestamp = !isNullOrUndefined(request.createdAt)
 			? Math.abs(responseDateMs - request.createdAt!)
 			: 999999;

@@ -5,7 +5,8 @@ import { createLogger, Logger } from 'winston';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { captureMessage, captureLog } from '@common/utils/sentryCalls.util';
-import { LoggerInterface, LogLevelEnum, MetadataInterface, getLoggerOptions } from './logger';
+import { LogLevelEnum } from '@common/enums/logLevel.enum';
+import { LoggerInterface, MetadataInterface, getLoggerOptions } from './logger';
 
 
 @Injectable({ scope: Scope.TRANSIENT })

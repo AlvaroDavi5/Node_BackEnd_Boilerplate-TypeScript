@@ -16,6 +16,8 @@
 	"sync.forceDownload": true,
 	"sync.autoUpload": true,
 	"sync.autoDownload": true,
+	"window.customTitleBarVisibility": "auto",
+	"window.commandCenter": true,
 	// Editor
 	"editor.insertSpaces": false,
 	"editor.tabSize": 2,
@@ -53,8 +55,10 @@
 	"workbench.tree.indent": 15,
 	"workbench.sideBar.location": "left",
 	"workbench.activityBar.orientation": "vertical",
-	"window.customTitleBarVisibility": "auto",
-	"window.commandCenter": true,
+	"workbench.editorAssociations": {
+		"*.copilotmd": "vscode.markdown.preview.editor",
+		"*.pdf": "latex-workshop-pdf-hook"
+	},
 	// Editor Tabs
 	"editor.minimap.enabled": true,
 	"explorer.autoReveal": true,
@@ -113,6 +117,8 @@
 	"gitlens.views.tags.branches.layout": "list",
 	"gitlens.views.branches.branches.layout": "list",
 	"gitlens.plusFeatures.enabled": true,
+	"gitlens.ai.model": "gitkraken",
+	"gitlens.ai.gitkraken.model": "gemini:gemini-2.0-flash",
 	"gitlens.menus": {
 		"editor": {
 			"blame": false,

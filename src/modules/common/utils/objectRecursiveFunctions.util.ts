@@ -20,56 +20,68 @@ export function cloneObject<OT extends object = object>(obj: OT): OT {
 	}
 }
 
+function hasFieldsAtCurrentObjectLevel<OT extends object = object>(obj: OT, fieldsToApply: (keyof OT)[]): boolean {
+	const objectKeys = getObjKeys<OT>(obj);
+	return objectKeys.some((key): boolean => fieldsToApply.includes(key),
+	);
+}
+
 export function checkFieldsExistence<OT extends object = object>(obj: OT, fieldsToApply: (keyof OT)[]): boolean {
 	if (isNullOrUndefined(obj))
 		return false;
 
-	const check = (payload: OT): boolean => {
-		const payloadKeys = getObjKeys<OT>(payload);
-		return payloadKeys.some((key): boolean => fieldsToApply.includes(key));
-	};
-
-	let result = false;
-	result = check(obj);
-	if (result === true)
-		return result;
+	if (hasFieldsAtCurrentObjectLevel(obj, fieldsToApply))
+		return true;
 
 	const objectKeys = getObjKeys<OT>(obj);
-	objectKeys.forEach((key) => {
+	for (const key of objectKeys) {
 		const value = obj[String(key) as keyof OT];
 
 		if (value && typeof value === 'object') {
-			if (Array.isArray(value))
-				result = result || value.some((item) => checkFieldsExistence(item as OT, fieldsToApply));
-			else
-				result = result || checkFieldsExistence(value as OT, fieldsToApply);
+			if (Array.isArray(value)) {
+				const hasFieldInArray = value.some((item) => checkFieldsExistence(item as OT, fieldsToApply));
+				if (hasFieldInArray)
+					return true;
+			} else {
+				if (checkFieldsExistence(value as OT, fieldsToApply))
+					return true;
+			}
+		}
+	}
+
+	return false;
+}
+
+function applyFieldReplacement<OT extends object = object>(obj: OT, fieldsToApply: (keyof OT)[], valueToReplace: unknown): OT {
+	fieldsToApply.forEach((key) => {
+		if (obj[String(key) as keyof OT] !== undefined) {
+			obj[String(key) as keyof OT] = valueToReplace as OT[keyof OT];
 		}
 	});
 
-	return result;
+	return obj;
 }
 
 export function replaceFields<OT extends object = object>(obj: OT, fieldsToApply: (keyof OT)[], valueToReplace: unknown): OT | null {
 	if (isNullOrUndefined(obj))
 		return null;
 
-	const replace = (payload: OT) => {
-		fieldsToApply.forEach((key) => {
-			if (payload[String(key) as keyof OT] !== undefined) {
-				payload[String(key) as keyof OT] = valueToReplace as OT[keyof OT];
-			}
-		});
-
-		return payload;
-	};
-
-	const objectKey = getObjKeys<OT>(obj);
-	objectKey.forEach((key) => {
+	const objectKeys = getObjKeys<OT>(obj);
+	for (const key of objectKeys) {
 		const value = obj[String(key) as keyof OT];
 
-		if (value && typeof value === 'object')
-			replaceFields(value as OT, fieldsToApply, valueToReplace);
-	});
+		if (value && typeof value === 'object') {
+			if (Array.isArray(value)) {
+				value.forEach((item) => {
+					if (item && typeof item === 'object') {
+						replaceFields(item as OT, fieldsToApply, valueToReplace);
+					}
+				});
+			} else {
+				replaceFields(value as OT, fieldsToApply, valueToReplace);
+			}
+		}
+	}
 
-	return replace(obj);
+	return applyFieldReplacement(obj, fieldsToApply, valueToReplace);
 }

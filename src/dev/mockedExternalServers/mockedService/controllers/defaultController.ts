@@ -9,7 +9,7 @@ export default {
 		console.log('\n#Request Received');
 		console.log('#Service: MockedService');
 		console.log(`#Path: ${req.path}`);
-		console.log('#Has Token: ', !!authorization);
+		console.log('#Has Token: ', authorization);
 
 		toggle++;
 		if (toggle >= 3) {

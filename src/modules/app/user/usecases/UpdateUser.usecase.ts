@@ -30,12 +30,12 @@ export default class UpdateUserUseCase {
 		this.validatePermissionToUpdateUser(agentUser, user);
 
 		const mustUpdateUser = this.userStrategy.mustUpdate<IViewUser, IUpdateUser>(user.getAttributes(), data);
-		const mustUpdateUserPreference = !!data.preference
+		const mustUpdateUserPreference = data.preference
 			&& this.userStrategy.mustUpdate<IViewUserPreference, IUpdateUserPreference>(preference.getAttributes(), data.preference);
 
 		if (mustUpdateUser)
 			await this.userService.update(user.getId(), data);
-		if (!!data.preference && mustUpdateUserPreference)
+		if (data.preference && mustUpdateUserPreference)
 			await this.userPreferenceService.update(preference.getId(), data.preference);
 
 		const [foundedUser, foundedPreference] = await Promise.all([

@@ -151,7 +151,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 	private async updateConnection(socket: Socket, message: string): Promise<void> {
 		const data = this.formatMessageAfterReceiveHelper(message);
 
-		if (typeof data === 'object' && !!data) {
+		if (typeof data === 'object' && data) {
 			const subscription = await this.subscriptionService.save(socket.id, {
 				...data,
 				subscriptionId: socket.id,

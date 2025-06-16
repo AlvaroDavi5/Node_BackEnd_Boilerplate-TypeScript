@@ -1,16 +1,7 @@
 import { createLogger, transports, format, Logger } from 'winston';
+import { LogLevelEnum } from '@common/enums/logLevel.enum';
 import { dataParserHelperMock } from '@dev/mocks/mockedModules';
 
-
-export enum LogLevelEnum {
-	// NOTE - ordered by level priority
-	ERROR = 'error',
-	WARN = 'warn',
-	INFO = 'info',
-	HTTP = 'http',
-	VERBOSE = 'verbose',
-	DEBUG = 'debug',
-}
 
 export interface LoggerInterface {
 	error: (...args: unknown[]) => void;
@@ -27,7 +18,7 @@ export interface MetadataInterface {
 	socketId?: string,
 	ip?: string,
 	details?: string | object | object[],
-	stack?: unknown | unknown[],
+	stack?: unknown,
 }
 
 function getMessageFormatter() {

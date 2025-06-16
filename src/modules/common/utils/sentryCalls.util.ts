@@ -2,9 +2,9 @@ import {
 	SeverityLevel, logger as sentryLogger,
 	captureException as captureSentryException, captureMessage as captureSentryMessage
 } from '@sentry/nestjs';
-import { LogLevelEnum } from '@core/logging/logger';
-import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 import externalErrorParser from '@common/utils/externalErrorParser.util';
+import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
+import { LogLevelEnum } from '@common/enums/logLevel.enum';
 import { ExceptionMetadataInterface } from '@shared/internal/interfaces/errorInterface';
 
 

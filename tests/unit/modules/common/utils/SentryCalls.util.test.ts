@@ -1,6 +1,6 @@
 import { BadRequestException, ServiceUnavailableException } from '@nestjs/common';
-import { LogLevelEnum } from '@core/logging/logger';
 import { captureException, captureMessage, captureLog } from '@common/utils/sentryCalls.util';
+import { LogLevelEnum } from '@common/enums/logLevel.enum';
 import { mockObservable } from 'tests/unit/support/mocks/mockObservable';
 
 

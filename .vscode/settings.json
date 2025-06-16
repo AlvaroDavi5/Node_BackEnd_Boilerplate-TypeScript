@@ -16,6 +16,8 @@
 	"sync.forceDownload": true,
 	"sync.autoUpload": true,
 	"sync.autoDownload": true,
+	"window.customTitleBarVisibility": "auto",
+	"window.commandCenter": true,
 	// Editor
 	"editor.insertSpaces": false,
 	"editor.tabSize": 2,
@@ -40,6 +42,7 @@
 	"editor.pasteAs.showPasteSelector": "never",
 	"editor.stickyScroll.enabled": false,
 	"editor.autoClosingBrackets": "always",
+	"editor.minimap.enabled": true,
 	"editor.unicodeHighlight.invisibleCharacters": false,
 	"editor.unicodeHighlight.ambiguousCharacters": false,
 	// Workbench
@@ -53,15 +56,16 @@
 	"workbench.tree.indent": 15,
 	"workbench.sideBar.location": "left",
 	"workbench.activityBar.orientation": "vertical",
-	"window.customTitleBarVisibility": "auto",
-	"window.commandCenter": true,
-	// Editor Tabs
-	"editor.minimap.enabled": true,
+	"workbench.editorAssociations": {
+		"*.copilotmd": "vscode.markdown.preview.editor",
+		"*.pdf": "latex-workshop-pdf-hook"
+	},
+	// Explorer
 	"explorer.autoReveal": true,
 	"explorer.confirmDragAndDrop": false,
+	// Git
 	"scm.defaultViewMode": "tree",
 	"scm.showHistoryGraph": false,
-	// Git
 	"git.autofetch": true,
 	"git.enableSmartCommit": true,
 	"git.openRepositoryInParentFolders": "always",
@@ -113,6 +117,8 @@
 	"gitlens.views.tags.branches.layout": "list",
 	"gitlens.views.branches.branches.layout": "list",
 	"gitlens.plusFeatures.enabled": true,
+	"gitlens.ai.model": "gitkraken",
+	"gitlens.ai.gitkraken.model": "gemini:gemini-2.0-flash",
 	"gitlens.menus": {
 		"editor": {
 			"blame": false,

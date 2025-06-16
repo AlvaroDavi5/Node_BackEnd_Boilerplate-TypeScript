@@ -42,6 +42,7 @@
 	"editor.pasteAs.showPasteSelector": "never",
 	"editor.stickyScroll.enabled": false,
 	"editor.autoClosingBrackets": "always",
+	"editor.minimap.enabled": true,
 	"editor.unicodeHighlight.invisibleCharacters": false,
 	"editor.unicodeHighlight.ambiguousCharacters": false,
 	// Workbench
@@ -59,13 +60,12 @@
 		"*.copilotmd": "vscode.markdown.preview.editor",
 		"*.pdf": "latex-workshop-pdf-hook"
 	},
-	// Editor Tabs
-	"editor.minimap.enabled": true,
+	// Explorer
 	"explorer.autoReveal": true,
 	"explorer.confirmDragAndDrop": false,
+	// Git
 	"scm.defaultViewMode": "tree",
 	"scm.showHistoryGraph": false,
-	// Git
 	"git.autofetch": true,
 	"git.enableSmartCommit": true,
 	"git.openRepositoryInParentFolders": "always",

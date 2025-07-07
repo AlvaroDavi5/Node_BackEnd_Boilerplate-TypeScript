@@ -1,11 +1,10 @@
-/* eslint-disable import/unambiguous, import/no-extraneous-dependencies, @typescript-eslint/no-var-requires */
-const { join } = require('path');
-const webpack = require('webpack');
+/* eslint-disable import/no-extraneous-dependencies */
+import { join } from 'path';
+import webpack from 'webpack';
+// eslint-disable-next-line @typescript-eslint/no-var-requires
 const nodeExternals = require('webpack-node-externals');
-/* eslint-enable import/unambiguous, import/no-extraneous-dependencies, @typescript-eslint/no-var-requires */
 
-
-module.exports = {
+const config: webpack.Configuration = {
 	mode: 'production',
 	watch: false,
 	target: 'node',
@@ -36,3 +35,5 @@ module.exports = {
 		new webpack.HotModuleReplacementPlugin(),
 	],
 };
+
+export default config;

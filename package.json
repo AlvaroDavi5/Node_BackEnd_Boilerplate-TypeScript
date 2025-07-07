@@ -157,8 +157,6 @@
 	},
 	"devDependencies": {
 		"@apollo/gateway": "^2.6.3",
-		"@babel/preset-env": "^7.23.2",
-		"@babel/preset-typescript": "^7.23.2",
 		"@commitlint/cli": "^17.6.6",
 		"@commitlint/config-conventional": "^17.6.6",
 		"@nestjs/cli": "^10.1.18",

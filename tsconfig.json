@@ -2,12 +2,10 @@
 	"$schema": "https://json.schemastore.org/tsconfig",
 	"extends": "./tsconfig.base.json",
 	"include": [
+		"./*.config.ts",
 		"src/**/*.ts",
-		"src/**/*.js",
 		"scripts/**/*.ts",
-		"scripts/**/*.js",
-		"tests/**/*.ts",
-		"tests/**/*.js"
+		"tests/**/*.ts"
 	],
 	"exclude": [
 		"node_modules",

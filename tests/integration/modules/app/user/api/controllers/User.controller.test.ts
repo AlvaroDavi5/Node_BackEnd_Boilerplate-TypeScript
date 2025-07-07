@@ -2,6 +2,7 @@ import { INestApplication } from '@nestjs/common';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import Exceptions from '@core/errors/Exceptions';
+import LoggerService from '@core/logging/Logger.service';
 import UserEntity from '@domain/entities/User.entity';
 import UserListEntity from '@domain/entities/generic/UserList.entity';
 import UserController from '@app/user/api/controllers/User.controller';
@@ -15,7 +16,6 @@ import AuthGuard from '@api/guards/Auth.guard';
 import EventEmitterClient from '@events/emitter/EventEmitter.client';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
 import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
@@ -33,7 +33,6 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 	const listUsersUseCaseMock = {
 		execute: jest.fn((_query: ListQueryInterface): Promise<UserListEntity> => { throw new Error('GenericError'); }),
 	};
-	const loggerServiceMock = new LoggerService();
 	const exceptions = new Exceptions();
 
 	// ? build test app
@@ -53,7 +52,7 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 				EventEmitterClient,
 				DataParserHelper,
 				Exceptions,
-				{ provide: LoggerService, useValue: loggerServiceMock },
+				LoggerService,
 			],
 			exports: [],
 		})

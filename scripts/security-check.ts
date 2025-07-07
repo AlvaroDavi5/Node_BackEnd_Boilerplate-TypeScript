@@ -1,18 +1,33 @@
-// eslint-disable-next-line import/unambiguous, @typescript-eslint/no-var-requires
-const { exec } = require('child_process');
+import { exec } from 'child_process';
+import type { ExecException } from 'child_process';
 
 
-exec('npm audit --json', (error, stdout, stderr) => {
+interface AuditMetadata {
+	vulnerabilities?: {
+		critical: number;
+		high: number;
+		moderate: number;
+		low: number;
+		info: number;
+		total: number;
+	};
+}
+
+interface AuditResult {
+	metadata?: AuditMetadata;
+}
+
+exec('npm audit --json', (error: ExecException | null, stdout: string, stderr: string) => {
 	if (error && !stdout) {
 		console.error('Error running npm audit:', stderr);
 		process.exit(1);
 	}
 
-	let auditResult;
+	let auditResult: AuditResult;
 	try {
 		auditResult = JSON.parse(stdout);
 	} catch (parseError) {
-		console.error('Failed to parse npm audit output:', parseError.message);
+		console.error('Failed to parse npm audit output:', (parseError as Error).message);
 		process.exit(1);
 	}
 
@@ -23,7 +38,14 @@ exec('npm audit --json', (error, stdout, stderr) => {
 		process.exit(0);
 	}
 
-	const { critical = 0, high = 0, moderate = 0, low = 0, info = 0, total = 0 } = vulnerabilities;
+	const {
+		critical = 0,
+		high = 0,
+		moderate = 0,
+		low = 0,
+		info = 0,
+		total = 0
+	} = vulnerabilities;
 
 	console.log('Vulnerability summary:');
 	console.log(`Critical: ${critical}`);

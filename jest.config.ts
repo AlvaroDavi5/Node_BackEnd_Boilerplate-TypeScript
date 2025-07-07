@@ -1,8 +1,6 @@
-// For a detailed explanation regarding each configuration property, visit:
-// https://jestjs.io/docs/en/configuration.html
+import type { Config } from 'jest';
 
-// eslint-disable-next-line import/unambiguous
-module.exports = {
+const config: Config = {
 	// The root directory that Jest should scan for tests and modules within
 	rootDir: './',
 
@@ -100,7 +98,6 @@ module.exports = {
 
 	// An array of directory names to be searched recursively up from the requiring module's location
 	moduleDirectories: [
-		__dirname,
 		'node_modules',
 		'src',
 	],
@@ -172,76 +169,22 @@ module.exports = {
 
 	// A path to a custom resolver
 	// resolver: undefined,
-
-	// A list of paths to modules that run some code to configure or set up the testing framework before each test
-	// setupFilesAfterEnv: [],
-
-	// The number of seconds after which a test is considered as slow and reported as such in the results.
 	slowTestThreshold: 2,
-
-	// A list of paths to snapshot serializer modules Jest should use for snapshot testing
-	// snapshotSerializers: [],
-
-	// The test environment that will be used for testing
 	testEnvironment: 'node',
-
-	// Options that will be passed to the testEnvironment
-	// testEnvironmentOptions: {},
-
-	// Adds a location field to test results
-	// testLocationInResults: false,
-
-	// The glob patterns Jest uses to detect test files
-	// testMatch: [
-	//   '**/__tests__/**/*.[jt]s?(x)',
-	//   '**/?(*.)+(spec|test).[tj]s?(x)'
-	// ],
-
-	// The regexp pattern or array of patterns that Jest uses to detect test files
 	testRegex: [
 		'.*\\.test\\.ts$',
 		'.*\\.spec\\.ts$',
 	],
-
-	// An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
 	testPathIgnorePatterns: [
 		'node_modules/',
 	],
-
-	// This option sets the URL for the jsdom environment. It is reflected in properties such as location.href
-	// testURL: 'http://localhost',
-
-	// Setting this value to 'fake' allows the use of fake timers for functions such as 'setTimeout'
-	// timers: 'real',
-
-	// A map from regular expressions to paths to transformers
 	transform: {
-		'^.+\\.(t|j)s$': [
-			'@swc/jest',
-			/*
-			'ts-jest',
-			{
-				diagnostics: false,
-				tsconfig: 'tsconfig.test.json',
-			},
-			*/
-		],
+		'^.+\\.(t|j)s$': '@swc/jest',
 	},
-
-	// An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
 	transformIgnorePatterns: [
 		'<rootDir>/node_modules/'
 	],
-
-	// An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
-	// unmockedModulePathPatterns: undefined,
-
-	// Indicates whether each individual test should be reported during the run
 	verbose: undefined,
-
-	// An array of regexp patterns that are matched against all source file paths before re-running tests in watch mode
-	// watchPathIgnorePatterns: [],
-
-	// Whether to use watchman for file crawling
-	// watchman: true,
 };
+
+export default config;

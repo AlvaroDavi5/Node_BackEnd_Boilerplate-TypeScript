@@ -18,7 +18,7 @@ log() {
 
 if [ ! -e .env -a "$CI" != "true" ]; then
 	log "Copying Dotenv File...";
-	cp envs/.env.development.local .env > /dev/null 2>&1;
+	cp envs/.env.development .env > /dev/null 2>&1;
 	if [ $? -ne 0 ]; then
 		err "Error while copying '.env' file.";
 	fi

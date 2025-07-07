@@ -1,5 +1,6 @@
 
 FROM node:20.19.2-slim AS build
+
 LABEL name="Node Back-End Boilerplate Image"
 LABEL description="Docker Image for Node.js Back-End Boilerplate"
 LABEL maintainer="Alvaro <alvaro.davsa@gmail.com>"
@@ -9,39 +10,47 @@ LABEL tag="boilerplate-image"
 LABEL version="1.0"
 
 ENV buildTag="1.0"
-ENV CI="true"
-ENV NODE_PATH=.
 
 USER root
 WORKDIR /app
 
-#COPY --from=build /app ./app
 COPY package.json ./
 COPY package-lock.json ./
-COPY scripts ./scripts
 
 RUN npm ci --ignore-scripts
 
 COPY tsconfig* ./
-COPY webpack.config.js ./
-COPY babel.config.js ./
 COPY .swcrc ./
+COPY webpack.config.ts ./
 COPY nest-cli.json ./
-COPY init.sh ./
 COPY src ./src
+COPY init.sh ./
 
-RUN npm run build
 RUN mkdir -p docs temp
 RUN chmod +x init.sh
+RUN npm run build
+
+FROM node:20.19.2-slim AS prod
+
+ENV CI="true"
+ENV NODE_ENV="prod"
 
 RUN groupadd -r appgroup && useradd -r -g appgroup -d /app -s /sbin/nologin appuser
-RUN chown -R appuser:appgroup /app
+RUN mkdir -p /app && chown -R appuser:appgroup /app
 
 USER appuser
 WORKDIR /app
+
+COPY --from=build --chown=appuser:appgroup /app/build ./build
+COPY --from=build --chown=appuser:appgroup /app/package.json ./package.json
+COPY --from=build --chown=appuser:appgroup /app/package-lock.json ./package-lock.json
+COPY --from=build --chown=appuser:appgroup /app/init.sh ./init.sh
+
+RUN npm install --ignore-scripts --omit=dev
+
+EXPOSE 3000
 
 CMD [ "./init.sh" ]
 
 #ENTRYPOINT ["/usr/bin/node", "-D", "FOREGROUND"]
 #VOLUME [ "/app" ]
-EXPOSE 3000

@@ -3,7 +3,6 @@
 	"extends": "./tsconfig.base.json",
 	"include": [
 		"src/**/*.ts",
-		"src/**/*.js",
 		"build"
 	],
 	"exclude": [
@@ -11,8 +10,6 @@
 		"scripts",
 		"tests",
 		"**/*.test.ts",
-		"**/*.spec.ts",
-		"**/*.test.js",
-		"**/*.spec.js"
+		"**/*.spec.ts"
 	]
 }

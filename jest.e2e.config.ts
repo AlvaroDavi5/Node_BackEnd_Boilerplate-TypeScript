@@ -1,8 +1,6 @@
-// For a detailed explanation regarding each configuration property, visit:
-// https://jestjs.io/docs/en/configuration.html
+import type { Config } from 'jest';
 
-// eslint-disable-next-line import/unambiguous
-module.exports = {
+const config: Config = {
 	// The root directory that Jest should scan for tests and modules within
 	rootDir: './',
 
@@ -105,7 +103,6 @@ module.exports = {
 
 	// An array of directory names to be searched recursively up from the requiring module's location
 	moduleDirectories: [
-		__dirname,
 		'node_modules',
 		'src',
 	],
@@ -221,16 +218,7 @@ module.exports = {
 
 	// A map from regular expressions to paths to transformers
 	transform: {
-		'^.+\\.(t|j)s$': [
-			'@swc/jest',
-			/*
-			'ts-jest',
-			{
-				diagnostics: false,
-				tsconfig: 'tsconfig.test.json',
-			},
-			*/
-		],
+		'^.+\\.(t|j)s$': '@swc/jest',
 	},
 
 	// An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
@@ -250,3 +238,5 @@ module.exports = {
 	// Whether to use watchman for file crawling
 	// watchman: true,
 };
+
+export default config;

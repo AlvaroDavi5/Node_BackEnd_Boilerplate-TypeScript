@@ -10,11 +10,11 @@ import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import SnsClient from '@core/infra/integration/aws/Sns.client';
 import S3Client from '@core/infra/integration/aws/S3.client';
 import CognitoClient from '@core/infra/integration/aws/Cognito.client';
+import LoggerService from '@core/logging/Logger.service';
 import EventEmitterClient from '@events/emitter/EventEmitter.client';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import { configServiceMock } from '@dev/mocks/mockedModules';
 import { mockObservable } from 'tests/integration/support/mocks/mockObservable';
-import LoggerService from 'tests/integration/support/mocks/logging/Logger.service';
 
 
 describe('Modules :: Core :: Start :: LifecycleService', () => {
@@ -53,7 +53,6 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 	const awsClientMock = {
 		destroy: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
 	};
-	const loggerServiceMock = new LoggerService();
 
 	// ? build test app
 	beforeAll(async () => {
@@ -70,7 +69,7 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 				{ provide: SnsClient, useValue: awsClientMock },
 				{ provide: S3Client, useValue: awsClientMock },
 				{ provide: CognitoClient, useValue: awsClientMock },
-				{ provide: LoggerService, useValue: loggerServiceMock },
+				LoggerService,
 				EventEmitterClient,
 				LifecycleService,
 			],

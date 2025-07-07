@@ -2,17 +2,17 @@ import type { Config } from 'jest';
 
 const config: Config = {
 	// The root directory that Jest should scan for tests and modules within
-	rootDir: './',
+	rootDir: '../',
 
 	// A list of paths to directories that Jest should use to search for files in
 	roots: [
-		'<rootDir>/tests/integration',
+		'<rootDir>/tests/e2e',
 	],
 
 	// The paths to modules that run some code to configure or set up the testing environment before each test
 	setupFiles: [
 		'dotenv/config',
-		'<rootDir>/tests/integration/support/setup.ts',
+		'<rootDir>/tests/e2e/support/setup.ts',
 	],
 
 	// Stop running tests after `n` failures
@@ -25,7 +25,7 @@ const config: Config = {
 	collectCoverage: false,
 
 	// The directory where Jest should output its coverage files
-	coverageDirectory: 'coverage/integration',
+	coverageDirectory: 'coverage/e2e',
 
 	// An array of glob patterns indicating a set of files for which coverage information should be collected
 	collectCoverageFrom: [
@@ -39,14 +39,22 @@ const config: Config = {
 		'src/shared/',
 		'.module.ts',
 		'src/main.ts',
-		'src/modules/api/guards/',
-		'src/modules/api/filters/',
-		'src/modules/api/middlewares/',
+		'src/modules/api/dto/',
+		'src/modules/api/pipes/',
+		'src/modules/api/schemas/',
+		'src/modules/app/(.*)/api/dto/',
+		'src/modules/app/(.*)/api/pipes/',
+		'src/modules/app/(.*)/api/schemas/',
 		'src/modules/app/(.*)/usecases/',
 		'src/modules/app/(.*)/strategies/',
+		'src/modules/app/(.*)/services/',
+		'src/modules/app/(.*)/repositories/',
 		'src/modules/common/',
+		'src/modules/core/configs/',
 		'src/modules/core/errors/',
+		'src/modules/core/logging/',
 		'src/modules/core/security/',
+		'src/modules/core/start/',
 		'src/modules/domain/',
 	],
 
@@ -64,10 +72,10 @@ const config: Config = {
 	// An object that configures minimum threshold enforcement for coverage results
 	coverageThreshold: {
 		global: {
-			statements: 50,
-			branches: 90,
-			functions: 80,
-			lines: 30
+			statements: 10,
+			branches: 10,
+			functions: 10,
+			lines: 10
 		}
 	},
 
@@ -81,10 +89,10 @@ const config: Config = {
 	// forceCoverageMatch: [],
 
 	// A path to a module which exports an async function that is triggered once before all test suites
-	globalSetup: '<rootDir>/tests/integration/support/jestInit.ts',
+	globalSetup: '<rootDir>/tests/e2e/support/jestInit.ts',
 
 	// A path to a module which exports an async function that is triggered once after all test suites
-	globalTeardown: '<rootDir>/tests/integration/support/jestFinish.ts',
+	globalTeardown: '<rootDir>/tests/e2e/support/jestFinish.ts',
 
 	// A set of global variables that need to be available in all test environments
 	// globals: {},

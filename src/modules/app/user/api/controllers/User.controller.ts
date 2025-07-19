@@ -5,7 +5,7 @@ import {
 	Get, Post, Put, Patch, Delete,
 	UseGuards, UseFilters, UseInterceptors,
 } from '@nestjs/common';
-import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse, ApiNoContentResponse } from '@nestjs/swagger';
+import { ApiOperation, ApiTags, ApiParam, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse, ApiNoContentResponse } from '@nestjs/swagger';
 import { ModuleRef } from '@nestjs/core';
 import Exceptions from '@core/errors/Exceptions';
 import UserEntity, { IViewUser } from '@domain/entities/User.entity';
@@ -157,6 +157,7 @@ export default class UserController implements OnModuleInit {
 		deprecated: false,
 	})
 	@Get('/:userId')
+	@ApiParam({ name: 'userId', required: true, example: 'f0805007-af7a-4845-9c72-4f9d3f855380' })
 	@ApiOkResponse({ type: UserEntity })
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
@@ -179,6 +180,7 @@ export default class UserController implements OnModuleInit {
 		deprecated: false,
 	})
 	@Patch('/:userId')
+	@ApiParam({ name: 'userId', required: true, example: 'f0805007-af7a-4845-9c72-4f9d3f855380' })
 	@ApiOkResponse({ type: UserEntity })
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
@@ -202,6 +204,7 @@ export default class UserController implements OnModuleInit {
 		deprecated: false,
 	})
 	@Delete('/:userId')
+	@ApiParam({ name: 'userId', required: true, example: 'f0805007-af7a-4845-9c72-4f9d3f855380' })
 	@ApiNoContentResponse({})
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')

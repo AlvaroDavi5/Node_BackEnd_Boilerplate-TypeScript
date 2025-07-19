@@ -1,4 +1,4 @@
-import { DataSource, DataSourceOptions } from 'typeorm';
+import { DataSource } from 'typeorm';
 import { dbConfig } from '@core/infra/database/db.config';
 import { testConnection } from '@core/infra/database/connection';
 import UsersModel from '@core/infra/database/models/Users.model';
@@ -6,13 +6,7 @@ import UserPreferencesModel from '@core/infra/database/models/UserPreferences.mo
 
 
 async function getConnection(): Promise<DataSource> {
-	const seedConfig: DataSourceOptions = {
-		...dbConfig,
-		host: 'localhost',
-		entities: ['src/modules/core/infra/database/models/**/*.ts'],
-	} as DataSourceOptions;
-
-	const connection = new DataSource(seedConfig);
+	const connection = new DataSource(dbConfig);
 
 	const isInitialized = await testConnection(connection, console);
 

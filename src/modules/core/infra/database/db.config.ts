@@ -1,5 +1,7 @@
 import { DataSource, DataSourceOptions } from 'typeorm';
 import envsConfig from '@core/configs/envs.config';
+import UsersModel from './models/Users.model';
+import UserPreferencesModel from './models/UserPreferences.model';
 
 
 function getDialect(dialect: string): 'mysql' | 'postgres' | 'sqlite' | 'mssql' {
@@ -30,7 +32,10 @@ export const dbConfig: DataSourceOptions = {
 	charset: db.charset,
 	timezone: db.timezone,
 	logging: app.showExternalLogs,
-	entities: ['build/modules/core/infra/database/models/**/*.js'],
+	entities: [
+		UsersModel,
+		UserPreferencesModel,
+	],
 	migrations: ['build/modules/core/infra/database/migrations/**/*.js'],
 	subscribers: [],
 	pool: {

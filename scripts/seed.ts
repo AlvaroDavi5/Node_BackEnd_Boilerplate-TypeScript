@@ -1,12 +1,18 @@
-import { DataSource } from 'typeorm';
+import { DataSource, DataSourceOptions } from 'typeorm';
 import { dbConfig } from '@core/infra/database/db.config';
 import { testConnection } from '@core/infra/database/connection';
 import UsersModel from '@core/infra/database/models/Users.model';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 
 
-async function getConnection() {
-	const connection = new DataSource(dbConfig);
+async function getConnection(): Promise<DataSource> {
+	const seedConfig: DataSourceOptions = {
+		...dbConfig,
+		host: 'localhost',
+		entities: ['src/modules/core/infra/database/models/**/*.ts'],
+	} as DataSourceOptions;
+
+	const connection = new DataSource(seedConfig);
 
 	const isInitialized = await testConnection(connection, console);
 
@@ -29,7 +35,7 @@ function getRepositories(connection: DataSource) {
 	};
 }
 
-async function seedDatabase() {
+async function seedDatabase(): Promise<void> {
 	const connection = await getConnection();
 	const { userRepository, userPreferenceRepository } = getRepositories(connection);
 

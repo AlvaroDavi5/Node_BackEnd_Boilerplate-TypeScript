@@ -15,6 +15,7 @@ import LoggerService from '@core/logging/Logger.service';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import { EmitterEventsEnum } from '@domain/enums/events.enum';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
+import EventsQueueConsumer from '@events/queue/consumers/EventsQueue.consumer';
 import EventEmitterClient from '@events/emitter/EventEmitter.client';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
@@ -24,6 +25,7 @@ import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 export default class LifecycleService implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown {
 	private readonly appConfigs: ConfigsInterface['application'];
 	private eventEmitterClient!: EventEmitterClient;
+	private eventsQueueConsumer!: EventsQueueConsumer;
 
 	constructor(
 		private readonly moduleRef: ModuleRef,
@@ -45,6 +47,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 
 	public onModuleInit(): void {
 		this.eventEmitterClient = this.moduleRef.get(EventEmitterClient, { strict: false });
+		this.eventsQueueConsumer = this.moduleRef.get(EventsQueueConsumer, { strict: false });
 
 		this.logger.debug('Builded host module');
 	}
@@ -56,13 +59,14 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 	}
 
 	public onModuleDestroy(): void {
-		this.logger.warn('Closing HTTP server, disconnecting websocket clients, stopping crons and destroying cloud integrations');
+		this.logger.warn('Closing HTTP server, disconnecting websocket clients, stopping crons and consumers and destroying cloud integrations');
 
 		try {
 			// NOTE - gracefull shutdown
 			this.httpAdapterHost.httpAdapter.close();
 			this.webSocketServer.disconnectAllSockets();
 			this.webSocketServer.disconnect();
+			this.eventsQueueConsumer.disable();
 			this.syncCronJob.stopCron();
 			this.cognitoClient.destroy();
 			this.sqsClient.destroy();

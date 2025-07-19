@@ -43,7 +43,7 @@ export async function syncConnection(connection: DataSource, logger?: Logger | L
 
 export const DATABASE_CONNECTION_PROVIDER = Symbol('DatabaseConnectionProvider');
 
-const databaseConnectionProvider: Provider = {
+const DatabaseConnectionProvider: Provider = {
 	provide: DATABASE_CONNECTION_PROVIDER,
 	scope: Scope.DEFAULT,
 
@@ -79,4 +79,4 @@ const databaseConnectionProvider: Provider = {
 	durable: false,
 };
 
-export default databaseConnectionProvider;
+export default DatabaseConnectionProvider;

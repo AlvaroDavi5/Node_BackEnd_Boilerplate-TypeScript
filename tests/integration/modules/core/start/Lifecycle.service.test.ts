@@ -12,6 +12,7 @@ import S3Client from '@core/infra/integration/aws/S3.client';
 import CognitoClient from '@core/infra/integration/aws/Cognito.client';
 import LoggerService from '@core/logging/Logger.service';
 import EventEmitterClient from '@events/emitter/EventEmitter.client';
+import EventsQueueConsumer from '@events/queue/consumers/EventsQueue.consumer';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import { configServiceMock } from '@dev/mocks/mockedModules';
 import { mockObservable } from 'tests/integration/support/mocks/mockObservable';
@@ -53,6 +54,9 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 	const awsClientMock = {
 		destroy: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
 	};
+	const eventsQueueConsumerMock = {
+		disable: jest.fn((): void => { console.log('Disabled consumer'); }),
+	};
 
 	// ? build test app
 	beforeAll(async () => {
@@ -69,6 +73,7 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 				{ provide: SnsClient, useValue: awsClientMock },
 				{ provide: S3Client, useValue: awsClientMock },
 				{ provide: CognitoClient, useValue: awsClientMock },
+				{ provide: EventsQueueConsumer, useValue: eventsQueueConsumerMock },
 				LoggerService,
 				EventEmitterClient,
 				LifecycleService,
@@ -87,11 +92,12 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 
 			expect(mockObservable.call).toHaveBeenCalledWith('Builded host module');
 			expect(mockObservable.call).toHaveBeenCalledWith(
-				'Closing HTTP server, disconnecting websocket clients, stopping crons and destroying cloud integrations'
+				'Closing HTTP server, disconnecting websocket clients, stopping crons and consumers and destroying cloud integrations'
 			);
 			expect(httpAdapterHostMock.httpAdapter.close).toHaveBeenCalledTimes(1);
 			expect(webSocketServerMock.disconnectAllSockets).toHaveBeenCalledTimes(1);
 			expect(webSocketServerMock.disconnect).toHaveBeenCalledTimes(1);
+			expect(eventsQueueConsumerMock.disable).toHaveBeenCalledTimes(1);
 			expect(syncCronJobMock.stopCron).toHaveBeenCalledTimes(1);
 			expect(mockObservable.call).toHaveBeenCalledWith('Closing cache and databases connections');
 			expect(mongoClientMock.disconnect).toHaveBeenCalledTimes(1);

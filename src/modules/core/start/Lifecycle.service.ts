@@ -15,8 +15,8 @@ import LoggerService from '@core/logging/Logger.service';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import { EmitterEventsEnum } from '@domain/enums/events.enum';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
-import EventsQueueConsumer from '@events/queue/consumers/EventsQueue.consumer';
 import EventEmitterClient from '@events/emitter/EventEmitter.client';
+import EventsQueueConsumer from '@events/queue/consumers/EventsQueue.consumer';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 

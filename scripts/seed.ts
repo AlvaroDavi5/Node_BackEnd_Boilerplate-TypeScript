@@ -5,7 +5,7 @@ import UsersModel from '@core/infra/database/models/Users.model';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 
 
-async function getConnection() {
+async function getConnection(): Promise<DataSource> {
 	const connection = new DataSource(dbConfig);
 
 	const isInitialized = await testConnection(connection, console);
@@ -29,7 +29,7 @@ function getRepositories(connection: DataSource) {
 	};
 }
 
-async function seedDatabase() {
+async function seedDatabase(): Promise<void> {
 	const connection = await getConnection();
 	const { userRepository, userPreferenceRepository } = getRepositories(connection);
 

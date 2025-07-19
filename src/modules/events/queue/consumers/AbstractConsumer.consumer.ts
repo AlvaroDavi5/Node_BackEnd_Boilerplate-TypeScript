@@ -24,6 +24,7 @@ export default abstract class AbstractQueueConsumer {
 	protected queueName: QueueNamesEnum;
 	protected queueUrl: string;
 	private errorsCount = 0;
+	private disabled = false;
 
 	constructor(
 		consumerName: string,
@@ -53,8 +54,26 @@ export default abstract class AbstractQueueConsumer {
 		this.logger.debug(`Created ${this.consumerName} to consume ${this.queueName} queue`);
 	}
 
+	public disable(): void {
+		this.logger.warn(`Disabling consumer ${this.consumerName}`);
+		this.disabled = true;
+	}
+
+	public enable(): void {
+		this.logger.info(`Enabling consumer ${this.consumerName}`);
+		this.disabled = false;
+	}
+
 	protected async handleMessage(message: Message): Promise<void> {
 		this.logger.info(`New message received from ${this.queueName}`);
+
+		if (this.disabled) {
+			throw this.exceptions.internal({
+				message: `Consumer ${this.consumerName} is disabled`,
+				details: `MessageId: ${message.MessageId}`,
+			});
+		}
+
 		const done = await this.messageHandler.execute(message);
 		if (done)
 			await this.deleteMessage(message);

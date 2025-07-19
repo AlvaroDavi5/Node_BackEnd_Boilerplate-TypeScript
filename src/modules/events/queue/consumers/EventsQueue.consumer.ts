@@ -39,7 +39,7 @@ export default class EventsQueueConsumer extends AbstractQueueConsumer {
 	@SqsMessageHandler(EVENTS_QUEUE_NAME, true)
 	public async handleMessageBatch(messages: Message[]): Promise<void> {
 		for (const message of messages) {
-			this.handleMessage(message);
+			await this.handleMessage(message);
 		}
 	}
 

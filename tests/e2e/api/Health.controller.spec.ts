@@ -8,17 +8,15 @@ import { createNestTestApplicationOptions, startNestApplication } from 'tests/e2
 jest.setTimeout(5000);
 describe('API :: HealthController', () => {
 	let nestTestApp: INestApplication;
-	let nestTestingModule: TestingModule;
 
 	// ? build test app
 	beforeAll(async () => {
-		nestTestingModule = await Test.createTestingModule({
+		const nestTestingModule: TestingModule = await Test.createTestingModule({
 			imports: [CoreModule],
 		}).compile();
 
 		nestTestApp = nestTestingModule.createNestApplication(createNestTestApplicationOptions);
 		await startNestApplication(nestTestApp);
-		await nestTestApp.init();
 	});
 
 	afterEach(() => {
@@ -26,7 +24,6 @@ describe('API :: HealthController', () => {
 	});
 	afterAll(async () => {
 		await nestTestApp.close();
-		await nestTestingModule.close();
 	});
 
 	describe('# [GET] /api/check', () => {

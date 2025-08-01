@@ -10,7 +10,7 @@ import { createNestTestApplicationOptions, startNestApplication } from 'tests/in
 
 describe('Modules :: API :: HealthController', () => {
 	let nestTestApp: INestApplication;
-	let nestTestingModule: TestingModule;
+
 	// // mocks
 	const customThrottlerGuardMock = {
 		handleRequest: jest.fn((..._args: unknown[]): Promise<boolean> => { return Promise.resolve(true); }),
@@ -23,7 +23,7 @@ describe('Modules :: API :: HealthController', () => {
 
 	// ? build test app
 	beforeAll(async () => {
-		nestTestingModule = await Test.createTestingModule({
+		const nestTestingModule: TestingModule = await Test.createTestingModule({
 			imports: [],
 			controllers: [
 				HealthController,
@@ -41,7 +41,6 @@ describe('Modules :: API :: HealthController', () => {
 
 		nestTestApp = nestTestingModule.createNestApplication(createNestTestApplicationOptions);
 		await startNestApplication(nestTestApp);
-		await nestTestApp.init();
 	});
 
 	afterEach(() => {
@@ -49,7 +48,6 @@ describe('Modules :: API :: HealthController', () => {
 	});
 	afterAll(async () => {
 		await nestTestApp.close();
-		await nestTestingModule.close();
 	});
 
 	describe('# [GET] /api/check', () => {

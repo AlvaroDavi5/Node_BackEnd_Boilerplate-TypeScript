@@ -2,9 +2,9 @@ name: Releasing
 
 on:
   push:
-    branches: [release, main]
+    branches: [main, release]
   pull_request:
-    branches: [release, main]
+    branches: [main, release]
 
 env:
   CI: true
@@ -12,8 +12,8 @@ env:
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  node_build:
-    name: Node.js Build
+  build_and_test:
+    name: Application Build and Tests
 
     runs-on: ubuntu-latest
 
@@ -52,15 +52,16 @@ jobs:
           name: build
           path: build
 
-      - name: Testing Modules
+      - name: Running Unit Tests
         run: npm run test:unit
-      - name: Testing Integration
+
+      - name: Running Integration Tests
         run: npm run test:integration
 
   semantic_release:
     name: Semantic Versioning Release
 
-    needs: node_build
+    needs: build_and_test
 
     runs-on: ubuntu-latest
 

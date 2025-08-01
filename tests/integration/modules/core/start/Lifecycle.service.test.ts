@@ -20,6 +20,7 @@ import { mockObservable } from 'tests/integration/support/mocks/mockObservable';
 
 describe('Modules :: Core :: Start :: LifecycleService', () => {
 	let nestTestingModule: TestingModule;
+
 	// // mocks
 	const databaseConnectionMock = {
 		destroy: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),

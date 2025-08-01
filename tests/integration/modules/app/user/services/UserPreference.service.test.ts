@@ -12,6 +12,7 @@ import { configServiceMock } from '@dev/mocks/mockedModules';
 describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 	let nestTestingModule: TestingModule;
 	let userPreferenceService: UserPreferenceService;
+
 	// // mocks
 	const userPreferenceRepositoryMock = {
 		findOne: jest.fn(async (_query: FindOneOptions<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => (null)),

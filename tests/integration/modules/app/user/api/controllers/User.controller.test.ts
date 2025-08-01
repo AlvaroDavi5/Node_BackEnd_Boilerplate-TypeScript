@@ -22,7 +22,7 @@ import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationIn
 
 describe('Modules :: App :: User :: API :: UserController', () => {
 	let nestTestApp: INestApplication;
-	let nestTestingModule: TestingModule;
+
 	// // mocks
 	const customThrottlerGuardMock = {
 		handleRequest: jest.fn((..._args: unknown[]): Promise<boolean> => { return Promise.resolve(true); }),
@@ -37,7 +37,7 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 
 	// ? build test app
 	beforeAll(async () => {
-		nestTestingModule = await Test.createTestingModule({
+		const nestTestingModule: TestingModule = await Test.createTestingModule({
 			imports: [],
 			controllers: [
 				UserController,
@@ -62,7 +62,6 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 
 		nestTestApp = nestTestingModule.createNestApplication(createNestTestApplicationOptions);
 		await startNestApplication(nestTestApp);
-		await nestTestApp.init();
 	});
 
 	afterEach(() => {
@@ -70,7 +69,6 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 	});
 	afterAll(async () => {
 		await nestTestApp.close();
-		await nestTestingModule.close();
 	});
 
 	describe('# [GET] /api/users', () => {

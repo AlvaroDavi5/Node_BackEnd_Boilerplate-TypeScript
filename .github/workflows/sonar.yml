@@ -1,24 +1,21 @@
-name: Testing
+name: SonarQube Analysis
 
 on:
   push:
-    branches: [homolog]
+    branches: [main, homolog]
   pull_request:
-    branches: [homolog]
+    branches: [main, homolog]
 
 permissions:
   contents: read
 
 env:
-  CI: true
-  LEFTHOOK: 0
-  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
   SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
 
 jobs:
-  node_build:
-    name: Node.js Build
+  generate_coverage:
+    name: Tests Coverage Generation
 
     runs-on: ubuntu-latest
 
@@ -42,18 +39,6 @@ jobs:
       - name: Installing Dependencies
         run: npm install --ignore-scripts
 
-      - name: Checking Dependencies Security
-        run: npm run security-check
-
-      - name: Checking Type
-        run: npm run typecheck
-
-      - name: Building
-        run: npm run build
-
-      - name: Packing
-        run: npm run build:webpack
-
       - name: Testing Modules
         run: npm run test:coverage
 
@@ -64,11 +49,11 @@ jobs:
           path: coverage
 
   sonarqube:
-    name: SonarQube Analyze
+    name: SonarQube Analysis
 
     runs-on: ubuntu-latest
 
-    needs: node_build
+    needs: generate_coverage
 
     steps:
       - name: Download Code Coverage Results
@@ -82,6 +67,9 @@ jobs:
 
       - name: Preparing Coverage Files
         run: npm run sonar:prepare
+
+      # - name: SonarQube Scan
+      #   run: npm run sonar:scan
 
       - name: SonarQube Scan
         uses: sonarsource/sonarqube-scan-action@master

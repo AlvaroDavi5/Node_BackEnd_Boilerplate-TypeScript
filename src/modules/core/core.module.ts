@@ -7,7 +7,6 @@ import { ThrottlerModule } from '@nestjs/throttler';
 import { GraphQLModule } from '@nestjs/graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { SentryModule } from '@sentry/nestjs/setup';
-import { DevtoolsModule } from '@nestjs/devtools-integration';
 import AppModule from '@app/app.module';
 import GraphQlModule from '@graphql/graphql.module';
 import { formatGraphQlError } from '@graphql/utils/errors.util';
@@ -16,6 +15,7 @@ import RequestRateLimitConstants from '@common/constants/RequestRateLimit.consta
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import CommonModule from '@common/common.module';
 import envsConfig from './configs/envs.config';
+import devToolsFactory from './configs/nestDevTools.config';
 import LifecycleService from './start/Lifecycle.service';
 import Exceptions from './errors/Exceptions';
 import LoggerService, { RequestLoggerProvider } from './logging/Logger.service';
@@ -33,7 +33,9 @@ import SyncCronTask from './cron/tasks/SyncCron.task';
 
 
 const { application: appConfigs } = envsConfig();
+
 const requestRateLimitConstants = new RequestRateLimitConstants();
+
 
 @Global()
 @Module({
@@ -64,10 +66,7 @@ const requestRateLimitConstants = new RequestRateLimitConstants();
 			include: [],
 		}),
 		SentryModule.forRoot(),
-		DevtoolsModule.register({
-			http: appConfigs.environment === EnvironmentsEnum.DEVELOPMENT,
-			port: appConfigs.nestDevToolsPort,
-		}),
+		...devToolsFactory(appConfigs.nestDevToolsPort, appConfigs.environment),
 		CommonModule,
 		AppModule,
 		EventsModule,

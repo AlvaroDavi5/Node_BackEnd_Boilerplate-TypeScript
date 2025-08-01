@@ -12,6 +12,7 @@ import { configServiceMock } from '@dev/mocks/mockedModules';
 describe('Modules :: App :: User :: Services :: UserService', () => {
 	let nestTestingModule: TestingModule;
 	let userService: UserService;
+
 	// // mocks
 	const userRepositoryMock = {
 		getById: jest.fn(async (_id: string, _withoutPassword?: boolean): Promise<UserEntity | null> => (null)),

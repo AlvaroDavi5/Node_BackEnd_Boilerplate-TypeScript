@@ -203,4 +203,23 @@ describe('Infra :: Errors :: Exceptions', () => {
 			});
 		});
 	});
+
+	describe('# Parsing', () => {
+		test('Should return a Internal exception', () => {
+			// eslint-disable-next-line dot-notation
+			const parser = exceptions['parseToString'];
+
+			const obj = {
+				key: 'value',
+				self: {},
+			};
+			obj.self = obj;
+
+			expect(parser('Test')).toBe('Test');
+			expect(parser(123.45)).toBe('123.45');
+			expect(parser(obj)).toBe('[object Object]');
+			expect(parser(new Error('Test Error'))).toBe('{}');
+			expect(parser(null)).toBeUndefined();
+		});
+	});
 });

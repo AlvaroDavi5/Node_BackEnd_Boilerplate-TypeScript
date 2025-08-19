@@ -1,18 +1,20 @@
 import { PipeTransform, ArgumentMetadata } from '@nestjs/common';
-import { Logger } from 'winston';
+import { ConfigService } from '@nestjs/config';
 import Exceptions from '@core/errors/Exceptions';
-import { generateLogger } from '@core/logging/logger';
+import LoggerService from '@core/logging/Logger.service';
+import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import { configServiceMock, dataParserHelperMock } from '@dev/mocks/mockedModules';
 
 
 type dateInputType = (string | Date) | (() => string | Date) | undefined | null
 
 export default class ParseDatePipe implements PipeTransform<dateInputType, Date> {
 	private readonly exceptions: Exceptions;
-	private readonly logger: Logger;
+	private readonly logger: LoggerService;
 
 	constructor() {
 		this.exceptions = new Exceptions();
-		this.logger = generateLogger(ParseDatePipe.name);
+		this.logger = new LoggerService(ParseDatePipe.name, configServiceMock as ConfigService, dataParserHelperMock as DataParserHelper);
 	}
 
 	public transform(value: dateInputType, metadata: ArgumentMetadata): Date {

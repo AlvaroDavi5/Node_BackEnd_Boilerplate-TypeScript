@@ -1,4 +1,4 @@
-import { createLogger, transports, format, Logger } from 'winston';
+import { transports, format } from 'winston';
 import { LogLevelEnum } from '@common/enums/logLevel.enum';
 import { dataParserHelperMock } from '@dev/mocks/mockedModules';
 
@@ -93,16 +93,4 @@ export function getLoggerOptions(serviceName: string, environment: string, conte
 		],
 		exitOnError: false,
 	};
-}
-
-export function generateLogger(loggerContext: string): Logger {
-	const loggerOptions = getLoggerOptions(
-		(process.env.APP_NAME ?? 'Node Boilerplate'),
-		(process.env.NODE_ENV ?? 'dev'),
-		loggerContext,
-		(process.env.APP_LOGS_PATH ?? './logs/logs.log'),
-		(process.env.SHOW_DETAILED_LOGS ?? 'true') === 'true',
-	);
-
-	return createLogger(loggerOptions);
 }

@@ -37,7 +37,7 @@
 		"start:prod": "node build/main.js",
 		"start:webpack": "node build/webpack.js",
 		"start:dev": "cross-env NODE_ENV=dev nodemon --config nodemon.json",
-		"start:debug": "cross-env NODE_ENV=dev nest start --debug --watch",
+		"start:debug": "nest start --debug --watch",
 		"security-check": "ts-node --project tsconfig.json ./scripts/security-check.ts",
 		"mock-dependencies": "ts-node --project tsconfig.json ./scripts/mock-dependencies.ts",
 		"receive-messages": "ts-node --project tsconfig.json scripts/receive-messages.ts",

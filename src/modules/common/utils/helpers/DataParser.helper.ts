@@ -27,7 +27,7 @@ export default class DataParserHelper {
 					const parsedData = data.map((d) => this.toString(d));
 					result = `${parsedData.join(', ')}`;
 				} else if (data instanceof Error)
-					result = data.toString();
+					result = `${data?.name}: ${data?.message} - ${data?.stack}`;
 				else {
 					try {
 						result = JSON.stringify(data);

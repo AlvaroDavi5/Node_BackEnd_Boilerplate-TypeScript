@@ -52,7 +52,7 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 
 			try {
 				parsedUser = dataParserHelper.toObject('{user:{id:1}}');
-			} catch (error) {
+			} catch (_error) {
 				expect(parsedUser).toBeUndefined();
 			}
 		});

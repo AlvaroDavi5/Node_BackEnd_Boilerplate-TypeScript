@@ -36,7 +36,7 @@ export default class RedisClient {
 	private parseValue<VT = unknown>(strValue: string): VT | null {
 		try {
 			return this.dataParserHelper.toObject<VT>(strValue);
-		} catch (error) {
+		} catch (_error) {
 			return null;
 		}
 	}
@@ -69,7 +69,7 @@ export default class RedisClient {
 
 		try {
 			return await this.redisClient.quit() === 'OK' && disconnectedStatus.includes(this.redisClient.status);
-		} catch (error) {
+		} catch (_error) {
 			return false;
 		}
 	}
@@ -121,7 +121,7 @@ export default class RedisClient {
 		const result = await Promise.allSettled(getByKeyPromises);
 
 		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		return result.map(({ status: _, ...args }) => ({ ...((args as any)?.value ?? {}) }));
+		return result.map(({ status: _, ...args }) => ({ ...(args as any)?.value ?? {} }));
 	}
 
 	public async getValuesByKeyPattern<VT = unknown>(key: string): Promise<(VT | null)[]> {

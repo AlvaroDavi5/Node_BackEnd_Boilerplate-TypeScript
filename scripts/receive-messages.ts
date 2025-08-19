@@ -8,7 +8,7 @@ function formatMessageAfterReceiveHelper(message: unknown): string {
 	let msg = '';
 	try {
 		msg = JSON.parse(message as unknown as string);
-	} catch (error) {
+	} catch (_error) {
 		msg = String(message);
 	}
 	return msg;

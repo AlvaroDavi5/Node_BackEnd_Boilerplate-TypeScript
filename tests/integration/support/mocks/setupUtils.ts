@@ -27,5 +27,7 @@ export async function startNestApplication(nestApp: INestApplication): Promise<v
 	nestApiConfig(nestApp);
 
 	await nestApp.listen(parseInt(process.env.APP_PORT ?? '3000', 10))
-		.catch((error: ErrorInterface | Error) => { validateKnownExceptions(error); });
+		.catch((error: ErrorInterface | Error) => {
+			validateKnownExceptions(error);
+		});
 }

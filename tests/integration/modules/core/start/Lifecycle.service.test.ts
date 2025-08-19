@@ -23,19 +23,29 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 
 	// // mocks
 	const databaseConnectionMock = {
-		destroy: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
+		destroy: jest.fn((...args: unknown[]): void => {
+			args.forEach((arg) => console.log(arg));
+		}),
 	};
 	const httpAdapterHostMock = {
 		httpAdapter: {
-			close: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
+			close: jest.fn((...args: unknown[]): void => {
+				args.forEach((arg) => console.log(arg));
+			}),
 		},
 	};
 	const webSocketServerMock = {
-		disconnect: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
-		disconnectAllSockets: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
+		disconnect: jest.fn((...args: unknown[]): void => {
+			args.forEach((arg) => console.log(arg));
+		}),
+		disconnectAllSockets: jest.fn((...args: unknown[]): void => {
+			args.forEach((arg) => console.log(arg));
+		}),
 	};
 	const syncCronJobMock = {
-		stopCron: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
+		stopCron: jest.fn((...args: unknown[]): void => {
+			args.forEach((arg) => console.log(arg));
+		}),
 	};
 	const mongoClientMock = {
 		isConnected: true,
@@ -46,17 +56,23 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 	};
 	const redisClientMock = {
 		_isConnected: true,
-		isConnected: jest.fn((): boolean => { return redisClientMock._isConnected; }),
+		isConnected: jest.fn((): boolean => {
+			return redisClientMock._isConnected;
+		}),
 		disconnect: jest.fn((...args: unknown[]): void => {
 			args.forEach((arg) => console.log(arg));
 			redisClientMock._isConnected = false;
 		}),
 	};
 	const awsClientMock = {
-		destroy: jest.fn((...args: unknown[]): void => { args.forEach((arg) => console.log(arg)); }),
+		destroy: jest.fn((...args: unknown[]): void => {
+			args.forEach((arg) => console.log(arg));
+		}),
 	};
 	const eventsQueueConsumerMock = {
-		disable: jest.fn((): void => { console.log('Disabled consumer'); }),
+		disable: jest.fn((): void => {
+			console.log('Disabled consumer');
+		}),
 	};
 
 	// ? build test app

@@ -20,20 +20,34 @@ describe('Modules :: App :: User :: UseCases :: GetUserUseCase', () => {
 	};
 	const userServiceMock = {
 		getByEmail: jest.fn(async (_email: string): Promise<UserEntity | null> => (null)),
-		getById: jest.fn(async (_id: string, _withoutPassword = true): Promise<UserEntity> => { throw new Error('GenericError'); }),
-		create: jest.fn(async (_entity: UserEntity): Promise<UserEntity> => { throw new Error('GenericError'); }),
-		update: jest.fn(async (_id: string, _data: IUpdateUser): Promise<UserEntity> => { throw new Error('GenericError'); }),
+		getById: jest.fn(async (_id: string, _withoutPassword = true): Promise<UserEntity> => {
+			throw new Error('GenericError');
+		}),
+		create: jest.fn(async (_entity: UserEntity): Promise<UserEntity> => {
+			throw new Error('GenericError');
+		}),
+		update: jest.fn(async (_id: string, _data: IUpdateUser): Promise<UserEntity> => {
+			throw new Error('GenericError');
+		}),
 		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, agentUserId?: string }): Promise<boolean> => (false)),
 		list: jest.fn(async (_query: ListQueryInterface, _withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => {
 			return { content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 };
 		}),
 		protectPassword: jest.fn((password: string): string => (password)),
-		validatePassword: jest.fn((_entity: UserEntity, _passwordToValidate: string): void => { throw new Error('GenericError'); }),
+		validatePassword: jest.fn((_entity: UserEntity, _passwordToValidate: string): void => {
+			throw new Error('GenericError');
+		}),
 	};
 	const userPreferenceServiceMock = {
-		getByUserId: jest.fn(async (_userId: string): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
-		create: jest.fn(async (_entity: UserPreferenceEntity): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
-		update: jest.fn(async (_id: string, _data: IUpdateUserPreference): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
+		getByUserId: jest.fn(async (_userId: string): Promise<UserPreferenceEntity> => {
+			throw new Error('GenericError');
+		}),
+		create: jest.fn(async (_entity: UserPreferenceEntity): Promise<UserPreferenceEntity> => {
+			throw new Error('GenericError');
+		}),
+		update: jest.fn(async (_id: string, _data: IUpdateUserPreference): Promise<UserPreferenceEntity> => {
+			throw new Error('GenericError');
+		}),
 		delete: jest.fn(async (_id: string, _data: { softDelete: boolean }): Promise<boolean> => (false)),
 	};
 

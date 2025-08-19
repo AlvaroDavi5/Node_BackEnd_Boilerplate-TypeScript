@@ -5,8 +5,12 @@ import { mockObservable } from 'tests/unit/support/mocks/mockObservable';
 
 
 jest.mock('@sentry/nestjs', () => ({
-	captureException: (...args: unknown[]) => { mockObservable.call(...args); },
-	captureMessage: (...args: unknown[]) => { mockObservable.call(...args); },
+	captureException: (...args: unknown[]) => {
+		mockObservable.call(...args);
+	},
+	captureMessage: (...args: unknown[]) => {
+		mockObservable.call(...args);
+	},
 	logger: {
 		debug: (...args: unknown[]) => mockObservable.call('debug', ...args),
 		info: (...args: unknown[]) => mockObservable.call('info', ...args),

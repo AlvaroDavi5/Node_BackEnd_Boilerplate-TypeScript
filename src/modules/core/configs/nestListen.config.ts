@@ -17,7 +17,7 @@ function getHttpsOptions(): Pick<NestApplicationOptions, 'httpsOptions'> {
 				cert: readFileSync('cert.pem'),
 			}
 		};
-	} catch (error) {
+	} catch (_error) {
 		return { httpsOptions: undefined };
 	}
 }

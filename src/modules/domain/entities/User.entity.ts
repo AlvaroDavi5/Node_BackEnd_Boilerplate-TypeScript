@@ -87,7 +87,7 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 
 	@ApiProperty({
 		type: UserPreferenceEntity,
-		example: (new UserPreferenceEntity({ imagePath: './image.png', defaultTheme: 'DEFAULT' })),
+		example: new UserPreferenceEntity({ imagePath: './image.png', defaultTheme: 'DEFAULT' }),
 		default: null, nullable: true, required: true,
 		description: 'User preference',
 	})
@@ -115,7 +115,7 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	@IsString()
 	private deletedBy: string | null = null;
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any, complexity
 	constructor(dataValues: any) {
 		super();
 		if (this.exists(dataValues?.id)) this.id = dataValues.id;
@@ -151,7 +151,9 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 		};
 	}
 
-	public getId(): string { return this.id; }
+	public getId(): string {
+		return this.id;
+	}
 	public setId(id: string): void {
 		if (id.length < 1)
 			return;
@@ -161,25 +163,33 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 		this.updatedAt = this.getDate();
 	}
 
-	public getFullName(): string { return this.fullName; }
+	public getFullName(): string {
+		return this.fullName;
+	}
 	public setFullName(fullName: string): void {
 		this.fullName = fullName;
 		this.updatedAt = this.getDate();
 	}
 
-	public getEmail(): string { return this.email; }
+	public getEmail(): string {
+		return this.email;
+	}
 	public setEmail(email: string): void {
 		this.email = email;
 		this.updatedAt = this.getDate();
 	}
 
-	public getPassword(): string { return this.password; }
+	public getPassword(): string {
+		return this.password;
+	}
 	public setPassword(password: string): void {
 		this.password = password;
 		this.updatedAt = this.getDate();
 	}
 
-	public getPhone(): string | null { return this.phone; }
+	public getPhone(): string | null {
+		return this.phone;
+	}
 	public setPhone(phone: string): void {
 		this.phone = phone;
 		this.updatedAt = this.getDate();
@@ -200,7 +210,9 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 		this.updatedAt = this.getDate();
 	}
 
-	public getDeletedBy(): string | null { return this.deletedBy; }
+	public getDeletedBy(): string | null {
+		return this.deletedBy;
+	}
 
 	public setDeletedBy(agentId: string): void {
 		this.deletedBy = agentId;

@@ -16,7 +16,9 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 	// // mocks
 	const userRepositoryMock = {
 		getById: jest.fn(async (_id: string, _withoutPassword?: boolean): Promise<UserEntity | null> => (null)),
-		create: jest.fn(async (_entity: UserEntity): Promise<UserEntity> => { throw new Error('GenericError'); }),
+		create: jest.fn(async (_entity: UserEntity): Promise<UserEntity> => {
+			throw new Error('GenericError');
+		}),
 		update: jest.fn(async (_id: string, _dataValues: Partial<UsersModel>): Promise<UserEntity | null> => (null)),
 		deleteOne: jest.fn(async (_id: string, _softDelete?: boolean, _agentId?: string | null): Promise<boolean> => (false)),
 	};

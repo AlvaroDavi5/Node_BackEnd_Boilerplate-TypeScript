@@ -13,7 +13,9 @@ describe('Modules :: API :: HealthController', () => {
 
 	// // mocks
 	const customThrottlerGuardMock = {
-		handleRequest: jest.fn((..._args: unknown[]): Promise<boolean> => { return Promise.resolve(true); }),
+		handleRequest: jest.fn((..._args: unknown[]): Promise<boolean> => {
+			return Promise.resolve(true);
+		}),
 	};
 	const httpMessagesConstantsMock = {
 		messages: {

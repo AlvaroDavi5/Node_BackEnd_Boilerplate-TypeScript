@@ -38,8 +38,12 @@ export const loggerProviderMock: LoggerInterface & {
 	http: console.info,
 	verbose: console.log,
 	debug: console.debug,
-	setContextName: (context: string) => { context.trim(); },
-	setRequestId: (requestId: string) => { requestId.trim(); },
+	setContextName: (context: string) => {
+		context.trim();
+	},
+	setRequestId: (requestId: string) => {
+		requestId.trim();
+	},
 };
 
 export const dataParserHelperMock = {

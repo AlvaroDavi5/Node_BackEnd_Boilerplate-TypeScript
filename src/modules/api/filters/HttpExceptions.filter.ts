@@ -78,6 +78,7 @@ export default class HttpExceptionsFilter extends AbstractExceptionsFilter imple
 		this.capture(exception, {
 			data: { requestId },
 			user: {
+				// eslint-disable-next-line camelcase
 				ip_address: clientIp,
 				username: request.user?.username as string,
 				id: request.user?.clientId as string,

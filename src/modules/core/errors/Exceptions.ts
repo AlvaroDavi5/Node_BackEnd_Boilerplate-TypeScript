@@ -12,7 +12,7 @@ export default class Exceptions {
 		else if (typeof value === 'object') {
 			try {
 				return JSON.stringify(value);
-			} catch (error) {
+			} catch (_error) {
 				return value?.toString();
 			}
 		} else if (typeof value === 'string') return value;

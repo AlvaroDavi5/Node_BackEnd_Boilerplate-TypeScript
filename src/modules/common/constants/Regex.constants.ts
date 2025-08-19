@@ -26,7 +26,9 @@ export default class RegExConstants {
 		};
 	}
 
-	private getRegExSource(regex: RegExp): string { return regex.source; }
+	private getRegExSource(regex: RegExp): string {
+		return regex.source;
+	}
 
 	private parseRegEx(regexSrc: string): RegExp {
 		// eslint-disable-next-line security/detect-non-literal-regexp

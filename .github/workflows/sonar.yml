@@ -7,7 +7,7 @@ on:
     branches: [main, homolog]
 
 permissions:
-  contents: read
+  contents: write
 
 env:
   SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}

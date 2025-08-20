@@ -22,7 +22,7 @@ export default class RegExConstants {
 		this.onlyNumericDigitsPattern = {
 			name: 'OnlyNumericDigitsPattern',
 			message: (field) => `'${field}' must have only numeric digits`,
-			regex: (/\D/g),
+			regex: /\D/g,
 		};
 	}
 

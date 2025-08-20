@@ -10,10 +10,10 @@ export class Server {
 		this.options = options || {};
 
 		this.sockets = {
-			fetchSockets: () => ([
+			fetchSockets: () => [
 				{ id: '#1' },
 				{ id: '#2' },
-			]),
+			],
 		};
 	}
 
@@ -38,7 +38,6 @@ export class Server {
 	}
 }
 
-// eslint-disable-next-line max-classes-per-file
 export class ServerSocket {
 	public readonly id: string;
 	public connected: boolean;

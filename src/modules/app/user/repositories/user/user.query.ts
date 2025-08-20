@@ -98,7 +98,7 @@ const buildPaginationParams = ({
 	return paginationParams;
 };
 
-export const userQueryParamsBuilder = ({
+export const userQueryParamsBuilder = {
 
 	buildParams: (data: UserBuildParamsInterface): FindManyOptions<UsersModel> => {
 		const select = buildSelectParams(data);
@@ -112,4 +112,4 @@ export const userQueryParamsBuilder = ({
 			relations: { preference: true },
 		};
 	}
-});
+};

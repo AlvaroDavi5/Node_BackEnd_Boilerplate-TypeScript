@@ -13,18 +13,18 @@ import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 	// // mocks
 	const exceptionsMock = {
-		internal: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
-		integration: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
-		unauthorized: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
-		business: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
-		notFound: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
-		conflict: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
+		internal: jest.fn(({ message }: ErrorInterface): Error => new Error(message)),
+		integration: jest.fn(({ message }: ErrorInterface): Error => new Error(message)),
+		unauthorized: jest.fn(({ message }: ErrorInterface): Error => new Error(message)),
+		business: jest.fn(({ message }: ErrorInterface): Error => new Error(message)),
+		notFound: jest.fn(({ message }: ErrorInterface): Error => new Error(message)),
+		conflict: jest.fn(({ message }: ErrorInterface): Error => new Error(message)),
 	};
 	const httpMessagesConstantsMock = {
-		messages: { conflict: jest.fn((element: string): string => (`${element} already exists!`)) },
+		messages: { conflict: jest.fn((element: string): string => `${element} already exists!`) },
 	};
 	const userServiceMock = {
-		getByEmail: jest.fn(async (_email: string): Promise<UserEntity | null> => (null)),
+		getByEmail: jest.fn(async (_email: string): Promise<UserEntity | null> => null),
 		getById: jest.fn(async (_id: string, _withoutPassword = true): Promise<UserEntity> => {
 			throw new Error('GenericError');
 		}),
@@ -34,11 +34,11 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 		update: jest.fn(async (_id: string, _data: IUpdateUser): Promise<UserEntity> => {
 			throw new Error('GenericError');
 		}),
-		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, agentUserId?: string }): Promise<boolean> => (false)),
+		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, agentUserId?: string }): Promise<boolean> => false),
 		list: jest.fn(async (_query: ListQueryInterface, _withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => {
 			return { content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 };
 		}),
-		protectPassword: jest.fn((password: string): string => (password)),
+		protectPassword: jest.fn((password: string): string => password),
 		validatePassword: jest.fn((_entity: UserEntity, _passwordToValidate: string): void => {
 			throw new Error('GenericError');
 		}),
@@ -53,7 +53,7 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 		update: jest.fn(async (_id: string, _data: IUpdateUserPreference): Promise<UserPreferenceEntity> => {
 			throw new Error('GenericError');
 		}),
-		delete: jest.fn(async (_id: string, _data: { softDelete: boolean }): Promise<boolean> => (false)),
+		delete: jest.fn(async (_id: string, _data: { softDelete: boolean }): Promise<boolean> => false),
 	};
 
 	const agentUser = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' };

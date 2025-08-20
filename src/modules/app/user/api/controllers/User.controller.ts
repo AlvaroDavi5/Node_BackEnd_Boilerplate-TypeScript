@@ -81,7 +81,7 @@ export default class UserController implements OnModuleInit {
 	@ApiOkResponse({
 		type: UserListEntity,
 		schema: {
-			example: (new UserListEntity()),
+			example: new UserListEntity(),
 		},
 	})
 	@ApiConsumes('application/json')
@@ -131,7 +131,7 @@ export default class UserController implements OnModuleInit {
 		schema: {
 			example: {
 				token: 'XXX',
-				...(new UserEntity({})).getAttributes(),
+				...new UserEntity({}).getAttributes(),
 			},
 		}
 	})

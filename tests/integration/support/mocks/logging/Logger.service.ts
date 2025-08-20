@@ -10,7 +10,7 @@ export default class LoggerService implements LoggerInterface {
 	private readonly showLogs = process.env.SHOW_LOGS === 'true';
 
 	private log(level: logLevelType, args: unknown[]): void {
-		const shouldLog = (this.showLogs === true) && (['error', 'warn'].includes(level));
+		const shouldLog = this.showLogs === true && ['error', 'warn'].includes(level);
 
 		args.forEach((arg: unknown) => {
 			if (mockObservable?.call)

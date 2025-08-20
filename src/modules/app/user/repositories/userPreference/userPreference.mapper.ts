@@ -8,7 +8,7 @@ const toDomainEntity = (dataValues: UserPreferencesModel): UserPreferenceEntity 
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 const toDatabaseEntity = (entity: UserPreferenceEntity): any => {
-	if (!(entity.validate().valid))
+	if (!entity.validate().valid)
 		return null;
 
 	const { id: _id, userId, ...preferenceAttributes } = entity.getAttributes();

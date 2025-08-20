@@ -22,7 +22,7 @@ describe('Modules :: Common :: Utils :: Helpers :: FileReaderHelper', () => {
 
 			try {
 				stream = fileReaderHelper.readStream(filePath, 'utf8');
-			} catch (error) {
+			} catch (_error) {
 				expect(stream?.readable).toBeUndefined();
 			}
 		});

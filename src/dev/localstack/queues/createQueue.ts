@@ -10,7 +10,7 @@ export default (queueName: string, queueUrl: string): void => {
 		sqsClient.createQueue(queueName).then((createdQueueUrl) => {
 			console.debug('Queue URL:', createdQueueUrl);
 		});
-	} catch (error) {
+	} catch (_error) {
 		sqsClient.deleteQueue(queueUrl).then((wasDeleted) => {
 			if (wasDeleted)
 				sqsClient.createQueue(queueName).then((createdQueueUrl) => {

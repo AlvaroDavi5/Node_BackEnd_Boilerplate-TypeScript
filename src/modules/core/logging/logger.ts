@@ -1,4 +1,4 @@
-import { createLogger, transports, format, Logger } from 'winston';
+import { transports, format } from 'winston';
 import { LogLevelEnum } from '@common/enums/logLevel.enum';
 import { dataParserHelperMock } from '@dev/mocks/mockedModules';
 
@@ -13,24 +13,31 @@ export interface LoggerInterface {
 }
 
 export interface MetadataInterface {
-	context?: string,
-	requestId?: string,
-	socketId?: string,
-	ip?: string,
-	details?: string | object | object[],
-	stack?: unknown,
+	context?: string;
+	requestId?: string;
+	socketId?: string;
+	ip?: string;
+	details?: string | object | object[];
+	stack?: unknown;
 }
 
 function getMessageFormatter() {
 	const levelFormatter = (level: string): string => format.colorize().colorize(level, level.toUpperCase());
 	const purpleConsoleColor = '\x1b[0;35m';
 	const defaultConsoleColor = '\x1b[0m';
-	const contextFormatter = (ctx: string): string => (`${purpleConsoleColor}${ctx}${defaultConsoleColor}`);
+	const contextFormatter = (ctx: string): string => `${purpleConsoleColor}${ctx}${defaultConsoleColor}`;
 
 	return format.printf((info) => {
-		const { level, message, timestamp, stack: errorStack, context: ctx, meta } = info;
+		const {
+			level,
+			message,
+			timestamp,
+			stack: errorStack,
+			context: ctx,
+			meta,
+		} = info;
 		const metadata = meta as Record<string, unknown>;
-		const context = (ctx ?? metadata?.context) as string;
+		const context = (ctx ?? metadata?.context) as string | undefined;
 
 		const logLevel = levelFormatter(level);
 		const logContext = contextFormatter(context ?? 'DefaultContext');
@@ -41,27 +48,23 @@ function getMessageFormatter() {
 
 		let log = `${dataParserHelperMock.toString(message)}`;
 
-		if (ip)
-			log += ` - IP: ${ip}`;
-		if (requestId)
-			log += ` - requestId: ${requestId}`;
-		if (socketId)
-			log += ` - socketId: ${socketId}`;
+		if (ip) log += ` - IP: ${dataParserHelperMock.toString(ip)}`;
+		if (requestId) log += ` - requestId: ${dataParserHelperMock.toString(requestId)}`;
+		if (socketId) log += ` - socketId: ${dataParserHelperMock.toString(socketId)}`;
 
 		if (logStack) {
 			if (Array.isArray(logStack))
 				logStack.forEach((stack) => {
 					log += `\n${stack}`;
 				});
-			else
-				log += `\n${logStack}`;
+			else log += `\n${dataParserHelperMock.toString(logStack)}`;
 		}
 
-		return `${timestamp} | ${logLevel} [${logContext}]: ${log}`;
+		return `${dataParserHelperMock.toString(timestamp)} | ${logLevel} [${logContext}]: ${log}`;
 	});
 }
 
-export function getLoggerOptions(serviceName: string, environment: string, context: string, logsPath: string, showDetailedLogs: boolean) {
+export function getLoggerOptions(serviceName: string, environment: string, context: string | undefined, logsPath: string, showDetailedLogs: boolean) {
 	const messageFormatter = getMessageFormatter();
 	const defaultFormat = format.combine(
 		format.timestamp(),
@@ -72,10 +75,7 @@ export function getLoggerOptions(serviceName: string, environment: string, conte
 	const consoleMaxLevel = showDetailedLogs === true ? LogLevelEnum.DEBUG : LogLevelEnum.HTTP;
 	const fileMaxLevel = showDetailedLogs === true ? LogLevelEnum.HTTP : LogLevelEnum.WARN;
 	return {
-		format: format.combine(
-			defaultFormat,
-			format.json(),
-		),
+		format: format.combine(defaultFormat, format.json()),
 		defaultMeta: {
 			context,
 			service: serviceName,
@@ -93,16 +93,4 @@ export function getLoggerOptions(serviceName: string, environment: string, conte
 		],
 		exitOnError: false,
 	};
-}
-
-export function generateLogger(loggerContext: string): Logger {
-	const loggerOptions = getLoggerOptions(
-		(process.env.APP_NAME ?? 'Node Boilerplate'),
-		(process.env.NODE_ENV ?? 'dev'),
-		loggerContext,
-		(process.env.APP_LOGS_PATH ?? './logs/logs.log'),
-		(process.env.SHOW_DETAILED_LOGS ?? 'true') === 'true',
-	);
-
-	return createLogger(loggerOptions);
 }

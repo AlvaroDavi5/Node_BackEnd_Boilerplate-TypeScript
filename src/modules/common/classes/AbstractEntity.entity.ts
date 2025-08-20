@@ -21,7 +21,7 @@ export default abstract class AbstractEntity<I = unknown> {
 	}
 
 	public exists(value: unknown): boolean {
-		return (value !== undefined && value !== null);
+		return value !== undefined && value !== null;
 	}
 
 	public getDate(strDate?: string): Date {

@@ -38,8 +38,12 @@ export const loggerProviderMock: LoggerInterface & {
 	http: console.info,
 	verbose: console.log,
 	debug: console.debug,
-	setContextName: (context: string) => { context.trim(); },
-	setRequestId: (requestId: string) => { requestId.trim(); },
+	setContextName: (context: string) => {
+		context.trim();
+	},
+	setRequestId: (requestId: string) => {
+		requestId.trim();
+	},
 };
 
 export const dataParserHelperMock = {
@@ -61,13 +65,18 @@ export const dataParserHelperMock = {
 				break;
 			case 'object':
 				if (!data)
-					result = '';
-				else if (Array.isArray(data))
+					break;
+				else if (Array.isArray(data)) {
 					result = `${data.join(', ')}`;
-				else if (data instanceof Error)
-					result = data.toString();
-				else
-					result = (JSON.stringify(data) || data?.toString()) ?? '';
+				} else if (data instanceof Error)
+					result = `${data?.name}: ${data?.message}`;
+				else {
+					try {
+						result = JSON.stringify(data);
+					} catch (_error) {
+						result = data?.toString() ?? '';
+					}
+				}
 				break;
 			case 'symbol':
 				result = data.toString();
@@ -82,8 +91,12 @@ export const dataParserHelperMock = {
 		return result;
 	},
 
-	toObject: <OT = object>(data: string): OT => {
-		return JSON.parse(data);
+	toObject: <OT = object>(data: string): OT | null => {
+		try {
+			return JSON.parse(data) as OT;
+		} catch (_error) {
+			return null;
+		}
 	},
 
 	toBuffer: async (data: string | Uint8Array | Buffer | Readable | ReadableStream | Blob, encoding: BufferEncoding): Promise<Buffer> => {

@@ -1,7 +1,7 @@
 import { JwtPayload } from 'jsonwebtoken';
 
 
-const EXPIRATION_UNITS = [
+const _EXPIRATION_UNITS = [
 	'Years', 'Year', 'Yrs', 'Yr', 'Y',
 	'Weeks', 'Week', 'W',
 	'Days', 'Day', 'D',
@@ -10,7 +10,7 @@ const EXPIRATION_UNITS = [
 	'Seconds', 'Second', 'Secs', 'Sec', 's',
 	'Milliseconds', 'Millisecond', 'Msecs', 'Msec', 'Ms'
 ] as const;
-type Unit = (typeof EXPIRATION_UNITS)[number];
+type Unit = (typeof _EXPIRATION_UNITS)[number];
 type jwtExpirationUnity = Unit | Uppercase<Unit> | Lowercase<Unit>;
 type jwtStringValue = | `${number}` | `${number}${jwtExpirationUnity}` | `${number} ${jwtExpirationUnity}`;
 

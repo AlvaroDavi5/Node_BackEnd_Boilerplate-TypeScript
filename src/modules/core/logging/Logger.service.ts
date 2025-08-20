@@ -29,7 +29,7 @@ export default class LoggerService implements LoggerInterface {
 		const loggerOptions = getLoggerOptions(
 			applicationConfigs.name,
 			applicationConfigs.environment,
-			undefined as unknown as string,
+			undefined,
 			applicationConfigs.logsPath,
 			applicationConfigs.showDetailedLogs,
 		);
@@ -69,7 +69,10 @@ export default class LoggerService implements LoggerInterface {
 		this.clientIp = clientIp;
 	}
 
-	private buildLog(args: unknown[]): { message: string, meta: MetadataInterface } {
+	private buildLog(args: unknown[]): {
+		message: string;
+		meta: MetadataInterface;
+	} {
 		const inquirerName = typeof this.inquirer === 'string'
 			? this.inquirer
 			: this.inquirer?.constructor?.name;
@@ -91,10 +94,14 @@ export default class LoggerService implements LoggerInterface {
 
 				if (arg.stack) {
 					if (Array.isArray(arg.stack)) {
-						const strStack: string[] = arg.stack.map((stack) => (`${blackConsoleColor}${stack}${defaultConsoleColor}`));
+						const strStack: string[] = arg.stack.map(
+							(stack) => `${blackConsoleColor}${stack}${defaultConsoleColor}`,
+						);
 						errorStacks.push(...strStack);
 					} else
-						errorStacks.push(`${blackConsoleColor}${arg.stack}${defaultConsoleColor}`);
+						errorStacks.push(
+							`${blackConsoleColor}${arg.stack}${defaultConsoleColor}`,
+						);
 				}
 			}
 		});

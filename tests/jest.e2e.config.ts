@@ -29,7 +29,7 @@ const config: Config = {
 
 	// An array of glob patterns indicating a set of files for which coverage information should be collected
 	collectCoverageFrom: [
-		'src/**/*.{ts,tsx,js,jsx}'
+		'src/**/*.{ts,ts,js,js}'
 	],
 
 	// An array of regexp pattern strings used to skip coverage collection
@@ -99,7 +99,7 @@ const config: Config = {
 
 	// The maximum amount of workers used to run your tests. Can be specified as % or a number.
 	// E.g. maxWorkers: 10% will use 10% of your CPU amount + 1 as the maximum worker number. maxWorkers: 2 will use a maximum of 2 workers.
-	// maxWorkers: '50%',
+	maxWorkers: '50%',
 
 	// An array of directory names to be searched recursively up from the requiring module's location
 	moduleDirectories: [
@@ -119,6 +119,7 @@ const config: Config = {
 	// A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
 	moduleNameMapper: {
 		'~/(.*)': '<rootDir>/$1',
+		'tests/(.*)': '<rootDir>/tests/$1',
 		'@dev/(.*)': '<rootDir>/src/dev/$1',
 		'@core/(.*)': '<rootDir>/src/modules/core/$1',
 		'@common/(.*)': '<rootDir>/src/modules/common/$1',
@@ -218,7 +219,13 @@ const config: Config = {
 
 	// A map from regular expressions to paths to transformers
 	transform: {
-		'^.+\\.(t|j)s$': '@swc/jest',
+		'^.+\\.(t|j)s$': [
+			'ts-jest', {
+				tsconfig: 'tsconfig.test.json',
+				diagnostics: false,
+			},
+			// '@swc/jest'
+		],
 	},
 
 	// An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation

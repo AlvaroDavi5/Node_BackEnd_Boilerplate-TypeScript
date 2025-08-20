@@ -1,12 +1,16 @@
-import { BadRequestException, ServiceUnavailableException } from '@nestjs/common';
+import { BadRequestException, GatewayTimeoutException, ServiceUnavailableException } from '@nestjs/common';
 import { captureException, captureMessage, captureLog } from '@common/utils/sentryCalls.util';
 import { LogLevelEnum } from '@common/enums/logLevel.enum';
 import { mockObservable } from 'tests/unit/support/mocks/mockObservable';
 
 
 jest.mock('@sentry/nestjs', () => ({
-	captureException: (...args: unknown[]) => { mockObservable.call(...args); },
-	captureMessage: (...args: unknown[]) => { mockObservable.call(...args); },
+	captureException: (...args: unknown[]) => {
+		mockObservable.call(...args);
+	},
+	captureMessage: (...args: unknown[]) => {
+		mockObservable.call(...args);
+	},
 	logger: {
 		debug: (...args: unknown[]) => mockObservable.call('debug', ...args),
 		info: (...args: unknown[]) => mockObservable.call('info', ...args),
@@ -38,6 +42,21 @@ describe('Modules :: Common :: Utils :: SentryCalls', () => {
 			);
 		});
 
+		test('Should send gateway timeout exception to Sentry', () => {
+			captureException(new GatewayTimeoutException('Test Error'), {
+				data: { key: 'value' },
+				user: { id: 'user_id', email: 'test.user@nomail.com' },
+			});
+			expect(mockObservable.call).toHaveBeenCalledWith(
+				new GatewayTimeoutException('Test Error'),
+				{
+					level: 'error',
+					data: { key: 'value' },
+					user: { id: 'user_id', email: 'test.user@nomail.com' },
+				}
+			);
+		});
+
 		test('Should send service unavailable exception to Sentry', () => {
 			captureException(new ServiceUnavailableException('Test Error'), {
 				data: { key: 'value' },
@@ -56,11 +75,15 @@ describe('Modules :: Common :: Utils :: SentryCalls', () => {
 
 	describe('# Capture Messages and Logs', () => {
 		test('Should send messages to Sentry', () => {
+			captureMessage('Test Message', LogLevelEnum.DEBUG);
+			expect(mockObservable.call).toHaveBeenCalledWith('Test Message', { level: 'debug' });
 			captureMessage('Test Message', LogLevelEnum.HTTP);
 			expect(mockObservable.call).toHaveBeenCalledWith('Test Message', { level: 'info' });
 		});
 
 		test('Should send logs to Sentry', () => {
+			captureLog('Log', LogLevelEnum.DEBUG);
+			expect(mockObservable.call).toHaveBeenCalledWith('debug', 'Log');
 			captureLog('Log', LogLevelEnum.WARN);
 			expect(mockObservable.call).toHaveBeenCalledWith('warn', 'Log');
 			captureLog('Log', LogLevelEnum.INFO);

@@ -25,13 +25,19 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 
 	// // mocks
 	const customThrottlerGuardMock = {
-		handleRequest: jest.fn((..._args: unknown[]): Promise<boolean> => { return Promise.resolve(true); }),
+		handleRequest: jest.fn((..._args: unknown[]): Promise<boolean> => {
+			return Promise.resolve(true);
+		}),
 	};
 	const authGuardMock = {
-		canActivate: jest.fn((_context: unknown): boolean => { return true; }),
+		canActivate: jest.fn((_context: unknown): boolean => {
+			return true;
+		}),
 	};
 	const listUsersUseCaseMock = {
-		execute: jest.fn((_query: ListQueryInterface): Promise<UserListEntity> => { throw new Error('GenericError'); }),
+		execute: jest.fn((_query: ListQueryInterface): Promise<UserListEntity> => {
+			throw new Error('GenericError');
+		}),
 	};
 	const exceptions = new Exceptions();
 

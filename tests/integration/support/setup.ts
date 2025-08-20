@@ -46,7 +46,7 @@ jest.mock('socket.io-client', () => {
 	return {
 		__esModule: true,
 		Socket: ClientSocket,
-		io: (_uri: string, _opts?: unknown) => (new ClientSocket()),
+		io: (_uri: string, _opts?: unknown) => new ClientSocket(),
 	};
 });
 

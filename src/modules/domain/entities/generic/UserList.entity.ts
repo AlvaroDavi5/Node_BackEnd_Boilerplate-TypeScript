@@ -17,7 +17,7 @@ export default class UserListEntity extends AbstractEntityList<UserEntity> {
 	@ApiProperty({
 		type: UserEntity,
 		isArray: true,
-		example: ([
+		example: [
 			new UserEntity({
 				fullName: 'User Default',
 				docType: 'INVALID',
@@ -29,7 +29,7 @@ export default class UserListEntity extends AbstractEntityList<UserEntity> {
 				createdAt: dateExample,
 				updatedAt: dateExample,
 			}),
-		]),
+		],
 		default: [],
 		nullable: false,
 		description: 'User list content',

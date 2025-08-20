@@ -10,7 +10,7 @@ export default class LoggerService implements LoggerInterface {
 	private readonly showLogs = process.env.SHOW_LOGS === 'true';
 
 	private log(level: logLevelType, args: unknown[]): void {
-		const shouldLog = (this.showLogs === true) && (['error', 'warn'].includes(level));
+		const shouldLog = this.showLogs === true && ['error', 'warn'].includes(level);
 
 		args.forEach((arg: unknown) => {
 			if (mockObservable?.call)
@@ -20,28 +20,56 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	public getContextName(): string { return 'LoggerServiceMock'; }
+	public getContextName(): string {
+		return 'LoggerServiceMock';
+	}
 
-	public setContextName(contextName: string): void { contextName.trim(); }
+	public setContextName(contextName: string): void {
+		contextName.trim();
+	}
 
-	public getRequestId(): string | undefined { return 'request_id'; }
+	public getRequestId(): string | undefined {
+		return 'request_id';
+	}
 
-	public setRequestId(requestId: string | undefined): void { requestId?.trim(); }
+	public setRequestId(requestId: string | undefined): void {
+		requestId?.trim();
+	}
 
-	public getSocketId(): string | undefined { return 'socket_id'; }
+	public getSocketId(): string | undefined {
+		return 'socket_id';
+	}
 
-	public setSocketId(socketId: string | undefined): void { socketId?.trim(); }
+	public setSocketId(socketId: string | undefined): void {
+		socketId?.trim();
+	}
 
-	public getClientIp(): string | undefined { return 'client_ip'; }
+	public getClientIp(): string | undefined {
+		return 'client_ip';
+	}
 
-	public setClientIp(clientIp: string | undefined): void { clientIp?.trim(); }
+	public setClientIp(clientIp: string | undefined): void {
+		clientIp?.trim();
+	}
 
-	public error(...args: unknown[]): void { this.log('error', args); }
-	public warn(...args: unknown[]): void { this.log('warn', args); }
-	public info(...args: unknown[]): void { this.log('info', args); }
-	public http(...args: unknown[]): void { this.log('info', args); }
-	public verbose(...args: unknown[]): void { this.log('log', args); }
-	public debug(...args: unknown[]): void { this.log('debug', args); }
+	public error(...args: unknown[]): void {
+		this.log('error', args);
+	}
+	public warn(...args: unknown[]): void {
+		this.log('warn', args);
+	}
+	public info(...args: unknown[]): void {
+		this.log('info', args);
+	}
+	public http(...args: unknown[]): void {
+		this.log('info', args);
+	}
+	public verbose(...args: unknown[]): void {
+		this.log('log', args);
+	}
+	public debug(...args: unknown[]): void {
+		this.log('debug', args);
+	}
 }
 
 export const REQUEST_LOGGER_PROVIDER = Symbol('RequestLoggerProvider');

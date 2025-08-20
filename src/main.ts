@@ -29,7 +29,9 @@ async function startNestApplication(): Promise<void> {
 		writeFileSync('./docs/nestGraph.json', nestApp.get(SerializedGraph, {}).toString());
 
 	await nestApp.listen(appPort)
-		.catch((error: ErrorInterface | Error) => { validateKnownExceptions(error); });
+		.catch((error: ErrorInterface | Error) => {
+			validateKnownExceptions(error);
+		});
 }
 
 startNestApplication().catch((error: Error) => {

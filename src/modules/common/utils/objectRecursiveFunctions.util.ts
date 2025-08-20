@@ -4,7 +4,7 @@ import { isNullOrUndefined, getObjKeys } from './dataValidations.util';
 export function cloneObject<OT extends object = object>(obj: OT): OT {
 	try {
 		return structuredClone(obj);
-	} catch (error) {
+	} catch (_error) {
 		const newObj = {} as OT;
 
 		getObjKeys<OT>(obj).forEach((key) => {

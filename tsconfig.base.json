@@ -80,7 +80,7 @@
 		// "maxNodeModuleJsDepth": 1,
 		/* Emit */
 		"declaration": true,
-		// "declarationMap": true,
+		"declarationMap": true,
 		// "emitDeclarationOnly": true,
 		"sourceMap": true,
 		// "outFile": "./",

@@ -111,7 +111,7 @@ export default class CryptographyService {
 		try {
 			const hash = crypto.createHash(algorithm);
 			return hash.update(data, inputEncoding).digest(outputFormat);
-		} catch (error) {
+		} catch (_error) {
 			return null;
 		}
 	}
@@ -124,7 +124,7 @@ export default class CryptographyService {
 			const dsaSign = crypto.createSign(algorithm);
 			dsaSign.update(data, inputEncoding);
 			return dsaSign.sign(privateKeyContent, outputFormat);
-		} catch (error) {
+		} catch (_error) {
 			return null;
 		}
 	}
@@ -140,7 +140,7 @@ export default class CryptographyService {
 			const encrypted = Buffer.from(hexEncrypted, 'hex').toString(outputEncoding);
 
 			return { encrypted, iv: IV };
-		} catch (error) {
+		} catch (_error) {
 			return { encrypted: null, iv: IV };
 		}
 	}
@@ -155,7 +155,7 @@ export default class CryptographyService {
 			const decrypted = Buffer.from(hexDecrypted, 'hex').toString(outputEncoding);
 
 			return { decrypted, iv };
-		} catch (error) {
+		} catch (_error) {
 			return { decrypted: null, iv };
 		}
 	}
@@ -168,12 +168,12 @@ export default class CryptographyService {
 			const dataBuffer = Buffer.from(data, inputEncoding);
 			const key: crypto.RsaPrivateKey | crypto.RsaPublicKey = {
 				key: keyContent,
-				padding: (keyType === 'private') ? crypto.constants.RSA_PKCS1_PADDING : crypto.constants.RSA_PKCS1_OAEP_PADDING,
+				padding: keyType === 'private' ? crypto.constants.RSA_PKCS1_PADDING : crypto.constants.RSA_PKCS1_OAEP_PADDING,
 			};
-			const encryptedBuffer = (keyType === 'private') ? crypto.privateEncrypt(key, dataBuffer) : crypto.publicEncrypt(key, dataBuffer);
+			const encryptedBuffer = keyType === 'private' ? crypto.privateEncrypt(key, dataBuffer) : crypto.publicEncrypt(key, dataBuffer);
 
 			return encryptedBuffer.toString(outputEncoding);
-		} catch (error) {
+		} catch (_error) {
 			return null;
 		}
 	}
@@ -186,12 +186,12 @@ export default class CryptographyService {
 			const dataBuffer = Buffer.from(data, inputEncoding);
 			const key: crypto.RsaPrivateKey | crypto.RsaPublicKey = {
 				key: keyContent,
-				padding: (keyType === 'private') ? crypto.constants.RSA_PKCS1_OAEP_PADDING : crypto.constants.RSA_PKCS1_PADDING,
+				padding: keyType === 'private' ? crypto.constants.RSA_PKCS1_OAEP_PADDING : crypto.constants.RSA_PKCS1_PADDING,
 			};
-			const decryptedBuffer = (keyType === 'private') ? crypto.privateDecrypt(key, dataBuffer) : crypto.publicDecrypt(key, dataBuffer);
+			const decryptedBuffer = keyType === 'private' ? crypto.privateDecrypt(key, dataBuffer) : crypto.publicDecrypt(key, dataBuffer);
 
 			return decryptedBuffer.toString(outputEncoding);
-		} catch (error) {
+		} catch (_error) {
 			return null;
 		}
 	}

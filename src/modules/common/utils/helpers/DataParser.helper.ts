@@ -27,9 +27,14 @@ export default class DataParserHelper {
 					const parsedData = data.map((d) => this.toString(d));
 					result = `${parsedData.join(', ')}`;
 				} else if (data instanceof Error)
-					result = data.toString();
-				else
-					result = (JSON.stringify(data) || data?.toString()) ?? '';
+					result = `${data?.name}: ${data?.message}`;
+				else {
+					try {
+						result = JSON.stringify(data);
+					} catch (_error) {
+						result = data?.toString() ?? '';
+					}
+				}
 				break;
 			case 'symbol':
 				result = data.toString();
@@ -44,8 +49,12 @@ export default class DataParserHelper {
 		return result;
 	}
 
-	public toObject<OT = object>(data: string): OT {
-		return JSON.parse(data);
+	public toObject<OT = object>(data: string): OT | null {
+		try {
+			return JSON.parse(data) as OT;
+		} catch (_error) {
+			return null;
+		}
 	}
 
 	public async toBuffer(data: string | Uint8Array | Buffer | Readable | ReadableStream | Blob, encoding: BufferEncoding): Promise<Buffer> {

@@ -102,7 +102,9 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 		};
 	}
 
-	public getId(): string { return this.id; }
+	public getId(): string {
+		return this.id;
+	}
 	public setId(id: string): void {
 		if (id.length < 1)
 			return;
@@ -111,7 +113,9 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 		this.updatedAt = this.getDate();
 	}
 
-	public getUserId(): string { return this.userId; }
+	public getUserId(): string {
+		return this.userId;
+	}
 	public setUserId(userId: string): void {
 		if (userId.length < 1)
 			return;
@@ -120,7 +124,9 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 		this.updatedAt = this.getDate();
 	}
 
-	public getDefaultTheme(): ThemesEnum | null { return this.defaultTheme; }
+	public getDefaultTheme(): ThemesEnum | null {
+		return this.defaultTheme;
+	}
 	public setDefaultTheme(theme: string): void {
 		if (!getObjValues<ThemesEnum>(ThemesEnum).includes(theme as ThemesEnum))
 			return;
@@ -135,7 +141,9 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 		this.updatedAt = this.getDate();
 	}
 
-	public getImagePath(): string | null { return this.imagePath; }
+	public getImagePath(): string | null {
+		return this.imagePath;
+	}
 	public setImagePath(path: string): void {
 		this.imagePath = path;
 		this.updatedAt = this.getDate();

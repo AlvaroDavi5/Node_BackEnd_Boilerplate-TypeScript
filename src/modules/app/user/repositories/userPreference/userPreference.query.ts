@@ -44,7 +44,7 @@ const buildWhereParams = ({
 	return where;
 };
 
-export const userPreferenceQueryParamsBuilder = ({
+export const userPreferenceQueryParamsBuilder = {
 
 	buildParams: (data: UserPreferenceBuildParamsInterface): FindManyOptions<UserPreferencesModel> => {
 		const select = buildSelectParams();
@@ -56,4 +56,4 @@ export const userPreferenceQueryParamsBuilder = ({
 			relations: { user: true },
 		};
 	}
-});
+};

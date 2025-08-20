@@ -44,8 +44,12 @@ export default class MongoClient {
 			}
 		});
 
-		this.mongoClient.on('open', () => { this.isConnected = true; });
-		this.mongoClient.on('topologyClosed', () => { this.isConnected = false; });
+		this.mongoClient.on('open', () => {
+			this.isConnected = true;
+		});
+		this.mongoClient.on('topologyClosed', () => {
+			this.isConnected = false;
+		});
 
 		this.databases = {
 			datalake: {
@@ -77,7 +81,7 @@ export default class MongoClient {
 			await this.mongoClient.close();
 
 			return true;
-		} catch (error) {
+		} catch (_error) {
 			return false;
 		}
 	}

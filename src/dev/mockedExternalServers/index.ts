@@ -8,7 +8,9 @@ export default class Server {
 	constructor() {
 		this.express = express();
 		this.express.use(mockedServiceRoutes);
-		this.express.use('/*', (_req, res, _next) => { res.status(404).send('not found'); });
+		this.express.use('/*', (_req, res, _next) => {
+			res.status(404).send('not found');
+		});
 	}
 
 	start() {

@@ -21,5 +21,7 @@ export async function startNestApplication(nestApp: INestApplication): Promise<v
 	const { appPort } = nestApp.get<ConfigService>(ConfigService, {}).get<ConfigsInterface['application']>('application')!;
 
 	await nestApp.listen(Number(appPort))
-		.catch((error: ErrorInterface | Error) => { validateKnownExceptions(error); });
+		.catch((error: ErrorInterface | Error) => {
+			validateKnownExceptions(error);
+		});
 }

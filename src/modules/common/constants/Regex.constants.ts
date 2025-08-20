@@ -22,11 +22,13 @@ export default class RegExConstants {
 		this.onlyNumericDigitsPattern = {
 			name: 'OnlyNumericDigitsPattern',
 			message: (field) => `'${field}' must have only numeric digits`,
-			regex: (/\D/g),
+			regex: /\D/g,
 		};
 	}
 
-	private getRegExSource(regex: RegExp): string { return regex.source; }
+	private getRegExSource(regex: RegExp): string {
+		return regex.source;
+	}
 
 	private parseRegEx(regexSrc: string): RegExp {
 		// eslint-disable-next-line security/detect-non-literal-regexp

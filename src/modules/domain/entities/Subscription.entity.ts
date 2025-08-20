@@ -103,20 +103,26 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 		};
 	}
 
-	public getDatabaseId(): string { return this.databaseId; }
+	public getDatabaseId(): string {
+		return this.databaseId;
+	}
 	public setDatabaseId(id: string): void {
 		if (id.length > 0)
 			this.databaseId = id;
 	}
 
-	public getSubscriptionId(): string { return this.subscriptionId; }
+	public getSubscriptionId(): string {
+		return this.subscriptionId;
+	}
 	public setSubscriptionId(subscriptionId: string): void {
 		if (subscriptionId.length > 0)
 			this.subscriptionId = subscriptionId;
 		this.updatedAt = this.getDate();
 	}
 
-	public getClientId(): string | null { return this.clientId; }
+	public getClientId(): string | null {
+		return this.clientId;
+	}
 	public setClientId(clientId: string): void {
 		if (clientId.length > 0)
 			this.clientId = clientId;

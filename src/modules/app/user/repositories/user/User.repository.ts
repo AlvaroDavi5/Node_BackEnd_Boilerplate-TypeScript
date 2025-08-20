@@ -50,6 +50,7 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 	public async list(query?: ListQueryInterface, withoutSensitiveData = true): Promise<PaginationInterface<UserEntity>> {
 		try {
 			const buildedQuery = this.queryParamsBuilder.buildParams({
+				// eslint-disable-next-line no-extra-parens
 				...(query ?? {}),
 				withoutSensitiveData,
 				withoutPassword: true,

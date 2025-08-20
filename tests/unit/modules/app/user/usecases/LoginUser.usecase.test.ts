@@ -12,33 +12,47 @@ import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 	// // mocks
 	const exceptionsMock = {
-		internal: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
-		integration: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
-		unauthorized: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
-		business: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
-		notFound: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
-		conflict: jest.fn(({ message }: ErrorInterface): Error => (new Error(message))),
+		internal: jest.fn(({ message }: ErrorInterface): Error => new Error(message)),
+		integration: jest.fn(({ message }: ErrorInterface): Error => new Error(message)),
+		unauthorized: jest.fn(({ message }: ErrorInterface): Error => new Error(message)),
+		business: jest.fn(({ message }: ErrorInterface): Error => new Error(message)),
+		notFound: jest.fn(({ message }: ErrorInterface): Error => new Error(message)),
+		conflict: jest.fn(({ message }: ErrorInterface): Error => new Error(message)),
 	};
 	const userServiceMock = {
-		getByEmail: jest.fn(async (_email: string): Promise<UserEntity | null> => (null)),
-		getById: jest.fn(async (_id: string, _withoutPassword = true): Promise<UserEntity> => { throw new Error('GenericError'); }),
-		create: jest.fn(async (_entity: UserEntity): Promise<UserEntity> => { throw new Error('GenericError'); }),
-		update: jest.fn(async (_id: string, _data: IUpdateUser): Promise<UserEntity> => { throw new Error('GenericError'); }),
-		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, agentUserId?: string }): Promise<boolean> => (false)),
+		getByEmail: jest.fn(async (_email: string): Promise<UserEntity | null> => null),
+		getById: jest.fn(async (_id: string, _withoutPassword = true): Promise<UserEntity> => {
+			throw new Error('GenericError');
+		}),
+		create: jest.fn(async (_entity: UserEntity): Promise<UserEntity> => {
+			throw new Error('GenericError');
+		}),
+		update: jest.fn(async (_id: string, _data: IUpdateUser): Promise<UserEntity> => {
+			throw new Error('GenericError');
+		}),
+		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, agentUserId?: string }): Promise<boolean> => false),
 		list: jest.fn(async (_query: ListQueryInterface, _withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => {
 			return { content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 };
 		}),
-		protectPassword: jest.fn((password: string): string => (password)),
-		validatePassword: jest.fn((_entity: UserEntity, _passwordToValidate: string): void => { throw new Error('GenericError'); }),
+		protectPassword: jest.fn((password: string): string => password),
+		validatePassword: jest.fn((_entity: UserEntity, _passwordToValidate: string): void => {
+			throw new Error('GenericError');
+		}),
 	};
 	const userPreferenceServiceMock = {
-		getByUserId: jest.fn(async (_userId: string): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
-		create: jest.fn(async (_entity: UserPreferenceEntity): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
-		update: jest.fn(async (_id: string, _data: IUpdateUserPreference): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
-		delete: jest.fn(async (_id: string, _data: { softDelete: boolean }): Promise<boolean> => (false)),
+		getByUserId: jest.fn(async (_userId: string): Promise<UserPreferenceEntity> => {
+			throw new Error('GenericError');
+		}),
+		create: jest.fn(async (_entity: UserPreferenceEntity): Promise<UserPreferenceEntity> => {
+			throw new Error('GenericError');
+		}),
+		update: jest.fn(async (_id: string, _data: IUpdateUserPreference): Promise<UserPreferenceEntity> => {
+			throw new Error('GenericError');
+		}),
+		delete: jest.fn(async (_id: string, _data: { softDelete: boolean }): Promise<boolean> => false),
 	};
 	const cryptographyServiceMock = {
-		encodeJwt: jest.fn((_payload: unknown, _inputEncoding: BufferEncoding, _expiration?: string): string => ('')),
+		encodeJwt: jest.fn((_payload: unknown, _inputEncoding: BufferEncoding, _expiration?: string): string => ''),
 	};
 
 	const loginUserUseCase = new LoginUserUseCase(
@@ -59,7 +73,9 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test', password: 'admin' });
 			userServiceMock.getById.mockResolvedValueOnce(userEntity);
 			userServiceMock.getByEmail.mockResolvedValueOnce(userEntity);
-			userServiceMock.validatePassword.mockImplementationOnce((_entity: UserEntity, _passwordToValidate: string) => { return undefined; });
+			userServiceMock.validatePassword.mockImplementationOnce((_entity: UserEntity, _passwordToValidate: string) => {
+				return undefined;
+			});
 			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(new UserPreferenceEntity({ userId: userEntity.getId() }));
 			cryptographyServiceMock.encodeJwt.mockReturnValueOnce(mockedToken);
 

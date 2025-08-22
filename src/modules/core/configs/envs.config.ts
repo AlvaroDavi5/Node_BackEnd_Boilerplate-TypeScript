@@ -5,7 +5,7 @@ import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 
 
 // dotenv.config({ path: (process.cwd() + '/envs/.env.development') });
-dotenv.config();
+dotenv.config({ quiet: true });
 
 export interface ConfigsInterface {
 	// ? Application Service

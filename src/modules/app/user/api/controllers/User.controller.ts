@@ -30,7 +30,7 @@ import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 import { secondsToMilliseconds } from '@common/utils/dates.util';
 import { PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
-import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
+import type { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 import CreateUserValidatorPipe from '../pipes/CreateUserValidator.pipe';
 import UpdateUserValidatorPipe from '../pipes/UpdateUserValidator.pipe';
 import LoginUserValidatorPipe from '../pipes/LoginUserValidator.pipe';

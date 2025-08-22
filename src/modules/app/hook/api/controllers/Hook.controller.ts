@@ -15,7 +15,7 @@ import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
-import { ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
+import type { ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @ApiTags('Webhooks')

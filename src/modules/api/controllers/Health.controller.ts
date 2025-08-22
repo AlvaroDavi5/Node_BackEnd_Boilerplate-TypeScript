@@ -11,7 +11,7 @@ import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import { ApiVersionsEnum } from '@common/enums/apiVersions.enum';
-import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
+import type { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @ApiTags('HealthCheck')

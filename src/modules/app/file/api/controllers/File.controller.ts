@@ -13,7 +13,7 @@ import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
-import { RequestFileInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
+import type { RequestFileInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @ApiTags('Files')

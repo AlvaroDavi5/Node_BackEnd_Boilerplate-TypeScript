@@ -8,7 +8,7 @@ import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { getObjValues } from '@common/utils/dataValidations.util';
 import { captureException } from '@common/utils/sentryCalls.util';
-import { ExceptionMetadataInterface } from '@shared/internal/interfaces/errorInterface';
+import type { ExceptionMetadataInterface } from '@shared/internal/interfaces/errorInterface';
 
 
 export type ErrorOrExceptionToFilter = HttpException | WsException | AxiosError | Error;

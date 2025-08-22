@@ -23,12 +23,12 @@ const defaultConfigs: Linter.Config = {
 		'.scannerwork',
 	],
 	languageOptions: {
-		ecmaVersion: 2020,
+		ecmaVersion: 2024,
 		sourceType: 'module',
 		parser: typescriptParser,
 		globals: {
 			...globals.node,
-			...globals.es2020,
+			...globals.es2024,
 			...globals.jest,
 			...globals.browser,
 		},

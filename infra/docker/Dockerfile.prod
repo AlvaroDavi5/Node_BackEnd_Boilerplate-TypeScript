@@ -1,5 +1,5 @@
 
-FROM node:20.19.2-slim AS build
+FROM node:24.2.0-slim AS build
 
 LABEL name="Node Back-End Boilerplate Image"
 LABEL description="Docker Image for Node.js Back-End Boilerplate"
@@ -30,7 +30,7 @@ RUN mkdir -p docs temp
 RUN chmod +x init.sh
 RUN npm run build
 
-FROM node:20.19.2-slim AS prod
+FROM node:24.2.0-slim AS prod
 
 ENV CI="true"
 ENV NODE_ENV="prod"

@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SqsMessageHandler, SqsConsumerEventHandler } from '@ssut/nestjs-sqs';
-import { Message } from '@aws-sdk/client-sqs';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import MongoClient from '@core/infra/data/Mongo.client';
 import Exceptions from '@core/errors/Exceptions';
@@ -10,6 +9,7 @@ import EventsQueueHandler from '@events/queue/handlers/EventsQueue.handler';
 import { ProcessEventsEnum } from '@common/enums/processEvents.enum';
 import { QueueNamesEnum } from '@common/enums/queueNames.enum';
 import AbstractQueueConsumer from './AbstractConsumer.consumer';
+import type { Message } from '@aws-sdk/client-sqs';
 
 
 const EVENTS_QUEUE_NAME = QueueNamesEnum.EVENTS_QUEUE;

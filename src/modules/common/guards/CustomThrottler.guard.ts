@@ -1,6 +1,6 @@
 import { Reflector } from '@nestjs/core';
 import { Injectable, Scope, ExecutionContext, CanActivate } from '@nestjs/common';
-import { InjectThrottlerStorage, ThrottlerStorage, InjectThrottlerOptions, ThrottlerModuleOptions, ThrottlerOptions, Resolvable } from '@nestjs/throttler';
+import { InjectThrottlerStorage, ThrottlerStorage, InjectThrottlerOptions, type ThrottlerModuleOptions, ThrottlerOptions, Resolvable } from '@nestjs/throttler';
 import { HttpArgumentsHost, WsArgumentsHost } from '@nestjs/common/interfaces';
 import { Socket } from 'socket.io-client';
 import Exceptions from '@core/errors/Exceptions';

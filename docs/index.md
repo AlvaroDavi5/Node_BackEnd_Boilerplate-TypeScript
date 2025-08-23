@@ -67,7 +67,7 @@ docker-compose down -v
 
 # build locally application docker image
 docker build -t boilerplate-image:1.0 . # replace './Dockerfile' to 'infra/docker/Dockerfile.prod'
-docker run --name boilerplate-container -d --env TZ=America/Sao_Paulo --memory=2g --cpus=1 boilerplate-image:1.0
+docker run --name boilerplate-container -d --env-file .env --env TZ=America/Sao_Paulo --memory=2g --cpus=1 boilerplate-image:1.0
 ```
 
 3. Prepare Kubernetes cluster locally (optional).
@@ -77,6 +77,11 @@ docker run --name boilerplate-container -d --env TZ=America/Sao_Paulo --memory=2
 kind create cluster --config=infra/kubernetes/cluster/boilerplate-cluster-kind.yml
 # load application docker image on Kind (only for tests/development)
 kind load docker-image -n boilerplate-cluster boilerplate-image:1.0
+
+# install MetalLB (load balancer)
+kubectl apply -f https://raw.githubusercontent.com/metallb/metallb/v0.14.5/config/manifests/metallb-native.yaml
+# apply load balancer configuration
+kubectl apply -f metallb-config.yaml
 
 # create namespace
 kubectl create -f=infra/kubernetes/namespaces/boilerplate-namespace.yml
@@ -92,6 +97,8 @@ kubectl create -f=infra/kubernetes/deployments/boilerplate-deployment.yml
 
 # services
 kubectl create -f=infra/kubernetes/services/boilerplate-service.yml
+# get service external IP
+kubectl get svc -n boilerplate-namespace
 
 # connect CONTAINER:HOST ports
 kubectl port-forward -n boilerplate-namespace services/boilerplate-service 3000
@@ -106,3 +113,5 @@ kind delete cluster --name boilerplate-cluster
 # delete resource
 kubectl delete -f=<resource_config_path> # or kubectl delete -n <resource_namespace> <resource_type> <resource_name>
 ```
+
+___

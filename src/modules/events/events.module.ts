@@ -26,6 +26,8 @@ import EventEmitterClient from './emitter/EventEmitter.client';
 		WebSocketClient,
 	],
 	exports: [
+		EventsQueueConsumer,
+		EventEmitterClient,
 		WebSocketServer,
 		WebSocketClient,
 	],

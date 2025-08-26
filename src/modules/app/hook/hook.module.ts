@@ -12,7 +12,9 @@ import WebhookService from './services/Webhook.service';
 	providers: [
 		WebhookService,
 	],
-	exports: [],
+	exports: [
+		WebhookService,
+	],
 })
 export default class HookModule implements NestModule {
 	configure(consumer: MiddlewareConsumer) {

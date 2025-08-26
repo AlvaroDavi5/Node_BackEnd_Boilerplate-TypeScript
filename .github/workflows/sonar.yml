@@ -2,7 +2,7 @@ name: SonarQube Analysis
 
 on:
   push:
-    branches: [main, homolog]
+    branches: [homolog]
   pull_request:
     branches: [main, homolog]
 

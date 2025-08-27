@@ -27,7 +27,7 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 		});
 
 		test('Should return a stringified null object', () => {
-			expect(dataParserHelper.toString(null)).toBe('');
+			expect(dataParserHelper.toString(null)).toBe('null');
 		});
 
 		test('Should return a stringified symbol', () => {

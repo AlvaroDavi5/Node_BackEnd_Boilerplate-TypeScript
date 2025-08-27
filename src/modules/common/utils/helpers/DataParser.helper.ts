@@ -1,52 +1,37 @@
 import { Readable } from 'stream';
 import { Injectable } from '@nestjs/common';
 
-
 @Injectable()
 export default class DataParserHelper {
-	public toString(data: unknown): string {
-		let result = '';
+	public toString(data: unknown, returnUndefined = false): string {
+		const defaultParse = String(data);
 
-		switch (typeof data) {
-			case 'bigint':
-				result = data.toString();
-				break;
-			case 'number':
-				result = data.toString();
-				break;
-			case 'boolean':
-				result = data.toString();
-				break;
-			case 'string':
-				result = data;
-				break;
-			case 'object':
-				if (!data)
-					break;
-				else if (Array.isArray(data)) {
-					const parsedData = data.map((d) => this.toString(d));
-					result = `${parsedData.join(', ')}`;
-				} else if (data instanceof Error)
-					result = `${data?.name}: ${data?.message}`;
-				else {
-					try {
-						result = JSON.stringify(data);
-					} catch (_error) {
-						result = data?.toString() ?? '';
-					}
-				}
-				break;
-			case 'symbol':
-				result = data.toString();
-				break;
-			case 'function':
-				result = data.toString();
-				break;
-			default:
-				break;
+		if (typeof data === 'string')
+			return data;
+		if (typeof data === 'undefined')
+			return returnUndefined ? 'undefined' : '';
+		if (typeof data === 'object') {
+			if (!data) {
+				return defaultParse;
+			}
+
+			if (Array.isArray(data)) {
+				const parsedData = data.map((element) => this.toString(element, returnUndefined));
+				return parsedData.join(', ');
+			}
+
+			if (data instanceof Error) {
+				return `${data?.name}: ${data?.message}`;
+			}
+
+			try {
+				return JSON.stringify(data);
+			} catch (_error) {
+				return defaultParse;
+			}
 		}
 
-		return result;
+		return defaultParse;
 	}
 
 	public toObject<OT = object>(data: string): OT | null {

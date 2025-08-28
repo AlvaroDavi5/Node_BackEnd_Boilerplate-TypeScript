@@ -1,10 +1,12 @@
 import { Readable } from 'stream';
 import { Injectable } from '@nestjs/common';
 
+
 @Injectable()
 export default class DataParserHelper {
 	public toString(data: unknown, returnUndefined = false): string {
 		const defaultParse = String(data);
+		const circularReference = '[Circular]';
 
 		if (typeof data === 'string')
 			return data;
@@ -16,7 +18,7 @@ export default class DataParserHelper {
 			}
 
 			if (Array.isArray(data)) {
-				const parsedData = data.map((element) => this.toString(element, returnUndefined));
+				const parsedData = data.map((element) => element === data ? circularReference : this.toString(element, returnUndefined));
 				return parsedData.join(', ');
 			}
 
@@ -25,6 +27,11 @@ export default class DataParserHelper {
 			}
 
 			try {
+				for (const key of Object.keys(data)) {
+					if ((data as Record<string, unknown>)[String(key)] === data) {
+						(data as Record<string, unknown>)[String(key)] = circularReference;
+					}
+				}
 				return JSON.stringify(data);
 			} catch (_error) {
 				return defaultParse;

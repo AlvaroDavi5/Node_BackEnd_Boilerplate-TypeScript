@@ -5,16 +5,18 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export default class DataParserHelper {
 	public toString(data: unknown, returnUndefined = false): string {
-		const defaultParse = String(data);
 		const circularReference = '[Circular]';
 
 		if (typeof data === 'string')
 			return data;
+		if (typeof data === 'symbol')
+			return data.toString();
 		if (typeof data === 'undefined')
 			return returnUndefined ? 'undefined' : '';
+
 		if (typeof data === 'object') {
 			if (!data) {
-				return defaultParse;
+				return String(data);
 			}
 
 			if (Array.isArray(data)) {
@@ -27,18 +29,18 @@ export default class DataParserHelper {
 			}
 
 			try {
-				for (const key of Object.keys(data)) {
-					if ((data as Record<string, unknown>)[String(key)] === data) {
-						(data as Record<string, unknown>)[String(key)] = circularReference;
-					}
+				const parsedData = data;
+				for (const key of Object.keys(parsedData)) {
+					if ((parsedData as Record<string, unknown>)[String(key)] === parsedData)
+						(parsedData as Record<string, unknown>)[String(key)] = circularReference;
 				}
-				return JSON.stringify(data);
+				return JSON.stringify(parsedData);
 			} catch (_error) {
-				return defaultParse;
+				return String(data);
 			}
 		}
 
-		return defaultParse;
+		return String(data);
 	}
 
 	public toObject<OT = object>(data: string): OT | null {

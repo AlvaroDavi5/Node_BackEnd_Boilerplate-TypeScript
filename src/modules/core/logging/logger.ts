@@ -15,6 +15,7 @@ export interface LoggerInterface {
 export interface MetadataInterface {
 	context?: string;
 	requestId?: string;
+	messageId?: string;
 	socketId?: string;
 	ip?: string;
 	details?: string | object | object[];
@@ -36,21 +37,23 @@ function getMessageFormatter() {
 			context: ctx,
 			meta,
 		} = info;
-		const metadata = meta as Record<string, unknown>;
+		const metadata = meta as MetadataInterface;
 		const context = (ctx ?? metadata?.context) as string | undefined;
 
 		const logLevel = levelFormatter(level);
 		const logContext = contextFormatter(context ?? 'DefaultContext');
 		const requestId = metadata?.requestId;
+		const messageId = metadata?.messageId;
 		const socketId = metadata?.socketId;
 		const ip = metadata?.ip;
 		const logStack = errorStack ?? metadata?.stack;
 
 		let log = `${dataParserHelperMock.toString(message)}`;
 
-		if (ip) log += ` - IP: ${dataParserHelperMock.toString(ip)}`;
 		if (requestId) log += ` - requestId: ${dataParserHelperMock.toString(requestId)}`;
+		if (messageId) log += ` - messageId: ${dataParserHelperMock.toString(messageId)}`;
 		if (socketId) log += ` - socketId: ${dataParserHelperMock.toString(socketId)}`;
+		if (ip) log += ` - IP: ${dataParserHelperMock.toString(ip)}`;
 
 		if (logStack) {
 			if (Array.isArray(logStack))

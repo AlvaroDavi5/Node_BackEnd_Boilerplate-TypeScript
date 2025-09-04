@@ -13,6 +13,7 @@ import { LoggerInterface, MetadataInterface, getLoggerOptions } from './logger';
 export default class LoggerService implements LoggerInterface {
 	private contextName!: string;
 	private requestId?: string;
+	private messageId?: string;
 	private socketId?: string;
 	private clientIp?: string;
 	private readonly logger: Logger;
@@ -53,6 +54,14 @@ export default class LoggerService implements LoggerInterface {
 		this.requestId = requestId;
 	}
 
+	public getMessageId(): string | undefined {
+		return this.messageId;
+	}
+
+	public setMessageId(messageId: string | undefined): void {
+		this.messageId = messageId;
+	}
+
 	public getSocketId(): string | undefined {
 		return this.socketId;
 	}
@@ -82,6 +91,7 @@ export default class LoggerService implements LoggerInterface {
 		const metadata: MetadataInterface = {
 			context: this.getContextName(),
 			requestId: this.getRequestId(),
+			messageId: this.getMessageId(),
 			socketId: this.getSocketId(),
 			ip: this.getClientIp(),
 		};

@@ -47,48 +47,41 @@ export const loggerProviderMock: LoggerInterface & {
 };
 
 export const dataParserHelperMock = {
-	toString: (data: unknown): string => {
-		let result = '';
+	toString: (data: unknown, returnUndefined = false): string => {
+		const defaultParse = String(data);
+		const circularReference = '[Circular]';
 
-		switch (typeof data) {
-			case 'bigint':
-				result = data.toString();
-				break;
-			case 'number':
-				result = data.toString();
-				break;
-			case 'boolean':
-				result = data.toString();
-				break;
-			case 'string':
-				result = data;
-				break;
-			case 'object':
-				if (!data)
-					break;
-				else if (Array.isArray(data)) {
-					result = `${data.join(', ')}`;
-				} else if (data instanceof Error)
-					result = `${data?.name}: ${data?.message}`;
-				else {
-					try {
-						result = JSON.stringify(data);
-					} catch (_error) {
-						result = data?.toString() ?? '';
+		if (typeof data === 'string')
+			return data;
+		if (typeof data === 'undefined')
+			return returnUndefined ? 'undefined' : '';
+		if (typeof data === 'object') {
+			if (!data) {
+				return defaultParse;
+			}
+
+			if (Array.isArray(data)) {
+				const parsedData = data.map((element) => element === data ? circularReference : String(element));
+				return parsedData.join(', ');
+			}
+
+			if (data instanceof Error) {
+				return `${data?.name}: ${data?.message}`;
+			}
+
+			try {
+				for (const key of Object.keys(data)) {
+					if ((data as Record<string, unknown>)[String(key)] === data) {
+						(data as Record<string, unknown>)[String(key)] = circularReference;
 					}
 				}
-				break;
-			case 'symbol':
-				result = data.toString();
-				break;
-			case 'function':
-				result = data.toString();
-				break;
-			default:
-				break;
+				return JSON.stringify(data);
+			} catch (_error) {
+				return defaultParse;
+			}
 		}
 
-		return result;
+		return defaultParse;
 	},
 
 	toObject: <OT = object>(data: string): OT | null => {

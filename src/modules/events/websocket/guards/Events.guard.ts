@@ -26,7 +26,7 @@ export default class EventsGuard implements CanActivate {
 		if (clientIp)
 			this.logger.setClientIp(clientIp);
 
-		this.logger.verbose(`Running guard to '${event}' event for '${socketId}' socket`);
+		this.logger.verbose(`Running guard to '${event}' event from socket`);
 
 		if (!getObjValues<WebSocketEventsEnum>(WebSocketEventsEnum).includes(event) || !getObjKeys(message).length) {
 			this.logger.warn(`Invalid event: '${event}' or message`);

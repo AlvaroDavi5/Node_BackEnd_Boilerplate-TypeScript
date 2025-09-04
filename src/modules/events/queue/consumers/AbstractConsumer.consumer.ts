@@ -51,7 +51,7 @@ export default abstract class AbstractQueueConsumer {
 		this.queueName = queueName;
 		this.queueUrl = queueUrl;
 
-		this.logger.debug(`Created ${this.consumerName} to consume ${this.queueName} queue`);
+		this.logger.debug(`Starting to consume ${this.queueName} queue`);
 	}
 
 	public disable(): void {
@@ -65,6 +65,7 @@ export default abstract class AbstractQueueConsumer {
 	}
 
 	protected async handleMessage(message: Message): Promise<void> {
+		if (message.MessageId) this.logger.setMessageId(message.MessageId);
 		this.logger.info(`New message received from ${this.queueName}`);
 
 		if (this.disabled) {
@@ -81,7 +82,8 @@ export default abstract class AbstractQueueConsumer {
 	}
 
 	protected async handleProcessingError(error: Error, message: Message): Promise<void> {
-		this.logger.error(`Processing error from ${this.queueName} - MessageId: ${message?.MessageId}. Error: ${error.message}`);
+		if (message.MessageId) this.logger.setMessageId(message.MessageId);
+		this.logger.error(`Processing error from ${this.queueName}. Error: ${error.message}`);
 
 		const messageData = { originalPayload: message.Body, messageId: message.MessageId };
 		const consumerData = { consumer: this.consumerName, queueUrl: this.queueUrl };

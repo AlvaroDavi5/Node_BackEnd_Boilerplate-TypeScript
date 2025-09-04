@@ -9,20 +9,17 @@ import { ExceptionMetadataInterface } from '@shared/internal/interfaces/errorInt
 
 
 function parseLogLevelToSentrySeverity(logLevel: LogLevelEnum): SeverityLevel {
-	switch (logLevel) {
-		case LogLevelEnum.DEBUG:
-			return 'debug';
-		case LogLevelEnum.HTTP:
-			return 'info';
-		case LogLevelEnum.INFO:
-			return 'info';
-		case LogLevelEnum.WARN:
-			return 'warning';
-		case LogLevelEnum.ERROR:
-			return 'error';
-		default:
-			return 'log';
+	if (logLevel === LogLevelEnum.WARN) {
+		return 'warning';
 	}
+	if (logLevel === LogLevelEnum.HTTP) {
+		return 'info';
+	}
+	if (logLevel === LogLevelEnum.VERBOSE || !Object.values(LogLevelEnum).includes(logLevel)) {
+		return 'log';
+	}
+
+	return logLevel;
 }
 
 function parseExceptionStatusCodeToSentrySeverity(statusCode: number): SeverityLevel {

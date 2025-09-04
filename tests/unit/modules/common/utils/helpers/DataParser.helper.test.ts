@@ -26,12 +26,41 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 			expect(stringifiedUser).toBe('{"user":{"id":1}}');
 		});
 
+		test('Should return a stringified object with circular reference', () => {
+			const obj = { user: { id: 1 }, self: null as any };
+			obj.self = obj;
+
+			const stringifiedUser = dataParserHelper.toString(obj);
+			expect(stringifiedUser).toBe('{"user":{"id":1},"self":"[Circular Reference]"}');
+		});
+
+		test('Should return a stringified array with error and circular reference', () => {
+			const error = new Error('Test Error');
+			const arr = [{ id: 1 }, error, null as any];
+			arr[2] = arr;
+
+			const stringifiedUser = dataParserHelper.toString(arr);
+			expect(stringifiedUser).toBe('{"id":1}, Error: Test Error, [Circular Reference]');
+		});
+
 		test('Should return a stringified null object', () => {
-			expect(dataParserHelper.toString(null)).toBe('');
+			expect(dataParserHelper.toString(null)).toBe('null');
 		});
 
 		test('Should return a stringified symbol', () => {
 			expect(dataParserHelper.toString(Symbol('TestSymbol'))).toBe('Symbol(TestSymbol)');
+		});
+
+		test('Should return a stringified function', () => {
+			// eslint-disable-next-line brace-style
+			expect(dataParserHelper.toString(function testFunction() { return; })).toBe('function testFunction() { return; }');
+			// eslint-disable-next-line brace-style
+			const arrowFunction = () => { return; };
+			expect(dataParserHelper.toString(arrowFunction)).toBe('() => { return; }');
+		});
+
+		test('Should return a stringified undefined', () => {
+			expect(dataParserHelper.toString(undefined, true)).toBe('undefined');
 		});
 
 		test('Should return a empty string', () => {
@@ -47,13 +76,13 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 	});
 
 	describe('# Invalid Data To Object', () => {
-		test('Should return the same data', () => {
+		test('Should return null', () => {
 			let parsedUser;
 
 			try {
 				parsedUser = dataParserHelper.toObject('{user:{id:1}}');
 			} catch (_error) {
-				expect(parsedUser).toBeUndefined();
+				expect(parsedUser).toBeNull();
 			}
 		});
 	});

@@ -4,49 +4,60 @@ import { Injectable } from '@nestjs/common';
 
 @Injectable()
 export default class DataParserHelper {
-	public toString(data: unknown): string {
-		let result = '';
+	public toString(data: unknown, returnUndefined = false): string {
+		const circularReference = '[Circular Reference]';
 
-		switch (typeof data) {
-			case 'bigint':
-				result = data.toString();
-				break;
-			case 'number':
-				result = data.toString();
-				break;
-			case 'boolean':
-				result = data.toString();
-				break;
-			case 'string':
-				result = data;
-				break;
-			case 'object':
-				if (!data)
-					break;
-				else if (Array.isArray(data)) {
-					const parsedData = data.map((d) => this.toString(d));
-					result = `${parsedData.join(', ')}`;
-				} else if (data instanceof Error)
-					result = `${data?.name}: ${data?.message}`;
-				else {
-					try {
-						result = JSON.stringify(data);
-					} catch (_error) {
-						result = data?.toString() ?? '';
+		if (typeof data === 'string')
+			return data;
+		if (typeof data === 'symbol')
+			return data.toString();
+		if (typeof data === 'undefined')
+			return returnUndefined ? 'undefined' : '';
+
+		if (typeof data === 'object') {
+			const fallback = String(data);
+
+			if (!data) {
+				return fallback;
+			}
+			if (data instanceof Error) {
+				return `${data?.name}: ${data?.message}`;
+			}
+
+			if (Array.isArray(data)) {
+				const seen = new WeakSet<unknown[]>();
+				const visit = (array: unknown[]): string => {
+					if (seen.has(array)) {
+						return circularReference;
 					}
+					seen.add(array);
+					const parsedData = array.map((element) => Array.isArray(element) ? visit(element) : this.toString(element, returnUndefined));
+					return parsedData.join(', ');
+				};
+				return visit(data);
+			}
+			try {
+				return JSON.stringify(data);
+			} catch (error) {
+				if (error instanceof Error && error.message.includes('circular')) {
+					const seen = new WeakSet();
+					const stringified = JSON.stringify(data, (_key, value) => {
+						if (typeof value === 'object' && value !== null) {
+							if (seen.has(value)) {
+								return circularReference;
+							}
+							seen.add(value);
+						}
+						return value;
+					});
+					return stringified;
 				}
-				break;
-			case 'symbol':
-				result = data.toString();
-				break;
-			case 'function':
-				result = data.toString();
-				break;
-			default:
-				break;
+
+				return fallback;
+			}
 		}
 
-		return result;
+		return String(data);
 	}
 
 	public toObject<OT = object>(data: string): OT | null {

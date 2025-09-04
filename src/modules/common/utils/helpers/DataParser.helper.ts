@@ -5,7 +5,7 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export default class DataParserHelper {
 	public toString(data: unknown, returnUndefined = false): string {
-		const circularReference = '[Circular]';
+		const circularReference = '[Circular Reference]';
 
 		if (typeof data === 'string')
 			return data;
@@ -15,28 +15,45 @@ export default class DataParserHelper {
 			return returnUndefined ? 'undefined' : '';
 
 		if (typeof data === 'object') {
+			const fallback = String(data);
+
 			if (!data) {
-				return String(data);
+				return fallback;
 			}
-
-			if (Array.isArray(data)) {
-				const parsedData = data.map((element) => element === data ? circularReference : this.toString(element, returnUndefined));
-				return parsedData.join(', ');
-			}
-
 			if (data instanceof Error) {
 				return `${data?.name}: ${data?.message}`;
 			}
 
+			if (Array.isArray(data)) {
+				const seen = new WeakSet<unknown[]>();
+				const visit = (array: unknown[]): string => {
+					if (seen.has(array)) {
+						return circularReference;
+					}
+					seen.add(array);
+					const parsedData = array.map((element) => Array.isArray(element) ? visit(element) : this.toString(element, returnUndefined));
+					return parsedData.join(', ');
+				};
+				return visit(data);
+			}
 			try {
-				const parsedData = data;
-				for (const key of Object.keys(parsedData)) {
-					if ((parsedData as Record<string, unknown>)[String(key)] === parsedData)
-						(parsedData as Record<string, unknown>)[String(key)] = circularReference;
+				return JSON.stringify(data);
+			} catch (error) {
+				if (error instanceof Error && error.message.includes('circular')) {
+					const seen = new WeakSet();
+					const stringified = JSON.stringify(data, (_key, value) => {
+						if (typeof value === 'object' && value !== null) {
+							if (seen.has(value)) {
+								return circularReference;
+							}
+							seen.add(value);
+						}
+						return value;
+					});
+					return stringified;
 				}
-				return JSON.stringify(parsedData);
-			} catch (_error) {
-				return String(data);
+
+				return fallback;
 			}
 		}
 

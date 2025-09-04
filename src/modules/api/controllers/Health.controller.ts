@@ -1,10 +1,8 @@
 import {
-	Controller, Req, Res, Version,
-	Sse, Get, Headers, Param, Query, Body,
-	UseGuards, UseFilters, UseInterceptors,
+	Controller, Req, Res, Version, Get, Headers, Param, Query, Body,
+	UseGuards, UseFilters, UseInterceptors
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse } from '@nestjs/swagger';
-import { interval, map, Observable } from 'rxjs';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import HttpExceptionsFilter from '@api/filters/HttpExceptions.filter';
 import ResponseInterceptor from '@api/interceptors/Response.interceptor';
@@ -97,25 +95,5 @@ export default class HealthController {
 	@ApiProduces('text/plain')
 	public healthCheckV1(): string {
 		return 'OK';
-	}
-
-	@ApiOperation({
-		summary: 'Server-Sent Events',
-		description: 'Send to Client the Server events',
-		deprecated: false,
-	})
-	@Sse('sse')
-	@Version(ApiVersionsEnum.DEFAULT)
-	@ApiOkResponse({
-		schema: {
-			example: { number: 1, text: 'OK' },
-		}
-	})
-	@ApiConsumes('text/plain')
-	@ApiProduces('text/event-stream')
-	sse(): Observable<Partial<MessageEvent<{ number: number, text: string }>>> {
-		return interval(1000).pipe(map<number, Partial<MessageEvent<{ number: number, text: string }>>>((n) => ({
-			data: { number: n, text: 'OK' },
-		})));
 	}
 }

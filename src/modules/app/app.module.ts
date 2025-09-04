@@ -1,6 +1,7 @@
 import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import RequestMiddleware from '@api/middlewares/Request.middleware';
 import HealthController from '@api/controllers/Health.controller';
+import ServerEvents from '@api/controllers/ServerEvents.controller';
 import UserModule from './user/user.module';
 import SubscriptionModule from './subscription/subscription.module';
 import HookModule from './hook/hook.module';
@@ -16,6 +17,7 @@ import FileModule from './file/file.module';
 	],
 	controllers: [
 		HealthController,
+		ServerEvents,
 	],
 	providers: [],
 	exports: [],
@@ -26,6 +28,7 @@ export default class AppModule implements NestModule {
 			.apply(RequestMiddleware)
 			.forRoutes(
 				HealthController,
+				ServerEvents,
 			);
 	}
 }

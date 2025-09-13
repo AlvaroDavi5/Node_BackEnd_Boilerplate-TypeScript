@@ -121,7 +121,7 @@
 		"@swc/helpers": "^0.5.17",
 		"@swc/jest": "^0.2.39",
 		"aws-sdk": "^2.1692.0",
-		"axios": "^1.11.0",
+		"axios": "^1.12.0",
 		"axios-retry": "^4.5.0",
 		"bcrypt": "^6.0.0",
 		"class-transformer": "^0.5.1",

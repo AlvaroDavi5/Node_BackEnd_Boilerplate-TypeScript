@@ -94,7 +94,7 @@ export default class SnsClient {
 
 	private publishParams(params: IPublishParams): PublishCommandInput {
 		const { message, protocol, topicArn, messageGroupId, messageDeduplicationId } = params;
-		const isFifoTopic: boolean = topicArn?.endsWith('.fifo');
+		const isFifoTopic = topicArn?.endsWith('.fifo');
 		const messageBody = this.formatMessageBeforeSend(message);
 
 		const publishData: PublishCommandInput = {

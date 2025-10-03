@@ -66,7 +66,7 @@ export default class SqsClient {
 
 	private msgParams(params: ISendParams): SendMessageCommandInput {
 		const { message, title, author, queueUrl, messageGroupId, messageDeduplicationId } = params;
-		const isFifoQueue: boolean = queueUrl?.endsWith('.fifo');
+		const isFifoQueue = queueUrl?.endsWith('.fifo');
 		const messageBody = this.formatMessageBeforeSend(message);
 
 		return {

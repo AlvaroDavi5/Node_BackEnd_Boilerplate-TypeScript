@@ -113,10 +113,10 @@ export default class LoggerService implements LoggerInterface {
 							})
 							: undefined;
 
-						if (responseMessage || responseMetadata) {
-							if (responseMessage) errorStacks.push(this.colorizeStack(responseMessage));
-							if (responseMetadata) errorStacks.push(this.colorizeStack(responseMetadata));
-						}
+						if (responseMessage)
+							errorStacks.push(this.colorizeStack(responseMessage));
+						if (responseMetadata)
+							errorStacks.push(this.colorizeStack(responseMetadata));
 					}
 				} else if (arg instanceof AxiosError) {
 					const { response } = arg;

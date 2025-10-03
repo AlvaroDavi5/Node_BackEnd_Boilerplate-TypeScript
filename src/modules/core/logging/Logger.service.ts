@@ -1,7 +1,8 @@
 import { INQUIRER } from '@nestjs/core';
-import { Injectable, Inject, Provider, Scope } from '@nestjs/common';
+import { Injectable, Inject, Provider, Scope, HttpException } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { createLogger, Logger } from 'winston';
+import { AxiosError } from 'axios';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { captureMessage, captureLog } from '@common/utils/sentryCalls.util';
@@ -99,19 +100,40 @@ export default class LoggerService implements LoggerInterface {
 		const errorStacks: string[] = [];
 		args.forEach((arg: unknown) => {
 			if (arg instanceof Error) {
-				const blackConsoleColor = '\x1b[0;30m';
-				const defaultConsoleColor = '\x1b[0m';
+				if (arg instanceof HttpException) {
+					const res = arg.getResponse();
+					if (typeof res === 'object') {
+						// eslint-disable-next-line @typescript-eslint/no-explicit-any
+						const response = res as Record<string, any>;
+						const responseMessage = !!response.message ? this.dataParserHelper.toString(response.message) : undefined;
+						const responseMetadata = !!response.metadata
+							? this.dataParserHelper.toString({
+								message: response.metadata?.message,
+								detail: response.metadata?.detail,
+							})
+							: undefined;
+
+						if (responseMessage || responseMetadata) {
+							if (responseMessage) errorStacks.push(this.colorizeStack(responseMessage));
+							if (responseMetadata) errorStacks.push(this.colorizeStack(responseMetadata));
+						}
+					}
+				} else if (arg instanceof AxiosError) {
+					const { response } = arg;
+					if (typeof response === 'object') {
+						const responseMessage = !!response.data ? this.dataParserHelper.toString(response.data) : undefined;
+						if (responseMessage) {
+							errorStacks.push(this.colorizeStack(responseMessage));
+						}
+					}
+				}
 
 				if (arg.stack) {
 					if (Array.isArray(arg.stack)) {
-						const strStack: string[] = arg.stack.map(
-							(stack) => `${blackConsoleColor}${stack}${defaultConsoleColor}`,
-						);
+						const strStack: string[] = arg.stack.map((stack) => this.colorizeStack(stack));
 						errorStacks.push(...strStack);
 					} else
-						errorStacks.push(
-							`${blackConsoleColor}${arg.stack}${defaultConsoleColor}`,
-						);
+						errorStacks.push(this.colorizeStack(arg.stack));
 				}
 			}
 		});
@@ -121,6 +143,13 @@ export default class LoggerService implements LoggerInterface {
 			message: this.dataParserHelper.toString(args),
 			meta: metadata,
 		};
+	}
+
+	private colorizeStack(stackPart: string): string {
+		const blackConsoleColor = '\x1b[0;30m';
+		const defaultConsoleColor = '\x1b[0m';
+
+		return `${blackConsoleColor}${stackPart}${defaultConsoleColor}`;
 	}
 
 	public [LogLevelEnum.ERROR](...args: unknown[]): void {

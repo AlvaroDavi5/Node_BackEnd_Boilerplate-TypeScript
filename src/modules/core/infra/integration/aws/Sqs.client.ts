@@ -7,20 +7,26 @@ import {
 	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput,
 } from '@aws-sdk/client-sqs';
 import { ConfigsInterface } from '@core/configs/envs.config';
-import CryptographyService from '@core/security/Cryptography.service';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
 
+type ISendParams = {
+	queueUrl: string;
+	title: string;
+	author: string;
+	message: unknown;
+	messageGroupId: string;
+	messageDeduplicationId: string;
+};
+
 @Injectable()
 export default class SqsClient {
-	private readonly messageGroupId: string;
 	private readonly sqsClient: SQSClient;
 
 	constructor(
 		private readonly configService: ConfigService,
-		private readonly cryptographyService: CryptographyService,
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
@@ -29,8 +35,6 @@ export default class SqsClient {
 			region, endpoint, accessKeyId, secretAccessKey, sessionToken,
 		} } = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
-
-		this.messageGroupId = 'DefaultGroup';
 
 		this.sqsClient = new SQSClient({
 			endpoint, region, apiVersion, maxAttempts,
@@ -45,7 +49,7 @@ export default class SqsClient {
 	}
 
 	private createParams(queueName: string): CreateQueueCommandInput {
-		const isFifoQueue: boolean = queueName?.includes('.fifo');
+		const isFifoQueue = queueName?.endsWith('.fifo');
 
 		const params: CreateQueueCommandInput = {
 			QueueName: queueName,
@@ -60,8 +64,9 @@ export default class SqsClient {
 		return params;
 	}
 
-	private msgParams(queueUrl: string, message: unknown, title: string, author: string): SendMessageCommandInput {
-		const isFifoQueue: boolean = queueUrl?.includes('.fifo');
+	private msgParams(params: ISendParams): SendMessageCommandInput {
+		const { message, title, author, queueUrl, messageGroupId, messageDeduplicationId } = params;
+		const isFifoQueue = queueUrl?.endsWith('.fifo');
 		const messageBody = this.formatMessageBeforeSend(message);
 
 		return {
@@ -77,8 +82,9 @@ export default class SqsClient {
 					StringValue: String(author)
 				},
 			},
-			MessageDeduplicationId: isFifoQueue ? this.cryptographyService.generateUuid() : undefined,
-			MessageGroupId: isFifoQueue ? this.messageGroupId : undefined, // Required for FIFO queues
+			// NOTE - required for FIFO queues
+			MessageDeduplicationId: isFifoQueue ? messageDeduplicationId : undefined,
+			MessageGroupId: isFifoQueue ? messageGroupId : undefined,
 		};
 	}
 
@@ -142,11 +148,9 @@ export default class SqsClient {
 		}
 	}
 
-	public async sendMessage(queueUrl: string, title: string, author: string, message: unknown): Promise<string> {
+	public async sendMessage(params: ISendParams): Promise<string> {
 		try {
-			const result = await this.sqsClient.send(new SendMessageCommand(
-				this.msgParams(queueUrl, message, title, author)
-			));
+			const result = await this.sqsClient.send(new SendMessageCommand(this.msgParams(params)));
 
 			if (!result?.MessageId)
 				throw this.exceptions.internal({ message: 'Message not sended' });

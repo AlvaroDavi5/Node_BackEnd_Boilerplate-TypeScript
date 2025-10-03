@@ -4,7 +4,7 @@ import envsConfig from '@core/configs/envs.config';
 import { secondsToMilliseconds } from '@common/utils/dates.util';
 import { QueueNamesEnum } from '@common/enums/queueNames.enum';
 import SqsClientMock from '@dev/localstack/queues/SqsClient';
-import { configServiceMock, cryptographyServiceMock, dataParserHelperMock, loggerProviderMock } from '@dev/mocks/mockedModules';
+import { configServiceMock, dataParserHelperMock, loggerProviderMock } from '@dev/mocks/mockedModules';
 
 
 export function sqsConsumersFactory(): SqsConsumerOptions[] {
@@ -13,7 +13,6 @@ export function sqsConsumersFactory(): SqsConsumerOptions[] {
 	const { queueUrl: eventsQueueUrl } = appConfigs.integration.aws.sqs.eventsQueue;
 	const sqsClientMock = new SqsClientMock(
 		configServiceMock as unknown as ConfigService,
-		cryptographyServiceMock,
 		loggerProviderMock,
 		dataParserHelperMock,
 	);

@@ -7,22 +7,48 @@ import {
 	CreateTopicCommandInput, SubscribeCommandInput, PublishCommandInput,
 } from '@aws-sdk/client-sns';
 import { ConfigsInterface } from '@core/configs/envs.config';
-import CryptographyService from '@core/security/Cryptography.service';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
 
-export type protocolType = 'email' | 'sms' | 'http' | 'https' | 'sqs' | 'lambda' | 'application'
+interface EmailPublishTargets {
+	protocol: 'email';
+	subject: string;
+}
+interface SmsPublishTargets {
+	protocol: 'sms';
+	phoneNumber: string;
+}
+interface SqsPublishTargets {
+	protocol: 'sqs';
+	targetArn?: string;
+}
+interface LambdaPublishTargets {
+	protocol: 'lambda';
+	targetArn?: string;
+}
+
+export type IPublishTargetsOptions =
+	| EmailPublishTargets
+	| SmsPublishTargets
+	| SqsPublishTargets
+	| LambdaPublishTargets;
+export type protocolType = IPublishTargetsOptions['protocol'];
+
+type IPublishParams = IPublishTargetsOptions & {
+	topicArn: string;
+	message: unknown;
+	messageGroupId: string;
+	messageDeduplicationId: string;
+};
 
 @Injectable()
 export default class SnsClient {
-	private readonly messageGroupId: string;
 	private readonly snsClient: SNSClient;
 
 	constructor(
 		private readonly configService: ConfigService,
-		private readonly cryptographyService: CryptographyService,
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
@@ -31,8 +57,6 @@ export default class SnsClient {
 			region, endpoint, accessKeyId, secretAccessKey, sessionToken,
 		} } = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
-
-		this.messageGroupId = 'DefaultGroup';
 
 		this.snsClient = new SNSClient({
 			endpoint, region, apiVersion, maxAttempts,
@@ -47,7 +71,7 @@ export default class SnsClient {
 	}
 
 	private createParams(topicName: string): CreateTopicCommandInput {
-		const isFifoTopic: boolean = topicName?.includes('.fifo');
+		const isFifoTopic = topicName?.endsWith('.fifo');
 
 		const params: CreateTopicCommandInput = {
 			Name: topicName,
@@ -68,28 +92,36 @@ export default class SnsClient {
 		};
 	}
 
-	private publishParams(topicArn: string, topicName: string,
-		protocol: protocolType, message: string, { subject, phoneNumber }: Record<string, string | undefined>): PublishCommandInput {
-		const isFifoTopic: boolean = topicName?.includes('.fifo');
+	private publishParams(params: IPublishParams): PublishCommandInput {
+		const { message, protocol, topicArn, messageGroupId, messageDeduplicationId } = params;
+		const isFifoTopic = topicArn?.endsWith('.fifo');
 		const messageBody = this.formatMessageBeforeSend(message);
 
 		const publishData: PublishCommandInput = {
-			TopicArn: topicArn,
 			Message: messageBody,
-			MessageDeduplicationId: isFifoTopic ? this.cryptographyService.generateUuid() : undefined,
-			MessageGroupId: isFifoTopic ? this.messageGroupId : undefined, // Required for FIFO topics
+			// NOTE - required for FIFO topics
+			MessageDeduplicationId: isFifoTopic ? messageDeduplicationId : undefined,
+			MessageGroupId: isFifoTopic ? messageGroupId : undefined,
 		};
 
 		switch (protocol) {
-			case 'email':
-				publishData.Subject = subject;
-				break;
 			case 'sms':
-				publishData.PhoneNumber = phoneNumber;
+				publishData.PhoneNumber = params.phoneNumber;
 				break;
-			default: // application | sqs | lambda | http(s)
+			case 'email':
 				publishData.TopicArn = topicArn;
-				publishData.TargetArn = topicArn;
+				publishData.Subject = params.subject;
+				break;
+			case 'lambda':
+			case 'sqs':
+				if (params.targetArn) {
+					publishData.TargetArn = params.targetArn;
+				} else {
+					publishData.TopicArn = topicArn;
+				}
+				break;
+			default:
+				publishData.TopicArn = topicArn;
 				break;
 		}
 
@@ -168,12 +200,9 @@ export default class SnsClient {
 		}
 	}
 
-	public async publishMessage(topicArn: string, topicName: string,
-		protocol: protocolType, message: string, destination: Record<string, string | undefined>): Promise<string> {
+	public async publishMessage(params: IPublishParams): Promise<string> {
 		try {
-			const result = await this.snsClient.send(new PublishCommand(
-				this.publishParams(topicArn, topicName, protocol, message, destination)
-			));
+			const result = await this.snsClient.send(new PublishCommand(this.publishParams(params)));
 
 			if (!result?.MessageId)
 				throw this.exceptions.internal({ message: 'Message not published' });

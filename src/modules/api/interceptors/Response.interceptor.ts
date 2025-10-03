@@ -41,11 +41,11 @@ export default class ResponseInterceptor implements NestInterceptor {
 			.pipe(
 				tap((responseData: unknown): void => {
 					const resData = this.dataParserHelper.toString(responseData);
-					this.logger.http(`RESPONDING - ${timestamp} ms: [${method.toUpperCase()}] '${path}' ${resData}`);
+					this.logger.http(`RESPONDING - ${timestamp} ms: [${method.toUpperCase()}] ${path} ${resData}`);
 				}),
 				catchError((responseError: Error): Observable<void> => {
 					const resErr = this.dataParserHelper.toString(responseError);
-					this.logger.http(`RESPONDING ERROR - ${timestamp} ms: [${method.toUpperCase()}] '${path}' ${resErr}`);
+					this.logger.http(`RESPONDING ERROR - ${timestamp} ms: [${method.toUpperCase()}] ${path} ${resErr}`);
 					throw responseError;
 				})
 			);

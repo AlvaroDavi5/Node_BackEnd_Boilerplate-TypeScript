@@ -6,6 +6,7 @@ import CryptographyService from '@core/security/Cryptography.service';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import { QueueSchemasEnum } from '@domain/enums/events.enum';
 import { EventPayloadInterface } from '@events/queue/handlers/schemas/eventPayload.schema';
+import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { captureException } from '@common/utils/sentryCalls.util';
 import { cloneObject, checkFieldsExistence, replaceFields } from '@common/utils/objectRecursiveFunctions.util';
 import { getDateTimeNow, fromDateTimeToISO } from '@common/utils/dates.util';
@@ -23,6 +24,7 @@ type queueCredentialsKeyType = Exclude<keyof ConfigsInterface['integration']['aw
 @Injectable()
 export default abstract class AbstractQueueProducer {
 	protected configService: ConfigService;
+	protected dataParserHelper: DataParserHelper;
 	protected cryptographyService: CryptographyService;
 	protected sqsClient: SqsClient;
 	protected logger: LoggerService;
@@ -35,11 +37,13 @@ export default abstract class AbstractQueueProducer {
 		producerName: string,
 		queueCredentialsKey: queueCredentialsKeyType,
 		configService: ConfigService,
+		dataParserHelper: DataParserHelper,
 		cryptographyService: CryptographyService,
 		sqsClient: SqsClient,
 		logger: LoggerService,
 	) {
 		this.configService = configService;
+		this.dataParserHelper = dataParserHelper;
 		this.cryptographyService = cryptographyService;
 		this.sqsClient = sqsClient;
 		this.logger = logger;
@@ -62,7 +66,7 @@ export default abstract class AbstractQueueProducer {
 			payload,
 			schema,
 			schemaVersion: 1.0,
-			source: this.producerName,
+			source: `${this.producerName}, ${this.applicationName}`,
 			timestamp: fromDateTimeToISO(getDateTimeNow(TimeZonesEnum.America_SaoPaulo)),
 		};
 	}
@@ -79,17 +83,27 @@ export default abstract class AbstractQueueProducer {
 		return data;
 	}
 
+	private buildDeduplicationId(payload: unknown): string {
+		const strDateWithSeconds = new Date().toISOString().slice(0, 19);
+		const strData = this.dataParserHelper.toString(payload);
+		const hash = this.cryptographyService.hashing(strData, 'utf8', 'sha256', 'hex');
+		return `${hash}-${strDateWithSeconds}`;
+	}
+
 	public async dispatch({ payload, schema, author, title }: EventDispatchInterface): Promise<string | null> {
 		const message = this.buildMessageBody(payload, schema);
+		const messageDeduplicationId = this.buildDeduplicationId(payload);
 
 		try {
-			const messageId = await this.sqsClient.sendMessage(
-				this.queueUrl,
-				title ?? 'New Message',
-				`${author ?? this.producerName}, ${this.applicationName}`,
+			const messageId = await this.sqsClient.sendMessage({
+				queueUrl: this.queueUrl,
 				message,
-			);
-			this.logger.info(`Sended message to queue ${this.queueName} - MessageId: ${messageId}`);
+				messageGroupId: this.producerName,
+				messageDeduplicationId,
+				title: title ?? 'New Message',
+				author: author ?? this.producerName,
+			});
+			this.logger.info(`Sended message to queue ${this.queueName} with MessageId: ${messageId}`);
 			return messageId;
 		} catch (error) {
 			this.logger.error(`Error to send message to queue ${this.queueName}`, error);

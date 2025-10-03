@@ -71,7 +71,7 @@ export default class SnsClient {
 	}
 
 	private createParams(topicName: string): CreateTopicCommandInput {
-		const isFifoTopic: boolean = topicName?.endsWith('.fifo');
+		const isFifoTopic = topicName?.endsWith('.fifo');
 
 		const params: CreateTopicCommandInput = {
 			Name: topicName,

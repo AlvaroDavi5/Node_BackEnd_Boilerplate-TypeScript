@@ -34,27 +34,23 @@ export default function externalErrorParser(error: unknown): HttpException {
 			const response = res as Record<string, any>;
 			const responseMessage = !!response.message ? JSON.stringify(response.message) : undefined;
 			const responseMetadata = !!response.metadata
-				? JSON.stringify({
-					message: response.metadata?.message,
-					detail: response.metadata?.detail,
-				})
+				? JSON.stringify({ message: response.metadata?.message, detail: response.metadata?.detail })
 				: undefined;
 
-			if (responseMessage || responseMetadata) {
-				if (responseMessage) errorStacks.push(responseMessage);
-				if (responseMetadata) errorStacks.push(responseMetadata);
-				error.stack = [...errorStacks, error.stack].join('\n');
-			}
+			if (responseMessage)
+				errorStacks.push(responseMessage);
+			if (responseMetadata)
+				errorStacks.push(responseMetadata);
+			error.stack = [...errorStacks, error.stack].join('\n');
 		}
 	} else if (error instanceof AxiosError) {
 		exceptionName = exceptionsMapper(error.status ?? 500);
 		const { response } = error;
 		if (typeof response === 'object') {
 			const responseMessage = !!response.data ? JSON.stringify(response.data) : undefined;
-			if (responseMessage) {
-				if (responseMessage) errorStacks.push(responseMessage);
-				error.stack = [...errorStacks, error.stack].join('\n');
-			}
+			if (responseMessage)
+				errorStacks.push(responseMessage);
+			error.stack = [...errorStacks, error.stack].join('\n');
 		}
 	} else { // instanceof Error
 		exceptionName = exceptionsMapper(HttpStatusEnum.INTERNAL_SERVER_ERROR);

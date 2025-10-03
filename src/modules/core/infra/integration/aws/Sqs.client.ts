@@ -49,7 +49,7 @@ export default class SqsClient {
 	}
 
 	private createParams(queueName: string): CreateQueueCommandInput {
-		const isFifoQueue: boolean = queueName?.endsWith('.fifo');
+		const isFifoQueue = queueName?.endsWith('.fifo');
 
 		const params: CreateQueueCommandInput = {
 			QueueName: queueName,

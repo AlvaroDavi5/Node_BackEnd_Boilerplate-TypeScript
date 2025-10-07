@@ -102,6 +102,7 @@ export default class LoggerService implements LoggerInterface {
 			if (arg instanceof Error) {
 				if (arg instanceof HttpException) {
 					const res = arg.getResponse();
+
 					if (typeof res === 'object') {
 						// eslint-disable-next-line @typescript-eslint/no-explicit-any
 						const response = res as Record<string, any>;
@@ -120,11 +121,11 @@ export default class LoggerService implements LoggerInterface {
 					}
 				} else if (arg instanceof AxiosError) {
 					const { response } = arg;
+
 					if (typeof response === 'object') {
 						const responseMessage = !!response.data ? this.dataParserHelper.toString(response.data) : undefined;
-						if (responseMessage) {
+						if (responseMessage)
 							errorStacks.push(this.colorizeStack(responseMessage));
-						}
 					}
 				}
 
@@ -137,10 +138,14 @@ export default class LoggerService implements LoggerInterface {
 				}
 			}
 		});
+
 		metadata.stack = errorStacks.length > 0 ? errorStacks : undefined;
+		const message = Array.isArray(args)
+			? args.map((arg) => this.dataParserHelper.toString(arg, true)).join(',')
+			: this.dataParserHelper.toString(args, true);
 
 		return {
-			message: this.dataParserHelper.toString(args),
+			message,
 			meta: metadata,
 		};
 	}

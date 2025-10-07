@@ -5,59 +5,65 @@ import { Injectable } from '@nestjs/common';
 @Injectable()
 export default class DataParserHelper {
 	public toString(data: unknown, returnUndefined = false): string {
-		const circularReference = '[Circular Reference]';
-
 		if (typeof data === 'string')
 			return data;
-		if (typeof data === 'symbol')
-			return data.toString();
 		if (typeof data === 'undefined')
 			return returnUndefined ? 'undefined' : '';
+		if (typeof data === 'symbol')
+			return data.toString();
+
+		if (data instanceof Error)
+			return this.parseErrorToString(data);
 
 		if (typeof data === 'object') {
-			const fallback = String(data);
-
-			if (!data) {
-				return fallback;
-			}
-			if (data instanceof Error) {
-				return `${data?.name}: ${data?.message}`;
-			}
-
 			if (Array.isArray(data)) {
-				const seen = new WeakSet<unknown[]>();
-				const visit = (array: unknown[]): string => {
-					if (seen.has(array)) {
-						return circularReference;
-					}
-					seen.add(array);
-					const parsedData = array.map((element) => Array.isArray(element) ? visit(element) : this.toString(element, returnUndefined));
-					return parsedData.join(', ');
-				};
-				return visit(data);
+				return `[${this.parseArrayToString(data, returnUndefined)}]`;
 			}
-			try {
-				return JSON.stringify(data);
-			} catch (error) {
-				if (error instanceof Error && error.message.includes('circular')) {
-					const seen = new WeakSet();
-					const stringified = JSON.stringify(data, (_key, value) => {
-						if (typeof value === 'object' && value !== null) {
-							if (seen.has(value)) {
-								return circularReference;
-							}
-							seen.add(value);
-						}
-						return value;
-					});
-					return stringified;
-				}
 
-				return fallback;
-			}
+			if (!data)
+				return String(data);
+
+			return this.parseObjectToString(data, String(data));
 		}
 
 		return String(data);
+	}
+
+	private parseErrorToString(error: Error): string {
+		return `${error?.name}: ${error?.message}`;
+	}
+
+	private parseArrayToString(data: unknown[], returnUndefined: boolean): string {
+		const seen = new WeakSet<unknown[]>();
+		const visit = (array: unknown[]): string => {
+			if (seen.has(array)) {
+				return 'Circular Reference';
+			}
+			seen.add(array);
+			return array.map((element) => Array.isArray(element) ? `[${visit(element)}]` : this.toString(element, returnUndefined)).join(',');
+		};
+		return visit(data);
+	}
+
+	private parseObjectToString(data: object, fallback: string): string {
+		try {
+			return JSON.stringify(data);
+		} catch (error) {
+			if (error instanceof Error && error.message.includes('circular')) {
+				const seen = new WeakSet();
+				const simplified = JSON.stringify(data, (_key, value) => {
+					if (typeof value === 'object' && value !== null) {
+						if (seen.has(value)) {
+							return '{Circular Reference}';
+						}
+						seen.add(value);
+					}
+					return value;
+				});
+				return simplified;
+			}
+			return fallback;
+		}
 	}
 
 	public toObject<OT = object>(data: string): OT | null {

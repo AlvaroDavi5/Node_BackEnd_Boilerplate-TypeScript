@@ -101,16 +101,16 @@ export default class LoggerService implements LoggerInterface {
 		args.forEach((arg: unknown) => {
 			if (arg instanceof Error) {
 				if (arg instanceof HttpException) {
-					const res = arg.getResponse();
+					const response = arg.getResponse();
 
-					if (typeof res === 'object') {
-						// eslint-disable-next-line @typescript-eslint/no-explicit-any
-						const response = res as Record<string, any>;
-						const responseMessage = !!response.message ? this.dataParserHelper.toString(response.message) : undefined;
-						const responseMetadata = !!response.metadata
+					if (typeof response === 'object') {
+						const res = response as Record<string, Record<string, unknown> | undefined>;
+
+						const responseMessage = !!res.message ? this.dataParserHelper.toString(res.message) : undefined;
+						const responseMetadata = !!res.metadata
 							? this.dataParserHelper.toString({
-								message: response.metadata?.message,
-								detail: response.metadata?.detail,
+								message: res.metadata?.message,
+								detail: res.metadata?.detail,
 							})
 							: undefined;
 
@@ -141,7 +141,7 @@ export default class LoggerService implements LoggerInterface {
 
 		metadata.stack = errorStacks.length > 0 ? errorStacks : undefined;
 		const message = Array.isArray(args)
-			? args.map((arg) => this.dataParserHelper.toString(arg, true)).join(',')
+			? args.map((arg) => this.dataParserHelper.toString(arg, true)).join(', ')
 			: this.dataParserHelper.toString(args, true);
 
 		return {

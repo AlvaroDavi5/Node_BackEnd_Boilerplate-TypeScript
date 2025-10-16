@@ -1,4 +1,4 @@
-name: SonarQube Analysis
+name: SonarQube Quality Analysis
 
 on:
   push:

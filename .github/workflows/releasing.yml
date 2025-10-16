@@ -2,22 +2,26 @@ name: Releasing
 
 on:
   push:
-    branches: [release, main]
+    branches: [main, release]
   pull_request:
-    branches: [release, main]
+    branches: [main, release]
 
 env:
+  CI: true
+  LEFTHOOK: 0
   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
-  node_build:
-    name: Node.js Build
+  build_and_test:
+    name: Application Build and Tests
+
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
 
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [20.x]
+        node-version: [24.x]
 
     steps:
       - name: Checkout Repository
@@ -30,19 +34,19 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "yarn"
+          cache: "npm"
 
       - name: Installing Dependencies
-        run: yarn install
+        run: npm install --ignore-scripts
 
       - name: Checking Dependencies Security
-        run: yarn run security-check
+        run: npm run security-check
 
       - name: Checking Type
-        run: yarn run typecheck
+        run: npm run typecheck
 
       - name: Building WebPack
-        run: yarn run build:webpack
+        run: npm run build:webpack
 
       - name: Uploading Release Builded Files
         uses: actions/upload-artifact@v4
@@ -50,21 +54,22 @@ jobs:
           name: build
           path: build
 
-      - name: Testing Modules
-        run: yarn run test:unit
-      - name: Testing Integration
-        run: yarn run test:integration
+      - name: Running Unit Tests
+        run: npm run test:unit
+
+      - name: Running Integration Tests
+        run: npm run test:integration
 
   semantic_release:
     name: Semantic Versioning Release
 
-    needs: node_build
+    needs: build_and_test
 
     runs-on: ubuntu-latest
 
     strategy:
       matrix:
-        node-version: [18.x]
+        node-version: [24.x]
 
     permissions:
       contents: write
@@ -82,10 +87,10 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ matrix.node-version }}
-          cache: "yarn"
+          cache: "npm"
 
       - name: Installing Dependencies
-        run: yarn install
+        run: npm install --ignore-scripts
 
       - name: Downloading Release Builded Files
         uses: actions/download-artifact@v4
@@ -97,4 +102,4 @@ jobs:
         run: zip -r build.zip build
 
       - name: Versioning Release
-        run: yarn run versioning
+        run: npm run versioning

@@ -1,23 +1,26 @@
 import {
 	Controller, Res,
 	Get, Post, Headers,
-	UseInterceptors, UseGuards,
+	UseInterceptors, UseGuards, UseFilters,
 	UploadedFile, StreamableFile, ParseFilePipe,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiBody, ApiHeaders, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import { FileInterceptor } from '@nestjs/platform-express';
-import { Multer as _Multer } from 'multer';
-import { Response } from 'express';
-import CustomThrottlerGuard from '@api/guards/Throttler.guard';
+import FileService from '@app/file/services/File.service';
 import AuthGuard from '@api/guards/Auth.guard';
+import HttpExceptionsFilter from '@api/filters/HttpExceptions.filter';
+import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
-import FileService from '@app/file/services/File.service';
+import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
+import type { RequestFileInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @ApiTags('Files')
 @Controller('/files')
 @UseGuards(CustomThrottlerGuard, AuthGuard)
+@UseFilters(HttpExceptionsFilter)
+@UseInterceptors(ResponseInterceptor)
 @authSwaggerDecorator()
 @exceptionsResponseDecorator()
 export default class FileController {
@@ -33,7 +36,7 @@ export default class FileController {
 	@Get('/download')
 	@ApiOkResponse({
 		schema: {
-			example: 'MIT License Copyright (c) 2022 Álvaro Alves <alvaro.davisa@gmail.com> ...',
+			example: 'MIT License Copyright (c) 2022 ...',
 		},
 		description: 'Downloadable file',
 	})
@@ -43,10 +46,10 @@ export default class FileController {
 		{ name: 'accept', allowEmptyValue: true },
 	])
 	public async downloadFile(
-		@Headers() headers: { [key: string]: string | undefined },
+		@Headers() headers: Record<string, string | undefined>,
 		@Headers('fileName') fileNameHeader: string,
 		@Headers('filePath') filePathHeader: string,
-		@Res({ passthrough: true }) response: Response,
+		@Res({ passthrough: true }) response: ResponseInterface,
 	): Promise<Buffer | StreamableFile | string> {
 		const { content, contentType, fileName } = await this.fileService.downloadFile(fileNameHeader, filePathHeader, headers.accept);
 
@@ -93,9 +96,9 @@ export default class FileController {
 	})
 	@UseInterceptors(FileInterceptor('file', { dest: './temp', preservePath: true, limits: {} }))
 	public async uploadFile(
-		@Headers() headers: { [key: string]: string | undefined },
+		@Headers() headers: Record<string, string | undefined>,
 		@Headers('fileName') fileNameHeader: string,
-		@UploadedFile(new ParseFilePipe()) file: Express.Multer.File,
+		@UploadedFile(new ParseFilePipe()) file: RequestFileInterface,
 	): Promise<{
 		filePath: string,
 		fileContentType: string,

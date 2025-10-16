@@ -1,26 +1,33 @@
+import { readFileSync } from 'fs';
 import { INestApplication, NestApplicationOptions } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
-import { captureError, configureTrackers } from '@core/errors/trackers';
 import LoggerService from '@core/logging/Logger.service';
 import { LoggerInterface } from '@core/logging/logger';
 import { ProcessEventsEnum, ProcessSignalsEnum } from '@common/enums/processEvents.enum';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { getObjValues } from '@common/utils/dataValidations.util';
+import { captureException } from '@common/utils/sentryCalls.util';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
-import { ConfigsInterface } from './envs.config';
 
+
+function getHttpsOptions(): Pick<NestApplicationOptions, 'httpsOptions'> {
+	try {
+		return {
+			httpsOptions: {
+				key: readFileSync('key.pem'),
+				cert: readFileSync('cert.pem'),
+			}
+		};
+	} catch (_error) {
+		return { httpsOptions: undefined };
+	}
+}
 
 export const createNestApplicationOptions: NestApplicationOptions = {
 	abortOnError: false,
 	snapshot: true,
 	preview: false,
 	forceCloseConnections: true,
-	/*
-	httpsOptions: {
-		key: '',
-		cert: '',
-	},
-	*/
+	...getHttpsOptions(),
 };
 
 export default async (nestApp: INestApplication): Promise<void> => {
@@ -38,8 +45,6 @@ export default async (nestApp: INestApplication): Promise<void> => {
 			logger = console;
 		});
 
-	const { environment, sentryDsn } = nestApp.get<ConfigService>(ConfigService, { strict: false }).get<ConfigsInterface['application']>('application')!;
-
 	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error: Error, origin: string) => {
 		logger.error(`App received ${ProcessEventsEnum.UNCAUGHT_EXCEPTION}`, `origin: ${origin}`, `error: ${error}`);
 		await nestApp.close();
@@ -52,8 +57,6 @@ export default async (nestApp: INestApplication): Promise<void> => {
 		logger.warn(`App received signal: ${signal}`);
 		await nestApp.close();
 	}));
-
-	configureTrackers(environment, { sentryDsn });
 };
 
 export function validateKnownExceptions(error: ErrorInterface | Error): void {
@@ -64,7 +67,7 @@ export function validateKnownExceptions(error: ErrorInterface | Error): void {
 		newError.name = error.name;
 		newError.stack = error.stack;
 
-		captureError(newError);
+		captureException(newError);
 		throw newError;
 	}
 }

@@ -5,9 +5,9 @@ import CryptographyService from '@core/security/Cryptography.service';
 import RestMockedServiceProvider from '@core/infra/providers/RestMockedService.provider';
 import RedisClient from '@core/infra/cache/Redis.client';
 import { CacheEnum } from '@domain/enums/cache.enum';
-import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 import { fromDateTimeToEpoch, fromJSDateToDateTime, getDateTimeNow } from '@common/utils/dates.util';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { requestMethodType } from '@shared/internal/types/restClientTypes';
 import { RegisterEventHookInterface } from '../api/schemas/registerEventHook.schema';
 
@@ -27,28 +27,28 @@ export default class WebhookService {
 		this.hooksTimeToLive = hooksExpirationTime;
 	}
 
-	public async pullHook(hookSchema: string, data: unknown): Promise<void> {
+	public async pullHook(hookSchema: string, data: Record<string, unknown>): Promise<void> {
 		const hookSchemaList = await this.list(hookSchema);
 		const mockedServiceBaseUrl = this.configService
 			.get<ConfigsInterface['integration']['rest']['mockedService']['baseUrl']>('integration.rest.mockedService.baseUrl')!;
 
 		const hooksToPull: Promise<unknown>[] = [];
 		const hooksToDelete: Promise<unknown>[] = [];
-		const epochDateNow = fromDateTimeToEpoch(getDateTimeNow(TimeZonesEnum.America_SaoPaulo), false, false);
+		const epochDateNow = fromDateTimeToEpoch(getDateTimeNow(TimeZonesEnum.America_SaoPaulo), 'seconds', false);
 
 		for (const { key, value: hook } of hookSchemaList) {
 			const epochSentAt = hook?.sendAt
-				? fromDateTimeToEpoch(fromJSDateToDateTime(hook.sendAt, TimeZonesEnum.America_SaoPaulo), false, false)
+				? fromDateTimeToEpoch(fromJSDateToDateTime(hook.sendAt, TimeZonesEnum.America_SaoPaulo), 'seconds', false)
 				: 0;
 
 			if (epochDateNow > epochSentAt) {
 				const responseEndpoint = hook?.responseEndpoint ?? mockedServiceBaseUrl;
 				const responseMethod = hook?.responseMethod?.toLowerCase() as requestMethodType;
 
-				hooksToPull.push(this.restMockedServiceProvider.requestHook<void>(
-					responseMethod, responseEndpoint,
-					{}, data as any
-				));
+				if (responseMethod && responseEndpoint)
+					hooksToPull.push(this.restMockedServiceProvider.requestHook<void>(
+						responseMethod, responseEndpoint,
+						{}, data));
 
 				const hookId = this.cacheAccessHelper.getId(
 					this.cacheAccessHelper.getId(key, CacheEnum.HOOKS),
@@ -64,8 +64,8 @@ export default class WebhookService {
 	public async get(hookId: string, hookSchema: string): Promise<RegisterEventHookInterface> {
 		const key = this.cacheAccessHelper.generateKey(`${hookSchema}:${hookId}`, CacheEnum.HOOKS);
 
-		const result = await this.redisClient.get(key);
-		return this.payloadBuilder(result);
+		const result = await this.redisClient.get<RegisterEventHookInterface>(key);
+		return this.payloadBuilder(result as RegisterEventHookInterface);
 	}
 
 	public async save(hookSchema: string, data: RegisterEventHookInterface): Promise<string> {
@@ -82,14 +82,14 @@ export default class WebhookService {
 
 		const deleted = await this.redisClient.delete(key);
 
-		return !!deleted;
+		return deleted > 0;
 	}
 
 	public async list(additionalPattern = ''): Promise<{
 		key: string;
 		value: RegisterEventHookInterface | null;
 	}[]> {
-		const pattern = `${CacheEnum.HOOKS}:${additionalPattern}*`;
+		const pattern = `${CacheEnum.HOOKS}:${additionalPattern}:*`;
 		const result = await this.redisClient.getByKeyPattern<RegisterEventHookInterface>(pattern);
 		return result.map(({ key, value }) => ({ key, value: this.payloadBuilder(value as RegisterEventHookInterface) }));
 	}

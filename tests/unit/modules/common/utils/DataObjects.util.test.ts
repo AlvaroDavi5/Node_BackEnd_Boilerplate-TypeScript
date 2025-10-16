@@ -1,5 +1,5 @@
 import { isNullOrUndefined, isEmpty, getObjKeys, getObjValues } from '@common/utils/dataValidations.util';
-import { checkFieldsExistence, replaceFields } from '@common/utils/objectRecursiveFunctions.util';
+import { checkFieldsExistence, replaceFields, cloneObject } from '@common/utils/objectRecursiveFunctions.util';
 
 
 describe('Modules :: Common :: Utils :: DataObjects', () => {
@@ -41,6 +41,21 @@ describe('Modules :: Common :: Utils :: DataObjects', () => {
 			expect(replaceFields<any>(undefined, ['key2'], 'xxx')).toBeNull();
 			expect(replaceFields({ key1: 'value1' }, ['key2'] as keyof object, 'xxx')).toEqual({ key1: 'value1' });
 			expect(replaceFields({ key2: 'value2' }, ['key2'], 'xxx')).toEqual({ key2: 'xxx' });
+		});
+
+		test('Should clone object', () => {
+			const obj = {
+				key: 'value',
+				self: {},
+			};
+			obj.self = obj;
+
+			expect(cloneObject(obj)).toEqual(obj);
+			expect(cloneObject([obj, obj])).toEqual([obj, obj]);
+			expect(cloneObject(new Error('Test Error'))).toEqual(new Error('Test Error'));
+			expect(cloneObject(null as any)).toBeNull();
+			expect(cloneObject('str' as any)).toBe('str');
+			expect(cloneObject(undefined as any)).toBeUndefined();
 		});
 	});
 });

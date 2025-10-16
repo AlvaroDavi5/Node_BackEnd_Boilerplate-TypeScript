@@ -1,6 +1,5 @@
 import { CacheEnum } from '@domain/enums/cache.enum';
-import { EventsEnum } from '@domain/enums/events.enum';
-import { WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/webSocketEvents.enum';
+import { QueueSchemasEnum, WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/events.enum';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 
 
@@ -21,18 +20,17 @@ describe('Modules :: Domain :: Enums', () => {
 		});
 	});
 
-	describe('# EventsEnum', () => {
+	describe('# QueueSchemasEnum', () => {
 		test('Should return keys', () => {
-			expect(Object.keys(EventsEnum)).toEqual(['INVALID', 'NEW_CONNECTION']);
+			expect(Object.keys(QueueSchemasEnum)).toEqual(['DOMAIN_EVENT', 'BROADCAST', 'NEW_CONNECTION', 'DISABLE_LOGIN', 'DISABLE_ALL_ROUTES']);
 		});
 
 		test('Should return values', () => {
-			expect(Object.values(EventsEnum)).toEqual(['INVALID', 'NEW_CONNECTION']);
+			expect(Object.values(QueueSchemasEnum)).toEqual(['DOMAIN_EVENT', 'BROADCAST', 'NEW_CONNECTION', 'DISABLE_LOGIN', 'DISABLE_ALL_ROUTES']);
 		});
 
 		test('Should return value', () => {
-			expect(EventsEnum.INVALID).toBe('INVALID');
-			expect(EventsEnum.NEW_CONNECTION).toBe('NEW_CONNECTION');
+			expect(QueueSchemasEnum.DOMAIN_EVENT).toBe('DOMAIN_EVENT');
 		});
 	});
 
@@ -59,6 +57,7 @@ describe('Modules :: Domain :: Enums', () => {
 				'DISCONNECT',
 				'RECONNECT',
 				'EMIT',
+				'ERROR',
 				'EMIT_PRIVATE',
 				'BROADCAST',
 			]);
@@ -72,6 +71,7 @@ describe('Modules :: Domain :: Enums', () => {
 				'disconnect',
 				'reconnect',
 				'emit',
+				'error',
 				'emit_private',
 				'broadcast',
 			]);

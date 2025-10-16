@@ -2,11 +2,11 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDate, IsEnum, IsUUID } from 'class-validator';
 import { ThemesEnum } from '@domain/enums/themes.enum';
-import { TimeZonesEnum } from '@common/enums/timeZones.enum';
-import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
-import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
-import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
 import { getObjValues } from '@common/utils/dataValidations.util';
+import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import AbstractEntity from '@common/classes/AbstractEntity.entity';
+import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
 
 
 const dateTimeExample = fromISOToDateTime('2024-06-10T03:52:50.885Z', false, TimeZonesEnum.America_SaoPaulo);
@@ -77,6 +77,7 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 	@IsDate()
 	public deletedAt: Date | null = null;
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	constructor(dataValues: any) {
 		super();
 		if (this.exists(dataValues?.id)) this.id = dataValues.id;
@@ -101,7 +102,9 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 		};
 	}
 
-	public getId(): string { return this.id; }
+	public getId(): string {
+		return this.id;
+	}
 	public setId(id: string): void {
 		if (id.length < 1)
 			return;
@@ -110,7 +113,9 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 		this.updatedAt = this.getDate();
 	}
 
-	public getUserId(): string { return this.userId; }
+	public getUserId(): string {
+		return this.userId;
+	}
 	public setUserId(userId: string): void {
 		if (userId.length < 1)
 			return;
@@ -119,7 +124,9 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 		this.updatedAt = this.getDate();
 	}
 
-	public getDefaultTheme(): ThemesEnum | null { return this.defaultTheme; }
+	public getDefaultTheme(): ThemesEnum | null {
+		return this.defaultTheme;
+	}
 	public setDefaultTheme(theme: string): void {
 		if (!getObjValues<ThemesEnum>(ThemesEnum).includes(theme as ThemesEnum))
 			return;
@@ -134,7 +141,9 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 		this.updatedAt = this.getDate();
 	}
 
-	public getImagePath(): string | null { return this.imagePath; }
+	public getImagePath(): string | null {
+		return this.imagePath;
+	}
 	public setImagePath(path: string): void {
 		this.imagePath = path;
 		this.updatedAt = this.getDate();

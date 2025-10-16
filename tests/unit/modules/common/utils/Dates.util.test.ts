@@ -24,8 +24,8 @@ describe('Modules :: Common :: Utils :: Dates', () => {
 		test('Should parse Epoch (milliseconds)', () => {
 			const dateTime = fromISOToDateTime('2024-06-10T05:52:50.885Z', false, TimeZonesEnum.America_SaoPaulo);
 
-			const gmtEpoch = fromDateTimeToEpoch(dateTime, true, false);
-			const gmtDateTime = fromEpochToDateTime(gmtEpoch, true, TimeZonesEnum.America_SaoPaulo);
+			const gmtEpoch = fromDateTimeToEpoch(dateTime, 'milliseconds', false);
+			const gmtDateTime = fromEpochToDateTime(gmtEpoch, 'milliseconds', TimeZonesEnum.America_SaoPaulo);
 
 			expect(fromDateTimeToISO(gmtDateTime, false)).toBe('2024-06-10T02:52:50.885-03:00');
 		});
@@ -33,8 +33,8 @@ describe('Modules :: Common :: Utils :: Dates', () => {
 		test('Should parse Epoch (seconds)', () => {
 			const dateTime = fromISOToDateTime('2024-06-10T05:52:50.885Z', false, TimeZonesEnum.America_SaoPaulo);
 
-			const gmtEpoch = fromDateTimeToEpoch(dateTime, false, false);
-			const gmtDateTime = fromEpochToDateTime(gmtEpoch, false, TimeZonesEnum.America_SaoPaulo);
+			const gmtEpoch = fromDateTimeToEpoch(dateTime, 'seconds', false);
+			const gmtDateTime = fromEpochToDateTime(gmtEpoch, 'seconds', TimeZonesEnum.America_SaoPaulo);
 
 			expect(fromDateTimeToISO(gmtDateTime, false)).toBe('2024-06-10T02:52:50.885-03:00');
 		});

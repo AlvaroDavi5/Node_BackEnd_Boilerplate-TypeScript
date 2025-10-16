@@ -3,15 +3,15 @@ import { ModuleRef } from '@nestjs/core';
 import { ConfigService } from '@nestjs/config';
 import { Collection, Db, ObjectId } from 'mongodb';
 import { ConfigsInterface } from '@core/configs/envs.config';
-import WebSocketClient from '@events/websocket/client/WebSocket.client';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
-import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 import LoggerService from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
 import SubscriptionEntity, { ICreateSubscription, IUpdateSubscription } from '@domain/entities/Subscription.entity';
 import { CacheEnum } from '@domain/enums/cache.enum';
-import { WebSocketEventsEnum } from '@domain/enums/webSocketEvents.enum';
+import { WebSocketEventsEnum } from '@domain/enums/events.enum';
+import WebSocketClient from '@events/websocket/client/WebSocket.client';
+import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 
 
 @Injectable()
@@ -44,21 +44,23 @@ export default class SubscriptionService implements OnModuleInit {
 	}
 
 	public async get(subscriptionId: string): Promise<SubscriptionEntity> {
-		let subscription = await this.getFromCache(subscriptionId);
-		if (!subscription) {
+		let savedSubscription = await this.getFromCache(subscriptionId);
+		if (!savedSubscription) {
 			const foundedSubscription = await this.mongoClient.findOne(this.subscriptionsCollection, {
 				subscriptionId,
 			});
-			subscription = foundedSubscription;
+			savedSubscription = foundedSubscription;
 		}
-		if (!subscription)
+
+		if (!savedSubscription)
 			throw this.exceptions.notFound({
 				message: 'Subscription not found!',
 			});
+		const subscription = new SubscriptionEntity(savedSubscription);
 
-		await this.saveOnCache(subscriptionId, subscription);
+		await this.saveOnCache(subscriptionId, subscription.getAttributes());
 
-		return new SubscriptionEntity(subscription);
+		return subscription;
 	}
 
 	public async save(subscriptionId: string, data: ICreateSubscription | IUpdateSubscription): Promise<SubscriptionEntity> {
@@ -67,17 +69,18 @@ export default class SubscriptionService implements OnModuleInit {
 		});
 		let subscriptionDatabaseId: ObjectId | null | undefined = foundedSubscription?._id;
 
+		const subscriptionData = new SubscriptionEntity(data).getAttributes();
 		if (!subscriptionDatabaseId) {
 			// ? create
-			const savedSubscription = await this.mongoClient.insertOne(this.subscriptionsCollection, data);
+			const savedSubscription = await this.mongoClient.insertOne(this.subscriptionsCollection, subscriptionData);
 			subscriptionDatabaseId = savedSubscription.insertedId;
 		} else
 			// ? update
-			await this.mongoClient.updateOne(this.subscriptionsCollection, subscriptionDatabaseId, data);
+			await this.mongoClient.updateOne(this.subscriptionsCollection, subscriptionDatabaseId, subscriptionData);
 
 		if (subscriptionDatabaseId) {
 			foundedSubscription = await this.mongoClient.get(this.subscriptionsCollection, subscriptionDatabaseId);
-			await this.saveOnCache(subscriptionId, foundedSubscription);
+			await this.saveOnCache(subscriptionId, new SubscriptionEntity(foundedSubscription).getAttributes());
 		} else
 			throw this.exceptions.conflict({
 				message: 'Subscription not created or updated!',
@@ -93,9 +96,9 @@ export default class SubscriptionService implements OnModuleInit {
 		});
 
 		if (foundedSubscription?._id) {
-			await this.deleteFromCache(subscriptionId);
 			deletedSubscription = (await this.mongoClient.deleteOne(this.subscriptionsCollection, foundedSubscription._id)).deletedCount > 0;
 		}
+		await this.deleteFromCache(subscriptionId);
 
 		return deletedSubscription;
 	}
@@ -112,7 +115,7 @@ export default class SubscriptionService implements OnModuleInit {
 	public emit(msg: unknown, socketIdsOrRooms: string | string[]): void {
 		this.logger.info('Emiting event');
 		this.webSocketClient.send(WebSocketEventsEnum.EMIT_PRIVATE, {
-			...msg as any,
+			...(msg as object),
 			socketIdsOrRooms,
 		});
 	}
@@ -122,12 +125,12 @@ export default class SubscriptionService implements OnModuleInit {
 		this.webSocketClient.send(WebSocketEventsEnum.BROADCAST, msg);
 	}
 
-	private async listFromCache(): Promise<any[]> {
+	private async listFromCache(): Promise<unknown[]> {
 		const pattern = `${CacheEnum.SUBSCRIPTIONS}:*`;
 		return await this.redisClient.getByKeyPattern(pattern);
 	}
 
-	private async getFromCache(subscriptionId: string): Promise<any> {
+	private async getFromCache(subscriptionId: string): Promise<unknown> {
 		const key = this.cacheAccessHelper.generateKey(subscriptionId, CacheEnum.SUBSCRIPTIONS);
 		return await this.redisClient.get(key);
 	}

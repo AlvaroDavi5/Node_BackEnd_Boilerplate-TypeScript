@@ -3,9 +3,16 @@ import { ConfigService } from '@nestjs/config';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import AbstractRestClient from '@core/infra/integration/rest/AbstractRestClient.client';
 import LoggerService from '@core/logging/Logger.service';
-import { requestMethodType } from '@shared/internal/types/restClientTypes';
+import { requestMethodType, requestQueryType, requestBodyType } from '@shared/internal/types/restClientTypes';
 import { RestClientResponseInterface } from '@shared/external/interfaces/RestClientInterface';
 
+
+interface HealthCheckResponseInterface {
+	url: string, statusCode: number, method: string,
+	params: Record<string, unknown>,
+	query: Record<string, unknown>,
+	body: Record<string, unknown>,
+}
 
 @Injectable()
 export default class RestMockedServiceProvider extends AbstractRestClient {
@@ -13,43 +20,34 @@ export default class RestMockedServiceProvider extends AbstractRestClient {
 		configService: ConfigService,
 		logger: LoggerService,
 	) {
-		const { baseUrl, serviceName, timeout } = configService.get<ConfigsInterface['integration']['rest']['mockedService']>('integration.rest.mockedService')!;
+		const {
+			baseUrl, serviceName,
+			timeout, maxRetries, maxRedirects
+		} = configService.get<ConfigsInterface['integration']['rest']['mockedService']>('integration.rest.mockedService')!;
 
 		super({
-			serviceName,
-			baseUrl,
-			timeout,
+			serviceName, baseUrl,
+			timeout, maxRedirects, maxRetries,
 			logger,
 		});
 	}
 
-	public async healthcheck() {
+	public async healthcheck(): Promise<HealthCheckResponseInterface> {
 		this.logger.info('Requesting healthcheck endpoint');
 
-		const request = await this.makeRequest<{
-			url: string, statusCode: number, method: string,
-			params: { [key: string]: unknown },
-			query: { [key: string]: unknown },
-			body: { [key: string]: unknown },
-		}>('get', 'mockedService/api/check');
+		const { data } = await this.get<HealthCheckResponseInterface>('mockedService/api/check');
 
-		if (request.status !== 200)
-			return request.error;
-
-		return request.data;
+		return data;
 	}
 
 	public async requestHook<RI = unknown>(
 		requestMethod: requestMethodType, requestEndpoint: string,
-		queryParams?: { [key: string]: unknown }, body?: { [key: string]: unknown },
+		queryParams?: requestQueryType, body?: requestBodyType,
 	): Promise<RestClientResponseInterface<RI>> {
 		this.logger.info('Requesting webhook endpoint');
 
-		const { data, status, headers, error } = await this.makeRequest<RI>(
-			requestMethod, requestEndpoint,
-			queryParams, body,
-		);
+		const { data, status, headers } = await this.makeRequest<RI>(requestMethod, requestEndpoint, queryParams, body);
 
-		return { data, status, headers, error };
+		return { data, status, headers };
 	}
 }

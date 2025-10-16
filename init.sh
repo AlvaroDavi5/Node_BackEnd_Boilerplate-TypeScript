@@ -16,9 +16,9 @@ log() {
 	echo "${green} \n[$(date +'%Y-%m-%dT%H:%M:%S%z')]: $@\n ${default}";
 }
 
-if [ ! -e .env -a "$IS_ON_CONTAINER" != "TRUE" ]; then
+if [ ! -e .env -a "$CI" != "true" ]; then
 	log "Copying Dotenv File...";
-	cp envs/.env.development.local .env > /dev/null 2>&1;
+	cp envs/.env.development .env > /dev/null 2>&1;
 	if [ $? -ne 0 ]; then
 		err "Error while copying '.env' file.";
 	fi
@@ -38,11 +38,11 @@ if [ $NODE_ENV != 'prod' ]; then
 	fi
 fi;
 
-if command -v yarn &> /dev/null
+if command -v npm &> /dev/null
 then
 	log "Starting Application...";
-	mkdir -p docs;
-	yarn run $EXEC_COMMAND;
+	mkdir -p docs temp > /dev/null 2>&1;
+	npm run $EXEC_COMMAND;
 	if [ $? -ne 0 ]; then
 		err "Error starting application.";
 	fi

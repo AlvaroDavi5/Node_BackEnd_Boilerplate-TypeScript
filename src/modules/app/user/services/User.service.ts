@@ -1,12 +1,12 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import CryptographyService from '@core/security/Cryptography.service';
+import Exceptions from '@core/errors/Exceptions';
+import { ConfigsInterface } from '@core/configs/envs.config';
 import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
 import UserListEntity from '@domain/entities/generic/UserList.entity';
-import CryptographyService from '@core/security/Cryptography.service';
 import UserRepository from '@app/user/repositories/user/User.repository';
-import Exceptions from '@core/errors/Exceptions';
 import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
-import { ConfigsInterface } from '@core/configs/envs.config';
 
 
 @Injectable()
@@ -38,16 +38,9 @@ export default class UserService {
 		}
 	}
 
-	public async getByEmail(email: string): Promise<UserEntity> {
+	public async getByEmail(email: string): Promise<UserEntity | null> {
 		try {
-			const user = await this.userRepository.findOne({ where: { email } });
-
-			if (!user)
-				throw this.exceptions.notFound({
-					message: 'User not founded by email!',
-				});
-
-			return user;
+			return await this.userRepository.findOne({ where: { email } });
 		} catch (error) {
 			throw this.caughtError(error);
 		}
@@ -63,7 +56,10 @@ export default class UserService {
 
 			entity.setPassword(this.protectPassword(userPassword));
 
-			return await this.userRepository.create(entity);
+			const createdUser = await this.userRepository.create(entity);
+
+			createdUser.setPassword('');
+			return createdUser;
 		} catch (error) {
 			throw this.caughtError(error);
 		}
@@ -77,22 +73,23 @@ export default class UserService {
 			if (userPassword?.length)
 				userData.password = this.protectPassword(userPassword);
 
-			const user = await this.userRepository.update(id, userData);
+			const updatedUser = await this.userRepository.update(id, userData);
 
-			if (!user)
+			if (!updatedUser)
 				throw this.exceptions.conflict({
 					message: 'User not updated!',
 				});
 
-			return user;
+			updatedUser.setPassword('');
+			return updatedUser;
 		} catch (error) {
 			throw this.caughtError(error);
 		}
 	}
 
-	public async delete(id: string, data: { softDelete: boolean, userAgentId?: string }): Promise<boolean> {
+	public async delete(id: string, data: { softDelete: boolean, agentUserId?: string }): Promise<boolean> {
 		try {
-			return await this.userRepository.deleteOne(id, Boolean(data.softDelete), String(data.userAgentId));
+			return await this.userRepository.deleteOne(id, Boolean(data.softDelete), String(data.agentUserId));
 		} catch (error) {
 			throw this.caughtError(error);
 		}
@@ -118,12 +115,13 @@ export default class UserService {
 		if (!salt?.length || !hash?.length)
 			throw this.exceptions.internal({
 				message: 'Error to get password',
-				details: 'Invalid salt or hash from database',
+				details: 'Invalid salt or hash',
 			});
 
 		const toHash = salt + passwordToValidate + this.secret;
 		const newHash = this.cryptographyService.hashing(toHash, 'ascii', 'sha256', 'base64url');
-		if (newHash !== hash)
+
+		if (!this.isSameHash(hash, newHash))
 			throw this.exceptions.unauthorized({
 				message: 'Incorrect password',
 				details: 'Password hash is different from database',
@@ -150,6 +148,13 @@ export default class UserService {
 		return result;
 	}
 
+	private isSameHash(h1: string | null, h2: string | null): boolean {
+		const hash1 = Buffer.from(h1 ?? 'h1');
+		const hash2 = Buffer.from(h2 ?? 'h2');
+		return this.cryptographyService.compareBuffer(hash1, hash2);
+	}
+
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private caughtError(error: any): Error {
 		const errorDetails: string | undefined = error?.message ?? error?.cause ?? error?.original;
 		return this.exceptions.internal({

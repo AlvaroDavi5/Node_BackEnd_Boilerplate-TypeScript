@@ -1,4 +1,4 @@
 
 export enum CronJobsEnum {
-	SyncCron = 'SYNC_CRON',
+	SYNC_CRON = 'SyncCron',
 }

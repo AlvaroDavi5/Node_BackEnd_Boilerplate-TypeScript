@@ -3,71 +3,27 @@ import { ConfigService } from '@nestjs/config';
 import SqsClient from '@core/infra/integration/aws/Sqs.client';
 import LoggerService from '@core/logging/Logger.service';
 import CryptographyService from '@core/security/Cryptography.service';
-import { ConfigsInterface } from '@core/configs/envs.config';
-import { EventSchemaInterface } from '@events/queue/handlers/schemas/event.schema';
-import { TimeZonesEnum } from '@common/enums/timeZones.enum';
-import { fromDateTimeToISO, getDateTimeNow } from '@common/utils/dates.util';
+import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import AbstractQueueProducer from './AbstractProducer.producer';
 
-
-interface EventDispatchInterface {
-	payload: {
-		[key: string]: any,
-	},
-	schema: string,
-	author?: string,
-	title?: string,
-}
 
 @Injectable()
-export default class EventsQueueProducer {
-	private readonly credentials: {
-		queueName: string,
-		queueUrl: string,
-	};
-
-	private readonly applicationName: string;
-
+export default class EventsQueueProducer extends AbstractQueueProducer {
 	constructor(
-		private readonly configService: ConfigService,
-		private readonly cryptographyService: CryptographyService,
-		private readonly sqsClient: SqsClient,
-		private readonly logger: LoggerService,
+		configService: ConfigService,
+		dataParserHelper: DataParserHelper,
+		cryptographyService: CryptographyService,
+		sqsClient: SqsClient,
+		logger: LoggerService,
 	) {
-		const { queueName, queueUrl } = this.configService.get<ConfigsInterface['integration']['aws']['sqs']['eventsQueue']>('integration.aws.sqs.eventsQueue')!;
-		this.credentials = {
-			queueName,
-			queueUrl,
-		};
-		const appName = this.configService.get<ConfigsInterface['application']['name']>('application.name')!;
-		this.applicationName = String(appName);
-	}
-
-	private buildMessageBody({ payload, schema }: { payload: any, schema?: string }): EventSchemaInterface {
-		return {
-			id: this.cryptographyService.generateUuid(),
-			schema: schema || 'EVENTS',
-			schemaVersion: 1.0,
-			payload,
-			source: 'BOILERPLATE',
-			timestamp: fromDateTimeToISO(getDateTimeNow(TimeZonesEnum.America_SaoPaulo)),
-		};
-	}
-
-	public async dispatch({ payload, schema, author, title }: EventDispatchInterface): Promise<string | null> {
-		const message = this.buildMessageBody({ payload, schema });
-
-		try {
-			const messageId = await this.sqsClient.sendMessage(
-				this.credentials.queueUrl,
-				title || 'New Event',
-				author || this.applicationName,
-				message,
-			);
-			this.logger.info(`Sended message to queue ${this.credentials.queueName}`);
-			return messageId;
-		} catch (error) {
-			this.logger.error(`Error to send message to queue ${this.credentials.queueName}: ${error}`);
-			return null;
-		}
+		super(
+			EventsQueueProducer.name,
+			'eventsQueue',
+			configService,
+			dataParserHelper,
+			cryptographyService,
+			sqsClient,
+			logger,
+		);
 	}
 }

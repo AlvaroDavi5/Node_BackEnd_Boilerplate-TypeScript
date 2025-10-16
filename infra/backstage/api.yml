@@ -1,0 +1,2246 @@
+apiVersion: backstage.io/v1alpha1
+kind: API
+metadata:
+  name: node-backend-boilerplate-api
+  description: Node.js Backend Boilerplate API
+spec:
+  owner: devs
+  system: node-backend-boilerplate-system
+  lifecycle: production
+  type: openapi
+  definition: |
+    openapi: 3.0.0
+    info:
+      title: Node Back-End Boilerplate
+      description: API Boilerplate created with Nest.js
+      version: 6.0.1
+      contact:
+        name: Álvaro Alves
+        url: https://github.com/AlvaroDavi5
+        email: alvaro-davi1@hotmail.com
+    servers:
+      - url: http://localhost:3000
+        description: HTTP Main Server
+        variables: {}
+      - url: https://localhost:3000
+        description: HTTPS Main Server
+        variables: {}
+    tags: []
+    paths:
+      /api/check:
+        get:
+          deprecated: false
+          description: Check if API is working
+          operationId: HealthController_healthCheck
+          parameters: []
+          responses:
+            '200':
+              description: ''
+              content:
+                application/json:
+                  schema:
+                    example:
+                      baseUrl: /
+                      url: /api/check?test=oi
+                      method: GET
+                      headers:
+                        host: localhost:3000
+                        connection: keep-alive
+                        accept: application/json
+                      params:
+                        id: 1
+                      query:
+                        key: value
+                      body:
+                        payload: {}
+                      statusCode: 200
+                      statusMessage: Endpoint founded successfully.
+            '400':
+              description: Invalid request format (body, query, params...).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Bad Request
+                      message: Error Message
+                      statusCode: 400
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '401':
+              description: Operation not allowed to the agentUser (Authorization).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Unauthorized
+                      message: Error Message
+                      statusCode: 401
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '403':
+              description: Token does not match or is invalid.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Invalid Token
+                      message: Error Message
+                      statusCode: 498
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '404':
+              description: Resource not founded.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Not Found
+                      message: Error Message
+                      statusCode: 404
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '409':
+              description: Operation not allowed due conflicts.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Conflict
+                      message: Error Message
+                      statusCode: 409
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '429':
+              description: Multiple requests in short time.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Too Many Requests
+                      message: Error Message
+                      statusCode: 429
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '500':
+              description: Internal unhandled situation.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Internal Server Error
+                      message: Error Message
+                      statusCode: 500
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '503':
+              description: Service temporarily unavailable.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Service Unavailable
+                      message: Error Message
+                      statusCode: 503
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+          summary: Check API
+          tags:
+            - HealthCheck
+      /api/v1/check:
+        get:
+          deprecated: true
+          description: Check if API is working (v1)
+          operationId: HealthController_healthCheckV1_v1
+          parameters: []
+          responses:
+            '200':
+              description: ''
+              content:
+                text/plain:
+                  schema:
+                    example: OK
+            '400':
+              description: Invalid request format (body, query, params...).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Bad Request
+                      message: Error Message
+                      statusCode: 400
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '401':
+              description: Operation not allowed to the agentUser (Authorization).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Unauthorized
+                      message: Error Message
+                      statusCode: 401
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '403':
+              description: Token does not match or is invalid.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Invalid Token
+                      message: Error Message
+                      statusCode: 498
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '404':
+              description: Resource not founded.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Not Found
+                      message: Error Message
+                      statusCode: 404
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '409':
+              description: Operation not allowed due conflicts.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Conflict
+                      message: Error Message
+                      statusCode: 409
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '429':
+              description: Multiple requests in short time.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Too Many Requests
+                      message: Error Message
+                      statusCode: 429
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '500':
+              description: Internal unhandled situation.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Internal Server Error
+                      message: Error Message
+                      statusCode: 500
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '503':
+              description: Service temporarily unavailable.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Service Unavailable
+                      message: Error Message
+                      statusCode: 503
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+          summary: Check API
+          tags:
+            - HealthCheck
+      /api/check/sse:
+        get:
+          deprecated: false
+          description: Send to Client the Server events
+          operationId: HealthController_sse
+          parameters: []
+          responses:
+            '200':
+              description: ''
+              content:
+                text/event-stream:
+                  schema:
+                    example:
+                      number: 1
+                      text: OK
+            '400':
+              description: Invalid request format (body, query, params...).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Bad Request
+                      message: Error Message
+                      statusCode: 400
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '401':
+              description: Operation not allowed to the agentUser (Authorization).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Unauthorized
+                      message: Error Message
+                      statusCode: 401
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '403':
+              description: Token does not match or is invalid.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Invalid Token
+                      message: Error Message
+                      statusCode: 498
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '404':
+              description: Resource not founded.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Not Found
+                      message: Error Message
+                      statusCode: 404
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '409':
+              description: Operation not allowed due conflicts.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Conflict
+                      message: Error Message
+                      statusCode: 409
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '429':
+              description: Multiple requests in short time.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Too Many Requests
+                      message: Error Message
+                      statusCode: 429
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '500':
+              description: Internal unhandled situation.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Internal Server Error
+                      message: Error Message
+                      statusCode: 500
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '503':
+              description: Service temporarily unavailable.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Service Unavailable
+                      message: Error Message
+                      statusCode: 503
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+          summary: Server-Sent Events
+          tags:
+            - HealthCheck
+      /api/users:
+        get:
+          deprecated: false
+          description: List all users from cache or database
+          operationId: UserController_listUsers
+          parameters:
+            - name: limit
+              required: false
+              in: query
+              description: Results amount by page
+              schema:
+                nullable: false
+                example: 5
+                type: number
+            - name: page
+              required: false
+              in: query
+              description: Page index
+              schema:
+                nullable: false
+                example: 1
+                type: number
+            - name: order
+              required: false
+              in: query
+              description: List order
+              schema:
+                nullable: false
+                example: ASC
+                type: string
+                enum:
+                  - ASC
+                  - DESC
+            - name: sortBy
+              required: false
+              in: query
+              description: Sort by attribute
+              schema:
+                nullable: false
+                example: createdAt
+                type: string
+                enum:
+                  - createdAt
+                  - updatedAt
+                  - deletedAt
+            - name: searchTerm
+              required: false
+              in: query
+              description: Term for search
+              schema:
+                nullable: false
+                example: My Name
+                type: string
+            - name: selectSoftDeleted
+              required: false
+              in: query
+              description: Filter just soft-deleted registers
+              schema:
+                nullable: false
+                example: true
+                type: boolean
+          responses:
+            '200':
+              schema:
+                example:
+                  content: []
+                  pageNumber: 0
+                  pageSize: 0
+                  totalPages: 0
+                  totalItems: 0
+              description: ''
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/UserListEntity'
+            '400':
+              description: Invalid request format (body, query, params...).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Bad Request
+                      message: Error Message
+                      statusCode: 400
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '401':
+              description: Operation not allowed to the agentUser (Authorization).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Unauthorized
+                      message: Error Message
+                      statusCode: 401
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '403':
+              description: Token does not match or is invalid.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Invalid Token
+                      message: Error Message
+                      statusCode: 498
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '404':
+              description: Resource not founded.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Not Found
+                      message: Error Message
+                      statusCode: 404
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '409':
+              description: Operation not allowed due conflicts.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Conflict
+                      message: Error Message
+                      statusCode: 409
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '429':
+              description: Multiple requests in short time.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Too Many Requests
+                      message: Error Message
+                      statusCode: 429
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '500':
+              description: Internal unhandled situation.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Internal Server Error
+                      message: Error Message
+                      statusCode: 500
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '503':
+              description: Service temporarily unavailable.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Service Unavailable
+                      message: Error Message
+                      statusCode: 503
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+          security:
+            - Authorization: []
+          summary: List Users
+          tags:
+            - Users
+        post:
+          deprecated: false
+          description: Create a new user
+          operationId: UserController_createUser
+          parameters: []
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/CreateUserInputDto'
+          responses:
+            '201':
+              description: ''
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/UserEntity'
+            '400':
+              description: Invalid request format (body, query, params...).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Bad Request
+                      message: Error Message
+                      statusCode: 400
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '401':
+              description: Operation not allowed to the agentUser (Authorization).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Unauthorized
+                      message: Error Message
+                      statusCode: 401
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '403':
+              description: Token does not match or is invalid.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Invalid Token
+                      message: Error Message
+                      statusCode: 498
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '404':
+              description: Resource not founded.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Not Found
+                      message: Error Message
+                      statusCode: 404
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '409':
+              description: Operation not allowed due conflicts.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Conflict
+                      message: Error Message
+                      statusCode: 409
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '429':
+              description: Multiple requests in short time.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Too Many Requests
+                      message: Error Message
+                      statusCode: 429
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '500':
+              description: Internal unhandled situation.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Internal Server Error
+                      message: Error Message
+                      statusCode: 500
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '503':
+              description: Service temporarily unavailable.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Service Unavailable
+                      message: Error Message
+                      statusCode: 503
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+          security:
+            - Authorization: []
+          summary: Create User
+          tags:
+            - Users
+        put:
+          deprecated: false
+          description: Login user and get user authorization token (1d)
+          operationId: UserController_loginUser
+          parameters: []
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/LoginUserInputDto'
+          responses:
+            '200':
+              description: ''
+              content:
+                application/json:
+                  schema:
+                    example:
+                      token: XXX
+                      createdAt: 2025-05-01T16:42:40.460Z
+            '400':
+              description: Invalid request format (body, query, params...).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Bad Request
+                      message: Error Message
+                      statusCode: 400
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '401':
+              description: Operation not allowed to the agentUser (Authorization).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Unauthorized
+                      message: Error Message
+                      statusCode: 401
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '403':
+              description: Token does not match or is invalid.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Invalid Token
+                      message: Error Message
+                      statusCode: 498
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '404':
+              description: Resource not founded.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Not Found
+                      message: Error Message
+                      statusCode: 404
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '409':
+              description: Operation not allowed due conflicts.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Conflict
+                      message: Error Message
+                      statusCode: 409
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '429':
+              description: Multiple requests in short time.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Too Many Requests
+                      message: Error Message
+                      statusCode: 429
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '500':
+              description: Internal unhandled situation.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Internal Server Error
+                      message: Error Message
+                      statusCode: 500
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '503':
+              description: Service temporarily unavailable.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Service Unavailable
+                      message: Error Message
+                      statusCode: 503
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+          summary: Login User
+          tags:
+            - Users
+      /api/users/{userId}:
+        get:
+          deprecated: false
+          description: Get user by ID
+          operationId: UserController_getUser
+          parameters:
+            - name: userId
+              required: true
+              in: path
+              schema:
+                type: string
+          responses:
+            '200':
+              description: ''
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/UserEntity'
+            '400':
+              description: Invalid request format (body, query, params...).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Bad Request
+                      message: Error Message
+                      statusCode: 400
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '401':
+              description: Operation not allowed to the agentUser (Authorization).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Unauthorized
+                      message: Error Message
+                      statusCode: 401
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '403':
+              description: Token does not match or is invalid.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Invalid Token
+                      message: Error Message
+                      statusCode: 498
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '404':
+              description: Resource not founded.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Not Found
+                      message: Error Message
+                      statusCode: 404
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '409':
+              description: Operation not allowed due conflicts.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Conflict
+                      message: Error Message
+                      statusCode: 409
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '429':
+              description: Multiple requests in short time.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Too Many Requests
+                      message: Error Message
+                      statusCode: 429
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '500':
+              description: Internal unhandled situation.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Internal Server Error
+                      message: Error Message
+                      statusCode: 500
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '503':
+              description: Service temporarily unavailable.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Service Unavailable
+                      message: Error Message
+                      statusCode: 503
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+          security:
+            - Authorization: []
+          summary: Get User
+          tags:
+            - Users
+        patch:
+          deprecated: false
+          description: Update registered user
+          operationId: UserController_updateUser
+          parameters:
+            - name: userId
+              required: true
+              in: path
+              schema:
+                type: string
+          requestBody:
+            required: true
+            content:
+              application/json:
+                schema:
+                  $ref: '#/components/schemas/UpdateUserInputDto'
+          responses:
+            '200':
+              description: ''
+              content:
+                application/json:
+                  schema:
+                    $ref: '#/components/schemas/UserEntity'
+            '400':
+              description: Invalid request format (body, query, params...).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Bad Request
+                      message: Error Message
+                      statusCode: 400
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '401':
+              description: Operation not allowed to the agentUser (Authorization).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Unauthorized
+                      message: Error Message
+                      statusCode: 401
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '403':
+              description: Token does not match or is invalid.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Invalid Token
+                      message: Error Message
+                      statusCode: 498
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '404':
+              description: Resource not founded.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Not Found
+                      message: Error Message
+                      statusCode: 404
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '409':
+              description: Operation not allowed due conflicts.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Conflict
+                      message: Error Message
+                      statusCode: 409
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '429':
+              description: Multiple requests in short time.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Too Many Requests
+                      message: Error Message
+                      statusCode: 429
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '500':
+              description: Internal unhandled situation.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Internal Server Error
+                      message: Error Message
+                      statusCode: 500
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '503':
+              description: Service temporarily unavailable.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Service Unavailable
+                      message: Error Message
+                      statusCode: 503
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+          security:
+            - Authorization: []
+          summary: Update User
+          tags:
+            - Users
+        delete:
+          deprecated: false
+          description: Delete a user
+          operationId: UserController_deleteUser
+          parameters:
+            - name: userId
+              required: true
+              in: path
+              schema:
+                type: string
+          responses:
+            '204':
+              description: ''
+            '400':
+              description: Invalid request format (body, query, params...).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Bad Request
+                      message: Error Message
+                      statusCode: 400
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '401':
+              description: Operation not allowed to the agentUser (Authorization).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Unauthorized
+                      message: Error Message
+                      statusCode: 401
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '403':
+              description: Token does not match or is invalid.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Invalid Token
+                      message: Error Message
+                      statusCode: 498
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '404':
+              description: Resource not founded.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Not Found
+                      message: Error Message
+                      statusCode: 404
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '409':
+              description: Operation not allowed due conflicts.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Conflict
+                      message: Error Message
+                      statusCode: 409
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '429':
+              description: Multiple requests in short time.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Too Many Requests
+                      message: Error Message
+                      statusCode: 429
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '500':
+              description: Internal unhandled situation.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Internal Server Error
+                      message: Error Message
+                      statusCode: 500
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '503':
+              description: Service temporarily unavailable.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Service Unavailable
+                      message: Error Message
+                      statusCode: 503
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+          security:
+            - Authorization: []
+          summary: Delete User
+          tags:
+            - Users
+      /api/subscriptions:
+        get:
+          deprecated: false
+          description: List websockets subscriptions
+          operationId: SubscriptionController_listSubscriptions
+          parameters:
+            - name: useCache
+              required: true
+              in: query
+              schema:
+                type: boolean
+          responses:
+            '200':
+              description: ''
+              content:
+                application/json:
+                  schema:
+                    example:
+                      - subscriptionId: 5-aUrSIYE7dSVsS8AAAB
+                        clientId: null
+                        updatedAt: null
+                        newConnectionsListen: false
+                        databaseId: 6561299695e69d3b19ddf979
+                        createdAt: 2025-05-01T16:42:41.618Z
+                      - subscriptionId: WKt2b2RWrMXogTfKAAAD
+                        clientId: localDev#1
+                        updatedAt: null
+                        newConnectionsListen: true
+                        databaseId: 65612ccebff9f0fbcd58256a
+                        createdAt: 2025-05-01T16:42:41.618Z
+                    default: []
+            '400':
+              description: Invalid request format (body, query, params...).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Bad Request
+                      message: Error Message
+                      statusCode: 400
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '401':
+              description: Operation not allowed to the agentUser (Authorization).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Unauthorized
+                      message: Error Message
+                      statusCode: 401
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '403':
+              description: Token does not match or is invalid.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Invalid Token
+                      message: Error Message
+                      statusCode: 498
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '404':
+              description: Resource not founded.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Not Found
+                      message: Error Message
+                      statusCode: 404
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '409':
+              description: Operation not allowed due conflicts.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Conflict
+                      message: Error Message
+                      statusCode: 409
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '429':
+              description: Multiple requests in short time.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Too Many Requests
+                      message: Error Message
+                      statusCode: 429
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '500':
+              description: Internal unhandled situation.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Internal Server Error
+                      message: Error Message
+                      statusCode: 500
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '503':
+              description: Service temporarily unavailable.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Service Unavailable
+                      message: Error Message
+                      statusCode: 503
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+          security:
+            - Authorization: []
+          summary: List Subscriptions
+          tags:
+            - Subscriptions
+      /api/files/download:
+        get:
+          deprecated: false
+          description: Download Uploaded File
+          operationId: FileController_downloadFile
+          parameters:
+            - name: fileName
+              required: true
+              in: header
+              schema:
+                type: string
+            - name: filePath
+              required: true
+              in: header
+              schema:
+                type: string
+            - name: accept
+              in: header
+              schema:
+                type: string
+          responses:
+            '200':
+              description: Downloadable file
+              content:
+                application/octet-stream:
+                  schema:
+                    example: MIT License Copyright (c) 2022 ...
+                text/plain:
+                  schema:
+                    example: MIT License Copyright (c) 2022 ...
+            '400':
+              description: Invalid request format (body, query, params...).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Bad Request
+                      message: Error Message
+                      statusCode: 400
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '401':
+              description: Operation not allowed to the agentUser (Authorization).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Unauthorized
+                      message: Error Message
+                      statusCode: 401
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '403':
+              description: Token does not match or is invalid.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Invalid Token
+                      message: Error Message
+                      statusCode: 498
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '404':
+              description: Resource not founded.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Not Found
+                      message: Error Message
+                      statusCode: 404
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '409':
+              description: Operation not allowed due conflicts.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Conflict
+                      message: Error Message
+                      statusCode: 409
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '429':
+              description: Multiple requests in short time.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Too Many Requests
+                      message: Error Message
+                      statusCode: 429
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '500':
+              description: Internal unhandled situation.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Internal Server Error
+                      message: Error Message
+                      statusCode: 500
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '503':
+              description: Service temporarily unavailable.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Service Unavailable
+                      message: Error Message
+                      statusCode: 503
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+          security:
+            - Authorization: []
+          summary: Download File
+          tags:
+            - Files
+      /api/files/upload:
+        post:
+          deprecated: false
+          description: Upload any file to S3
+          operationId: FileController_uploadFile
+          parameters:
+            - name: fileName
+              required: true
+              in: header
+              schema:
+                type: string
+            - name: accept
+              in: header
+              schema:
+                type: string
+          requestBody:
+            required: true
+            content:
+              multipart/form-data:
+                schema:
+                  type: object
+                  properties:
+                    file:
+                      type: string
+                      format: binary
+          responses:
+            '201':
+              description: Uploaded File Info
+              content:
+                application/json:
+                  schema:
+                    example:
+                      filePath: upload/reports/file.txt
+                      fileContentType: text/plain
+                      uploadTag: '"d41d8cd98f00b204e9801998ecf8427e"'
+            '400':
+              description: Invalid request format (body, query, params...).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Bad Request
+                      message: Error Message
+                      statusCode: 400
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '401':
+              description: Operation not allowed to the agentUser (Authorization).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Unauthorized
+                      message: Error Message
+                      statusCode: 401
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '403':
+              description: Token does not match or is invalid.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Invalid Token
+                      message: Error Message
+                      statusCode: 498
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '404':
+              description: Resource not founded.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Not Found
+                      message: Error Message
+                      statusCode: 404
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '409':
+              description: Operation not allowed due conflicts.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Conflict
+                      message: Error Message
+                      statusCode: 409
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '429':
+              description: Multiple requests in short time.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Too Many Requests
+                      message: Error Message
+                      statusCode: 429
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '500':
+              description: Internal unhandled situation.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Internal Server Error
+                      message: Error Message
+                      statusCode: 500
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '503':
+              description: Service temporarily unavailable.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Service Unavailable
+                      message: Error Message
+                      statusCode: 503
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+          security:
+            - Authorization: []
+          summary: Upload File
+          tags:
+            - Files
+      /api/hook:
+        put:
+          deprecated: false
+          description: Create a new event register for hook
+          operationId: HookController_registerEventHook
+          parameters:
+            - name: responseEndpoint
+              required: true
+              in: query
+              schema:
+                nullable: false
+                default: ''
+                example: http://localhost:4000/api/hook
+                type: string
+            - name: responseMethod
+              required: true
+              in: query
+              schema:
+                $ref: '#/components/schemas/[object Object]'
+            - name: responseSchema
+              required: true
+              in: query
+              schema:
+                nullable: false
+                default: ''
+                example: INVALID
+                type: string
+            - name: sendAt
+              required: false
+              in: query
+              schema:
+                format: date-time
+                nullable: false
+                default: '2025-05-01T16:42:41.957Z'
+                example: '2024-04-17T17:36:48.666Z'
+                type: string
+          responses:
+            '201':
+              description: ''
+              content:
+                application/json:
+                  schema:
+                    example:
+                      statusMessage: Hook event register created successfully.
+            '400':
+              description: Invalid request format (body, query, params...).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Bad Request
+                      message: Error Message
+                      statusCode: 400
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '401':
+              description: Operation not allowed to the agentUser (Authorization).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Unauthorized
+                      message: Error Message
+                      statusCode: 401
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '403':
+              description: Token does not match or is invalid.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Invalid Token
+                      message: Error Message
+                      statusCode: 498
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '404':
+              description: Resource not founded.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Not Found
+                      message: Error Message
+                      statusCode: 404
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '406':
+              description: ''
+              content:
+                application/json:
+                  schema:
+                    example:
+                      statusMessage: Hook event register is not acceptable!
+            '409':
+              description: Operation not allowed due conflicts.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Conflict
+                      message: Error Message
+                      statusCode: 409
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '429':
+              description: Multiple requests in short time.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Too Many Requests
+                      message: Error Message
+                      statusCode: 429
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '500':
+              description: Internal unhandled situation.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Internal Server Error
+                      message: Error Message
+                      statusCode: 500
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+            '503':
+              description: Service temporarily unavailable.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Service Unavailable
+                      message: Error Message
+                      statusCode: 503
+                      code: ERR
+                      description: Unknown Error
+                      details: '[]'
+                      cause: ''
+                      timestamp: '2024-10-11T00:01:49.996Z'
+          security:
+            - Authorization: []
+          summary: Register Event Hook
+          tags:
+            - Webhooks
+    components:
+      securitySchemes:
+        Authorization:
+          scheme: bearer
+          bearerFormat: JWT
+          type: http
+          in: header
+          name: JWT
+          description: Enter JWT token
+      schemas:
+        UserPreferenceEntity:
+          type: object
+          properties:
+            id:
+              type: string
+              example: a5483856-1bf7-4dae-9c21-d7ea4dd30d1d
+              default: ''
+              nullable: false
+              description: Database register ID
+            userId:
+              type: string
+              example: a5483856-1bf7-4dae-9c21-d7ea4dd30d1d
+              default: ''
+              nullable: false
+              description: User ID
+            imagePath:
+              type: string
+              example: ./image.png
+              default: null
+              nullable: true
+              description: User profile image path
+            defaultTheme:
+              type: string
+              enum:
+                - DEFAULT
+                - LIGHT
+                - DARK
+              example: DEFAULT
+              default: null
+              nullable: true
+              description: User default theme
+            createdAt:
+              format: date-time
+              type: string
+              example: 2024-06-10T03:52:50.885Z
+              default: 2024-06-10T03:52:50.885Z
+              nullable: false
+              description: User creation timestamp
+            updatedAt:
+              format: date-time
+              type: string
+              example: null
+              default: null
+              nullable: true
+              description: User updated timestamp
+            deletedAt:
+              format: date-time
+              type: string
+              example: null
+              default: null
+              nullable: true
+              description: User deleted timestamp
+          required:
+            - imagePath
+            - defaultTheme
+            - deletedAt
+        UserEntity:
+          type: object
+          properties:
+            id:
+              type: string
+              example: a5483856-1bf7-4dae-9c21-d7ea4dd30d1d
+              default: ''
+              nullable: false
+              description: Database register ID
+            fullName:
+              type: string
+              example: User Default
+              default: null
+              nullable: true
+              description: User name
+            email:
+              type: string
+              example: user.default@nomail.dev
+              default: null
+              nullable: true
+              description: User email
+            password:
+              type: string
+              example: cGFzczEyMw==
+              default: null
+              nullable: true
+              description: User password
+            phone:
+              type: string
+              example: '+0000000000000'
+              default: null
+              nullable: true
+              description: User phone number
+            docType:
+              type: string
+              example: INVALID
+              default: null
+              nullable: true
+              description: Document type
+            document:
+              type: string
+              example: '00000000000'
+              default: null
+              nullable: true
+              description: Document code
+            fu:
+              type: string
+              example: UF
+              default: null
+              nullable: true
+              description: Brazilian Federative Unity
+            preference:
+              example:
+                imagePath: ./image.png
+                defaultTheme: DEFAULT
+                updatedAt: null
+                deletedAt: null
+                createdAt: 2025-05-01T16:42:38.091Z
+              default: null
+              nullable: true
+              description: User preference
+              allOf:
+                - $ref: '#/components/schemas/UserPreferenceEntity'
+            createdAt:
+              format: date-time
+              type: string
+              example: 2024-06-10T03:52:50.885Z
+              default: 2025-05-01T16:42:38.092Z
+              nullable: false
+              description: User creation timestamp
+            updatedAt:
+              format: date-time
+              type: string
+              example: null
+              default: null
+              nullable: true
+              description: User updated timestamp
+            deletedAt:
+              format: date-time
+              type: string
+              example: null
+              default: null
+              nullable: true
+              description: User deleted timestamp
+            deletedBy:
+              type: string
+              example: null
+              default: null
+              nullable: true
+              description: Deleted by agentUser
+          required:
+            - fullName
+            - email
+            - password
+            - phone
+            - docType
+            - document
+            - fu
+            - preference
+            - deletedAt
+            - deletedBy
+        UserListEntity:
+          type: object
+          properties:
+            pageNumber:
+              type: number
+              example: 0
+              default: 0
+              nullable: false
+              description: Page index
+            pageSize:
+              type: number
+              example: 0
+              default: 0
+              nullable: false
+              description: Amount of items by page
+            totalPages:
+              type: number
+              example: 0
+              default: 0
+              nullable: false
+              description: Pages amount
+            totalItems:
+              type: number
+              example: 0
+              default: 0
+              nullable: false
+              description: All results amount
+            content:
+              example:
+                - phone: null
+                  docType: INVALID
+                  document: null
+                  fu: UF
+                  preference:
+                    imagePath: ./image.png
+                    defaultTheme: DEFAULT
+                    updatedAt: null
+                    deletedAt: null
+                    createdAt: 2025-05-01T16:42:38.138Z
+                  updatedAt: 2024-06-10T03:52:50.885Z
+                  deletedAt: null
+                  deletedBy: null
+                  fullName: User Default
+                  createdAt: 2025-05-01T16:42:38.139Z
+              default: []
+              nullable: false
+              description: User list content
+              type: array
+              items:
+                $ref: '#/components/schemas/UserEntity'
+          required:
+            - pageNumber
+            - pageSize
+            - totalPages
+            - totalItems
+            - content
+        '[object Object]':
+          type: string
+          enum:
+            - DEFAULT
+            - LIGHT
+            - DARK
+        UserPreferenceInputDto:
+          type: object
+          properties:
+            imagePath:
+              type: string
+              example: ./image.png
+              nullable: false
+            defaultTheme:
+              example: DEFAULT
+              nullable: false
+              allOf:
+                - $ref: '#/components/schemas/[object Object]'
+        CreateUserInputDto:
+          type: object
+          properties:
+            fullName:
+              type: string
+              example: User Default
+              default: ''
+              nullable: false
+            email:
+              type: string
+              example: user.default@nomail.dev
+              default: ''
+              nullable: false
+            password:
+              type: string
+              example: pass123
+              default: ''
+              nullable: false
+            phone:
+              type: string
+              example: '+0000000000000'
+              nullable: false
+            docType:
+              type: string
+              example: INVALID
+              nullable: false
+            document:
+              type: string
+              example: '00000000000'
+              nullable: false
+            fu:
+              type: string
+              example: UF
+              nullable: false
+            preference:
+              nullable: false
+              allOf:
+                - $ref: '#/components/schemas/UserPreferenceInputDto'
+          required:
+            - fullName
+            - email
+            - password
+        LoginUserInputDto:
+          type: object
+          properties:
+            email:
+              type: string
+              example: user.default@nomail.dev
+              default: ''
+              nullable: false
+            password:
+              type: string
+              example: pass123
+              default: ''
+              nullable: false
+          required:
+            - email
+            - password
+        UpdateUserInputDto:
+          type: object
+          properties:
+            fullName:
+              type: string
+              example: User Default
+              nullable: false
+            email:
+              type: string
+              example: user.default@nomail.dev
+              nullable: false
+            password:
+              type: string
+              example: pass123
+              nullable: false
+            phone:
+              type: string
+              example: '+0000000000000'
+              nullable: false
+            docType:
+              type: string
+              example: INVALID
+              nullable: false
+            document:
+              type: string
+              example: '00000000000'
+              nullable: false
+            fu:
+              type: string
+              example: UF
+              nullable: false
+            preference:
+              nullable: false
+              allOf:
+                - $ref: '#/components/schemas/UserPreferenceInputDto'

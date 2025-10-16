@@ -1,0 +1,85 @@
+name: SonarQube Quality Analysis
+
+on:
+  push:
+    branches: [homolog]
+  pull_request:
+    branches: [main, homolog]
+
+permissions:
+  contents: write
+
+env:
+  SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
+  SONAR_HOST_URL: ${{ secrets.SONAR_HOST_URL }}
+
+jobs:
+  generate_coverage:
+    name: Tests Coverage Generation
+
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [24.x]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref }}
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Installing Dependencies
+        run: npm install --ignore-scripts
+
+      - name: Testing Modules
+        run: npm run test:coverage
+
+      - name: Upload Code Coverage Results
+        uses: actions/upload-artifact@v4
+        with:
+          name: coverage
+          path: coverage
+
+  sonarqube:
+    name: SonarQube Analysis
+
+    needs: generate_coverage
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Code Coverage Results
+        uses: actions/download-artifact@v4
+        with:
+          name: coverage
+          path: coverage
+
+      - name: Installing Dependencies
+        run: npm install --ignore-scripts
+
+      - name: Preparing Coverage Files
+        run: npm run sonar:prepare
+
+      # - name: SonarQube Scan
+      #   run: npm run sonar:scan
+
+      - name: SonarQube Scan
+        uses: sonarsource/sonarqube-scan-action@master
+
+      - name: SonarQube Quality Gate Check
+        id: sonarqube_quality_gate_check
+        uses: sonarsource/sonarqube-quality-gate-action@master
+        timeout-minutes: 5
+
+      - name: "SonarQube Quality Gate Status Return"
+        run: echo "Quality Gate Status -> ${{ steps.sonarqube_quality_gate_check.outputs.quality-gate-status }}"

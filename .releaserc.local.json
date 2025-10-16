@@ -14,6 +14,13 @@
 			"@semantic-release/commit-analyzer",
 			{
 				"preset": "conventionalcommits",
+				"presetConfig": {},
+				"parserOpts": {
+					"noteKeywords": [
+						"BREAKING CHANGE",
+						"BREAKING CHANGES"
+					]
+				},
 				"releaseRules": [
 					{
 						"scope": "no-release",
@@ -50,14 +57,93 @@
 		[
 			"@semantic-release/release-notes-generator",
 			{
-				"preset": "conventionalcommits"
+				"preset": "conventionalcommits",
+				"presetConfig": {
+					"types": [
+						{
+							"type": "revert",
+							"section": "⏪ Reverts",
+							"hidden": false
+						},
+						{
+							"type": "feat",
+							"section": "🚀 Features",
+							"hidden": false
+						},
+						{
+							"type": "fix",
+							"section": "🐛 Bug Fixes",
+							"hidden": false
+						},
+						{
+							"type": "perf",
+							"section": "⚡️ Performance Improvements",
+							"hidden": false
+						},
+						{
+							"type": "ci",
+							"section": "🔧 CI/CD",
+							"hidden": false
+						},
+						{
+							"type": "chore",
+							"section": "🔨 Chore",
+							"hidden": false
+						},
+						{
+							"type": "refactor",
+							"section": "🧹 Code Refactoring",
+							"hidden": false
+						},
+						{
+							"type": "docs",
+							"section": "📚 Documentation",
+							"hidden": false
+						},
+						{
+							"type": "test",
+							"section": "🧪 Tests",
+							"hidden": false
+						},
+						{
+							"type": "style",
+							"section": "🎨 Style Changes",
+							"hidden": true
+						},
+						{
+							"type": "build",
+							"section": "📦 Build",
+							"hidden": true
+						}
+					]
+				},
+				"parserOpts": {
+					"noteKeywords": [
+						"BREAKING CHANGE",
+						"BREAKING CHANGES"
+					]
+				},
+				"writerOpts": {
+					"commitsSort": [
+						"subject",
+						"scope"
+					]
+				}
+			}
+		],
+		[
+			"@semantic-release/npm",
+			{
+				"npmPublish": false,
+				"pkgRoot": ".",
+				"tarballDir": "./"
 			}
 		],
 		[
 			"@semantic-release/git",
 			{
 				"assets": [
-					"build.zip"
+					"build/*.tgz"
 				],
 				"message": "docs(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
 			}

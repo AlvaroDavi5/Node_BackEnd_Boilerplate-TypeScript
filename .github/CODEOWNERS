@@ -26,7 +26,6 @@ init.sh                               @AlvaroDavi5
 # Owners responsible for workflows, CI/CD and deploy
 /.github/workflows/*                  @AlvaroDavi5
 .releaserc.*                          @AlvaroDavi5
-/.husky/*                             @AlvaroDavi5
 Jenkinsfile                           @AlvaroDavi5
 Procfile                              @AlvaroDavi5
 
@@ -39,7 +38,7 @@ nest-cli.json                         @AlvaroDavi5
 babel.config.js                       @AlvaroDavi5
 webpack.config.js                     @AlvaroDavi5
 package.json                          @AlvaroDavi5
-yarn.lock                             @AlvaroDavi5
+package-lock.json                     @AlvaroDavi5
 
 
 # Owners responsible for scripts and tests
@@ -50,6 +49,8 @@ jest.*                                @AlvaroDavi5
 
 # Owners responsible for project configs
 /.vscode/*                            @AlvaroDavi5
+/.husky/*                             @AlvaroDavi5
+lefthook.yml                          @AlvaroDavi5
 .gitignore                            @AlvaroDavi5
 .eslintignore                         @AlvaroDavi5
 .eslintrc.json                        @AlvaroDavi5

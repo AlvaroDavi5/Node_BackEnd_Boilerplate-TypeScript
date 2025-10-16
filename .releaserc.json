@@ -13,6 +13,13 @@
 			"@semantic-release/commit-analyzer",
 			{
 				"preset": "conventionalcommits",
+				"presetConfig": {},
+				"parserOpts": {
+					"noteKeywords": [
+						"BREAKING CHANGE",
+						"BREAKING CHANGES"
+					]
+				},
 				"releaseRules": [
 					{
 						"scope": "no-release",
@@ -49,13 +56,86 @@
 		[
 			"@semantic-release/release-notes-generator",
 			{
-				"preset": "conventionalcommits"
+				"preset": "conventionalcommits",
+				"presetConfig": {
+					"types": [
+						{
+							"type": "revert",
+							"section": "⏪ Reverts",
+							"hidden": false
+						},
+						{
+							"type": "feat",
+							"section": "🚀 Features",
+							"hidden": false
+						},
+						{
+							"type": "fix",
+							"section": "🐛 Bug Fixes",
+							"hidden": false
+						},
+						{
+							"type": "perf",
+							"section": "⚡️ Performance Improvements",
+							"hidden": false
+						},
+						{
+							"type": "ci",
+							"section": "🔧 CI/CD",
+							"hidden": false
+						},
+						{
+							"type": "chore",
+							"section": "🔨 Chore",
+							"hidden": false
+						},
+						{
+							"type": "refactor",
+							"section": "🧹 Code Refactoring",
+							"hidden": false
+						},
+						{
+							"type": "docs",
+							"section": "📚 Documentation",
+							"hidden": false
+						},
+						{
+							"type": "test",
+							"section": "🧪 Tests",
+							"hidden": false
+						},
+						{
+							"type": "style",
+							"section": "🎨 Style Changes",
+							"hidden": true
+						},
+						{
+							"type": "build",
+							"section": "📦 Build",
+							"hidden": true
+						}
+					]
+				},
+				"parserOpts": {
+					"noteKeywords": [
+						"BREAKING CHANGE",
+						"BREAKING CHANGES"
+					]
+				},
+				"writerOpts": {
+					"commitsSort": [
+						"subject",
+						"scope"
+					]
+				}
 			}
 		],
 		[
-			"@semantic-release/git",
+			"@semantic-release/npm",
 			{
-				"message": "docs(release): ${nextRelease.version} [skip ci]\n\n${nextRelease.notes}"
+				"npmPublish": false,
+				"pkgRoot": ".",
+				"tarballDir": "./"
 			}
 		],
 		[
@@ -64,13 +144,18 @@
 				"assets": [
 					{
 						"path": "build.zip",
-						"name": "node_backend_boilerplate-v4.8.4.zip",
-						"label": "Application WebPack"
+						"name": "node_backend_boilerplate-v${nextRelease.version}.zip",
+						"label": "Application WebPack - v${nextRelease.version}"
+					},
+					{
+						"path": "node_backend_boilerplate-${nextRelease.version}.tgz",
+						"name": "node_backend_boilerplate-v${nextRelease.version}.tgz",
+						"label": "Application TarBall - v${nextRelease.version}"
 					},
 					{
 						"path": "CHANGELOG.md",
-						"name": "CHANGELOG-node_backend_boilerplate.md",
-						"label": "Application CHANGELOG"
+						"name": "CHANGELOG-node_backend_boilerplate-v${nextRelease.version}.md",
+						"label": "Application CHANGELOG - v${nextRelease.version}"
 					}
 				]
 			}

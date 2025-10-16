@@ -1,25 +1,33 @@
-import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Injectable, CanActivate, ExecutionContext, Scope } from '@nestjs/common';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 import CryptographyService from '@core/security/Cryptography.service';
 import { RequestInterface } from '@shared/internal/interfaces/endpointInterface';
+import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 
 
-@Injectable()
+@Injectable({ scope: Scope.DEFAULT })
 export default class AuthGuard implements CanActivate {
-
 	constructor(
 		private readonly cryptographyService: CryptographyService,
-		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
+		private readonly exceptions: Exceptions,
 	) { }
 
 	public canActivate(context: ExecutionContext): boolean {
+		const request = context.switchToHttp().getRequest<RequestInterface>();
+
+		const requestId = request?.id;
+		const clientIp = request?.ip ?? request?.socket?.remoteAddress;
+
+		if (requestId)
+			this.logger.setRequestId(requestId);
+		if (clientIp)
+			this.logger.setClientIp(clientIp);
+
 		this.logger.verbose(`Running guard in '${context.getType()}' context`);
 
-		const request = context.switchToHttp().getRequest<RequestInterface>();
 		const authorization = request?.headers?.authorization;
-
 		if (!authorization) {
 			this.logger.warn('Request without authorization token');
 			throw this.exceptions.invalidToken({
@@ -28,9 +36,9 @@ export default class AuthGuard implements CanActivate {
 		}
 
 		const token = authorization.replace('Bearer ', '');
-		const { content, invalidSignature, expired } = this.cryptographyService.decodeJwt(token);
+		const { content, invalidSignature, expired } = this.cryptographyService.decodeJwt<UserAuthInterface>(token);
 
-		if (!content || typeof content === 'string') {
+		if (!content || typeof content !== 'object') {
 			if (expired) {
 				this.logger.warn('Request with expired authorization token');
 				throw this.exceptions.invalidToken({

@@ -118,7 +118,7 @@ export default class UsersModel extends BaseEntity {
 		length: 260,
 		nullable: true,
 		default: null,
-		comment: 'Delete userAgent',
+		comment: 'Deleted by agentUser',
 	})
 	public deletedBy!: string | null;
 

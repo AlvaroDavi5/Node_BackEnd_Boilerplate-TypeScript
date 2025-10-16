@@ -1,52 +1,46 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
-	SQSClient, SQSClientConfig, Message,
+	SQSClient, Message,
 	ListQueuesCommand, CreateQueueCommand, DeleteQueueCommand,
 	SendMessageCommand, ReceiveMessageCommand, DeleteMessageCommand,
 	CreateQueueCommandInput, SendMessageCommandInput, ReceiveMessageCommandInput,
 } from '@aws-sdk/client-sqs';
 import { ConfigsInterface } from '@core/configs/envs.config';
-import CryptographyService from '@core/security/Cryptography.service';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
 
+type ISendParams = {
+	queueUrl: string;
+	title: string;
+	author: string;
+	message: unknown;
+	messageGroupId: string;
+	messageDeduplicationId: string;
+};
+
 @Injectable()
 export default class SqsClient {
-	private readonly awsConfig: SQSClientConfig;
-	private readonly messageGroupId: string;
 	private readonly sqsClient: SQSClient;
 
 	constructor(
 		private readonly configService: ConfigService,
-		private readonly cryptographyService: CryptographyService,
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
-		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
+		const { sqs: { apiVersion, maxAttempts }, credentials: {
+			region, endpoint, accessKeyId, secretAccessKey, sessionToken,
+		} } = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
-		const {
-			region, endpoint, sessionToken,
-			accessKeyId, secretAccessKey,
-		} = awsConfigs.credentials;
-		const { apiVersion } = awsConfigs.sqs;
 
-		this.awsConfig = {
-			endpoint,
-			region,
-			apiVersion,
-			credentials: {
-				accessKeyId: String(accessKeyId),
-				secretAccessKey: String(secretAccessKey),
-				sessionToken,
-			},
+		this.sqsClient = new SQSClient({
+			endpoint, region, apiVersion, maxAttempts,
+			credentials: { accessKeyId, secretAccessKey, sessionToken },
 			logger: showExternalLogs ? this.logger : undefined,
-		};
-		this.messageGroupId = 'DefaultGroup';
-		this.sqsClient = new SQSClient(this.awsConfig);
+		});
 	}
 
 
@@ -55,7 +49,7 @@ export default class SqsClient {
 	}
 
 	private createParams(queueName: string): CreateQueueCommandInput {
-		const isFifoQueue: boolean = queueName?.includes('.fifo');
+		const isFifoQueue = queueName?.endsWith('.fifo');
 
 		const params: CreateQueueCommandInput = {
 			QueueName: queueName,
@@ -70,8 +64,9 @@ export default class SqsClient {
 		return params;
 	}
 
-	private msgParams(queueUrl: string, message: unknown, title: string, author: string): SendMessageCommandInput {
-		const isFifoQueue: boolean = queueUrl?.includes('.fifo');
+	private msgParams(params: ISendParams): SendMessageCommandInput {
+		const { message, title, author, queueUrl, messageGroupId, messageDeduplicationId } = params;
+		const isFifoQueue = queueUrl?.endsWith('.fifo');
 		const messageBody = this.formatMessageBeforeSend(message);
 
 		return {
@@ -87,23 +82,20 @@ export default class SqsClient {
 					StringValue: String(author)
 				},
 			},
-			MessageDeduplicationId: isFifoQueue ? this.cryptographyService.generateUuid() : undefined,
-			MessageGroupId: isFifoQueue ? this.messageGroupId : undefined, // Required for FIFO queues
+			// NOTE - required for FIFO queues
+			MessageDeduplicationId: isFifoQueue ? messageDeduplicationId : undefined,
+			MessageGroupId: isFifoQueue ? messageGroupId : undefined,
 		};
 	}
 
 	private receiveParam(queueUrl: string): ReceiveMessageCommandInput {
 		return {
 			QueueUrl: queueUrl,
-			AttributeNames: [
-				'CreatedTimestamp'
-			],
+			AttributeNames: ['CreatedTimestamp'],
+			MessageAttributeNames: ['All'],
 			MaxNumberOfMessages: 10,
-			MessageAttributeNames: [
-				'All'
-			],
-			VisibilityTimeout: 20,
 			WaitTimeSeconds: 0,
+			VisibilityTimeout: 10,
 		};
 	}
 
@@ -115,72 +107,58 @@ export default class SqsClient {
 		this.sqsClient.destroy();
 	}
 
-	public async listQueues(): Promise<string[]> {
-		let list: string[] = [];
+	public async listQueues(max = 200): Promise<string[]> {
 
 		try {
 			const result = await this.sqsClient.send(new ListQueuesCommand({
-				MaxResults: 200,
+				MaxResults: max,
 			}));
-			if (result?.QueueUrls)
-				list = result.QueueUrls;
-		} catch (error) {
-			this.logger.error('List Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
 
-		return list;
+			return result?.QueueUrls ?? [];
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
 	public async createQueue(queueName: string): Promise<string> {
-		let queueUrl = '';
-
 		try {
 			const result = await this.sqsClient.send(new CreateQueueCommand(
 				this.createParams(queueName)
 			));
-			if (result?.QueueUrl)
-				queueUrl = result.QueueUrl;
-		} catch (error) {
-			this.logger.error('Create Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
 
-		return queueUrl;
+			if (!result?.QueueUrl)
+				throw this.exceptions.internal({ message: 'Queue not created' });
+
+			return result.QueueUrl;
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
 	public async deleteQueue(queueUrl: string): Promise<boolean> {
-		let isDeleted = false;
-
 		try {
 			const result = await this.sqsClient.send(new DeleteQueueCommand({
 				QueueUrl: queueUrl,
 			}));
-			if (result.$metadata?.httpStatusCode && String(result.$metadata?.httpStatusCode)[2] === '2')
-				isDeleted = true;
-		} catch (error) {
-			this.logger.error('Delete Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
 
-		return isDeleted;
+			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
+			return statusCode >= 200 && statusCode < 300;
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
-	public async sendMessage(queueUrl: string, title: string, author: string, message: unknown): Promise<string> {
-		let messageId = '';
-
+	public async sendMessage(params: ISendParams): Promise<string> {
 		try {
-			const result = await this.sqsClient.send(new SendMessageCommand(
-				this.msgParams(queueUrl, message, title, author)
-			));
-			if (result?.MessageId)
-				messageId = result.MessageId;
-		} catch (error) {
-			this.logger.error('Send Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
+			const result = await this.sqsClient.send(new SendMessageCommand(this.msgParams(params)));
 
-		return messageId;
+			if (!result?.MessageId)
+				throw this.exceptions.internal({ message: 'Message not sended' });
+
+			return result.MessageId;
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
 	public async getMessages(queueUrl: string): Promise<Message[]> {
@@ -190,35 +168,34 @@ export default class SqsClient {
 			const result = await this.sqsClient.send(new ReceiveMessageCommand(
 				this.receiveParam(queueUrl)
 			));
-			if (result?.Messages) {
-				for (const message of result?.Messages) {
+
+			if (result?.Messages?.length)
+				result.Messages.forEach((message) => {
 					messages.push(message);
 					this.deleteMessage(queueUrl, message);
-				}
-			}
+				});
 		} catch (error) {
-			this.logger.error('Receive Error:', error);
-			throw this.exceptions.integration(error as Error);
+			throw this.caughtError(error);
 		}
 
 		return messages;
 	}
 
 	public async deleteMessage(queueUrl: string, message: Message): Promise<boolean> {
-		let isDeleted = false;
-
 		try {
 			const result = await this.sqsClient.send(new DeleteMessageCommand({
 				QueueUrl: queueUrl,
 				ReceiptHandle: `${message?.ReceiptHandle}`,
 			}));
-			if (result.$metadata?.httpStatusCode && String(result.$metadata?.httpStatusCode)[2] === '2')
-				isDeleted = true;
+			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
+			return statusCode >= 200 && statusCode < 300;
 		} catch (error) {
-			this.logger.error('Error to Delete Message:', error);
-			throw this.exceptions.integration(error as Error);
+			throw this.caughtError(error);
 		}
+	}
 
-		return isDeleted;
+	private caughtError(error: unknown): Error {
+		this.logger.error(error);
+		return this.exceptions.integration(error as Error);
 	}
 }

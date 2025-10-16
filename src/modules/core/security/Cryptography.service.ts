@@ -1,10 +1,11 @@
+import crypto from 'crypto';
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import crypto from 'crypto';
 import { genSaltSync } from 'bcrypt';
-import { sign, verify, JwtPayload, JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
+import { sign, verify, JsonWebTokenError, TokenExpiredError } from 'jsonwebtoken';
 import { v4 as uuidV4 } from 'uuid';
 import { ConfigsInterface } from '@core/configs/envs.config';
+import { jwtExpirationType, jwtEncode, jwtDecode } from '@shared/internal/types/jwtParamsTypes';
 
 
 type hashAlgorithmType = 'md5' | 'sha256' | 'sha512'
@@ -24,19 +25,20 @@ export default class CryptographyService {
 		return Buffer.from(data, encoding).toString(decoding);
 	}
 
-	public encodeJwt<PT extends object = any>(payload: string | Buffer | PT, inputEncoding: BufferEncoding, expiration = '7d'): string {
-		return sign(payload,
-			this.secret,
-			{
-				algorithm: 'HS256',
-				encoding: inputEncoding,
-				expiresIn: expiration,
-			}
-		);
+	public compareBuffer(b1: Buffer, b2: Buffer): boolean {
+		return crypto.timingSafeEqual(b1, b2);
 	}
 
-	public decodeJwt(token: string): {
-		content: JwtPayload | string | null,
+	public encodeJwt<PT extends object = object>(payload: jwtEncode<PT>, inputEncoding: BufferEncoding, expiration?: jwtExpirationType): string {
+		return sign(payload, this.secret, {
+			algorithm: 'HS256',
+			encoding: inputEncoding,
+			expiresIn: expiration ?? '1d',
+		});
+	}
+
+	public decodeJwt<CT extends object = object>(token: string): {
+		content: jwtDecode<CT> | null,
 		invalidSignature: boolean, expired: boolean,
 	} {
 		try {
@@ -46,7 +48,7 @@ export default class CryptographyService {
 			});
 
 			return {
-				content: decoded,
+				content: decoded as jwtDecode<CT>,
 				invalidSignature: false,
 				expired: false,
 			};
@@ -93,6 +95,7 @@ export default class CryptographyService {
 	}
 
 	public generateDSAKeyPair(keySize: 1024 | 2048): crypto.KeyPairSyncResult<string, string> {
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const { publicKey, privateKey } = crypto.generateKeyPairSync('dsa' as any, {
 			modulusLength: keySize,
 			namedCurve: 'secp256k1',
@@ -108,22 +111,27 @@ export default class CryptographyService {
 		try {
 			const hash = crypto.createHash(algorithm);
 			return hash.update(data, inputEncoding).digest(outputFormat);
-		} catch (error) {
+		} catch (_error) {
 			return null;
 		}
 	}
 
-	public contentDSASign(data: string, inputEncoding: BufferEncoding, privateKeyContent: string, algorithm: hashAlgorithmType, outputFormat: crypto.BinaryToTextEncoding): string | null {
+	public contentDSASign(
+		data: string, inputEncoding: BufferEncoding,
+		privateKeyContent: string, algorithm: hashAlgorithmType,
+		outputFormat: crypto.BinaryToTextEncoding): string | null {
 		try {
 			const dsaSign = crypto.createSign(algorithm);
 			dsaSign.update(data, inputEncoding);
 			return dsaSign.sign(privateKeyContent, outputFormat);
-		} catch (error) {
+		} catch (_error) {
 			return null;
 		}
 	}
 
-	public symmetricAESEncrypt(data: string, inputEncoding: BufferEncoding, keyContent: string, outputEncoding: BufferEncoding, iv?: string): { encrypted: string | null, iv: string } {
+	public symmetricAESEncrypt(
+		data: string, inputEncoding: BufferEncoding, keyContent: string,
+		outputEncoding: BufferEncoding, iv?: string): { encrypted: string | null, iv: string } {
 		const IV = iv ?? crypto.randomBytes(12).toString('hex');
 
 		try {
@@ -132,49 +140,58 @@ export default class CryptographyService {
 			const encrypted = Buffer.from(hexEncrypted, 'hex').toString(outputEncoding);
 
 			return { encrypted, iv: IV };
-		} catch (error) {
+		} catch (_error) {
 			return { encrypted: null, iv: IV };
 		}
 	}
 
-	public symmetricAESDecrypt(data: string, inputEncoding: BufferEncoding, keyContent: string, iv: string, outputEncoding: BufferEncoding): { decrypted: string | null, iv: string } {
+	public symmetricAESDecrypt(
+		data: string, inputEncoding: BufferEncoding,
+		keyContent: string, iv: string,
+		outputEncoding: BufferEncoding): { decrypted: string | null, iv: string } {
 		try {
 			const decipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(keyContent, 'hex'), Buffer.from(iv, 'hex'));
 			const hexDecrypted = decipher.update(data, inputEncoding, 'hex') + decipher.final('hex');
 			const decrypted = Buffer.from(hexDecrypted, 'hex').toString(outputEncoding);
 
 			return { decrypted, iv };
-		} catch (error) {
+		} catch (_error) {
 			return { decrypted: null, iv };
 		}
 	}
 
-	public asymmetricRSAEncrypt(data: string, inputEncoding: BufferEncoding, keyType: 'public' | 'private', keyContent: string, outputEncoding: BufferEncoding): string | null {
+	public asymmetricRSAEncrypt(
+		data: string, inputEncoding: BufferEncoding,
+		keyType: 'public' | 'private', keyContent: string,
+		outputEncoding: BufferEncoding): string | null {
 		try {
 			const dataBuffer = Buffer.from(data, inputEncoding);
 			const key: crypto.RsaPrivateKey | crypto.RsaPublicKey = {
 				key: keyContent,
-				padding: (keyType === 'private') ? crypto.constants.RSA_PKCS1_PADDING : crypto.constants.RSA_PKCS1_OAEP_PADDING,
+				padding: keyType === 'private' ? crypto.constants.RSA_PKCS1_PADDING : crypto.constants.RSA_PKCS1_OAEP_PADDING,
 			};
-			const encryptedBuffer = (keyType === 'private') ? crypto.privateEncrypt(key, dataBuffer) : crypto.publicEncrypt(key, dataBuffer);
+			const encryptedBuffer = keyType === 'private' ? crypto.privateEncrypt(key, dataBuffer) : crypto.publicEncrypt(key, dataBuffer);
 
 			return encryptedBuffer.toString(outputEncoding);
-		} catch (error) {
+		} catch (_error) {
 			return null;
 		}
 	}
 
-	public asymmetricRSADecrypt(data: string, inputEncoding: BufferEncoding, keyType: 'public' | 'private', keyContent: string, outputEncoding: BufferEncoding): string | null {
+	public asymmetricRSADecrypt(
+		data: string, inputEncoding: BufferEncoding,
+		keyType: 'public' | 'private', keyContent: string,
+		outputEncoding: BufferEncoding): string | null {
 		try {
 			const dataBuffer = Buffer.from(data, inputEncoding);
 			const key: crypto.RsaPrivateKey | crypto.RsaPublicKey = {
 				key: keyContent,
-				padding: (keyType === 'private') ? crypto.constants.RSA_PKCS1_OAEP_PADDING : crypto.constants.RSA_PKCS1_PADDING,
+				padding: keyType === 'private' ? crypto.constants.RSA_PKCS1_OAEP_PADDING : crypto.constants.RSA_PKCS1_PADDING,
 			};
-			const decryptedBuffer = (keyType === 'private') ? crypto.privateDecrypt(key, dataBuffer) : crypto.publicDecrypt(key, dataBuffer);
+			const decryptedBuffer = keyType === 'private' ? crypto.privateDecrypt(key, dataBuffer) : crypto.publicDecrypt(key, dataBuffer);
 
 			return decryptedBuffer.toString(outputEncoding);
-		} catch (error) {
+		} catch (_error) {
 			return null;
 		}
 	}

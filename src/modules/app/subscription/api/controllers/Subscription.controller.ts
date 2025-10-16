@@ -1,16 +1,20 @@
-import { Controller, Get, ParseBoolPipe, Query, UseGuards } from '@nestjs/common';
+import { Controller, Get, ParseBoolPipe, Query, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiOkResponse, ApiProduces, ApiConsumes } from '@nestjs/swagger';
-import CustomThrottlerGuard from '@api/guards/Throttler.guard';
+import SubscriptionEntity, { SubscriptionInterface } from '@domain/entities/Subscription.entity';
+import SubscriptionService from '@app/subscription/services/Subscription.service';
 import AuthGuard from '@api/guards/Auth.guard';
+import HttpExceptionsFilter from '@api/filters/HttpExceptions.filter';
+import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
-import SubscriptionService from '@app/subscription/services/Subscription.service';
-import SubscriptionEntity, { SubscriptionInterface } from '@domain/entities/Subscription.entity';
+import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 
 
 @ApiTags('Subscriptions')
 @Controller('/subscriptions')
 @UseGuards(CustomThrottlerGuard, AuthGuard)
+@UseFilters(HttpExceptionsFilter)
+@UseInterceptors(ResponseInterceptor)
 @authSwaggerDecorator()
 @exceptionsResponseDecorator()
 export default class SubscriptionController {

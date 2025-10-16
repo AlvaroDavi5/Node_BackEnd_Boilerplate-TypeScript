@@ -1,10 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
-	CognitoIdentityProviderClient, CognitoIdentityProviderClientConfig, UserPoolDescriptionType,
+	CognitoIdentityProviderClient,
 	ListUserPoolsCommand, CreateUserPoolCommand, DeleteUserPoolCommand, CreateUserPoolClientCommand, DeleteUserPoolClientCommand,
 	AdminCreateUserCommand, AdminGetUserCommand, AdminDeleteUserCommand, SignUpCommand, AdminConfirmSignUpCommand,
-	SignUpCommandInput,
+	SignUpCommandInput, UserPoolDescriptionType, UserPoolClientType, UserType, SignUpResponse,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
@@ -13,9 +13,6 @@ import LoggerService from '@core/logging/Logger.service';
 
 @Injectable()
 export default class CognitoClient {
-	private readonly awsConfig: CognitoIdentityProviderClientConfig;
-	public readonly userPoolName: string;
-	public readonly userPoolId: string;
 	private readonly clientId: string;
 	private readonly cognitoClient: CognitoIdentityProviderClient;
 
@@ -24,29 +21,18 @@ export default class CognitoClient {
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 	) {
-		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
+		const { congito: { apiVersion, maxAttempts, clientId }, credentials: {
+			region, endpoint, accessKeyId, secretAccessKey, sessionToken,
+		} } = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
-		const {
-			region, endpoint, sessionToken,
-			accessKeyId, secretAccessKey,
-		} = awsConfigs.credentials;
-		const { userPoolName, userPoolId, clientId, apiVersion } = awsConfigs.congito;
 
-		this.awsConfig = {
-			endpoint,
-			region,
-			apiVersion,
-			credentials: {
-				accessKeyId: String(accessKeyId),
-				secretAccessKey: String(secretAccessKey),
-				sessionToken,
-			},
-			logger: showExternalLogs ? this.logger : undefined,
-		};
-		this.userPoolName = userPoolName;
-		this.userPoolId = userPoolId;
 		this.clientId = clientId;
-		this.cognitoClient = new CognitoIdentityProviderClient(this.awsConfig);
+
+		this.cognitoClient = new CognitoIdentityProviderClient({
+			endpoint, region, apiVersion, maxAttempts,
+			credentials: { accessKeyId, secretAccessKey, sessionToken },
+			logger: showExternalLogs ? this.logger : undefined,
+		});
 	}
 
 	private signUpParams(userName: string, userEmail: string, password: string): SignUpCommandInput {
@@ -63,7 +49,6 @@ export default class CognitoClient {
 		};
 	}
 
-
 	public getClient(): CognitoIdentityProviderClient {
 		return this.cognitoClient;
 	}
@@ -72,185 +57,169 @@ export default class CognitoClient {
 		this.cognitoClient.destroy();
 	}
 
-	public async listUserPools(): Promise<UserPoolDescriptionType[]> {
-		let list: UserPoolDescriptionType[] = [];
-
+	public async listUserPools(max = 200): Promise<UserPoolDescriptionType[]> {
 		try {
 			const result = await this.cognitoClient.send(new ListUserPoolsCommand({
-				MaxResults: 200,
+				MaxResults: max,
 			}));
-			if (result?.UserPools)
-				list = result.UserPools;
-		} catch (error) {
-			this.logger.error('List User Pools Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
 
-		return list;
+			return result.UserPools ?? [];
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
 	public async createUserPool(userPoolName: string): Promise<string> {
-		let userPoolId = '';
-
 		try {
 			const result = await this.cognitoClient.send(new CreateUserPoolCommand({
 				PoolName: userPoolName,
 			}));
-			if (result?.UserPool?.Id)
-				userPoolId = result.UserPool.Id;
-		} catch (error) {
-			this.logger.error('Create User Pool Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
 
-		return userPoolId;
+			if (!result?.UserPool?.Id)
+				throw this.exceptions.internal({ message: 'UserPool not created' });
+
+			return result.UserPool.Id;
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
-	public async deleteUserPool(userPoolId: string): Promise<number> {
-		let statusCode = 0;
-
+	public async deleteUserPool(userPoolId: string): Promise<boolean> {
 		try {
 			const result = await this.cognitoClient.send(new DeleteUserPoolCommand({
 				UserPoolId: userPoolId,
 			}));
 
-			const { httpStatusCode } = result.$metadata;
-			if (httpStatusCode)
-				statusCode = httpStatusCode;
+			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
+			return statusCode >= 200 && statusCode < 300;
 		} catch (error) {
-			this.logger.error('Delete User Pool Error:', error);
-			throw this.exceptions.integration(error as Error);
+			throw this.caughtError(error);
 		}
-
-		return statusCode;
 	}
 
-	public async createClient(userPoolName: string, userPoolId: string): Promise<string> {
-		let clientId = '';
-
+	public async createClient(clientName: string, userPoolId: string): Promise<UserPoolClientType> {
 		try {
 			const result = await this.cognitoClient.send(new CreateUserPoolClientCommand({
-				ClientName: userPoolName,
+				ClientName: clientName,
 				UserPoolId: userPoolId,
 			}));
-			if (result?.UserPoolClient?.ClientId)
-				clientId = result.UserPoolClient.ClientId;
-		} catch (error) {
-			this.logger.error('Create Client Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
 
-		return clientId;
+			if (!result?.UserPoolClient?.ClientId)
+				throw this.exceptions.internal({ message: 'Client not created' });
+
+			return result.UserPoolClient;
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
-	public async deleteClient(clientId: string, userPoolId: string): Promise<number> {
-		let statusCode = 0;
-
+	public async deleteClient(clientId: string, userPoolId: string): Promise<boolean> {
 		try {
 			const result = await this.cognitoClient.send(new DeleteUserPoolClientCommand({
 				ClientId: clientId,
 				UserPoolId: userPoolId,
 			}));
 
-			const { httpStatusCode } = result.$metadata;
-			if (httpStatusCode)
-				statusCode = httpStatusCode;
+			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
+			return statusCode >= 200 && statusCode < 300;
 		} catch (error) {
-			this.logger.error('Delete Client Error:', error);
-			throw this.exceptions.integration(error as Error);
+			throw this.caughtError(error);
 		}
-
-		return statusCode;
 	}
 
-	public async createUser(userName: string, userPoolId: string): Promise<string> {
-		let userStatus = '';
-
+	public async createUser(userName: string, userPoolId: string): Promise<UserType> {
 		try {
 			const result = await this.cognitoClient.send(new AdminCreateUserCommand({
 				Username: userName,
 				UserPoolId: userPoolId,
 			}));
-			if (result?.User?.UserStatus)
-				userStatus = result.User.UserStatus;
+
+			if (!result?.User?.Username)
+				throw this.exceptions.internal({ message: 'User not created' });
+
+			return result.User;
 		} catch (error) {
-			this.logger.error('Create User Error:', error);
-			throw this.exceptions.integration(error as Error);
+			throw this.caughtError(error);
 		}
 
-		return userStatus;
 	}
 
-	public async getUser(userName: string, userPoolId: string): Promise<boolean> {
-		let userEnabled = false;
+	public async getUser(userName: string, userPoolId: string): Promise<UserType> {
+		const user: UserType = {};
 
 		try {
 			const result = await this.cognitoClient.send(new AdminGetUserCommand({
 				Username: userName,
 				UserPoolId: userPoolId,
 			}));
-			if (result?.Enabled)
-				userEnabled = result.Enabled;
+
+			if (!result?.Username)
+				throw this.exceptions.internal({ message: 'User not finded' });
+
+			user.Username = result.Username;
+			user.Enabled = result.Enabled;
+			user.UserStatus = result.UserStatus;
+			user.MFAOptions = result.MFAOptions;
+			user.UserCreateDate = result.UserCreateDate;
+			user.UserLastModifiedDate = result.UserLastModifiedDate;
 		} catch (error) {
-			this.logger.error('Get User Error:', error);
-			throw this.exceptions.integration(error as Error);
+			throw this.caughtError(error);
 		}
 
-		return userEnabled;
+		return user;
 	}
 
-	public async deleteUser(userName: string, userPoolId: string): Promise<number> {
-		let statusCode = 0;
-
+	public async deleteUser(userName: string, userPoolId: string): Promise<boolean> {
 		try {
 			const result = await this.cognitoClient.send(new AdminDeleteUserCommand({
 				Username: userName,
 				UserPoolId: userPoolId,
 			}));
 
-			const { httpStatusCode } = result.$metadata;
-			if (httpStatusCode)
-				statusCode = httpStatusCode;
+			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
+			return statusCode >= 200 && statusCode < 300;
 		} catch (error) {
-			this.logger.error('Delete User Error:', error);
-			throw this.exceptions.integration(error as Error);
+			throw this.caughtError(error);
 		}
-
-		return statusCode;
 	}
 
-	public async signUp(userName: string, userEmail: string, password: string): Promise<boolean> {
-		let userConfirmed = false;
+	public async userSignUp(userName: string, userEmail: string, userPassword: string): Promise<SignUpResponse> {
+		const user: SignUpResponse = {
+			UserConfirmed: false,
+			UserSub: '',
+		};
 
 		try {
-			const result = await this.cognitoClient.send(new SignUpCommand(this.signUpParams(userName, userEmail, password)));
-			if (result?.UserConfirmed)
-				userConfirmed = result.UserConfirmed;
+			const result = await this.cognitoClient.send(new SignUpCommand(this.signUpParams(userName, userEmail, userPassword)));
+
+			if (!result?.UserConfirmed)
+				throw this.exceptions.internal({ message: 'User not confirmed' });
+
+			user.UserConfirmed = result.UserConfirmed;
+			user.UserSub = result.UserSub;
 		} catch (error) {
-			this.logger.error('signUp Error:', error);
-			throw this.exceptions.integration(error as Error);
+			throw this.caughtError(error);
 		}
 
-		return userConfirmed;
+		return user;
 	}
 
-	public async confirmSignUp(userName: string, userPoolId: string): Promise<number> {
-		let statusCode = 0;
-
+	public async confirmUserSignUp(userName: string, userPoolId: string): Promise<boolean> {
 		try {
 			const result = await this.cognitoClient.send(new AdminConfirmSignUpCommand({
 				Username: userName,
 				UserPoolId: userPoolId,
 			}));
 
-			const { httpStatusCode } = result.$metadata;
-			if (httpStatusCode)
-				statusCode = httpStatusCode;
+			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
+			return statusCode >= 200 && statusCode < 300;
 		} catch (error) {
-			this.logger.error('SignUp Confirm Error:', error);
-			throw this.exceptions.integration(error as Error);
+			throw this.caughtError(error);
 		}
+	}
 
-		return statusCode;
+	private caughtError(error: unknown): Error {
+		this.logger.error(error);
+		return this.exceptions.integration(error as Error);
 	}
 }

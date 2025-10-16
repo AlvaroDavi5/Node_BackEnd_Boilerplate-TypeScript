@@ -8,15 +8,18 @@ import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 @Injectable()
 export default class Exceptions {
 	private parseToString(value?: unknown): string | undefined {
-		if (isNullOrUndefined(value) || typeof value === 'function') return undefined;
+		if (typeof value === 'string')
+			return value;
+		else if (isNullOrUndefined(value) || typeof value === 'function')
+			return undefined;
 		else if (typeof value === 'object') {
 			try {
 				return JSON.stringify(value);
 			} catch (_error) {
 				return value?.toString();
 			}
-		} else if (typeof value === 'string') return value;
-		else return value?.toString();
+		} else
+			return value?.toString();
 	}
 
 	private buildException(

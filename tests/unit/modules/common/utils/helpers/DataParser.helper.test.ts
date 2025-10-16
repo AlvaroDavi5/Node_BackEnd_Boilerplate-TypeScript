@@ -26,21 +26,97 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 			expect(stringifiedUser).toBe('{"user":{"id":1}}');
 		});
 
+		test('Should return a stringified empty object', () => {
+			const stringifiedObject = dataParserHelper.toString({});
+			expect(stringifiedObject).toBe('{}');
+		});
+
+		test('Should return a stringified object with null values', () => {
+			const obj = { name: 'test', value: null, active: true };
+			const stringifiedObject = dataParserHelper.toString(obj);
+			expect(stringifiedObject).toBe('{"name":"test","value":null,"active":true}');
+		});
+
+		test('Should return a stringified nested object', () => {
+			const obj = {
+				user: {
+					id: 1,
+					profile: {
+						name: 'John',
+						settings: {
+							theme: 'dark',
+							notifications: false
+						}
+					}
+				}
+			};
+			const stringifiedObject = dataParserHelper.toString(obj);
+			expect(stringifiedObject).toBe('{"user":{"id":1,"profile":{"name":"John","settings":{"theme":"dark","notifications":false}}}}');
+		});
+
 		test('Should return a stringified object with circular reference', () => {
-			const obj = { user: { id: 1 }, self: null as any };
+			const obj = { user: { id: 1 }, self: null as unknown };
 			obj.self = obj;
 
 			const stringifiedUser = dataParserHelper.toString(obj);
-			expect(stringifiedUser).toBe('{"user":{"id":1},"self":"[Circular Reference]"}');
+			expect(stringifiedUser).toBe('{"user":{"id":1},"self":"{Circular Reference}"}');
+		});
+
+		test('Should return a stringified simple array', () => {
+			const arr = [1, 2, 3, 'test', true];
+			const stringifiedArray = dataParserHelper.toString(arr);
+			expect(stringifiedArray).toBe('[1,2,3,test,true]');
+		});
+
+		test('Should return a stringified empty array', () => {
+			const stringifiedArray = dataParserHelper.toString([]);
+			expect(stringifiedArray).toBe('[]');
+			const arr = dataParserHelper.toString([[], []]);
+			expect(arr).toBe('[[],[]]');
+		});
+
+		test('Should return a stringified array with null and undefined values', () => {
+			const arr = [1, null, undefined, 'test'];
+			const stringifiedArray = dataParserHelper.toString(arr, true);
+			expect(stringifiedArray).toBe('[1,null,undefined,test]');
+		});
+
+		test('Should return a stringified array of objects', () => {
+			const arr = [
+				{ id: 1, name: 'John' },
+				{ id: 2, name: 'Jane' },
+				{ id: 3, name: 'Bob' }
+			];
+			const stringifiedArray = dataParserHelper.toString(arr);
+			expect(stringifiedArray).toBe('[{"id":1,"name":"John"},{"id":2,"name":"Jane"},{"id":3,"name":"Bob"}]');
+		});
+
+		test('Should return a stringified nested array', () => {
+			const arr = [1, [2, 3, [4, 5]], 6];
+			const stringifiedArray = dataParserHelper.toString(arr);
+			expect(stringifiedArray).toBe('[1,[2,3,[4,5]],6]');
+		});
+
+		test('Should return a stringified mixed array with objects and primitives', () => {
+			const arr = [
+				'string',
+				123,
+				true,
+				{ id: 1, active: false },
+				[1, 2, 3],
+				null
+			];
+			const stringifiedArray = dataParserHelper.toString(arr);
+			expect(stringifiedArray).toBe('[string,123,true,{"id":1,"active":false},[1,2,3],null]');
 		});
 
 		test('Should return a stringified array with error and circular reference', () => {
 			const error = new Error('Test Error');
-			const arr = [{ id: 1 }, error, null as any];
+			const arr = [{ id: 1 }, error, null as unknown];
 			arr[2] = arr;
 
 			const stringifiedUser = dataParserHelper.toString(arr);
-			expect(stringifiedUser).toBe('{"id":1}, Error: Test Error, [Circular Reference]');
+			expect(stringifiedUser).toBe('[{"id":1},Error: Test Error,[Circular Reference]]');
 		});
 
 		test('Should return a stringified null object', () => {

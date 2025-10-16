@@ -20,6 +20,7 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
+	/* eslint-disable @typescript-eslint/no-empty-function */
 	public getContextName(): string {
 		return 'LoggerServiceMock';
 	}
@@ -32,25 +33,26 @@ export default class LoggerService implements LoggerInterface {
 		return 'request_id';
 	}
 
-	public setRequestId(requestId: string | undefined): void {
-		requestId?.trim();
+	public setRequestId(_requestId: string | undefined): void { }
+
+	public getMessageId(): string | undefined {
+		return 'message_id';
 	}
+
+	public setMessageId(_messageId: string | undefined): void { }
 
 	public getSocketId(): string | undefined {
 		return 'socket_id';
 	}
 
-	public setSocketId(socketId: string | undefined): void {
-		socketId?.trim();
-	}
+	public setSocketId(_socketId: string | undefined): void { }
 
 	public getClientIp(): string | undefined {
 		return 'client_ip';
 	}
 
-	public setClientIp(clientIp: string | undefined): void {
-		clientIp?.trim();
-	}
+	public setClientIp(_clientIp: string | undefined): void { }
+	/* eslint-enable @typescript-eslint/no-empty-function */
 
 	public error(...args: unknown[]): void {
 		this.log('error', args);

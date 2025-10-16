@@ -1,0 +1,39 @@
+name: Auto Merge Main into Develop/Homolog/Release
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+jobs:
+  merge:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Configurar Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Atualizar Development
+        run: |
+          git checkout develop
+          git merge origin/main -m "Auto merge main into develop [skip ci]"
+          git push origin develop
+
+      - name: Atualizar Homolog
+        run: |
+          git checkout homolog
+          git merge origin/main -m "Auto merge main into homolog [skip ci]"
+          git push origin homolog
+
+      - name: Atualizar Release
+        run: |
+          git checkout release
+          git merge origin/main -m "Auto merge main into release [skip ci]"
+          git push origin release

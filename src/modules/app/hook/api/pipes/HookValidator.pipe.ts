@@ -1,16 +1,20 @@
 import { PipeTransform, ArgumentMetadata } from '@nestjs/common';
-import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
+import { ConfigService } from '@nestjs/config';
 import Exceptions from '@core/errors/Exceptions';
+import LoggerService from '@core/logging/Logger.service';
 import registerEventHookSchema, { RegisterEventHookInterface } from '@app/hook/api/schemas/registerEventHook.schema';
 import { RegisterEventHookInputDto } from '@app/hook/api/dto/HookInput.dto';
-import { generateLogger } from '@core/logging/logger';
+import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
+import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import { configServiceMock, dataParserHelperMock } from '@dev/mocks/mockedModules';
 
 
-export class RegisterEventHookValidatorPipe implements PipeTransform<RegisterEventHookInputDto, RegisterEventHookInterface> {
+export default class RegisterEventHookValidatorPipe implements PipeTransform<RegisterEventHookInputDto, RegisterEventHookInterface> {
 	private readonly schemaValidator: SchemaValidator;
 
 	constructor() {
-		this.schemaValidator = new SchemaValidator(new Exceptions(), generateLogger(RegisterEventHookValidatorPipe.name));
+		const logger = new LoggerService(SchemaValidator.name, configServiceMock as ConfigService, dataParserHelperMock as DataParserHelper);
+		this.schemaValidator = new SchemaValidator(new Exceptions(), logger);
 	}
 
 	public transform(value: RegisterEventHookInputDto, metadata: ArgumentMetadata): RegisterEventHookInterface {

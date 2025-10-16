@@ -1,11 +1,12 @@
 import { Injectable, Scope } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { Readable } from 'stream';
-import S3Client, { s3FileContentType } from '@core/infra/integration/aws/S3.client';
+import S3Client from '@core/infra/integration/aws/S3.client';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
 import FileStrategy from '@app/file/strategies/File.strategy';
 import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
+import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import { RequestFileInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @Injectable({ scope: Scope.TRANSIENT })
@@ -17,35 +18,18 @@ export default class UploadService {
 		private readonly configService: ConfigService,
 		private readonly s3Client: S3Client,
 		private readonly fileReaderHelper: FileReaderHelper,
+		private readonly dataParserHelper: DataParserHelper,
 		private readonly exceptions: Exceptions,
 	) {
 		const s3Configs = this.configService.get<ConfigsInterface['integration']['aws']['s3']>('integration.aws.s3')!;
 		this.uploadBucket = s3Configs.bucketName;
 	}
 
-	private async parseToBuffer(content: s3FileContentType, inputEncoding: BufferEncoding): Promise<Buffer> {
-		if (Buffer.isBuffer(content)) {
-			return content;
-		} else if (typeof content === 'string') {
-			return Buffer.from(content, inputEncoding);
-		} else if (content instanceof Readable) {
-			const chunks: Uint8Array[] = [];
-			for await (const chunk of content) {
-				chunks.push(chunk);
-			}
-			return Buffer.concat(chunks);
-		} else {
-			throw this.exceptions.internal({
-				message: 'Unsupported content type',
-			});
-		}
-	}
-
-	public async uploadFile(fileName: string, file: Express.Multer.File): Promise<{ filePath: string, uploadTag: string }> {
+	public async uploadFile(fileName: string, file: RequestFileInterface): Promise<{ filePath: string, uploadTag: string }> {
 		let uploadTag = '';
 		const fileEncoding = this.fileStrategy.defineEncoding(fileName, file.mimetype);
 		const fileContent = this.fileReaderHelper.readFile(file.path, fileEncoding) ?? '';
-		const fileBuffer = await this.parseToBuffer(fileContent, fileEncoding);
+		const fileBuffer = await this.dataParserHelper.toBuffer(fileContent, fileEncoding);
 		const filePath = `upload/reports/${fileName}`;
 
 		const isValidFile = fileBuffer?.length ?? fileContent?.length;
@@ -69,7 +53,7 @@ export default class UploadService {
 				message: 'File not founded!',
 			});
 
-		const fileContentBuffer = await this.parseToBuffer(content, fileEncoding);
+		const fileContentBuffer = await this.dataParserHelper.toBuffer(content, fileEncoding);
 		return fileContentBuffer;
 	}
 }

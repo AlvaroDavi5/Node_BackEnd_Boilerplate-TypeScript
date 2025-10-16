@@ -5,15 +5,16 @@ import { Server, ServerSocket } from './mocks/webSocket/socket.io';
 import { ClientSocket } from './mocks/webSocket/socket.io-client';
 
 
-dotenv.config({ path: '.env.test' });
+dotenv.config({ path: '.env', quiet: true });
+process.env.NODE_ENV = 'test';
 
 // * backing services and dependencies mocks
-jest.mock('src/modules/core/logging/Logger.service.ts', () => jest.requireActual('./mocks/logging/Logger.service'));
+jest.mock('@core/logging/Logger.service.ts', () => jest.requireActual('./mocks/logging/Logger.service'));
 
-jest.mock('src/modules/core/infra/providers/RestMockedService.provider.ts', () => jest.requireActual('./mocks/rest/RestMockedService.provider'));
+jest.mock('@core/infra/providers/RestMockedService.provider.ts', () => jest.requireActual('./mocks/rest/RestMockedService.provider'));
 
 /*
-jest.mock('src/modules/core/infra/database/connection', () => {
+jest.mock('@core/infra/database/connection', () => {
 	let isConnected = true;
 
 	return {
@@ -45,7 +46,7 @@ jest.mock('socket.io-client', () => {
 	return {
 		__esModule: true,
 		Socket: ClientSocket,
-		io: (_uri: string, _opts?: unknown) => (new ClientSocket()),
+		io: (_uri: string, _opts?: unknown) => new ClientSocket(),
 	};
 });
 

@@ -1,17 +1,18 @@
 import { ModuleRef } from '@nestjs/core';
-import { OnModuleInit, UseGuards } from '@nestjs/common';
+import { OnModuleInit, UseFilters, UseGuards } from '@nestjs/common';
 import {
 	WebSocketGateway, SubscribeMessage, MessageBody,
 	WebSocketServer as Server, ConnectedSocket,
 	OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect,
 } from '@nestjs/websockets';
-import { Server as SocketIoServer, Socket as ServerSocket } from 'socket.io';
-import { EventsEnum } from '@domain/enums/events.enum';
-import { WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/webSocketEvents.enum';
+import { Server as SocketIoServer, Socket } from 'socket.io';
+import LoggerService from '@core/logging/Logger.service';
+import { QueueSchemasEnum, WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/events.enum';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
 import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
 import EventsGuard from '@events/websocket/guards/Events.guard';
-import LoggerService from '@core/logging/Logger.service';
+import WebSocketExceptionsFilter from '@events/websocket/filters/WebSocketExceptions.filter';
+import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 import { getObjValues } from '@common/utils/dataValidations.util';
@@ -24,8 +25,9 @@ import { getObjValues } from '@common/utils/dataValidations.util';
 		methods: getObjValues<HttpMethodsEnum>(HttpMethodsEnum),
 	}
 })
-@UseGuards(EventsGuard)
-export default class WebSocketServer implements OnModuleInit, OnGatewayInit<SocketIoServer>, OnGatewayConnection<ServerSocket>, OnGatewayDisconnect<ServerSocket> {
+@UseFilters(WebSocketExceptionsFilter)
+@UseGuards(CustomThrottlerGuard, EventsGuard)
+export default class WebSocketServer implements OnModuleInit, OnGatewayInit<SocketIoServer>, OnGatewayConnection<Socket>, OnGatewayDisconnect<Socket> {
 	@Server()
 	private server!: SocketIoServer;
 
@@ -43,7 +45,12 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 	}
 
 	private formatMessageAfterReceiveHelper(message: string): object | string | null {
-		return this.dataParserHelper.toObject(message).data ?? message;
+		try {
+			return this.dataParserHelper.toObject(message);
+		} catch (error) {
+			this.logger.error(error);
+			return message;
+		}
 	}
 
 	private formatMessageBeforeSendHelper(message: unknown): string {
@@ -59,31 +66,26 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 	}
 
 	// listen 'connection' event from client
-	public async handleConnection(socket: ServerSocket, ...args: unknown[]): Promise<void> {
+	public async handleConnection(socket: Socket, ...args: unknown[]): Promise<void> {
 		this.logger.info(`Client connected: ${socket.id} - ${args}`);
-		await this.subscriptionService.save(socket.id, {
-			subscriptionId: socket.id,
-		});
-		await this.eventsQueueProducer.dispatch({
-			title: 'New Client Connected',
-			author: 'Websocket Server',
-			payload: {
-				subscriptionId: socket.id,
-				event: EventsEnum.NEW_CONNECTION,
-			},
-			schema: WebSocketEventsEnum.CONNECT,
-		});
+
+		await this.saveAndDispatchConnection(socket.id);
 	}
 
 	// listen 'disconnect' event from client
-	public async handleDisconnect(socket: ServerSocket): Promise<void> {
+	public async handleDisconnect(socket: Socket): Promise<void> {
 		this.logger.info(`Client disconnected: ${socket.id}`);
 		await socket.leave(WebSocketRoomsEnum.NEW_CONNECTIONS);
-		await this.subscriptionService.delete(socket.id);
+
+		await this.deleteConnection(socket.id);
 	}
 
 	public disconnect(): void {
 		this.server?.close();
+	}
+
+	public disconnectAllSockets(): void {
+		this.server?.disconnectSockets();
 	}
 
 	public async getSocketsIds(): Promise<string[]> {
@@ -91,32 +93,19 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 		return socketsList?.map((socket) => socket?.id) ?? [];
 	}
 
-	public disconnectAllSockets(): void {
-		this.server?.disconnectSockets();
-	}
-
 	@SubscribeMessage(WebSocketEventsEnum.RECONNECT)
 	public async handleReconnect(
-		@ConnectedSocket() socket: ServerSocket,
+		@ConnectedSocket() socket: Socket,
 		@MessageBody() msg: string,
 	): Promise<void> { // listen reconnect event from client
 		this.logger.info(`Client reconnected: ${socket.id}`);
 
-		const message = this.formatMessageAfterReceiveHelper(msg);
-		if (message && typeof message === 'object') {
-			const subscription = await this.subscriptionService.save(socket.id, {
-				...message,
-				subscriptionId: socket.id,
-			});
-
-			if (subscription?.newConnectionsListen === true)
-				await socket.join(WebSocketRoomsEnum.NEW_CONNECTIONS);
-		}
+		await this.updateConnection(socket, msg);
 	}
 
 	@SubscribeMessage(WebSocketEventsEnum.BROADCAST)
 	public broadcast(
-		@ConnectedSocket() socket: ServerSocket,
+		@ConnectedSocket() socket: Socket,
 		@MessageBody() msg: string,
 	): void { // listen 'broadcast' event from client
 		this.logger.info('Emiting message to all clients');
@@ -125,7 +114,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 
 	@SubscribeMessage(WebSocketEventsEnum.EMIT_PRIVATE)
 	public emitPrivate(
-		@ConnectedSocket() _socket: ServerSocket,
+		@ConnectedSocket() _socket: Socket,
 		@MessageBody() msg: string,
 	): void { // listen 'emit_private' order event from client
 		const { socketIdsOrRooms, ...message } = this.formatMessageAfterReceiveHelper(msg) as { [key: string]: unknown, socketIdsOrRooms?: string | string[] };
@@ -138,8 +127,44 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 
 		this.logger.info(`Emiting message to: ${socketIdsOrRooms}`);
 		this.server?.to(socketIdsOrRooms).emit(
-			String(WebSocketEventsEnum.EMIT),
+			WebSocketEventsEnum.EMIT,
 			String(msgContent),
 		); // emit to specific clients or rooms
+	}
+
+	private async saveAndDispatchConnection(socketId: string): Promise<void> {
+		await this.subscriptionService.save(socketId, {
+			subscriptionId: socketId,
+		});
+
+		await this.eventsQueueProducer.dispatch({
+			title: 'New Client Connected',
+			author: 'Websocket Server',
+			schema: QueueSchemasEnum.NEW_CONNECTION,
+			payload: {
+				subscriptionId: socketId,
+				event: QueueSchemasEnum.NEW_CONNECTION,
+			},
+		});
+	}
+
+	private async updateConnection(socket: Socket, message: string): Promise<void> {
+		const data = this.formatMessageAfterReceiveHelper(message);
+
+		if (typeof data === 'object' && data) {
+			const subscription = await this.subscriptionService.save(socket.id, {
+				...data,
+				subscriptionId: socket.id,
+			});
+
+			if (subscription.newConnectionsListen === true)
+				await socket.join(WebSocketRoomsEnum.NEW_CONNECTIONS);
+			else
+				await socket.leave(WebSocketRoomsEnum.NEW_CONNECTIONS);
+		}
+	}
+
+	private async deleteConnection(socketId: string): Promise<void> {
+		await this.subscriptionService.delete(socketId);
 	}
 }

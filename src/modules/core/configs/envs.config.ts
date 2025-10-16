@@ -1,9 +1,11 @@
 import dotenv from 'dotenv';
+import { daysToSeconds, hoursToSeconds, minutesToSeconds, secondsToMilliseconds } from '@common/utils/dates.util';
+import { QueueNamesEnum } from '@common/enums/queueNames.enum';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 
 
 // dotenv.config({ path: (process.cwd() + '/envs/.env.development') });
-dotenv.config();
+dotenv.config({ quiet: true });
 
 export interface ConfigsInterface {
 	// ? Application Service
@@ -93,14 +95,16 @@ export interface ConfigsInterface {
 				clientName: string,
 				clientId: string,
 				apiVersion: string,
+				maxAttempts: number,
 			},
 			// * Message Queues Service
 			sqs: {
 				eventsQueue: {
-					queueName: string,
+					queueName: QueueNamesEnum,
 					queueUrl: string,
 				},
 				apiVersion: string,
+				maxAttempts: number,
 			},
 			// * Notification Topics Service
 			sns: {
@@ -110,12 +114,14 @@ export interface ConfigsInterface {
 					topicProtocol: string,
 				},
 				apiVersion: string,
+				maxAttempts: number,
 			},
 			// * Storage Service
 			s3: {
 				bucketName: string,
 				filesExpiration: number, // files expiration in seconds
 				apiVersion: string,
+				maxAttempts: number,
 			},
 		},
 		rest: {
@@ -124,12 +130,29 @@ export interface ConfigsInterface {
 				serviceName: string,
 				baseUrl: string,
 				timeout: number, // request timeout in milliseconds
+				maxRedirects: number, // maximum redirections
+				maxRetries: number, // maximum retries
 			},
 		},
 	},
 	// ? Cryptography and Security
 	security: {
 		secretKey: string,
+	},
+	// ? NPM Package
+	package: {
+		name?: string,
+		description?: string,
+		version?: string,
+		license?: string,
+		author?: string,
+		repository?: string,
+		private?: boolean,
+		engines?: {
+			node?: string,
+			npm?: string,
+			yarn?: string,
+		},
 	},
 }
 
@@ -171,8 +194,8 @@ export default (): ConfigsInterface => ({
 			min: 0,
 			max: 5,
 			fifo: true,
-			acquire: (2 * 1000),
-			idle: (2 * 1000),
+			acquire: secondsToMilliseconds(2),
+			idle: secondsToMilliseconds(2),
 		},
 	},
 	data: {
@@ -197,8 +220,8 @@ export default (): ConfigsInterface => ({
 			port: process.env.REDIS_PORT ?? '6379',
 		},
 		expirationTime: {
-			subscriptions: (12 * 60 * 60),
-			hooks: (5 * 60),
+			subscriptions: hoursToSeconds(12),
+			hooks: daysToSeconds(1),
 		},
 	},
 	integration: {
@@ -216,13 +239,15 @@ export default (): ConfigsInterface => ({
 				clientName: process.env.AWS_COGNITO_USER_POOL_CLIENT_NAME ?? 'defaultClient',
 				clientId: process.env.AWS_COGNITO_USER_POOL_CLIENT_ID ?? 'xxx',
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
+				maxAttempts: 3,
 			},
 			sqs: {
 				eventsQueue: {
-					queueName: process.env.AWS_SQS_EVENTS_QUEUE_NAME ?? 'eventsQueue.fifo',
-					queueUrl: process.env.AWS_SQS_EVENTS_QUEUE_URL ?? 'http://sqs.us-east-1.Cloud_LocalStack.localstack.cloud:4566/000000000000/eventsQueue.fifo',
+					queueName: QueueNamesEnum.EVENTS_QUEUE,
+					queueUrl: process.env.AWS_SQS_EVENTS_QUEUE_URL ?? 'http://sqs.us-east-1.Cloud_LocalStack.localstack.cloud:4566/0000/eventsQueue.fifo',
 				},
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
+				maxAttempts: 2,
 			},
 			sns: {
 				defaultTopic: {
@@ -231,22 +256,41 @@ export default (): ConfigsInterface => ({
 					topicProtocol: process.env.AWS_TOPIC_PROTOCOL ?? 'email',
 				},
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
+				maxAttempts: 2,
 			},
 			s3: {
 				bucketName: process.env.AWS_S3_BUCKET_NAME ?? 'defaultbucket',
-				filesExpiration: (5 * 60),
+				filesExpiration: minutesToSeconds(5),
 				apiVersion: process.env.AWS_API_VERSION ?? 'latest',
+				maxAttempts: 3,
 			},
 		},
 		rest: {
 			mockedService: {
 				serviceName: process.env.MOCKED_SERVICE_NAME ?? 'Mocked Service',
 				baseUrl: process.env.MOCKED_SERVICE_URL ?? 'http://localhost:4000/',
-				timeout: 1000,
+				timeout: secondsToMilliseconds(30),
+				maxRedirects: 2,
+				maxRetries: 3,
 			},
 		},
 	},
 	security: {
 		secretKey: process.env.SECRET ?? 'pass_phrase',
+	},
+	// ? NPM Package
+	package: {
+		name: process.env.npm_package_name,
+		description: process.env.npm_package_description,
+		version: process.env.npm_package_version,
+		license: process.env.npm_package_license,
+		author: `${process.env.npm_package_author_name} - ${process.env.npm_package_author_email}`,
+		repository: process.env.npm_package_repository,
+		private: process.env.npm_package_private === 'true',
+		engines: {
+			node: process.env.npm_package_engines_node,
+			npm: process.env.npm_package_engines_npm,
+			yarn: process.env.npm_package_engines_yarn,
+		},
 	},
 });

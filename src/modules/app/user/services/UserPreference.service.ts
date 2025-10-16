@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import UserPreferenceRepository from '@app/user/repositories/userPreference/UserPreference.repository';
-import UserPreferenceEntity, { IUpdateUserPreference } from '@domain/entities/UserPreference.entity';
 import Exceptions from '@core/errors/Exceptions';
+import UserPreferenceEntity, { IUpdateUserPreference } from '@domain/entities/UserPreference.entity';
+import UserPreferenceRepository from '@app/user/repositories/userPreference/UserPreference.repository';
 
 
 @Injectable()
@@ -59,6 +59,7 @@ export default class UserPreferenceService {
 		}
 	}
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	private caughtError(error: any): Error {
 		const errorDetails: string | undefined = error?.message ?? error?.cause ?? error?.original;
 		return this.exceptions.internal({

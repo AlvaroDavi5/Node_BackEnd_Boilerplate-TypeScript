@@ -1,9 +1,9 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsBoolean, IsDate, IsUUID } from 'class-validator';
-import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
-import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import AbstractEntity from '@common/classes/AbstractEntity.entity';
 import { returingString, returingBoolean, returingDate } from '@shared/internal/types/returnTypeFunc';
 
 
@@ -16,7 +16,7 @@ export interface SubscriptionInterface {
 	subscriptionId?: string,
 	dataValues: {
 		clientId?: string,
-		[key: string]: unknown | undefined,
+		[key: string]: unknown,
 		readonly createdAt: Date,
 		updatedAt?: Date,
 	},
@@ -67,14 +67,17 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 	@IsBoolean()
 	public newConnectionsListen = false;
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	constructor(dataValues: any) {
 		super();
 		const newDataValues = { ...dataValues, ...dataValues?.value };
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
 		const values: any = {
 			...newDataValues,
 			...newDataValues?.listen,
 			...newDataValues.dataValues,
 		};
+
 		if (this.exists(values?._id)) this.databaseId = values._id;
 		if (this.exists(values?.id)) this.databaseId = values.id;
 		if (this.exists(values?.subscriptionId)) this.subscriptionId = values.subscriptionId;
@@ -93,27 +96,33 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 				clientId: this.clientId ?? undefined,
 				createdAt: this.createdAt,
 				updatedAt: this.updatedAt ?? undefined,
-			} ?? undefined,
+			},
 			listen: {
 				newConnections: this.newConnectionsListen,
-			} ?? undefined,
+			},
 		};
 	}
 
-	public getDatabaseId(): string { return this.databaseId; }
+	public getDatabaseId(): string {
+		return this.databaseId;
+	}
 	public setDatabaseId(id: string): void {
 		if (id.length > 0)
 			this.databaseId = id;
 	}
 
-	public getSubscriptionId(): string { return this.subscriptionId; }
+	public getSubscriptionId(): string {
+		return this.subscriptionId;
+	}
 	public setSubscriptionId(subscriptionId: string): void {
 		if (subscriptionId.length > 0)
 			this.subscriptionId = subscriptionId;
 		this.updatedAt = this.getDate();
 	}
 
-	public getClientId(): string | null { return this.clientId; }
+	public getClientId(): string | null {
+		return this.clientId;
+	}
 	public setClientId(clientId: string): void {
 		if (clientId.length > 0)
 			this.clientId = clientId;

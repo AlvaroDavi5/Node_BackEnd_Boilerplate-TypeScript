@@ -36,9 +36,7 @@ export const dbConfig: DataSourceOptions = {
 		UsersModel,
 		UserPreferencesModel,
 	],
-	migrations: [
-		'build/modules/core/infra/database/migrations/**/*{.ts,.js}',
-	],
+	migrations: ['build/modules/core/infra/database/migrations/**/*.js'],
 	subscribers: [],
 	pool: {
 		max: db.pool.max,

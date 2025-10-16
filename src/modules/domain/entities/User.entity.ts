@@ -2,9 +2,9 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDate, IsUUID } from 'class-validator';
 import { Type } from 'class-transformer';
-import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
-import AbstractEntity from '@shared/internal/classes/AbstractEntity.entity';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import AbstractEntity from '@common/classes/AbstractEntity.entity';
 import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
 import UserPreferenceEntity, { ICreateUserPreference, UserPreferenceInterface, returingUserPreferenceEntity } from './UserPreference.entity';
 
@@ -87,7 +87,7 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 
 	@ApiProperty({
 		type: UserPreferenceEntity,
-		example: (new UserPreferenceEntity({ imagePath: './image.png', defaultTheme: 'DEFAULT' })),
+		example: new UserPreferenceEntity({ imagePath: './image.png', defaultTheme: 'DEFAULT' }),
 		default: null, nullable: true, required: true,
 		description: 'User preference',
 	})
@@ -110,11 +110,12 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	@IsDate()
 	public deletedAt: Date | null = null;
 
-	@ApiProperty({ type: String, example: null, default: null, nullable: true, required: true, description: 'Delete userAgent' })
-	@Field(returingString, { defaultValue: null, nullable: true, description: 'Delete userAgent' })
+	@ApiProperty({ type: String, example: null, default: null, nullable: true, required: true, description: 'Deleted by agentUser' })
+	@Field(returingString, { defaultValue: null, nullable: true, description: 'Deleted by agentUser' })
 	@IsString()
 	private deletedBy: string | null = null;
 
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any, complexity
 	constructor(dataValues: any) {
 		super();
 		if (this.exists(dataValues?.id)) this.id = dataValues.id;
@@ -150,7 +151,9 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 		};
 	}
 
-	public getId(): string { return this.id; }
+	public getId(): string {
+		return this.id;
+	}
 	public setId(id: string): void {
 		if (id.length < 1)
 			return;
@@ -160,25 +163,33 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 		this.updatedAt = this.getDate();
 	}
 
-	public getFullName(): string { return this.fullName; }
+	public getFullName(): string {
+		return this.fullName;
+	}
 	public setFullName(fullName: string): void {
 		this.fullName = fullName;
 		this.updatedAt = this.getDate();
 	}
 
-	public getEmail(): string { return this.email; }
+	public getEmail(): string {
+		return this.email;
+	}
 	public setEmail(email: string): void {
 		this.email = email;
 		this.updatedAt = this.getDate();
 	}
 
-	public getPassword(): string { return this.password; }
+	public getPassword(): string {
+		return this.password;
+	}
 	public setPassword(password: string): void {
 		this.password = password;
 		this.updatedAt = this.getDate();
 	}
 
-	public getPhone(): string | null { return this.phone; }
+	public getPhone(): string | null {
+		return this.phone;
+	}
 	public setPhone(phone: string): void {
 		this.phone = phone;
 		this.updatedAt = this.getDate();
@@ -199,7 +210,9 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 		this.updatedAt = this.getDate();
 	}
 
-	public getDeletedBy(): string | null { return this.deletedBy; }
+	public getDeletedBy(): string | null {
+		return this.deletedBy;
+	}
 
 	public setDeletedBy(agentId: string): void {
 		this.deletedBy = agentId;

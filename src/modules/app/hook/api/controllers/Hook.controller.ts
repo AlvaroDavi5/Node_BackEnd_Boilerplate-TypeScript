@@ -1,29 +1,33 @@
 import {
 	Controller, Res,
 	Put, Query,
-	UseGuards,
+	UseGuards, UseFilters, UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiCreatedResponse, ApiNotAcceptableResponse } from '@nestjs/swagger';
-import { Response } from 'express';
 import WebhookService from '@app/hook/services/Webhook.service';
-import { RegisterEventHookValidatorPipe } from '@app/hook/api/pipes/HookValidator.pipe';
+import RegisterEventHookValidatorPipe from '@app/hook/api/pipes/HookValidator.pipe';
 import { RegisterEventHookInputDto } from '@app/hook/api/dto/HookInput.dto';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
-import CustomThrottlerGuard from '@api/guards/Throttler.guard';
 import AuthGuard from '@api/guards/Auth.guard';
+import HttpExceptionsFilter from '@api/filters/HttpExceptions.filter';
+import ResponseInterceptor from '@api/interceptors/Response.interceptor';
+import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
-import HttpConstants from '@common/constants/Http.constants';
+import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
+import type { ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @ApiTags('Webhooks')
 @Controller('/hook')
 @UseGuards(CustomThrottlerGuard, AuthGuard)
+@UseFilters(HttpExceptionsFilter)
+@UseInterceptors(ResponseInterceptor)
 @authSwaggerDecorator()
 @exceptionsResponseDecorator()
 export default class HookController {
 	constructor(
-		private readonly httpConstants: HttpConstants,
+		private readonly httpMessagesConstants: HttpMessagesConstants,
 		private readonly webHookService: WebhookService,
 	) { }
 
@@ -51,7 +55,7 @@ export default class HookController {
 	@ApiProduces('application/json')
 	public async registerEventHook(
 		@Query(RegisterEventHookValidatorPipe) query: RegisterEventHookInputDto,
-		@Res({ passthrough: true }) response: Response,
+		@Res({ passthrough: true }) response: ResponseInterface,
 	): Promise<{ statusMessage: string }> {
 		const resourceName = 'Hook event register';
 
@@ -60,12 +64,12 @@ export default class HookController {
 
 			response.status(HttpStatusEnum.CREATED);
 			return {
-				statusMessage: response.statusMessage ?? this.httpConstants.messages.created(resourceName),
+				statusMessage: response.statusMessage ?? this.httpMessagesConstants.messages.created(resourceName),
 			};
 		} else {
 			response.status(HttpStatusEnum.NOT_ACCEPTABLE);
 			return {
-				statusMessage: response.statusMessage ?? this.httpConstants.messages.notAcceptable(resourceName),
+				statusMessage: response.statusMessage ?? this.httpMessagesConstants.messages.notAcceptable(resourceName),
 			};
 		}
 	}

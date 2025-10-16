@@ -18,7 +18,7 @@ export default class SyncCronJob {
 		private readonly logger: LoggerService,
 	) {
 		this.name = SyncCronJob.name;
-		this.cronName = CronJobsEnum.SyncCron;
+		this.cronName = CronJobsEnum.SYNC_CRON;
 		this.cronExpression = CronExpression.EVERY_5_MINUTES;
 		this.logger.debug(`Created ${this.name}`);
 	}
@@ -33,29 +33,49 @@ export default class SyncCronJob {
 	*/
 	@Cron('0 */5 * * * *', {
 		// // first second every 5 minutes
-		name: CronJobsEnum.SyncCron,
+		name: CronJobsEnum.SYNC_CRON,
 		timeZone: TimeZonesEnum.America_SaoPaulo,
 		disabled: false,
 		unrefTimeout: false,
 	})
 	public async handleCron(): Promise<void> {
-		await this.syncCronTask.execute();
+		try {
+			await this.syncCronTask.execute();
+		} catch (error) {
+			this.logger.error(error);
+			throw error;
+		}
 	}
 
 	public startCron(): void {
-		const job = this.schedulerRegistry.getCronJob(this.cronName);
-		job.start();
-		this.logger.info(`Started ${this.name}`);
+		try {
+			const job = this.schedulerRegistry.getCronJob(this.cronName);
+			job.start();
+			this.logger.info(`Started ${this.name}`);
+		} catch (error) {
+			this.logger.error(error);
+			throw error;
+		}
 	}
 
 	public stopCron(): void {
-		const job = this.schedulerRegistry.getCronJob(this.cronName);
-		job.stop();
-		this.logger.warn(`Stopped ${this.name}`);
+		try {
+			const job = this.schedulerRegistry.getCronJob(this.cronName);
+			job.stop();
+			this.logger.warn(`Stopped ${this.name}`);
+		} catch (error) {
+			this.logger.error(error);
+			throw error;
+		}
 	}
 
 	public getLastJobDate(): Date | null {
-		const job = this.schedulerRegistry.getCronJob(this.cronName);
-		return job.lastDate();
+		try {
+			const job = this.schedulerRegistry.getCronJob(this.cronName);
+			return job.lastDate();
+		} catch (error) {
+			this.logger.error(error);
+			throw error;
+		}
 	}
 }

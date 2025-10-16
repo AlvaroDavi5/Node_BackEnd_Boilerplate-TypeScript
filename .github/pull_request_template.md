@@ -31,7 +31,7 @@ Description of the functionality and main decisions made
 
 ___
 
-Justification for unselected checkboxes:
+#### Justification for unselected checkboxes:
 
 ...
 

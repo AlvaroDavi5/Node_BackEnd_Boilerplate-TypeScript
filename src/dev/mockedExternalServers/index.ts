@@ -1,20 +1,24 @@
-import express, { Express } from 'express';
-import mockedServiceRoutes from './mockedService/Router';
+import express, { Express, json, urlencoded } from 'express';
+import mockedServiceRoutes from './mockedService/router';
 
 
 export default class Server {
-	private express: Express;
+	private expressServer: Express;
 
 	constructor() {
-		this.express = express();
-		this.express.use(mockedServiceRoutes);
-		this.express.use('/*', (_req, res, _next) => { res.status(404).send('not found'); });
+		this.expressServer = express();
+		this.expressServer.use(json()).use(urlencoded({ extended: true }));
+
+		this.expressServer.use('/mockedService', mockedServiceRoutes);
+		this.expressServer.use((_req, res, _next) => {
+			res.status(404).send('not found');
+		});
 	}
 
 	start() {
 		const serverPort = process.env.MOCKED_SERVERS_APP_PORT || 4000;
 
-		return this.express.listen(serverPort, () => {
+		return this.expressServer.listen(serverPort, () => {
 			console.log(
 				`\nMOCKED_SERVERS_URL='http://localhost:${serverPort}/'`
 			);

@@ -1,9 +1,9 @@
 import { Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
-import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { fromISOToDateTime, fromDateTimeToJSDate } from '@common/utils/dates.util';
-import AbstractEntityList from '@shared/internal/classes/AbstractListEntity.entity';
+import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import AbstractEntityList from '@common/classes/AbstractListEntity.entity';
 import UserEntity from '../User.entity';
 import UserPreferenceEntity from '../UserPreference.entity';
 
@@ -17,7 +17,7 @@ export default class UserListEntity extends AbstractEntityList<UserEntity> {
 	@ApiProperty({
 		type: UserEntity,
 		isArray: true,
-		example: ([
+		example: [
 			new UserEntity({
 				fullName: 'User Default',
 				docType: 'INVALID',
@@ -29,7 +29,7 @@ export default class UserListEntity extends AbstractEntityList<UserEntity> {
 				createdAt: dateExample,
 				updatedAt: dateExample,
 			}),
-		]),
+		],
 		default: [],
 		nullable: false,
 		description: 'User list content',

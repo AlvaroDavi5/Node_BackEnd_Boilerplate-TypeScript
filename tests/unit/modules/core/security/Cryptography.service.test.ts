@@ -18,7 +18,13 @@ describe('Modules :: Core :: Security :: CryptographyService', () => {
 			expect(cryptographyService.changeBufferEncoding('w4FsdmFybw==', 'base64', 'utf8')).toBe('Álvaro');
 		});
 
-		test('Should generate JWT', () => {
+		test('Should compare buffers', () => {
+			const b1 = Buffer.from('Álvaro', 'utf8');
+			const b2 = Buffer.from('w4FsdmFybw==', 'base64');
+			expect(cryptographyService.compareBuffer(b1, b2)).toBeTruthy();
+		});
+
+		test('Should generate valid JWT', () => {
 			const data = { name: 'Tester' };
 			const token = cryptographyService.encodeJwt(data, 'utf8');
 			const decoded = {
@@ -28,6 +34,35 @@ describe('Modules :: Core :: Security :: CryptographyService', () => {
 				expired: false,
 				invalidSignature: false,
 			};
+
+			expect(token.length).toBe(149);
+			expect(cryptographyService.decodeJwt(token)).toMatchObject(decoded);
+		});
+
+		test('Should generate expired JWT', () => {
+			const token = cryptographyService.encodeJwt({ name: 'Tester' }, 'utf8', '1Ms');
+			const decoded = {
+				content: null,
+				expired: true,
+				invalidSignature: false,
+			};
+
+			expect(token.length).toBe(149);
+			expect(cryptographyService.decodeJwt(token)).toMatchObject(decoded);
+		});
+
+		test('Should generate invalid JWT', () => {
+			/* eslint-disable dot-notation */
+			const jwtSecret = cryptographyService['secret'] ?? 'secret';
+			(cryptographyService as any)['secret'] = 'invalid';
+			const token = cryptographyService.encodeJwt({ name: 'Tester' }, 'utf8', '1Ms');
+			const decoded = {
+				content: null,
+				expired: false,
+				invalidSignature: true,
+			};
+			(cryptographyService as any)['secret'] = jwtSecret;
+			/* eslint-enable dot-notation */
 
 			expect(token.length).toBe(149);
 			expect(cryptographyService.decodeJwt(token)).toMatchObject(decoded);

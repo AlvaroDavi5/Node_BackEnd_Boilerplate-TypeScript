@@ -10,8 +10,6 @@ import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 export default class RedisClient {
 	private readonly redisClient: IORedis;
 
-	public isConnected: boolean;
-
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly exceptions: Exceptions,
@@ -33,46 +31,45 @@ export default class RedisClient {
 				message: 'Error to instance redis client',
 			});
 		}
-
-		this.isConnected = true;
 	}
 
 	private parseValue<VT = unknown>(strValue: string): VT | null {
-		const { data } = this.dataParserHelper.toObject<VT>(strValue);
-		return data;
+		try {
+			return this.dataParserHelper.toObject<VT>(strValue);
+		} catch (_error) {
+			return null;
+		}
 	}
 
 	public getClient(): IORedis {
 		return this.redisClient;
 	}
 
-	public async connect(): Promise<boolean> {
+	public isConnected(): boolean {
 		const connectedStatus = ['connect', 'ready'];
 
+		return connectedStatus.includes(this.redisClient.status);
+	}
+
+	public async connect(): Promise<boolean> {
 		try {
 			await this.redisClient.connect();
-			this.isConnected = connectedStatus.includes(this.redisClient.status);
 		} catch (error) {
-			this.isConnected = false;
 			throw this.exceptions.integration({
 				message: 'Error to connect redis client',
 				details: (error as Error)?.message,
 			});
 		}
-		return this.isConnected;
+
+		return this.isConnected();
 	}
 
 	public async disconnect(): Promise<boolean> {
 		const disconnectedStatus = ['wait', 'close', 'end'];
 
 		try {
-			const wasClosed = await this.redisClient.quit() === 'OK' || disconnectedStatus.includes(this.redisClient.status);
-
-			if (wasClosed)
-				this.isConnected = false;
-
-			return wasClosed;
-		} catch (error) {
+			return await this.redisClient.quit() === 'OK' && disconnectedStatus.includes(this.redisClient.status);
+		} catch (_error) {
 			return false;
 		}
 	}
@@ -86,20 +83,27 @@ export default class RedisClient {
 		return result;
 	}
 
-	public async get<VT = any>(key: string): Promise<any> {
+	public async get<VT = unknown>(key: string): Promise<VT | null> {
 		const value = await this.redisClient.get(String(key));
 		const result = value ? this.parseValue(value) : null;
 
 		return result as (VT | null);
 	}
 
+	/**
+	@brief [key] expires in [ttl] seconds
+	@param key string
+	@param value unknown
+	@param ttl number
+	@return 'OK'
+	**/
 	public async set(key: string, value: unknown, ttl = 30): Promise<string> {
 		const result = await this.redisClient.set(String(key), this.dataParserHelper.toString(value));
-		await this.redisClient.expire(String(key), Number(ttl)); // [key] expires in [ttl] seconds
+		await this.redisClient.expire(String(key), Number(ttl));
 		return result;
 	}
 
-	public async getByKeyPattern<VT = any>(pattern: string): Promise<{
+	public async getByKeyPattern<VT = unknown>(pattern: string): Promise<{
 		key: string,
 		value: VT | null,
 	}[]> {
@@ -116,10 +120,11 @@ export default class RedisClient {
 		);
 		const result = await Promise.allSettled(getByKeyPromises);
 
-		return result.map(({ status: _, ...args }) => ({ ...((args as any)?.value ?? {}) }));
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		return result.map(({ status: _, ...args }) => ({ ...(args as any)?.value ?? {} }));
 	}
 
-	public async getValuesByKeyPattern<VT = any>(key: string): Promise<(VT | null)[]> {
+	public async getValuesByKeyPattern<VT = unknown>(key: string): Promise<(VT | null)[]> {
 		const keys = await this.redisClient.keys(key);
 
 		if (!keys || keys?.length < 1) {
@@ -145,8 +150,9 @@ export default class RedisClient {
 	}
 
 	public async remove(keyPattern: string): Promise<void> {
-		const scanValue: string | any = `${keyPattern}:*`;
-		const stream = this.redisClient.scanStream(scanValue);
+		const scanValue = `${keyPattern}:*`;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		const stream = this.redisClient.scanStream(scanValue as any);
 
 		stream.on('data', (keys: string[]) => {
 			if (keys.length) {

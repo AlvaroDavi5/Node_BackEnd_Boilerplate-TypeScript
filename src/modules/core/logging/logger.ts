@@ -1,16 +1,7 @@
-import { createLogger, transports, format, Logger } from 'winston';
+import { transports, format } from 'winston';
+import { LogLevelEnum } from '@common/enums/logLevel.enum';
 import { dataParserHelperMock } from '@dev/mocks/mockedModules';
 
-
-export enum LogLevelEnum {
-	// NOTE - ordered by level priority
-	ERROR = 'error',
-	WARN = 'warn',
-	INFO = 'info',
-	HTTP = 'http',
-	VERBOSE = 'verbose',
-	DEBUG = 'debug',
-}
 
 export interface LoggerInterface {
 	error: (...args: unknown[]) => void;
@@ -22,43 +13,61 @@ export interface LoggerInterface {
 }
 
 export interface MetadataInterface {
-	context?: string,
-	requestId?: string,
-	details?: string | object | object[],
-	stack?: unknown | unknown[],
+	context?: string;
+	requestId?: string;
+	messageId?: string;
+	socketId?: string;
+	ip?: string;
+	details?: string | object | object[];
+	stack?: unknown;
 }
 
 function getMessageFormatter() {
 	const levelFormatter = (level: string): string => format.colorize().colorize(level, level.toUpperCase());
 	const purpleConsoleColor = '\x1b[0;35m';
 	const defaultConsoleColor = '\x1b[0m';
-	const contextFormatter = (ctx: string): string => (`${purpleConsoleColor}${ctx}${defaultConsoleColor}`);
+	const contextFormatter = (ctx: string): string => `${purpleConsoleColor}${ctx}${defaultConsoleColor}`;
 
 	return format.printf((info) => {
-		const { level, message, timestamp, stack: errorStack, context, meta } = info;
+		const {
+			level,
+			message,
+			timestamp,
+			stack: errorStack,
+			context: ctx,
+			meta,
+		} = info;
+		const metadata = meta as MetadataInterface;
+		const context = (ctx ?? metadata?.context) as string | undefined;
+
 		const logLevel = levelFormatter(level);
-		const logContext = contextFormatter((context || meta?.context) ?? 'DefaultContext');
-		const requestId = meta?.requestId;
-		const logStack = errorStack ?? meta?.stack;
+		const logContext = contextFormatter(context ?? 'DefaultContext');
+		const requestId = metadata?.requestId;
+		const messageId = metadata?.messageId;
+		const socketId = metadata?.socketId;
+		const ip = metadata?.ip;
+		const logStack = errorStack ?? metadata?.stack;
 
 		let log = `${dataParserHelperMock.toString(message)}`;
 
-		if (requestId)
-			log += ` - requestId: ${requestId}`;
+		if (requestId) log += ` - requestId: ${dataParserHelperMock.toString(requestId)}`;
+		if (messageId) log += ` - messageId: ${dataParserHelperMock.toString(messageId)}`;
+		if (socketId) log += ` - socketId: ${dataParserHelperMock.toString(socketId)}`;
+		if (ip) log += ` - IP: ${dataParserHelperMock.toString(ip)}`;
+
 		if (logStack) {
 			if (Array.isArray(logStack))
 				logStack.forEach((stack) => {
 					log += `\n${stack}`;
 				});
-			else
-				log += `\n${logStack}`;
+			else log += `\n${dataParserHelperMock.toString(logStack)}`;
 		}
 
-		return `${timestamp} | ${logLevel} [${logContext}]: ${log}`;
+		return `${dataParserHelperMock.toString(timestamp)} | ${logLevel} [${logContext}]: ${log}`;
 	});
 }
 
-export function getLoggerOptions(serviceName: string, environment: string, context: string, logsPath: string, showDetailedLogs: boolean) {
+export function getLoggerOptions(serviceName: string, environment: string, context: string | undefined, logsPath: string, showDetailedLogs: boolean) {
 	const messageFormatter = getMessageFormatter();
 	const defaultFormat = format.combine(
 		format.timestamp(),
@@ -69,10 +78,7 @@ export function getLoggerOptions(serviceName: string, environment: string, conte
 	const consoleMaxLevel = showDetailedLogs === true ? LogLevelEnum.DEBUG : LogLevelEnum.HTTP;
 	const fileMaxLevel = showDetailedLogs === true ? LogLevelEnum.HTTP : LogLevelEnum.WARN;
 	return {
-		format: format.combine(
-			defaultFormat,
-			format.json(),
-		),
+		format: format.combine(defaultFormat, format.json()),
 		defaultMeta: {
 			context,
 			service: serviceName,
@@ -90,16 +96,4 @@ export function getLoggerOptions(serviceName: string, environment: string, conte
 		],
 		exitOnError: false,
 	};
-}
-
-export function generateLogger(loggerContext: string): Logger {
-	const loggerOptions = getLoggerOptions(
-		(process.env.APP_NAME ?? 'Node Boilerplate'),
-		(process.env.NODE_ENV ?? 'dev'),
-		loggerContext,
-		(process.env.APP_LOGS_PATH ?? './logs/logs.log'),
-		(process.env.SHOW_DETAILED_LOGS ?? 'true') === 'true',
-	);
-
-	return createLogger(loggerOptions);
 }

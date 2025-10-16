@@ -1,0 +1,28 @@
+apiVersion: backstage.io/v1alpha1
+kind: Component
+metadata:
+  name: node-backend-boilerplate-app
+  description: Node.js Boilerplate for Back-End using TypeScript
+  annotations:
+    github.com/project-slug: AlvaroDavi5/Node_BackEnd_Boilerplate-TypeScript
+    backstage.io/techdocs-ref: dir:.
+  tags:
+    - backend
+    - node
+spec:
+  owner: devs
+  system: node-backend-boilerplate-system
+  lifecycle: experimental # experimental | production
+  type: service
+  ci:
+    - type: github-actions
+      name: ci-pipeline
+  providesApis:
+    - node-backend-boilerplate-api
+  implementsApis:
+    - node-backend-boilerplate-api
+  consumesApis:
+    - auth-api
+  dependsOn:
+    - resource:default/postgres-db
+    - component:default/logger-lib

@@ -2,22 +2,25 @@ import { Test, TestingModule } from '@nestjs/testing';
 import { ConfigService } from '@nestjs/config';
 import { FindOneOptions } from 'typeorm';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
-import UserPreferenceService from '@app/user/services/UserPreference.service';
-import UserPreferenceRepository from '@app/user/repositories/userPreference/UserPreference.repository';
 import Exceptions from '@core/errors/Exceptions';
 import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
+import UserPreferenceService from '@app/user/services/UserPreference.service';
+import UserPreferenceRepository from '@app/user/repositories/userPreference/UserPreference.repository';
 import { configServiceMock } from '@dev/mocks/mockedModules';
 
 
 describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 	let nestTestingModule: TestingModule;
 	let userPreferenceService: UserPreferenceService;
+
 	// // mocks
 	const userPreferenceRepositoryMock = {
-		findOne: jest.fn(async (_query: FindOneOptions<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => (null)),
-		create: jest.fn(async (_entity: UserPreferenceEntity): Promise<UserPreferenceEntity> => { throw new Error('GenericError'); }),
-		update: jest.fn(async (_id: string, _dataValues: Partial<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => (null)),
-		deleteOne: jest.fn(async (_id: string, _softDelete?: boolean): Promise<boolean> => (false)),
+		findOne: jest.fn(async (_query: FindOneOptions<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => null),
+		create: jest.fn(async (_entity: UserPreferenceEntity): Promise<UserPreferenceEntity> => {
+			throw new Error('GenericError');
+		}),
+		update: jest.fn(async (_id: string, _dataValues: Partial<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => null),
+		deleteOne: jest.fn(async (_id: string, _softDelete?: boolean): Promise<boolean> => false),
 	};
 
 	// ? build test app
@@ -73,7 +76,9 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 
 	describe('# Get User Preference', () => {
 		test('Should find a user preference successfully', async () => {
-			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' });
+			const userPreferenceEntity = new UserPreferenceEntity({
+				id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+			});
 			userPreferenceRepositoryMock.findOne.mockResolvedValueOnce(userPreferenceEntity);
 
 			const userPreference = await userPreferenceService.getByUserId('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
@@ -93,12 +98,15 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 
 	describe('# Update User Preference', () => {
 		test('Should update a user preference successfully', async () => {
-			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', defaultTheme: 'DEFAULT' });
-			userPreferenceRepositoryMock.update.mockImplementationOnce(async (id: string, dataValues: Partial<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => {
-				if (dataValues?.defaultTheme) userPreferenceEntity.setDefaultTheme(dataValues.defaultTheme);
-				if (dataValues?.imagePath) userPreferenceEntity.setImagePath(dataValues.imagePath);
-				return userPreferenceEntity;
+			const userPreferenceEntity = new UserPreferenceEntity({
+				id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', defaultTheme: 'DEFAULT',
 			});
+			userPreferenceRepositoryMock.update.mockImplementationOnce(
+				async (_id: string, dataValues: Partial<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => {
+					if (dataValues?.defaultTheme) userPreferenceEntity.setDefaultTheme(dataValues.defaultTheme);
+					if (dataValues?.imagePath) userPreferenceEntity.setImagePath(dataValues.imagePath);
+					return userPreferenceEntity;
+				});
 
 			const updatedUserPreference = await userPreferenceService.update('b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', new UserPreferenceEntity({
 				defaultTheme: 'DARK',

@@ -1,22 +1,30 @@
+import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
 import ListUsersUseCase from '@app/user/usecases/ListUsers.usecase';
 import UserService from '@app/user/services/User.service';
-import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
 
 describe('Modules :: App :: User :: UseCases :: ListUsersUseCase', () => {
 	// // mocks
 	const userServiceMock = {
-		getByEmail: jest.fn(async (_email: string): Promise<UserEntity | null> => (null)),
-		getById: jest.fn(async (_id: string, _withoutPassword = true): Promise<UserEntity> => { throw new Error('GenericError'); }),
-		create: jest.fn(async (_entity: UserEntity): Promise<UserEntity> => { throw new Error('GenericError'); }),
-		update: jest.fn(async (_id: string, _data: IUpdateUser): Promise<UserEntity> => { throw new Error('GenericError'); }),
-		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, userAgentId?: string }): Promise<boolean> => (false)),
+		getByEmail: jest.fn(async (_email: string): Promise<UserEntity | null> => null),
+		getById: jest.fn(async (_id: string, _withoutPassword = true): Promise<UserEntity> => {
+			throw new Error('GenericError');
+		}),
+		create: jest.fn(async (_entity: UserEntity): Promise<UserEntity> => {
+			throw new Error('GenericError');
+		}),
+		update: jest.fn(async (_id: string, _data: IUpdateUser): Promise<UserEntity> => {
+			throw new Error('GenericError');
+		}),
+		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, agentUserId?: string }): Promise<boolean> => false),
 		list: jest.fn(async (_query: ListQueryInterface, _withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => {
 			return { content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 };
 		}),
-		protectPassword: jest.fn((password: string): string => (password)),
-		validatePassword: jest.fn((_entity: UserEntity, _passwordToValidate: string): void => { throw new Error('GenericError'); }),
+		protectPassword: jest.fn((password: string): string => password),
+		validatePassword: jest.fn((_entity: UserEntity, _passwordToValidate: string): void => {
+			throw new Error('GenericError');
+		}),
 	};
 
 	const listUsersUseCase = new ListUsersUseCase(userServiceMock as unknown as UserService);

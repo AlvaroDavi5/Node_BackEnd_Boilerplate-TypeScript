@@ -1,57 +1,68 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
-	SNSClient, SNSClientConfig, Topic,
+	SNSClient, Topic,
 	ListTopicsCommand, CreateTopicCommand, DeleteTopicCommand,
 	SubscribeCommand, UnsubscribeCommand, PublishCommand,
 	CreateTopicCommandInput, SubscribeCommandInput, PublishCommandInput,
 } from '@aws-sdk/client-sns';
 import { ConfigsInterface } from '@core/configs/envs.config';
-import CryptographyService from '@core/security/Cryptography.service';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
 
-export type protocolType = 'email' | 'sms' | 'http' | 'https' | 'sqs' | 'lambda' | 'application'
-interface DestinationInterface {
-	[key: string]: string | undefined,
+interface EmailPublishTargets {
+	protocol: 'email';
+	subject: string;
 }
+interface SmsPublishTargets {
+	protocol: 'sms';
+	phoneNumber: string;
+}
+interface SqsPublishTargets {
+	protocol: 'sqs';
+	targetArn?: string;
+}
+interface LambdaPublishTargets {
+	protocol: 'lambda';
+	targetArn?: string;
+}
+
+export type IPublishTargetsOptions =
+	| EmailPublishTargets
+	| SmsPublishTargets
+	| SqsPublishTargets
+	| LambdaPublishTargets;
+export type protocolType = IPublishTargetsOptions['protocol'];
+
+type IPublishParams = IPublishTargetsOptions & {
+	topicArn: string;
+	message: unknown;
+	messageGroupId: string;
+	messageDeduplicationId: string;
+};
 
 @Injectable()
 export default class SnsClient {
-	private readonly awsConfig: SNSClientConfig;
-	private readonly messageGroupId: string;
 	private readonly snsClient: SNSClient;
 
 	constructor(
 		private readonly configService: ConfigService,
-		private readonly cryptographyService: CryptographyService,
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
-		const awsConfigs = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
+		const { sns: { apiVersion, maxAttempts }, credentials: {
+			region, endpoint, accessKeyId, secretAccessKey, sessionToken,
+		} } = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
-		const {
-			region, endpoint, sessionToken,
-			accessKeyId, secretAccessKey,
-		} = awsConfigs.credentials;
-		const { apiVersion } = awsConfigs.sns;
 
-		this.awsConfig = {
-			endpoint,
-			region,
-			apiVersion,
-			credentials: {
-				accessKeyId: String(accessKeyId),
-				secretAccessKey: String(secretAccessKey),
-				sessionToken,
-			},
+		this.snsClient = new SNSClient({
+			endpoint, region, apiVersion, maxAttempts,
+			credentials: { accessKeyId, secretAccessKey, sessionToken },
 			logger: showExternalLogs ? this.logger : undefined,
-		};
-		this.messageGroupId = 'DefaultGroup';
-		this.snsClient = new SNSClient(this.awsConfig);
+		});
 	}
 
 
@@ -60,7 +71,7 @@ export default class SnsClient {
 	}
 
 	private createParams(topicName: string): CreateTopicCommandInput {
-		const isFifoTopic: boolean = topicName?.includes('.fifo');
+		const isFifoTopic = topicName?.endsWith('.fifo');
 
 		const params: CreateTopicCommandInput = {
 			Name: topicName,
@@ -74,36 +85,43 @@ export default class SnsClient {
 	}
 
 	private subscribeParams(protocol: protocolType, topicArn: string, to: string): SubscribeCommandInput {
-		const endpoint = to || this.awsConfig.endpoint;
-
 		return {
 			Protocol: protocol,
 			TopicArn: topicArn,
-			Endpoint: String(endpoint),
+			Endpoint: to,
 		};
 	}
 
-	private publishParams(protocol: protocolType, topicArn: string, topicName: string, message: string, { subject, phoneNumber }: DestinationInterface): PublishCommandInput {
-		const isFifoTopic: boolean = topicName?.includes('.fifo');
+	private publishParams(params: IPublishParams): PublishCommandInput {
+		const { message, protocol, topicArn, messageGroupId, messageDeduplicationId } = params;
+		const isFifoTopic = topicArn?.endsWith('.fifo');
 		const messageBody = this.formatMessageBeforeSend(message);
 
 		const publishData: PublishCommandInput = {
-			TopicArn: topicArn,
 			Message: messageBody,
-			MessageDeduplicationId: isFifoTopic ? this.cryptographyService.generateUuid() : undefined,
-			MessageGroupId: isFifoTopic ? this.messageGroupId : undefined, // Required for FIFO topics
+			// NOTE - required for FIFO topics
+			MessageDeduplicationId: isFifoTopic ? messageDeduplicationId : undefined,
+			MessageGroupId: isFifoTopic ? messageGroupId : undefined,
 		};
 
 		switch (protocol) {
-			case 'email':
-				publishData.Subject = subject;
-				break;
 			case 'sms':
-				publishData.PhoneNumber = phoneNumber;
+				publishData.PhoneNumber = params.phoneNumber;
 				break;
-			default: // application | sqs | lambda | http(s)
+			case 'email':
 				publishData.TopicArn = topicArn;
-				publishData.TargetArn = topicArn;
+				publishData.Subject = params.subject;
+				break;
+			case 'lambda':
+			case 'sqs':
+				if (params.targetArn) {
+					publishData.TargetArn = params.targetArn;
+				} else {
+					publishData.TopicArn = topicArn;
+				}
+				break;
+			default:
+				publishData.TopicArn = topicArn;
 				break;
 		}
 
@@ -119,104 +137,84 @@ export default class SnsClient {
 	}
 
 	public async listTopics(): Promise<Topic[]> {
-		let list: Topic[] = [];
-
 		try {
 			const result = await this.snsClient.send(new ListTopicsCommand({}));
-			if (result?.Topics)
-				list = result?.Topics;
-		} catch (error) {
-			this.logger.error('List Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
 
-		return list;
+			return result?.Topics ?? [];
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
 	public async createTopic(topicName: string): Promise<string> {
-		let topicArn = '';
-
 		try {
-			const result = await this.snsClient.send(new CreateTopicCommand(
-				this.createParams(topicName)
-			));
-			if (result?.TopicArn)
-				topicArn = result.TopicArn;
-		} catch (error) {
-			this.logger.error('Create Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
+			const result = await this.snsClient.send(new CreateTopicCommand(this.createParams(topicName)));
 
-		return topicArn;
+			if (!result?.TopicArn)
+				throw this.exceptions.internal({ message: 'Topic not created' });
+
+			return result.TopicArn;
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
 	public async deleteTopic(topicArn: string): Promise<boolean> {
-		let isDeleted = false;
-
 		try {
 			const result = await this.snsClient.send(new DeleteTopicCommand({
 				TopicArn: topicArn,
 			}));
-			if (result.$metadata?.httpStatusCode && String(result.$metadata?.httpStatusCode)[2] === '2')
-				isDeleted = true;
-		} catch (error) {
-			this.logger.error('Delete Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
 
-		return isDeleted;
+			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
+			return statusCode >= 200 && statusCode < 300;
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
 	public async subscribeTopic(protocol: protocolType, topicArn: string, to: string): Promise<string> {
-		let subscriptionArn = '';
-
 		try {
 			const result = await this.snsClient.send(new SubscribeCommand(
 				this.subscribeParams(protocol, topicArn, to)
 			));
-			if (result?.SubscriptionArn)
-				subscriptionArn = result.SubscriptionArn;
-		} catch (error) {
-			this.logger.error('Subscribe Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
 
-		return subscriptionArn;
+			if (!result?.SubscriptionArn)
+				throw this.exceptions.internal({ message: 'Not Subscribed in topic' });
+
+			return result.SubscriptionArn;
+		} catch (error) {
+			throw this.caughtError(error);
+		}
 	}
 
-	public async unsubscribeTopic(subscriptionArn: string): Promise<number> {
-		let statusCode = 0;
-
+	public async unsubscribeTopic(subscriptionArn: string): Promise<boolean> {
 		try {
 			const result = await this.snsClient.send(new UnsubscribeCommand({
 				SubscriptionArn: subscriptionArn
 			}));
 
-			const { httpStatusCode } = result.$metadata;
-			if (httpStatusCode)
-				statusCode = httpStatusCode;
+			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
+			return statusCode >= 200 && statusCode < 300;
 		} catch (error) {
-			this.logger.error('Unsubscribe Error:', error);
-			throw this.exceptions.integration(error as Error);
+			throw this.caughtError(error);
 		}
-
-		return statusCode;
 	}
 
-	public async publishMessage(protocol: protocolType, topicArn: string, topicName: string, message: string, destination: DestinationInterface): Promise<string> {
-		let messageId = '';
-
+	public async publishMessage(params: IPublishParams): Promise<string> {
 		try {
-			const result = await this.snsClient.send(new PublishCommand(
-				this.publishParams(protocol, topicArn, topicName, message, destination)
-			));
-			if (result?.MessageId)
-				messageId = result.MessageId;
-		} catch (error) {
-			this.logger.error('Publish Error:', error);
-			throw this.exceptions.integration(error as Error);
-		}
+			const result = await this.snsClient.send(new PublishCommand(this.publishParams(params)));
 
-		return messageId;
+			if (!result?.MessageId)
+				throw this.exceptions.internal({ message: 'Message not published' });
+
+			return result.MessageId;
+		} catch (error) {
+			throw this.caughtError(error);
+		}
+	}
+
+	private caughtError(error: unknown): Error {
+		this.logger.error(error);
+		return this.exceptions.integration(error as Error);
 	}
 }

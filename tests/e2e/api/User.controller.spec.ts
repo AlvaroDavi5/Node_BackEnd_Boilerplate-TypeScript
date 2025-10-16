@@ -8,17 +8,15 @@ import { createNestTestApplicationOptions, startNestApplication } from 'tests/e2
 jest.setTimeout(1.2 * 5000);
 describe('API :: UserController', () => {
 	let nestTestApp: INestApplication;
-	let nestTestingModule: TestingModule;
 
 	// ? build test app
 	beforeAll(async () => {
-		nestTestingModule = await Test.createTestingModule({
+		const nestTestingModule: TestingModule = await Test.createTestingModule({
 			imports: [CoreModule],
 		}).compile();
 
 		nestTestApp = nestTestingModule.createNestApplication(createNestTestApplicationOptions);
 		await startNestApplication(nestTestApp);
-		await nestTestApp.init();
 	});
 
 	afterEach(() => {
@@ -26,7 +24,6 @@ describe('API :: UserController', () => {
 	});
 	afterAll(async () => {
 		await nestTestApp.close();
-		await nestTestingModule.close();
 	});
 
 	describe('# [GET] /api/users', () => {
@@ -42,7 +39,6 @@ describe('API :: UserController', () => {
 						fullName: 'Tester User',
 						fu: 'SP',
 						docType: 'CPF',
-						document: '12312312345',
 						preference: {
 							defaultTheme: 'DARK',
 							imagePath: './generic.png',
@@ -61,8 +57,9 @@ describe('API :: UserController', () => {
 				.get('/api/users');
 
 			expect(response.statusCode).toBe(498);
-			expect(response.body).toEqual({
-				error: 'Invalid Token',
+			expect(response.body).toMatchObject({
+				error: 'invalidToken',
+				name: 'Invalid Token',
 				message: 'Authorization token is required',
 				statusCode: 498,
 			});
@@ -82,8 +79,9 @@ describe('API :: UserController', () => {
 				});
 
 			expect(response.statusCode).toBe(400);
-			expect(response.body).toEqual({
-				error: 'Bad Request',
+			expect(response.body).toMatchObject({
+				error: 'BadRequestException',
+				name: 'Bad Request',
 				message: [
 					'password should not be empty',
 					'password must be a string',

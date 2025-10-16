@@ -5,6 +5,7 @@ export enum TimeZonesEnum {
 	America_SaoPaulo = 'America/Sao_Paulo', // GMT -3
 	Atlantic_Azores = 'Atlantic/Azores', // GMT -1
 	Europe_London = 'Europe/London', // GMT 0
+	UTC = 'Etc/UTC', // GMT 0
 	Europe_Berlin = 'Europe/Berlin', // GMT +1
 	Africa_Cairo = 'Africa/Cairo', // GMT +2
 	Africa_Nairobi = 'Africa/Nairobi', // GMT +3

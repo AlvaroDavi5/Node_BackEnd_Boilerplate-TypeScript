@@ -1,6 +1,7 @@
 import { io, Socket as ClientSocket } from 'socket.io-client';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import { LoggerInterface } from '@core/logging/logger';
+import { secondsToMilliseconds } from '@common/utils/dates.util';
 import { dataParserHelperMock } from '../mocks/mockedModules';
 
 
@@ -18,14 +19,14 @@ export default class WebSocketClient {
 				autoConnect: true,
 				closeOnBeforeunload: true,
 				reconnectionAttempts: 3,
-				timeout: (1 * 1000),
-				ackTimeout: (2 * 1000),
+				timeout: secondsToMilliseconds(1),
+				ackTimeout: secondsToMilliseconds(2),
 			});
 		}
 	}
 
-	private formatMessageBeforeSend(data: unknown): string {
-		return dataParserHelperMock.toString(data);
+	private formatMessageBeforeSend(message: unknown): string {
+		return dataParserHelperMock.toString(message);
 	}
 
 	public send(event: string, msg: unknown): void {
@@ -36,21 +37,15 @@ export default class WebSocketClient {
 	}
 
 	public listen(event: string, callback: (...args: unknown[]) => void): void {
-		this.logger.info(`Listenned event '${event}' from the WebSocket server`);
+		this.logger.info(`Listenning event '${event}' from the WebSocket server`);
 
-		this.clientSocket.on(
-			String(event),
-			callback,
-		);
+		this.clientSocket.on(String(event), callback);
 	}
 
 	public ignore(event: string, callback: (...args: unknown[]) => void): void {
-		this.logger.info(`Ignored event '${event}' from the WebSocket server`);
+		this.logger.info(`Ignoring event '${event}' from the WebSocket server`);
 
-		this.clientSocket.off(
-			String(event),
-			callback,
-		);
+		this.clientSocket.off(String(event), callback);
 	}
 
 	public isConnected(): boolean {

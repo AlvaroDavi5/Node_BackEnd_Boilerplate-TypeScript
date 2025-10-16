@@ -1,23 +1,21 @@
-import { APP_FILTER } from '@nestjs/core';
-import { Module, Global, Scope } from '@nestjs/common';
+import { join } from 'path';
+import { Module, Global } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { ScheduleModule } from '@nestjs/schedule';
 import { EventEmitterModule } from '@nestjs/event-emitter';
 import { ThrottlerModule } from '@nestjs/throttler';
 import { GraphQLModule } from '@nestjs/graphql';
-import { GraphQLFormattedError } from 'graphql';
 import { ApolloDriver, ApolloDriverConfig } from '@nestjs/apollo';
 import { SentryModule } from '@sentry/nestjs/setup';
-import { DevtoolsModule } from '@nestjs/devtools-integration';
-import { join } from 'path';
-import KnownExceptionFilter from '@api/filters/KnownException.filter';
-import RequestRateConstants from '@common/constants/RequestRate.constants';
+import AppModule from '@app/app.module';
+import GraphQlModule from '@graphql/graphql.module';
+import { formatGraphQlError } from '@graphql/utils/errors.util';
+import EventsModule from '@events/events.module';
+import RequestRateLimitConstants from '@common/constants/RequestRateLimit.constants';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import CommonModule from '@common/common.module';
-import AppModule from '@app/app.module';
-import EventsModule from '@events/events.module';
-import GraphQlModule from '@graphql/graphql.module';
 import envsConfig from './configs/envs.config';
+import devToolsFactory from './configs/nestDevTools.config';
 import LifecycleService from './start/Lifecycle.service';
 import Exceptions from './errors/Exceptions';
 import LoggerService, { RequestLoggerProvider } from './logging/Logger.service';
@@ -35,48 +33,40 @@ import SyncCronTask from './cron/tasks/SyncCron.task';
 
 
 const { application: appConfigs } = envsConfig();
-const requestRateConstants = new RequestRateConstants();
+
+const requestRateLimitConstants = new RequestRateLimitConstants();
+
 
 @Global()
 @Module({
 	imports: [
-		ConfigModule.forRoot({
-			isGlobal: true,
-			load: [envsConfig],
-		}),
-		ScheduleModule.forRoot(),
 		EventEmitterModule.forRoot({
 			maxListeners: 10,
 			verboseMemoryLeak: true,
 		}),
+		ScheduleModule.forRoot({
+			cronJobs: true,
+			intervals: true,
+			timeouts: true,
+		}),
 		ThrottlerModule.forRoot([
-			requestRateConstants.short,
-			requestRateConstants.medium,
-			requestRateConstants.long,
+			requestRateLimitConstants.short,
+			requestRateLimitConstants.medium,
+			requestRateLimitConstants.long,
 		]),
+		ConfigModule.forRoot({
+			isGlobal: true,
+			load: [envsConfig],
+		}),
 		GraphQLModule.forRoot<ApolloDriverConfig>({
 			driver: ApolloDriver,
 			playground: appConfigs.environment === EnvironmentsEnum.DEVELOPMENT,
 			autoSchemaFile: join(process.cwd(), 'src/modules/graphql/schemas/schema.gql'),
-			formatError: ({ message, extensions, path }: GraphQLFormattedError, error: any) => {
-				const graphQLFormattedError: GraphQLFormattedError = {
-					message: message ?? error?.message,
-					path: path ?? error?.path,
-					extensions: {
-						code: extensions?.code,
-						originalError: extensions?.originalError,
-					},
-				};
-
-				return graphQLFormattedError;
-			},
+			formatError: formatGraphQlError,
 			include: [],
 		}),
 		SentryModule.forRoot(),
-		DevtoolsModule.register({
-			http: appConfigs.environment === EnvironmentsEnum.DEVELOPMENT,
-			port: appConfigs.nestDevToolsPort,
-		}),
+		...devToolsFactory(appConfigs.nestDevToolsPort, appConfigs.environment),
 		CommonModule,
 		AppModule,
 		EventsModule,
@@ -84,40 +74,33 @@ const requestRateConstants = new RequestRateConstants();
 	],
 	controllers: [],
 	providers: [
-		{
-			provide: APP_FILTER,
-			useClass: KnownExceptionFilter,
-			scope: Scope.DEFAULT,
-		},
-		LifecycleService,
 		Exceptions,
 		LoggerService,
 		RequestLoggerProvider,
 		CryptographyService,
+		RestMockedServiceProvider,
 		DatabaseConnectionProvider,
-		RedisClient,
 		MongoClient,
+		RedisClient,
+		CognitoClient,
 		SqsClient,
 		SnsClient,
 		S3Client,
-		CognitoClient,
-		RestMockedServiceProvider,
 		SyncCronJob,
 		SyncCronTask,
+		LifecycleService,
 	],
 	exports: [
 		Exceptions,
 		LoggerService,
 		RequestLoggerProvider,
 		CryptographyService,
-		DatabaseConnectionProvider,
-		RedisClient,
-		MongoClient,
-		SqsClient,
-		SnsClient,
-		S3Client,
-		CognitoClient,
 		RestMockedServiceProvider,
+		DatabaseConnectionProvider,
+		MongoClient,
+		RedisClient,
+		SqsClient,
+		S3Client,
 	],
 })
 export default class CoreModule { }

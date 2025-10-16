@@ -2,26 +2,26 @@
 	"version": "0.2.0",
 	"configurations": [
 		{
-			"name": "Node.js: Debug with YARN",
-			"command": "yarn start:debug",
+			"name": "Node.js: Debug with NPM",
+			"command": "npm run start:debug",
 			"request": "launch",
 			"type": "node-terminal"
 		},
 		{
-			"name": "Node.js: Test Unit Debug with YARN",
-			"command": "yarn test:unit:watch",
+			"name": "Node.js: Test Unit Debug with NPM",
+			"command": "npm run test:unit:watch",
 			"request": "launch",
 			"type": "node-terminal"
 		},
 		{
-			"name": "Node.js: Test Integ Debug with YARN",
-			"command": "yarn test:integration:watch",
+			"name": "Node.js: Test Integ Debug with NPM",
+			"command": "npm run test:integration:watch",
 			"request": "launch",
 			"type": "node-terminal"
 		},
 		{
-			"name": "Node.js: Test E2E Debug with YARN",
-			"command": "yarn test:e2e:watch",
+			"name": "Node.js: Test E2E Debug with NPM",
+			"command": "npm run test:e2e:watch",
 			"request": "launch",
 			"type": "node-terminal"
 		},
@@ -58,13 +58,6 @@
 			"skipFiles": [
 				"<node_internals>/**"
 			]
-		},
-		{
-			"name": "Chrome: Launch against localhost",
-			"type": "chrome",
-			"request": "launch",
-			"webRoot": "${workspaceFolder}",
-			"url": "http://localhost:3000/"
 		}
 	]
 }

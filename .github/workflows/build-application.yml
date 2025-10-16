@@ -1,0 +1,41 @@
+name: Build Application
+
+on:
+  push:
+    branches: [develop]
+  schedule:
+    - cron: "0 0 */7 * *" # runs on every 7th day
+
+jobs:
+  build:
+    name: Application Build
+
+    if: "!contains(github.event.head_commit.message, '[skip ci]')"
+
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [24.x]
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v3
+        with:
+          fetch-depth: 0
+          ref: ${{ github.head_ref || github.ref }}
+
+      - name: Setup Node.js ${{ matrix.node-version }}
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ matrix.node-version }}
+          cache: "npm"
+
+      - name: Installing Dependencies
+        run: npm install --ignore-scripts
+
+      - name: Checking Type
+        run: npm run typecheck
+
+      - name: Building
+        run: npm run build

@@ -1,51 +1,77 @@
 import { Injectable, Provider, Scope } from '@nestjs/common';
 import { LoggerInterface } from '@core/logging/logger';
-import { MockObservableInterface } from '../mockObservable';
+import { mockObservable } from '../mockObservable';
 
 
 type logLevelType = 'error' | 'warn' | 'info' | 'debug' | 'log';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export default class LoggerService implements LoggerInterface {
-	private readonly showLogs = Boolean(process.env.SHOW_LOGS);
-
-	constructor(
-		private readonly mockObservable?: MockObservableInterface<void, unknown[]>,
-	) { }
+	private readonly showLogs = process.env.SHOW_LOGS === 'true';
 
 	private log(level: logLevelType, args: unknown[]): void {
-		const shouldLog = (this.showLogs === true) && (['error', 'warn'].includes(level));
+		const shouldLog = this.showLogs === true && ['error', 'warn'].includes(level);
 
 		args.forEach((arg: unknown) => {
-			if (this.mockObservable?.call)
-				this.mockObservable.call(arg);
+			if (mockObservable?.call)
+				mockObservable.call(arg);
 			if (shouldLog)
 				console[String(level) as logLevelType](arg);
 		});
 	}
 
+	/* eslint-disable @typescript-eslint/no-empty-function */
 	public getContextName(): string {
 		return 'LoggerServiceMock';
 	}
 
-	public setContextName(context: string): void {
-		context.trim();
+	public setContextName(contextName: string): void {
+		contextName.trim();
 	}
 
-	public getRequestId(): string {
-		return 'LoggerServiceMock';
+	public getRequestId(): string | undefined {
+		return 'request_id';
 	}
 
-	public setRequestId(requestId: string): void {
-		requestId.trim();
+	public setRequestId(_requestId: string | undefined): void { }
+
+	public getMessageId(): string | undefined {
+		return 'message_id';
 	}
 
-	public error(...args: unknown[]): void { this.log('error', args); }
-	public warn(...args: unknown[]): void { this.log('warn', args); }
-	public info(...args: unknown[]): void { this.log('info', args); }
-	public http(...args: unknown[]): void { this.log('info', args); }
-	public verbose(...args: unknown[]): void { this.log('log', args); }
-	public debug(...args: unknown[]): void { this.log('debug', args); }
+	public setMessageId(_messageId: string | undefined): void { }
+
+	public getSocketId(): string | undefined {
+		return 'socket_id';
+	}
+
+	public setSocketId(_socketId: string | undefined): void { }
+
+	public getClientIp(): string | undefined {
+		return 'client_ip';
+	}
+
+	public setClientIp(_clientIp: string | undefined): void { }
+	/* eslint-enable @typescript-eslint/no-empty-function */
+
+	public error(...args: unknown[]): void {
+		this.log('error', args);
+	}
+	public warn(...args: unknown[]): void {
+		this.log('warn', args);
+	}
+	public info(...args: unknown[]): void {
+		this.log('info', args);
+	}
+	public http(...args: unknown[]): void {
+		this.log('info', args);
+	}
+	public verbose(...args: unknown[]): void {
+		this.log('log', args);
+	}
+	public debug(...args: unknown[]): void {
+		this.log('debug', args);
+	}
 }
 
 export const REQUEST_LOGGER_PROVIDER = Symbol('RequestLoggerProvider');
@@ -55,22 +81,6 @@ export const RequestLoggerProvider: Provider = {
 
 	inject: [],
 	useFactory: (): LoggerService => new LoggerService(),
-
-	durable: false,
-};
-
-export const SINGLETON_LOGGER_PROVIDER = Symbol('SingletonLoggerProvider');
-export interface LoggerProviderInterface {
-	getLogger: (context: string) => LoggerService,
-}
-export const SingletonLoggerProvider: Provider = {
-	provide: SINGLETON_LOGGER_PROVIDER,
-	scope: Scope.DEFAULT,
-
-	inject: [],
-	useFactory: (): LoggerProviderInterface => ({
-		getLogger: (_context: string): LoggerService => new LoggerService(),
-	}),
 
 	durable: false,
 };

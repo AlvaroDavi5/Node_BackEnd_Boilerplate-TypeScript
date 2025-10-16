@@ -10,7 +10,15 @@ export class RegisterEventHookInputDto implements RegisterEventHookInterface {
 	@IsNotEmpty()
 	public responseEndpoint!: string;
 
-	@ApiProperty({ type: HttpMethodsEnum, enum: HttpMethodsEnum, example: HttpMethodsEnum.POST, default: HttpMethodsEnum.GET, nullable: false, required: true })
+	@ApiProperty({
+		type: HttpMethodsEnum,
+		enumName: String(HttpMethodsEnum),
+		enum: HttpMethodsEnum,
+		example: HttpMethodsEnum.POST,
+		default: HttpMethodsEnum.GET,
+		nullable: false,
+		required: true,
+	})
 	@IsEnum(HttpMethodsEnum)
 	@IsNotEmpty()
 	public responseMethod!: HttpMethodsEnum;
@@ -21,8 +29,8 @@ export class RegisterEventHookInputDto implements RegisterEventHookInterface {
 	public responseSchema!: string;
 
 	@ApiProperty({
-		type: Date, example: (new Date('2024-04-17T17:36:48.666Z').toISOString()),
-		default: (new Date().toISOString()), nullable: false, required: false
+		type: Date, example: new Date('2024-04-17T17:36:48.666Z').toISOString(),
+		default: new Date().toISOString(), nullable: false, required: false
 	})
 	@IsDateString()
 	@IsNotEmpty()

@@ -1,4 +1,4 @@
-import { Field } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { Type } from 'class-transformer';
 import { fromISOToDateTime, fromDateTimeToJSDate } from '@common/utils/dates.util';
@@ -13,6 +13,9 @@ export const returingUserEntityArray = () => Array<UserEntity>;
 const dateTimeExample = fromISOToDateTime('2024-06-10T03:52:50.885Z', false, TimeZonesEnum.America_SaoPaulo);
 const dateExample = fromDateTimeToJSDate(dateTimeExample, false);
 
+@ObjectType({
+	description: 'User list entity',
+})
 export default class UserListEntity extends AbstractEntityList<UserEntity> {
 	@ApiProperty({
 		type: UserEntity,

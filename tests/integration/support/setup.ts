@@ -1,8 +1,8 @@
 import dotenv from 'dotenv';
-import ioredisMock from 'ioredis-mock';
 import mongoMock from 'mongo-mock';
 import { Server, ServerSocket } from './mocks/webSocket/socket.io';
 import { ClientSocket } from './mocks/webSocket/socket.io-client';
+import { IoRedis } from './mocks/cache/ioredis';
 
 
 dotenv.config({ path: '.env', quiet: true });
@@ -50,6 +50,6 @@ jest.mock('socket.io-client', () => {
 	};
 });
 
-jest.mock('ioredis', () => ioredisMock);
+jest.mock('ioredis', () => IoRedis);
 
 jest.mock('mongodb', () => mongoMock);

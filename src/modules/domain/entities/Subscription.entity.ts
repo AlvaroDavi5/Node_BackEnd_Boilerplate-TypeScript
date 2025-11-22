@@ -29,7 +29,9 @@ export type ICreateSubscription = Omit<SubscriptionInterface, 'id' | 'subscripti
 export type IUpdateSubscription = Partial<ICreateSubscription> & { subscriptionId?: string };
 export type IViewSubscription = SubscriptionInterface;
 
-@ObjectType()
+@ObjectType({
+	description: 'Subscription entity',
+})
 export default class SubscriptionEntity extends AbstractEntity<SubscriptionInterface> {
 	@ApiProperty({
 		type: String,

@@ -16,7 +16,7 @@ import { ApiVersionsEnum } from '@common/enums/apiVersions.enum';
 @UseFilters(HttpExceptionsFilter)
 @exceptionsResponseDecorator()
 export default class ServerEvents {
-
+	// TODO - move to events module and apply for polling
 	@ApiOperation({
 		summary: 'Server-Sent Events',
 		description: 'Send to Client the Server events',

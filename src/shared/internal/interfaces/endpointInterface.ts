@@ -12,7 +12,15 @@ export interface RequestInterface extends Request {
 }
 export type ResponseInterface = Response
 export type NextFunctionInterface = NextFunction
+
 export type RequestFileInterface = Express.Multer.File
+
+type PartialMessageEventType<T> = Partial<MessageEvent<T>>
+type SseInterface<TD = unknown> =
+	| { attempt: number, data: TD, text?: never, error?: never }
+	| { attempt: number, text: string, data?: never, error?: never }
+	| { attempt: number, error: errorType, data?: never, text?: never };
+export type ResponseSseInterface<TD> = PartialMessageEventType<SseInterface<TD>>
 
 type errorType = Error | HttpException | ErrorInterface
 

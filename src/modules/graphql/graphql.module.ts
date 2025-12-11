@@ -14,7 +14,8 @@ const { application: appConfigs } = envsConfig();
 	imports: [
 		GraphQLModule.forRoot<ApolloDriverConfig>({
 			driver: ApolloDriver,
-			playground: appConfigs.environment === EnvironmentsEnum.DEVELOPMENT,
+			// NOTE - enable playground using graphiql
+			graphiql: appConfigs.environment === EnvironmentsEnum.DEVELOPMENT,
 			autoSchemaFile: join(process.cwd(), 'src/modules/graphql/schemas/schema.gql'),
 			formatError: formatGraphQlError,
 			include: [],

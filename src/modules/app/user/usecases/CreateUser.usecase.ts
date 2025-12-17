@@ -24,7 +24,8 @@ export default class CreateUserUseCase {
 				message: 'Invalid agentUser',
 			});
 
-		const newUser = new UserEntity(data);
+		const { preference: preferenceData, ...userData } = data;
+		const newUser = new UserEntity(userData);
 		const existentUser = await this.userService.getByEmail(newUser.getEmail());
 		if (existentUser)
 			throw this.exceptions.conflict({
@@ -33,7 +34,7 @@ export default class CreateUserUseCase {
 
 		const createdUser = await this.userService.create(newUser);
 
-		const newPreference = new UserPreferenceEntity(data.preference);
+		const newPreference = new UserPreferenceEntity(preferenceData ?? {});
 		newPreference.setUserId(createdUser.getId());
 		await this.userPreferenceService.create(newPreference);
 

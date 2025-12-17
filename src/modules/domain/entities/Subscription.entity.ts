@@ -11,7 +11,7 @@ const dateTimeExample = fromISOToDateTime('2024-06-10T03:52:50.885Z', false, Tim
 const dateExample = fromDateTimeToJSDate(dateTimeExample, false);
 const getDateNow = () => fromDateTimeToJSDate(getDateTimeNow(TimeZonesEnum.America_SaoPaulo));
 
-export interface SubscriptionInterface {
+interface SubscriptionInterface {
 	id?: string,
 	subscriptionId?: string,
 	dataValues: {

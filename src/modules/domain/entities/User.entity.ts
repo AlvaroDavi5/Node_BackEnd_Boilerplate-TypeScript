@@ -6,10 +6,10 @@ import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import AbstractEntity from '@common/classes/AbstractEntity.entity';
 import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
-import UserPreferenceEntity, { ICreateUserPreference, UserPreferenceInterface, returingUserPreferenceEntity } from './UserPreference.entity';
+import UserPreferenceEntity, { ICreateUserPreference, IViewUserPreference, returingUserPreferenceEntity } from './UserPreference.entity';
 
 
-export interface UserInterface<UP = UserPreferenceInterface> {
+interface UserInterface<UP = IViewUserPreference> {
 	id?: string,
 	fullName: string,
 	email: string,

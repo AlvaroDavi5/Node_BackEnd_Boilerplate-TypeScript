@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon';
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
+import { isNullOrUndefined } from '@common/utils/dataValidations.util';
 
 
 export default abstract class AbstractEntity<I = unknown> {
@@ -20,11 +21,11 @@ export default abstract class AbstractEntity<I = unknown> {
 		return { value, valid, error };
 	}
 
-	public exists(value: unknown): boolean {
-		return value !== undefined && value !== null;
+	protected exists(value: unknown): boolean {
+		return !isNullOrUndefined(value);
 	}
 
-	public getDate(strDate?: string): Date {
+	protected getDate(strDate?: string): Date {
 		const date: DateTime = strDate?.length
 			? fromISOToDateTime(strDate, false, TimeZonesEnum.America_SaoPaulo)
 			: getDateTimeNow(TimeZonesEnum.America_SaoPaulo);

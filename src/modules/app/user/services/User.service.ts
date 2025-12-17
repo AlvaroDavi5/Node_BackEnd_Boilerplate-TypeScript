@@ -69,7 +69,7 @@ export default class UserService {
 		const { preference: _, ...payload } = data;
 		const {
 			id: _id, preference: _preference,
-			createdAt: _createdAt, updatedAt: _updatedAt,
+			createdAt: _createdAt, updatedAt: _updatedAt, deletedAt: _deletedAt,
 			...userData
 		} = new UserEntity(payload).getAttributes();
 

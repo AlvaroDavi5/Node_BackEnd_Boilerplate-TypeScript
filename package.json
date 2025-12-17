@@ -171,6 +171,7 @@
 		"@types/bcrypt": "^6.0.0",
 		"@types/compression": "^1.8.1",
 		"@types/ejs": "^3.1.5",
+		"@types/eslint-plugin-security": "^3.0.0",
 		"@types/jest": "^30.0.0",
 		"@types/jsonwebtoken": "^9.0.10",
 		"@types/multer": "^2.0.0",

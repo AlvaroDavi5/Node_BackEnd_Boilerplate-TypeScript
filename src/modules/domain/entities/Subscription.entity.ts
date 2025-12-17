@@ -69,25 +69,24 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 	@IsBoolean()
 	public newConnectionsListen = false;
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	constructor(dataValues: any) {
+
+	constructor(dataValues: Partial<IViewSubscription & { _id?: string, newConnectionsListen?: boolean }> = {}) {
 		super();
-		const newDataValues = { ...dataValues, ...dataValues?.value };
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const values: any = {
-			...newDataValues,
-			...newDataValues?.listen,
-			...newDataValues.dataValues,
+
+		const values = {
+			...dataValues,
+			...dataValues?.listen,
+			...dataValues.dataValues,
 		};
 
-		if (this.exists(values?._id)) this.databaseId = values._id;
-		if (this.exists(values?.id)) this.databaseId = values.id;
-		if (this.exists(values?.subscriptionId)) this.subscriptionId = values.subscriptionId;
-		if (this.exists(values?.clientId)) this.clientId = values.clientId;
-		if (this.exists(values?.newConnections)) this.newConnectionsListen = values.newConnections;
-		if (this.exists(values?.newConnectionsListen)) this.newConnectionsListen = values.newConnectionsListen;
-		if (this.exists(values?.updatedAt)) this.updatedAt = values.updatedAt;
-		this.createdAt = this.exists(values?.createdAt) ? this.getDate(values.createdAt) : this.getDate();
+		if (!!values?._id) this.databaseId = values._id;
+		if (!!values?.id) this.databaseId = values.id;
+		if (!!values?.subscriptionId) this.subscriptionId = values.subscriptionId;
+		if (!!values?.clientId) this.clientId = values.clientId;
+		if (!!values?.newConnections) this.newConnectionsListen = values.newConnections;
+		if (!!values?.newConnectionsListen) this.newConnectionsListen = values.newConnectionsListen;
+		if (!!values?.updatedAt) this.updatedAt = values.updatedAt;
+		this.createdAt = !!values?.createdAt ? this.getDate(values.createdAt) : this.getDate();
 	}
 
 	public getAttributes(): SubscriptionInterface {

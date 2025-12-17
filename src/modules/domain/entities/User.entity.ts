@@ -2,11 +2,13 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDate, IsUUID } from 'class-validator';
 import { Type } from 'class-transformer';
+import UsersModel from '@core/infra/database/models/Users.model';
+import { ThemesEnum } from '@domain/enums/themes.enum';
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import AbstractEntity from '@common/classes/AbstractEntity.entity';
 import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
-import UserPreferenceEntity, { ICreateUserPreference, IViewUserPreference, returingUserPreferenceEntity } from './UserPreference.entity';
+import UserPreferenceEntity, { ICreateUserPreference, IUpdateUserPreference, IViewUserPreference, returingUserPreferenceEntity } from './UserPreference.entity';
 
 
 interface UserInterface<UP = IViewUserPreference> {
@@ -26,7 +28,7 @@ interface UserInterface<UP = IViewUserPreference> {
 }
 
 export type ICreateUser = Omit<UserInterface<ICreateUserPreference>, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
-export type IUpdateUser = Partial<ICreateUser>;
+export type IUpdateUser = Partial<Omit<ICreateUser, 'preference'>> & { preference?: IUpdateUserPreference };
 export type IViewUser = UserInterface;
 export type IViewUserWithoutPassword = Omit<UserInterface, 'password'>;
 export type IViewUserWithoutSensitiveData = Omit<UserInterface, 'password' | 'phone' | 'document'>;
@@ -87,7 +89,7 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 
 	@ApiProperty({
 		type: UserPreferenceEntity,
-		example: new UserPreferenceEntity({ imagePath: './image.png', defaultTheme: 'DEFAULT' }),
+		example: new UserPreferenceEntity({ imagePath: './image.png', defaultTheme: ThemesEnum.DEFAULT }),
 		default: null, nullable: true, required: true,
 		description: 'User preference',
 	})
@@ -115,22 +117,23 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	@IsString()
 	private deletedBy: string | null = null;
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any, complexity
-	constructor(dataValues: any) {
+	// eslint-disable-next-line complexity
+	constructor(dataValues: Partial<UsersModel | IViewUser>) {
 		super();
-		if (this.exists(dataValues?.id)) this.id = dataValues.id;
-		if (this.exists(dataValues?.fullName)) this.fullName = dataValues.fullName;
-		if (this.exists(dataValues?.email)) this.email = dataValues.email;
-		if (this.exists(dataValues?.password)) this.password = dataValues.password;
-		if (this.exists(dataValues?.phone)) this.phone = dataValues.phone;
-		if (this.exists(dataValues?.docType)) this.docType = dataValues.docType;
-		if (this.exists(dataValues?.document)) this.document = dataValues.document;
-		if (this.exists(dataValues?.fu)) this.fu = dataValues.fu;
-		if (this.exists(dataValues?.preference)) this.preference = new UserPreferenceEntity(dataValues.preference);
-		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
-		if (this.exists(dataValues?.deletedAt)) this.deletedAt = dataValues.deletedAt;
-		if (this.exists(dataValues?.deletedBy)) this.deletedBy = dataValues.deletedBy;
-		this.createdAt = this.exists(dataValues?.createdAt) ? this.getDate(dataValues.createdAt) : this.getDate();
+
+		if (!!dataValues?.id) this.id = dataValues.id;
+		if (!!dataValues?.fullName) this.fullName = dataValues.fullName;
+		if (!!dataValues?.email) this.email = dataValues.email;
+		if (!!dataValues?.password) this.password = dataValues.password;
+		if (!!dataValues?.phone) this.phone = dataValues.phone;
+		if (!!dataValues?.docType) this.docType = dataValues.docType;
+		if (!!dataValues?.document) this.document = dataValues.document;
+		if (!!dataValues?.fu) this.fu = dataValues.fu;
+		if (!!dataValues?.preference) this.preference = new UserPreferenceEntity(dataValues.preference);
+		if (!!dataValues?.updatedAt) this.updatedAt = dataValues.updatedAt;
+		if (!!dataValues?.deletedAt) this.deletedAt = dataValues.deletedAt;
+		if (!!dataValues?.deletedBy) this.deletedBy = dataValues.deletedBy;
+		this.createdAt = !!dataValues?.createdAt ? this.getDate(dataValues.createdAt) : this.getDate();
 	}
 
 	public getAttributes(): IViewUser {

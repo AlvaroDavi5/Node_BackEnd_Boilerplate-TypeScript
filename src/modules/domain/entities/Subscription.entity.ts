@@ -69,8 +69,8 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 	@IsBoolean()
 	public newConnectionsListen = false;
 
-
-	constructor(dataValues: Partial<IViewSubscription & { _id?: string, newConnectionsListen?: boolean }> = {}) {
+	// eslint-disable-next-line complexity
+	constructor(dataValues: Partial<IViewSubscription & Record<string, unknown>> = {}) {
 		super();
 
 		const values = {
@@ -78,14 +78,16 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 			...dataValues?.listen,
 			...dataValues.dataValues,
 		};
+		const connectionId = !!dataValues._id ? String(dataValues._id) : undefined;
+		const newConnectionsListen = Boolean(values?.newConnections ?? values?.listen?.newConnections);
 
-		if (!!values?._id) this.databaseId = values._id;
+		if (!!connectionId) this.databaseId = connectionId;
 		if (!!values?.id) this.databaseId = values.id;
 		if (!!values?.subscriptionId) this.subscriptionId = values.subscriptionId;
 		if (!!values?.clientId) this.clientId = values.clientId;
 		if (!!values?.newConnections) this.newConnectionsListen = values.newConnections;
-		if (!!values?.newConnectionsListen) this.newConnectionsListen = values.newConnectionsListen;
 		if (!!values?.updatedAt) this.updatedAt = values.updatedAt;
+		this.newConnectionsListen = newConnectionsListen;
 		this.createdAt = !!values?.createdAt ? this.getDate(values.createdAt) : this.getDate();
 	}
 

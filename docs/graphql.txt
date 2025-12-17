@@ -1,6 +1,6 @@
 
 query {
-	findConnections
+	listConnections
 	{
 		databaseId,
 		subscriptionId,

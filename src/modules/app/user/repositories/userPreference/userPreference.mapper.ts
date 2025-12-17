@@ -2,12 +2,12 @@ import UserPreferencesModel from '@core/infra/database/models/UserPreferences.mo
 import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
 
 
-const toDomainEntity = (dataValues: UserPreferencesModel): UserPreferenceEntity => {
+function toDomainEntity(dataValues: UserPreferencesModel): UserPreferenceEntity {
 	return new UserPreferenceEntity(dataValues);
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const toDatabaseEntity = (entity: UserPreferenceEntity): any => {
+function toDatabaseEntity(entity: UserPreferenceEntity): any {
 	if (!entity.validate().valid)
 		return null;
 

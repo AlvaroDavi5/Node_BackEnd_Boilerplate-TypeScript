@@ -66,7 +66,12 @@ export default class UserService {
 	}
 
 	public async update(id: string, data: IUpdateUser): Promise<UserEntity> {
-		const { id: _userId, createdAt: _createdAt, preference: _preference, ...userData } = new UserEntity(data).getAttributes();
+		const { preference: _, ...payload } = data;
+		const {
+			id: _id, preference: _preference,
+			createdAt: _createdAt, updatedAt: _updatedAt, deletedAt: _deletedAt,
+			...userData
+		} = new UserEntity(payload).getAttributes();
 
 		try {
 			const userPassword = userData.password;

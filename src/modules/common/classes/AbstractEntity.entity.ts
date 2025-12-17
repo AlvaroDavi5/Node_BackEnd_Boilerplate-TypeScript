@@ -1,4 +1,3 @@
-import { DateTime } from 'luxon';
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 
@@ -20,16 +19,17 @@ export default abstract class AbstractEntity<I = unknown> {
 		return { value, valid, error };
 	}
 
-	public exists(value: unknown): boolean {
-		return value !== undefined && value !== null;
-	}
+	protected getDate(dateValue?: unknown): Date {
+		const setUTC = true;
 
-	public getDate(strDate?: string): Date {
-		const date: DateTime = strDate?.length
-			? fromISOToDateTime(strDate, false, TimeZonesEnum.America_SaoPaulo)
-			: getDateTimeNow(TimeZonesEnum.America_SaoPaulo);
+		if (dateValue instanceof Date) {
+			return dateValue;
+		} else if (typeof dateValue === 'string') {
+			const dateTime = fromISOToDateTime(dateValue, false, TimeZonesEnum.America_SaoPaulo);
+			return fromDateTimeToJSDate(dateTime, setUTC);
+		}
 
-		return fromDateTimeToJSDate(date, true);
+		return fromDateTimeToJSDate(getDateTimeNow(TimeZonesEnum.America_SaoPaulo), setUTC);
 	}
 
 	public getAttributes(): I {

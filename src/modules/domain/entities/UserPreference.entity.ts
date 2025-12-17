@@ -1,19 +1,21 @@
 import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDate, IsEnum, IsUUID } from 'class-validator';
+import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 import { getObjValues } from '@common/utils/dataValidations.util';
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import AbstractEntity from '@common/classes/AbstractEntity.entity';
 import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
+import { IViewUser } from './User.entity';
 
 
 const dateTimeExample = fromISOToDateTime('2024-06-10T03:52:50.885Z', false, TimeZonesEnum.America_SaoPaulo);
 const dateExample = fromDateTimeToJSDate(dateTimeExample, false);
 const getDateNow = () => fromDateTimeToJSDate(getDateTimeNow(TimeZonesEnum.America_SaoPaulo));
 
-export interface UserPreferenceInterface {
+interface UserPreferenceInterface {
 	id?: string,
 	userId?: string,
 	imagePath?: string,
@@ -77,17 +79,18 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 	@IsDate()
 	public deletedAt: Date | null = null;
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	constructor(dataValues: any) {
+	constructor(dataValues: Partial<UserPreferencesModel | IViewUserPreference & { user?: IViewUser }>) {
 		super();
-		if (this.exists(dataValues?.id)) this.id = dataValues.id;
-		if (this.exists(dataValues?.userId)) this.userId = dataValues.userId;
-		else if (this.exists(dataValues?.user?.id)) this.userId = dataValues.user.id;
-		if (this.exists(dataValues?.imagePath)) this.imagePath = dataValues.imagePath;
-		if (this.exists(dataValues?.defaultTheme)) this.defaultTheme = dataValues.defaultTheme;
-		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
-		if (this.exists(dataValues?.deletedAt)) this.deletedAt = dataValues.deletedAt;
-		this.createdAt = this.exists(dataValues?.createdAt) ? this.getDate(dataValues.createdAt) : this.getDate();
+
+		if (!!dataValues?.id) this.id = dataValues.id;
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		if (!!(dataValues as any)?.userId) this.userId = (dataValues as any).userId;
+		else if (!!dataValues?.user?.id) this.userId = dataValues.user.id;
+		if (!!dataValues?.imagePath) this.imagePath = dataValues.imagePath;
+		if (!!dataValues?.defaultTheme) this.setDefaultTheme(dataValues.defaultTheme);
+		if (!!dataValues?.updatedAt) this.updatedAt = dataValues.updatedAt;
+		if (!!dataValues?.deletedAt) this.deletedAt = dataValues.deletedAt;
+		this.createdAt = !!dataValues?.createdAt ? this.getDate(dataValues.createdAt) : this.getDate();
 	}
 
 	public getAttributes(): UserPreferenceInterface {
@@ -131,13 +134,13 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 		if (!getObjValues<ThemesEnum>(ThemesEnum).includes(theme as ThemesEnum))
 			return;
 
-		const themeMapper: Record<string, ThemesEnum> = {
+		const themeMapper: Record<ThemesEnum, ThemesEnum> = {
 			[ThemesEnum.DEFAULT]: ThemesEnum.DEFAULT,
 			[ThemesEnum.LIGHT]: ThemesEnum.LIGHT,
 			[ThemesEnum.DARK]: ThemesEnum.DARK,
 		};
 
-		this.defaultTheme = themeMapper[theme.toUpperCase()];
+		this.defaultTheme = themeMapper[theme.toUpperCase() as ThemesEnum];
 		this.updatedAt = this.getDate();
 	}
 

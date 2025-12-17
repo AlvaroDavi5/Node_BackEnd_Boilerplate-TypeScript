@@ -1,6 +1,6 @@
 import { Controller, Get, ParseBoolPipe, Query, UseFilters, UseGuards, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiOkResponse, ApiProduces, ApiConsumes } from '@nestjs/swagger';
-import SubscriptionEntity, { SubscriptionInterface } from '@domain/entities/Subscription.entity';
+import SubscriptionEntity, { IViewSubscription } from '@domain/entities/Subscription.entity';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
 import AuthGuard from '@api/guards/Auth.guard';
 import HttpExceptionsFilter from '@api/filters/HttpExceptions.filter';
@@ -49,7 +49,7 @@ export default class SubscriptionController {
 	@ApiProduces('application/json')
 	public async listSubscriptions(
 		@Query('useCache', ParseBoolPipe) useCache: boolean, // ? feature flag
-	): Promise<SubscriptionInterface[]> {
+	): Promise<IViewSubscription[]> {
 		const result = await this.subscriptionService.list(useCache);
 
 		return result.map((subscription: SubscriptionEntity) => {

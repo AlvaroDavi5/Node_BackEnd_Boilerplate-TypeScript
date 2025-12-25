@@ -80,13 +80,14 @@ export default class SubscriptionService implements OnModuleInit {
 
 		if (subscriptionDatabaseId) {
 			foundedSubscription = await this.mongoClient.get(this.subscriptionsCollection, subscriptionDatabaseId);
-			await this.saveOnCache(subscriptionId, new SubscriptionEntity(foundedSubscription).getAttributes());
+			if (!!foundedSubscription?._id)
+				await this.saveOnCache(subscriptionId, new SubscriptionEntity(foundedSubscription).getAttributes());
 		} else
 			throw this.exceptions.conflict({
 				message: 'Subscription not created or updated!',
 			});
 
-		return new SubscriptionEntity(foundedSubscription);
+		return new SubscriptionEntity(foundedSubscription ?? {});
 	}
 
 	public async delete(subscriptionId: string): Promise<boolean> {
@@ -104,7 +105,7 @@ export default class SubscriptionService implements OnModuleInit {
 	}
 
 	public async list(useCache = true): Promise<SubscriptionEntity[]> {
-		let foundedSubscriptions = await this.listFromCache();
+		let foundedSubscriptions = await this.listFromCache() as Record<string, unknown>[];
 
 		if (!useCache || !foundedSubscriptions.length)
 			foundedSubscriptions = await this.mongoClient.findMany(this.subscriptionsCollection, {});

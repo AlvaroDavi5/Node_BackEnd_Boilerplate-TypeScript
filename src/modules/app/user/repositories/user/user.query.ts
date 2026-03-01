@@ -2,7 +2,7 @@ import { Not, IsNull, Equal, Like, In, And, FindManyOptions, FindOptionsWhere, F
 import UsersModel from '@core/infra/database/models/Users.model';
 import { BuildParamsInterface, PaginationOptionsInterface } from '@core/infra/database/repositories/AbstractRepository.repository';
 import { ThemesEnum } from '@domain/enums/themes.enum';
-import { UserInterface } from '@domain/entities/User.entity';
+import { IViewUser } from '@domain/entities/User.entity';
 import { getObjValues } from '@common/utils/dataValidations.util';
 
 
@@ -11,12 +11,12 @@ interface UserSelectRestrictInterface {
 	withoutSensitiveData: boolean,
 }
 
-export type UserBuildParamsInterface = BuildParamsInterface<UserInterface> & UserSelectRestrictInterface;
+export type UserBuildParamsInterface = BuildParamsInterface<IViewUser> & UserSelectRestrictInterface;
 
-const buildSelectParams = ({
+function buildSelectParams({
 	withoutPassword,
 	withoutSensitiveData,
-}: UserSelectRestrictInterface): FindOptionsSelect<UsersModel> => {
+}: UserSelectRestrictInterface): FindOptionsSelect<UsersModel> {
 	const selectSensitiveData = withoutSensitiveData === false;
 	const selectPassword = withoutPassword === false;
 
@@ -32,7 +32,7 @@ const buildSelectParams = ({
 	return select;
 };
 
-const buildWhereParams = ({
+function buildWhereParams({
 	id,
 	searchTerm,
 	fullName, email,
@@ -40,14 +40,12 @@ const buildWhereParams = ({
 	docType, document,
 	preference,
 	selectSoftDeleted,
-}: UserBuildParamsInterface): FindOptionsWhere<UsersModel>[] => {
+}: UserBuildParamsInterface): FindOptionsWhere<UsersModel>[] {
 	const where: FindOptionsWhere<UsersModel>[] = [];
 	const partialWhere: FindOptionsWhere<UsersModel> = {};
 
 	if (selectSoftDeleted === true) {
-		// ? AND operator
 		partialWhere.deletedAt = Not(IsNull());
-		partialWhere.deletedBy = Not(IsNull());
 	}
 
 	if (id) {
@@ -77,10 +75,10 @@ const buildWhereParams = ({
 	return where;
 };
 
-const buildPaginationParams = ({
+function buildPaginationParams({
 	limit, page,
 	order, sortBy,
-}: UserBuildParamsInterface): PaginationOptionsInterface<UsersModel> => {
+}: UserBuildParamsInterface): PaginationOptionsInterface<UsersModel> {
 	const paginationParams: PaginationOptionsInterface<UsersModel> = {};
 
 	if (limit && page) {
@@ -99,7 +97,6 @@ const buildPaginationParams = ({
 };
 
 export const userQueryParamsBuilder = {
-
 	buildParams: (data: UserBuildParamsInterface): FindManyOptions<UsersModel> => {
 		const select = buildSelectParams(data);
 		const where = buildWhereParams(data);

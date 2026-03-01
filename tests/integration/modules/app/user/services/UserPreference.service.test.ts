@@ -50,12 +50,12 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 			userPreferenceRepositoryMock.create.mockResolvedValueOnce(new UserPreferenceEntity({
 				userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
 				defaultTheme: 'DARK',
-			}));
+			} as any));
 
 			const createdUserPreference = await userPreferenceService.create(new UserPreferenceEntity({
 				userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
 				defaultTheme: 'DARK',
-			}));
+			} as any));
 			expect(userPreferenceRepositoryMock.create).toHaveBeenCalledTimes(1);
 			expect(createdUserPreference?.getUserId()).toBe('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(createdUserPreference?.getDefaultTheme()).toBe('DARK');
@@ -65,7 +65,7 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 			await expect(userPreferenceService.create(new UserPreferenceEntity({
 				userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
 				defaultTheme: 'DARK',
-			})))
+			} as any)))
 				.rejects.toMatchObject({
 					name: 'internal',
 					message: 'Error to comunicate with database',
@@ -100,7 +100,7 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 		test('Should update a user preference successfully', async () => {
 			const userPreferenceEntity = new UserPreferenceEntity({
 				id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', defaultTheme: 'DEFAULT',
-			});
+			} as any);
 			userPreferenceRepositoryMock.update.mockImplementationOnce(
 				async (_id: string, dataValues: Partial<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => {
 					if (dataValues?.defaultTheme) userPreferenceEntity.setDefaultTheme(dataValues.defaultTheme);
@@ -129,7 +129,7 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 
 	describe('# Delete User Preference', () => {
 		test('Should delete a user preference successfully', async () => {
-			const userPreferenceEntity = new UserPreferenceEntity({ id: 1, userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' });
+			const userPreferenceEntity = new UserPreferenceEntity({ id: '1', userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' });
 			userPreferenceRepositoryMock.deleteOne.mockResolvedValueOnce(true);
 
 			const deletedUserPreference = await userPreferenceService.delete(userPreferenceEntity?.getId(), { softDelete: false });

@@ -4,6 +4,7 @@ import { IsString, IsBoolean, IsDate, IsUUID } from 'class-validator';
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import AbstractEntity from '@common/classes/AbstractEntity.entity';
+import { isNullOrUndefined } from '@common/utils/dataValidations.util';
 import { returingString, returingBoolean, returingDate } from '@shared/internal/types/returnTypeFunc';
 
 
@@ -11,7 +12,7 @@ const dateTimeExample = fromISOToDateTime('2024-06-10T03:52:50.885Z', false, Tim
 const dateExample = fromDateTimeToJSDate(dateTimeExample, false);
 const getDateNow = () => fromDateTimeToJSDate(getDateTimeNow(TimeZonesEnum.America_SaoPaulo));
 
-export interface SubscriptionInterface {
+interface SubscriptionInterface {
 	id?: string,
 	subscriptionId?: string,
 	dataValues: {
@@ -69,25 +70,26 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 	@IsBoolean()
 	public newConnectionsListen = false;
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	constructor(dataValues: any) {
+	// eslint-disable-next-line complexity
+	constructor(dataValues: Partial<IViewSubscription & Record<string, unknown>> = {}) {
 		super();
-		const newDataValues = { ...dataValues, ...dataValues?.value };
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const values: any = {
-			...newDataValues,
-			...newDataValues?.listen,
-			...newDataValues.dataValues,
-		};
 
-		if (this.exists(values?._id)) this.databaseId = values._id;
-		if (this.exists(values?.id)) this.databaseId = values.id;
-		if (this.exists(values?.subscriptionId)) this.subscriptionId = values.subscriptionId;
-		if (this.exists(values?.clientId)) this.clientId = values.clientId;
-		if (this.exists(values?.newConnections)) this.newConnectionsListen = values.newConnections;
-		if (this.exists(values?.newConnectionsListen)) this.newConnectionsListen = values.newConnectionsListen;
-		if (this.exists(values?.updatedAt)) this.updatedAt = values.updatedAt;
-		this.createdAt = this.exists(values?.createdAt) ? this.getDate(values.createdAt) : this.getDate();
+		const values = {
+			...dataValues,
+			...dataValues?.listen,
+			...dataValues.dataValues,
+		};
+		const registerId = !!dataValues._id ? String(dataValues._id) : undefined;
+		const newConnectionsListen = Boolean(values?.newConnections ?? values?.listen?.newConnections);
+
+		if (!isNullOrUndefined(registerId)) this.databaseId = registerId;
+		if (!isNullOrUndefined(values?.id)) this.databaseId = values.id;
+		if (!isNullOrUndefined(values?.subscriptionId)) this.subscriptionId = values.subscriptionId;
+		if (!isNullOrUndefined(values?.clientId)) this.clientId = values.clientId;
+		if (!isNullOrUndefined(values?.newConnections)) this.newConnectionsListen = values.newConnections;
+		if (!isNullOrUndefined(values?.updatedAt)) this.updatedAt = values.updatedAt;
+		this.newConnectionsListen = newConnectionsListen;
+		this.createdAt = !isNullOrUndefined(values?.createdAt) ? this.getDate(values.createdAt) : this.getDate();
 	}
 
 	public getAttributes(): SubscriptionInterface {

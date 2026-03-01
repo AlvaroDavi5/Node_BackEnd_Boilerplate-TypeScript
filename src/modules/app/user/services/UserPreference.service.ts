@@ -35,7 +35,11 @@ export default class UserPreferenceService {
 	}
 
 	public async update(id: string, data: IUpdateUserPreference): Promise<UserPreferenceEntity> {
-		const { id: _preferenceId, userId: _userId, createdAt: _createdAt, ...userPreferenceData } = new UserPreferenceEntity(data).getAttributes();
+		const {
+			id: _id, userId: _userId,
+			createdAt: _createdAt, updatedAt: _updatedAt, deletedAt: _deletedAt,
+			...userPreferenceData
+		} = new UserPreferenceEntity(data).getAttributes();
 
 		try {
 			const preference = await this.userPreferenceRepository.update(id, userPreferenceData);

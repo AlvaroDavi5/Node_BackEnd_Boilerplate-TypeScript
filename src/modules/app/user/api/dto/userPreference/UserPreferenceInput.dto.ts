@@ -1,10 +1,10 @@
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsEnum, IsOptional } from 'class-validator';
-import { IUpdateUserPreference } from '@domain/entities/UserPreference.entity';
+import { ICreateUserPreference, IUpdateUserPreference } from '@domain/entities/UserPreference.entity';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 
 
-export class UserPreferenceInputDto implements IUpdateUserPreference {
+export class UserPreferenceInputDto implements ICreateUserPreference, IUpdateUserPreference {
 	@ApiProperty({ type: String, example: './image.png', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()

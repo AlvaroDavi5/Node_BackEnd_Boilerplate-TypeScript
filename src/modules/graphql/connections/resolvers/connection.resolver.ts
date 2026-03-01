@@ -16,8 +16,8 @@ export default class ConnectionResolver {
 		return await this.connectionsService.create(createConnectionInputDto);
 	}
 
-	@Query(() => [SubscriptionEntity], { name: 'findConnections' })
-	public findConnections() {
+	@Query(() => [SubscriptionEntity], { name: 'listConnections' })
+	public listConnections() {
 		return this.connectionsService.findAll();
 	}
 

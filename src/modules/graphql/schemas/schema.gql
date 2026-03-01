@@ -53,7 +53,7 @@ type SubscriptionEntity {
 }
 
 type Query {
-  findConnections: [SubscriptionEntity!]!
+  listConnections: [SubscriptionEntity!]!
   findConnection(subscriptionId: String!): SubscriptionEntity!
 }
 

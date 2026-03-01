@@ -2,14 +2,17 @@ import { ObjectType, Field } from '@nestjs/graphql';
 import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDate, IsUUID } from 'class-validator';
 import { Type } from 'class-transformer';
+import UsersModel from '@core/infra/database/models/Users.model';
+import { ThemesEnum } from '@domain/enums/themes.enum';
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import AbstractEntity from '@common/classes/AbstractEntity.entity';
+import { isNullOrUndefined } from '@common/utils/dataValidations.util';
 import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
-import UserPreferenceEntity, { ICreateUserPreference, UserPreferenceInterface, returingUserPreferenceEntity } from './UserPreference.entity';
+import UserPreferenceEntity, { ICreateUserPreference, IUpdateUserPreference, IViewUserPreference, returingUserPreferenceEntity } from './UserPreference.entity';
 
 
-export interface UserInterface<UP = UserPreferenceInterface> {
+interface UserInterface<UP = IViewUserPreference> {
 	id?: string,
 	fullName: string,
 	email: string,
@@ -26,7 +29,7 @@ export interface UserInterface<UP = UserPreferenceInterface> {
 }
 
 export type ICreateUser = Omit<UserInterface<ICreateUserPreference>, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
-export type IUpdateUser = Partial<ICreateUser>;
+export type IUpdateUser = Partial<Omit<ICreateUser, 'preference'>> & { preference?: IUpdateUserPreference };
 export type IViewUser = UserInterface;
 export type IViewUserWithoutPassword = Omit<UserInterface, 'password'>;
 export type IViewUserWithoutSensitiveData = Omit<UserInterface, 'password' | 'phone' | 'document'>;
@@ -87,7 +90,7 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 
 	@ApiProperty({
 		type: UserPreferenceEntity,
-		example: new UserPreferenceEntity({ imagePath: './image.png', defaultTheme: 'DEFAULT' }),
+		example: new UserPreferenceEntity({ imagePath: './image.png', defaultTheme: ThemesEnum.DEFAULT }),
 		default: null, nullable: true, required: true,
 		description: 'User preference',
 	})
@@ -115,22 +118,23 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	@IsString()
 	private deletedBy: string | null = null;
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any, complexity
-	constructor(dataValues: any) {
+	// eslint-disable-next-line complexity
+	constructor(dataValues: Partial<UsersModel | IViewUser>) {
 		super();
-		if (this.exists(dataValues?.id)) this.id = dataValues.id;
-		if (this.exists(dataValues?.fullName)) this.fullName = dataValues.fullName;
-		if (this.exists(dataValues?.email)) this.email = dataValues.email;
-		if (this.exists(dataValues?.password)) this.password = dataValues.password;
-		if (this.exists(dataValues?.phone)) this.phone = dataValues.phone;
-		if (this.exists(dataValues?.docType)) this.docType = dataValues.docType;
-		if (this.exists(dataValues?.document)) this.document = dataValues.document;
-		if (this.exists(dataValues?.fu)) this.fu = dataValues.fu;
-		if (this.exists(dataValues?.preference)) this.preference = new UserPreferenceEntity(dataValues.preference);
-		if (this.exists(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
-		if (this.exists(dataValues?.deletedAt)) this.deletedAt = dataValues.deletedAt;
-		if (this.exists(dataValues?.deletedBy)) this.deletedBy = dataValues.deletedBy;
-		this.createdAt = this.exists(dataValues?.createdAt) ? this.getDate(dataValues.createdAt) : this.getDate();
+
+		if (!isNullOrUndefined(dataValues?.id)) this.id = dataValues.id;
+		if (!isNullOrUndefined(dataValues?.fullName)) this.fullName = dataValues.fullName;
+		if (!isNullOrUndefined(dataValues?.email)) this.email = dataValues.email;
+		if (!isNullOrUndefined(dataValues?.password)) this.password = dataValues.password;
+		if (!isNullOrUndefined(dataValues?.phone)) this.phone = dataValues.phone;
+		if (!isNullOrUndefined(dataValues?.docType)) this.docType = dataValues.docType;
+		if (!isNullOrUndefined(dataValues?.document)) this.document = dataValues.document;
+		if (!isNullOrUndefined(dataValues?.fu)) this.fu = dataValues.fu;
+		if (!isNullOrUndefined(dataValues?.preference)) this.preference = new UserPreferenceEntity(dataValues.preference);
+		if (!isNullOrUndefined(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
+		if (!isNullOrUndefined(dataValues?.deletedAt)) this.deletedAt = dataValues.deletedAt;
+		if (!isNullOrUndefined(dataValues?.deletedBy)) this.deletedBy = dataValues.deletedBy;
+		this.createdAt = !isNullOrUndefined(dataValues?.createdAt) ? this.getDate(dataValues.createdAt) : this.getDate();
 	}
 
 	public getAttributes(): IViewUser {

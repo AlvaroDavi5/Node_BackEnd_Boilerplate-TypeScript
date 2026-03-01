@@ -15,14 +15,13 @@ export default class UserPreferenceRepository extends AbstractRepository<UserPre
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER) connection: DataSource,
 		@Inject(REQUEST_LOGGER_PROVIDER) logger: LoggerService,
-			exceptions: Exceptions,
+		@Inject(Exceptions) exceptions: Exceptions,
 	) {
 		logger.setContextName(UserPreferenceRepository.name);
 		super({
 			connection,
 			DomainEntity: UserPreferenceEntity,
 			ResourceModel: UserPreferencesModel,
-			ResourceRepo: UserPreferencesModel.getRepository(),
 			resourceMapper: userPreferenceMapper,
 			queryParamsBuilder: userPreferenceQueryParamsBuilder,
 			exceptions,

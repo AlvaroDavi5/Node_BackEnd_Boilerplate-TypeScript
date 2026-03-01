@@ -1,5 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
-import { DataSource, In, FindOneOptions, FindManyOptions, UpdateResult } from 'typeorm';
+import { DataSource, UpdateResult, DeleteResult } from 'typeorm';
 import { DATABASE_CONNECTION_PROVIDER } from '@core/infra/database/connection';
 import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
@@ -16,14 +16,13 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 	constructor(
 		@Inject(DATABASE_CONNECTION_PROVIDER) connection: DataSource,
 		@Inject(REQUEST_LOGGER_PROVIDER) logger: LoggerService,
-			exceptions: Exceptions,
+		@Inject(Exceptions) exceptions: Exceptions,
 	) {
 		logger.setContextName(UserRepository.name);
 		super({
 			connection,
 			DomainEntity: UserEntity,
 			ResourceModel: UsersModel,
-			ResourceRepo: UsersModel.getRepository(),
 			resourceMapper: userMapper,
 			queryParamsBuilder: userQueryParamsBuilder,
 			exceptions,
@@ -38,7 +37,7 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 				withoutSensitiveData: false,
 				withoutPassword,
 			});
-			const result = await this.ResourceRepo.findOne(buildedQuery);
+			const result = await this.resourceRepository.findOne(buildedQuery);
 			if (!result) return null;
 
 			return this.resourceMapper.toDomainEntity(result);
@@ -55,7 +54,7 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 				withoutSensitiveData,
 				withoutPassword: true,
 			});
-			const { 0: rows, 1: count } = await this.ResourceRepo.findAndCount(buildedQuery);
+			const { 0: rows, 1: count } = await this.resourceRepository.findAndCount(buildedQuery);
 
 			const totalItems = count;
 			const totalPages = Math.ceil(totalItems / (query?.limit ?? 1)) || 1;
@@ -81,32 +80,17 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 
 	public async deleteOne(id: string, softDelete = true, agentId: string | null = null): Promise<boolean> {
 		try {
-			const query: FindOneOptions<UsersModel> = {
-				where: { id },
-			};
+			let result: UpdateResult | DeleteResult | null = null;
 
-			let result: UpdateResult | UsersModel | null = null;
+			await this.resourceRepository.update(id, { deletedBy: agentId ?? null });
+
 			if (softDelete) {
-				const timestamp = this.getISODateNow();
-				result = await this.ResourceRepo.update(id, {
-					deletedAt: timestamp,
-					deletedBy: agentId,
-				});
-				if (result !== null && result !== undefined) {
-					const res = result.affected
-						? result.affected > 0
-						: true;
-					return res;
-				} else
-					return false;
+				result = await this.resourceRepository.softDelete(id);
 			} else {
-				const register = await this.ResourceRepo.findOne(query);
-				if (register) {
-					result = await register.remove();
-					return true;
-				}
-				return false;
+				result = await this.resourceRepository.delete(id);
 			}
+
+			return !!result?.affected;
 		} catch (error) {
 			throw this.exceptions.internal(error as Error);
 		}
@@ -114,29 +98,17 @@ export default class UserRepository extends AbstractRepository<UsersModel, UserE
 
 	public async deleteMany(ids: string[], softDelete = true, agentId: string | null = null): Promise<number> {
 		try {
-			const query: FindManyOptions<UsersModel> = {
-				where: { id: In(ids) }
-			};
+			let result: UpdateResult | DeleteResult | null = null;
 
-			let result: UpdateResult | UsersModel | null = null;
+			await this.resourceRepository.update(ids, { deletedBy: agentId ?? null });
+
 			if (softDelete) {
-				const timestamp = this.getISODateNow();
-				result = await this.ResourceRepo.update(ids, {
-					deletedAt: timestamp,
-					deletedBy: agentId,
-				});
-				return Number(result.affected);
+				result = await this.resourceRepository.softDelete(ids);
 			} else {
-				const registers = await this.ResourceRepo.find(query);
-				if (!registers) return 0;
-
-				let counter = 0;
-				for (const register of registers) {
-					result = await register.remove();
-					counter++;
-				}
-				return counter;
+				result = await this.resourceRepository.delete(ids);
 			}
+
+			return Number(result?.affected ?? 0);
 		} catch (error) {
 			throw this.exceptions.internal(error as Error);
 		}

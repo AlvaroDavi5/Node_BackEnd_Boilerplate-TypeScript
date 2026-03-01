@@ -1,6 +1,14 @@
 
-export function isNullOrUndefined(data: unknown): boolean {
-	return data === null || data === undefined;
+export function isDefined<T = unknown>(value: T | undefined): value is T {
+	return value !== undefined;
+}
+
+export function isNull(value: unknown | null): value is null {
+	return value === null;
+}
+
+export function isNullOrUndefined<T = unknown>(value: T): value is T & (null | undefined) {
+	return isNull(value) || !isDefined(value);
 }
 
 export function isEmpty(data: unknown): boolean {

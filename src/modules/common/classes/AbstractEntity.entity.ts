@@ -19,6 +19,10 @@ export default abstract class AbstractEntity<I = unknown> {
 		return { value, valid, error };
 	}
 
+	public getAttributes(): I {
+		return {} as I;
+	}
+
 	protected getDate(dateValue?: unknown): Date {
 		const setUTC = true;
 
@@ -30,9 +34,5 @@ export default abstract class AbstractEntity<I = unknown> {
 		}
 
 		return fromDateTimeToJSDate(getDateTimeNow(TimeZonesEnum.America_SaoPaulo), setUTC);
-	}
-
-	public getAttributes(): I {
-		return {} as I;
 	}
 }

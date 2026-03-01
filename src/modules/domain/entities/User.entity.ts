@@ -7,6 +7,7 @@ import { ThemesEnum } from '@domain/enums/themes.enum';
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import AbstractEntity from '@common/classes/AbstractEntity.entity';
+import { isNullOrUndefined } from '@common/utils/dataValidations.util';
 import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
 import UserPreferenceEntity, { ICreateUserPreference, IUpdateUserPreference, IViewUserPreference, returingUserPreferenceEntity } from './UserPreference.entity';
 
@@ -121,19 +122,19 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	constructor(dataValues: Partial<UsersModel | IViewUser>) {
 		super();
 
-		if (!!dataValues?.id) this.id = dataValues.id;
-		if (!!dataValues?.fullName) this.fullName = dataValues.fullName;
-		if (!!dataValues?.email) this.email = dataValues.email;
-		if (!!dataValues?.password) this.password = dataValues.password;
-		if (!!dataValues?.phone) this.phone = dataValues.phone;
-		if (!!dataValues?.docType) this.docType = dataValues.docType;
-		if (!!dataValues?.document) this.document = dataValues.document;
-		if (!!dataValues?.fu) this.fu = dataValues.fu;
-		if (!!dataValues?.preference) this.preference = new UserPreferenceEntity(dataValues.preference);
-		if (!!dataValues?.updatedAt) this.updatedAt = dataValues.updatedAt;
-		if (!!dataValues?.deletedAt) this.deletedAt = dataValues.deletedAt;
-		if (!!dataValues?.deletedBy) this.deletedBy = dataValues.deletedBy;
-		this.createdAt = !!dataValues?.createdAt ? this.getDate(dataValues.createdAt) : this.getDate();
+		if (!isNullOrUndefined(dataValues?.id)) this.id = dataValues.id;
+		if (!isNullOrUndefined(dataValues?.fullName)) this.fullName = dataValues.fullName;
+		if (!isNullOrUndefined(dataValues?.email)) this.email = dataValues.email;
+		if (!isNullOrUndefined(dataValues?.password)) this.password = dataValues.password;
+		if (!isNullOrUndefined(dataValues?.phone)) this.phone = dataValues.phone;
+		if (!isNullOrUndefined(dataValues?.docType)) this.docType = dataValues.docType;
+		if (!isNullOrUndefined(dataValues?.document)) this.document = dataValues.document;
+		if (!isNullOrUndefined(dataValues?.fu)) this.fu = dataValues.fu;
+		if (!isNullOrUndefined(dataValues?.preference)) this.preference = new UserPreferenceEntity(dataValues.preference);
+		if (!isNullOrUndefined(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
+		if (!isNullOrUndefined(dataValues?.deletedAt)) this.deletedAt = dataValues.deletedAt;
+		if (!isNullOrUndefined(dataValues?.deletedBy)) this.deletedBy = dataValues.deletedBy;
+		this.createdAt = !isNullOrUndefined(dataValues?.createdAt) ? this.getDate(dataValues.createdAt) : this.getDate();
 	}
 
 	public getAttributes(): IViewUser {

@@ -3,12 +3,11 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsDate, IsEnum, IsUUID } from 'class-validator';
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 import { ThemesEnum } from '@domain/enums/themes.enum';
-import { getObjValues } from '@common/utils/dataValidations.util';
+import { getObjValues, isNullOrUndefined } from '@common/utils/dataValidations.util';
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import AbstractEntity from '@common/classes/AbstractEntity.entity';
 import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
-import { IViewUser } from './User.entity';
 
 
 const dateTimeExample = fromISOToDateTime('2024-06-10T03:52:50.885Z', false, TimeZonesEnum.America_SaoPaulo);
@@ -79,18 +78,18 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 	@IsDate()
 	public deletedAt: Date | null = null;
 
-	constructor(dataValues: Partial<UserPreferencesModel | IViewUserPreference & { user?: IViewUser }>) {
+	constructor(dataValues: Partial<UserPreferencesModel | IViewUserPreference> = {}) {
 		super();
 
-		if (!!dataValues?.id) this.id = dataValues.id;
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		if (!!(dataValues as any)?.userId) this.userId = (dataValues as any).userId;
-		else if (!!dataValues?.user?.id) this.userId = dataValues.user.id;
-		if (!!dataValues?.imagePath) this.imagePath = dataValues.imagePath;
-		if (!!dataValues?.defaultTheme) this.setDefaultTheme(dataValues.defaultTheme);
-		if (!!dataValues?.updatedAt) this.updatedAt = dataValues.updatedAt;
-		if (!!dataValues?.deletedAt) this.deletedAt = dataValues.deletedAt;
-		this.createdAt = !!dataValues?.createdAt ? this.getDate(dataValues.createdAt) : this.getDate();
+		const userIdFromDataValues = this.getUserIdFromDataValues(dataValues);
+
+		if (!isNullOrUndefined(dataValues?.id)) this.id = dataValues.id;
+		if (!isNullOrUndefined(userIdFromDataValues)) this.userId = userIdFromDataValues;
+		if (!isNullOrUndefined(dataValues?.imagePath)) this.imagePath = dataValues.imagePath;
+		if (!isNullOrUndefined(dataValues?.defaultTheme)) this.setDefaultTheme(dataValues.defaultTheme);
+		if (!isNullOrUndefined(dataValues?.updatedAt)) this.updatedAt = dataValues.updatedAt;
+		if (!isNullOrUndefined(dataValues?.deletedAt)) this.deletedAt = dataValues.deletedAt;
+		this.createdAt = !isNullOrUndefined(dataValues?.createdAt) ? this.getDate(dataValues.createdAt) : this.getDate();
 	}
 
 	public getAttributes(): UserPreferenceInterface {
@@ -150,6 +149,18 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 	public setImagePath(path: string): void {
 		this.imagePath = path;
 		this.updatedAt = this.getDate();
+	}
+
+	private getUserIdFromDataValues(dataValues: Partial<UserPreferencesModel | IViewUserPreference>): string | undefined {
+		if ('userId' in dataValues && !isNullOrUndefined(dataValues?.userId)) {
+			return dataValues.userId;
+		}
+
+		if ('user' in dataValues && !isNullOrUndefined(dataValues?.user?.id)) {
+			return dataValues.user.id;
+		}
+
+		return undefined;
 	}
 }
 

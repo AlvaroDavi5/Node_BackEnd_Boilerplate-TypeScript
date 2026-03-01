@@ -4,6 +4,7 @@ import { IsString, IsBoolean, IsDate, IsUUID } from 'class-validator';
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import AbstractEntity from '@common/classes/AbstractEntity.entity';
+import { isNullOrUndefined } from '@common/utils/dataValidations.util';
 import { returingString, returingBoolean, returingDate } from '@shared/internal/types/returnTypeFunc';
 
 
@@ -81,14 +82,14 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 		const registerId = !!dataValues._id ? String(dataValues._id) : undefined;
 		const newConnectionsListen = Boolean(values?.newConnections ?? values?.listen?.newConnections);
 
-		if (!!registerId) this.databaseId = registerId;
-		if (!!values?.id) this.databaseId = values.id;
-		if (!!values?.subscriptionId) this.subscriptionId = values.subscriptionId;
-		if (!!values?.clientId) this.clientId = values.clientId;
-		if (!!values?.newConnections) this.newConnectionsListen = values.newConnections;
-		if (!!values?.updatedAt) this.updatedAt = values.updatedAt;
+		if (!isNullOrUndefined(registerId)) this.databaseId = registerId;
+		if (!isNullOrUndefined(values?.id)) this.databaseId = values.id;
+		if (!isNullOrUndefined(values?.subscriptionId)) this.subscriptionId = values.subscriptionId;
+		if (!isNullOrUndefined(values?.clientId)) this.clientId = values.clientId;
+		if (!isNullOrUndefined(values?.newConnections)) this.newConnectionsListen = values.newConnections;
+		if (!isNullOrUndefined(values?.updatedAt)) this.updatedAt = values.updatedAt;
 		this.newConnectionsListen = newConnectionsListen;
-		this.createdAt = !!values?.createdAt ? this.getDate(values.createdAt) : this.getDate();
+		this.createdAt = !isNullOrUndefined(values?.createdAt) ? this.getDate(values.createdAt) : this.getDate();
 	}
 
 	public getAttributes(): SubscriptionInterface {

@@ -4,7 +4,7 @@ import UserEntity from '@domain/entities/User.entity';
 import userPreferenceMapper from '@app/user/repositories/userPreference/userPreference.mapper';
 
 
-const toDomainEntity = (dataValues: UsersModel): UserEntity => {
+function toDomainEntity(dataValues: UsersModel): UserEntity {
 	const user = new UserEntity(dataValues);
 
 	if (!user.getPreference()) {
@@ -22,7 +22,7 @@ const toDomainEntity = (dataValues: UsersModel): UserEntity => {
 };
 
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
-const toDatabaseEntity = (entity: UserEntity): any => {
+function toDatabaseEntity(entity: UserEntity): any {
 	if (!entity.validate().valid)
 		return null;
 

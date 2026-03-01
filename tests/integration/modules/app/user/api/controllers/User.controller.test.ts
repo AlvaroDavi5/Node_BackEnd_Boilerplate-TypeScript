@@ -3,8 +3,9 @@ import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
-import UserEntity from '@domain/entities/User.entity';
+import UserEntity, { IViewUser } from '@domain/entities/User.entity';
 import UserListEntity from '@domain/entities/generic/UserList.entity';
+import UserPreferenceEntity, { IViewUserPreference } from '@domain/entities/UserPreference.entity';
 import UserController from '@app/user/api/controllers/User.controller';
 import LoginUserUseCase from '@app/user/usecases/LoginUser.usecase';
 import ListUsersUseCase from '@app/user/usecases/ListUsers.usecase';
@@ -82,15 +83,25 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 			listUsersUseCaseMock.execute.mockResolvedValueOnce({
 				content: [
 					new UserEntity({
+						id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
 						fullName: 'Tester User',
+						email: 'user.tester@nomail.com',
+						password: 'admin',
+						phone: '+5527999999999',
 						fu: 'SP',
 						docType: 'CPF',
 						document: '12312312345',
-						preference: {
+						preference: new UserPreferenceEntity({
+							id: 'a6483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+							user: { id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' },
 							defaultTheme: 'DARK',
 							imagePath: './generic.png',
-						},
-					}),
+							createdAt: new Date(),
+							updatedAt: new Date(),
+						} as IViewUserPreference).getAttributes(),
+						createdAt: new Date(),
+						updatedAt: new Date(),
+					} as IViewUser),
 				],
 				pageNumber: 0,
 				pageSize: 1,

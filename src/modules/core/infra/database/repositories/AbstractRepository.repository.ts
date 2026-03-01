@@ -1,12 +1,10 @@
-import { DataSource, BaseEntity, In, Repository, FindOneOptions, FindManyOptions, FindOptionsOrder, UpdateResult } from 'typeorm';
+import { DataSource, BaseEntity, Repository, FindOneOptions, FindManyOptions, FindOptionsOrder, UpdateResult, DeleteResult } from 'typeorm';
 import { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity';
 import LoggerService from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
-import { fromDateTimeToISO, getDateTimeNow } from '@common/utils/dates.util';
-import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import AbstractEntity from '@common/classes/AbstractEntity.entity';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
-import { constructorType } from '@shared/internal/types/constructorType';
+import { classConstructorType } from '@shared/internal/types/constructorType';
 
 
 export interface PaginationOptionsInterface<M extends BaseEntity> {
@@ -16,23 +14,22 @@ export interface PaginationOptionsInterface<M extends BaseEntity> {
 }
 export type BuildParamsInterface<I = unknown> = ListQueryInterface & Partial<I>;
 
-type ModelType<E extends BaseEntity> = constructorType<E> & typeof BaseEntity;
+type ModelType<E extends BaseEntity> = classConstructorType<E> & typeof BaseEntity;
 
 /* eslint-disable @typescript-eslint/no-explicit-any */
 export default abstract class AbstractRepository<M extends BaseEntity, E extends AbstractEntity, BI extends BuildParamsInterface> {
 	// ? ------ Attributes ------
-	protected DomainEntity: constructorType<E>;
-	protected ResourceModel: ModelType<M>;
-	protected ResourceRepo: Repository<M>;
+	private DomainEntity: classConstructorType<E>;
+	private ResourceModel: ModelType<M>;
+
+	protected resourceRepository: Repository<M>;
 	protected resourceMapper: {
 		toDomainEntity: (dataValues: M) => E,
 		toDatabaseEntity: (entity: E) => M,
 	};
-
 	protected queryParamsBuilder: {
 		buildParams: (data: BI) => FindManyOptions<M>,
 	};
-
 	protected exceptions: Exceptions;
 	protected logger: LoggerService;
 
@@ -41,16 +38,14 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 		connection,
 		DomainEntity,
 		ResourceModel,
-		ResourceRepo,
 		resourceMapper,
 		queryParamsBuilder,
 		exceptions,
 		logger,
 	}: {
 		connection: DataSource,
-		DomainEntity: constructorType<E>,
+		DomainEntity: classConstructorType<E>,
 		ResourceModel: ModelType<M>,
-		ResourceRepo: Repository<M>,
 		resourceMapper: {
 			toDomainEntity: (dataValues: M) => E,
 			toDatabaseEntity: (entity: E) => M,
@@ -64,7 +59,8 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 		this.DomainEntity = DomainEntity;
 		this.ResourceModel = ResourceModel;
 		this.ResourceModel.useDataSource(connection);
-		this.ResourceRepo = ResourceRepo;
+
+		this.resourceRepository = this.ResourceModel.getRepository();
 		this.resourceMapper = resourceMapper;
 		this.queryParamsBuilder = queryParamsBuilder;
 		this.exceptions = exceptions;
@@ -72,10 +68,6 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 	}
 
 	// * ------ Methods ------
-	protected getISODateNow(): string {
-		return fromDateTimeToISO(getDateTimeNow(TimeZonesEnum.America_SaoPaulo));
-	}
-
 	public validatePayload(entity: E): void {
 		if (!(entity instanceof this.DomainEntity)) {
 			throw this.exceptions.contract({
@@ -99,7 +91,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 		try {
 			this.validatePayload(entity);
 
-			const result = await this.ResourceRepo.create(
+			const result = await this.resourceRepository.create(
 				this.resourceMapper.toDatabaseEntity(entity)
 			).save();
 
@@ -111,7 +103,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 
 	public async getById(id: string): Promise<E | null> {
 		try {
-			const result = await this.ResourceRepo.findOne({ where: { id } as any });
+			const result = await this.resourceRepository.findOne({ where: { id } as any });
 			if (!result) return null;
 
 			return this.resourceMapper.toDomainEntity(result);
@@ -122,7 +114,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 
 	public async findOne(query: FindOneOptions<M>): Promise<E | null> {
 		try {
-			const result = await this.ResourceRepo.findOne(query);
+			const result = await this.resourceRepository.findOne(query);
 			if (!result) return null;
 
 			return this.resourceMapper.toDomainEntity(result);
@@ -133,7 +125,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 
 	public async findAll(query?: FindManyOptions<M>): Promise<E[]> {
 		try {
-			const result = await this.ResourceRepo.find(query);
+			const result = await this.resourceRepository.find(query);
 
 			return result.map(this.resourceMapper.toDomainEntity);
 		} catch (error) {
@@ -147,10 +139,8 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 				where: { id } as any,
 			};
 
-			const timestamp = this.getISODateNow();
-			(dataValues as any).updatedAt = timestamp;
-			await this.ResourceRepo.update(id, dataValues);
-			const result = await this.ResourceRepo.findOne(query);
+			await this.resourceRepository.update(id, dataValues);
+			const result = await this.resourceRepository.findOne(query);
 			if (!result) return null;
 
 			return this.resourceMapper.toDomainEntity(result);
@@ -162,7 +152,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 	public async list(query?: ListQueryInterface): Promise<PaginationInterface<E>> {
 		try {
 			const buildedQuery = this.queryParamsBuilder.buildParams(query as any);
-			const { 0: rows, 1: count } = await this.ResourceRepo.findAndCount(buildedQuery);
+			const { 0: rows, 1: count } = await this.resourceRepository.findAndCount(buildedQuery);
 
 			const totalItems = count;
 			const totalPages = Math.ceil(totalItems / (query?.limit ?? 1)) || 1;
@@ -188,7 +178,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 
 	public async count(query: FindManyOptions<M> | undefined): Promise<number> {
 		try {
-			const counter = await this.ResourceRepo.count(query);
+			const counter = await this.resourceRepository.count(query);
 
 			return counter;
 		} catch (error) {
@@ -198,31 +188,15 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 
 	public async deleteOne(id: string, softDelete = true): Promise<boolean> {
 		try {
-			const query: FindOneOptions<M> = {
-				where: { id } as any,
-			};
+			let result: UpdateResult | DeleteResult | null = null;
 
-			let result: UpdateResult | M | null = null;
 			if (softDelete) {
-				const timestamp = this.getISODateNow();
-				result = await this.ResourceRepo.update(id, {
-					deletedAt: timestamp,
-				} as any);
-				if (result !== null && result !== undefined) {
-					const res = result.affected
-						? result.affected > 0
-						: true;
-					return res;
-				} else
-					return false;
+				result = await this.resourceRepository.softDelete(id);
 			} else {
-				const register = await this.ResourceRepo.findOne(query);
-				if (register) {
-					result = await register.remove();
-					return true;
-				}
-				return false;
+				result = await this.resourceRepository.delete(id);
 			}
+
+			return !!result?.affected;
 		} catch (error) {
 			throw this.exceptions.internal(error as Error);
 		}
@@ -230,28 +204,15 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 
 	public async deleteMany(ids: string[], softDelete = true): Promise<number> {
 		try {
-			const query: FindManyOptions<M> = {
-				where: { id: In(ids) } as any,
-			};
+			let result: UpdateResult | DeleteResult | null = null;
 
-			let result: UpdateResult | M | null = null;
 			if (softDelete) {
-				const timestamp = this.getISODateNow();
-				result = await this.ResourceRepo.update(ids, {
-					deletedAt: timestamp,
-				} as any);
-				return Number(result.affected);
+				result = await this.resourceRepository.softDelete(ids);
 			} else {
-				const registers = await this.ResourceRepo.find(query);
-				if (!registers) return 0;
-
-				let counter = 0;
-				for (const register of registers) {
-					result = await register.remove();
-					counter++;
-				}
-				return counter;
+				result = await this.resourceRepository.delete(ids);
 			}
+
+			return Number(result?.affected ?? 0);
 		} catch (error) {
 			throw this.exceptions.internal(error as Error);
 		}
@@ -259,7 +220,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 
 	public async executeQuery(sqlQuery: string): Promise<unknown> {
 		try {
-			const result = await this.ResourceRepo.query(sqlQuery);
+			const result = await this.resourceRepository.query(sqlQuery);
 			return result;
 		} catch (error) {
 			throw this.exceptions.internal(error as Error);

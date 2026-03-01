@@ -28,7 +28,7 @@ export default class UserListEntity extends AbstractEntityList<UserEntity> {
 				preference: new UserPreferenceEntity({
 					imagePath: './image.png',
 					defaultTheme: 'DEFAULT',
-				}),
+				}).getAttributes(),
 				createdAt: dateExample,
 				updatedAt: dateExample,
 			}),

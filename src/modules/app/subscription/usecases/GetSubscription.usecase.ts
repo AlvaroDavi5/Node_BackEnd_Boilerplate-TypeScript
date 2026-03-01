@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { SubscriptionInterface } from '@domain/entities/Subscription.entity';
+import { IViewSubscription } from '@domain/entities/Subscription.entity';
 import SubscriptionService from '../services/Subscription.service';
 
 
@@ -9,7 +9,7 @@ export default class GetSubscriptionUseCase {
 		private readonly subscriptionService: SubscriptionService,
 	) { }
 
-	public async execute(subscriptionId: string): Promise<SubscriptionInterface> {
+	public async execute(subscriptionId: string): Promise<IViewSubscription> {
 		const subscription = await this.subscriptionService.get(subscriptionId);
 
 		return subscription.getAttributes();

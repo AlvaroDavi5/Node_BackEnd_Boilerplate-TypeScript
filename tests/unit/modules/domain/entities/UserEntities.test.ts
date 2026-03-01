@@ -1,5 +1,5 @@
 import UserEntity from '@domain/entities/User.entity';
-import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
+import UserPreferenceEntity, { ICreateUserPreference } from '@domain/entities/UserPreference.entity';
 
 
 describe('Modules :: Domain :: Entities :: UserEntities', () => {
@@ -14,10 +14,10 @@ describe('Modules :: Domain :: Entities :: UserEntities', () => {
 			preference: undefined,
 		});
 		userEntity.setPreference(new UserPreferenceEntity({
-			userId: userEntity.getId(),
+			user: userEntity.getId(),
 			imagePath: './',
 			defaultTheme: 'DEFAULT',
-		}));
+		} as ICreateUserPreference));
 
 		const otherUserEntity = new UserEntity({
 			fullName: 'Test User',

@@ -2,13 +2,13 @@ import { Equal, Like, In, And, FindManyOptions, FindOptionsWhere, FindOptionsSel
 import UserPreferencesModel from '@core/infra/database/models/UserPreferences.model';
 import { BuildParamsInterface } from '@core/infra/database/repositories/AbstractRepository.repository';
 import { ThemesEnum } from '@domain/enums/themes.enum';
-import { UserPreferenceInterface } from '@domain/entities/UserPreference.entity';
+import { IViewUserPreference } from '@domain/entities/UserPreference.entity';
 import { getObjValues } from '@common/utils/dataValidations.util';
 
 
-export type UserPreferenceBuildParamsInterface = BuildParamsInterface<UserPreferenceInterface>;
+export type UserPreferenceBuildParamsInterface = BuildParamsInterface<IViewUserPreference>;
 
-const buildSelectParams = (): FindOptionsSelect<UserPreferencesModel> => {
+function buildSelectParams(): FindOptionsSelect<UserPreferencesModel> {
 	const select: FindOptionsSelect<UserPreferencesModel> = {
 		id: true,
 		defaultTheme: true, imagePath: true,
@@ -19,12 +19,12 @@ const buildSelectParams = (): FindOptionsSelect<UserPreferencesModel> => {
 	return select;
 };
 
-const buildWhereParams = ({
+function buildWhereParams({
 	id,
 	userId,
 	imagePath,
 	defaultTheme,
-}: UserPreferenceBuildParamsInterface): FindOptionsWhere<UserPreferencesModel> => {
+}: UserPreferenceBuildParamsInterface): FindOptionsWhere<UserPreferencesModel> {
 	const where: FindOptionsWhere<UserPreferencesModel> = {};
 
 	if (id) {
@@ -45,7 +45,6 @@ const buildWhereParams = ({
 };
 
 export const userPreferenceQueryParamsBuilder = {
-
 	buildParams: (data: UserPreferenceBuildParamsInterface): FindManyOptions<UserPreferencesModel> => {
 		const select = buildSelectParams();
 		const where = buildWhereParams(data);

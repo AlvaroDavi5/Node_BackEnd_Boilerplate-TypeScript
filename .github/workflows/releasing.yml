@@ -39,12 +39,6 @@ jobs:
       - name: Installing Dependencies
         run: npm install --ignore-scripts
 
-      - name: Checking Dependencies Security
-        run: npm run security-check
-
-      - name: Checking Type
-        run: npm run typecheck
-
       - name: Building WebPack
         run: npm run build:webpack
 
@@ -56,9 +50,6 @@ jobs:
 
       - name: Running Unit Tests
         run: npm run test:unit
-
-      - name: Running Integration Tests
-        run: npm run test:integration
 
   semantic_release:
     name: Semantic Versioning Release

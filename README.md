@@ -35,7 +35,7 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 - **TypeScript**: JavaScript superset for typing;
 - **Node.js**: JavaScript runtime;
 - **Nest.js**: TypeScript Framework for Back-End;
-- **Express**: Robust tooling for HTTP servers;
+- **Fastify**: Robust and performatic tooling for HTTP servers;
 - **Socket.io**: WebSocket library;
 - **AWS-SDK**: A Node.js SDK to access AWS resources, such as:  
 	> _SQS_: Queue management service;  

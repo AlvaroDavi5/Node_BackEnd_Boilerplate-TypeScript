@@ -58,8 +58,6 @@ describe('Modules :: Domain :: Enums', () => {
 				'RECONNECT',
 				'EMIT',
 				'ERROR',
-				'EMIT_PRIVATE',
-				'BROADCAST',
 			]);
 
 			expect(Object.keys(WebSocketRoomsEnum)).toEqual(['NEW_CONNECTIONS']);
@@ -72,8 +70,6 @@ describe('Modules :: Domain :: Enums', () => {
 				'reconnect',
 				'emit',
 				'error',
-				'emit_private',
-				'broadcast',
 			]);
 
 			expect(Object.values(WebSocketRoomsEnum)).toEqual(['new_connections']);
@@ -84,8 +80,6 @@ describe('Modules :: Domain :: Enums', () => {
 			expect(WebSocketEventsEnum.DISCONNECT).toBe('disconnect');
 			expect(WebSocketEventsEnum.RECONNECT).toBe('reconnect');
 			expect(WebSocketEventsEnum.EMIT).toBe('emit');
-			expect(WebSocketEventsEnum.EMIT_PRIVATE).toBe('emit_private');
-			expect(WebSocketEventsEnum.BROADCAST).toBe('broadcast');
 
 			expect(WebSocketRoomsEnum.NEW_CONNECTIONS).toBe('new_connections');
 		});

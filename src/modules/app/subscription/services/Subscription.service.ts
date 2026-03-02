@@ -9,14 +9,14 @@ import LoggerService from '@core/logging/Logger.service';
 import Exceptions from '@core/errors/Exceptions';
 import SubscriptionEntity, { ICreateSubscription, IUpdateSubscription } from '@domain/entities/Subscription.entity';
 import { CacheEnum } from '@domain/enums/cache.enum';
-import { WebSocketEventsEnum } from '@domain/enums/events.enum';
-import WebSocketClient from '@events/websocket/client/WebSocket.client';
+import { EmitterEventsEnum } from '@domain/enums/events.enum';
+import EventEmitterClient from '@events/emitter/EventEmitter.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 
 
 @Injectable()
 export default class SubscriptionService implements OnModuleInit {
-	private webSocketClient!: WebSocketClient;
+	private eventEmitterClient!: EventEmitterClient;
 	public readonly subscriptionsTimeToLive: number;
 	public readonly datalakeDatabase: Db;
 	public readonly subscriptionsCollection: Collection;
@@ -40,7 +40,7 @@ export default class SubscriptionService implements OnModuleInit {
 	}
 
 	public onModuleInit(): void {
-		this.webSocketClient = this.moduleRef.get(WebSocketClient, { strict: false });
+		this.eventEmitterClient = this.moduleRef.get(EventEmitterClient, { strict: false });
 	}
 
 	public async get(subscriptionId: string): Promise<SubscriptionEntity> {
@@ -115,15 +115,12 @@ export default class SubscriptionService implements OnModuleInit {
 
 	public emit(msg: unknown, socketIdsOrRooms: string | string[]): void {
 		this.logger.info('Emiting event');
-		this.webSocketClient.send(WebSocketEventsEnum.EMIT_PRIVATE, {
-			...(msg as object),
-			socketIdsOrRooms,
-		});
+		this.eventEmitterClient.send(EmitterEventsEnum.EMIT_PRIVATE, socketIdsOrRooms, msg);
 	}
 
 	public broadcast(msg: unknown): void {
 		this.logger.info('Broadcasting event');
-		this.webSocketClient.send(WebSocketEventsEnum.BROADCAST, msg);
+		this.eventEmitterClient.send(EmitterEventsEnum.BROADCAST, msg);
 	}
 
 	private async listFromCache(): Promise<unknown[]> {

@@ -99,7 +99,13 @@ export default class CustomThrottlerGuard implements CanActivate {
 	}
 
 	private getRoute(req: RequestInterface): string {
-		return `[${req.method.toUpperCase()}]${req.path}`;
+		const { method, originalUrl, url, routeOptions } = req;
+		const baseUrl = routeOptions?.url;
+		const [originalUrlPath] = originalUrl.split('?');
+		const [urlPath] = url.split('?');
+
+		const path = baseUrl || originalUrlPath || urlPath;
+		return `[${method.toUpperCase()}]${path}`;
 	}
 
 	private generateKey(throttlerName: string, clientContext: string, clientId: string, callCode: string): string {

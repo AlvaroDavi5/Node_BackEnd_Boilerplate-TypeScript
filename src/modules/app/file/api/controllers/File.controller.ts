@@ -1,11 +1,9 @@
 import {
-	Controller, Res,
-	Get, Post, Headers,
-	UseInterceptors, UseGuards, UseFilters,
-	UploadedFile, StreamableFile, ParseFilePipe,
+	Controller, Req, Res,
+	Get, Post, Headers, UseInterceptors, UseGuards, UseFilters, StreamableFile,
+	BadRequestException
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiBody, ApiHeaders, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
-import { FileInterceptor } from '@nestjs/platform-express';
 import FileService from '@app/file/services/File.service';
 import AuthGuard from '@api/guards/Auth.guard';
 import HttpExceptionsFilter from '@api/filters/HttpExceptions.filter';
@@ -13,7 +11,7 @@ import ResponseInterceptor from '@api/interceptors/Response.interceptor';
 import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
-import type { RequestFileInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
+import type { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
 
 @ApiTags('Files')
@@ -51,9 +49,13 @@ export default class FileController {
 		@Headers('filePath') filePathHeader: string,
 		@Res({ passthrough: true }) response: ResponseInterface,
 	): Promise<Buffer | StreamableFile | string> {
+		if (!fileNameHeader || !filePathHeader) {
+			throw new BadRequestException('"fileName" and "filePath" headers are required');
+		}
+
 		const { content, contentType, fileName } = await this.fileService.downloadFile(fileNameHeader, filePathHeader, headers.accept);
 
-		response.set({
+		response.headers({
 			'Content-Type': contentType,
 			'Content-Disposition': `attachment; filename="${fileName}"`,
 		});
@@ -94,16 +96,23 @@ export default class FileController {
 			},
 		},
 	})
-	@UseInterceptors(FileInterceptor('file', { dest: './temp', preservePath: true, limits: {} }))
 	public async uploadFile(
 		@Headers() headers: Record<string, string | undefined>,
-		@Headers('fileName') fileNameHeader: string,
-		@UploadedFile(new ParseFilePipe()) file: RequestFileInterface,
+		@Headers('fileName') fileNameHeader: string | undefined,
+		@Req() request: RequestInterface,
 	): Promise<{
 		filePath: string,
 		fileContentType: string,
-		uploadTag: string,
+		uploadTag: string | null,
 	}> {
+		const file = await request.file();
+		if (!file) {
+			throw new BadRequestException('File is required');
+		}
+		if (!fileNameHeader) {
+			throw new BadRequestException('"fileName" header is required');
+		}
+
 		return await this.fileService.uploadFile(file, fileNameHeader, headers.accept);
 	}
 }

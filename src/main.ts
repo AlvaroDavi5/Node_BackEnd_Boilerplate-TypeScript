@@ -1,23 +1,25 @@
 import 'src/modules/core/errors/setup';
 import { writeFileSync } from 'fs';
 import { NestFactory, SerializedGraph, PartialGraphHost } from '@nestjs/core';
-import { INestApplication } from '@nestjs/common';
+import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { ConfigService } from '@nestjs/config';
 import CoreModule from '@core/core.module';
 import nestListenConfig, { createNestApplicationOptions, validateKnownExceptions } from '@core/configs/nestListen.config';
-import nestApiConfig from '@core/configs/nestApi.config';
+import nestApiConfig, { fastifyAdapter } from '@core/configs/nestApi.config';
 import swaggerDocConfig from '@core/configs/swaggerDoc.config';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
-import type { Express } from 'express';
 
 
 async function startNestApplication(): Promise<void> {
-	const nestApp = await NestFactory.create<INestApplication<Express>>(CoreModule, createNestApplicationOptions);
-	await nestListenConfig(nestApp);
-
+	const nestApp = await NestFactory.create<NestFastifyApplication>(
+		CoreModule,
+		fastifyAdapter,
+		createNestApplicationOptions,
+	);
+	nestListenConfig(nestApp);
 	nestApiConfig(nestApp);
 
 	const { environment, appPort } = nestApp.get<ConfigService>(ConfigService, {}).get<ConfigsInterface['application']>('application')!;
@@ -28,7 +30,7 @@ async function startNestApplication(): Promise<void> {
 	if (environment === EnvironmentsEnum.DEVELOPMENT)
 		writeFileSync('./docs/nestGraph.json', nestApp.get(SerializedGraph, {}).toString());
 
-	await nestApp.listen(appPort)
+	await nestApp.listen({ port: appPort, host: '0.0.0.0' })
 		.catch((error: ErrorInterface | Error) => {
 			validateKnownExceptions(error);
 		});

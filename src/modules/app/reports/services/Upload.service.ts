@@ -4,7 +4,6 @@ import S3Client from '@core/infra/integration/aws/S3.client';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
 import FileStrategy from '@app/file/strategies/File.strategy';
-import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { RequestFileInterface } from '@shared/internal/interfaces/endpointInterface';
 
@@ -17,7 +16,6 @@ export default class UploadService {
 	constructor(
 		private readonly configService: ConfigService,
 		private readonly s3Client: S3Client,
-		private readonly fileReaderHelper: FileReaderHelper,
 		private readonly dataParserHelper: DataParserHelper,
 		private readonly exceptions: Exceptions,
 	) {
@@ -25,14 +23,12 @@ export default class UploadService {
 		this.uploadBucket = s3Configs.bucketName;
 	}
 
-	public async uploadFile(fileName: string, file: RequestFileInterface): Promise<{ filePath: string, uploadTag: string }> {
-		let uploadTag = '';
-		const fileEncoding = this.fileStrategy.defineEncoding(fileName, file.mimetype);
-		const fileContent = this.fileReaderHelper.readFile(file.path, fileEncoding) ?? '';
-		const fileBuffer = await this.dataParserHelper.toBuffer(fileContent, fileEncoding);
+	public async uploadFile(fileName: string, file: RequestFileInterface): Promise<{ filePath: string, uploadTag: string | null }> {
+		let uploadTag: string | null = null;
+		const fileBuffer = await file.toBuffer();
 		const filePath = `upload/reports/${fileName}`;
 
-		const isValidFile = fileBuffer?.length ?? fileContent?.length;
+		const isValidFile = !!fileBuffer?.length;
 		if (isValidFile)
 			uploadTag = await this.s3Client.uploadFile(this.uploadBucket, filePath, fileBuffer);
 

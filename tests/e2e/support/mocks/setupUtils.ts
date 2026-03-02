@@ -1,4 +1,5 @@
-import { INestApplication } from '@nestjs/common';
+import { NestApplicationOptions } from '@nestjs/common';
+import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { ConfigService } from '@nestjs/config';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import nestListenConfig, { validateKnownExceptions } from '@core/configs/nestListen.config';
@@ -6,14 +7,14 @@ import nestApiConfig from '@core/configs/nestApi.config';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
-export const createNestTestApplicationOptions = {
+export const createNestTestApplicationOptions: NestApplicationOptions = {
 	abortOnError: true,
 	snapshot: false,
 	preview: false,
 	forceCloseConnections: true,
 };
 
-export async function startNestApplication(nestApp: INestApplication): Promise<void> {
+export async function startNestApplication(nestApp: NestFastifyApplication): Promise<void> {
 	await nestListenConfig(nestApp);
 
 	nestApiConfig(nestApp);

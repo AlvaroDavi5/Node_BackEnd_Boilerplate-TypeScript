@@ -86,6 +86,6 @@ export default class HttpExceptionsFilter extends AbstractExceptionsFilter imple
 		});
 
 		const { status, errorResponse } = this.buildHttpErrorResponse(exception);
-		response.status(status).json(errorResponse);
+		response.status(status).send(errorResponse);
 	}
 }

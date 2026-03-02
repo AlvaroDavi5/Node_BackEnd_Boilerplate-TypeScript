@@ -1,6 +1,7 @@
-import { INestApplication } from '@nestjs/common';
+import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
+import { fastifyAdapter } from '@core/configs/nestApi.config';
 import LoggerService from '@core/logging/Logger.service';
 import HealthController from '@api/controllers/Health.controller';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
@@ -8,8 +9,9 @@ import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
 
+
 describe('Modules :: API :: HealthController', () => {
-	let nestTestApp: INestApplication;
+	let nestTestApp: NestFastifyApplication;
 
 	// // mocks
 	const customThrottlerGuardMock = {
@@ -41,7 +43,7 @@ describe('Modules :: API :: HealthController', () => {
 			.overrideProvider(HttpMessagesConstants).useValue(httpMessagesConstantsMock)
 			.compile();
 
-		nestTestApp = nestTestingModule.createNestApplication(createNestTestApplicationOptions);
+		nestTestApp = nestTestingModule.createNestApplication<NestFastifyApplication>(fastifyAdapter, createNestTestApplicationOptions);
 		await startNestApplication(nestTestApp);
 	});
 
@@ -55,16 +57,13 @@ describe('Modules :: API :: HealthController', () => {
 	describe('# [GET] /api/check', () => {
 		test('Should get success', async () => {
 			const response = await request(await nestTestApp.getHttpServer())
-				.get('/api/check?key=value')
-				.send({
-					test: 'Hello World!',
-				});
+				.get('/api/check?key=value');
 
 			expect(response.statusCode).toBe(200);
 			expect(response.body).toEqual({
 				method: 'GET',
 				url: '/api/check?key=value',
-				baseUrl: '',
+				baseUrl: '/api/check',
 				headers: {
 					connection: 'close',
 					host: '127.0.0.1:3000',
@@ -72,9 +71,6 @@ describe('Modules :: API :: HealthController', () => {
 				pathParams: {},
 				queryParams: {
 					key: 'value',
-				},
-				body: {
-					test: 'Hello World!',
 				},
 				statusCode: 200,
 				statusMessage: 'Endpoint founded successfully.',

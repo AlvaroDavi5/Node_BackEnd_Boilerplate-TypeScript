@@ -14,6 +14,8 @@ export enum QueueSchemasEnum {
 export enum EmitterEventsEnum {
 	DISABLE_LOGIN = 'disable_login',
 	DISABLE_ALL_ROUTES = 'disable_all_routes',
+	EMIT_PRIVATE = 'emit_private',
+	BROADCAST = 'broadcast',
 }
 
 export enum WebSocketEventsEnum {
@@ -25,11 +27,8 @@ export enum WebSocketEventsEnum {
 	RECONNECT = 'reconnect',
 	EMIT = 'emit',
 	ERROR = 'error',
-
-	// ? Internal Events
-	EMIT_PRIVATE = 'emit_private',
-	BROADCAST = 'broadcast',
 }
+
 export enum WebSocketRoomsEnum {
 	NEW_CONNECTIONS = 'new_connections',
 }

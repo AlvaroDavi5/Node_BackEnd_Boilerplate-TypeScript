@@ -1,7 +1,7 @@
 import { HttpAdapterHost, ModuleRef } from '@nestjs/core';
 import { Injectable, Inject, OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { ExpressAdapter } from '@nestjs/platform-express';
+import { FastifyAdapter } from '@nestjs/platform-fastify';
 import { DataSource } from 'typeorm';
 import MongoClient from '@core/infra/data/Mongo.client';
 import RedisClient from '@core/infra/cache/Redis.client';
@@ -29,7 +29,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 
 	constructor(
 		private readonly moduleRef: ModuleRef,
-		private readonly httpAdapterHost: HttpAdapterHost<ExpressAdapter>,
+		private readonly httpAdapterHost: HttpAdapterHost<FastifyAdapter>,
 		private readonly configService: ConfigService,
 		@Inject(DATABASE_CONNECTION_PROVIDER) private readonly connection: DataSource,
 		private readonly mongoClient: MongoClient,
@@ -63,11 +63,11 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 
 		try {
 			// NOTE - gracefull shutdown
-			this.httpAdapterHost.httpAdapter.close();
+			this.syncCronJob.stopCron();
+			this.eventsQueueConsumer.disable();
 			this.webSocketServer.disconnectAllSockets();
 			this.webSocketServer.disconnect();
-			this.eventsQueueConsumer.disable();
-			this.syncCronJob.stopCron();
+			this.httpAdapterHost.httpAdapter.close();
 			this.cognitoClient.destroy();
 			this.sqsClient.destroy();
 			this.snsClient.destroy();

@@ -64,12 +64,12 @@ export default class HookController {
 
 			response.status(HttpStatusEnum.CREATED);
 			return {
-				statusMessage: response.statusMessage ?? this.httpMessagesConstants.messages.created(resourceName),
+				statusMessage: this.httpMessagesConstants.messages.created(resourceName),
 			};
 		} else {
 			response.status(HttpStatusEnum.NOT_ACCEPTABLE);
 			return {
-				statusMessage: response.statusMessage ?? this.httpMessagesConstants.messages.notAcceptable(resourceName),
+				statusMessage: this.httpMessagesConstants.messages.notAcceptable(resourceName),
 			};
 		}
 	}

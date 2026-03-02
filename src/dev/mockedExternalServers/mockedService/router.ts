@@ -1,9 +1,7 @@
-import { Router } from 'express';
+import { FastifyInstance } from 'fastify';
 import defaultControllerRouter from './controllers/defaultController';
 
 
-const apiRouter: Router = Router();
-
-apiRouter.use('/api', defaultControllerRouter());
-
-export default apiRouter;
+export default async function apiRoutes(fastify: FastifyInstance) {
+	await fastify.register(defaultControllerRouter, { prefix: '/api' });
+}

@@ -1,6 +1,7 @@
-import { INestApplication } from '@nestjs/common';
+import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
+import { fastifyAdapter } from '@core/configs/nestApi.config';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 import UserEntity, { IViewUser } from '@domain/entities/User.entity';
@@ -22,7 +23,7 @@ import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationIn
 
 
 describe('Modules :: App :: User :: API :: UserController', () => {
-	let nestTestApp: INestApplication;
+	let nestTestApp: NestFastifyApplication;
 
 	// // mocks
 	const customThrottlerGuardMock = {
@@ -67,7 +68,7 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 			.overrideGuard(AuthGuard).useValue(authGuardMock)
 			.compile();
 
-		nestTestApp = nestTestingModule.createNestApplication(createNestTestApplicationOptions);
+		nestTestApp = nestTestingModule.createNestApplication<NestFastifyApplication>(fastifyAdapter, createNestTestApplicationOptions);
 		await startNestApplication(nestTestApp);
 	});
 

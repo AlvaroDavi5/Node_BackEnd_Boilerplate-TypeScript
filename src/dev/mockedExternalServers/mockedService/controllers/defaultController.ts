@@ -1,37 +1,32 @@
-import { Router, Request, Response } from 'express';
+import { FastifyInstance, FastifyRequest, FastifyReply } from 'fastify';
 
 
 let toggle = 0;
 
-const healthcheck = async (req: Request, res: Response) => {
-	const { authorization } = req.headers;
-	console.log('\n#Request Received');
-	console.log('#Service: MockedService');
-	console.log(`#Path: ${req.path}`);
-	console.log('#Has Token: ', authorization);
+export default async function defaultControllerRouter(fastify: FastifyInstance): Promise<void> {
+	fastify.get('/check',
+		(req: FastifyRequest, res: FastifyReply): unknown => {
+			const { authorization } = req.headers;
+			console.log('\n#Request Received');
+			console.log('#Service: MockedService');
+			console.log(`#Path: ${req.url}`);
+			console.log('#Has Token: ', authorization);
 
-	toggle++;
-	if (toggle >= 3) {
-		toggle = 0;
-		return res.status(500).send('service unavailable');
-	}
+			toggle++;
+			if (toggle >= 3) {
+				toggle = 0;
+				return res.status(500).send('service unavailable');
+			}
 
-	const data = {
-		url: req?.url,
-		statusCode: req?.statusCode ?? 200,
-		method: req?.method,
-		query: req?.query,
-		params: req?.params,
-		body: req?.body,
-	};
+			const data = {
+				url: req?.url,
+				statusCode: res?.statusCode ?? 200,
+				method: req?.method,
+				query: req?.query,
+				params: req?.params,
+				body: req?.body,
+			};
 
-	return res.status(200).send(data);
-};
-
-export default function defaultControllerRouter(): Router {
-	const router = Router();
-
-	router.get('/check', healthcheck);
-
-	return router;
+			return res.status(200).send(data);
+		});
 };

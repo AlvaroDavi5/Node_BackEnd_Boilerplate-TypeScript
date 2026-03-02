@@ -62,8 +62,9 @@ export default abstract class AbstractRestClient {
 		method: requestMethodType, endpoint: string,
 		query?: requestQueryType, body?: requestBodyType
 	): Promise<RestClientResponseInterface<RI>> {
+		this.logger.http(`REQUESTING - ${this.serviceName}: [${method.toUpperCase()}] '${endpoint}'`);
+
 		try {
-			this.logger.http(`REQUESTING - ${this.serviceName}: [${method.toUpperCase()}] '${endpoint}'`);
 			const { data, status, headers } = await this.client.request<RI>({
 				method, url: endpoint,
 				params: query, data: body,

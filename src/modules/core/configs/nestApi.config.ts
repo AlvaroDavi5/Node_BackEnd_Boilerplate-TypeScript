@@ -1,12 +1,22 @@
-import { INestApplication, ValidationPipe, VersioningType } from '@nestjs/common';
+import { ValidationPipe, VersioningType } from '@nestjs/common';
+import { FastifyAdapter, NestFastifyApplication } from '@nestjs/platform-fastify';
 import { IoAdapter } from '@nestjs/platform-socket.io';
-import { json, urlencoded } from 'express';
+import fastifyMultipart from '@fastify/multipart';
 import compression from 'compression';
 import { getObjValues } from '@common/utils/dataValidations.util';
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 
 
-export default (nestApp: INestApplication): void => {
+export const fastifyAdapter = new FastifyAdapter({
+	bodyLimit: 10 * 1024 * 1024,
+	routerOptions: {
+		ignoreTrailingSlash: true,
+		maxParamLength: 1000,
+	},
+	logger: false,
+});
+
+export default (nestApp: NestFastifyApplication): void => {
 	nestApp.useGlobalPipes(
 		new ValidationPipe({
 			transform: true,
@@ -22,8 +32,8 @@ export default (nestApp: INestApplication): void => {
 		defaultVersion: '',
 		prefix: '',
 	});
-	nestApp.use(json({ limit: '10mb' }));
-	nestApp.use(urlencoded({ extended: true }));
+
+	nestApp.register(fastifyMultipart);
 	nestApp.use(compression());
 	nestApp.enableCors({
 		origin: '*',

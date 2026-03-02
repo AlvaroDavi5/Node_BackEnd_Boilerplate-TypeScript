@@ -5,7 +5,6 @@ import GetSubscriptionUseCase from '@app/subscription/usecases/GetSubscription.u
 import RequestMiddleware from '@api/middlewares/Request.middleware';
 import ServerEventsController from './api/controllers/ServerEvents.controller';
 import EventEmitterClient from './emitter/EventEmitter.client';
-import WebSocketClient from './websocket/client/WebSocket.client';
 import WebSocketServer from './websocket/server/WebSocket.server';
 import { sqsConsumersFactory } from './sqsConsumers.factory';
 import EventsQueueHandler from './queue/handlers/EventsQueue.handler';
@@ -27,7 +26,6 @@ import EventsQueueProducer from './queue/producers/EventsQueue.producer';
 		GetSubscriptionUseCase,
 		SubscriptionService,
 		EventEmitterClient,
-		WebSocketClient,
 		WebSocketServer,
 		EventsQueueHandler,
 		EventsQueueConsumer,
@@ -35,7 +33,6 @@ import EventsQueueProducer from './queue/producers/EventsQueue.producer';
 	],
 	exports: [
 		EventEmitterClient,
-		WebSocketClient,
 		WebSocketServer,
 		EventsQueueConsumer,
 	],

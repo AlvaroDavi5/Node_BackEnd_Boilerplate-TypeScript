@@ -5,7 +5,6 @@ import RedisClient from '@core/infra/cache/Redis.client';
 import LoggerService from '@core/logging/Logger.service';
 import { DATABASE_CONNECTION_PROVIDER, testConnection, startConnection } from '@core/infra/database/connection';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
-import WebSocketClient from '@events/websocket/client/WebSocket.client';
 
 
 @Injectable()
@@ -17,7 +16,6 @@ export default class SyncCronTask {
 		private readonly mongoClient: MongoClient,
 		private readonly redisClient: RedisClient,
 		private readonly webSocketServer: WebSocketServer,
-		private readonly webSocketClient: WebSocketClient,
 		private readonly logger: LoggerService,
 	) {
 		this.name = SyncCronTask.name;
@@ -29,13 +27,11 @@ export default class SyncCronTask {
 		let isDatabaseActive = false;
 		let isDatalakeActive = false;
 		let isCacheActive = false;
-		let isWebsocketActive = false;
 
 		try {
 			isDatabaseActive = await testConnection(this.connection, this.logger);
 			isDatalakeActive = this.mongoClient.isConnected;
 			isCacheActive = this.redisClient.isConnected();
-			isWebsocketActive = this.webSocketClient.isConnected();
 
 			if (!isDatabaseActive) {
 				await startConnection(this.connection, this.logger);
@@ -47,15 +43,11 @@ export default class SyncCronTask {
 			if (!isCacheActive) {
 				isCacheActive = await this.redisClient.connect();
 			}
-			if (!isWebsocketActive) {
-				this.webSocketClient.connect();
-				isWebsocketActive = this.webSocketClient.isConnected();
-			}
 		} catch (error) {
 			this.logger.error(error);
 		}
 
-		if (!isCacheActive || !isDatalakeActive || !isDatabaseActive || !isWebsocketActive) {
+		if (!isCacheActive || !isDatalakeActive || !isDatabaseActive) {
 			this.logger.warn('Unavailable Backing Services, disconnecting all sockets');
 			this.webSocketServer.disconnectAllSockets();
 		}

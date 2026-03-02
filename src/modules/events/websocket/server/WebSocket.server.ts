@@ -7,8 +7,9 @@ import {
 } from '@nestjs/websockets';
 import { Server as SocketIoServer, Socket } from 'socket.io';
 import LoggerService from '@core/logging/Logger.service';
-import { QueueSchemasEnum, WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/events.enum';
+import { EmitterEventsEnum, QueueSchemasEnum, WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/events.enum';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
+import EventEmitterClient from '@events/emitter/EventEmitter.client';
 import EventsQueueProducer from '@events/queue/producers/EventsQueue.producer';
 import EventsGuard from '@events/websocket/guards/Events.guard';
 import WebSocketExceptionsFilter from '@events/websocket/filters/WebSocketExceptions.filter';
@@ -35,6 +36,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 
 	constructor(
 		private readonly moduleRef: ModuleRef,
+		private readonly eventEmitterClient: EventEmitterClient,
 		private readonly eventsQueueProducer: EventsQueueProducer,
 		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
@@ -44,40 +46,14 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 		this.subscriptionService = this.moduleRef.get(SubscriptionService, { strict: false });
 	}
 
-	private formatMessageAfterReceiveHelper(message: string): object | string | null {
-		try {
-			return this.dataParserHelper.toObject(message);
-		} catch (error) {
-			this.logger.error(error);
-			return message;
-		}
-	}
-
-	private formatMessageBeforeSendHelper(message: unknown): string {
-		return this.dataParserHelper.toString(message);
-	}
-
 	public afterInit(server: SocketIoServer): void {
 		server.setMaxListeners(5);
 		if (!this.server)
 			this.server = server;
 		this.server.setMaxListeners(5);
 		this.logger.debug('Started Websocket Server');
-	}
 
-	// listen 'connection' event from client
-	public async handleConnection(socket: Socket, ...args: unknown[]): Promise<void> {
-		this.logger.info(`Client connected: ${socket.id} - ${args}`);
-
-		await this.saveAndDispatchConnection(socket.id);
-	}
-
-	// listen 'disconnect' event from client
-	public async handleDisconnect(socket: Socket): Promise<void> {
-		this.logger.info(`Client disconnected: ${socket.id}`);
-		await socket.leave(WebSocketRoomsEnum.NEW_CONNECTIONS);
-
-		await this.deleteConnection(socket.id);
+		this.setInternalListenners(server);
 	}
 
 	public disconnect(): void {
@@ -93,43 +69,76 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 		return socketsList?.map((socket) => socket?.id) ?? [];
 	}
 
+	// NOTE - listen 'connection' event from client
+	public async handleConnection(socket: Socket, ...args: unknown[]): Promise<void> {
+		this.logger.info(`Client connected: ${socket.id} - ${args}`);
+
+		await this.saveAndDispatchConnection(socket.id);
+	}
+
+	// NOTE - listen 'disconnect' event from client
+	public async handleDisconnect(socket: Socket): Promise<void> {
+		this.logger.info(`Client disconnected: ${socket.id}`);
+		await socket.leave(WebSocketRoomsEnum.NEW_CONNECTIONS);
+
+		await this.deleteConnection(socket.id);
+	}
+
+	// NOTE - listen 'reconnect' event from client
 	@SubscribeMessage(WebSocketEventsEnum.RECONNECT)
 	public async handleReconnect(
 		@ConnectedSocket() socket: Socket,
 		@MessageBody() msg: string,
-	): Promise<void> { // listen reconnect event from client
+	): Promise<void> {
 		this.logger.info(`Client reconnected: ${socket.id}`);
 
 		await this.updateConnection(socket, msg);
 	}
 
-	@SubscribeMessage(WebSocketEventsEnum.BROADCAST)
-	public broadcast(
-		@ConnectedSocket() socket: Socket,
-		@MessageBody() msg: string,
-	): void { // listen 'broadcast' event from client
-		this.logger.info('Emiting message to all clients');
-		socket.broadcast.emit(WebSocketEventsEnum.EMIT, msg); // emit to all clients, except the sender
+	private formatMessageAfterReceiveHelper(message: string): object | string | null {
+		try {
+			return this.dataParserHelper.toObject(message);
+		} catch (error) {
+			this.logger.error(error);
+			return message;
+		}
 	}
 
-	@SubscribeMessage(WebSocketEventsEnum.EMIT_PRIVATE)
-	public emitPrivate(
-		@ConnectedSocket() _socket: Socket,
-		@MessageBody() msg: string,
-	): void { // listen 'emit_private' order event from client
-		const { socketIdsOrRooms, ...message } = this.formatMessageAfterReceiveHelper(msg) as { [key: string]: unknown, socketIdsOrRooms?: string | string[] };
-		const msgContent = this.formatMessageBeforeSendHelper(message);
+	private formatMessageBeforeSendHelper(message: unknown): string {
+		return this.dataParserHelper.toString(message);
+	}
 
-		if (!socketIdsOrRooms) {
-			this.logger.warn('Invalid socket IDs or Rooms to emit');
-			return;
-		}
+	private getSocketIdsOrRooms(socketIdsOrRooms: unknown): string | string[] | null {
+		if (typeof socketIdsOrRooms === 'string')
+			return socketIdsOrRooms;
 
-		this.logger.info(`Emiting message to: ${socketIdsOrRooms}`);
-		this.server?.to(socketIdsOrRooms).emit(
-			WebSocketEventsEnum.EMIT,
-			String(msgContent),
-		); // emit to specific clients or rooms
+		if (Array.isArray(socketIdsOrRooms) && socketIdsOrRooms.every((item) => typeof item === 'string'))
+			return socketIdsOrRooms;
+
+		return null;
+	}
+
+	private setInternalListenners(server: SocketIoServer): void {
+		this.logger.info('Setting internal listenners for Websocket Server');
+
+		this.eventEmitterClient.listen(EmitterEventsEnum.BROADCAST, (msg: unknown): void => {
+			this.logger.info('Broadcasting message to all clients');
+			server.emit(WebSocketEventsEnum.EMIT, this.formatMessageBeforeSendHelper(msg));
+		});
+
+		this.eventEmitterClient.listen(EmitterEventsEnum.EMIT_PRIVATE, (socketIdsOrRooms: unknown, msg: unknown): void => {
+			const validSocketIdsOrRooms = this.getSocketIdsOrRooms(socketIdsOrRooms);
+			if (!validSocketIdsOrRooms) {
+				this.logger.warn('Invalid socket IDs or Rooms to emit:', socketIdsOrRooms);
+				return;
+			}
+
+			this.logger.info(`Emiting message to: ${socketIdsOrRooms}`);
+			server?.to(validSocketIdsOrRooms).emit(
+				WebSocketEventsEnum.EMIT,
+				this.formatMessageBeforeSendHelper(msg),
+			);
+		});
 	}
 
 	private async saveAndDispatchConnection(socketId: string): Promise<void> {

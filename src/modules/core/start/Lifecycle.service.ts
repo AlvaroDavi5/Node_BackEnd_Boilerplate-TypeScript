@@ -63,11 +63,11 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 
 		try {
 			// NOTE - gracefull shutdown
-			this.httpAdapterHost.httpAdapter.close();
+			this.syncCronJob.stopCron();
+			this.eventsQueueConsumer.disable();
 			this.webSocketServer.disconnectAllSockets();
 			this.webSocketServer.disconnect();
-			this.eventsQueueConsumer.disable();
-			this.syncCronJob.stopCron();
+			this.httpAdapterHost.httpAdapter.close();
 			this.cognitoClient.destroy();
 			this.sqsClient.destroy();
 			this.snsClient.destroy();

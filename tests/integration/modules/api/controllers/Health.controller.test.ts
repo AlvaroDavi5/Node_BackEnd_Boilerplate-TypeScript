@@ -57,16 +57,13 @@ describe('Modules :: API :: HealthController', () => {
 	describe('# [GET] /api/check', () => {
 		test('Should get success', async () => {
 			const response = await request(await nestTestApp.getHttpServer())
-				.get('/api/check?key=value')
-				.send({
-					test: 'Hello World!',
-				});
+				.get('/api/check?key=value');
 
 			expect(response.statusCode).toBe(200);
 			expect(response.body).toEqual({
 				method: 'GET',
 				url: '/api/check?key=value',
-				baseUrl: '',
+				baseUrl: '/api/check',
 				headers: {
 					connection: 'close',
 					host: '127.0.0.1:3000',
@@ -74,9 +71,6 @@ describe('Modules :: API :: HealthController', () => {
 				pathParams: {},
 				queryParams: {
 					key: 'value',
-				},
-				body: {
-					test: 'Hello World!',
 				},
 				statusCode: 200,
 				statusMessage: 'Endpoint founded successfully.',

@@ -1,6 +1,7 @@
-import { INestApplication } from '@nestjs/common';
+import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
+import { fastifyAdapter } from '@core/configs/nestApi.config';
 import LoggerService from '@core/logging/Logger.service';
 import HealthController from '@api/controllers/Health.controller';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
@@ -8,8 +9,9 @@ import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
 
+
 describe('Modules :: API :: HealthController', () => {
-	let nestTestApp: INestApplication;
+	let nestTestApp: NestFastifyApplication;
 
 	// // mocks
 	const customThrottlerGuardMock = {
@@ -41,7 +43,7 @@ describe('Modules :: API :: HealthController', () => {
 			.overrideProvider(HttpMessagesConstants).useValue(httpMessagesConstantsMock)
 			.compile();
 
-		nestTestApp = nestTestingModule.createNestApplication(createNestTestApplicationOptions);
+		nestTestApp = nestTestingModule.createNestApplication<NestFastifyApplication>(fastifyAdapter, createNestTestApplicationOptions);
 		await startNestApplication(nestTestApp);
 	});
 

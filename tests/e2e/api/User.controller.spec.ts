@@ -1,13 +1,14 @@
-import { INestApplication } from '@nestjs/common';
+import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test, TestingModule } from '@nestjs/testing';
 import request from 'supertest';
+import { fastifyAdapter } from '@core/configs/nestApi.config';
 import CoreModule from '@core/core.module';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/e2e/support/mocks/setupUtils';
 
 
 jest.setTimeout(1.2 * 5000);
 describe('API :: UserController', () => {
-	let nestTestApp: INestApplication;
+	let nestTestApp: NestFastifyApplication;
 
 	// ? build test app
 	beforeAll(async () => {
@@ -15,7 +16,7 @@ describe('API :: UserController', () => {
 			imports: [CoreModule],
 		}).compile();
 
-		nestTestApp = nestTestingModule.createNestApplication(createNestTestApplicationOptions);
+		nestTestApp = nestTestingModule.createNestApplication<NestFastifyApplication>(fastifyAdapter, createNestTestApplicationOptions);
 		await startNestApplication(nestTestApp);
 	});
 

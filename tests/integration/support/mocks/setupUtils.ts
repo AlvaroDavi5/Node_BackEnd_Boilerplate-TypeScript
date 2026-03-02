@@ -1,18 +1,19 @@
-import { INestApplication } from '@nestjs/common';
+import { NestApplicationOptions } from '@nestjs/common';
+import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { validateKnownExceptions } from '@core/configs/nestListen.config';
 import nestApiConfig from '@core/configs/nestApi.config';
 import { ProcessEventsEnum } from '@common/enums/processEvents.enum';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
 
-export const createNestTestApplicationOptions = {
+export const createNestTestApplicationOptions: NestApplicationOptions = {
 	abortOnError: true,
 	snapshot: false,
 	preview: false,
 	forceCloseConnections: true,
 };
 
-export async function startNestApplication(nestApp: INestApplication): Promise<void> {
+export async function startNestApplication(nestApp: NestFastifyApplication): Promise<void> {
 	nestApp.enableShutdownHooks();
 
 	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error: Error, origin: string) => {

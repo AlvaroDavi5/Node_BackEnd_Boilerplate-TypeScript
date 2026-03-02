@@ -2,9 +2,11 @@ name: Build Application
 
 on:
   push:
-    branches: [develop]
+    branches: [main, develop]
+  pull_request:
+    branches: ['*']
   schedule:
-    - cron: "0 0 */7 * *" # runs on every 7th day
+    - cron: '0 0 */7 * *' # runs on every 7th day at 00:00 on main branch
 
 jobs:
   build:

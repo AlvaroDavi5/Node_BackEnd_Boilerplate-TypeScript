@@ -30,11 +30,11 @@ export const createNestApplicationOptions: NestApplicationOptions = {
 	...getHttpsOptions(),
 };
 
-export default async (nestApp: INestApplication): Promise<void> => {
+export default (nestApp: INestApplication): void => {
 	nestApp.enableShutdownHooks();
 
 	let logger: LoggerInterface | Console;
-	await nestApp.resolve<LoggerService>(LoggerService)
+	nestApp.resolve<LoggerService>(LoggerService)
 		.then((loggerService) => {
 			loggerService.setContextName('NestApplication');
 			logger = loggerService;
@@ -45,17 +45,17 @@ export default async (nestApp: INestApplication): Promise<void> => {
 			logger = console;
 		});
 
-	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, async (error: Error, origin: string) => {
+	process.on(ProcessEventsEnum.UNCAUGHT_EXCEPTION, (error: Error, origin: string) => {
 		logger.error(`App received ${ProcessEventsEnum.UNCAUGHT_EXCEPTION}`, `origin: ${origin}`, `error: ${error}`);
-		await nestApp.close();
+		nestApp.close();
 	});
-	process.on(ProcessEventsEnum.UNHANDLED_REJECTION, async (reason: unknown, _promise: Promise<unknown>) => {
+	process.on(ProcessEventsEnum.UNHANDLED_REJECTION, (reason: unknown, _promise: Promise<unknown>) => {
 		logger.error(`App received ${ProcessEventsEnum.UNHANDLED_REJECTION}`, `reason: ${reason}`);
-		await nestApp.close();
+		nestApp.close();
 	});
-	getObjValues<ProcessSignalsEnum>(ProcessSignalsEnum).map((procSignal) => process.on(procSignal, async (signal) => {
+	getObjValues<ProcessSignalsEnum>(ProcessSignalsEnum).map((procSignal) => process.on(procSignal, (signal) => {
 		logger.warn(`App received signal: ${signal}`);
-		await nestApp.close();
+		nestApp.close();
 	}));
 };
 

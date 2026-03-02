@@ -73,7 +73,7 @@ export default class FileService implements OnModuleInit {
 	public async uploadFile(file: RequestFileInterface, fileNameHeader: string, acceptHeader = ''): Promise<{
 		filePath: string,
 		fileContentType: string,
-		uploadTag: string,
+		uploadTag: string | null,
 	}> {
 		const {
 			text: { PLAIN: plainTextContentType, CSV: csvContentType, XML: xmlContentType },
@@ -96,20 +96,21 @@ export default class FileService implements OnModuleInit {
 		const fileContentType = acceptableContentTypes.includes(expectedContentType) ? expectedContentType : plainTextContentType;
 
 		try {
-			const [fileSteam] = (fileNameHeader.length > 0 ? fileNameHeader : file.originalname).trim().split('.');
-			const originalName = file.originalname.trim().split('.');
-			const fileName = this.cryptographyService.changeBufferEncoding(fileSteam, 'utf8', 'ascii');
-			const fileExtension = this.cryptographyService.changeBufferEncoding(originalName[originalName.length - 1], 'utf8', 'ascii');
-			const fullFileName = `${fileName}.${fileExtension}`;
+			const [headerFileName, headerFileExtension] = this.getFileNameWithExtension(fileNameHeader);
+			const [originalFileName, originalFileExtension] = this.getFileNameWithExtension(file.filename);
+
+			const fileName = headerFileName ?? originalFileName;
+			const fileExtension = originalFileExtension ?? headerFileExtension;
+			const fileUploadName = this.cryptographyService.changeBufferEncoding(`${fileName}.${fileExtension}`, 'utf8', 'ascii');
 
 			if (this.isTestEnv)
 				return {
-					filePath: `upload/reports/${fullFileName}`,
+					filePath: `upload/reports/${fileUploadName}`,
 					fileContentType,
 					uploadTag: '',
 				};
 
-			const { uploadTag, filePath } = await this.uploadService.uploadFile(fullFileName, file);
+			const { uploadTag, filePath } = await this.uploadService.uploadFile(fileUploadName, file);
 
 			return {
 				filePath,
@@ -121,5 +122,16 @@ export default class FileService implements OnModuleInit {
 				message: (error as Error).message,
 			});
 		}
+	}
+
+	private getFileNameWithExtension(fullFileName: string): string[] {
+		const fileNameParts = fullFileName.trim().split('.');
+		if (fileNameParts.length < 2)
+			return [fullFileName];
+
+		const fileExtension = fileNameParts[fileNameParts.length - 1];
+		const fileNameWithoutExtension = fileNameParts.slice(0, -1).join('-');
+
+		return [fileNameWithoutExtension, fileExtension];
 	}
 }

@@ -1,30 +1,37 @@
-import express, { Express, json, urlencoded } from 'express';
+import Fastify, { FastifyInstance } from 'fastify';
+import formbody from '@fastify/formbody';
 import mockedServiceRoutes from './mockedService/router';
 
 
 export default class Server {
-	private expressServer: Express;
+	private fastifyServer: FastifyInstance;
 
 	constructor() {
-		this.expressServer = express();
-		this.expressServer.use(json()).use(urlencoded({ extended: true }));
+		this.fastifyServer = Fastify({ logger: true });
 
-		this.expressServer.use('/mockedService', mockedServiceRoutes);
-		this.expressServer.use((_req, res, _next) => {
-			res.status(404).send('not found');
+		this.fastifyServer.register(formbody);
+
+		this.fastifyServer.register(mockedServiceRoutes, { prefix: '/mockedService' });
+
+		this.fastifyServer.setNotFoundHandler((_req, reply) => {
+			reply.status(404).send('not found');
 		});
 	}
 
-	start() {
-		const serverPort = process.env.MOCKED_SERVERS_APP_PORT || 4000;
+	async start() {
+		const serverPort = Number(process.env.MOCKED_SERVERS_APP_PORT) || 4000;
 
-		return this.expressServer.listen(serverPort, () => {
+		try {
+			await this.fastifyServer.listen({ port: serverPort, host: '0.0.0.0' });
 			console.log(
 				`\nMOCKED_SERVERS_URL='http://localhost:${serverPort}/'`
 			);
 			console.log(
 				`Mocked external servers listening at PORT: ${serverPort}\n`
 			);
-		});
+		} catch (err) {
+			this.fastifyServer.log.error(err);
+			process.exit(1);
+		}
 	}
 }

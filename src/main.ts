@@ -19,7 +19,7 @@ async function startNestApplication(): Promise<void> {
 		fastifyAdapter,
 		createNestApplicationOptions,
 	);
-	await nestListenConfig(nestApp);
+	nestListenConfig(nestApp);
 	nestApiConfig(nestApp);
 
 	const { environment, appPort } = nestApp.get<ConfigService>(ConfigService, {}).get<ConfigsInterface['application']>('application')!;

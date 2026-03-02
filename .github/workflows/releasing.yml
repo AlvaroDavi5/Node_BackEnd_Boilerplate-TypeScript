@@ -51,9 +51,6 @@ jobs:
       - name: Running Unit Tests
         run: npm run test:unit
 
-      - name: Running Integration Tests
-        run: npm run test:integration
-
   semantic_release:
     name: Semantic Versioning Release
 

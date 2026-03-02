@@ -60,7 +60,8 @@ describe('Modules :: Domain :: Entities :: UserEntities', () => {
 			expect(userEntity.getPreference()?.createdAt).not.toBeNull();
 
 			expect(otherUserEntity.getId()).toBeUndefined();
-			otherUserEntity.getPreference()?.setDefaultTheme('INVALID');
+			const themeError = new Error('Invalid theme value: INVALID. Valid values are: DEFAULT, LIGHT, DARK');
+			expect(() => otherUserEntity.getPreference()?.setDefaultTheme('INVALID')).toThrow(themeError);
 			expect(otherUserEntity.getPreference()?.getDefaultTheme()).toBeNull();
 			expect(otherUserEntity.createdAt).not.toBeNull();
 			expect(otherUserEntity.updatedAt).not.toBeNull();

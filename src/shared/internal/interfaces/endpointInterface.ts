@@ -1,19 +1,15 @@
-import { HttpException } from '@nestjs/common';
-import { UserAuthInterface } from './userAuthInterface';
-import { ErrorInterface } from './errorInterface';
-import type { Multer as _Multer } from 'multer';
-import type { Request, Response, NextFunction } from 'express';
+import type { HttpException } from '@nestjs/common';
+import type { UserAuthInterface } from './userAuthInterface';
+import type { ErrorInterface } from './errorInterface';
+import type { FastifyRequest, FastifyReply } from 'fastify';
+import type { MultipartFile } from '@fastify/multipart';
 
-
-export interface RequestInterface extends Request {
-	id?: string,
-	createdAt?: number,
+export interface RequestInterface extends FastifyRequest {
 	user?: UserAuthInterface,
 }
-export type ResponseInterface = Response
-export type NextFunctionInterface = NextFunction
-
-export type RequestFileInterface = Express.Multer.File
+export type ResponseInterface = FastifyReply
+export type RequestFileInterface = MultipartFile
+export type NextFunctionInterface = (error?: Error | null) => void
 
 type PartialMessageEventType<T> = Partial<MessageEvent<T>>
 type SseInterface<TD = unknown> =

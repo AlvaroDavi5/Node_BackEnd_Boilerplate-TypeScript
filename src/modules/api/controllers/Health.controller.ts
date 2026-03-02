@@ -55,7 +55,7 @@ export default class HealthController {
 		@Body() body: unknown,
 		@Res({ passthrough: true }) response: ResponseInterface,
 	): {
-		baseUrl: string, url: string, method: string,
+		baseUrl?: string, url: string, method: string,
 		headers: Record<string, string | undefined>,
 		pathParams: Record<string, unknown>, queryParams: unknown, body: unknown,
 		statusCode: number, statusMessage: string,
@@ -63,7 +63,7 @@ export default class HealthController {
 		// [METHOD]:{STATUS_CODE} http://url/:param1/:param2?query1=X&query2=Y { 'body': {} }
 
 		return {
-			baseUrl: request?.baseUrl,
+			baseUrl: request.routeOptions?.url,
 			url: request?.url,
 			method: request?.method,
 			headers: {
@@ -75,7 +75,7 @@ export default class HealthController {
 			queryParams,
 			body,
 			statusCode: response.statusCode,
-			statusMessage: response.statusMessage ?? this.httpMessagesConstants.messages.found('Endpoint'),
+			statusMessage: this.httpMessagesConstants.messages.found('Endpoint'),
 		};
 	}
 

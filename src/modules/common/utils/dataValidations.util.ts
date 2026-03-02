@@ -28,6 +28,10 @@ export function isEmpty(data: unknown): boolean {
 	return true;
 }
 
+export function normalizeToArray<T = unknown>(value: T | T[]): T[] {
+	return Array.isArray(value) ? value : [value];
+}
+
 export function getObjKeys<OT = unknown>(obj: OT): (keyof OT)[] {
 	if (isNullOrUndefined(obj))
 		return [] as unknown as (keyof OT)[];

@@ -110,7 +110,7 @@
 		"@nestjs/event-emitter": "^3.0.1",
 		"@nestjs/graphql": "^13.2.4",
 		"@nestjs/passport": "^11.0.5",
-		"@nestjs/platform-fastify": "^11.1.14",
+		"@nestjs/platform-fastify": "^11.1.16",
 		"@nestjs/platform-socket.io": "^11.1.10",
 		"@nestjs/platform-ws": "^11.1.10",
 		"@nestjs/schedule": "^6.1.0",

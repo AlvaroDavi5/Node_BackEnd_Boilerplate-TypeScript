@@ -1,3 +1,4 @@
+import { Test, TestingModule } from '@nestjs/testing';
 import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
 import ListUsersUseCase from '@app/user/usecases/ListUsers.usecase';
 import UserService from '@app/user/services/User.service';
@@ -27,7 +28,22 @@ describe('Modules :: App :: User :: UseCases :: ListUsersUseCase', () => {
 		}),
 	};
 
-	const listUsersUseCase = new ListUsersUseCase(userServiceMock as unknown as UserService);
+	let listUsersUseCase: ListUsersUseCase;
+	let nestTestingModule: TestingModule;
+
+	beforeAll(async () => {
+		nestTestingModule = await Test.createTestingModule({
+			providers: [
+				ListUsersUseCase,
+				{ provide: UserService, useValue: userServiceMock },
+			],
+		}).compile();
+
+		listUsersUseCase = nestTestingModule.get<ListUsersUseCase>(ListUsersUseCase);
+	});
+	afterAll(async () => {
+		await nestTestingModule.close();
+	});
 
 	afterEach(() => {
 		jest.clearAllMocks();

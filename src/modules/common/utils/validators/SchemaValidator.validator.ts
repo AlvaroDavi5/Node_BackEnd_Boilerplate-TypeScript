@@ -1,4 +1,3 @@
-import { Console } from 'console';
 import { ArgumentMetadata } from '@nestjs/common';
 import { Schema } from 'joi';
 import { Logger } from 'winston';
@@ -13,10 +12,10 @@ export default class SchemaValidator {
 	) { }
 
 	private log(message: string): void {
-		if (this.logger instanceof Console)
-			this.logger.log(message);
-		else
+		if ('verbose' in this.logger)
 			this.logger.verbose(message);
+		else
+			this.logger.log(message);
 	}
 
 	public validate<S = unknown>(data: unknown, metadata: ArgumentMetadata, schema: Schema<S>): S {

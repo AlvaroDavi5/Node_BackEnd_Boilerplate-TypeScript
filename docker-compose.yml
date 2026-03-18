@@ -1,9 +1,8 @@
 # Docker Compose Version
-version: '3.7'
+version: "3.7"
 
 # Containers
 services:
-
   # Application
   app:
     container_name: App_Node

@@ -93,23 +93,23 @@ describe('Modules :: Core :: Security :: CryptographyService', () => {
 			expect(rsaKeyPair.privateKey).toContain('-----BEGIN PRIVATE KEY-----');
 		});
 
-		test('Should generate DSA key pair', () => {
-			const dsaKeyPair = cryptographyService.generateDSAKeyPair(2048);
+		test('Should generate RSA key pair', () => {
+			const rsaKeyPair = cryptographyService.generateRSAKeyPair(2048);
 
-			expect(dsaKeyPair.publicKey).toContain('-----BEGIN PUBLIC KEY-----');
-			expect(dsaKeyPair.privateKey).toContain('-----BEGIN PRIVATE KEY-----');
+			expect(rsaKeyPair.publicKey).toContain('-----BEGIN PUBLIC KEY-----');
+			expect(rsaKeyPair.privateKey).toContain('-----BEGIN PRIVATE KEY-----');
 		});
 
-		test('Should sign content with DSA', () => {
-			const dsaKeyPair = cryptographyService.generateDSAKeyPair(1024);
+		test('Should sign content with RSA', () => {
+			const rsaKeyPair = cryptographyService.generateRSAKeyPair(1024);
 
-			const signedContent = cryptographyService.contentDSASign('Alvaro', 'utf8', dsaKeyPair.privateKey, 'sha512', 'hex');
+			const signedContent = cryptographyService.contentRSASign('Alvaro', 'utf8', rsaKeyPair.privateKey, 'RSA-SHA256', 'hex');
 
 			expect(signedContent?.length).not.toBeNull();
 		});
 
-		test('Should not sign content with DSA', () => {
-			const signedContent = cryptographyService.contentDSASign('Alvaro', 'utf8', 'xxx', 'sha512', 'hex');
+		test('Should not sign content with RSA', () => {
+			const signedContent = cryptographyService.contentRSASign('Alvaro', 'utf8', 'xxx', 'RSA-SHA256', 'hex');
 
 			expect(signedContent).toBeNull();
 		});

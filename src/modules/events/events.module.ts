@@ -14,9 +14,11 @@ import EventsQueueProducer from './queue/producers/EventsQueue.producer';
 
 @Module({
 	imports: [
-		SqsModule.register({
-			consumers: sqsConsumersFactory(),
-			producers: [],
+		SqsModule.registerAsync({
+			useFactory: () => ({
+				consumers: sqsConsumersFactory(),
+				producers: [],
+			}),
 		}),
 	],
 	controllers: [

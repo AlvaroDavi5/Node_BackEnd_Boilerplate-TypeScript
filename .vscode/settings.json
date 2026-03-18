@@ -42,12 +42,55 @@
 		"typescriptreact"
 	],
 	"diffEditor.ignoreTrimWhitespace": false,
-	"javascript.suggest.autoImports": true,
-	"javascript.suggestionActions.enabled": true,
-	"javascript.updateImportsOnFileMove.enabled": "always",
-	"typescript.suggest.autoImports": true,
-	"typescript.suggestionActions.enabled": true,
-	"typescript.updateImportsOnFileMove.enabled": "always",
+	"js/ts.suggest.autoImports": true,
+	"js/ts.suggestionActions.enabled": true,
+	"js/ts.updateImportsOnFileMove.enabled": "always",
+	"github.copilot.nextEditSuggestions.enabled": true,
+	"[ignore]": {
+		"editor.defaultFormatter": "EditorConfig.EditorConfig"
+	},
+	"[dbml]": {
+		"editor.defaultFormatter": "matt-meyers.vscode-dbml"
+	},
+	"[apiblueprint]": {
+		"editor.defaultFormatter": "develiteio.api-blueprint-viewer"
+	},
+	"[chatagent]": {
+		"editor.defaultFormatter": "vscode.markdown-language-features"
+	},
+	"[prompt]": {
+		"editor.defaultFormatter": "vscode.markdown-language-features"
+	},
+	"[instructions]": {
+		"editor.defaultFormatter": "vscode.markdown-language-features"
+	},
+	"[skill]": {
+		"editor.defaultFormatter": "vscode.markdown-language-features"
+	},
+	"[markdown]": {
+		"editor.defaultFormatter": "vscode.markdown-language-features"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	},
+	"[javascript]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	},
+	"[dockerfile]": {
+		"editor.defaultFormatter": "ms-azuretools.vscode-containers"
+	},
+	"[dockercompose]": {
+		"editor.defaultFormatter": "redhat.vscode-yaml"
+	},
+	"[yaml]": {
+		"editor.defaultFormatter": "redhat.vscode-yaml"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "vscode.json-language-features"
+	},
+	"[jsonc]": {
+		"editor.defaultFormatter": "vscode.json-language-features"
+	},
 	"json.schemas": [
 		{
 			"fileMatch": [

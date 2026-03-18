@@ -20,6 +20,19 @@ name: "Copilot Commit Message"
 - Header must not end with a period.
 - Short description must be in lowercase and imperative mood (e.g. `add`, `fix`, `update`).
 
+## Staged Code Analysis
+
+1. Run `git diff --staged` to get the full diff of staged changes.
+2. Analyze the diff to identify:
+   - **What changed**: new files, deleted files, modified logic, renamed symbols, added/removed dependencies.
+   - **Why it changed** (when inferable from context): fixing a bug, adding a feature, refactoring, etc.
+   - **Affected modules or layers**: e.g. controller, service, repository, config, tests.
+3. Use this analysis to:
+   - Choose the correct commit **type** (e.g. `feat`, `fix`, `refactor`).
+   - Write a precise and meaningful **short description** in the header.
+   - Draft the **body** explaining what changed and why, based on the actual code — not just the filenames.
+4. If no staged changes are found, ask the user to stage files before generating the message.
+
 ## Scope — Extract from Branch Name
 
 1. Run `git rev-parse --abbrev-ref HEAD` to get the current branch name.
@@ -115,9 +128,10 @@ chore(no-release): update local development docs
 
 ## Generation Checklist
 
+- [ ] `git diff --staged` was analyzed to understand what actually changed.
 - [ ] Type is one of the allowed types above.
 - [ ] Scope extracted from branch name if `[A-Z]+-[0-9]+` pattern present.
 - [ ] Header is lowercase, imperative, no trailing period, ≤ 100 chars.
-- [ ] Body explains what/why (not how), lines ≤ 200 chars.
+- [ ] Body is derived from the staged diff — explains what/why (not how), lines ≤ 200 chars.
 - [ ] Footer references issues or breaking changes as applicable, lines ≤ 150 chars.
 - [ ] `BREAKING CHANGE` used in footer when the commit introduces incompatible changes.

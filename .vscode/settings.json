@@ -55,13 +55,16 @@
 	"[apiblueprint]": {
 		"editor.defaultFormatter": "develiteio.api-blueprint-viewer"
 	},
+	"[chatagent]": {
+		"editor.defaultFormatter": "vscode.markdown-language-features"
+	},
 	"[prompt]": {
 		"editor.defaultFormatter": "vscode.markdown-language-features"
 	},
-	"[skill]": {
+	"[instructions]": {
 		"editor.defaultFormatter": "vscode.markdown-language-features"
 	},
-	"[instructions]": {
+	"[skill]": {
 		"editor.defaultFormatter": "vscode.markdown-language-features"
 	},
 	"[markdown]": {

@@ -1,23 +1,4 @@
 {
-	// Workflow
-	"security.workspace.trust.untrustedFiles": "open",
-	"problems.showCurrentInStatus": true,
-	"update.showReleaseNotes": false,
-	"terminal.integrated.defaultProfile.linux": "zsh",
-	"terminal.integrated.defaultProfile.windows": "Ubuntu-20.04 (WSL)",
-	"chat.commandCenter.enabled": true,
-	"http.proxy": "",
-	"http.proxySupport": "off",
-	"http.proxyAuthorization": null,
-	"http.proxyStrictSSL": false,
-	"sync.gist": "",
-	"sync.forceUpload": true,
-	"sync.quietSync": true,
-	"sync.forceDownload": true,
-	"sync.autoUpload": true,
-	"sync.autoDownload": true,
-	"window.customTitleBarVisibility": "auto",
-	"window.commandCenter": true,
 	// Editor
 	"editor.insertSpaces": false,
 	"editor.tabSize": 2,
@@ -47,59 +28,12 @@
 	"editor.unicodeHighlight.ambiguousCharacters": false,
 	// Workbench
 	"workbench.editor.restoreViewState": true,
-	"workbench.colorTheme": "Dracula Theme",
-	"workbench.preferredHighContrastColorTheme": "Monokai",
-	"workbench.preferredHighContrastLightColorTheme": "Default Light Modern",
-	"workbench.preferredLightColorTheme": "Solarized Light",
-	"workbench.productIconTheme": "material-product-icons",
-	"workbench.iconTheme": "material-icon-theme",
-	"workbench.tree.indent": 15,
-	"workbench.sideBar.location": "left",
-	"workbench.activityBar.orientation": "vertical",
-	"workbench.editorAssociations": {
-		"*.copilotmd": "vscode.markdown.preview.editor",
-		"*.pdf": "latex-workshop-pdf-hook"
-	},
-	// Explorer
-	"explorer.autoReveal": true,
-	"explorer.confirmDragAndDrop": false,
 	// Git
 	"scm.defaultViewMode": "tree",
-	"scm.showHistoryGraph": false,
 	"git.autofetch": true,
 	"git.enableSmartCommit": true,
 	"git.openRepositoryInParentFolders": "always",
-	"git.discardUntrackedChangesToTrash": false,
-	// Debug
-	"debug.allowBreakpointsEverywhere": true,
-	"debug.console.closeOnEnd": true,
-	"debug.onTaskErrors": "debugAnyway",
 	// Extensions
-	"extensions.closeExtensionDetailsOnViewChange": false,
-	"extensions.ignoreRecommendations": true,
-	"containers.containers.groupBy": "Compose Project Name",
-	"containers.containers.sortBy": "Label",
-	"containers.images.groupBy": "RepositoryName",
-	"containers.images.sortBy": "Label",
-	"docker.commands.composeUpSubset": [
-		{
-			"label": "Compose Up",
-			"template": "${composeCommand} ${profileList} ${configurationFile} up ${detached} ${build} ${serviceList}"
-		}
-	],
-	"material-icon-theme.activeIconPack": "nest",
-	"vsicons.presets.nestjs": true,
-	"vsicons.presets.angular": true,
-	"vsicons.presets.tsOfficial": true,
-	"vsicons.presets.jsOfficial": true,
-	"bookmarks.saveBookmarksInProject": true,
-	"powermode.enabled": true,
-	"powermode.presets": "flames",
-	"powermode.combo.location": "editor",
-	"powermode.shake.enabled": false,
-	"bracket-pair-colorizer-2.depreciation-notice": false,
-	"editorconfig.generateAuto": true,
-	"editorconfig.template": "default",
 	"eslint.format.enable": true,
 	"eslint.validate": [
 		"javascript",
@@ -107,91 +41,55 @@
 		"typescript",
 		"typescriptreact"
 	],
-	"vsintellicode.modify.editor.suggestSelection": "automaticallyOverrodeDefaultValue",
-	"vsintellicode.features.python.deepLearning": "enabled",
-	"tabnine.experimentalAutoImports": true,
 	"diffEditor.ignoreTrimWhitespace": false,
-	"git-graph.repository.commits.fetchAvatars": true,
-	"gitlens.defaultDateFormat": null,
-	"gitlens.views.remotes.branches.layout": "list",
-	"gitlens.views.tags.branches.layout": "list",
-	"gitlens.views.branches.branches.layout": "list",
-	"gitlens.plusFeatures.enabled": true,
-	"gitlens.ai.model": "gitkraken",
-	"gitlens.ai.gitkraken.model": "gemini:gemini-2.0-flash",
-	"gitlens.menus": {
-		"editor": {
-			"blame": false,
-			"clipboard": true,
-			"compare": false,
-			"history": false,
-			"remote": false
-		},
-		"editorGroup": {
-			"blame": true,
-			"compare": true
-		},
-		"editorTab": {
-			"clipboard": true,
-			"compare": false,
-			"history": false,
-			"remote": false
-		},
-		"explorer": {
-			"clipboard": true,
-			"compare": true,
-			"history": false,
-			"remote": true
-		},
-		"scm": {
-			"graph": false,
-			"authors": true
-		},
-		"scmRepositoryInline": {
-			"graph": false
-		},
-		"scmRepository": {
-			"authors": true,
-			"graph": false
-		},
-		"scmGroupInline": {
-			"stash": true
-		},
-		"scmGroup": {
-			"compare": true,
-			"openClose": true,
-			"stash": true
-		},
-		"scmItemInline": {
-			"stash": false
-		},
-		"scmItem": {
-			"clipboard": true,
-			"compare": true,
-			"history": true,
-			"remote": false,
-			"stash": true
-		}
+	"js/ts.suggest.autoImports": true,
+	"js/ts.suggestionActions.enabled": true,
+	"js/ts.updateImportsOnFileMove.enabled": "always",
+	"github.copilot.nextEditSuggestions.enabled": true,
+	"[ignore]": {
+		"editor.defaultFormatter": "EditorConfig.EditorConfig"
 	},
-	"docker.images.groupBy": "RepositoryName",
-	"docker.images.sortBy": "Label",
-	"docker.containers.groupBy": "Compose Project Name",
-	"docker.containers.sortBy": "Label",
-	"javascript.suggest.autoImports": true,
-	"javascript.suggestionActions.enabled": true,
-	"javascript.updateImportsOnFileMove.enabled": "always",
-	"typescript.suggest.autoImports": true,
-	"typescript.suggestionActions.enabled": true,
-	"typescript.updateImportsOnFileMove.enabled": "always",
-	"typescript.enablePromptUseWorkspaceTsdk": true,
-	"typescript.tsserver.maxTsServerMemory": 1536,
-	"typescript.tsserver.watchOptions": {},
-	"github.copilot.enable": {
-		"*": true,
-		"yaml": true,
-		"markdown": true,
-		"java": false,
-		"plaintext": false
+	"[dbml]": {
+		"editor.defaultFormatter": "matt-meyers.vscode-dbml"
+	},
+	"[apiblueprint]": {
+		"editor.defaultFormatter": "develiteio.api-blueprint-viewer"
+	},
+	"[chatagent]": {
+		"editor.defaultFormatter": "vscode.markdown-language-features"
+	},
+	"[prompt]": {
+		"editor.defaultFormatter": "vscode.markdown-language-features"
+	},
+	"[instructions]": {
+		"editor.defaultFormatter": "vscode.markdown-language-features"
+	},
+	"[skill]": {
+		"editor.defaultFormatter": "vscode.markdown-language-features"
+	},
+	"[markdown]": {
+		"editor.defaultFormatter": "vscode.markdown-language-features"
+	},
+	"[typescript]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	},
+	"[javascript]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	},
+	"[dockerfile]": {
+		"editor.defaultFormatter": "ms-azuretools.vscode-containers"
+	},
+	"[dockercompose]": {
+		"editor.defaultFormatter": "redhat.vscode-yaml"
+	},
+	"[yaml]": {
+		"editor.defaultFormatter": "redhat.vscode-yaml"
+	},
+	"[json]": {
+		"editor.defaultFormatter": "vscode.json-language-features"
+	},
+	"[jsonc]": {
+		"editor.defaultFormatter": "vscode.json-language-features"
 	},
 	"json.schemas": [
 		{
@@ -202,125 +100,10 @@
 			"schema": true
 		}
 	],
-	"[jsonc]": {
-		"editor.defaultFormatter": "vscode.json-language-features"
-	},
-	"[json]": {
-		"editor.defaultFormatter": "vscode.json-language-features"
-	},
-	"[dockercompose]": {
-		"editor.defaultFormatter": "ms-azuretools.vscode-docker"
-	},
 	"files.exclude": {
 		"**/.classpath": true,
 		"**/.project": true,
 		"**/.settings": true,
 		"**/.factorypath": true
-	},
-	"color-highlight.languages": [
-		"*"
-	],
-	"color-highlight.hslWithNoFunctionLanguages": [
-		"*"
-	],
-	"better-comments.multilineComments": true,
-	"better-comments.highlightPlainText": false,
-	"better-comments.tags": [
-		{
-			"tag": "!",
-			"color": "#ff3117",
-			"strikethrough": false,
-			"underline": false,
-			"backgroundColor": "transparent",
-			"bold": false,
-			"italic": false
-		},
-		{
-			"tag": "?",
-			"color": "#2da1f1",
-			"strikethrough": false,
-			"underline": false,
-			"backgroundColor": "transparent",
-			"bold": false,
-			"italic": false
-		},
-		{
-			"tag": "//",
-			"color": "#5b5a5a",
-			"strikethrough": true,
-			"underline": false,
-			"backgroundColor": "transparent",
-			"bold": false,
-			"italic": false
-		},
-		{
-			"tag": "todo",
-			"color": "#f1d113",
-			"strikethrough": false,
-			"underline": false,
-			"backgroundColor": "transparent",
-			"bold": false,
-			"italic": false
-		},
-		{
-			"tag": "*",
-			"color": "#8fbd6e",
-			"strikethrough": false,
-			"underline": false,
-			"backgroundColor": "transparent",
-			"bold": false,
-			"italic": false
-		}
-	],
-	"commentAnchors.tags.matchCase": true,
-	"commentAnchors.tags.anchors": {
-		"ANCHOR": {
-			"iconColor": "#ffdbfe",
-			"highlightColor": "#ffdbfe",
-			"scope": "file"
-		},
-		"TODO": {
-			"iconColor": "#ffb300",
-			"highlightColor": "#ffb300",
-			"scope": "workspace"
-		},
-		"FIXME": {
-			"iconColor": "#f44336",
-			"highlightColor": "#f44336",
-			"scope": "workspace"
-		},
-		"STUB": {
-			"iconColor": "#ba68c8",
-			"highlightColor": "#ba68c8",
-			"scope": "file"
-		},
-		"NOTE": {
-			"iconColor": "#47acff",
-			"highlightColor": "#47acff",
-			"scope": "file"
-		},
-		"REVIEW": {
-			"iconColor": "#64dd17",
-			"highlightColor": "#64dd17",
-			"scope": "workspace"
-		},
-		"SECTION": {
-			"iconColor": "#3811ff",
-			"highlightColor": "#3811ff",
-			"scope": "workspace",
-			"behavior": "region"
-		},
-		"LINK": {
-			"iconColor": "#2ecc71",
-			"highlightColor": "#2ecc71",
-			"scope": "workspace",
-			"behavior": "link"
-		}
-	},
-	"files.associations": {
-		"*.apib": "apiblueprint",
-		"*.dbml": "dbml",
-		"**/CODEOWNERS": "markdown",
-		"*.rmd": "markdown"
 	}
 }

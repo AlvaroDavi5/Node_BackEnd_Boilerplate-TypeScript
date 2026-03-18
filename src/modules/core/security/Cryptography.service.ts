@@ -9,6 +9,7 @@ import { jwtExpirationType, jwtEncode, jwtDecode } from '@shared/internal/types/
 
 
 type hashAlgorithmType = 'md5' | 'sha256' | 'sha512'
+type rsaAlgorithmType = 'RSA-SHA256';
 
 @Injectable()
 export default class CryptographyService {
@@ -94,19 +95,6 @@ export default class CryptographyService {
 		});
 	}
 
-	public generateDSAKeyPair(keySize: 1024 | 2048): crypto.KeyPairSyncResult<string, string> {
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		const { publicKey, privateKey } = crypto.generateKeyPairSync('dsa' as any, {
-			modulusLength: keySize,
-			namedCurve: 'secp256k1',
-		});
-
-		return {
-			publicKey: publicKey.export({ type: 'spki', format: 'pem', }).toString(),
-			privateKey: privateKey.export({ type: 'pkcs8', format: 'pem', }).toString(),
-		};
-	}
-
 	public hashing(data: string, inputEncoding: BufferEncoding, algorithm: hashAlgorithmType, outputFormat: crypto.BinaryToTextEncoding): string | null {
 		try {
 			const hash = crypto.createHash(algorithm);
@@ -116,14 +104,14 @@ export default class CryptographyService {
 		}
 	}
 
-	public contentDSASign(
+	public contentRSASign(
 		data: string, inputEncoding: BufferEncoding,
-		privateKeyContent: string, algorithm: hashAlgorithmType,
+		privateKeyContent: string, algorithm: rsaAlgorithmType,
 		outputFormat: crypto.BinaryToTextEncoding): string | null {
 		try {
-			const dsaSign = crypto.createSign(algorithm);
-			dsaSign.update(data, inputEncoding);
-			return dsaSign.sign(privateKeyContent, outputFormat);
+			const rsaSign = crypto.createSign(algorithm);
+			rsaSign.update(data, inputEncoding);
+			return rsaSign.sign(privateKeyContent, outputFormat);
 		} catch (_error) {
 			return null;
 		}

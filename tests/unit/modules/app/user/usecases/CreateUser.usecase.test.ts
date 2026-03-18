@@ -1,3 +1,4 @@
+import { Test, TestingModule } from '@nestjs/testing';
 import Exceptions from '@core/errors/Exceptions';
 import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
 import UserPreferenceEntity, { IUpdateUserPreference } from '@domain/entities/UserPreference.entity';
@@ -57,12 +58,26 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 	};
 
 	const agentUser = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' };
-	const createUserUseCase = new CreateUserUseCase(
-		userServiceMock as unknown as UserService,
-		userPreferenceServiceMock as unknown as UserPreferenceService,
-		httpMessagesConstantsMock as unknown as HttpMessagesConstants,
-		exceptionsMock as unknown as Exceptions,
-	);
+
+	let createUserUseCase: CreateUserUseCase;
+	let nestTestingModule: TestingModule;
+
+	beforeAll(async () => {
+		nestTestingModule = await Test.createTestingModule({
+			providers: [
+				CreateUserUseCase,
+				{ provide: UserService, useValue: userServiceMock },
+				{ provide: UserPreferenceService, useValue: userPreferenceServiceMock },
+				{ provide: HttpMessagesConstants, useValue: httpMessagesConstantsMock },
+				{ provide: Exceptions, useValue: exceptionsMock },
+			],
+		}).compile();
+
+		createUserUseCase = nestTestingModule.get<CreateUserUseCase>(CreateUserUseCase);
+	});
+	afterAll(async () => {
+		await nestTestingModule.close();
+	});
 
 	afterEach(() => {
 		jest.clearAllMocks();

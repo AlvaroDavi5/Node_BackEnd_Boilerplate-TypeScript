@@ -1,3 +1,4 @@
+import { Test, TestingModule } from '@nestjs/testing';
 import Exceptions from '@core/errors/Exceptions';
 import CryptographyService from '@core/security/Cryptography.service';
 import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
@@ -55,12 +56,25 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 		encodeJwt: jest.fn((_payload: unknown, _inputEncoding: BufferEncoding, _expiration?: string): string => ''),
 	};
 
-	const loginUserUseCase = new LoginUserUseCase(
-		userServiceMock as unknown as UserService,
-		userPreferenceServiceMock as unknown as UserPreferenceService,
-		cryptographyServiceMock as unknown as CryptographyService,
-		exceptionsMock as unknown as Exceptions,
-	);
+	let loginUserUseCase: LoginUserUseCase;
+	let nestTestingModule: TestingModule;
+
+	beforeAll(async () => {
+		nestTestingModule = await Test.createTestingModule({
+			providers: [
+				LoginUserUseCase,
+				{ provide: UserService, useValue: userServiceMock },
+				{ provide: UserPreferenceService, useValue: userPreferenceServiceMock },
+				{ provide: CryptographyService, useValue: cryptographyServiceMock },
+				{ provide: Exceptions, useValue: exceptionsMock },
+			],
+		}).compile();
+
+		loginUserUseCase = nestTestingModule.get<LoginUserUseCase>(LoginUserUseCase);
+	});
+	afterAll(async () => {
+		await nestTestingModule.close();
+	});
 
 	afterEach(() => {
 		jest.clearAllMocks();

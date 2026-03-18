@@ -33,8 +33,6 @@ Review in this order:
 6. Everything else
 
 ### Step 3 — Run Automated Baseline
-Run [staged security scanner](./scripts/review-staged-security.sh) for secrets and dangerous patterns.
-
 If `.ts` or `.js` files are staged and `eslint` is available, run:
 ```
 npx eslint <staged_files> --quiet

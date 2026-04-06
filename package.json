@@ -105,7 +105,7 @@
 		"@nestjs/apollo": "^13.2.4",
 		"@nestjs/common": "^11.1.10",
 		"@nestjs/config": "^4.0.2",
-		"@nestjs/core": "^11.1.10",
+		"@nestjs/core": "^11.1.18",
 		"@nestjs/devtools-integration": "^0.2.1",
 		"@nestjs/event-emitter": "^3.0.1",
 		"@nestjs/graphql": "^13.2.4",

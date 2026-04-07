@@ -121,7 +121,6 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 	public setSubscriptionId(subscriptionId: string): void {
 		if (subscriptionId.length > 0)
 			this.subscriptionId = subscriptionId;
-		this.updatedAt = this.getDate();
 	}
 
 	public getClientId(): string | null {
@@ -130,16 +129,13 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 	public setClientId(clientId: string): void {
 		if (clientId.length > 0)
 			this.clientId = clientId;
-		this.updatedAt = this.getDate();
 	}
 
 	public listenNewConnections(): void {
 		this.newConnectionsListen = true;
-		this.updatedAt = this.getDate();
 	}
 
 	public ignoreNewConnections(): void {
 		this.newConnectionsListen = false;
-		this.updatedAt = this.getDate();
 	}
 }

@@ -112,7 +112,6 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 			return;
 
 		this.id = id;
-		this.updatedAt = this.getDate();
 	}
 
 	public getUserId(): string {
@@ -123,7 +122,6 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 			return;
 
 		this.userId = userId;
-		this.updatedAt = this.getDate();
 	}
 
 	public getDefaultTheme(): ThemesEnum | null {
@@ -136,7 +134,6 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 			throw new Error(`Invalid theme value: ${theme}. Valid values are: ${themeValues.join(', ')}`);
 
 		this.defaultTheme = theme as ThemesEnum;
-		this.updatedAt = this.getDate();
 	}
 
 	public getImagePath(): string | null {
@@ -144,7 +141,6 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 	}
 	public setImagePath(path: string): void {
 		this.imagePath = path;
-		this.updatedAt = this.getDate();
 	}
 
 	private getUserIdFromDataValues(dataValues: Partial<UserPreferencesModel | IViewUserPreference>): string | undefined {

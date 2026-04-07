@@ -164,7 +164,6 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 
 		this.id = id;
 		this.preference?.setUserId(id);
-		this.updatedAt = this.getDate();
 	}
 
 	public getFullName(): string {
@@ -172,7 +171,6 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	}
 	public setFullName(fullName: string): void {
 		this.fullName = fullName;
-		this.updatedAt = this.getDate();
 	}
 
 	public getEmail(): string {
@@ -180,7 +178,6 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	}
 	public setEmail(email: string): void {
 		this.email = email;
-		this.updatedAt = this.getDate();
 	}
 
 	public getPassword(): string {
@@ -188,7 +185,6 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	}
 	public setPassword(password: string): void {
 		this.password = password;
-		this.updatedAt = this.getDate();
 	}
 
 	public getPhone(): string | null {
@@ -196,7 +192,6 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	}
 	public setPhone(phone: string): void {
 		this.phone = phone;
-		this.updatedAt = this.getDate();
 	}
 
 	public getDocInfos(): { document: string | null, docType: string | null, fu: string | null } {
@@ -211,7 +206,6 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 		this.document = docValue;
 		this.docType = docType;
 		this.fu = fu;
-		this.updatedAt = this.getDate();
 	}
 
 	public getDeletedBy(): string | null {
@@ -221,7 +215,6 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	public setDeletedBy(agentId: string): void {
 		this.deletedBy = agentId;
 		this.deletedAt = this.getDate();
-		this.updatedAt = this.getDate();
 	}
 
 	public getPreference(): UserPreferenceEntity | null {

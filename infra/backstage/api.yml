@@ -13,9 +13,9 @@ spec:
     info:
       title: Node Back-End Boilerplate
       description: API Boilerplate created with Nest.js
-      version: 6.0.1
+      version: 8.0.1
       contact:
-        name: Álvaro Alves
+        name: Ãlvaro Alves
         url: https://github.com/AlvaroDavi5
         email: alvaro-davi1@hotmail.com
     servers:
@@ -34,8 +34,8 @@ spec:
           operationId: HealthController_healthCheck
           parameters: []
           responses:
-            '200':
-              description: ''
+            "200":
+              description: ""
               content:
                 application/json:
                   schema:
@@ -55,7 +55,7 @@ spec:
                         payload: {}
                       statusCode: 200
                       statusMessage: Endpoint founded successfully.
-            '400':
+            "400":
               description: Invalid request format (body, query, params...).
               content:
                 application/json:
@@ -66,10 +66,10 @@ spec:
                       statusCode: 400
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '401':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "401":
               description: Operation not allowed to the agentUser (Authorization).
               content:
                 application/json:
@@ -80,10 +80,10 @@ spec:
                       statusCode: 401
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '403':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "403":
               description: Token does not match or is invalid.
               content:
                 application/json:
@@ -94,10 +94,10 @@ spec:
                       statusCode: 498
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '404':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "404":
               description: Resource not founded.
               content:
                 application/json:
@@ -108,10 +108,10 @@ spec:
                       statusCode: 404
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '409':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "409":
               description: Operation not allowed due conflicts.
               content:
                 application/json:
@@ -122,10 +122,10 @@ spec:
                       statusCode: 409
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '429':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "429":
               description: Multiple requests in short time.
               content:
                 application/json:
@@ -136,10 +136,10 @@ spec:
                       statusCode: 429
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '500':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "500":
               description: Internal unhandled situation.
               content:
                 application/json:
@@ -150,10 +150,10 @@ spec:
                       statusCode: 500
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '503':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "503":
               description: Service temporarily unavailable.
               content:
                 application/json:
@@ -164,9 +164,9 @@ spec:
                       statusCode: 503
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
           summary: Check API
           tags:
             - HealthCheck
@@ -177,13 +177,13 @@ spec:
           operationId: HealthController_healthCheckV1_v1
           parameters: []
           responses:
-            '200':
-              description: ''
+            "200":
+              description: ""
               content:
                 text/plain:
                   schema:
                     example: OK
-            '400':
+            "400":
               description: Invalid request format (body, query, params...).
               content:
                 application/json:
@@ -194,10 +194,10 @@ spec:
                       statusCode: 400
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '401':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "401":
               description: Operation not allowed to the agentUser (Authorization).
               content:
                 application/json:
@@ -208,10 +208,10 @@ spec:
                       statusCode: 401
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '403':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "403":
               description: Token does not match or is invalid.
               content:
                 application/json:
@@ -222,10 +222,10 @@ spec:
                       statusCode: 498
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '404':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "404":
               description: Resource not founded.
               content:
                 application/json:
@@ -236,10 +236,10 @@ spec:
                       statusCode: 404
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '409':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "409":
               description: Operation not allowed due conflicts.
               content:
                 application/json:
@@ -250,10 +250,10 @@ spec:
                       statusCode: 409
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '429':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "429":
               description: Multiple requests in short time.
               content:
                 application/json:
@@ -264,10 +264,10 @@ spec:
                       statusCode: 429
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '500':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "500":
               description: Internal unhandled situation.
               content:
                 application/json:
@@ -278,10 +278,10 @@ spec:
                       statusCode: 500
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '503':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "503":
               description: Service temporarily unavailable.
               content:
                 application/json:
@@ -292,140 +292,10 @@ spec:
                       statusCode: 503
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
           summary: Check API
-          tags:
-            - HealthCheck
-      /api/check/sse:
-        get:
-          deprecated: false
-          description: Send to Client the Server events
-          operationId: HealthController_sse
-          parameters: []
-          responses:
-            '200':
-              description: ''
-              content:
-                text/event-stream:
-                  schema:
-                    example:
-                      number: 1
-                      text: OK
-            '400':
-              description: Invalid request format (body, query, params...).
-              content:
-                application/json:
-                  schema:
-                    example:
-                      error: Bad Request
-                      message: Error Message
-                      statusCode: 400
-                      code: ERR
-                      description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '401':
-              description: Operation not allowed to the agentUser (Authorization).
-              content:
-                application/json:
-                  schema:
-                    example:
-                      error: Unauthorized
-                      message: Error Message
-                      statusCode: 401
-                      code: ERR
-                      description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '403':
-              description: Token does not match or is invalid.
-              content:
-                application/json:
-                  schema:
-                    example:
-                      error: Invalid Token
-                      message: Error Message
-                      statusCode: 498
-                      code: ERR
-                      description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '404':
-              description: Resource not founded.
-              content:
-                application/json:
-                  schema:
-                    example:
-                      error: Not Found
-                      message: Error Message
-                      statusCode: 404
-                      code: ERR
-                      description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '409':
-              description: Operation not allowed due conflicts.
-              content:
-                application/json:
-                  schema:
-                    example:
-                      error: Conflict
-                      message: Error Message
-                      statusCode: 409
-                      code: ERR
-                      description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '429':
-              description: Multiple requests in short time.
-              content:
-                application/json:
-                  schema:
-                    example:
-                      error: Too Many Requests
-                      message: Error Message
-                      statusCode: 429
-                      code: ERR
-                      description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '500':
-              description: Internal unhandled situation.
-              content:
-                application/json:
-                  schema:
-                    example:
-                      error: Internal Server Error
-                      message: Error Message
-                      statusCode: 500
-                      code: ERR
-                      description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '503':
-              description: Service temporarily unavailable.
-              content:
-                application/json:
-                  schema:
-                    example:
-                      error: Service Unavailable
-                      message: Error Message
-                      statusCode: 503
-                      code: ERR
-                      description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-          summary: Server-Sent Events
           tags:
             - HealthCheck
       /api/users:
@@ -490,7 +360,7 @@ spec:
                 example: true
                 type: boolean
           responses:
-            '200':
+            "200":
               schema:
                 example:
                   content: []
@@ -498,12 +368,12 @@ spec:
                   pageSize: 0
                   totalPages: 0
                   totalItems: 0
-              description: ''
+              description: ""
               content:
                 application/json:
                   schema:
-                    $ref: '#/components/schemas/UserListEntity'
-            '400':
+                    $ref: "#/components/schemas/UserListEntity"
+            "400":
               description: Invalid request format (body, query, params...).
               content:
                 application/json:
@@ -514,10 +384,10 @@ spec:
                       statusCode: 400
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '401':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "401":
               description: Operation not allowed to the agentUser (Authorization).
               content:
                 application/json:
@@ -528,10 +398,10 @@ spec:
                       statusCode: 401
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '403':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "403":
               description: Token does not match or is invalid.
               content:
                 application/json:
@@ -542,10 +412,10 @@ spec:
                       statusCode: 498
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '404':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "404":
               description: Resource not founded.
               content:
                 application/json:
@@ -556,10 +426,10 @@ spec:
                       statusCode: 404
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '409':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "409":
               description: Operation not allowed due conflicts.
               content:
                 application/json:
@@ -570,10 +440,10 @@ spec:
                       statusCode: 409
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '429':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "429":
               description: Multiple requests in short time.
               content:
                 application/json:
@@ -584,10 +454,10 @@ spec:
                       statusCode: 429
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '500':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "500":
               description: Internal unhandled situation.
               content:
                 application/json:
@@ -598,10 +468,10 @@ spec:
                       statusCode: 500
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '503':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "503":
               description: Service temporarily unavailable.
               content:
                 application/json:
@@ -612,9 +482,9 @@ spec:
                       statusCode: 503
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
           security:
             - Authorization: []
           summary: List Users
@@ -630,15 +500,15 @@ spec:
             content:
               application/json:
                 schema:
-                  $ref: '#/components/schemas/CreateUserInputDto'
+                  $ref: "#/components/schemas/CreateUserInputDto"
           responses:
-            '201':
-              description: ''
+            "201":
+              description: ""
               content:
                 application/json:
                   schema:
-                    $ref: '#/components/schemas/UserEntity'
-            '400':
+                    $ref: "#/components/schemas/UserEntity"
+            "400":
               description: Invalid request format (body, query, params...).
               content:
                 application/json:
@@ -649,10 +519,10 @@ spec:
                       statusCode: 400
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '401':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "401":
               description: Operation not allowed to the agentUser (Authorization).
               content:
                 application/json:
@@ -663,10 +533,10 @@ spec:
                       statusCode: 401
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '403':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "403":
               description: Token does not match or is invalid.
               content:
                 application/json:
@@ -677,10 +547,10 @@ spec:
                       statusCode: 498
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '404':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "404":
               description: Resource not founded.
               content:
                 application/json:
@@ -691,10 +561,10 @@ spec:
                       statusCode: 404
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '409':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "409":
               description: Operation not allowed due conflicts.
               content:
                 application/json:
@@ -705,10 +575,10 @@ spec:
                       statusCode: 409
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '429':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "429":
               description: Multiple requests in short time.
               content:
                 application/json:
@@ -719,10 +589,10 @@ spec:
                       statusCode: 429
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '500':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "500":
               description: Internal unhandled situation.
               content:
                 application/json:
@@ -733,10 +603,10 @@ spec:
                       statusCode: 500
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '503':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "503":
               description: Service temporarily unavailable.
               content:
                 application/json:
@@ -747,9 +617,9 @@ spec:
                       statusCode: 503
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
           security:
             - Authorization: []
           summary: Create User
@@ -765,17 +635,17 @@ spec:
             content:
               application/json:
                 schema:
-                  $ref: '#/components/schemas/LoginUserInputDto'
+                  $ref: "#/components/schemas/LoginUserInputDto"
           responses:
-            '200':
-              description: ''
+            "200":
+              description: ""
               content:
                 application/json:
                   schema:
                     example:
                       token: XXX
-                      createdAt: 2025-05-01T16:42:40.460Z
-            '400':
+                      createdAt: 2026-04-07T01:09:57.368Z
+            "400":
               description: Invalid request format (body, query, params...).
               content:
                 application/json:
@@ -786,10 +656,10 @@ spec:
                       statusCode: 400
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '401':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "401":
               description: Operation not allowed to the agentUser (Authorization).
               content:
                 application/json:
@@ -800,10 +670,10 @@ spec:
                       statusCode: 401
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '403':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "403":
               description: Token does not match or is invalid.
               content:
                 application/json:
@@ -814,10 +684,10 @@ spec:
                       statusCode: 498
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '404':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "404":
               description: Resource not founded.
               content:
                 application/json:
@@ -828,10 +698,10 @@ spec:
                       statusCode: 404
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '409':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "409":
               description: Operation not allowed due conflicts.
               content:
                 application/json:
@@ -842,10 +712,10 @@ spec:
                       statusCode: 409
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '429':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "429":
               description: Multiple requests in short time.
               content:
                 application/json:
@@ -856,10 +726,10 @@ spec:
                       statusCode: 429
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '500':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "500":
               description: Internal unhandled situation.
               content:
                 application/json:
@@ -870,10 +740,10 @@ spec:
                       statusCode: 500
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '503':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "503":
               description: Service temporarily unavailable.
               content:
                 application/json:
@@ -884,9 +754,9 @@ spec:
                       statusCode: 503
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
           summary: Login User
           tags:
             - Users
@@ -900,15 +770,16 @@ spec:
               required: true
               in: path
               schema:
+                example: f0805007-af7a-4845-9c72-4f9d3f855380
                 type: string
           responses:
-            '200':
-              description: ''
+            "200":
+              description: ""
               content:
                 application/json:
                   schema:
-                    $ref: '#/components/schemas/UserEntity'
-            '400':
+                    $ref: "#/components/schemas/UserEntity"
+            "400":
               description: Invalid request format (body, query, params...).
               content:
                 application/json:
@@ -919,10 +790,10 @@ spec:
                       statusCode: 400
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '401':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "401":
               description: Operation not allowed to the agentUser (Authorization).
               content:
                 application/json:
@@ -933,10 +804,10 @@ spec:
                       statusCode: 401
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '403':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "403":
               description: Token does not match or is invalid.
               content:
                 application/json:
@@ -947,10 +818,10 @@ spec:
                       statusCode: 498
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '404':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "404":
               description: Resource not founded.
               content:
                 application/json:
@@ -961,10 +832,10 @@ spec:
                       statusCode: 404
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '409':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "409":
               description: Operation not allowed due conflicts.
               content:
                 application/json:
@@ -975,10 +846,10 @@ spec:
                       statusCode: 409
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '429':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "429":
               description: Multiple requests in short time.
               content:
                 application/json:
@@ -989,10 +860,10 @@ spec:
                       statusCode: 429
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '500':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "500":
               description: Internal unhandled situation.
               content:
                 application/json:
@@ -1003,10 +874,10 @@ spec:
                       statusCode: 500
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '503':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "503":
               description: Service temporarily unavailable.
               content:
                 application/json:
@@ -1017,9 +888,9 @@ spec:
                       statusCode: 503
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
           security:
             - Authorization: []
           summary: Get User
@@ -1034,21 +905,22 @@ spec:
               required: true
               in: path
               schema:
+                example: f0805007-af7a-4845-9c72-4f9d3f855380
                 type: string
           requestBody:
             required: true
             content:
               application/json:
                 schema:
-                  $ref: '#/components/schemas/UpdateUserInputDto'
+                  $ref: "#/components/schemas/UpdateUserInputDto"
           responses:
-            '200':
-              description: ''
+            "200":
+              description: ""
               content:
                 application/json:
                   schema:
-                    $ref: '#/components/schemas/UserEntity'
-            '400':
+                    $ref: "#/components/schemas/UserEntity"
+            "400":
               description: Invalid request format (body, query, params...).
               content:
                 application/json:
@@ -1059,10 +931,10 @@ spec:
                       statusCode: 400
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '401':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "401":
               description: Operation not allowed to the agentUser (Authorization).
               content:
                 application/json:
@@ -1073,10 +945,10 @@ spec:
                       statusCode: 401
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '403':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "403":
               description: Token does not match or is invalid.
               content:
                 application/json:
@@ -1087,10 +959,10 @@ spec:
                       statusCode: 498
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '404':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "404":
               description: Resource not founded.
               content:
                 application/json:
@@ -1101,10 +973,10 @@ spec:
                       statusCode: 404
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '409':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "409":
               description: Operation not allowed due conflicts.
               content:
                 application/json:
@@ -1115,10 +987,10 @@ spec:
                       statusCode: 409
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '429':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "429":
               description: Multiple requests in short time.
               content:
                 application/json:
@@ -1129,10 +1001,10 @@ spec:
                       statusCode: 429
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '500':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "500":
               description: Internal unhandled situation.
               content:
                 application/json:
@@ -1143,10 +1015,10 @@ spec:
                       statusCode: 500
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '503':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "503":
               description: Service temporarily unavailable.
               content:
                 application/json:
@@ -1157,9 +1029,9 @@ spec:
                       statusCode: 503
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
           security:
             - Authorization: []
           summary: Update User
@@ -1174,11 +1046,12 @@ spec:
               required: true
               in: path
               schema:
+                example: f0805007-af7a-4845-9c72-4f9d3f855380
                 type: string
           responses:
-            '204':
-              description: ''
-            '400':
+            "204":
+              description: ""
+            "400":
               description: Invalid request format (body, query, params...).
               content:
                 application/json:
@@ -1189,10 +1062,10 @@ spec:
                       statusCode: 400
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '401':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "401":
               description: Operation not allowed to the agentUser (Authorization).
               content:
                 application/json:
@@ -1203,10 +1076,10 @@ spec:
                       statusCode: 401
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '403':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "403":
               description: Token does not match or is invalid.
               content:
                 application/json:
@@ -1217,10 +1090,10 @@ spec:
                       statusCode: 498
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '404':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "404":
               description: Resource not founded.
               content:
                 application/json:
@@ -1231,10 +1104,10 @@ spec:
                       statusCode: 404
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '409':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "409":
               description: Operation not allowed due conflicts.
               content:
                 application/json:
@@ -1245,10 +1118,10 @@ spec:
                       statusCode: 409
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '429':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "429":
               description: Multiple requests in short time.
               content:
                 application/json:
@@ -1259,10 +1132,10 @@ spec:
                       statusCode: 429
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '500':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "500":
               description: Internal unhandled situation.
               content:
                 application/json:
@@ -1273,10 +1146,10 @@ spec:
                       statusCode: 500
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '503':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "503":
               description: Service temporarily unavailable.
               content:
                 application/json:
@@ -1287,9 +1160,9 @@ spec:
                       statusCode: 503
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
           security:
             - Authorization: []
           summary: Delete User
@@ -1307,26 +1180,26 @@ spec:
               schema:
                 type: boolean
           responses:
-            '200':
-              description: ''
+            "200":
+              description: ""
               content:
                 application/json:
                   schema:
                     example:
-                      - subscriptionId: 5-aUrSIYE7dSVsS8AAAB
+                      - databaseId: 6561299695e69d3b19ddf979
+                        subscriptionId: 5-aUrSIYE7dSVsS8AAAB
                         clientId: null
+                        createdAt: 2026-04-07T01:09:57.718Z
                         updatedAt: null
                         newConnectionsListen: false
-                        databaseId: 6561299695e69d3b19ddf979
-                        createdAt: 2025-05-01T16:42:41.618Z
-                      - subscriptionId: WKt2b2RWrMXogTfKAAAD
+                      - databaseId: 65612ccebff9f0fbcd58256a
+                        subscriptionId: WKt2b2RWrMXogTfKAAAD
                         clientId: localDev#1
+                        createdAt: 2026-04-07T01:09:57.718Z
                         updatedAt: null
                         newConnectionsListen: true
-                        databaseId: 65612ccebff9f0fbcd58256a
-                        createdAt: 2025-05-01T16:42:41.618Z
                     default: []
-            '400':
+            "400":
               description: Invalid request format (body, query, params...).
               content:
                 application/json:
@@ -1337,10 +1210,10 @@ spec:
                       statusCode: 400
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '401':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "401":
               description: Operation not allowed to the agentUser (Authorization).
               content:
                 application/json:
@@ -1351,10 +1224,10 @@ spec:
                       statusCode: 401
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '403':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "403":
               description: Token does not match or is invalid.
               content:
                 application/json:
@@ -1365,10 +1238,10 @@ spec:
                       statusCode: 498
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '404':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "404":
               description: Resource not founded.
               content:
                 application/json:
@@ -1379,10 +1252,10 @@ spec:
                       statusCode: 404
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '409':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "409":
               description: Operation not allowed due conflicts.
               content:
                 application/json:
@@ -1393,10 +1266,10 @@ spec:
                       statusCode: 409
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '429':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "429":
               description: Multiple requests in short time.
               content:
                 application/json:
@@ -1407,10 +1280,10 @@ spec:
                       statusCode: 429
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '500':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "500":
               description: Internal unhandled situation.
               content:
                 application/json:
@@ -1421,10 +1294,10 @@ spec:
                       statusCode: 500
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '503':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "503":
               description: Service temporarily unavailable.
               content:
                 application/json:
@@ -1435,9 +1308,9 @@ spec:
                       statusCode: 503
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
           security:
             - Authorization: []
           summary: List Subscriptions
@@ -1464,7 +1337,7 @@ spec:
               schema:
                 type: string
           responses:
-            '200':
+            "200":
               description: Downloadable file
               content:
                 application/octet-stream:
@@ -1473,7 +1346,7 @@ spec:
                 text/plain:
                   schema:
                     example: MIT License Copyright (c) 2022 ...
-            '400':
+            "400":
               description: Invalid request format (body, query, params...).
               content:
                 application/json:
@@ -1484,10 +1357,10 @@ spec:
                       statusCode: 400
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '401':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "401":
               description: Operation not allowed to the agentUser (Authorization).
               content:
                 application/json:
@@ -1498,10 +1371,10 @@ spec:
                       statusCode: 401
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '403':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "403":
               description: Token does not match or is invalid.
               content:
                 application/json:
@@ -1512,10 +1385,10 @@ spec:
                       statusCode: 498
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '404':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "404":
               description: Resource not founded.
               content:
                 application/json:
@@ -1526,10 +1399,10 @@ spec:
                       statusCode: 404
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '409':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "409":
               description: Operation not allowed due conflicts.
               content:
                 application/json:
@@ -1540,10 +1413,10 @@ spec:
                       statusCode: 409
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '429':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "429":
               description: Multiple requests in short time.
               content:
                 application/json:
@@ -1554,10 +1427,10 @@ spec:
                       statusCode: 429
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '500':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "500":
               description: Internal unhandled situation.
               content:
                 application/json:
@@ -1568,10 +1441,10 @@ spec:
                       statusCode: 500
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '503':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "503":
               description: Service temporarily unavailable.
               content:
                 application/json:
@@ -1582,9 +1455,9 @@ spec:
                       statusCode: 503
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
           security:
             - Authorization: []
           summary: Download File
@@ -1596,11 +1469,6 @@ spec:
           description: Upload any file to S3
           operationId: FileController_uploadFile
           parameters:
-            - name: fileName
-              required: true
-              in: header
-              schema:
-                type: string
             - name: accept
               in: header
               schema:
@@ -1616,7 +1484,7 @@ spec:
                       type: string
                       format: binary
           responses:
-            '201':
+            "201":
               description: Uploaded File Info
               content:
                 application/json:
@@ -1625,7 +1493,7 @@ spec:
                       filePath: upload/reports/file.txt
                       fileContentType: text/plain
                       uploadTag: '"d41d8cd98f00b204e9801998ecf8427e"'
-            '400':
+            "400":
               description: Invalid request format (body, query, params...).
               content:
                 application/json:
@@ -1636,10 +1504,10 @@ spec:
                       statusCode: 400
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '401':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "401":
               description: Operation not allowed to the agentUser (Authorization).
               content:
                 application/json:
@@ -1650,10 +1518,10 @@ spec:
                       statusCode: 401
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '403':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "403":
               description: Token does not match or is invalid.
               content:
                 application/json:
@@ -1664,10 +1532,10 @@ spec:
                       statusCode: 498
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '404':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "404":
               description: Resource not founded.
               content:
                 application/json:
@@ -1678,10 +1546,10 @@ spec:
                       statusCode: 404
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '409':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "409":
               description: Operation not allowed due conflicts.
               content:
                 application/json:
@@ -1692,10 +1560,10 @@ spec:
                       statusCode: 409
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '429':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "429":
               description: Multiple requests in short time.
               content:
                 application/json:
@@ -1706,10 +1574,10 @@ spec:
                       statusCode: 429
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '500':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "500":
               description: Internal unhandled situation.
               content:
                 application/json:
@@ -1720,10 +1588,10 @@ spec:
                       statusCode: 500
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '503':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "503":
               description: Service temporarily unavailable.
               content:
                 application/json:
@@ -1734,9 +1602,9 @@ spec:
                       statusCode: 503
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
           security:
             - Authorization: []
           summary: Upload File
@@ -1753,20 +1621,20 @@ spec:
               in: query
               schema:
                 nullable: false
-                default: ''
+                default: ""
                 example: http://localhost:4000/api/hook
                 type: string
             - name: responseMethod
               required: true
               in: query
               schema:
-                $ref: '#/components/schemas/[object Object]'
+                $ref: "#/components/schemas/[object Object]"
             - name: responseSchema
               required: true
               in: query
               schema:
                 nullable: false
-                default: ''
+                default: ""
                 example: INVALID
                 type: string
             - name: sendAt
@@ -1775,18 +1643,18 @@ spec:
               schema:
                 format: date-time
                 nullable: false
-                default: '2025-05-01T16:42:41.957Z'
-                example: '2024-04-17T17:36:48.666Z'
+                default: "2026-04-07T01:09:57.855Z"
+                example: "2024-04-17T17:36:48.666Z"
                 type: string
           responses:
-            '201':
-              description: ''
+            "201":
+              description: ""
               content:
                 application/json:
                   schema:
                     example:
                       statusMessage: Hook event register created successfully.
-            '400':
+            "400":
               description: Invalid request format (body, query, params...).
               content:
                 application/json:
@@ -1797,10 +1665,10 @@ spec:
                       statusCode: 400
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '401':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "401":
               description: Operation not allowed to the agentUser (Authorization).
               content:
                 application/json:
@@ -1811,10 +1679,10 @@ spec:
                       statusCode: 401
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '403':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "403":
               description: Token does not match or is invalid.
               content:
                 application/json:
@@ -1825,10 +1693,10 @@ spec:
                       statusCode: 498
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '404':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "404":
               description: Resource not founded.
               content:
                 application/json:
@@ -1839,17 +1707,17 @@ spec:
                       statusCode: 404
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '406':
-              description: ''
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "406":
+              description: ""
               content:
                 application/json:
                   schema:
                     example:
                       statusMessage: Hook event register is not acceptable!
-            '409':
+            "409":
               description: Operation not allowed due conflicts.
               content:
                 application/json:
@@ -1860,10 +1728,10 @@ spec:
                       statusCode: 409
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '429':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "429":
               description: Multiple requests in short time.
               content:
                 application/json:
@@ -1874,10 +1742,10 @@ spec:
                       statusCode: 429
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '500':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "500":
               description: Internal unhandled situation.
               content:
                 application/json:
@@ -1888,10 +1756,10 @@ spec:
                       statusCode: 500
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
-            '503':
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "503":
               description: Service temporarily unavailable.
               content:
                 application/json:
@@ -1902,14 +1770,150 @@ spec:
                       statusCode: 503
                       code: ERR
                       description: Unknown Error
-                      details: '[]'
-                      cause: ''
-                      timestamp: '2024-10-11T00:01:49.996Z'
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
           security:
             - Authorization: []
           summary: Register Event Hook
           tags:
             - Webhooks
+      /api/events/subscriptions/{subscriptionId}:
+        get:
+          deprecated: false
+          description: Send to Client the Server events
+          operationId: ServerEventsController_getSubscription
+          parameters:
+            - name: subscriptionId
+              required: true
+              in: path
+              schema:
+                example: WKt2b2RWrMXogTfKAAAD
+                type: string
+          responses:
+            "200":
+              description: ""
+              content:
+                text/event-stream:
+                  schema:
+                    example:
+                      number: 1
+                      text: OK
+            "400":
+              description: Invalid request format (body, query, params...).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Bad Request
+                      message: Error Message
+                      statusCode: 400
+                      code: ERR
+                      description: Unknown Error
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "401":
+              description: Operation not allowed to the agentUser (Authorization).
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Unauthorized
+                      message: Error Message
+                      statusCode: 401
+                      code: ERR
+                      description: Unknown Error
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "403":
+              description: Token does not match or is invalid.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Invalid Token
+                      message: Error Message
+                      statusCode: 498
+                      code: ERR
+                      description: Unknown Error
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "404":
+              description: Resource not founded.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Not Found
+                      message: Error Message
+                      statusCode: 404
+                      code: ERR
+                      description: Unknown Error
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "409":
+              description: Operation not allowed due conflicts.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Conflict
+                      message: Error Message
+                      statusCode: 409
+                      code: ERR
+                      description: Unknown Error
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "429":
+              description: Multiple requests in short time.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Too Many Requests
+                      message: Error Message
+                      statusCode: 429
+                      code: ERR
+                      description: Unknown Error
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "500":
+              description: Internal unhandled situation.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Internal Server Error
+                      message: Error Message
+                      statusCode: 500
+                      code: ERR
+                      description: Unknown Error
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+            "503":
+              description: Service temporarily unavailable.
+              content:
+                application/json:
+                  schema:
+                    example:
+                      error: Service Unavailable
+                      message: Error Message
+                      statusCode: 503
+                      code: ERR
+                      description: Unknown Error
+                      details: "[]"
+                      cause: ""
+                      timestamp: "2024-10-11T00:01:49.996Z"
+          summary: Server-Sent Events
+          tags:
+            - Server-Sent Events
     components:
       securitySchemes:
         Authorization:
@@ -1926,13 +1930,13 @@ spec:
             id:
               type: string
               example: a5483856-1bf7-4dae-9c21-d7ea4dd30d1d
-              default: ''
+              default: ""
               nullable: false
               description: Database register ID
             userId:
               type: string
               example: a5483856-1bf7-4dae-9c21-d7ea4dd30d1d
-              default: ''
+              default: ""
               nullable: false
               description: User ID
             imagePath:
@@ -1982,7 +1986,7 @@ spec:
             id:
               type: string
               example: a5483856-1bf7-4dae-9c21-d7ea4dd30d1d
-              default: ''
+              default: ""
               nullable: false
               description: Database register ID
             fullName:
@@ -1993,7 +1997,7 @@ spec:
               description: User name
             email:
               type: string
-              example: user.default@nomail.dev
+              example: tester.user@nomail.com
               default: null
               nullable: true
               description: User email
@@ -2005,7 +2009,7 @@ spec:
               description: User password
             phone:
               type: string
-              example: '+0000000000000'
+              example: "+0000000000000"
               default: null
               nullable: true
               description: User phone number
@@ -2017,7 +2021,7 @@ spec:
               description: Document type
             document:
               type: string
-              example: '00000000000'
+              example: "00000000000"
               default: null
               nullable: true
               description: Document code
@@ -2031,19 +2035,19 @@ spec:
               example:
                 imagePath: ./image.png
                 defaultTheme: DEFAULT
-                updatedAt: null
+                createdAt: 2026-04-07T01:09:56.086Z
+                updatedAt: 2026-04-07T01:09:56.086Z
                 deletedAt: null
-                createdAt: 2025-05-01T16:42:38.091Z
               default: null
               nullable: true
               description: User preference
               allOf:
-                - $ref: '#/components/schemas/UserPreferenceEntity'
+                - $ref: "#/components/schemas/UserPreferenceEntity"
             createdAt:
               format: date-time
               type: string
               example: 2024-06-10T03:52:50.885Z
-              default: 2025-05-01T16:42:38.092Z
+              default: 2026-04-07T01:09:56.087Z
               nullable: false
               description: User creation timestamp
             updatedAt:
@@ -2106,34 +2110,34 @@ spec:
               description: All results amount
             content:
               example:
-                - phone: null
+                - fullName: User Default
+                  phone: null
                   docType: INVALID
                   document: null
                   fu: UF
                   preference:
                     imagePath: ./image.png
                     defaultTheme: DEFAULT
-                    updatedAt: null
+                    createdAt: 2026-04-07T01:09:56.121Z
+                    updatedAt: 2026-04-07T01:09:56.121Z
                     deletedAt: null
-                    createdAt: 2025-05-01T16:42:38.138Z
+                  createdAt: 2024-06-10T03:52:50.885Z
                   updatedAt: 2024-06-10T03:52:50.885Z
                   deletedAt: null
                   deletedBy: null
-                  fullName: User Default
-                  createdAt: 2025-05-01T16:42:38.139Z
               default: []
               nullable: false
               description: User list content
               type: array
               items:
-                $ref: '#/components/schemas/UserEntity'
+                $ref: "#/components/schemas/UserEntity"
           required:
             - pageNumber
             - pageSize
             - totalPages
             - totalItems
             - content
-        '[object Object]':
+        "[object Object]":
           type: string
           enum:
             - DEFAULT
@@ -2150,28 +2154,28 @@ spec:
               example: DEFAULT
               nullable: false
               allOf:
-                - $ref: '#/components/schemas/[object Object]'
+                - $ref: "#/components/schemas/[object Object]"
         CreateUserInputDto:
           type: object
           properties:
             fullName:
               type: string
               example: User Default
-              default: ''
+              default: ""
               nullable: false
             email:
               type: string
-              example: user.default@nomail.dev
-              default: ''
+              example: tester.user@nomail.com
+              default: ""
               nullable: false
             password:
               type: string
-              example: pass123
-              default: ''
+              example: TestUser1!
+              default: ""
               nullable: false
             phone:
               type: string
-              example: '+0000000000000'
+              example: "+0000000000000"
               nullable: false
             docType:
               type: string
@@ -2179,7 +2183,7 @@ spec:
               nullable: false
             document:
               type: string
-              example: '00000000000'
+              example: "00000000000"
               nullable: false
             fu:
               type: string
@@ -2188,7 +2192,7 @@ spec:
             preference:
               nullable: false
               allOf:
-                - $ref: '#/components/schemas/UserPreferenceInputDto'
+                - $ref: "#/components/schemas/UserPreferenceInputDto"
           required:
             - fullName
             - email
@@ -2198,13 +2202,13 @@ spec:
           properties:
             email:
               type: string
-              example: user.default@nomail.dev
-              default: ''
+              example: tester.user@nomail.com
+              default: ""
               nullable: false
             password:
               type: string
-              example: pass123
-              default: ''
+              example: TestUser1!
+              default: ""
               nullable: false
           required:
             - email
@@ -2218,15 +2222,15 @@ spec:
               nullable: false
             email:
               type: string
-              example: user.default@nomail.dev
+              example: tester.user@nomail.com
               nullable: false
             password:
               type: string
-              example: pass123
+              example: TestUser1!
               nullable: false
             phone:
               type: string
-              example: '+0000000000000'
+              example: "+0000000000000"
               nullable: false
             docType:
               type: string
@@ -2234,7 +2238,7 @@ spec:
               nullable: false
             document:
               type: string
-              example: '00000000000'
+              example: "00000000000"
               nullable: false
             fu:
               type: string
@@ -2243,4 +2247,4 @@ spec:
             preference:
               nullable: false
               allOf:
-                - $ref: '#/components/schemas/UserPreferenceInputDto'
+                - $ref: "#/components/schemas/UserPreferenceInputDto"

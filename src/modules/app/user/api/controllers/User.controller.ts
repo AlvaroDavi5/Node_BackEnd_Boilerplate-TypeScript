@@ -28,7 +28,7 @@ import { customThrottlerDecorator } from '@api/decorators/customThrottler.decora
 import EventEmitterClient from '@events/emitter/EventEmitter.client';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
-import { secondsToMilliseconds } from '@common/utils/dates.util';
+import { hoursToSeconds, secondsToMilliseconds } from '@common/utils/dates.util';
 import { PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import type { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 import CreateUserValidatorPipe from '../pipes/CreateUserValidator.pipe';
@@ -126,7 +126,8 @@ export default class UserController implements OnModuleInit {
 		deprecated: false,
 	})
 	@Put('/')
-	@customThrottlerDecorator({ name: 'login', limit: 4, ttl: secondsToMilliseconds(10) })
+	// * 4 requests every 10 seconds
+	@customThrottlerDecorator({ name: 'login', limit: 4, ttl: secondsToMilliseconds(10), blockDuration: secondsToMilliseconds(hoursToSeconds(2)) })
 	@ApiOkResponse({
 		schema: {
 			example: {

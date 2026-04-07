@@ -15,12 +15,12 @@ export default class CreateUserInputDto implements ICreateUser {
 	@IsNotEmpty()
 	public fullName!: string;
 
-	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: '', nullable: false, required: true })
+	@ApiProperty({ type: String, example: 'tester.user@nomail.com', default: '', nullable: false, required: true })
 	@IsString()
 	@IsNotEmpty()
 	public email!: string;
 
-	@ApiProperty({ type: String, example: 'pass123', default: '', nullable: false, required: true })
+	@ApiProperty({ type: String, example: 'TestUser1!', default: '', nullable: false, required: true })
 	@IsString()
 	@IsNotEmpty()
 	public password!: string;

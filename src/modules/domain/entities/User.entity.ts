@@ -58,7 +58,7 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	@IsString()
 	public fullName!: string;
 
-	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: null, nullable: true, required: true, description: 'User email' })
+	@ApiProperty({ type: String, example: 'tester.user@nomail.com', default: null, nullable: true, required: true, description: 'User email' })
 	@Field(returingString, { defaultValue: null, nullable: true, description: 'User email' })
 	@IsString()
 	private email!: string;

@@ -40,7 +40,8 @@ async function seedDatabase(): Promise<void> {
 	const testUser = await userRepository.create({
 		document: '12312312345', docType: 'CPF', fu: 'SP',
 		fullName: 'Tester User', email: 'tester.user@nomail.com',
-		password: '$2b$10$KuaNFAgwY.RJfRLhS0kDVu|D73SxsNl_H6yaDzjE_-ZAJCorFvEnN1WG3bn8ICGA-Y',
+		// password: 'TestUser1!'
+		password: '$2b$10$XjrXJchTIWRiDxg1V/n/0u|eOUn4ImpHTOJB8ICJ1kgdTWbgYha86kW97kTtNJpAD4',
 	}).save();
 	await userPreferenceRepository.create({
 		user: { id: testUser.id },

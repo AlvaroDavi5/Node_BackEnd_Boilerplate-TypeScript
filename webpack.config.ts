@@ -8,7 +8,7 @@ const config: webpack.Configuration = {
 	mode: 'production',
 	watch: false,
 	target: 'node',
-	entry: ['webpack/hot/poll?1000', './build/main.js'],
+	entry: ['webpack/hot/poll?1000', './build/src/main.js'],
 	resolve: {
 		extensions: ['.ts', '.js'],
 	},

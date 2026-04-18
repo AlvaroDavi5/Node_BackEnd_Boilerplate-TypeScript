@@ -34,7 +34,7 @@
 		"build": "nest build",
 		"build:webpack": "npm run build && webpack --config webpack.config.ts",
 		"start": "nest start",
-		"start:prod": "node build/main.js",
+		"start:prod": "node build/src/main.js",
 		"start:webpack": "node build/webpack.js",
 		"start:dev": "cross-env NODE_ENV=dev nodemon --config nodemon.json",
 		"start:debug": "nest start --debug --watch",
@@ -155,6 +155,9 @@
 		"typescript": "^5.9.3",
 		"uuid": "^11.1.0",
 		"winston": "^3.17.0"
+	},
+	"overrides": {
+		"fastify": "$fastify"
 	},
 	"devDependencies": {
 		"@commitlint/cli": "^20.2.0",

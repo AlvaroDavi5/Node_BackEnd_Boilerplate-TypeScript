@@ -95,7 +95,7 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 
 			await deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', agentUser);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
+			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(userServiceMock.delete).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.delete).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { softDelete: true, agentUserId: agentUser.clientId });
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
@@ -116,7 +116,7 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 			await expect(deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', agentUser))
 				.rejects.toMatchObject(new Error('User not deleted'));
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
+			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(userServiceMock.delete).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.delete).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { softDelete: true, agentUserId: agentUser.clientId });
 			expect(exceptionsMock.internal).toHaveBeenCalledWith({ message: 'User not deleted' });
@@ -150,7 +150,7 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 			await expect(deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', agentUser))
 				.rejects.toMatchObject(new Error('User not founded by ID!'));
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
+			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
 			expect(exceptionsMock.notFound).toHaveBeenCalledWith({
 				message: 'User not founded by ID!'

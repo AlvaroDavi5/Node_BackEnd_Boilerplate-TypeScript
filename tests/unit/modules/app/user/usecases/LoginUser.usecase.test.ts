@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import Exceptions from '@core/errors/Exceptions';
+import LoggerService from '@core/logging/Logger.service';
 import CryptographyService from '@core/security/Cryptography.service';
 import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
 import UserPreferenceEntity, { IUpdateUserPreference } from '@domain/entities/UserPreference.entity';
@@ -55,6 +56,9 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 	const cryptographyServiceMock = {
 		encodeJwt: jest.fn((_payload: unknown, _inputEncoding: BufferEncoding, _expiration?: string): string => ''),
 	};
+	const loggerMock = {
+		error: jest.fn(),
+	};
 
 	let loginUserUseCase: LoginUserUseCase;
 	let nestTestingModule: TestingModule;
@@ -67,6 +71,7 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 				{ provide: UserPreferenceService, useValue: userPreferenceServiceMock },
 				{ provide: CryptographyService, useValue: cryptographyServiceMock },
 				{ provide: Exceptions, useValue: exceptionsMock },
+				{ provide: LoggerService, useValue: loggerMock },
 			],
 		}).compile();
 
@@ -123,13 +128,13 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 			});
 
 			await expect(loginUserUseCase.execute({ email: 'user.test@nomail.test', password: 'admin' }))
-				.rejects.toMatchObject(new Error('Password hash is different from database'));
+				.rejects.toMatchObject(new Error('Invalid Credentials'));
 			expect(userServiceMock.getByEmail).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getByEmail).toHaveBeenCalledWith('user.test@nomail.test');
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', false);
 			expect(userServiceMock.validatePassword).toHaveBeenCalledTimes(1);
-			expect(userServiceMock.validatePassword).toHaveBeenCalledWith(userEntity, 'admin');
+			expect(userServiceMock.validatePassword).toHaveBeenCalledWith(userEntity.getPassword(), 'admin');
 			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
 			expect(cryptographyServiceMock.encodeJwt).not.toHaveBeenCalled();
 		});
@@ -140,7 +145,7 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 			userServiceMock.getByEmail.mockResolvedValueOnce(null);
 
 			await expect(loginUserUseCase.execute({ email: 'user.test@nomail.test', password: 'admin' }))
-				.rejects.toMatchObject(new Error('User not founded by e-mail!'));
+				.rejects.toMatchObject(new Error('Invalid Credentials'));
 			expect(userServiceMock.getByEmail).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getByEmail).toHaveBeenCalledWith('user.test@nomail.test');
 			expect(exceptionsMock.notFound).toHaveBeenCalledWith({

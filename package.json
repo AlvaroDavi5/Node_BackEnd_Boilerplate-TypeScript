@@ -182,6 +182,7 @@
 		"@types/node": "^24.12.2",
 		"@types/supertest": "^6.0.3",
 		"@types/uuid": "^10.0.0",
+		"@types/webpack-node-externals": "^3.0.4",
 		"@types/ws": "^8.18.1",
 		"@typescript-eslint/eslint-plugin": "^8.58.2",
 		"@typescript-eslint/parser": "^8.58.2",

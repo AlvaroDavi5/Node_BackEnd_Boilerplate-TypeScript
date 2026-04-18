@@ -21,7 +21,7 @@ export default class GetUserUseCase {
 			});
 
 		const [foundedUser, foundedPreference] = await Promise.all([
-			this.userService.getById(id, true),
+			this.userService.getById(id),
 			this.userPreferenceService.getByUserId(id),
 		]);
 

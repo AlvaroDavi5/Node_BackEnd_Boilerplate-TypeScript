@@ -1,5 +1,6 @@
 import { Test, TestingModule } from '@nestjs/testing';
 import Exceptions from '@core/errors/Exceptions';
+import LoggerService from '@core/logging/Logger.service';
 import CryptographyService from '@core/security/Cryptography.service';
 import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
 import UserPreferenceEntity, { IUpdateUserPreference } from '@domain/entities/UserPreference.entity';
@@ -36,7 +37,7 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 			return { content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 };
 		}),
 		protectPassword: jest.fn((password: string): string => password),
-		validatePassword: jest.fn((_entity: UserEntity, _passwordToValidate: string): void => {
+		validatePassword: jest.fn((_password: string, _passwordToValidate: string): void => {
 			throw new Error('GenericError');
 		}),
 	};
@@ -55,6 +56,9 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 	const cryptographyServiceMock = {
 		encodeJwt: jest.fn((_payload: unknown, _inputEncoding: BufferEncoding, _expiration?: string): string => ''),
 	};
+	const loggerMock = {
+		error: jest.fn(),
+	};
 
 	let loginUserUseCase: LoginUserUseCase;
 	let nestTestingModule: TestingModule;
@@ -67,6 +71,7 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 				{ provide: UserPreferenceService, useValue: userPreferenceServiceMock },
 				{ provide: CryptographyService, useValue: cryptographyServiceMock },
 				{ provide: Exceptions, useValue: exceptionsMock },
+				{ provide: LoggerService, useValue: loggerMock },
 			],
 		}).compile();
 
@@ -87,7 +92,7 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test', password: 'admin' });
 			userServiceMock.getById.mockResolvedValueOnce(userEntity);
 			userServiceMock.getByEmail.mockResolvedValueOnce(userEntity);
-			userServiceMock.validatePassword.mockImplementationOnce((_entity: UserEntity, _passwordToValidate: string) => {
+			userServiceMock.validatePassword.mockImplementationOnce((_password: string, _passwordToValidate: string) => {
 				return undefined;
 			});
 			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(new UserPreferenceEntity({ userId: userEntity.getId() }));
@@ -99,11 +104,14 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', false);
 			expect(userServiceMock.validatePassword).toHaveBeenCalledTimes(1);
-			expect(userServiceMock.validatePassword).toHaveBeenCalledWith(userEntity, 'admin');
+			expect(userServiceMock.validatePassword).toHaveBeenCalledWith('admin', 'admin');
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(cryptographyServiceMock.encodeJwt).toHaveBeenCalledTimes(1);
-			expect(cryptographyServiceMock.encodeJwt).toHaveBeenCalledWith({ clientId: userEntity.getId(), username: userEntity.getEmail() }, 'utf8', '1D');
+			expect(cryptographyServiceMock.encodeJwt).toHaveBeenCalledWith({
+				username: userEntity.getEmail(),
+				clientId: userEntity.getId(),
+			}, 'utf8', '1D');
 			expect(result.token).toBe(mockedToken);
 			expect(result.user.getEmail()).toBe('user.test@nomail.test');
 			expect(result.user.getPassword()).toBe('');
@@ -113,20 +121,20 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test', password: 'admin' });
 			userServiceMock.getById.mockResolvedValueOnce(userEntity);
 			userServiceMock.getByEmail.mockResolvedValueOnce(userEntity);
-			userServiceMock.validatePassword.mockImplementationOnce((_entity: UserEntity, _passwordToValidate: string) => {
+			userServiceMock.validatePassword.mockImplementationOnce((_password: string, _passwordToValidate: string) => {
 				throw exceptionsMock.unauthorized({
 					message: 'Password hash is different from database',
 				});
 			});
 
 			await expect(loginUserUseCase.execute({ email: 'user.test@nomail.test', password: 'admin' }))
-				.rejects.toMatchObject(new Error('Password hash is different from database'));
+				.rejects.toMatchObject(new Error('Invalid Credentials'));
 			expect(userServiceMock.getByEmail).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getByEmail).toHaveBeenCalledWith('user.test@nomail.test');
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', false);
 			expect(userServiceMock.validatePassword).toHaveBeenCalledTimes(1);
-			expect(userServiceMock.validatePassword).toHaveBeenCalledWith(userEntity, 'admin');
+			expect(userServiceMock.validatePassword).toHaveBeenCalledWith(userEntity.getPassword(), 'admin');
 			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
 			expect(cryptographyServiceMock.encodeJwt).not.toHaveBeenCalled();
 		});
@@ -137,7 +145,7 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 			userServiceMock.getByEmail.mockResolvedValueOnce(null);
 
 			await expect(loginUserUseCase.execute({ email: 'user.test@nomail.test', password: 'admin' }))
-				.rejects.toMatchObject(new Error('User not founded by e-mail!'));
+				.rejects.toMatchObject(new Error('Invalid Credentials'));
 			expect(userServiceMock.getByEmail).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getByEmail).toHaveBeenCalledWith('user.test@nomail.test');
 			expect(exceptionsMock.notFound).toHaveBeenCalledWith({

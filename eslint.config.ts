@@ -7,7 +7,7 @@ import security from 'eslint-plugin-security';
 import prettier from 'eslint-plugin-prettier';
 import importPlugin from 'eslint-plugin-import';
 import typescriptParser from '@typescript-eslint/parser';
-import typescript from '@typescript-eslint/eslint-plugin';
+import typescriptEslintPlugin from '@typescript-eslint/eslint-plugin';
 /* eslint-enable import/no-extraneous-dependencies */
 
 
@@ -35,7 +35,7 @@ const defaultConfigs: Linter.Config = {
 	},
 	linterOptions: {},
 	plugins: {
-		'@typescript-eslint': typescript as unknown as ESLint.Plugin,
+		'@typescript-eslint': typescriptEslintPlugin as unknown as ESLint.Plugin,
 		prettier,
 		import: importPlugin,
 		security,
@@ -348,201 +348,201 @@ const defaultConfigs: Linter.Config = {
 			}
 		]
 	},
-},
+};
 
-	advancedConfigs: Linter.Config = {
-		name: 'AdvancedConfigs',
-		files: ['**/*.{js,ts}'],
-		plugins: {
-			'@typescript-eslint': typescript as unknown as ESLint.Plugin,
-			import: importPlugin,
-			security,
-			jsdoc,
-		},
-		rules: {
-			'security/detect-possible-timing-attacks': 'error',
-			'security/detect-object-injection': 'error',
-			'security/detect-non-literal-fs-filename': 'warn',
-			'security/detect-non-literal-regexp': 'warn',
-			'import/order': [
-				'error',
-				{
-					groups: [
-						'builtin',
-						'external',
-						'internal',
-						'parent',
-						'sibling',
-						'index',
-						'object',
-						'type'
-					],
-					'newlines-between': 'never',
-					distinctGroup: true,
-					pathGroups: [
-						{
-							pattern: '@core/**',
-							group: 'internal',
-							position: 'before'
-						},
-						{
-							pattern: '@domain/**',
-							group: 'internal',
-							position: 'before'
-						},
-						{
-							pattern: '@app/**',
-							group: 'internal',
-							position: 'before'
-						},
-						{
-							pattern: '@api/**',
-							group: 'internal',
-							position: 'before'
-						},
-						{
-							pattern: '@graphql/**',
-							group: 'internal',
-							position: 'before'
-						},
-						{
-							pattern: '@events/**',
-							group: 'internal',
-							position: 'before'
-						},
-						{
-							pattern: '@common/**',
-							group: 'internal',
-							position: 'before'
-						},
-						{
-							pattern: '@dev/**',
-							group: 'internal',
-							position: 'before'
-						},
-						{
-							pattern: '@shared/**',
-							group: 'internal',
-							position: 'after'
-						},
-						{
-							pattern: 'tests/**',
-							group: 'internal',
-							position: 'before'
-						}
-					],
-					pathGroupsExcludedImportTypes: [],
-					alphabetize: {
-						order: 'ignore',
-						caseInsensitive: true
+const advancedConfigs: Linter.Config = {
+	name: 'AdvancedConfigs',
+	files: ['**/*.{js,ts}'],
+	plugins: {
+		'@typescript-eslint': typescriptEslintPlugin as unknown as ESLint.Plugin,
+		import: importPlugin,
+		security,
+		jsdoc,
+	},
+	rules: {
+		'security/detect-possible-timing-attacks': 'error',
+		'security/detect-object-injection': 'error',
+		'security/detect-non-literal-fs-filename': 'warn',
+		'security/detect-non-literal-regexp': 'warn',
+		'import/order': [
+			'error',
+			{
+				groups: [
+					'builtin',
+					'external',
+					'internal',
+					'parent',
+					'sibling',
+					'index',
+					'object',
+					'type'
+				],
+				'newlines-between': 'never',
+				distinctGroup: true,
+				pathGroups: [
+					{
+						pattern: '@core/**',
+						group: 'internal',
+						position: 'before'
+					},
+					{
+						pattern: '@domain/**',
+						group: 'internal',
+						position: 'before'
+					},
+					{
+						pattern: '@app/**',
+						group: 'internal',
+						position: 'before'
+					},
+					{
+						pattern: '@api/**',
+						group: 'internal',
+						position: 'before'
+					},
+					{
+						pattern: '@graphql/**',
+						group: 'internal',
+						position: 'before'
+					},
+					{
+						pattern: '@events/**',
+						group: 'internal',
+						position: 'before'
+					},
+					{
+						pattern: '@common/**',
+						group: 'internal',
+						position: 'before'
+					},
+					{
+						pattern: '@dev/**',
+						group: 'internal',
+						position: 'before'
+					},
+					{
+						pattern: '@shared/**',
+						group: 'internal',
+						position: 'after'
+					},
+					{
+						pattern: 'tests/**',
+						group: 'internal',
+						position: 'before'
+					}
+				],
+				pathGroupsExcludedImportTypes: [],
+				alphabetize: {
+					order: 'ignore',
+					caseInsensitive: true
+				}
+			}
+		],
+		'import/default': 'error',
+		'import/unambiguous': 'error',
+		'import/no-extraneous-dependencies': [
+			'error',
+			{
+				devDependencies: [
+					'src/dev/**',
+					'scripts/**',
+					'tests/**'
+				],
+				peerDependencies: true,
+				optionalDependencies: false,
+				bundledDependencies: false
+			}
+		],
+		'@typescript-eslint/ban-ts-comment': 'error',
+		'@typescript-eslint/no-restricted-types': [
+			'error',
+			{
+				types: {
+					Object: {
+						message: 'Avoid using the `Object` type. Did you mean `object`?'
+					},
+					Function: {
+						message: 'Avoid using the `Function` type. Prefer a specific function type, like `() => void`.'
+					},
+					Boolean: {
+						message: 'Avoid using the `Boolean` type. Did you mean `boolean`?'
+					},
+					Number: {
+						message: 'Avoid using the `Number` type. Did you mean `number`?'
+					},
+					String: {
+						message: 'Avoid using the `String` type. Did you mean `string`?'
+					},
+					Symbol: {
+						message: 'Avoid using the `Symbol` type. Did you mean `symbol`?'
 					}
 				}
-			],
-			'import/default': 'error',
-			'import/unambiguous': 'error',
-			'import/no-extraneous-dependencies': [
-				'error',
-				{
-					devDependencies: [
-						'src/dev/**',
-						'scripts/**',
-						'tests/**'
-					],
-					peerDependencies: true,
-					optionalDependencies: false,
-					bundledDependencies: false
-				}
-			],
-			'@typescript-eslint/ban-ts-comment': 'error',
-			'@typescript-eslint/no-restricted-types': [
-				'error',
-				{
-					types: {
-						Object: {
-							message: 'Avoid using the `Object` type. Did you mean `object`?'
-						},
-						Function: {
-							message: 'Avoid using the `Function` type. Prefer a specific function type, like `() => void`.'
-						},
-						Boolean: {
-							message: 'Avoid using the `Boolean` type. Did you mean `boolean`?'
-						},
-						Number: {
-							message: 'Avoid using the `Number` type. Did you mean `number`?'
-						},
-						String: {
-							message: 'Avoid using the `String` type. Did you mean `string`?'
-						},
-						Symbol: {
-							message: 'Avoid using the `Symbol` type. Did you mean `symbol`?'
-						}
-					}
-				}
-			],
-			'@typescript-eslint/array-type': 'error',
-			'@typescript-eslint/consistent-type-assertions': 'error',
-			'@typescript-eslint/no-non-null-assertion': 'off',
-			'@typescript-eslint/no-explicit-any': 'warn',
-			'@typescript-eslint/no-empty-function': 'error',
-			'@typescript-eslint/no-empty-interface': 'error',
-			'@typescript-eslint/no-use-before-define': 'error',
-			'@typescript-eslint/no-unused-expressions': 'error',
-			'@typescript-eslint/no-unused-vars': [
-				'error',
-				{
-					argsIgnorePattern: '^_',
-					varsIgnorePattern: '^_',
-					caughtErrorsIgnorePattern: '^_'
-				}
-			],
-			'@typescript-eslint/no-var-requires': 'error',
-			'@typescript-eslint/no-misused-new': 'error',
-			'@typescript-eslint/no-namespace': 'error',
-			'@typescript-eslint/prefer-namespace-keyword': 'error',
-			'@typescript-eslint/prefer-function-type': 'error',
-			'@typescript-eslint/prefer-for-of': 'error',
-			'@typescript-eslint/unified-signatures': 'error',
-			'@typescript-eslint/adjacent-overload-signatures': 'error',
-			'@typescript-eslint/member-ordering': 'off',
-			'@typescript-eslint/naming-convention': 'off',
-			'@typescript-eslint/no-parameter-properties': 'off',
-			'@typescript-eslint/no-shadow': [
-				'error',
-				{
-					hoist: 'all'
-				}
-			],
-			'@typescript-eslint/triple-slash-reference': [
-				'error',
-				{
-					path: 'always',
-					types: 'prefer-import',
-					lib: 'always'
-				}
-			],
-			'@typescript-eslint/explicit-member-accessibility': [
-				'off',
-				{
-					accessibility: 'explicit'
-				}
-			]
-		},
+			}
+		],
+		'@typescript-eslint/array-type': 'error',
+		'@typescript-eslint/consistent-type-assertions': 'error',
+		'@typescript-eslint/no-non-null-assertion': 'off',
+		'@typescript-eslint/no-explicit-any': 'warn',
+		'@typescript-eslint/no-empty-function': 'error',
+		'@typescript-eslint/no-empty-interface': 'error',
+		'@typescript-eslint/no-use-before-define': 'error',
+		'@typescript-eslint/no-unused-expressions': 'error',
+		'@typescript-eslint/no-unused-vars': [
+			'error',
+			{
+				argsIgnorePattern: '^_',
+				varsIgnorePattern: '^_',
+				caughtErrorsIgnorePattern: '^_'
+			}
+		],
+		'@typescript-eslint/no-var-requires': 'error',
+		'@typescript-eslint/no-misused-new': 'error',
+		'@typescript-eslint/no-namespace': 'error',
+		'@typescript-eslint/prefer-namespace-keyword': 'error',
+		'@typescript-eslint/prefer-function-type': 'error',
+		'@typescript-eslint/prefer-for-of': 'error',
+		'@typescript-eslint/unified-signatures': 'error',
+		'@typescript-eslint/adjacent-overload-signatures': 'error',
+		'@typescript-eslint/member-ordering': 'off',
+		'@typescript-eslint/naming-convention': 'off',
+		'@typescript-eslint/no-parameter-properties': 'off',
+		'@typescript-eslint/no-shadow': [
+			'error',
+			{
+				hoist: 'all'
+			}
+		],
+		'@typescript-eslint/triple-slash-reference': [
+			'error',
+			{
+				path: 'always',
+				types: 'prefer-import',
+				lib: 'always'
+			}
+		],
+		'@typescript-eslint/explicit-member-accessibility': [
+			'off',
+			{
+				accessibility: 'explicit'
+			}
+		]
 	},
+};
 
-	// ? Override for development, scripts, and test files
-	developmentOverrideConfigs: Linter.Config = {
-		files: ['src/dev/**', 'scripts/**', 'tests/**'],
-		rules: {
-			'no-console': 'off',
-			'@typescript-eslint/no-explicit-any': 'off',
-		},
+// ? Override for development, scripts, and test files
+const developmentOverrideConfigs: Linter.Config = {
+	files: ['src/dev/**', 'scripts/**', 'tests/**'],
+	rules: {
+		'no-console': 'off',
+		'@typescript-eslint/no-explicit-any': 'off',
 	},
+};
 
-	// * $schema: 'https://json.schemastore.org/eslintrc',
-	configs: Linter.Config[] = [
-		defaultConfigs,
-		advancedConfigs,
-		developmentOverrideConfigs,
-	];
+// * $schema: 'https://json.schemastore.org/eslintrc',
+const configs: Linter.Config[] = [
+	defaultConfigs,
+	advancedConfigs,
+	developmentOverrideConfigs,
+];
 
 export default configs;

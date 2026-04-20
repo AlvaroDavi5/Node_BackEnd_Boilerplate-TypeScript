@@ -120,7 +120,7 @@ describe('Modules :: <ModuleName> :: UseCases :: <UseCaseName>', () => {
 ```
 
 ### Mandatory Rules
-- **All** dependencies are mocked as plain objects with `jest.fn()` typed by the actual interfaces — never use `jest.spyOn` or NestJS `Test.createTestingModule` in unit tests.
+- **All** dependencies are mocked as plain objects or objects with mocked methods using `jest.fn()` typed by the actual interfaces — if is a NestJS application, create test using NestJS library imports (`Test.createTestingModule`) in unit tests.
 - Default mock behavior for methods that can fail: `throw new Error('GenericError')`.
 - Default mock behavior for methods that usually succeed in real flow: return a safe neutral value (`null`, `false`, empty pagination, etc.).
 - Cast mocks as `DependencyMock as unknown as ActualType` in the constructor call.

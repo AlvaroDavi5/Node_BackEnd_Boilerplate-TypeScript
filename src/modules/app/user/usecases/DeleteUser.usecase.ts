@@ -22,7 +22,7 @@ export default class DeleteUserUseCase {
 				message: 'Invalid agentUser',
 			});
 
-		const user = await this.userService.getById(id, true);
+		const user = await this.userService.getById(id);
 		const preference = await this.userPreferenceService.getByUserId(id);
 
 		this.validatePermissionToDeleteUser(agentUser, user);

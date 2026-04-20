@@ -1,8 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { ConfigService } from '@nestjs/config';
 import CryptographyService from '@core/security/Cryptography.service';
 import Exceptions from '@core/errors/Exceptions';
-import { ConfigsInterface } from '@core/configs/envs.config';
 import UserEntity, { IUpdateUser } from '@domain/entities/User.entity';
 import UserListEntity from '@domain/entities/generic/UserList.entity';
 import UserRepository from '@app/user/repositories/user/User.repository';
@@ -11,17 +9,11 @@ import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationIn
 
 @Injectable()
 export default class UserService {
-	private readonly secret: string;
-
 	constructor(
-		private readonly configService: ConfigService,
 		private readonly cryptographyService: CryptographyService,
 		private readonly userRepository: UserRepository,
 		private readonly exceptions: Exceptions,
-	) {
-		const { secretKey } = this.configService.get<ConfigsInterface['security']>('security')!;
-		this.secret = secretKey;
-	}
+	) { }
 
 	public async getById(id: string, withoutPassword = true): Promise<UserEntity> {
 		try {
@@ -56,6 +48,11 @@ export default class UserService {
 
 			entity.setPassword(this.protectPassword(userPassword));
 
+			const foundedUser = await this.getByEmail(entity.getEmail());
+			if (foundedUser)
+				throw this.exceptions.conflict({
+					message: 'E-mail already in use!',
+				});
 			const createdUser = await this.userRepository.create(entity);
 
 			createdUser.setPassword('');
@@ -108,8 +105,7 @@ export default class UserService {
 		}
 	}
 
-	public validatePassword(entity: UserEntity, passwordToValidate: string): void {
-		const userPassword = entity.getPassword();
+	public validatePassword(userPassword: string, passwordToValidate: string): void {
 		if (!userPassword?.length)
 			throw this.exceptions.unauthorized({
 				message: 'Invalid password',
@@ -123,17 +119,21 @@ export default class UserService {
 				details: 'Invalid salt or hash',
 			});
 
-		const toHash = salt + passwordToValidate + this.secret;
-		const newHash = this.cryptographyService.hashing(toHash, 'ascii', 'sha256', 'base64url');
+		const newHash = this.hashPassword(passwordToValidate, salt);
 
-		if (!this.isSameHash(hash, newHash))
+		const isSameHash = this.cryptographyService.compareBuffer(Buffer.from(hash), Buffer.from(newHash ?? ''));
+		if (!isSameHash)
 			throw this.exceptions.unauthorized({
 				message: 'Incorrect password',
 				details: 'Password hash is different from database',
 			});
 	}
 
-	// * dbRes = salt + hash(salt + password + secretEnv)
+	/**
+		@description Generates a protected password by hashing the plain text password with a secret and a salt.
+		@param plainTextPassword - The plain text password to be protected.
+		@returns salt | hash(plainTextPassword + secretEnv + salt)
+	**/
 	private protectPassword(plainTextPassword: string): string {
 		const salt = this.cryptographyService.generateSalt();
 		if (!salt)
@@ -141,8 +141,7 @@ export default class UserService {
 				message: 'Error to generate salt',
 			});
 
-		const toHash = salt + plainTextPassword + this.secret;
-		const hash = this.cryptographyService.hashing(toHash, 'ascii', 'sha256', 'base64url');
+		const hash = this.hashPassword(plainTextPassword, salt);
 		if (!hash)
 			throw this.exceptions.internal({
 				message: 'Error to generate hash',
@@ -153,10 +152,8 @@ export default class UserService {
 		return result;
 	}
 
-	private isSameHash(h1: string | null, h2: string | null): boolean {
-		const hash1 = Buffer.from(h1 ?? 'h1');
-		const hash2 = Buffer.from(h2 ?? 'h2');
-		return this.cryptographyService.compareBuffer(hash1, hash2);
+	private hashPassword(plainTextPassword: string, salt: string): string | null {
+		return this.cryptographyService.hashWithSecret('sha256', 'utf8', 'base64url', plainTextPassword, salt);
 	}
 
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any

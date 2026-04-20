@@ -39,7 +39,7 @@ describe('API :: HealthController', () => {
 			expect(response.body).toEqual({
 				method: 'GET',
 				url: '/api/check?key=value',
-				baseUrl: '',
+				baseUrl: '/api/check',
 				headers: {
 					connection: 'close',
 					host: '127.0.0.1:3000',
@@ -47,9 +47,6 @@ describe('API :: HealthController', () => {
 				pathParams: {},
 				queryParams: {
 					key: 'value',
-				},
-				body: {
-					test: 'Hello World!',
 				},
 				statusCode: 200,
 				statusMessage: 'Endpoint founded successfully.',

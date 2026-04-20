@@ -24,7 +24,7 @@ export default class UpdateUserUseCase {
 				message: 'Invalid agentUser',
 			});
 
-		const user = await this.userService.getById(id, true);
+		const user = await this.userService.getById(id);
 		const preference = await this.userPreferenceService.getByUserId(id);
 
 		this.validatePermissionToUpdateUser(agentUser, user);
@@ -39,7 +39,7 @@ export default class UpdateUserUseCase {
 			await this.userPreferenceService.update(preference.getId(), data.preference);
 
 		const [foundedUser, foundedPreference] = await Promise.all([
-			this.userService.getById(user.getId(), true),
+			this.userService.getById(user.getId()),
 			this.userPreferenceService.getByUserId(user.getId()),
 		]);
 

@@ -1,14 +1,13 @@
 /* eslint-disable import/no-extraneous-dependencies */
 import { join } from 'path';
 import webpack from 'webpack';
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const nodeExternals = require('webpack-node-externals');
+import nodeExternals from 'webpack-node-externals';
 
 const config: webpack.Configuration = {
 	mode: 'production',
 	watch: false,
 	target: 'node',
-	entry: ['webpack/hot/poll?1000', './build/main.js'],
+	entry: ['webpack/hot/poll?1000', './build/src/main.js'],
 	resolve: {
 		extensions: ['.ts', '.js'],
 	},

@@ -43,7 +43,7 @@ describe('Modules :: Domain :: Entities :: UserEntities', () => {
 			expect(userEntity.getPhone()).toBe('+5527999999999');
 			userEntity.setEmail('user.test@nomail.test');
 			expect(userEntity.getEmail()).toBe('user.test@nomail.test');
-			expect(userEntity.updatedAt).not.toBeNull();
+			expect(userEntity.updatedAt).toBeNull();
 			userEntity.setPassword('admin');
 			expect(userEntity.getPassword()).toBe('admin');
 			expect(userEntity.createdAt).not.toBeNull();

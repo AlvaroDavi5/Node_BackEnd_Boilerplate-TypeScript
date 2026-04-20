@@ -57,7 +57,7 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 		delete: jest.fn(async (_id: string, _data: { softDelete: boolean }): Promise<boolean> => false),
 	};
 
-	const agentUser = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' };
+	const agentUser = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' } as UserAuthInterface;
 
 	let deleteUserUseCase: DeleteUserUseCase;
 	let nestTestingModule: TestingModule;
@@ -95,7 +95,7 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 
 			await deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', agentUser);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
+			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(userServiceMock.delete).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.delete).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { softDelete: true, agentUserId: agentUser.clientId });
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
@@ -116,7 +116,7 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 			await expect(deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', agentUser))
 				.rejects.toMatchObject(new Error('User not deleted'));
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
+			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(userServiceMock.delete).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.delete).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', { softDelete: true, agentUserId: agentUser.clientId });
 			expect(exceptionsMock.internal).toHaveBeenCalledWith({ message: 'User not deleted' });
@@ -131,11 +131,11 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 		test('Should throw a business error', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: userEntity.getId() });
-			const otheragentUser = { username: 'test', clientId: '1' };
+			const otherAgentUser = { username: 'test', clientId: '1' } as UserAuthInterface;
 			userServiceMock.getById.mockResolvedValueOnce(userEntity);
 			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
 
-			await expect(deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', otheragentUser))
+			await expect(deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', otherAgentUser))
 				.rejects.toMatchObject(new Error('agentUser not allowed to delete this user!'));
 			expect(exceptionsMock.business).toHaveBeenCalledWith({
 				message: 'agentUser not allowed to delete this user!'
@@ -150,7 +150,7 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 			await expect(deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', agentUser))
 				.rejects.toMatchObject(new Error('User not founded by ID!'));
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
+			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
 			expect(exceptionsMock.notFound).toHaveBeenCalledWith({
 				message: 'User not founded by ID!'

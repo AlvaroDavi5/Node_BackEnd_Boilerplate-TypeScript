@@ -1,5 +1,6 @@
 import UserEntity from '@domain/entities/User.entity';
 import UserStrategy from '@app/user/strategies/User.strategy';
+import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 
 
 describe('Modules :: App :: User :: Strategies :: UserStrategy', () => {
@@ -8,7 +9,7 @@ describe('Modules :: App :: User :: Strategies :: UserStrategy', () => {
 	describe('# Allowed to Manage User', () => {
 		describe('# Same Agent is Allowed', () => {
 			test('Should return true', () => {
-				const agentUser = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' };
+				const agentUser = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' } as UserAuthInterface;
 				const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
 				expect(userStrategy.isAllowedToManageUser(agentUser, userEntity)).toBe(true);
 			});
@@ -16,12 +17,12 @@ describe('Modules :: App :: User :: Strategies :: UserStrategy', () => {
 
 		describe('# Another Agent is Not Allowed', () => {
 			test('Should return false due ID', () => {
-				const agentUser = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' };
+				const agentUser = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' } as UserAuthInterface;
 				const userEntity = new UserEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
 				expect(userStrategy.isAllowedToManageUser(agentUser, userEntity)).toBe(false);
 			});
 			test('Should return false due username', () => {
-				const agentUser = { username: 'tester@nomail.test', clientId: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d' };
+				const agentUser = { username: 'tester@nomail.test', clientId: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d' } as UserAuthInterface;
 				const userEntity = new UserEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
 				expect(userStrategy.isAllowedToManageUser(agentUser, userEntity)).toBe(false);
 			});

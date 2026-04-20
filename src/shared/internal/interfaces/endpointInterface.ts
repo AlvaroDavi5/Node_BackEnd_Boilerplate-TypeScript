@@ -9,7 +9,6 @@ export interface RequestInterface extends FastifyRequest {
 }
 export type ResponseInterface = FastifyReply
 export type RequestFileInterface = MultipartFile
-export type NextFunctionInterface = (error?: Error | null) => void
 
 type PartialMessageEventType<T> = Partial<MessageEvent<T>>
 type SseInterface<TD = unknown> =
@@ -24,6 +23,4 @@ export interface EndpointInterface {
 	error: errorType,
 	request: RequestInterface,
 	response: ResponseInterface,
-	next: NextFunctionInterface,
 }
-

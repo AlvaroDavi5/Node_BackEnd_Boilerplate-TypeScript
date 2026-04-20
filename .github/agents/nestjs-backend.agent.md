@@ -39,7 +39,7 @@ Always follow the layered flow defined in [architecture-flow-and-code-style.inst
 3. Ensure no tests are broken; update tests if behavior changes.
 
 ### When reviewing code
-1. Run [staged security scanner](../skills/staged-security-review/scripts/review-staged-security.sh) or invoke the `staged-security-review` skill.
+1. Run [staged security scanner](../skills/staged-security-review/SKILL.md) or invoke the `staged-security-review` skill.
 2. Check layer responsibilities, mutation risks, naming and lint compliance.
 3. Report findings with severity, file+line evidence and fix suggestion.
 

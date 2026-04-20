@@ -1,9 +1,11 @@
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
 import request from 'supertest';
 import { fastifyAdapter } from '@core/configs/nestApi.config';
 import Exceptions from '@core/errors/Exceptions';
-import LoggerService from '@core/logging/Logger.service';
+import CryptographyService from '@core/security/Cryptography.service';
+import LoggerService, { RequestLoggerProvider } from '@core/logging/Logger.service';
 import UserEntity, { IViewUser } from '@domain/entities/User.entity';
 import UserListEntity from '@domain/entities/generic/UserList.entity';
 import UserPreferenceEntity, { IViewUserPreference } from '@domain/entities/UserPreference.entity';
@@ -18,6 +20,7 @@ import AuthGuard from '@api/guards/Auth.guard';
 import EventEmitterClient from '@events/emitter/EventEmitter.client';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import { configServiceMock } from '@dev/mocks/mockedModules';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
 import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
@@ -51,6 +54,7 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 				UserController,
 			],
 			providers: [
+				{ provide: ConfigService, useValue: configServiceMock },
 				{ provide: LoginUserUseCase, useValue: {} },
 				{ provide: ListUsersUseCase, useValue: listUsersUseCaseMock },
 				{ provide: CreateUserUseCase, useValue: {} },
@@ -58,9 +62,11 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 				{ provide: UpdateUserUseCase, useValue: {} },
 				{ provide: DeleteUserUseCase, useValue: {} },
 				EventEmitterClient,
+				CryptographyService,
 				DataParserHelper,
 				Exceptions,
 				LoggerService,
+				RequestLoggerProvider,
 			],
 			exports: [],
 		})

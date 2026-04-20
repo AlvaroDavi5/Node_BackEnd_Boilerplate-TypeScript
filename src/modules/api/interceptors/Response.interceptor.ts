@@ -1,6 +1,6 @@
 import { Injectable, Inject, Scope, NestInterceptor, CallHandler, ExecutionContext, StreamableFile } from '@nestjs/common';
 import { Observable, tap, catchError } from 'rxjs';
-import CryptographyService from '@core/security/Cryptography.service';
+import { v4 as uuidV4 } from 'uuid';
 import LoggerService, { REQUEST_LOGGER_PROVIDER } from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { isDefined, isNullOrUndefined, normalizeToArray } from '@common/utils/dataValidations.util';
@@ -13,7 +13,6 @@ import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces
 @Injectable({ scope: Scope.REQUEST })
 export default class ResponseInterceptor implements NestInterceptor {
 	constructor(
-		private readonly cryptographyService: CryptographyService,
 		private readonly dataParserHelper: DataParserHelper,
 		@Inject(REQUEST_LOGGER_PROVIDER) private readonly logger: LoggerService,
 	) { }
@@ -28,7 +27,7 @@ export default class ResponseInterceptor implements NestInterceptor {
 		const { method, params, query, body, headers } = request;
 
 		const [headerRequestId] = normalizeToArray<string | undefined>(headers['x-request-id']);
-		const requestId = headerRequestId ?? request?.id ?? this.cryptographyService.generateUuid();
+		const requestId = headerRequestId ?? request?.id ?? uuidV4();
 		if (requestId) {
 			request.id = requestId;
 			response.header('x-request-id', requestId);

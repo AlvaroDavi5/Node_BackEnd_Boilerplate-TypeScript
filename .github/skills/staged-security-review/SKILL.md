@@ -34,9 +34,6 @@ Review in this order:
 
 ### Step 3 — Run Automated Baseline
 If `.ts` or `.js` files are staged and `eslint` is available, run:
-```
-npx eslint <staged_files> --quiet
-```
 
 ### Step 4 — Manual Diff Review
 Review `git diff --cached` looking for:

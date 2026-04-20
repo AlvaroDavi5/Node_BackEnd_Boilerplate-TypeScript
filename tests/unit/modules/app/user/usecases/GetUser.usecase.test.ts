@@ -7,6 +7,7 @@ import UserService from '@app/user/services/User.service';
 import UserPreferenceService from '@app/user/services/UserPreference.service';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
+import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 
 
 describe('Modules :: App :: User :: UseCases :: GetUserUseCase', () => {
@@ -52,7 +53,7 @@ describe('Modules :: App :: User :: UseCases :: GetUserUseCase', () => {
 		delete: jest.fn(async (_id: string, _data: { softDelete: boolean }): Promise<boolean> => false),
 	};
 
-	const agentUser = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' };
+	const agentUser = { username: 'user.test@nomail.test', clientId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d' } as UserAuthInterface;
 
 	let getUserUseCase: GetUserUseCase;
 	let nestTestingModule: TestingModule;
@@ -86,7 +87,7 @@ describe('Modules :: App :: User :: UseCases :: GetUserUseCase', () => {
 
 			const result = await getUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', agentUser);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
-			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', true);
+			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(result?.getId()).toBe(userEntity.getId());

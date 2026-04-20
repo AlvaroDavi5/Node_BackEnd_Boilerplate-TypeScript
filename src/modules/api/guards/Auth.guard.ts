@@ -1,4 +1,5 @@
 import { Injectable, CanActivate, ExecutionContext, Scope } from '@nestjs/common';
+import { JwtPayload } from 'jsonwebtoken';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 import CryptographyService from '@core/security/Cryptography.service';
@@ -36,6 +37,17 @@ export default class AuthGuard implements CanActivate {
 		}
 
 		const token = authorization.replace('Bearer ', '');
+		const content = this.validateTokenContent(token);
+
+		request.user = {
+			username: content?.username ?? content['cognito:username'],
+			clientId: content?.clientId ?? content?.client_id ?? content?.sub,
+		};
+
+		return true;
+	}
+
+	private validateTokenContent(token: string): UserAuthInterface & JwtPayload {
 		const { content, invalidSignature, expired } = this.cryptographyService.decodeJwt<UserAuthInterface>(token);
 
 		if (!content || typeof content !== 'object') {
@@ -51,17 +63,12 @@ export default class AuthGuard implements CanActivate {
 				});
 			}
 
-			this.logger.warn(`Request with invalid authorization token content: ${content}`);
+			this.logger.warn('Request with invalid authorization token content:', content);
 			throw this.exceptions.invalidToken({
 				message: 'Authorization token is invalid',
 			});
 		}
 
-		request.user = {
-			username: content?.username ?? content['cognito:username'],
-			clientId: content?.clientId ?? content?.client_id,
-		};
-
-		return true;
+		return content;
 	}
 }

@@ -15,12 +15,12 @@ export default class UpdateUserInputDto implements IUpdateUser {
 	@IsOptional()
 	public fullName?: string;
 
-	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: undefined, nullable: false, required: false })
+	@ApiProperty({ type: String, example: 'tester.user@nomail.com', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
 	public email?: string;
 
-	@ApiProperty({ type: String, example: 'pass123', default: undefined, nullable: false, required: false })
+	@ApiProperty({ type: String, example: 'TestUser1!', default: undefined, nullable: false, required: false })
 	@IsString()
 	@IsOptional()
 	public password?: string;

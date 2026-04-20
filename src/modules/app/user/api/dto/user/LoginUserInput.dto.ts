@@ -4,12 +4,12 @@ import { LoginUserSchemaInterface } from '@app/user/api/schemas/user/loginUser.s
 
 
 export default class LoginUserInputDto implements LoginUserSchemaInterface {
-	@ApiProperty({ type: String, example: 'user.default@nomail.dev', default: '', nullable: false, required: true })
+	@ApiProperty({ type: String, example: 'tester.user@nomail.com', default: '', nullable: false, required: true })
 	@IsString()
 	@IsNotEmpty()
 	public email!: string;
 
-	@ApiProperty({ type: String, example: 'pass123', default: '', nullable: false, required: true })
+	@ApiProperty({ type: String, example: 'TestUser1!', default: '', nullable: false, required: true })
 	@IsString()
 	@IsNotEmpty()
 	public password!: string;

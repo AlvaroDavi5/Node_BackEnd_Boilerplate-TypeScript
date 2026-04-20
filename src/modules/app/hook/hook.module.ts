@@ -1,5 +1,4 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import RequestMiddleware from '@api/middlewares/Request.middleware';
+import { Module } from '@nestjs/common';
 import HookController from './api/controllers/Hook.controller';
 import WebhookService from './services/Webhook.service';
 
@@ -16,12 +15,4 @@ import WebhookService from './services/Webhook.service';
 		WebhookService,
 	],
 })
-export default class HookModule implements NestModule {
-	configure(consumer: MiddlewareConsumer) {
-		consumer
-			.apply(RequestMiddleware)
-			.forRoutes(
-				HookController,
-			);
-	}
-}
+export default class HookModule { }

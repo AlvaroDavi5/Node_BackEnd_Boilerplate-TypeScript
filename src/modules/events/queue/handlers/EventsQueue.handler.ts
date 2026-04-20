@@ -33,11 +33,10 @@ export default class EventsQueueHandler implements OnModuleInit {
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 	) {
-		const { environment } = this.configService.get<ConfigsInterface['application']>('application')!;
-		const { secretKey } = this.configService.get<ConfigsInterface['security']>('security')!;
-
 		this.schemaValidator = new SchemaValidator(this.exceptions, this.logger);
-		this.envSecretHash = this.cryptographyService.hashing(`${environment}${secretKey}`, 'utf8', 'sha256', 'base64');
+
+		const { environment } = this.configService.get<ConfigsInterface['application']>('application')!;
+		this.envSecretHash = this.cryptographyService.hashWithSecret('sha256', 'utf8', 'base64', environment);
 	}
 
 	public onModuleInit(): void {

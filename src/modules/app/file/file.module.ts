@@ -1,5 +1,4 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import RequestMiddleware from '@api/middlewares/Request.middleware';
+import { Module } from '@nestjs/common';
 import FileController from './api/controllers/File.controller';
 import FileStrategy from './strategies/File.strategy';
 import FileService from './services/File.service';
@@ -18,12 +17,4 @@ import FileService from './services/File.service';
 		FileStrategy,
 	],
 })
-export default class FileModule implements NestModule {
-	configure(consumer: MiddlewareConsumer) {
-		consumer
-			.apply(RequestMiddleware)
-			.forRoutes(
-				FileController,
-			);
-	}
-}
+export default class FileModule { }

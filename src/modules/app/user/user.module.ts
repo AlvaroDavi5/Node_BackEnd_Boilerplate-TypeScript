@@ -1,5 +1,4 @@
-import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
-import RequestMiddleware from '@api/middlewares/Request.middleware';
+import { Module } from '@nestjs/common';
 import UserController from './api/controllers/User.controller';
 import UserStrategy from './strategies/User.strategy';
 import LoginUserUseCase from './usecases/LoginUser.usecase';
@@ -34,12 +33,4 @@ import UserPreferenceRepository from './repositories/userPreference/UserPreferen
 	],
 	exports: [],
 })
-export default class UserModule implements NestModule {
-	configure(consumer: MiddlewareConsumer) {
-		consumer
-			.apply(RequestMiddleware)
-			.forRoutes(
-				UserController,
-			);
-	}
-}
+export default class UserModule { }

@@ -30,6 +30,43 @@ export default class CryptographyService {
 		return crypto.timingSafeEqual(b1, b2);
 	}
 
+	public generateUuid(): string {
+		return uuidV4();
+	}
+
+	public generateSalt(rounds = 10, minor: 'a' | 'b' = 'b'): string {
+		return genSaltSync(rounds, minor);
+	}
+
+	public hashing(data: string, inputEncoding: BufferEncoding, algorithm: hashAlgorithmType, outputFormat: crypto.BinaryToTextEncoding): string | null {
+		try {
+			const hash = crypto.createHash(algorithm);
+			return hash.update(data, inputEncoding).digest(outputFormat);
+		} catch (_error) {
+			return null;
+		}
+	}
+
+	/**
+		@description Hashes the data with the secret key from environment variables and an optional salt.
+		@param algorithm - The hashing algorithm to use (e.g., 'sha256').
+		@param inputEncoding - The encoding of the input data (e.g., 'utf8').
+		@param outputFormat - The encoding of the output hash (e.g., 'base64url').
+		@param data - The data to be hashed.
+		@param salt - An optional salt to be added to the data before hashing. If not provided, only the secret key will be used as salt.
+		@returns hash(data + secretEnv + salt)
+	**/
+	public hashWithSecret(
+		algorithm: hashAlgorithmType,
+		inputEncoding: BufferEncoding,
+		outputFormat: crypto.BinaryToTextEncoding,
+		data: string,
+		salt?: string
+	): string | null {
+		const toHash = data + this.secret + (salt ?? '');
+		return this.hashing(toHash, inputEncoding, algorithm, outputFormat);
+	}
+
 	public encodeJwt<PT extends object = object>(payload: jwtEncode<PT>, inputEncoding: BufferEncoding, expiration?: jwtExpirationType): string {
 		return sign(payload, this.secret, {
 			algorithm: 'HS256',
@@ -73,14 +110,6 @@ export default class CryptographyService {
 		}
 	}
 
-	public generateUuid(): string {
-		return uuidV4();
-	}
-
-	public generateSalt(rounds = 10, minor: 'a' | 'b' = 'b'): string {
-		return genSaltSync(rounds, minor);
-	}
-
 	public generateRSAKeyPair(keySize: 1024 | 2048): crypto.KeyPairSyncResult<string, string> {
 		return crypto.generateKeyPairSync('rsa', {
 			modulusLength: keySize,
@@ -93,15 +122,6 @@ export default class CryptographyService {
 				format: 'pem',
 			},
 		});
-	}
-
-	public hashing(data: string, inputEncoding: BufferEncoding, algorithm: hashAlgorithmType, outputFormat: crypto.BinaryToTextEncoding): string | null {
-		try {
-			const hash = crypto.createHash(algorithm);
-			return hash.update(data, inputEncoding).digest(outputFormat);
-		} catch (_error) {
-			return null;
-		}
 	}
 
 	public contentRSASign(

@@ -1,8 +1,7 @@
-import { MiddlewareConsumer, Module, NestModule } from '@nestjs/common';
+import { Module } from '@nestjs/common';
 import { SqsModule } from '@ssut/nestjs-sqs';
 import SubscriptionService from '@app/subscription/services/Subscription.service';
 import GetSubscriptionUseCase from '@app/subscription/usecases/GetSubscription.usecase';
-import RequestMiddleware from '@api/middlewares/Request.middleware';
 import ServerEventsController from './api/controllers/ServerEvents.controller';
 import EventEmitterClient from './emitter/EventEmitter.client';
 import WebSocketServer from './websocket/server/WebSocket.server';
@@ -39,12 +38,4 @@ import EventsQueueProducer from './queue/producers/EventsQueue.producer';
 		EventsQueueConsumer,
 	],
 })
-export default class EventsModule implements NestModule {
-	configure(consumer: MiddlewareConsumer) {
-		consumer
-			.apply(RequestMiddleware)
-			.forRoutes(
-				ServerEventsController,
-			);
-	}
-}
+export default class EventsModule { }

@@ -1,12 +1,14 @@
 import { NestFastifyApplication } from '@nestjs/platform-fastify';
 import { Test, TestingModule } from '@nestjs/testing';
+import { ConfigService } from '@nestjs/config';
 import request from 'supertest';
 import { fastifyAdapter } from '@core/configs/nestApi.config';
-import LoggerService from '@core/logging/Logger.service';
+import LoggerService, { RequestLoggerProvider } from '@core/logging/Logger.service';
 import HealthController from '@api/controllers/Health.controller';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
+import { configServiceMock } from '@dev/mocks/mockedModules';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
 
 
@@ -33,9 +35,11 @@ describe('Modules :: API :: HealthController', () => {
 				HealthController,
 			],
 			providers: [
+				{ provide: ConfigService, useValue: configServiceMock },
 				HttpMessagesConstants,
 				DataParserHelper,
 				LoggerService,
+				RequestLoggerProvider,
 			],
 			exports: [],
 		})

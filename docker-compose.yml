@@ -108,8 +108,9 @@ services:
     container_name: Cloud_LocalStack
     image: localstack/localstack:latest
     environment:
+      LOCALSTACK_AUTH_TOKEN: ${LOCALSTACK_AUTH_TOKEN}
       AWS_DEFAULT_REGION: us-east-1
-      EDGE_PORT: 4566
+      GATEWAY_LISTEN: 0.0.0.0:4566
       SERVICES: sqs,sns,s3,cognito
       SKIP_SSL_CERT_DOWNLOAD: 1
     ports:

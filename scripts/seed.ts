@@ -48,6 +48,12 @@ async function seedDatabase(): Promise<void> {
 		defaultTheme: 'DARK',
 		imagePath: './generic.png',
 	}).save();
+
+	console.info(
+		'\n # Database seeded successfully \n'
+	);
+
+	await connection.destroy();
 }
 
 seedDatabase();

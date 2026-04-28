@@ -28,7 +28,7 @@
 	"editor.unicodeHighlight.ambiguousCharacters": false,
 	// Workbench
 	"workbench.editor.restoreViewState": true,
-	// Git
+	// Versioning
 	"scm.defaultViewMode": "tree",
 	"git.autofetch": true,
 	"git.enableSmartCommit": true,

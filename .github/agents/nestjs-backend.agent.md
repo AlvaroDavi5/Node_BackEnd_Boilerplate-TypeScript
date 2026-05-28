@@ -31,7 +31,7 @@ Always follow the layered flow defined in [architecture-flow-and-code-style.inst
 ### When implementing a new feature
 1. Identify the correct layer for each piece of logic.
 2. Create or update files in this order: entity/DTO → data_provider → logic_provider → trigger.
-3. Use `/create-usecase-with-tests` prompt when creating a usecase — always produce the unit test alongside it.
+3. Use [create usecase with tests](../prompts/create-usecase-with-tests.prompt.md) prompt when creating a usecase — always produce the unit test alongside it.
 
 ### When refactoring
 1. Read the existing code fully before proposing changes.

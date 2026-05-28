@@ -26,7 +26,7 @@ If the user does not specify a module path, ask before proceeding.
 Create `src/modules/<module>/usecases/<Name>.usecase.ts` following these rules:
 
 - Annotate with `@Injectable()`.
-- Inject all dependencies via constructor with `private readonly`.
+- Inject all dependencies via constructor with `private readonly`. Example: `constructor(private readonly userRepository: UserRepository, private readonly logger: LoggerService)`.
 - Expose a single public `execute(...)` method with typed parameters and return type.
 - Follow the architecture flow: **trigger → logic_provider → data_provider** (the usecase is the `logic_provider`; never access DB or IO directly).
 - No payload mutation: create copies when transforming data.

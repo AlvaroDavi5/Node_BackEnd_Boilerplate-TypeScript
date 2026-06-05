@@ -124,7 +124,7 @@
 		"@swc/core": "^1.13.21",
 		"@swc/helpers": "^0.5.21",
 		"@swc/jest": "^0.2.39",
-		"axios": "^1.15.0",
+		"axios": "^1.16.0",
 		"axios-retry": "^4.5.0",
 		"bcrypt": "^6.0.0",
 		"class-transformer": "^0.5.1",

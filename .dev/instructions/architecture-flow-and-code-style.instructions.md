@@ -13,13 +13,14 @@ applyTo: "{src,tests,scripts}/**/*.{ts,js}"
 
 ## Trigger Layer
 Allowed types:
-| Type | Description |
-|---|---|
-| `httpController` | Activated by HTTP requests |
-| `webSocketServer` | WebSocket connections |
-| `eventEmitter` | Internal application events |
-| `cronJob` | Scheduled job scheduler |
-| `queueConsumer` | Message queue consumer |
+|        Type       |       Description             |
+|-------------------|-------------------------------|
+| `httpController`  | Activated by HTTP requests    |
+| `graphqlResolver` | Activated by GraphQL requests |
+| `webSocketServer` | WebSocket connections         |
+| `eventEmitter`    | Internal application events   |
+| `cronJob`         | Scheduled job scheduler       |
+| `queueConsumer`   | Message queue consumer        |
 
 Responsibilities:
 - Receive and validate entrypoint input.
@@ -28,10 +29,10 @@ Responsibilities:
 
 ## Logic Provider Layer
 Allowed types:
-| Type | Description |
-|---|---|
-| `usecase` | Orchestrates business rules |
-| `cronTask` | Actions executed after a scheduled cron fires |
+|      Type      |                          Description                      |
+|----------------|-----------------------------------------------------------|
+|   `usecase`    | Orchestrates business rules                               |
+|   `cronTask`   | Actions executed after a scheduled cron fires             |
 | `queueHandler` | Actions after consuming and deserializing a queue message |
 
 Responsibilities:
@@ -41,12 +42,12 @@ Responsibilities:
 
 ## Data Provider Layer
 Allowed types:
-| Type | Description |
-|---|---|
-| `repository` | Database access |
-| `dataClient` | Cache or data lake access |
-| `service` | Wrapper for crypto libraries, dataClients, eventEmitter calls |
-| `httpClient` | External service HTTP calls |
+|     Type     |                          Description                          |
+|--------------|---------------------------------------------------------------|
+| `repository` | Database access                                               |
+| `dataClient` | Cache or data lake access                                     |
+| `service`    | Wrapper for crypto libraries, dataClients, eventEmitter calls |
+| `httpClient` | External service HTTP calls                                   |
 
 Responsibilities:
 - Encapsulate all IO and infrastructure concerns.
@@ -58,13 +59,15 @@ Responsibilities:
 - Avoid global mutable state or variables.
 - Save complex or compound conditions in a named `boolean` variable before branching.
 - Prefer `const` over `let`; only use `let` when reassignment is strictly necessary.
+- Never bypass TypeScript type safety with `any`. If strictly necessary, use `unknown` and cast to the expected type with a documented reason.
+- Do no bypass TypeScript type with `// @ts-ignore` without a documented reason.
 
 ## Naming Conventions (Hard Rules)
-| Context | Convention | Example |
-|---|---|---|
-| Variables and functions | `camelCase` | `getUserById`, `isActive` |
-| Classes and interfaces | `PascalCase` | `UserRepository`, `CreateUserDto` |
-| Constants | `SNAKE_CASE` (in UPPER_CASE) | `MAX_RETRY_COUNT`, `DEFAULT_TIMEOUT` |
+|         Context         |          Convention          |               Example                |
+|-------------------------|------------------------------|--------------------------------------|
+| Variables and functions | `camelCase`                  | `getUserById`, `isActive`            |
+| Classes and interfaces  | `PascalCase`                 | `UserRepository`, `CreateUserDto`    |
+|       Constants         | `SNAKE_CASE` (in UPPER_CASE) | `MAX_RETRY_COUNT`, `DEFAULT_TIMEOUT` |
 
 ## Formatting and Lint
 - All generated and modified code must pass ESLint rules defined in `eslint.config.ts`.

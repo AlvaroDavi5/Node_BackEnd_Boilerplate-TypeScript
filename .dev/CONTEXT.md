@@ -11,7 +11,7 @@ Full reference: [`docs/system-overview.md`](../docs/system-overview.md)
 ### Main Technologies
 
 | Technology | Role |
-|---|---|
+| --- | --- |
 | **TypeScript / Node.js** | Runtime and language |
 | **NestJS** | Back-end framework |
 | **Fastify** | HTTP server adapter |
@@ -54,81 +54,25 @@ npm run start:dev
 
 ## NestJS Framework
 
-### Architecture — Hexagonal Layered Flow
+Architecture rules, layer definitions, naming conventions, and code quality hard rules are defined in [`architecture-flow-and-code-style.instructions.md`](./instructions/architecture-flow-and-code-style.instructions.md).
 
-All code must follow this strict execution order:
+The mandatory execution order is: `trigger → logic_provider → data_provider`.
 
-```
-trigger → logic_provider → data_provider
-```
-
-Never skip layers. Never call `data_provider` directly from `trigger`.
-
-#### Trigger Layer
-
-Entry points that receive external input:
-
-| Type | Description |
-|---|---|
-| `httpController` | HTTP request handler |
-| `webSocketServer` | WebSocket connection handler |
-| `eventEmitter` | Internal application event listener |
-| `cronJob` | Scheduled job scheduler |
-| `queueConsumer` | Message queue consumer |
-
-Responsibilities: receive and validate input, delegate all business logic to `logic_provider`.
-
-#### Logic Provider Layer
-
-Orchestrators of business rules:
-
-| Type | Description |
-|---|---|
-| `usecase` | Orchestrates business rules |
-| `cronTask` | Actions executed after a scheduled cron fires |
-| `queueHandler` | Actions after consuming and deserializing a queue message |
-
-Auxiliary providers allowed here: `services`, `mappers`, `helpers`, `utils`.
-Must not perform direct persistence or IO when a dedicated `data_provider` exists.
-
-#### Data Provider Layer
-
-Infrastructure and IO encapsulation:
-
-| Type | Description |
-|---|---|
-| `repository` | Database access (TypeORM) |
-| `dataClient` | Cache or data lake access (Redis, S3) |
-| `service` | Wrapper for crypto libraries, dataClients, eventEmitter calls |
-| `httpClient` | External service HTTP calls |
-
-### NestJS Usage Rules
+### NestJS Usage Patterns
 
 - Annotate providers with `@Injectable()`.
+- Declare providers, imports, and exports per module with `@Module()`.
 - Inject dependencies via constructor using `private readonly`.
-- Use `@Module()` to declare providers, imports, and exports per module.
-- Use NestJS `Test.createTestingModule` for unit tests — never plain class instantiation.
-- Use `ExceptionFilter` and `HttpException` subclasses for error handling.
-- Use `ValidationPipe` with `class-validator` for DTO validation at controller boundaries.
+- Use `ExceptionFilter` and `HttpException` subclasses for error handling — never throw raw `Error` from controllers.
+- Use `ValidationPipe` with `class-validator` decorators for DTO validation at controller boundaries.
 - Use `ConfigService` for environment variable access — never `process.env` directly.
-
-### Code Quality Rules
-
-- Never mutate payload objects shared across methods — create copies.
-- No global mutable state.
-- Extract complex conditions to named boolean variables.
-- Prefer `const` over `let`.
-- Naming conventions:
-  - `camelCase` — variables and functions
-  - `PascalCase` — classes and interfaces
-  - `SNAKE_CASE` — constants (UPPER_CASE)
-- All output must pass ESLint + Prettier as configured in the project.
+- Use NestJS `Test.createTestingModule` for unit tests — never plain class instantiation.
 
 ---
 
 ## GraphQL
 
-The application exposes a GraphQL endpoint at `/graphql`.
+The application exposes a GraphQL endpoint at `/graphql`. Use `@Resolver()`, `@Query()`, `@Mutation()`, and `@Args()` decorators from `@nestjs/graphql`. Input types use `@InputType()` and output types use `@ObjectType()`.
 
 ### Query Example — List Connections
 

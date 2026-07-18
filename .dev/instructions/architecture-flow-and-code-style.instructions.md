@@ -11,7 +11,7 @@ applyTo: "{src,tests,scripts}/**/*.{ts,js}"
 - Do not skip layers and do not call `data_provider` directly from `trigger`.
 - `logic_provider` may delegate to auxiliary providers (`services`, `mappers`, `helpers`, `utils`) but must not bypass the layer contract.
 
-## Trigger Layer
+### Trigger Layer
 Allowed types:
 |        Type       |       Description             |
 |-------------------|-------------------------------|
@@ -27,7 +27,7 @@ Responsibilities:
 - Delegate all business logic to `logic_provider`.
 - Avoid business rules and persistence logic in this layer.
 
-## Logic Provider Layer
+### Logic Provider Layer
 Allowed types:
 |      Type      |                          Description                      |
 |----------------|-----------------------------------------------------------|
@@ -40,7 +40,7 @@ Responsibilities:
 - Auxiliary providers allowed here: `services`, `mappers`, `helpers`, `utils`.
 - Must not perform direct persistence or IO when a dedicated `data_provider` exists.
 
-## Data Provider Layer
+### Data Provider Layer
 Allowed types:
 |     Type     |                          Description                          |
 |--------------|---------------------------------------------------------------|
@@ -55,12 +55,12 @@ Responsibilities:
 
 ## Code Quality (Hard Rules)
 - Preserve data integrity during manipulation and persistence.
-- Never mutate payload objects shared with other methods — create copies when needed.
+- Never mutate inputs and payload objects shared with other methods — create copies when needed.
 - Avoid global mutable state or variables.
 - Save complex or compound conditions in a named `boolean` variable before branching.
 - Prefer `const` over `let`; only use `let` when reassignment is strictly necessary.
 - Never bypass TypeScript type safety with `any`. If strictly necessary, use `unknown` and cast to the expected type with a documented reason.
-- Do no bypass TypeScript type with `// @ts-ignore` without a documented reason.
+- Do not bypass TypeScript types with `// @ts-ignore` without a documented reason.
 
 ## Naming Conventions (Hard Rules)
 |         Context         |          Convention          |               Example                |
@@ -77,7 +77,7 @@ Responsibilities:
 ## Implementation Checklist
 - [ ] Layering follows `trigger -> logic_provider -> data_provider`.
 - [ ] Each type belongs to its correct layer.
-- [ ] No payload objects are mutated across method boundaries.
+- [ ] No inputs or payload objects are mutated across method boundaries.
 - [ ] No global mutable variables introduced.
 - [ ] Complex conditions are extracted to named booleans.
 - [ ] `const` is used wherever reassignment is not needed.

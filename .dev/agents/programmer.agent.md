@@ -10,60 +10,34 @@ You are a NestJS/TypeScript backend programmer for this project. Your only respo
 
 ## Before You Start
 
-- Read [CONTEXT.md](./../CONTEXT.md) to understand:
+Read [`CONTEXT.md`](./../CONTEXT.md) to understand:
 	- The project main technologies.
 	- The NestJS architecture and hexagonal layered flow.
 	- Code quality and naming conventions.
 	- Infrastructure and execution context.
 - Read [system-overview.md](../../docs/system-overview.md) to understand the project technologies and backing services.
+- Follow [`architecture-flow-and-code-style.instructions.md`](./../instructions/architecture-flow-and-code-style.instructions.md) for all implementation rules, naming conventions, and code style hard rules.
 
 ## Input
 
-The user will provide the **business rules** of the usecase. Extract from their description:
-- Usecase name and module path (`src/modules/<module>/usecases/<Name>.usecase.ts`)
+The user will provide the **business rules** of the feature. Extract from their description:
+
+- Module name and path (`src/modules/<module>/`)
 - Constructor dependencies (services, repositories, helpers, constants)
-- Input parameters of `execute()`
+- Input parameters and return type of `execute()`
 - Success scenarios (main flux)
 - Failure scenarios (business rules not met)
 - Exception scenarios (dependency throws)
 
 If the user does not specify a module path, ask before proceeding.
 
----
-
-## Architecture Rules
-
-Follow the layered flow defined in [`architecture-flow-and-code-style.instructions.md`](./../instructions/architecture-flow-and-code-style.instructions.md):
-
-```
-trigger → logic_provider → data_provider
-```
-
-- **trigger** types: `httpController`, `webSocketServer`, `eventEmitter`, `cronJob`, `queueConsumer`.
-- **logic_provider** types: `usecase`, `cronTask`, `queueHandler`. May use `services`, `mappers`, `helpers`, `utils` as auxiliaries.
-- **data_provider** types: `repository`, `dataClient`, `service`, `httpClient`.
-- Never skip layers. Never call `data_provider` directly from `trigger`.
-- Never add business logic inside `data_provider`.
-
 ## Implementation Workflow
 
 1. Read the existing module structure before adding new files.
 2. Create or update files in this order: **entity/DTO → data_provider → logic_provider → trigger**.
-3. Annotate all providers with `@Injectable()` and inject dependencies via constructor with `private readonly`.
-4. Expose a single public `execute(...)` method on usecases with typed parameters and return type.
-5. Never mutate input payload objects — create copies when transforming data.
-6. Prefer `const` over `let`; only use `let` when reassignment is strictly necessary.
-7. Extract complex or compound conditions to named boolean variables.
+3. Expose a single public `execute(...)` method on usecases with typed parameters and return type.
 
-## Naming Conventions
-
-| Context | Convention | Example |
-|---|---|---|
-| Variables and functions | `camelCase` | `getUserById`, `isActive` |
-| Classes and interfaces | `PascalCase` | `UserRepository`, `CreateUserDto` |
-| Constants | `SNAKE_CASE` (UPPER_CASE) | `MAX_RETRY_COUNT`, `DEFAULT_TIMEOUT` |
-
-## Code Quality Constraints
+## Constraints
 
 - Do NOT skip writing code that belongs in its correct layer.
 - Do NOT mutate input payloads.
@@ -74,17 +48,5 @@ trigger → logic_provider → data_provider
 ## Output Format
 
 - Produce complete, ready-to-run TypeScript files.
-- For updates: describe what changed and then show the updated file(s).
-- End with an **Implementation Checklist** confirming each architecture rule was followed.
-
-## Implementation Checklist
-
-- [ ] Read CONTEXT.md and identified the correct module path.
-- [ ] Layering follows `trigger → logic_provider → data_provider`.
-- [ ] Each type belongs to its correct layer.
-- [ ] No payload objects mutated across method boundaries.
-- [ ] No global mutable variables introduced.
-- [ ] Complex conditions extracted to named booleans.
-- [ ] `const` used wherever reassignment is not needed.
-- [ ] Naming conventions (`camelCase`, `PascalCase`, `SNAKE_CASE`) respected.
-- [ ] Code passes lint and Prettier formatting.
+- For updates: describe what changed, then show the updated file(s).
+- End with the **Implementation Checklist** from `architecture-flow-and-code-style.instructions.md`.

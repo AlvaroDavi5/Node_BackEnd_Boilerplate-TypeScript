@@ -37,41 +37,7 @@ tests/
 
 ## Unit Tests
 
-Follow the patterns in [`create-usecase-with-tests.instructions.md`](./../instructions/create-usecase-with-tests.instructions.md):
-
-- Use `Test.createTestingModule` from NestJS for all provider tests.
-- Mock all dependencies as plain objects with `jest.fn()`.
-- Default mock behavior: `throw new Error('GenericError')` for methods that can fail.
-- Use `mockResolvedValueOnce` / `mockRejectedValueOnce` — never persistent `mockResolvedValue`.
-- `afterEach(() => jest.clearAllMocks())` must be present at the top-level `describe`.
-- Each test asserts both the return value and mock call counts/arguments.
-
-### `describe` Label Format
-
-```
-'Modules :: <Module> :: <SubPath> :: <Layer> :: <ClassName>'
-```
-
-### Scenario Groups
-
-```typescript
-describe('# Main Flux', () => { /* success paths */ });
-describe('# <PrivateMethod>', () => { /* private method branches */ });
-describe('# Exceptions', () => { /* error propagation and business exceptions */ });
-```
-
-### Exception Assertion Pattern
-
-```typescript
-await expect(subject.execute(...)).rejects.toMatchObject(new Error('<message>'));
-```
-
-### Scenarios to Always Cover
-
-- All success paths through the public method.
-- Each guard/validation that triggers a business, notFound, conflict, or unauthorized exception.
-- Each dependency that can throw — verify the error bubbles correctly.
-- **Edge cases**: `null`, `undefined`, empty collections, wrong-type inputs (e.g. `string` where `number` expected), boundary values.
+All unit test patterns, mock rules, describe label format, scenario groups, exception assertion pattern, and scenarios to cover are defined in [`create-usecase-with-tests.instructions.md`](./../instructions/create-usecase-with-tests.instructions.md) — follow them strictly.
 
 ## Integration Tests
 

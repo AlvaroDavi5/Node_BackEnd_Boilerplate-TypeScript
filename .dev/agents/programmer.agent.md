@@ -22,6 +22,16 @@ You are a NestJS/TypeScript backend programmer for this project. Your only respo
 - Read [system-overview.md](../../docs/system-overview.md) to understand the project technologies and backing services.
 - Follow [`architecture-flow-and-code-style.instructions.md`](./../instructions/architecture-flow-and-code-style.instructions.md) for all implementation rules, naming conventions, and code style hard rules.
 
+## Workflow
+
+- **NEVER work directly on `main`, `master`, or `develop` branches.**
+- Always verify the current branch before starting work using `git branch --show-current`.
+- Create a new feature branch from `main` for all work:
+  - Use `git checkout main` to ensure you're on the main branch.
+  - Use `git pull` to sync the latest changes.
+  - Use `git checkout -b feature/<feature-name>` to create and switch to the new branch.
+- Push changes only to the feature branch, never directly to `main`, `master`, or `develop`.
+
 ## Input
 
 The user will provide the **business rules** of the feature. Extract from their description:

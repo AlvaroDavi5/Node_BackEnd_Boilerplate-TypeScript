@@ -80,7 +80,7 @@ export default class SubscriptionService implements OnModuleInit {
 
 		if (subscriptionDatabaseId) {
 			foundedSubscription = await this.mongoClient.get(this.subscriptionsCollection, subscriptionDatabaseId);
-			if (!!foundedSubscription?._id)
+			if (foundedSubscription?._id)
 				await this.saveOnCache(subscriptionId, new SubscriptionEntity(foundedSubscription).getAttributes());
 		} else
 			throw this.exceptions.conflict({

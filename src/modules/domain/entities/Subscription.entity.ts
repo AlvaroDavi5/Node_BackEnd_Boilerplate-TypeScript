@@ -79,7 +79,7 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 			...dataValues?.listen,
 			...dataValues.dataValues,
 		};
-		const registerId = !!dataValues._id ? String(dataValues._id) : undefined;
+		const registerId = dataValues._id ? String(dataValues._id) : undefined;
 		const newConnectionsListen = Boolean(values?.newConnections ?? values?.listen?.newConnections);
 
 		if (!isNullOrUndefined(registerId)) this.databaseId = registerId;

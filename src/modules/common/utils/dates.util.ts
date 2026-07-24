@@ -57,21 +57,21 @@ export function setDateUnits(dateTime: DateTime, units: DateObjectUnits): DateTi
 }
 
 export function secondsToMilliseconds(s: number): number {
-	if (isNaN(s)) return 0;
+	if (Number.isNaN(s)) return 0;
 	return s * 1000;
 }
 
 export function minutesToSeconds(m: number): number {
-	if (isNaN(m)) return 0;
+	if (Number.isNaN(m)) return 0;
 	return m * 60;
 }
 
 export function hoursToSeconds(h: number): number {
-	if (isNaN(h)) return 0;
+	if (Number.isNaN(h)) return 0;
 	return minutesToSeconds(h * 60);
 }
 
 export function daysToSeconds(d: number): number {
-	if (isNaN(d)) return 0;
+	if (Number.isNaN(d)) return 0;
 	return hoursToSeconds(d * 24);
 }

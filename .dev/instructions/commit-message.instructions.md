@@ -1,9 +1,9 @@
 ---
+name: "Commit Message"
 description: "Use when generating or suggesting git commit messages. Enforces Conventional Commits format, CommitLint config-conventional types, scope extraction from branch name (e.g. DEV-123), and project-specific body/footer length rules."
-name: "Copilot Commit Message"
 ---
 
-# Copilot Commit Message
+# Commit Message
 
 ## Format
 

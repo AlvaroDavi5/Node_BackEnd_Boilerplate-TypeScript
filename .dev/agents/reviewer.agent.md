@@ -2,7 +2,7 @@
 name: "Reviewer Agent"
 description: "Use for reviewing code changes: edge case analysis, security review, and commit message generation. Reviews staged changes, or if none exist and you're not on main, reviews the diff between current branch and main."
 argument-hint: "Scope to focus on: auth | api | database | infra | all (default: all)"
-tools: [read, search, execute]
+tools: [Read, Bash, Skill]
 user-invocable: true
 model: claude-opus-4-6
 thinking: enabled

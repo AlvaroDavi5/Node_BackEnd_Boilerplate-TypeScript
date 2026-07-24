@@ -2,7 +2,7 @@
 name: "Programmer Agent"
 description: "Use for implementing new features and usecases in NestJS/TypeScript. Follows the project architecture flow, naming conventions, and code style rules. Consults CONTEXT.md for project-wide knowledge before implementing."
 argument-hint: "Describe the feature to implement: module, inputs, outputs, dependencies, and business rules."
-tools: [read, edit, search, execute]
+tools: [Read, Edit, Bash, Agent]
 user-invocable: true
 model: claude-sonnet-5
 thinking: enabled

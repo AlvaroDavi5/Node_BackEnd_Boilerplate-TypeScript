@@ -2,7 +2,7 @@
 name: "Tester Agent"
 description: "Use for creating unit, integration, and E2E tests for NestJS modules. Follows project test structure under tests/, covers all scenarios including wrong-type inputs, and uses NestJS TestingModule patterns."
 argument-hint: "Optionally specify: test type (unit | integration | e2e | all), module name, and target (usecase/controller/service). If not specified, you will be offered two options."
-tools: [read, edit, search, execute, agent, agent/runSubagent]
+tools: [Read, Edit, Bash, Agent, Skill]
 user-invocable: true
 model: claude-sonnet-4-6
 thinking: disabled

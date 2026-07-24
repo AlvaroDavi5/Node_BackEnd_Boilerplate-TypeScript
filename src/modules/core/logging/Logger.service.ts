@@ -106,8 +106,8 @@ export default class LoggerService implements LoggerInterface {
 					if (typeof response === 'object') {
 						const res = response as Record<string, Record<string, unknown> | undefined>;
 
-						const responseMessage = !!res.message ? this.dataParserHelper.toString(res.message) : undefined;
-						const responseMetadata = !!res.metadata
+						const responseMessage = res.message ? this.dataParserHelper.toString(res.message) : undefined;
+						const responseMetadata = res.metadata
 							? this.dataParserHelper.toString({
 								message: res.metadata?.message,
 								detail: res.metadata?.detail,
@@ -123,7 +123,7 @@ export default class LoggerService implements LoggerInterface {
 					const { response } = arg;
 
 					if (typeof response === 'object') {
-						const responseMessage = !!response.data ? this.dataParserHelper.toString(response.data) : undefined;
+						const responseMessage = response.data ? this.dataParserHelper.toString(response.data) : undefined;
 						if (responseMessage)
 							errorStacks.push(this.colorizeStack(responseMessage));
 					}

@@ -28,7 +28,7 @@ export default class UploadService {
 		const fileBuffer = await file.toBuffer();
 		const filePath = `upload/reports/${fileName}`;
 
-		const isValidFile = !!fileBuffer?.length;
+		const isValidFile = fileBuffer?.length;
 		if (isValidFile)
 			uploadTag = await this.s3Client.uploadFile(this.uploadBucket, filePath, fileBuffer);
 

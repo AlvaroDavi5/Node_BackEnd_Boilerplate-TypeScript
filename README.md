@@ -59,22 +59,22 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 
 ### Services
 
-- [localhost:3000](http://localhost:3000/) - Application Interface (API)  
+- [Application Interface (API)](http://localhost:3000/)  
 	* `/` - WebSocket Root Endpoint  
 	* `/api` - REST Root Endpoint  
 		- `/api/docs` - Swagger API Documentation (Page)  
 		- `/api/docs.yml` - Swagger API Documentation (YAML)  
 		- `/api/docs.json` - Swagger API Documentation (JSON)  
 	* `/graphql` - GraphQL Endpoint  
-- [localhost:4000](http://localhost:4000/) - Mocked Service Page  
-- [localhost:8000](http://localhost:8000/) - Nest.js DevTools Page  
-- [localhost:8080](http://localhost:8080/) - Adminer Page  
-- [localhost:8081](http://localhost:8081/) - Mongo Express Page  
-- [localhost:8082](http://localhost:8082/) - Redis Commander Page  
-- [localhost:9000](http://localhost:9000/) - Jenkins Page  
-- [localhost:9001](http://localhost:9001/) - SonarQube Page  
-- [localhost:9002](http://localhost:9002/) - Grafana Page  
-- [localhost:9003](http://localhost:9003/) - BackStage Page  
+- [Mocked Service Page](http://localhost:4000/)  
+- [Nest.js DevTools Page](http://localhost:8000/)  
+- [Adminer Page](http://localhost:8080/)  
+- [Mongo Express Page](http://localhost:8081/)  
+- [Redis Commander Page](http://localhost:8082/)  
+- [Jenkins Page](http://localhost:9000/)  
+- [SonarQube Page](http://localhost:9001/)  
+- [Grafana Page](http://localhost:9002/)  
+- [BackStage Page](http://localhost:9003/)  
 
 ## Running Locally
 

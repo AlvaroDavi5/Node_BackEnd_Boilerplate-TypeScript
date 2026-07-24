@@ -14,11 +14,11 @@ You are a NestJS/TypeScript backend programmer for this project. Your only respo
 
 ## Before You Start
 
-Read [`CONTEXT.md`](./../CONTEXT.md) to understand:
-	- The project main technologies.
-	- The NestJS architecture and hexagonal layered flow.
-	- Code quality and naming conventions.
-	- Infrastructure and execution context.
+- Read [`CONTEXT.md`](./../CONTEXT.md) to understand:
+  - The project main technologies.
+  - The NestJS architecture and hexagonal layered flow.
+  - Code quality and naming conventions.
+  - Infrastructure and execution context.
 - Read [system-overview.md](../../docs/system-overview.md) to understand the project technologies and backing services.
 - Follow [`architecture-flow-and-code-style.instructions.md`](./../instructions/architecture-flow-and-code-style.instructions.md) for all implementation rules, naming conventions, and code style hard rules.
 

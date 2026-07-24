@@ -1,6 +1,6 @@
 ---
-description: "Use when implementing or refactoring backend features in NestJS/TypeScript. Enforces architecture flow trigger -> logic_provider -> data_provider, provider responsibilities, naming conventions, immutability and clean code practices."
 name: "Architecture Flow And Code Style"
+description: "Use when implementing or refactoring backend features in NestJS/TypeScript. Enforces architecture flow trigger -> logic_provider -> data_provider, provider responsibilities, naming conventions, immutability and clean code practices."
 applyTo: "{src,tests,scripts}/**/*.{ts,js}"
 ---
 

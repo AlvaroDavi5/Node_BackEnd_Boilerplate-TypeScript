@@ -10,18 +10,18 @@ Full reference: [`docs/system-overview.md`](../docs/system-overview.md)
 
 ### Main Technologies
 
-| Technology | Role |
-| --- | --- |
-| **TypeScript / Node.js** | Runtime and language |
-| **NestJS** | Back-end framework |
-| **Fastify** | HTTP server adapter |
-| **Socket.io** | WebSocket library |
-| **Joi** | Schema validation |
-| **AWS SDK** | SQS (queues), SNS (notifications), S3 (storage), Cognito (auth) |
-| **TypeORM** | ORM — PostgreSQL and MongoDB |
-| **PostgreSQL** | Relational (SQL) database |
-| **MongoDB** | Document-oriented NoSQL database |
-| **Redis** | Cache / in-memory key-value store |
+|        Technology        | Role                                                            |
+| ------------------------ | --------------------------------------------------------------- |
+| **TypeScript / Node.js** | Runtime and language                                            |
+|        **NestJS**        | Back-end framework                                              |
+|        **Fastify**       | HTTP server adapter                                             |
+|        **Socket.io**     | WebSocket library                                               |
+|          **Joi**         | Schema validation                                               |
+|        **AWS SDK**       | SQS (queues), SNS (notifications), S3 (storage), Cognito (auth) |
+|        **TypeORM**       | ORM — PostgreSQL and MongoDB                                    |
+|        **PostgreSQL**    | Relational (SQL) database                                       |
+|         **MongoDB**      | Document-oriented NoSQL database                                |
+|         **Redis**        | Cache / in-memory key-value store                               |
 
 ## Execution
 
@@ -41,14 +41,14 @@ npm run start:dev
 
 ### Useful Scripts
 
-| Script | Purpose |
-|---|---|
-| `npm run start:dev` | Start in development mode (watch) |
-| `npm run db:migration-run` | Run TypeORM migrations |
-| `npm run db:seed` | Seed database with initial data |
+| Script                      | Purpose                                       |
+|-----------------------------|-----------------------------------------------|
+| `npm run start:dev`         | Start in development mode (watch)             |
+| `npm run db:migration-run`  | Run TypeORM migrations                        |
+| `npm run db:seed`           | Seed database with initial data               |
 | `npm run mock-dependencies` | Create SQS/SNS queues and start mock services |
-| `npm run receive-messages` | Start WebSocket client to receive events |
-| `npm run send-message` | Send a test message to the queue |
+| `npm run receive-messages`  | Start WebSocket client to receive events      |
+| `npm run send-message`      | Send a test message to the queue              |
 
 ---
 
@@ -114,14 +114,14 @@ Use NestJS `@Resolver()`, `@Query()`, `@Mutation()`, and `@Args()` decorators fr
 
 The `infra/` directory contains all deployment and observability configuration:
 
-| Path | Purpose |
-|---|---|
-| `infra/docker/` | Dockerfiles for production and development builds |
-| `infra/kubernetes/` | Kubernetes manifests — namespace, deployment, service, secrets |
-| `infra/backstage/` | BackStage catalog and API definition files |
-| `infra/grafana.properties` | Grafana datasource and dashboard configuration |
-| `infra/loki-config.yaml` | Loki log aggregation configuration |
-| `infra/promtail-config.yaml` | Promtail log scraping configuration (feeds Loki) |
+| Path                         | Purpose                                                        |
+|------------------------------|----------------------------------------------------------------|
+| `infra/docker/`              | Dockerfiles for production and development builds              |
+| `infra/kubernetes/`          | Kubernetes manifests — namespace, deployment, service, secrets |
+| `infra/backstage/`           | BackStage catalog and API definition files                     |
+| `infra/grafana.properties`   | Grafana datasource and dashboard configuration                 |
+| `infra/loki-config.yaml`     | Loki log aggregation configuration                             |
+| `infra/promtail-config.yaml` | Promtail log scraping configuration (feeds Loki)               |
 
 ### Docker
 

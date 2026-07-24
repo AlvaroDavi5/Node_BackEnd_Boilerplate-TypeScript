@@ -1,6 +1,6 @@
 ---
-description: "Use when implementing a new NestJS usecase and its unit test file. Enforces project test structure, mock patterns, scenario coverage (success, failure, exceptions), and NestJS TestingModule setup."
 name: "Create Usecase With Tests"
+description: "Use when implementing a new NestJS usecase and its unit test file. Enforces project test structure, mock patterns, scenario coverage (success, failure, exceptions), and NestJS TestingModule setup."
 applyTo: "{src,tests}/**/*.{ts,js}"
 ---
 

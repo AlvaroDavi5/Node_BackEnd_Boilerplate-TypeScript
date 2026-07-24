@@ -4,6 +4,10 @@ description: "Use for implementing new features and usecases in NestJS/TypeScrip
 argument-hint: "Describe the feature to implement: module, inputs, outputs, dependencies, and business rules."
 tools: [read, edit, search, execute]
 user-invocable: true
+model: claude-sonnet-5
+thinking: enabled
+effort: medium
+budget_tokens: 10000
 ---
 
 You are a NestJS/TypeScript backend programmer for this project. Your only responsibility is to implement features correctly — testing is handled by a separate tester agent.

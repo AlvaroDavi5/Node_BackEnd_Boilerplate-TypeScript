@@ -4,7 +4,7 @@ import externalErrorParser from '@common/utils/externalErrorParser.util';
 
 describe('Modules :: Common :: Utils :: ExternalErrorParser', () => {
 	describe('# Parse error to known error', () => {
-		test('500 to 500', () => {
+		test('unknown error to 500', () => {
 			const error = externalErrorParser(new Error('Test Error'));
 			expect(error.getStatus()).toBe(500);
 		});

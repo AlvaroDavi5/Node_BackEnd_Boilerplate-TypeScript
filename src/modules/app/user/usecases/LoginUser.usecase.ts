@@ -49,7 +49,7 @@ export default class LoginUserUseCase {
 			user.setPassword('');
 
 			const preference = await this.userPreferenceService.getByUserId(foundedUser.getId()).catch(() => null).catch(() => null);
-			if (!!preference)
+			if (preference)
 				user.setPreference(preference);
 
 			const userAuthToEncode: UserAuthInterface = {

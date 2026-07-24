@@ -36,8 +36,8 @@ export default function externalErrorParser(error: unknown): HttpException {
 		if (typeof res === 'object') {
 			const response = res as Record<string, Record<string, unknown> | undefined>;
 
-			const responseMessage = !!response.message ? parseToString(response.message) : undefined;
-			const responseMetadata = !!response.metadata
+			const responseMessage = response.message ? parseToString(response.message) : undefined;
+			const responseMetadata = response.metadata
 				? parseToString({ message: response.metadata?.message, detail: response.metadata?.detail })
 				: undefined;
 
@@ -51,7 +51,7 @@ export default function externalErrorParser(error: unknown): HttpException {
 
 		const { response } = error;
 		if (typeof response === 'object') {
-			const responseMessage = !!response.data ? parseToString(response.data) : undefined;
+			const responseMessage = response.data ? parseToString(response.data) : undefined;
 			if (responseMessage)
 				errorStacks.push(responseMessage);
 		}

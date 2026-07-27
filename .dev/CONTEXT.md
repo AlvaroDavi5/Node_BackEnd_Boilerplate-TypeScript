@@ -114,14 +114,14 @@ Use NestJS `@Resolver()`, `@Query()`, `@Mutation()`, and `@Args()` decorators fr
 
 The `infra/` directory contains all deployment and observability configuration:
 
-| Path                         | Purpose                                                        |
-|------------------------------|----------------------------------------------------------------|
-| `infra/docker/`              | Dockerfiles for production and development builds              |
-| `infra/kubernetes/`          | Kubernetes manifests — namespace, deployment, service, secrets |
-| `infra/backstage/`           | BackStage catalog and API definition files                     |
-| `infra/grafana.properties`   | Grafana datasource and dashboard configuration                 |
-| `infra/loki-config.yaml`     | Loki log aggregation configuration                             |
-| `infra/promtail-config.yaml` | Promtail log scraping configuration (feeds Loki)               |
+| Path                                 | Purpose                                                        |
+|--------------------------------------|----------------------------------------------------------------|
+| `infra/docker/`                      | Dockerfiles for production and development builds              |
+| `infra/kubernetes/`                  | Kubernetes manifests — namespace, deployment, service, secrets |
+| `infra/backstage/`                   | BackStage catalog and API definition files                     |
+| `infra/grafana/grafana.properties`   | Grafana datasource and dashboard configuration                 |
+| `infra/grafana/loki-config.yaml`     | Loki log aggregation configuration                             |
+| `infra/grafana/promtail-config.yaml` | Promtail log scraping configuration (feeds Loki)               |
 
 ### Docker
 
@@ -142,5 +142,5 @@ Manifests under `infra/kubernetes/`:
 
 - **Grafana** (`localhost:9002`) reads metrics and logs. Config at `infra/grafana.properties`.
 - **Loki** aggregates logs from the application container.
-- **Promtail** scrapes container stdout/stderr and ships to Loki. Config at `infra/promtail-config.yaml`.
+- **Promtail** scrapes container stdout/stderr and ships to Loki.
 - **Sentry** captures runtime errors and traces (configured via `SENTRY_DSN` env var).

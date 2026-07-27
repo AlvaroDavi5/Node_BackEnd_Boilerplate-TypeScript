@@ -14,7 +14,7 @@ pre-commit:
 
     - name: Run linter for Git staged files
       run: npx eslint {staged_files} --quiet --fix
-      glob: '*.{js,ts,jsx,tsx}'
+      glob: "*.{js,ts,jsx,tsx}"
 
 pre-push:
   jobs:

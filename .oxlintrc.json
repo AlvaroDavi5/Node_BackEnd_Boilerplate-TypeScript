@@ -27,6 +27,49 @@
 		".scannerwork"
 	],
 	"rules": {
+		"getter-return": "error",
+		"no-async-promise-executor": "error",
+		"no-class-assign": "error",
+		"no-const-assign": "error",
+		"no-constant-binary-expression": "error",
+		"no-control-regex": "error",
+		"no-delete-var": "error",
+		"no-dupe-class-members": "error",
+		"no-dupe-else-if": "error",
+		"no-dupe-keys": "error",
+		"no-duplicate-case": "error",
+		"no-empty-character-class": "error",
+		"no-empty-pattern": "error",
+		"no-empty-static-block": "error",
+		"no-ex-assign": "error",
+		"no-func-assign": "error",
+		"no-global-assign": "error",
+		"no-import-assign": "error",
+		"no-invalid-regexp": "error",
+		"no-irregular-whitespace": "error",
+		"no-loss-of-precision": "error",
+		"no-misleading-character-class": "error",
+		"no-new-native-nonconstructor": "error",
+		"no-nonoctal-decimal-escape": "error",
+		"no-obj-calls": "error",
+		"no-prototype-builtins": "error",
+		"no-regex-spaces": "error",
+		"no-self-assign": "error",
+		"no-setter-return": "error",
+		"no-shadow-restricted-names": "error",
+		"no-sparse-arrays": "error",
+		"no-this-before-super": "error",
+		"no-unexpected-multiline": "error",
+		"no-unreachable": "error",
+		"no-unsafe-negation": "error",
+		"no-unsafe-optional-chaining": "error",
+		"no-unused-private-class-members": "error",
+		"no-useless-backreference": "error",
+		"no-useless-catch": "error",
+		"no-useless-escape": "error",
+		"no-with": "error",
+		"require-yield": "error",
+		"no-underscore-dangle": "off",
 		"max-classes-per-file": [
 			"error",
 			1
@@ -52,6 +95,7 @@
 		"curly": "off",
 		"object-shorthand": "warn",
 		"arrow-body-style": "off",
+		"id-match": "error",
 		"id-denylist": [
 			"error",
 			"e",
@@ -99,24 +143,6 @@
 			"error",
 			"never"
 		],
-		"no-underscore-dangle": "off",
-		"no-empty-function": "error",
-		"no-unused-expressions": "error",
-		"no-use-before-define": "error",
-		"no-shadow": [
-			"error",
-			{
-				"hoist": "all"
-			}
-		],
-		"no-unused-vars": [
-			"error",
-			{
-				"argsIgnorePattern": "^_",
-				"varsIgnorePattern": "^_",
-				"caughtErrorsIgnorePattern": "^_"
-			}
-		],
 		"import/default": "error",
 		"import/unambiguous": "error",
 		"typescript/ban-ts-comment": "error",
@@ -149,7 +175,18 @@
 		"typescript/consistent-type-assertions": "error",
 		"typescript/no-non-null-assertion": "off",
 		"typescript/no-explicit-any": "warn",
+		"no-empty-function": "error",
 		"typescript/no-empty-interface": "error",
+		"no-use-before-define": "error",
+		"no-unused-expressions": "error",
+		"no-unused-vars": [
+			"error",
+			{
+				"argsIgnorePattern": "^_",
+				"varsIgnorePattern": "^_",
+				"caughtErrorsIgnorePattern": "^_"
+			}
+		],
 		"typescript/no-var-requires": "error",
 		"typescript/no-misused-new": "error",
 		"typescript/no-namespace": "error",
@@ -159,7 +196,12 @@
 		"typescript/unified-signatures": "error",
 		"typescript/adjacent-overload-signatures": "error",
 		"typescript/parameter-properties": "off",
-		"typescript/explicit-member-accessibility": "off",
+		"no-shadow": [
+			"error",
+			{
+				"hoist": "all"
+			}
+		],
 		"typescript/triple-slash-reference": [
 			"error",
 			{
@@ -168,6 +210,7 @@
 				"lib": "always"
 			}
 		],
+		"typescript/explicit-member-accessibility": "off",
 		"typescript/no-extraneous-class": "off",
 		"unicorn/no-useless-fallback-in-spread": "off",
 		"oxc/number-arg-out-of-range": "off"

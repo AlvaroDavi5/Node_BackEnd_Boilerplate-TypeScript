@@ -1,0 +1,217 @@
+{
+	"$schema": "./node_modules/oxlint/configuration_schema.json",
+	"plugins": [
+		"typescript",
+		"oxc",
+		"unicorn",
+		"import"
+	],
+	"categories": {
+		"correctness": "error"
+	},
+	"env": {
+		"builtin": true,
+		"es2024": true,
+		"node": true,
+		"browser": true,
+		"jest": true
+	},
+	"options": {
+		"reportUnusedDisableDirectives": "warn"
+	},
+	"ignorePatterns": [
+		"node_modules",
+		"build",
+		"coverage",
+		"site",
+		".scannerwork"
+	],
+	"rules": {
+		"max-classes-per-file": [
+			"error",
+			1
+		],
+		"complexity": "error",
+		"eqeqeq": [
+			"error",
+			"always"
+		],
+		"no-compare-neg-zero": "error",
+		"constructor-super": "error",
+		"no-array-constructor": "warn",
+		"no-useless-constructor": "off",
+		"no-new-wrappers": "error",
+		"no-throw-literal": "error",
+		"no-fallthrough": "error",
+		"no-unsafe-finally": "error",
+		"guard-for-in": "error",
+		"default-case": "error",
+		"default-case-last": "error",
+		"no-case-declarations": "error",
+		"default-param-last": "error",
+		"curly": "off",
+		"object-shorthand": "warn",
+		"arrow-body-style": "off",
+		"id-denylist": [
+			"error",
+			"e",
+			"a",
+			"b",
+			"cb"
+		],
+		"no-bitwise": "error",
+		"no-caller": "warn",
+		"radix": "warn",
+		"valid-typeof": "error",
+		"prefer-const": "warn",
+		"prefer-template": "error",
+		"prefer-destructuring": "error",
+		"prefer-spread": "error",
+		"prefer-rest-params": "error",
+		"yoda": [
+			"error",
+			"never",
+			{
+				"exceptRange": true,
+				"onlyEquality": false
+			}
+		],
+		"no-cond-assign": "error",
+		"no-constant-condition": "error",
+		"no-undef": "off",
+		"no-return-assign": [
+			"error",
+			"always"
+		],
+		"no-empty": "error",
+		"no-template-curly-in-string": "warn",
+		"for-direction": "error",
+		"no-extra-boolean-cast": "off",
+		"no-redeclare": "error",
+		"use-isnan": "warn",
+		"no-eval": "error",
+		"no-var": "error",
+		"no-labels": "error",
+		"no-unused-labels": "error",
+		"no-debugger": "error",
+		"no-console": "error",
+		"unicode-bom": [
+			"error",
+			"never"
+		],
+		"no-underscore-dangle": "off",
+		"no-empty-function": "error",
+		"no-unused-expressions": "error",
+		"no-use-before-define": "error",
+		"no-shadow": [
+			"error",
+			{
+				"hoist": "all"
+			}
+		],
+		"no-unused-vars": [
+			"error",
+			{
+				"argsIgnorePattern": "^_",
+				"varsIgnorePattern": "^_",
+				"caughtErrorsIgnorePattern": "^_"
+			}
+		],
+		"import/default": "error",
+		"import/unambiguous": "error",
+		"typescript/ban-ts-comment": "error",
+		"typescript/no-restricted-types": [
+			"error",
+			{
+				"types": {
+					"Object": {
+						"message": "Avoid using the `Object` type. Did you mean `object`?"
+					},
+					"Function": {
+						"message": "Avoid using the `Function` type. Prefer a specific function type, like `() => void`."
+					},
+					"Boolean": {
+						"message": "Avoid using the `Boolean` type. Did you mean `boolean`?"
+					},
+					"Number": {
+						"message": "Avoid using the `Number` type. Did you mean `number`?"
+					},
+					"String": {
+						"message": "Avoid using the `String` type. Did you mean `string`?"
+					},
+					"Symbol": {
+						"message": "Avoid using the `Symbol` type. Did you mean `symbol`?"
+					}
+				}
+			}
+		],
+		"typescript/array-type": "error",
+		"typescript/consistent-type-assertions": "error",
+		"typescript/no-non-null-assertion": "off",
+		"typescript/no-explicit-any": "warn",
+		"typescript/no-empty-interface": "error",
+		"typescript/no-var-requires": "error",
+		"typescript/no-misused-new": "error",
+		"typescript/no-namespace": "error",
+		"typescript/prefer-namespace-keyword": "error",
+		"typescript/prefer-function-type": "error",
+		"typescript/prefer-for-of": "error",
+		"typescript/unified-signatures": "error",
+		"typescript/adjacent-overload-signatures": "error",
+		"typescript/parameter-properties": "off",
+		"typescript/explicit-member-accessibility": "off",
+		"typescript/triple-slash-reference": [
+			"error",
+			{
+				"path": "always",
+				"types": "prefer-import",
+				"lib": "always"
+			}
+		],
+		"typescript/no-extraneous-class": "off",
+		"unicorn/no-useless-fallback-in-spread": "off",
+		"oxc/number-arg-out-of-range": "off"
+	},
+	"overrides": [
+		// ? Logging decorators write to stdout by design
+		{
+			"files": [
+				"src/shared/internal/decorators/**"
+			],
+			"rules": {
+				"no-console": "off"
+			}
+		},
+		// ? Ambient declaration files are never modules
+		{
+			"files": [
+				"**/*.d.ts"
+			],
+			"rules": {
+				"import/unambiguous": "off"
+			}
+		},
+		// ? Override for development, scripts, and test files
+		{
+			"files": [
+				"src/dev/**",
+				"scripts/**",
+				"tests/**"
+			],
+			"rules": {
+				"no-console": "off",
+				"typescript/no-explicit-any": "off"
+			}
+		},
+		// ? Test mocks legitimately group several classes in a file and stub methods with empty bodies
+		{
+			"files": [
+				"tests/**"
+			],
+			"rules": {
+				"max-classes-per-file": "off",
+				"no-empty-function": "off"
+			}
+		}
+	]
+}

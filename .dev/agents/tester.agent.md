@@ -112,4 +112,4 @@ All unit test patterns, mock rules, describe label format, scenario groups, exce
 - [ ] Wrong-type and null/undefined input scenarios included.
 - [ ] Exception propagation verified for all throwing dependencies.
 - [ ] Assertions cover both return values and mock call counts/arguments.
-- [ ] Code follows ESLint + Prettier project config.
+- [ ] Code follows the Oxlint config and is formatted by Oxfmt + EditorConfig.

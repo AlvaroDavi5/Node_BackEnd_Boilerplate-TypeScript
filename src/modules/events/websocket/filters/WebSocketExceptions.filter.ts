@@ -78,7 +78,6 @@ export default class WebSocketExceptionsFilter extends AbstractExceptionsFilter 
 
 		this.capture(exception, {
 			data: { socketId, event, payload: data },
-			// eslint-disable-next-line camelcase
 			user: { socketId, ip_address: clientIp },
 		});
 

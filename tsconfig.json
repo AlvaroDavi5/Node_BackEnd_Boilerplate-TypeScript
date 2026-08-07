@@ -8,7 +8,6 @@
 		"tests/**/*.ts"
 	],
 	"exclude": [
-		"eslint.config.ts",
 		"node_modules",
 		"build"
 	]

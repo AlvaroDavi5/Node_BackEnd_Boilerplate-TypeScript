@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { join } from 'path';
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';

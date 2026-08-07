@@ -12,9 +12,22 @@ trim_trailing_whitespace = true
 end_of_line = lf
 insert_final_newline = true
 
+[*.{js,ts,jsx,tsx}]
+curly_bracket_next_line = false
+spaces_around_operators = true
+spaces_around_brackets = inside
+
+[*.{json,jsonc}]
+indent_style = tab
+indent_size = 2
+
 [*.md]
 trim_trailing_whitespace = false
 
-[*.yml]
+[*.{yml,yaml}]
 indent_style = space
+indent_size = 2
+
+[*.{sh,bash,zsh}]
+indent_style = tab
 indent_size = 2

@@ -28,7 +28,7 @@ Description of the functionality and main decisions made
 - [ ] Implemented and approved unit, integration, and E2E tests  
 - [ ] Added GitHub labels for PR/Issues  
 - [ ] Code owners marked for review  
-- [ ] ESLint rules passed  
+- [ ] Oxlint rules passed  
 
 ___
 

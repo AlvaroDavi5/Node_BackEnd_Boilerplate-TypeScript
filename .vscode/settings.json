@@ -7,6 +7,7 @@
 	"editor.defaultFormatter": "vscode.typescript-language-features",
 	"editor.codeActionsOnSave": {
 		"source.fixAll": "explicit",
+		"source.fixAll.oxc": "explicit",
 		"source.organizeImports": "never",
 		"source.removeUnusedImports": "always",
 		"source.removeUnused.ts": "never"
@@ -34,13 +35,8 @@
 	"git.enableSmartCommit": true,
 	"git.openRepositoryInParentFolders": "always",
 	// Extensions
-	"eslint.format.enable": true,
-	"eslint.validate": [
-		"javascript",
-		"javascriptreact",
-		"typescript",
-		"typescriptreact"
-	],
+	"oxc.configPath": ".oxlintrc.json",
+	"oxc.fmt.configPath": ".oxfmtrc.json",
 	"diffEditor.ignoreTrimWhitespace": false,
 	"js/ts.suggest.autoImports": true,
 	"js/ts.suggestionActions.enabled": true,

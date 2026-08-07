@@ -120,7 +120,7 @@ export default class RedisClient {
 		);
 		const result = await Promise.allSettled(getByKeyPromises);
 
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		// oxlint-disable-next-line typescript/no-explicit-any
 		return result.map(({ status: _, ...args }) => ({ ...(args as any)?.value ?? {} }));
 	}
 
@@ -151,7 +151,7 @@ export default class RedisClient {
 
 	public async remove(keyPattern: string): Promise<void> {
 		const scanValue = `${keyPattern}:*`;
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		// oxlint-disable-next-line typescript/no-explicit-any
 		const stream = this.redisClient.scanStream(scanValue as any);
 
 		stream.on('data', (keys: string[]) => {

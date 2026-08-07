@@ -40,7 +40,7 @@ export default (nestApp: INestApplication): void => {
 			logger = loggerService;
 		})
 		.catch((err: unknown) => {
-			// eslint-disable-next-line no-console
+			// oxlint-disable-next-line no-console
 			console.error(err);
 			logger = console;
 		});

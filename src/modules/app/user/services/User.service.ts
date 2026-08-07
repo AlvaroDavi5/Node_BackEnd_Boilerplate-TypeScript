@@ -156,7 +156,7 @@ export default class UserService {
 		return this.cryptographyService.hashWithSecret('sha256', 'utf8', 'base64url', plainTextPassword, salt);
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// oxlint-disable-next-line typescript/no-explicit-any
 	private caughtError(error: any): Error {
 		const errorDetails: string | undefined = error?.message ?? error?.cause ?? error?.original;
 		return this.exceptions.internal({

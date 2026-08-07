@@ -55,8 +55,8 @@ If the user does not specify a module path, ask before proceeding.
 
 - Do NOT skip writing code that belongs in its correct layer.
 - Do NOT mutate input payloads.
-- Do NOT add `eslint-disable` without a documented reason.
-- Do NOT generate code that does not comply with the project's ESLint/Prettier config.
+- Do NOT add `oxlint-disable` without a documented reason.
+- Do NOT generate code that does not comply with the project's Oxlint config and Oxfmt/EditorConfig formatting.
 - Do NOT implement tests — that is the tester agent's responsibility.
 
 ## Output Format

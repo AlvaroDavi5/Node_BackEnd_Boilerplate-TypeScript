@@ -206,7 +206,6 @@ describe('Infra :: Errors :: Exceptions', () => {
 
 	describe('# Parsing', () => {
 		test('Should return a Internal exception', () => {
-			// eslint-disable-next-line dot-notation
 			const parser = exceptions['parseToString'];
 
 			const obj = {

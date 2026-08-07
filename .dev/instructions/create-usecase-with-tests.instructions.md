@@ -119,4 +119,4 @@ Derive from the business rules of the usecase:
 - [ ] Every `execute()` branch covered by at least one test.
 - [ ] Assertions cover both return values and mock call counts/arguments.
 - [ ] Wrong-type and null/undefined input scenarios included.
-- [ ] Code follows ESLint + Prettier project config.
+- [ ] Code follows the Oxlint config and is formatted by Oxfmt + EditorConfig.

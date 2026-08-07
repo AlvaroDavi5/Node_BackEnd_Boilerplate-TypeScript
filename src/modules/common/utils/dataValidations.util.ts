@@ -43,6 +43,6 @@ export function getObjValues<VT = unknown>(obj: unknown): VT[] {
 	if (isNullOrUndefined(obj))
 		return [];
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// oxlint-disable-next-line typescript/no-explicit-any
 	return Object.values<VT>(obj as any);
 }

@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 import { MigrationInterface, QueryRunner } from 'typeorm';
 
 export class AlterTableUserPreferencesUserId1742917418825 implements MigrationInterface {
@@ -22,4 +21,3 @@ export class AlterTableUserPreferencesUserId1742917418825 implements MigrationIn
 		await queryRunner.query('ALTER TABLE "UserPreferences" ADD CONSTRAINT "user_id" FOREIGN KEY ("userId") REFERENCES "Users"("id") ON DELETE CASCADE ON UPDATE CASCADE');
 	}
 }
-/* eslint-enable max-len */

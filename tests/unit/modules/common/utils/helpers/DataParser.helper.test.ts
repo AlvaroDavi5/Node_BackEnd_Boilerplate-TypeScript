@@ -128,9 +128,7 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 		});
 
 		test('Should return a stringified function', () => {
-			// eslint-disable-next-line brace-style
 			expect(dataParserHelper.toString(function testFunction() { return; })).toBe('function testFunction() { return; }');
-			// eslint-disable-next-line brace-style
 			const arrowFunction = () => { return; };
 			expect(dataParserHelper.toString(arrowFunction)).toBe('() => { return; }');
 		});

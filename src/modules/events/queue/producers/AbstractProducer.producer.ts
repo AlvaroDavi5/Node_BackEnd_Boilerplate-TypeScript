@@ -59,7 +59,7 @@ export default abstract class AbstractQueueProducer {
 		this.queueUrl = queueUrl;
 	}
 
-	// eslint-disable-next-line @typescript-eslint/no-explicit-any
+	// oxlint-disable-next-line typescript/no-explicit-any
 	private buildMessageBody(payload: any, schema: QueueSchemasEnum): EventPayloadInterface {
 		return {
 			id: this.cryptographyService.generateUuid(),

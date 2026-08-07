@@ -62,7 +62,7 @@ Review in priority order:
 5. Env/config files and CI/CD scripts (hardcoded secrets, unsafe crypto)
 6. Everything else (unsafe session handling, sensitive data in logs)
 
-If `eslint` is available and `.ts`/`.js` files are in the diff, run `npx eslint --max-warnings=0` on changed files.
+If `oxlint` is available and `.ts`/`.js` files are in the diff, run `npx oxlint --config .oxlintrc.json --deny-warnings` on changed files.
 
 ### Security Finding Format
 

@@ -33,7 +33,7 @@ Review in this order:
 6. Everything else
 
 ### Step 3 — Run Automated Baseline
-If `.ts` or `.js` files are staged and `eslint` is available, run:
+If `.ts` or `.js` files are staged and `oxlint` is available, run `npx oxlint --config .oxlintrc.json --deny-warnings` on the staged files.
 
 ### Step 4 — Manual Diff Review
 Review `git diff --cached` looking for:

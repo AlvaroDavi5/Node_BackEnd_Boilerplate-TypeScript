@@ -70,7 +70,7 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 	@IsBoolean()
 	public newConnectionsListen = false;
 
-	// eslint-disable-next-line complexity
+	// oxlint-disable-next-line complexity
 	constructor(dataValues: Partial<IViewSubscription & Record<string, unknown>> = {}) {
 		super();
 

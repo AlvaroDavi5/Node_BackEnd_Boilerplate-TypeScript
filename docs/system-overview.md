@@ -29,8 +29,10 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 - **Grafana**: Containers data visualization and dashboards;
 - **Sentry**: Errors capture, tracing and metrics;
 - **SonarQube**: Test coverage and code quality analyzer;
-- **ESLint**: JavaScript/TypeScript linter and formatter;
-- **Lefthook**: Git hooks tool used to check tests, format the code and the commits;
+- **Oxlint**: Rust-based JavaScript/TypeScript linter;
+- **Oxfmt**: Rust-based JavaScript/TypeScript formatter;
+- **EditorConfig**: Editor-agnostic code style rules (indentation, line endings, line length);
+- **Lefthook**: Git hooks tool used to check tests, lint the code and the commits;
 
 ### Services
 

@@ -70,9 +70,9 @@ Responsibilities:
 |       Constants         | `SNAKE_CASE` (in UPPER_CASE) | `MAX_RETRY_COUNT`, `DEFAULT_TIMEOUT` |
 
 ## Formatting and Lint
-- All generated and modified code must pass ESLint rules defined in `eslint.config.ts`.
-- Formatting must match Prettier configuration in the project.
-- Do not bypass lint rules with `// eslint-disable` unless there is a documented reason.
+- All generated and modified code must pass Oxlint rules defined in `.oxlintrc.json`.
+- Formatting must match Oxfmt (`.oxfmtrc.json`) and the EditorConfig rules in `.editorconfig` (tabs, single quotes, LF, 160 columns).
+- Do not bypass lint rules with `// oxlint-disable` unless there is a documented reason.
 
 ## Implementation Checklist
 - [ ] Layering follows `trigger -> logic_provider -> data_provider`.
@@ -82,4 +82,4 @@ Responsibilities:
 - [ ] Complex conditions are extracted to named booleans.
 - [ ] `const` is used wherever reassignment is not needed.
 - [ ] Naming conventions (`camelCase`, `PascalCase`, `SNAKE_CASE`) are respected.
-- [ ] Code passes lint and Prettier formatting.
+- [ ] Code passes Oxlint linting and Oxfmt formatting.

@@ -118,7 +118,7 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	@IsString()
 	private deletedBy: string | null = null;
 
-	// eslint-disable-next-line complexity
+	// oxlint-disable-next-line complexity
 	constructor(dataValues: Partial<UsersModel | IViewUser>) {
 		super();
 

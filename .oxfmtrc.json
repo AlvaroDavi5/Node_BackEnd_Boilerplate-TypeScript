@@ -1,0 +1,20 @@
+{
+	"$schema": "./node_modules/oxfmt/configuration_schema.json",
+	"singleQuote": true,
+	"jsxSingleQuote": true,
+	"quoteProps": "as-needed",
+	"semi": true,
+	"trailingComma": "all",
+	"bracketSpacing": true,
+	"arrowParens": "always",
+	"objectWrap": "preserve",
+	"sortPackageJson": false,
+	"ignorePatterns": [
+		"node_modules",
+		"build",
+		"coverage",
+		"site",
+		".scannerwork",
+		"CHANGELOG.md"
+	]
+}

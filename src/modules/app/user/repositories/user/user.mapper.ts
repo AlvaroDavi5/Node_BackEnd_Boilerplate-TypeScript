@@ -9,7 +9,6 @@ function toDomainEntity(dataValues: UsersModel): UserEntity {
 
 	if (!user.getPreference()) {
 		const preferenceDataValues = {
-			// eslint-disable-next-line no-extra-parens
 			...(dataValues?.preference ?? {}),
 			userId: dataValues?.id,
 		};
@@ -21,7 +20,7 @@ function toDomainEntity(dataValues: UsersModel): UserEntity {
 	return user;
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 function toDatabaseEntity(entity: UserEntity): any {
 	if (!entity.validate().valid)
 		return null;

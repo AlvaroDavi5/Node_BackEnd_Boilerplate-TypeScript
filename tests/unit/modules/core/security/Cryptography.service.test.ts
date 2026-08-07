@@ -52,7 +52,6 @@ describe('Modules :: Core :: Security :: CryptographyService', () => {
 		});
 
 		test('Should generate invalid JWT', () => {
-			/* eslint-disable dot-notation */
 			const jwtSecret = cryptographyService['secret'] ?? 'secret';
 			(cryptographyService as any)['secret'] = 'invalid';
 			const token = cryptographyService.encodeJwt({ name: 'Tester' }, 'utf8', '1Ms');
@@ -62,7 +61,6 @@ describe('Modules :: Core :: Security :: CryptographyService', () => {
 				invalidSignature: true,
 			};
 			(cryptographyService as any)['secret'] = jwtSecret;
-			/* eslint-enable dot-notation */
 
 			expect(token.length).toBe(149);
 			expect(cryptographyService.decodeJwt(token)).toMatchObject(decoded);

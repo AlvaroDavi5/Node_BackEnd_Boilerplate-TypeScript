@@ -16,7 +16,7 @@ export type BuildParamsInterface<I = unknown> = ListQueryInterface & Partial<I>;
 
 type ModelType<E extends BaseEntity> = classConstructorType<E> & typeof BaseEntity;
 
-/* eslint-disable @typescript-eslint/no-explicit-any */
+/* oxlint-disable typescript/no-explicit-any */
 export default abstract class AbstractRepository<M extends BaseEntity, E extends AbstractEntity, BI extends BuildParamsInterface> {
 	// ? ------ Attributes ------
 	private DomainEntity: classConstructorType<E>;
@@ -227,4 +227,4 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 		}
 	}
 }
-/* eslint-enable @typescript-eslint/no-explicit-any */
+/* oxlint-enable typescript/no-explicit-any */

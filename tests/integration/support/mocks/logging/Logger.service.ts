@@ -20,7 +20,6 @@ export default class LoggerService implements LoggerInterface {
 		});
 	}
 
-	/* eslint-disable @typescript-eslint/no-empty-function */
 	public getContextName(): string {
 		return 'LoggerServiceMock';
 	}
@@ -52,7 +51,6 @@ export default class LoggerService implements LoggerInterface {
 	}
 
 	public setClientIp(_clientIp: string | undefined): void { }
-	/* eslint-enable @typescript-eslint/no-empty-function */
 
 	public error(...args: unknown[]): void {
 		this.log('error', args);

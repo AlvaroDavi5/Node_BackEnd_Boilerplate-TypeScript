@@ -25,7 +25,7 @@ function exceptionsMapper(statusCode: number): ExceptionsEnum {
 export default function externalErrorParser(error: unknown): HttpException {
 	const exceptions = new Exceptions();
 	const errorStacks: string[] = [];
-	// eslint-disable-next-line dot-notation, prefer-destructuring
+	// oxlint-disable-next-line prefer-destructuring
 	const parseToString = exceptions['parseToString'];
 
 	let exceptionName: ExceptionsEnum;

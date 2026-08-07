@@ -6,7 +6,7 @@ function toDomainEntity(dataValues: UserPreferencesModel): UserPreferenceEntity 
 	return new UserPreferenceEntity(dataValues);
 };
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
+// oxlint-disable-next-line typescript/no-explicit-any
 function toDatabaseEntity(entity: UserPreferenceEntity): any {
 	if (!entity.validate().valid)
 		return null;

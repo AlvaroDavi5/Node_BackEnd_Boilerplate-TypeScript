@@ -130,6 +130,13 @@
 		"no-empty": "error",
 		"no-template-curly-in-string": "warn",
 		"for-direction": "error",
+		"dot-notation": [
+			"error",
+			{
+				"allowKeywords": true,
+				"allowPattern": "throws"
+			}
+		],
 		"no-extra-boolean-cast": "off",
 		"no-redeclare": "error",
 		"use-isnan": "warn",

@@ -1,0 +1,10 @@
+# Revisions ignored by `git blame` — bulk reformatting only, no logic changes.
+#
+# GitHub honours this file automatically. To use it locally, run once:
+#   git config blame.ignoreRevsFile .git-blame-ignore-revs
+#
+# Add only commits whose whole content is mechanical (formatting, renames, whitespace),
+# using the full 40-character hash.
+
+# style(no-release): apply oxfmt formatting to the whole codebase
+680b0d638dd282d4d9f3f80df44f9ff7bc5f8cc1

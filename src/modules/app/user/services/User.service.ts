@@ -6,14 +6,13 @@ import UserListEntity from '@domain/entities/generic/UserList.entity';
 import UserRepository from '@app/user/repositories/user/User.repository';
 import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
-
 @Injectable()
 export default class UserService {
 	constructor(
 		private readonly cryptographyService: CryptographyService,
 		private readonly userRepository: UserRepository,
 		private readonly exceptions: Exceptions,
-	) { }
+	) {}
 
 	public async getById(id: string, withoutPassword = true): Promise<UserEntity> {
 		try {
@@ -65,15 +64,17 @@ export default class UserService {
 	public async update(id: string, data: IUpdateUser): Promise<UserEntity> {
 		const { preference: _, ...payload } = data;
 		const {
-			id: _id, preference: _preference,
-			createdAt: _createdAt, updatedAt: _updatedAt, deletedAt: _deletedAt,
+			id: _id,
+			preference: _preference,
+			createdAt: _createdAt,
+			updatedAt: _updatedAt,
+			deletedAt: _deletedAt,
 			...userData
 		} = new UserEntity(payload).getAttributes();
 
 		try {
 			const userPassword = userData.password;
-			if (userPassword?.length)
-				userData.password = this.protectPassword(userPassword);
+			if (userPassword?.length) userData.password = this.protectPassword(userPassword);
 
 			const updatedUser = await this.userRepository.update(id, userData);
 
@@ -89,7 +90,7 @@ export default class UserService {
 		}
 	}
 
-	public async delete(id: string, data: { softDelete: boolean, agentUserId?: string }): Promise<boolean> {
+	public async delete(id: string, data: { softDelete: boolean; agentUserId?: string }): Promise<boolean> {
 		try {
 			return await this.userRepository.deleteOne(id, Boolean(data.softDelete), String(data.agentUserId));
 		} catch (error) {

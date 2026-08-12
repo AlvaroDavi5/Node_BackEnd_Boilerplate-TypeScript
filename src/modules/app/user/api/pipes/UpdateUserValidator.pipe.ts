@@ -9,7 +9,6 @@ import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { configServiceMock, dataParserHelperMock } from '@dev/mocks/mockedModules';
 import UpdateUserInputDto from '../dto/user/UpdateUserInput.dto';
 
-
 export default class UpdateUserValidatorPipe implements PipeTransform<UpdateUserInputDto, IUpdateUser> {
 	private readonly schemaValidator: SchemaValidator;
 

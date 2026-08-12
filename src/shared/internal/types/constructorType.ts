@@ -1,4 +1,3 @@
-
 // oxlint-disable-next-line typescript/no-explicit-any
 export type classConstructorType<T> = new (...args: any[]) => T;
 

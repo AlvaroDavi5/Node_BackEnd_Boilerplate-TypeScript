@@ -1,7 +1,6 @@
 import { Readable } from 'stream';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
-
 describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 	const dataParserHelper = new DataParserHelper();
 	describe('# Valid Data To String', () => {
@@ -45,10 +44,10 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 						name: 'John',
 						settings: {
 							theme: 'dark',
-							notifications: false
-						}
-					}
-				}
+							notifications: false,
+						},
+					},
+				},
 			};
 			const stringifiedObject = dataParserHelper.toString(obj);
 			expect(stringifiedObject).toBe('{"user":{"id":1,"profile":{"name":"John","settings":{"theme":"dark","notifications":false}}}}');
@@ -85,7 +84,7 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 			const arr = [
 				{ id: 1, name: 'John' },
 				{ id: 2, name: 'Jane' },
-				{ id: 3, name: 'Bob' }
+				{ id: 3, name: 'Bob' },
 			];
 			const stringifiedArray = dataParserHelper.toString(arr);
 			expect(stringifiedArray).toBe('[{"id":1,"name":"John"},{"id":2,"name":"Jane"},{"id":3,"name":"Bob"}]');
@@ -98,14 +97,7 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 		});
 
 		test('Should return a stringified mixed array with objects and primitives', () => {
-			const arr = [
-				'string',
-				123,
-				true,
-				{ id: 1, active: false },
-				[1, 2, 3],
-				null
-			];
+			const arr = ['string', 123, true, { id: 1, active: false }, [1, 2, 3], null];
 			const stringifiedArray = dataParserHelper.toString(arr);
 			expect(stringifiedArray).toBe('[string,123,true,{"id":1,"active":false},[1,2,3],null]');
 		});
@@ -128,8 +120,14 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 		});
 
 		test('Should return a stringified function', () => {
-			expect(dataParserHelper.toString(function testFunction() { return; })).toBe('function testFunction() { return; }');
-			const arrowFunction = () => { return; };
+			expect(
+				dataParserHelper.toString(function testFunction() {
+					return;
+				}),
+			).toBe('function testFunction() { return; }');
+			const arrowFunction = () => {
+				return;
+			};
 			expect(dataParserHelper.toString(arrowFunction)).toBe('() => { return; }');
 		});
 
@@ -190,11 +188,10 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 				start(controller) {
 					controller.enqueue(new TextEncoder().encode('Hello World'));
 					controller.close();
-				}
+				},
 			});
 			const buffer = await dataParserHelper.toBuffer(readableStream, 'utf8');
 			expect(buffer.toString('utf8')).toBe('Hello World');
 		});
 	});
-
 });

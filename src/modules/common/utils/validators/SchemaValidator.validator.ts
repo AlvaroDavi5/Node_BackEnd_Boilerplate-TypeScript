@@ -4,27 +4,21 @@ import { Logger } from 'winston';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 
-
 export default class SchemaValidator {
 	constructor(
 		private readonly exceptions: Exceptions,
 		private readonly logger: Logger | LoggerService | Console,
-	) { }
+	) {}
 
 	private log(message: string): void {
-		if ('verbose' in this.logger)
-			this.logger.verbose(message);
-		else
-			this.logger.log(message);
+		if ('verbose' in this.logger) this.logger.verbose(message);
+		else this.logger.log(message);
 	}
 
 	public validate<S = unknown>(data: unknown, metadata: ArgumentMetadata, schema: Schema<S>): S {
 		this.log(`Validating '${metadata.type}' received as '${metadata.metatype?.name}'`);
 
-		const { value, error } = schema.validate(
-			data,
-			{ stripUnknown: false },
-		);
+		const { value, error } = schema.validate(data, { stripUnknown: false });
 
 		if (error) {
 			const errorMessages = error.details.map((errorDetail) => errorDetail.message).join(', ');

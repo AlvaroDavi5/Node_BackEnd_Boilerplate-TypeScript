@@ -11,21 +11,20 @@ import { isNullOrUndefined } from '@common/utils/dataValidations.util';
 import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
 import UserPreferenceEntity, { ICreateUserPreference, IUpdateUserPreference, IViewUserPreference, returingUserPreferenceEntity } from './UserPreference.entity';
 
-
 interface UserInterface<UP = IViewUserPreference> {
-	id?: string,
-	fullName: string,
-	email: string,
-	password: string,
-	phone?: string,
-	docType?: string,
-	document?: string,
-	fu?: string,
-	preference?: UP,
-	readonly createdAt: Date,
-	updatedAt?: Date,
-	deletedAt?: Date,
-	deletedBy?: string,
+	id?: string;
+	fullName: string;
+	email: string;
+	password: string;
+	phone?: string;
+	docType?: string;
+	document?: string;
+	fu?: string;
+	preference?: UP;
+	readonly createdAt: Date;
+	updatedAt?: Date;
+	deletedAt?: Date;
+	deletedBy?: string;
 }
 
 export type ICreateUser = Omit<UserInterface<ICreateUserPreference>, 'id' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
@@ -45,7 +44,9 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	@ApiProperty({
 		type: String,
 		example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
-		default: '', nullable: false, required: false,
+		default: '',
+		nullable: false,
+		required: false,
 		description: 'Database register ID',
 	})
 	@Field(returingString, { defaultValue: '', nullable: false, description: 'Database register ID' })
@@ -91,7 +92,9 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 	@ApiProperty({
 		type: UserPreferenceEntity,
 		example: new UserPreferenceEntity({ imagePath: './image.png', defaultTheme: ThemesEnum.DEFAULT }),
-		default: null, nullable: true, required: true,
+		default: null,
+		nullable: true,
+		required: true,
 		description: 'User preference',
 	})
 	@Type(returingUserPreferenceEntity)
@@ -159,8 +162,7 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 		return this.id;
 	}
 	public setId(id: string): void {
-		if (id.length < 1)
-			return;
+		if (id.length < 1) return;
 
 		this.id = id;
 		this.preference?.setUserId(id);
@@ -194,7 +196,7 @@ export default class UserEntity extends AbstractEntity<UserInterface> {
 		this.phone = phone;
 	}
 
-	public getDocInfos(): { document: string | null, docType: string | null, fu: string | null } {
+	public getDocInfos(): { document: string | null; docType: string | null; fu: string | null } {
 		return {
 			document: this.document,
 			docType: this.docType,

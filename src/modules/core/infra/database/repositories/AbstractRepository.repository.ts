@@ -6,11 +6,10 @@ import AbstractEntity from '@common/classes/AbstractEntity.entity';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import { classConstructorType } from '@shared/internal/types/constructorType';
 
-
 export interface PaginationOptionsInterface<M extends BaseEntity> {
-	take?: number, // limit
-	skip?: number, // offset
-	order?: FindOptionsOrder<M>,
+	take?: number; // limit
+	skip?: number; // offset
+	order?: FindOptionsOrder<M>;
 }
 export type BuildParamsInterface<I = unknown> = ListQueryInterface & Partial<I>;
 
@@ -24,11 +23,11 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 
 	protected resourceRepository: Repository<M>;
 	protected resourceMapper: {
-		toDomainEntity: (dataValues: M) => E,
-		toDatabaseEntity: (entity: E) => M,
+		toDomainEntity: (dataValues: M) => E;
+		toDatabaseEntity: (entity: E) => M;
 	};
 	protected queryParamsBuilder: {
-		buildParams: (data: BI) => FindManyOptions<M>,
+		buildParams: (data: BI) => FindManyOptions<M>;
 	};
 	protected exceptions: Exceptions;
 	protected logger: LoggerService;
@@ -43,18 +42,18 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 		exceptions,
 		logger,
 	}: {
-		connection: DataSource,
-		DomainEntity: classConstructorType<E>,
-		ResourceModel: ModelType<M>,
+		connection: DataSource;
+		DomainEntity: classConstructorType<E>;
+		ResourceModel: ModelType<M>;
 		resourceMapper: {
-			toDomainEntity: (dataValues: M) => E,
-			toDatabaseEntity: (entity: E) => M,
-		},
+			toDomainEntity: (dataValues: M) => E;
+			toDatabaseEntity: (entity: E) => M;
+		};
 		queryParamsBuilder: {
-			buildParams: (data: BI) => FindManyOptions<M>,
-		},
-		exceptions: Exceptions,
-		logger: LoggerService,
+			buildParams: (data: BI) => FindManyOptions<M>;
+		};
+		exceptions: Exceptions;
+		logger: LoggerService;
 	}) {
 		this.DomainEntity = DomainEntity;
 		this.ResourceModel = ResourceModel;
@@ -91,9 +90,7 @@ export default abstract class AbstractRepository<M extends BaseEntity, E extends
 		try {
 			this.validatePayload(entity);
 
-			const result = await this.resourceRepository.create(
-				this.resourceMapper.toDatabaseEntity(entity)
-			).save();
+			const result = await this.resourceRepository.create(this.resourceMapper.toDatabaseEntity(entity)).save();
 
 			return this.resourceMapper.toDomainEntity(result);
 		} catch (error) {

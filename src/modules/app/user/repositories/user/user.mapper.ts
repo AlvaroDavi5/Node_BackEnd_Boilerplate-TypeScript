@@ -3,7 +3,6 @@ import UserPreferencesModel from '@core/infra/database/models/UserPreferences.mo
 import UserEntity from '@domain/entities/User.entity';
 import userPreferenceMapper from '@app/user/repositories/userPreference/userPreference.mapper';
 
-
 function toDomainEntity(dataValues: UsersModel): UserEntity {
 	const user = new UserEntity(dataValues);
 
@@ -18,17 +17,16 @@ function toDomainEntity(dataValues: UsersModel): UserEntity {
 	}
 
 	return user;
-};
+}
 
 // oxlint-disable-next-line typescript/no-explicit-any
 function toDatabaseEntity(entity: UserEntity): any {
-	if (!entity.validate().valid)
-		return null;
+	if (!entity.validate().valid) return null;
 
 	const { id: _id, preference: _preference, ...userAttributes } = entity.getAttributes();
 
 	return userAttributes;
-};
+}
 
 export default {
 	toDomainEntity,

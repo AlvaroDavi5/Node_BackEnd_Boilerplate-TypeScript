@@ -3,18 +3,11 @@ import { requestMethodType, requestQueryType, requestBodyType } from '@shared/in
 import { RestClientResponseInterface } from '@shared/external/interfaces/RestClientInterface';
 import { mockObservable } from '../mockObservable';
 
-
 export default abstract class AbstractRestClient {
 	protected readonly logger: LoggerService;
 	protected readonly serviceName: string;
 
-	constructor({
-		serviceName,
-		logger,
-	}: {
-		serviceName: string,
-		logger: LoggerService,
-	}) {
+	constructor({ serviceName, logger }: { serviceName: string; logger: LoggerService }) {
 		this.logger = logger;
 		this.serviceName = serviceName;
 	}
@@ -39,10 +32,7 @@ export default abstract class AbstractRestClient {
 		return this.makeRequest('delete', endpoint, query);
 	}
 
-	protected makeRequest(
-		method: requestMethodType, endpoint: string,
-		query?: requestQueryType, body?: requestBodyType
-	): RestClientResponseInterface<unknown> {
+	protected makeRequest(method: requestMethodType, endpoint: string, query?: requestQueryType, body?: requestBodyType): RestClientResponseInterface<unknown> {
 		try {
 			this.logger.http(`REQUESTING - ${this.serviceName}: [${method.toUpperCase()}] '${endpoint}'`);
 			mockObservable.call({ method, url: endpoint, params: query, data: body });

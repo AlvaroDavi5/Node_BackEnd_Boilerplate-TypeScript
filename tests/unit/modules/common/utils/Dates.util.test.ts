@@ -1,10 +1,15 @@
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import {
-	fromISOToDateTime, fromEpochToDateTime, fromJSDateToDateTime,
-	fromDateTimeToISO, fromDateTimeToEpoch, fromDateTimeToJSDate,
-	getDateTimeNow, setDateUnits, formatDateTime,
+	fromISOToDateTime,
+	fromEpochToDateTime,
+	fromJSDateToDateTime,
+	fromDateTimeToISO,
+	fromDateTimeToEpoch,
+	fromDateTimeToJSDate,
+	getDateTimeNow,
+	setDateUnits,
+	formatDateTime,
 } from '@common/utils/dates.util';
-
 
 describe('Modules :: Common :: Utils :: Dates', () => {
 	const timestamp = fromISOToDateTime('2024-06-10T05:52:50.885Z', false, TimeZonesEnum.America_SaoPaulo);

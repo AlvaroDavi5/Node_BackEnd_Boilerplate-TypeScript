@@ -10,7 +10,6 @@ import { ListQueryInterface, PaginationInterface } from '@shared/internal/interf
 import userMapper from './user.mapper';
 import { userQueryParamsBuilder, UserBuildParamsInterface } from './user.query';
 
-
 @Injectable()
 export default class UserRepository extends AbstractRepository<UsersModel, UserEntity, UserBuildParamsInterface> {
 	constructor(

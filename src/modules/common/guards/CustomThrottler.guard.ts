@@ -20,9 +20,7 @@ export default class CustomThrottlerGuard implements CanActivate {
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 	) {
-		this.globalThrottlers = Array.isArray(this.throttlerModuleOptions)
-			? this.throttlerModuleOptions
-			: this.throttlerModuleOptions.throttlers;
+		this.globalThrottlers = Array.isArray(this.throttlerModuleOptions) ? this.throttlerModuleOptions : this.throttlerModuleOptions.throttlers;
 		this.headerPrefix = 'X-RateLimit';
 	}
 
@@ -57,13 +55,7 @@ export default class CustomThrottlerGuard implements CanActivate {
 		return continues.every((cont) => cont);
 	}
 
-	private async handleHttpRequest(
-		httpContext: HttpArgumentsHost,
-		throttlerName: string,
-		ttl: number,
-		limit: number,
-		blockDuration: number
-	): Promise<boolean> {
+	private async handleHttpRequest(httpContext: HttpArgumentsHost, throttlerName: string, ttl: number, limit: number, blockDuration: number): Promise<boolean> {
 		const { req, res } = this.getRequestResponse(httpContext);
 
 		const ip = req?.ip ?? req?.socket?.remoteAddress ?? '_';
@@ -124,11 +116,14 @@ export default class CustomThrottlerGuard implements CanActivate {
 		return throttlers;
 	}
 
-	private async getThrottlerData(context: ExecutionContext, throttler: ThrottlerOptions): Promise<{
-		name: string,
-		ttl: number,
-		limit: number,
-		blockDuration: number,
+	private async getThrottlerData(
+		context: ExecutionContext,
+		throttler: ThrottlerOptions,
+	): Promise<{
+		name: string;
+		ttl: number;
+		limit: number;
+		blockDuration: number;
 	}> {
 		const name = throttler.name ?? 'default';
 		const limit = await this.resolveValue<number>(context, throttler.limit);
@@ -142,7 +137,7 @@ export default class CustomThrottlerGuard implements CanActivate {
 		return typeof resolvableValue === 'function' ? resolvableValue(context) : resolvableValue;
 	}
 
-	private getRequestResponse(httpContext: HttpArgumentsHost): { req: RequestInterface, res: ResponseInterface } {
+	private getRequestResponse(httpContext: HttpArgumentsHost): { req: RequestInterface; res: ResponseInterface } {
 		return {
 			req: httpContext.getRequest<RequestInterface>(),
 			res: httpContext.getResponse<ResponseInterface>(),

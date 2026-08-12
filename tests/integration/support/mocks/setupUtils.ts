@@ -5,7 +5,6 @@ import nestApiConfig from '@core/configs/nestApi.config';
 import { ProcessEventsEnum } from '@common/enums/processEvents.enum';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
-
 export const createNestTestApplicationOptions: NestApplicationOptions = {
 	abortOnError: true,
 	snapshot: false,
@@ -27,8 +26,7 @@ export async function startNestApplication(nestApp: NestFastifyApplication): Pro
 
 	nestApiConfig(nestApp);
 
-	await nestApp.listen(parseInt(process.env.APP_PORT ?? '3000', 10))
-		.catch((error: ErrorInterface | Error) => {
-			validateKnownExceptions(error);
-		});
+	await nestApp.listen(parseInt(process.env.APP_PORT ?? '3000', 10)).catch((error: ErrorInterface | Error) => {
+		validateKnownExceptions(error);
+	});
 }

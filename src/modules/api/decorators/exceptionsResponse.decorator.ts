@@ -1,11 +1,16 @@
 import { applyDecorators } from '@nestjs/common';
 import {
-	ApiBadRequestResponse, ApiUnauthorizedResponse, ApiForbiddenResponse, ApiNotFoundResponse,
-	ApiConflictResponse, ApiInternalServerErrorResponse, ApiServiceUnavailableResponse, ApiTooManyRequestsResponse,
+	ApiBadRequestResponse,
+	ApiUnauthorizedResponse,
+	ApiForbiddenResponse,
+	ApiNotFoundResponse,
+	ApiConflictResponse,
+	ApiInternalServerErrorResponse,
+	ApiServiceUnavailableResponse,
+	ApiTooManyRequestsResponse,
 } from '@nestjs/swagger';
 import Exceptions from '@core/errors/Exceptions';
 import { ExceptionsEnum } from '@common/enums/exceptions.enum';
-
 
 export default () => {
 	const exceptions = new Exceptions();

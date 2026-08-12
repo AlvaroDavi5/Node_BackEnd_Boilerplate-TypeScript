@@ -5,7 +5,6 @@ import { ConfigService } from '@nestjs/config';
 import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from './DataParser.helper';
 
-
 @Injectable()
 export default class FileReaderHelper {
 	private readonly logger: LoggerService;

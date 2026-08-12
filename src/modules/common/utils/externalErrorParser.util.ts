@@ -5,7 +5,6 @@ import { ExceptionsEnum } from '@common/enums/exceptions.enum';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
-
 function exceptionsMapper(statusCode: number): ExceptionsEnum {
 	const mapper: Record<number, ExceptionsEnum> = {
 		[HttpStatusEnum.BAD_REQUEST]: ExceptionsEnum.CONTRACT,
@@ -37,14 +36,10 @@ export default function externalErrorParser(error: unknown): HttpException {
 			const response = res as Record<string, Record<string, unknown> | undefined>;
 
 			const responseMessage = response.message ? parseToString(response.message) : undefined;
-			const responseMetadata = response.metadata
-				? parseToString({ message: response.metadata?.message, detail: response.metadata?.detail })
-				: undefined;
+			const responseMetadata = response.metadata ? parseToString({ message: response.metadata?.message, detail: response.metadata?.detail }) : undefined;
 
-			if (responseMessage)
-				errorStacks.push(responseMessage);
-			if (responseMetadata)
-				errorStacks.push(responseMetadata);
+			if (responseMessage) errorStacks.push(responseMessage);
+			if (responseMetadata) errorStacks.push(responseMetadata);
 		}
 	} else if (error instanceof AxiosError) {
 		exceptionName = exceptionsMapper(error.status ?? 500);
@@ -52,10 +47,10 @@ export default function externalErrorParser(error: unknown): HttpException {
 		const { response } = error;
 		if (typeof response === 'object') {
 			const responseMessage = response.data ? parseToString(response.data) : undefined;
-			if (responseMessage)
-				errorStacks.push(responseMessage);
+			if (responseMessage) errorStacks.push(responseMessage);
 		}
-	} else { // instanceof Error
+	} else {
+		// instanceof Error
 		exceptionName = exceptionsMapper(HttpStatusEnum.INTERNAL_SERVER_ERROR);
 	}
 

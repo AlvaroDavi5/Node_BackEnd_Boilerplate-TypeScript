@@ -1,4 +1,3 @@
-
 export enum QueueDomainEventsEnum {
 	NEW_HOOK = 'NEW_HOOK',
 }

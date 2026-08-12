@@ -5,7 +5,6 @@ import { fastifyAdapter } from '@core/configs/nestApi.config';
 import CoreModule from '@core/core.module';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/e2e/support/mocks/setupUtils';
 
-
 jest.setTimeout(5000);
 describe('API :: HealthController', () => {
 	let nestTestApp: NestFastifyApplication;

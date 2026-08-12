@@ -1,6 +1,5 @@
 import { GraphQLFormattedError } from 'graphql';
 
-
 // oxlint-disable-next-line typescript/no-explicit-any
 export function formatGraphQlError({ message, extensions, path }: GraphQLFormattedError, error: any): GraphQLFormattedError {
 	const graphQLFormattedError: GraphQLFormattedError = {

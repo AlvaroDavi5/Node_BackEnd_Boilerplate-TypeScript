@@ -2,9 +2,7 @@ import { CacheEnum } from '@domain/enums/cache.enum';
 import { QueueSchemasEnum, WebSocketEventsEnum, WebSocketRoomsEnum } from '@domain/enums/events.enum';
 import { ThemesEnum } from '@domain/enums/themes.enum';
 
-
 describe('Modules :: Domain :: Enums', () => {
-
 	describe('# CacheEnum', () => {
 		test('Should return keys', () => {
 			expect(Object.keys(CacheEnum)).toEqual(['SUBSCRIPTIONS', 'HOOKS']);
@@ -52,25 +50,13 @@ describe('Modules :: Domain :: Enums', () => {
 
 	describe('# WebSocketEventsEnum and WebSocketRoomsEnum', () => {
 		test('Should return keys', () => {
-			expect(Object.keys(WebSocketEventsEnum)).toEqual([
-				'CONNECT',
-				'DISCONNECT',
-				'RECONNECT',
-				'EMIT',
-				'ERROR',
-			]);
+			expect(Object.keys(WebSocketEventsEnum)).toEqual(['CONNECT', 'DISCONNECT', 'RECONNECT', 'EMIT', 'ERROR']);
 
 			expect(Object.keys(WebSocketRoomsEnum)).toEqual(['NEW_CONNECTIONS']);
 		});
 
 		test('Should return values', () => {
-			expect(Object.values(WebSocketEventsEnum)).toEqual([
-				'connection',
-				'disconnect',
-				'reconnect',
-				'emit',
-				'error',
-			]);
+			expect(Object.values(WebSocketEventsEnum)).toEqual(['connection', 'disconnect', 'reconnect', 'emit', 'error']);
 
 			expect(Object.values(WebSocketRoomsEnum)).toEqual(['new_connections']);
 		});

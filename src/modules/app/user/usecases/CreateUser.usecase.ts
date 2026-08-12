@@ -8,7 +8,6 @@ import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 import CreateUserInputDto from '../api/dto/user/CreateUserInput.dto';
 
-
 @Injectable()
 export default class CreateUserUseCase {
 	constructor(
@@ -16,7 +15,7 @@ export default class CreateUserUseCase {
 		private readonly userPreferenceService: UserPreferenceService,
 		private readonly httpMessagesConstants: HttpMessagesConstants,
 		private readonly exceptions: Exceptions,
-	) { }
+	) {}
 
 	public async execute(data: CreateUserInputDto, agentUser?: UserAuthInterface): Promise<UserEntity> {
 		if (!agentUser?.clientId)
@@ -43,8 +42,7 @@ export default class CreateUserUseCase {
 			this.userPreferenceService.getByUserId(createdUser.getId()),
 		]);
 
-		if (foundedPreference)
-			foundedUser?.setPreference(foundedPreference);
+		if (foundedPreference) foundedUser?.setPreference(foundedPreference);
 
 		return foundedUser;
 	}

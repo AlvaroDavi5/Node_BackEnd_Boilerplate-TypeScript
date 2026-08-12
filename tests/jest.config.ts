@@ -5,15 +5,10 @@ const config: Config = {
 	rootDir: '../',
 
 	// A list of paths to directories that Jest should use to search for files in
-	roots: [
-		'<rootDir>/tests/unit',
-	],
+	roots: ['<rootDir>/tests/unit'],
 
 	// The paths to modules that run some code to configure or set up the testing environment before each test
-	setupFiles: [
-		'dotenv/config',
-		'<rootDir>/tests/unit/support/setup.ts',
-	],
+	setupFiles: ['dotenv/config', '<rootDir>/tests/unit/support/setup.ts'],
 
 	// Stop running tests after `n` failures
 	// bail: 0,
@@ -28,9 +23,7 @@ const config: Config = {
 	coverageDirectory: 'coverage/unit',
 
 	// An array of glob patterns indicating a set of files for which coverage information should be collected
-	collectCoverageFrom: [
-		'src/**/*.{ts,ts,js,js}'
-	],
+	collectCoverageFrom: ['src/**/*.{ts,ts,js,js}'],
 
 	// An array of regexp pattern strings used to skip coverage collection
 	coveragePathIgnorePatterns: [
@@ -57,12 +50,7 @@ const config: Config = {
 	coverageProvider: 'babel',
 
 	// A list of reporter names that Jest uses when writing coverage reports
-	coverageReporters: [
-		'json',
-		'text',
-		'lcov',
-		'clover'
-	],
+	coverageReporters: ['json', 'text', 'lcov', 'clover'],
 
 	// An object that configures minimum threshold enforcement for coverage results
 	coverageThreshold: {
@@ -70,8 +58,8 @@ const config: Config = {
 			statements: 90,
 			branches: 80,
 			functions: 80,
-			lines: 70
-		}
+			lines: 70,
+		},
 	},
 
 	// A path to a custom dependency extractor
@@ -97,19 +85,10 @@ const config: Config = {
 	maxWorkers: '50%',
 
 	// An array of directory names to be searched recursively up from the requiring module's location
-	moduleDirectories: [
-		'node_modules',
-		'src',
-	],
+	moduleDirectories: ['node_modules', 'src'],
 
 	// An array of file extensions your modules use
-	moduleFileExtensions: [
-		'ts',
-		'tsx',
-		'js',
-		'jsx',
-		'json',
-	],
+	moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
 
 	// A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
 	moduleNameMapper: {
@@ -172,25 +151,19 @@ const config: Config = {
 	// resolver: undefined,
 	slowTestThreshold: 2,
 	testEnvironment: 'node',
-	testRegex: [
-		'.*\\.test\\.ts$',
-		'.*\\.spec\\.ts$',
-	],
-	testPathIgnorePatterns: [
-		'node_modules/',
-	],
+	testRegex: ['.*\\.test\\.ts$', '.*\\.spec\\.ts$'],
+	testPathIgnorePatterns: ['node_modules/'],
 	transform: {
 		'^.+\\.(t|j)s$': [
-			'ts-jest', {
+			'ts-jest',
+			{
 				tsconfig: 'tsconfig.test.json',
 				diagnostics: false,
 			},
 			// '@swc/jest'
 		],
 	},
-	transformIgnorePatterns: [
-		'<rootDir>/node_modules/'
-	],
+	transformIgnorePatterns: ['<rootDir>/node_modules/'],
 	verbose: undefined,
 };
 

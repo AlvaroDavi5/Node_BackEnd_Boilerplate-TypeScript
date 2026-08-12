@@ -1,7 +1,6 @@
 import Joi from 'joi';
 import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
-
 const listQuerySchema: Joi.Schema<ListQueryInterface> = Joi.object({
 	limit: Joi.number(),
 	page: Joi.number(),

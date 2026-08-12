@@ -10,7 +10,6 @@ import UserPreferenceService from '@app/user/services/UserPreference.service';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
-
 describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 	// // mocks
 	const exceptionsMock = {
@@ -32,7 +31,7 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 		update: jest.fn(async (_id: string, _data: IUpdateUser): Promise<UserEntity> => {
 			throw new Error('GenericError');
 		}),
-		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, agentUserId?: string }): Promise<boolean> => false),
+		delete: jest.fn(async (_id: string, _data: { softDelete: boolean; agentUserId?: string }): Promise<boolean> => false),
 		list: jest.fn(async (_query: ListQueryInterface, _withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => {
 			return { content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 };
 		}),
@@ -87,7 +86,8 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 
 	describe('# Main Flux', () => {
 		test('Should validate password', async () => {
-			const mockedToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIuZGVmYXVsdEBub21haWwuZGV2IiwiY2xpZW50SWQiOiIxODZlN2RhYS1kMmRmLTQ0YWYtYmE4Yy00ZjIwNDM1NmQwZjkiLCJpYXQiOjE3MTgxNTY2MjQsImV4cCI6MTcxODI0MzAyNH0.4gmn_kp7YaZq4XGvKxe2i6QgWZh-f2iNaJg40md6agQ';
+			const mockedToken =
+				'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VybmFtZSI6InVzZXIuZGVmYXVsdEBub21haWwuZGV2IiwiY2xpZW50SWQiOiIxODZlN2RhYS1kMmRmLTQ0YWYtYmE4Yy00ZjIwNDM1NmQwZjkiLCJpYXQiOjE3MTgxNTY2MjQsImV4cCI6MTcxODI0MzAyNH0.4gmn_kp7YaZq4XGvKxe2i6QgWZh-f2iNaJg40md6agQ';
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test', password: 'admin' });
 			userServiceMock.getById.mockResolvedValueOnce(userEntity);
 			userServiceMock.getByEmail.mockResolvedValueOnce(userEntity);
@@ -107,10 +107,14 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(cryptographyServiceMock.encodeJwt).toHaveBeenCalledTimes(1);
-			expect(cryptographyServiceMock.encodeJwt).toHaveBeenCalledWith({
-				username: userEntity.getEmail(),
-				clientId: userEntity.getId(),
-			}, 'utf8', '1D');
+			expect(cryptographyServiceMock.encodeJwt).toHaveBeenCalledWith(
+				{
+					username: userEntity.getEmail(),
+					clientId: userEntity.getId(),
+				},
+				'utf8',
+				'1D',
+			);
 			expect(result.token).toBe(mockedToken);
 			expect(result.user.getEmail()).toBe('user.test@nomail.test');
 			expect(result.user.getPassword()).toBe('');
@@ -126,8 +130,7 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 				});
 			});
 
-			await expect(loginUserUseCase.execute({ email: 'user.test@nomail.test', password: 'admin' }))
-				.rejects.toMatchObject(new Error('Invalid Credentials'));
+			await expect(loginUserUseCase.execute({ email: 'user.test@nomail.test', password: 'admin' })).rejects.toMatchObject(new Error('Invalid Credentials'));
 			expect(userServiceMock.getByEmail).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getByEmail).toHaveBeenCalledWith('user.test@nomail.test');
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
@@ -143,12 +146,11 @@ describe('Modules :: App :: User :: UseCases :: LoginUserUseCase', () => {
 		test('Should throw a not found error', async () => {
 			userServiceMock.getByEmail.mockResolvedValueOnce(null);
 
-			await expect(loginUserUseCase.execute({ email: 'user.test@nomail.test', password: 'admin' }))
-				.rejects.toMatchObject(new Error('Invalid Credentials'));
+			await expect(loginUserUseCase.execute({ email: 'user.test@nomail.test', password: 'admin' })).rejects.toMatchObject(new Error('Invalid Credentials'));
 			expect(userServiceMock.getByEmail).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getByEmail).toHaveBeenCalledWith('user.test@nomail.test');
 			expect(exceptionsMock.notFound).toHaveBeenCalledWith({
-				message: 'User not founded by e-mail!'
+				message: 'User not founded by e-mail!',
 			});
 			expect(userServiceMock.validatePassword).not.toHaveBeenCalled();
 			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();

@@ -1,4 +1,3 @@
-
 export enum ProcessEventsEnum {
 	// ? app events
 	UNCAUGHT_EXCEPTION = 'uncaughtException',

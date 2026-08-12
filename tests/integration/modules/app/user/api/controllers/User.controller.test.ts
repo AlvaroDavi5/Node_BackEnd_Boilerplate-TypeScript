@@ -24,7 +24,6 @@ import { configServiceMock } from '@dev/mocks/mockedModules';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
 import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
-
 describe('Modules :: App :: User :: API :: UserController', () => {
 	let nestTestApp: NestFastifyApplication;
 
@@ -50,9 +49,7 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 	beforeAll(async () => {
 		const nestTestingModule: TestingModule = await Test.createTestingModule({
 			imports: [],
-			controllers: [
-				UserController,
-			],
+			controllers: [UserController],
 			providers: [
 				{ provide: ConfigService, useValue: configServiceMock },
 				{ provide: LoginUserUseCase, useValue: {} },
@@ -70,8 +67,10 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 			],
 			exports: [],
 		})
-			.overrideGuard(CustomThrottlerGuard).useValue(customThrottlerGuardMock)
-			.overrideGuard(AuthGuard).useValue(authGuardMock)
+			.overrideGuard(CustomThrottlerGuard)
+			.useValue(customThrottlerGuardMock)
+			.overrideGuard(AuthGuard)
+			.useValue(authGuardMock)
 			.compile();
 
 		nestTestApp = nestTestingModule.createNestApplication<NestFastifyApplication>(fastifyAdapter, createNestTestApplicationOptions);
@@ -148,8 +147,7 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 				});
 			});
 
-			const response = await request(await nestTestApp.getHttpServer())
-				.get('/api/users');
+			const response = await request(await nestTestApp.getHttpServer()).get('/api/users');
 
 			expect(response.statusCode).toBe(498);
 			expect(response.body).toMatchObject({
@@ -177,10 +175,7 @@ describe('Modules :: App :: User :: API :: UserController', () => {
 			expect(response.body).toMatchObject({
 				error: 'BadRequestException',
 				name: 'Bad Request',
-				message: [
-					'password should not be empty',
-					'password must be a string',
-				],
+				message: ['password should not be empty', 'password must be a string'],
 				statusCode: 400,
 			});
 		});

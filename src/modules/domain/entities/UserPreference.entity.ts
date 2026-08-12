@@ -9,19 +9,18 @@ import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import AbstractEntity from '@common/classes/AbstractEntity.entity';
 import { returingString, returingDate } from '@shared/internal/types/returnTypeFunc';
 
-
 const dateTimeExample = fromISOToDateTime('2024-06-10T03:52:50.885Z', false, TimeZonesEnum.America_SaoPaulo);
 const dateExample = fromDateTimeToJSDate(dateTimeExample, false);
 const getDateNow = () => fromDateTimeToJSDate(getDateTimeNow(TimeZonesEnum.America_SaoPaulo));
 
 interface UserPreferenceInterface {
-	id?: string,
-	userId?: string,
-	imagePath?: string,
-	defaultTheme?: ThemesEnum,
-	readonly createdAt: Date,
-	updatedAt?: Date,
-	deletedAt?: Date,
+	id?: string;
+	userId?: string;
+	imagePath?: string;
+	defaultTheme?: ThemesEnum;
+	readonly createdAt: Date;
+	updatedAt?: Date;
+	deletedAt?: Date;
 }
 
 export type ICreateUserPreference = Omit<UserPreferenceInterface, 'id' | 'userId' | 'createdAt' | 'updatedAt' | 'deletedAt'>;
@@ -35,7 +34,9 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 	@ApiProperty({
 		type: String,
 		example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
-		default: '', nullable: false, required: false,
+		default: '',
+		nullable: false,
+		required: false,
 		description: 'Database register ID',
 	})
 	@Field(returingString, { defaultValue: '', nullable: false, description: 'Database register ID' })
@@ -54,9 +55,12 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 	private imagePath: string | null = null;
 
 	@ApiProperty({
-		type: String, enum: getObjValues<ThemesEnum>(ThemesEnum),
+		type: String,
+		enum: getObjValues<ThemesEnum>(ThemesEnum),
 		example: ThemesEnum.DEFAULT,
-		default: null, nullable: true, required: true,
+		default: null,
+		nullable: true,
+		required: true,
 		description: 'User default theme',
 	})
 	@Field(returingString, { defaultValue: null, nullable: true, description: 'User default theme' })
@@ -108,8 +112,7 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 		return this.id;
 	}
 	public setId(id: string): void {
-		if (id.length < 1)
-			return;
+		if (id.length < 1) return;
 
 		this.id = id;
 	}
@@ -118,8 +121,7 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 		return this.userId;
 	}
 	public setUserId(userId: string): void {
-		if (userId.length < 1)
-			return;
+		if (userId.length < 1) return;
 
 		this.userId = userId;
 	}
@@ -130,8 +132,7 @@ export default class UserPreferenceEntity extends AbstractEntity<UserPreferenceI
 	public setDefaultTheme(theme: ThemesEnum | string): void {
 		const themeValues = getObjValues<string>(ThemesEnum);
 
-		if (!themeValues.includes(theme))
-			throw new Error(`Invalid theme value: ${theme}. Valid values are: ${themeValues.join(', ')}`);
+		if (!themeValues.includes(theme)) throw new Error(`Invalid theme value: ${theme}. Valid values are: ${themeValues.join(', ')}`);
 
 		this.defaultTheme = theme as ThemesEnum;
 	}

@@ -9,7 +9,6 @@ import { configServiceMock, dataParserHelperMock } from '@dev/mocks/mockedModule
 import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import { ListQueryInputDto } from '../dto/QueryInput.dto';
 
-
 export default class ListQueryValidatorPipe implements PipeTransform<ListQueryInputDto, ListQueryInterface> {
 	private readonly schemaValidator: SchemaValidator;
 

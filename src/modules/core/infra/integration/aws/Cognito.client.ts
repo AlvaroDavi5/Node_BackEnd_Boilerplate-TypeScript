@@ -2,14 +2,25 @@ import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
 	CognitoIdentityProviderClient,
-	ListUserPoolsCommand, CreateUserPoolCommand, DeleteUserPoolCommand, CreateUserPoolClientCommand, DeleteUserPoolClientCommand,
-	AdminCreateUserCommand, AdminGetUserCommand, AdminDeleteUserCommand, SignUpCommand, AdminConfirmSignUpCommand,
-	SignUpCommandInput, UserPoolDescriptionType, UserPoolClientType, UserType, SignUpResponse,
+	ListUserPoolsCommand,
+	CreateUserPoolCommand,
+	DeleteUserPoolCommand,
+	CreateUserPoolClientCommand,
+	DeleteUserPoolClientCommand,
+	AdminCreateUserCommand,
+	AdminGetUserCommand,
+	AdminDeleteUserCommand,
+	SignUpCommand,
+	AdminConfirmSignUpCommand,
+	SignUpCommandInput,
+	UserPoolDescriptionType,
+	UserPoolClientType,
+	UserType,
+	SignUpResponse,
 } from '@aws-sdk/client-cognito-identity-provider';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
-
 
 @Injectable()
 export default class CognitoClient {
@@ -21,15 +32,19 @@ export default class CognitoClient {
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
 	) {
-		const { congito: { apiVersion, maxAttempts, clientId }, credentials: {
-			region, endpoint, accessKeyId, secretAccessKey, sessionToken,
-		} } = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
+		const {
+			congito: { apiVersion, maxAttempts, clientId },
+			credentials: { region, endpoint, accessKeyId, secretAccessKey, sessionToken },
+		} = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
 
 		this.clientId = clientId;
 
 		this.cognitoClient = new CognitoIdentityProviderClient({
-			endpoint, region, apiVersion, maxAttempts,
+			endpoint,
+			region,
+			apiVersion,
+			maxAttempts,
 			credentials: { accessKeyId, secretAccessKey, sessionToken },
 			logger: showExternalLogs ? this.logger : undefined,
 		});
@@ -42,7 +57,7 @@ export default class CognitoClient {
 			UserAttributes: [
 				{
 					Name: 'email',
-					Value: userEmail
+					Value: userEmail,
 				},
 			],
 			ClientId: this.clientId,
@@ -59,9 +74,11 @@ export default class CognitoClient {
 
 	public async listUserPools(max = 200): Promise<UserPoolDescriptionType[]> {
 		try {
-			const result = await this.cognitoClient.send(new ListUserPoolsCommand({
-				MaxResults: max,
-			}));
+			const result = await this.cognitoClient.send(
+				new ListUserPoolsCommand({
+					MaxResults: max,
+				}),
+			);
 
 			return result.UserPools ?? [];
 		} catch (error) {
@@ -71,12 +88,13 @@ export default class CognitoClient {
 
 	public async createUserPool(userPoolName: string): Promise<string> {
 		try {
-			const result = await this.cognitoClient.send(new CreateUserPoolCommand({
-				PoolName: userPoolName,
-			}));
+			const result = await this.cognitoClient.send(
+				new CreateUserPoolCommand({
+					PoolName: userPoolName,
+				}),
+			);
 
-			if (!result?.UserPool?.Id)
-				throw this.exceptions.internal({ message: 'UserPool not created' });
+			if (!result?.UserPool?.Id) throw this.exceptions.internal({ message: 'UserPool not created' });
 
 			return result.UserPool.Id;
 		} catch (error) {
@@ -86,9 +104,11 @@ export default class CognitoClient {
 
 	public async deleteUserPool(userPoolId: string): Promise<boolean> {
 		try {
-			const result = await this.cognitoClient.send(new DeleteUserPoolCommand({
-				UserPoolId: userPoolId,
-			}));
+			const result = await this.cognitoClient.send(
+				new DeleteUserPoolCommand({
+					UserPoolId: userPoolId,
+				}),
+			);
 
 			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
 			return statusCode >= 200 && statusCode < 300;
@@ -99,13 +119,14 @@ export default class CognitoClient {
 
 	public async createClient(clientName: string, userPoolId: string): Promise<UserPoolClientType> {
 		try {
-			const result = await this.cognitoClient.send(new CreateUserPoolClientCommand({
-				ClientName: clientName,
-				UserPoolId: userPoolId,
-			}));
+			const result = await this.cognitoClient.send(
+				new CreateUserPoolClientCommand({
+					ClientName: clientName,
+					UserPoolId: userPoolId,
+				}),
+			);
 
-			if (!result?.UserPoolClient?.ClientId)
-				throw this.exceptions.internal({ message: 'Client not created' });
+			if (!result?.UserPoolClient?.ClientId) throw this.exceptions.internal({ message: 'Client not created' });
 
 			return result.UserPoolClient;
 		} catch (error) {
@@ -115,10 +136,12 @@ export default class CognitoClient {
 
 	public async deleteClient(clientId: string, userPoolId: string): Promise<boolean> {
 		try {
-			const result = await this.cognitoClient.send(new DeleteUserPoolClientCommand({
-				ClientId: clientId,
-				UserPoolId: userPoolId,
-			}));
+			const result = await this.cognitoClient.send(
+				new DeleteUserPoolClientCommand({
+					ClientId: clientId,
+					UserPoolId: userPoolId,
+				}),
+			);
 
 			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
 			return statusCode >= 200 && statusCode < 300;
@@ -129,32 +152,33 @@ export default class CognitoClient {
 
 	public async createUser(userName: string, userPoolId: string): Promise<UserType> {
 		try {
-			const result = await this.cognitoClient.send(new AdminCreateUserCommand({
-				Username: userName,
-				UserPoolId: userPoolId,
-			}));
+			const result = await this.cognitoClient.send(
+				new AdminCreateUserCommand({
+					Username: userName,
+					UserPoolId: userPoolId,
+				}),
+			);
 
-			if (!result?.User?.Username)
-				throw this.exceptions.internal({ message: 'User not created' });
+			if (!result?.User?.Username) throw this.exceptions.internal({ message: 'User not created' });
 
 			return result.User;
 		} catch (error) {
 			throw this.caughtError(error);
 		}
-
 	}
 
 	public async getUser(userName: string, userPoolId: string): Promise<UserType> {
 		const user: UserType = {};
 
 		try {
-			const result = await this.cognitoClient.send(new AdminGetUserCommand({
-				Username: userName,
-				UserPoolId: userPoolId,
-			}));
+			const result = await this.cognitoClient.send(
+				new AdminGetUserCommand({
+					Username: userName,
+					UserPoolId: userPoolId,
+				}),
+			);
 
-			if (!result?.Username)
-				throw this.exceptions.internal({ message: 'User not finded' });
+			if (!result?.Username) throw this.exceptions.internal({ message: 'User not finded' });
 
 			user.Username = result.Username;
 			user.Enabled = result.Enabled;
@@ -171,10 +195,12 @@ export default class CognitoClient {
 
 	public async deleteUser(userName: string, userPoolId: string): Promise<boolean> {
 		try {
-			const result = await this.cognitoClient.send(new AdminDeleteUserCommand({
-				Username: userName,
-				UserPoolId: userPoolId,
-			}));
+			const result = await this.cognitoClient.send(
+				new AdminDeleteUserCommand({
+					Username: userName,
+					UserPoolId: userPoolId,
+				}),
+			);
 
 			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
 			return statusCode >= 200 && statusCode < 300;
@@ -192,8 +218,7 @@ export default class CognitoClient {
 		try {
 			const result = await this.cognitoClient.send(new SignUpCommand(this.signUpParams(userName, userEmail, userPassword)));
 
-			if (!result?.UserConfirmed)
-				throw this.exceptions.internal({ message: 'User not confirmed' });
+			if (!result?.UserConfirmed) throw this.exceptions.internal({ message: 'User not confirmed' });
 
 			user.UserConfirmed = result.UserConfirmed;
 			user.UserSub = result.UserSub;
@@ -206,10 +231,12 @@ export default class CognitoClient {
 
 	public async confirmUserSignUp(userName: string, userPoolId: string): Promise<boolean> {
 		try {
-			const result = await this.cognitoClient.send(new AdminConfirmSignUpCommand({
-				Username: userName,
-				UserPoolId: userPoolId,
-			}));
+			const result = await this.cognitoClient.send(
+				new AdminConfirmSignUpCommand({
+					Username: userName,
+					UserPoolId: userPoolId,
+				}),
+			);
 
 			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
 			return statusCode >= 200 && statusCode < 300;

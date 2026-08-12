@@ -1,9 +1,7 @@
 import UserEntity from '@domain/entities/User.entity';
 import UserPreferenceEntity, { ICreateUserPreference } from '@domain/entities/UserPreference.entity';
 
-
 describe('Modules :: Domain :: Entities :: UserEntities', () => {
-
 	const currentDate = new Date();
 	describe('# Instances', () => {
 		const userEntity = new UserEntity({
@@ -13,11 +11,13 @@ describe('Modules :: Domain :: Entities :: UserEntities', () => {
 			phone: '+5527999999999',
 			preference: undefined,
 		});
-		userEntity.setPreference(new UserPreferenceEntity({
-			user: userEntity.getId(),
-			imagePath: './',
-			defaultTheme: 'DEFAULT',
-		} as ICreateUserPreference));
+		userEntity.setPreference(
+			new UserPreferenceEntity({
+				user: userEntity.getId(),
+				imagePath: './',
+				defaultTheme: 'DEFAULT',
+			} as ICreateUserPreference),
+		);
 
 		const otherUserEntity = new UserEntity({
 			fullName: 'Test User',
@@ -29,12 +29,14 @@ describe('Modules :: Domain :: Entities :: UserEntities', () => {
 			updatedAt: currentDate,
 			deletedAt: currentDate,
 		});
-		otherUserEntity.setPreference(new UserPreferenceEntity({
-			userId: otherUserEntity.getId(),
-			createdAt: currentDate,
-			updatedAt: currentDate,
-			deletedAt: currentDate,
-		}));
+		otherUserEntity.setPreference(
+			new UserPreferenceEntity({
+				userId: otherUserEntity.getId(),
+				createdAt: currentDate,
+				updatedAt: currentDate,
+				deletedAt: currentDate,
+			}),
+		);
 
 		test('Validate fields', () => {
 			userEntity.setId('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');

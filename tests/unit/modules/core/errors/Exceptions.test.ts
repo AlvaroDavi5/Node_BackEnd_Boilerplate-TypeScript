@@ -1,6 +1,5 @@
 import Exceptions from '@core/errors/Exceptions';
 
-
 describe('Infra :: Errors :: Exceptions', () => {
 	const exceptions = new Exceptions();
 

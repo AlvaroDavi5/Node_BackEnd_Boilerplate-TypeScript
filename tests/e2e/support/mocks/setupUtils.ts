@@ -6,7 +6,6 @@ import nestListenConfig, { validateKnownExceptions } from '@core/configs/nestLis
 import nestApiConfig from '@core/configs/nestApi.config';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
-
 export const createNestTestApplicationOptions: NestApplicationOptions = {
 	abortOnError: true,
 	snapshot: false,
@@ -21,8 +20,7 @@ export async function startNestApplication(nestApp: NestFastifyApplication): Pro
 
 	const { appPort } = nestApp.get<ConfigService>(ConfigService, {}).get<ConfigsInterface['application']>('application')!;
 
-	await nestApp.listen(Number(appPort))
-		.catch((error: ErrorInterface | Error) => {
-			validateKnownExceptions(error);
-		});
+	await nestApp.listen(Number(appPort)).catch((error: ErrorInterface | Error) => {
+		validateKnownExceptions(error);
+	});
 }

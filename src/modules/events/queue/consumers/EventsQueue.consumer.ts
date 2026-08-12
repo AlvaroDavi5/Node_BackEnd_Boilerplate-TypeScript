@@ -11,7 +11,6 @@ import { QueueNamesEnum } from '@common/enums/queueNames.enum';
 import AbstractQueueConsumer from './AbstractConsumer.consumer';
 import type { Message } from '@aws-sdk/client-sqs';
 
-
 const EVENTS_QUEUE_NAME = QueueNamesEnum.EVENTS_QUEUE;
 
 @Injectable()
@@ -24,16 +23,7 @@ export default class EventsQueueConsumer extends AbstractQueueConsumer {
 		exceptions: Exceptions,
 		logger: LoggerService,
 	) {
-		super(
-			EventsQueueConsumer.name,
-			'eventsQueue',
-			eventsQueueHandler,
-			configService,
-			sqsClient,
-			mongoClient,
-			exceptions,
-			logger,
-		);
+		super(EventsQueueConsumer.name, 'eventsQueue', eventsQueueHandler, configService, sqsClient, mongoClient, exceptions, logger);
 	}
 
 	@SqsMessageHandler(EVENTS_QUEUE_NAME, true)

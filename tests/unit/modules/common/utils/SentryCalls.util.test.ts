@@ -3,7 +3,6 @@ import { captureException, captureMessage, captureLog } from '@common/utils/sent
 import { LogLevelEnum } from '@common/enums/logLevel.enum';
 import { mockObservable } from 'tests/unit/support/mocks/mockObservable';
 
-
 jest.mock('@sentry/nestjs', () => ({
 	captureException: (...args: unknown[]) => {
 		mockObservable.call(...args);
@@ -32,14 +31,11 @@ describe('Modules :: Common :: Utils :: SentryCalls', () => {
 				data: { key: 'value' },
 				user: { id: 'user_id', email: 'test.user@nomail.com' },
 			});
-			expect(mockObservable.call).toHaveBeenCalledWith(
-				new BadRequestException('Test Error'),
-				{
-					level: 'warning',
-					data: { key: 'value' },
-					user: { id: 'user_id', email: 'test.user@nomail.com' },
-				}
-			);
+			expect(mockObservable.call).toHaveBeenCalledWith(new BadRequestException('Test Error'), {
+				level: 'warning',
+				data: { key: 'value' },
+				user: { id: 'user_id', email: 'test.user@nomail.com' },
+			});
 		});
 
 		test('Should send gateway timeout exception to Sentry', () => {
@@ -47,14 +43,11 @@ describe('Modules :: Common :: Utils :: SentryCalls', () => {
 				data: { key: 'value' },
 				user: { id: 'user_id', email: 'test.user@nomail.com' },
 			});
-			expect(mockObservable.call).toHaveBeenCalledWith(
-				new GatewayTimeoutException('Test Error'),
-				{
-					level: 'error',
-					data: { key: 'value' },
-					user: { id: 'user_id', email: 'test.user@nomail.com' },
-				}
-			);
+			expect(mockObservable.call).toHaveBeenCalledWith(new GatewayTimeoutException('Test Error'), {
+				level: 'error',
+				data: { key: 'value' },
+				user: { id: 'user_id', email: 'test.user@nomail.com' },
+			});
 		});
 
 		test('Should send service unavailable exception to Sentry', () => {
@@ -62,14 +55,11 @@ describe('Modules :: Common :: Utils :: SentryCalls', () => {
 				data: { key: 'value' },
 				user: { id: 'user_id', email: 'test.user@nomail.com' },
 			});
-			expect(mockObservable.call).toHaveBeenCalledWith(
-				new ServiceUnavailableException('Test Error'),
-				{
-					level: 'fatal',
-					data: { key: 'value' },
-					user: { id: 'user_id', email: 'test.user@nomail.com' },
-				}
-			);
+			expect(mockObservable.call).toHaveBeenCalledWith(new ServiceUnavailableException('Test Error'), {
+				level: 'fatal',
+				data: { key: 'value' },
+				user: { id: 'user_id', email: 'test.user@nomail.com' },
+			});
 		});
 	});
 

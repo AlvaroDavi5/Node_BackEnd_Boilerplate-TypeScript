@@ -1,28 +1,35 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
-	MongoClient as MongoDBClient, WithId, ServerApiVersion,
-	Db, Document as MongoDocument, Collection, ObjectId,
-	InsertOneResult, InsertManyResult, UpdateResult, DeleteResult,
+	MongoClient as MongoDBClient,
+	WithId,
+	ServerApiVersion,
+	Db,
+	Document as MongoDocument,
+	Collection,
+	ObjectId,
+	InsertOneResult,
+	InsertManyResult,
+	UpdateResult,
+	DeleteResult,
 } from 'mongodb';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
 
-
 // oxlint-disable-next-line typescript/no-explicit-any
-type documentObjectType = Record<string, any>
+type documentObjectType = Record<string, any>;
 
 @Injectable()
 export default class MongoClient {
 	private readonly mongoClient: MongoDBClient;
 	public readonly databases: {
 		datalake: {
-			db: Db,
+			db: Db;
 			collections: {
-				subscriptions: string,
-				unprocessedMessages: string,
-			},
-		},
+				subscriptions: string;
+				unprocessedMessages: string;
+			};
+		};
 	};
 
 	public isConnected: boolean;
@@ -41,7 +48,7 @@ export default class MongoClient {
 				version: ServerApiVersion.v1,
 				strict: true,
 				deprecationErrors: true,
-			}
+			},
 		});
 
 		this.mongoClient.on('open', () => {
@@ -55,7 +62,7 @@ export default class MongoClient {
 			datalake: {
 				db: this.mongoClient.db(databases.datalake.name),
 				collections: databases.datalake.collections,
-			}
+			},
 		};
 	}
 
@@ -160,7 +167,8 @@ export default class MongoClient {
 
 	public async updateMany(
 		collection: Collection<MongoDocument>,
-		filterData: documentObjectType, newData: documentObjectType
+		filterData: documentObjectType,
+		newData: documentObjectType,
 	): Promise<UpdateResult<MongoDocument>> {
 		return await collection.updateMany(filterData, { $set: newData });
 	}

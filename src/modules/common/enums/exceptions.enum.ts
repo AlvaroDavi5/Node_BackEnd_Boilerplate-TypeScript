@@ -1,4 +1,3 @@
-
 export enum ExceptionsEnum {
 	CONTRACT = 'contract',
 	BUSINESS = 'business',

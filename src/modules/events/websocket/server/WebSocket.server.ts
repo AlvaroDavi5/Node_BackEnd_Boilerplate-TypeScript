@@ -1,9 +1,14 @@
 import { ModuleRef } from '@nestjs/core';
 import { OnModuleInit, UseFilters, UseGuards } from '@nestjs/common';
 import {
-	WebSocketGateway, SubscribeMessage, MessageBody,
-	WebSocketServer as Server, ConnectedSocket,
-	OnGatewayInit, OnGatewayConnection, OnGatewayDisconnect,
+	WebSocketGateway,
+	SubscribeMessage,
+	MessageBody,
+	WebSocketServer as Server,
+	ConnectedSocket,
+	OnGatewayInit,
+	OnGatewayConnection,
+	OnGatewayDisconnect,
 } from '@nestjs/websockets';
 import { Server as SocketIoServer, Socket } from 'socket.io';
 import LoggerService from '@core/logging/Logger.service';
@@ -18,13 +23,12 @@ import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 import { getObjValues } from '@common/utils/dataValidations.util';
 
-
 @WebSocketGateway({
 	cors: {
 		origin: '*',
 		allowedHeaders: '*',
 		methods: getObjValues<HttpMethodsEnum>(HttpMethodsEnum),
-	}
+	},
 })
 @UseFilters(WebSocketExceptionsFilter)
 @UseGuards(CustomThrottlerGuard, EventsGuard)
@@ -40,7 +44,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 		private readonly eventsQueueProducer: EventsQueueProducer,
 		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
-	) { }
+	) {}
 
 	public onModuleInit(): void {
 		this.subscriptionService = this.moduleRef.get(SubscriptionService, { strict: false });
@@ -48,8 +52,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 
 	public afterInit(server: SocketIoServer): void {
 		server.setMaxListeners(5);
-		if (!this.server)
-			this.server = server;
+		if (!this.server) this.server = server;
 		this.server.setMaxListeners(5);
 		this.logger.debug('Started Websocket Server');
 
@@ -86,10 +89,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 
 	// NOTE - listen 'reconnect' event from client
 	@SubscribeMessage(WebSocketEventsEnum.RECONNECT)
-	public async handleReconnect(
-		@ConnectedSocket() socket: Socket,
-		@MessageBody() msg: string,
-	): Promise<void> {
+	public async handleReconnect(@ConnectedSocket() socket: Socket, @MessageBody() msg: string): Promise<void> {
 		this.logger.info(`Client reconnected: ${socket.id}`);
 
 		await this.updateConnection(socket, msg);
@@ -109,11 +109,9 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 	}
 
 	private getSocketIdsOrRooms(socketIdsOrRooms: unknown): string | string[] | null {
-		if (typeof socketIdsOrRooms === 'string')
-			return socketIdsOrRooms;
+		if (typeof socketIdsOrRooms === 'string') return socketIdsOrRooms;
 
-		if (Array.isArray(socketIdsOrRooms) && socketIdsOrRooms.every((item) => typeof item === 'string'))
-			return socketIdsOrRooms;
+		if (Array.isArray(socketIdsOrRooms) && socketIdsOrRooms.every((item) => typeof item === 'string')) return socketIdsOrRooms;
 
 		return null;
 	}
@@ -134,10 +132,7 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 			}
 
 			this.logger.info(`Emiting message to: ${socketIdsOrRooms}`);
-			server?.to(validSocketIdsOrRooms).emit(
-				WebSocketEventsEnum.EMIT,
-				this.formatMessageBeforeSendHelper(msg),
-			);
+			server?.to(validSocketIdsOrRooms).emit(WebSocketEventsEnum.EMIT, this.formatMessageBeforeSendHelper(msg));
 		});
 	}
 
@@ -166,10 +161,8 @@ export default class WebSocketServer implements OnModuleInit, OnGatewayInit<Sock
 				subscriptionId: socket.id,
 			});
 
-			if (subscription.newConnectionsListen === true)
-				await socket.join(WebSocketRoomsEnum.NEW_CONNECTIONS);
-			else
-				await socket.leave(WebSocketRoomsEnum.NEW_CONNECTIONS);
+			if (subscription.newConnectionsListen === true) await socket.join(WebSocketRoomsEnum.NEW_CONNECTIONS);
+			else await socket.leave(WebSocketRoomsEnum.NEW_CONNECTIONS);
 		}
 	}
 

@@ -3,13 +3,12 @@ import Exceptions from '@core/errors/Exceptions';
 import UserPreferenceEntity, { IUpdateUserPreference } from '@domain/entities/UserPreference.entity';
 import UserPreferenceRepository from '@app/user/repositories/userPreference/UserPreference.repository';
 
-
 @Injectable()
 export default class UserPreferenceService {
 	constructor(
 		private readonly userPreferenceRepository: UserPreferenceRepository,
 		private readonly exceptions: Exceptions,
-	) { }
+	) {}
 
 	public async getByUserId(userId: string): Promise<UserPreferenceEntity> {
 		try {
@@ -36,8 +35,11 @@ export default class UserPreferenceService {
 
 	public async update(id: string, data: IUpdateUserPreference): Promise<UserPreferenceEntity> {
 		const {
-			id: _id, userId: _userId,
-			createdAt: _createdAt, updatedAt: _updatedAt, deletedAt: _deletedAt,
+			id: _id,
+			userId: _userId,
+			createdAt: _createdAt,
+			updatedAt: _updatedAt,
+			deletedAt: _deletedAt,
 			...userPreferenceData
 		} = new UserPreferenceEntity(data).getAttributes();
 

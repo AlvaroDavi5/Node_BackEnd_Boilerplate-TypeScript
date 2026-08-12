@@ -3,7 +3,6 @@ import { IsString, IsEnum, IsDateString, IsNotEmpty } from 'class-validator';
 import { RegisterEventHookInterface } from '@app/hook/api/schemas/registerEventHook.schema';
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 
-
 export class RegisterEventHookInputDto implements RegisterEventHookInterface {
 	@ApiProperty({ type: String, example: 'http://localhost:4000/api/hook', default: '', nullable: false, required: true })
 	@IsString()
@@ -29,8 +28,11 @@ export class RegisterEventHookInputDto implements RegisterEventHookInterface {
 	public responseSchema!: string;
 
 	@ApiProperty({
-		type: Date, example: new Date('2024-04-17T17:36:48.666Z').toISOString(),
-		default: new Date().toISOString(), nullable: false, required: false
+		type: Date,
+		example: new Date('2024-04-17T17:36:48.666Z').toISOString(),
+		default: new Date().toISOString(),
+		nullable: false,
+		required: false,
 	})
 	@IsDateString()
 	@IsNotEmpty()

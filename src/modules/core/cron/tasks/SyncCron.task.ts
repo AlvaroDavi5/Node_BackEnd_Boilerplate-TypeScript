@@ -6,7 +6,6 @@ import LoggerService from '@core/logging/Logger.service';
 import { DATABASE_CONNECTION_PROVIDER, testConnection, startConnection } from '@core/infra/database/connection';
 import WebSocketServer from '@events/websocket/server/WebSocket.server';
 
-
 @Injectable()
 export default class SyncCronTask {
 	public readonly name: string;

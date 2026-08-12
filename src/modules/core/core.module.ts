@@ -26,11 +26,9 @@ import RestMockedServiceProvider from './infra/providers/RestMockedService.provi
 import SyncCronJob from './cron/jobs/SyncCron.job';
 import SyncCronTask from './cron/tasks/SyncCron.task';
 
-
 const { application: appConfigs } = envsConfig();
 
 const requestRateLimitConstants = new RequestRateLimitConstants();
-
 
 @Global()
 @Module({
@@ -44,11 +42,7 @@ const requestRateLimitConstants = new RequestRateLimitConstants();
 			intervals: true,
 			timeouts: true,
 		}),
-		ThrottlerModule.forRoot([
-			requestRateLimitConstants.short,
-			requestRateLimitConstants.medium,
-			requestRateLimitConstants.long,
-		]),
+		ThrottlerModule.forRoot([requestRateLimitConstants.short, requestRateLimitConstants.medium, requestRateLimitConstants.long]),
 		ConfigModule.forRoot({
 			isGlobal: true,
 			load: [envsConfig],
@@ -91,4 +85,4 @@ const requestRateLimitConstants = new RequestRateLimitConstants();
 		S3Client,
 	],
 })
-export default class CoreModule { }
+export default class CoreModule {}

@@ -3,157 +3,156 @@ import { daysToSeconds, hoursToSeconds, minutesToSeconds, secondsToMilliseconds 
 import { QueueNamesEnum } from '@common/enums/queueNames.enum';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 
-
 // dotenv.config({ path: (process.cwd() + '/envs/.env.development') });
 dotenv.config({ quiet: true });
 
 export interface ConfigsInterface {
 	// ? Application Service
 	application: {
-		name: string, // app name
-		environment: string, // app env
-		appPort: number, // app port
-		nestDevToolsPort: number, // dev tools port
-		sentryDsn: string, // error tracker DSN
-		url: string, // app url
-		socketEnv: boolean, // enable websocket
-		showDetailedLogs: boolean, // enable app error stack and debug levels logging
-		showExternalLogs: boolean, // enable third-party and backing services logging
-		logsPath: string, // logs file path
-	},
+		name: string; // app name
+		environment: string; // app env
+		appPort: number; // app port
+		nestDevToolsPort: number; // dev tools port
+		sentryDsn: string; // error tracker DSN
+		url: string; // app url
+		socketEnv: boolean; // enable websocket
+		showDetailedLogs: boolean; // enable app error stack and debug levels logging
+		showExternalLogs: boolean; // enable third-party and backing services logging
+		logsPath: string; // logs file path
+	};
 	// ? DataBase Backing-Service
 	database: {
-		database: string, // database name
-		username: string, // database username
-		password: string, // database password
-		host: string, // database host
-		port: string, // database port
-		dialect: string, // database DBMS
+		database: string; // database name
+		username: string; // database username
+		password: string; // database password
+		host: string; // database host
+		port: string; // database port
+		dialect: string; // database DBMS
 		dialectOptions?: {
 			ssl?: {
-				rejectUnauthorized?: boolean, // to use SSL protocol (in production)
-			},
-		},
-		charset: string, // database charset encoding
-		timezone: string, // database timezone
+				rejectUnauthorized?: boolean; // to use SSL protocol (in production)
+			};
+		};
+		charset: string; // database charset encoding
+		timezone: string; // database timezone
 		define: {
-			underscored: boolean, // to force underscore on name of fields
-			timestamps: boolean, // to createdAt and updatedAt
-			paranoid: boolean, // to deletedAt
-			freezeTableName: boolean, // to set table names on plural
-		},
+			underscored: boolean; // to force underscore on name of fields
+			timestamps: boolean; // to createdAt and updatedAt
+			paranoid: boolean; // to deletedAt
+			freezeTableName: boolean; // to set table names on plural
+		};
 		pool: {
-			min: number, // minimum number of connections in pool
-			max: number, // maximum number of connections in pool
-			fifo: boolean, // the oldest resources will be first to be allocated (First-In-First-Out)
-			acquire: number, // maximum time, in milliseconds, that pool will try to get connection before throwing error
-			idle: number, // maximum time, in milliseconds, that a connection can be idle before being released
-		},
-	},
+			min: number; // minimum number of connections in pool
+			max: number; // maximum number of connections in pool
+			fifo: boolean; // the oldest resources will be first to be allocated (First-In-First-Out)
+			acquire: number; // maximum time, in milliseconds, that pool will try to get connection before throwing error
+			idle: number; // maximum time, in milliseconds, that a connection can be idle before being released
+		};
+	};
 	// ? Data Backing-Service
 	data: {
 		mongo: {
-			uri: string, // connection URI
-			maxConnecting: number, // maximum number of connections concurrently the pool
-			maxPoolSize: number, // maximum number of connections in pool
-		},
+			uri: string; // connection URI
+			maxConnecting: number; // maximum number of connections concurrently the pool
+			maxPoolSize: number; // maximum number of connections in pool
+		};
 		databases: {
 			datalake: {
-				name: string,
+				name: string;
 				collections: {
-					subscriptions: string,
-					unprocessedMessages: string,
-				},
-			},
-		},
-	},
+					subscriptions: string;
+					unprocessedMessages: string;
+				};
+			};
+		};
+	};
 	// ? Caching Backing-Service
 	cache: {
 		redis: {
-			port: string, // cache port
-			host: string, // cache host
-		},
+			port: string; // cache port
+			host: string; // cache host
+		};
 		expirationTime: {
-			subscriptions: number, // expiration in seconds
-			hooks: number,
-		},
-	},
+			subscriptions: number; // expiration in seconds
+			hooks: number;
+		};
+	};
 	// ? Third-Party Services
 	integration: {
 		aws: {
 			credentials: {
-				region: string, // service region
-				accessKeyId: string,
-				secretAccessKey: string,
-				sessionToken: string,
-				endpoint?: string,
-			},
+				region: string; // service region
+				accessKeyId: string;
+				secretAccessKey: string;
+				sessionToken: string;
+				endpoint?: string;
+			};
 			// * Authentication Service
 			congito: {
-				userPoolName: string,
-				userPoolId: string,
-				clientName: string,
-				clientId: string,
-				apiVersion: string,
-				maxAttempts: number,
-			},
+				userPoolName: string;
+				userPoolId: string;
+				clientName: string;
+				clientId: string;
+				apiVersion: string;
+				maxAttempts: number;
+			};
 			// * Message Queues Service
 			sqs: {
 				eventsQueue: {
-					queueName: QueueNamesEnum,
-					queueUrl: string,
-				},
-				apiVersion: string,
-				maxAttempts: number,
-			},
+					queueName: QueueNamesEnum;
+					queueUrl: string;
+				};
+				apiVersion: string;
+				maxAttempts: number;
+			};
 			// * Notification Topics Service
 			sns: {
 				defaultTopic: {
-					topicName: string,
-					topicArn: string,
-					topicProtocol: string,
-				},
-				apiVersion: string,
-				maxAttempts: number,
-			},
+					topicName: string;
+					topicArn: string;
+					topicProtocol: string;
+				};
+				apiVersion: string;
+				maxAttempts: number;
+			};
 			// * Storage Service
 			s3: {
-				bucketName: string,
-				filesExpiration: number, // files expiration in seconds
-				apiVersion: string,
-				maxAttempts: number,
-			},
-		},
+				bucketName: string;
+				filesExpiration: number; // files expiration in seconds
+				apiVersion: string;
+				maxAttempts: number;
+			};
+		};
 		rest: {
 			// * Another Service
 			mockedService: {
-				serviceName: string,
-				baseUrl: string,
-				timeout: number, // request timeout in milliseconds
-				maxRedirects: number, // maximum redirections
-				maxRetries: number, // maximum retries
-			},
-		},
-	},
+				serviceName: string;
+				baseUrl: string;
+				timeout: number; // request timeout in milliseconds
+				maxRedirects: number; // maximum redirections
+				maxRetries: number; // maximum retries
+			};
+		};
+	};
 	// ? Cryptography and Security
 	security: {
-		secretKey: string,
-	},
+		secretKey: string;
+	};
 	// ? NPM Package
 	package: {
-		name?: string,
-		description?: string,
-		version?: string,
-		license?: string,
-		author?: string,
-		repository?: string,
-		private?: boolean,
+		name?: string;
+		description?: string;
+		version?: string;
+		license?: string;
+		author?: string;
+		repository?: string;
+		private?: boolean;
 		engines?: {
-			node?: string,
-			npm?: string,
-			yarn?: string,
-		},
-	},
+			node?: string;
+			npm?: string;
+			yarn?: string;
+		};
+	};
 }
 
 // oxlint-disable-next-line complexity

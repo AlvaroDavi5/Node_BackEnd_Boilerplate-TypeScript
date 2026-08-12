@@ -12,12 +12,11 @@ import { cloneObject, checkFieldsExistence, replaceFields } from '@common/utils/
 import { getDateTimeNow, fromDateTimeToISO } from '@common/utils/dates.util';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 
-
 interface EventDispatchInterface {
-	payload: Record<string, unknown>,
-	schema: QueueSchemasEnum,
-	author?: string,
-	title?: string,
+	payload: Record<string, unknown>;
+	schema: QueueSchemasEnum;
+	author?: string;
+	title?: string;
 }
 type queueCredentialsKeyType = Exclude<keyof ConfigsInterface['integration']['aws']['sqs'], 'apiVersion' | 'maxAttempts'>;
 
@@ -51,7 +50,7 @@ export default abstract class AbstractQueueProducer {
 		const appName = this.configService.get<ConfigsInterface['application']['name']>('application.name');
 		this.applicationName = String(appName);
 		const {
-			[queueCredentialsKey]: { queueName, queueUrl }
+			[queueCredentialsKey]: { queueName, queueUrl },
 		} = this.configService.get<ConfigsInterface['integration']['aws']['sqs']>('integration.aws.sqs')!;
 
 		this.producerName = producerName;

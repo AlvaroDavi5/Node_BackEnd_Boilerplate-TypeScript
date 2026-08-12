@@ -8,7 +8,6 @@ import UserRepository from '@app/user/repositories/user/User.repository';
 import UserService from '@app/user/services/User.service';
 import { configServiceMock } from '@dev/mocks/mockedModules';
 
-
 describe('Modules :: App :: User :: Services :: UserService', () => {
 	let nestTestingModule: TestingModule;
 	let userService: UserService;
@@ -49,28 +48,36 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 
 	describe('# Create User', () => {
 		test('Should create a user successfully', async () => {
-			userRepositoryMock.create.mockResolvedValueOnce(new UserEntity({
-				id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
-				email: 'user.test@nomail.dev',
-				password: 'pas123',
-			}));
+			userRepositoryMock.create.mockResolvedValueOnce(
+				new UserEntity({
+					id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+					email: 'user.test@nomail.dev',
+					password: 'pas123',
+				}),
+			);
 
-			const createdUser = await userService.create(new UserEntity({
-				id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
-				email: 'user.test@nomail.dev',
-				password: 'pas123',
-			}));
+			const createdUser = await userService.create(
+				new UserEntity({
+					id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+					email: 'user.test@nomail.dev',
+					password: 'pas123',
+				}),
+			);
 			expect(userRepositoryMock.create).toHaveBeenCalledTimes(1);
 			expect(createdUser?.getId()).toBe('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(createdUser?.getEmail()).toBe('user.test@nomail.dev');
 		});
 
 		test('Should not create a user', async () => {
-			await expect(userService.create(new UserEntity({
-				id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
-				email: 'user.test@nomail.dev',
-				password: 'pas123',
-			}))).rejects.toMatchObject({
+			await expect(
+				userService.create(
+					new UserEntity({
+						id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+						email: 'user.test@nomail.dev',
+						password: 'pas123',
+					}),
+				),
+			).rejects.toMatchObject({
 				name: 'internal',
 				message: 'Error to comunicate with database',
 			});
@@ -89,11 +96,10 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 		});
 
 		test('Should not find a user', async () => {
-			await expect(userService.getById('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d'))
-				.rejects.toMatchObject({
-					name: 'internal',
-					message: 'Error to comunicate with database',
-				});
+			await expect(userService.getById('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d')).rejects.toMatchObject({
+				name: 'internal',
+				message: 'Error to comunicate with database',
+			});
 			expect(userRepositoryMock.getById).toHaveBeenCalledTimes(1);
 		});
 	});
@@ -106,21 +112,28 @@ describe('Modules :: App :: User :: Services :: UserService', () => {
 				return userEntity;
 			});
 
-			const updatedUser = await userService.update('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', new UserEntity({
-				email: 'user.test@nomail.dev',
-			}).getAttributes());
+			const updatedUser = await userService.update(
+				'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+				new UserEntity({
+					email: 'user.test@nomail.dev',
+				}).getAttributes(),
+			);
 			expect(userRepositoryMock.update).toHaveBeenCalledTimes(1);
 			expect(updatedUser?.getEmail()).toBe('user.test@nomail.dev');
 		});
 
 		test('Should not update a user', async () => {
-			await expect(userService.update('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', new UserEntity({
-				email: 'user.test@nomail.dev',
-			}).getAttributes()))
-				.rejects.toMatchObject({
-					name: 'internal',
-					message: 'Error to comunicate with database',
-				});
+			await expect(
+				userService.update(
+					'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+					new UserEntity({
+						email: 'user.test@nomail.dev',
+					}).getAttributes(),
+				),
+			).rejects.toMatchObject({
+				name: 'internal',
+				message: 'Error to comunicate with database',
+			});
 			expect(userRepositoryMock.update).toHaveBeenCalledTimes(1);
 		});
 	});

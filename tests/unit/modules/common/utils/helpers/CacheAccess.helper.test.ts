@@ -1,6 +1,5 @@
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 
-
 describe('Modules :: Common :: Utils :: Helpers :: CacheAccessHelper', () => {
 	const cacheAccessHelper = new CacheAccessHelper();
 

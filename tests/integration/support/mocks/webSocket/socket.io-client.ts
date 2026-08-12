@@ -5,11 +5,11 @@ export class ClientSocket {
 		this.connected = true;
 	}
 
-	public on(_ev: string, _listener?: ((...args: unknown[]) => void)): this {
+	public on(_ev: string, _listener?: (...args: unknown[]) => void): this {
 		return this;
 	}
 
-	public off(_ev?: string, _listener?: ((...args: unknown[]) => void)): this {
+	public off(_ev?: string, _listener?: (...args: unknown[]) => void): this {
 		return this;
 	}
 

@@ -2,7 +2,6 @@ import { ConfigService } from '@nestjs/config';
 import CryptographyService from '@core/security/Cryptography.service';
 import { configServiceMock } from '@dev/mocks/mockedModules';
 
-
 describe('Modules :: Core :: Security :: CryptographyService', () => {
 	const cryptographyService = new CryptographyService(configServiceMock as unknown as ConfigService);
 
@@ -120,8 +119,8 @@ describe('Modules :: Core :: Security :: CryptographyService', () => {
 		const iv = '2a19dd220ef09ff472b59447';
 		let encrypted = '';
 		let decrypted = '';
-		let enc: { encrypted: string | null, iv: string } | undefined;
-		let dec: { decrypted: string | null, iv: string } | undefined;
+		let enc: { encrypted: string | null; iv: string } | undefined;
+		let dec: { decrypted: string | null; iv: string } | undefined;
 
 		test('Should encrypt', () => {
 			enc = cryptographyService.symmetricAESEncrypt(plainText, 'utf8', key1, 'base64', iv);

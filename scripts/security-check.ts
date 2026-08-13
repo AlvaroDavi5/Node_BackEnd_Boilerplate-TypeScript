@@ -1,7 +1,6 @@
 import { exec } from 'child_process';
 import type { ExecException } from 'child_process';
 
-
 interface AuditMetadata {
 	vulnerabilities?: {
 		critical: number;
@@ -38,14 +37,7 @@ exec('npm audit --json', (error: ExecException | null, stdout: string, stderr: s
 		process.exit(0);
 	}
 
-	const {
-		critical = 0,
-		high = 0,
-		moderate = 0,
-		low = 0,
-		info = 0,
-		total = 0
-	} = vulnerabilities;
+	const { critical = 0, high = 0, moderate = 0, low = 0, info = 0, total = 0 } = vulnerabilities;
 
 	console.log('Vulnerability summary:');
 	console.log(`Critical: ${critical}`);

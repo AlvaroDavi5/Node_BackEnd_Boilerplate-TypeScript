@@ -1,4 +1,3 @@
-
 export enum EnvironmentsEnum {
 	DEVELOPMENT = 'dev',
 	HOMOLOG = 'hml',

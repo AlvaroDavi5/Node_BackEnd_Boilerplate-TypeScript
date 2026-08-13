@@ -4,7 +4,6 @@ import ListUsersUseCase from '@app/user/usecases/ListUsers.usecase';
 import UserService from '@app/user/services/User.service';
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
-
 describe('Modules :: App :: User :: UseCases :: ListUsersUseCase', () => {
 	// // mocks
 	const userServiceMock = {
@@ -18,7 +17,7 @@ describe('Modules :: App :: User :: UseCases :: ListUsersUseCase', () => {
 		update: jest.fn(async (_id: string, _data: IUpdateUser): Promise<UserEntity> => {
 			throw new Error('GenericError');
 		}),
-		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, agentUserId?: string }): Promise<boolean> => false),
+		delete: jest.fn(async (_id: string, _data: { softDelete: boolean; agentUserId?: string }): Promise<boolean> => false),
 		list: jest.fn(async (_query: ListQueryInterface, _withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => {
 			return { content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 };
 		}),
@@ -33,10 +32,7 @@ describe('Modules :: App :: User :: UseCases :: ListUsersUseCase', () => {
 
 	beforeAll(async () => {
 		nestTestingModule = await Test.createTestingModule({
-			providers: [
-				ListUsersUseCase,
-				{ provide: UserService, useValue: userServiceMock },
-			],
+			providers: [ListUsersUseCase, { provide: UserService, useValue: userServiceMock }],
 		}).compile();
 
 		listUsersUseCase = nestTestingModule.get<ListUsersUseCase>(ListUsersUseCase);
@@ -80,8 +76,7 @@ describe('Modules :: App :: User :: UseCases :: ListUsersUseCase', () => {
 		test('Should throw a not found error', async () => {
 			userServiceMock.list.mockRejectedValueOnce(new Error('Error to comunicate with database'));
 
-			await expect(listUsersUseCase.execute({}))
-				.rejects.toMatchObject(new Error('Error to comunicate with database'));
+			await expect(listUsersUseCase.execute({})).rejects.toMatchObject(new Error('Error to comunicate with database'));
 			expect(userServiceMock.list).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.list).toHaveBeenCalledWith({});
 		});

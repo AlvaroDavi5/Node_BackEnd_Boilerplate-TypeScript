@@ -1,7 +1,6 @@
 import { BaseEntity, Entity, PrimaryGeneratedColumn, Column, JoinColumn, CreateDateColumn, UpdateDateColumn, DeleteDateColumn, OneToOne } from 'typeorm';
 import UsersModel from './Users.model';
 
-
 @Entity({
 	name: 'UserPreferences',
 	comment: 'User Preferences data structure',

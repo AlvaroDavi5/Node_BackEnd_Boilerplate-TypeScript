@@ -10,7 +10,6 @@ import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface
 import { ListQueryInterface, PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
-
 describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 	// // mocks
 	const exceptionsMock = {
@@ -35,7 +34,7 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 		update: jest.fn(async (_id: string, _data: IUpdateUser): Promise<UserEntity> => {
 			throw new Error('GenericError');
 		}),
-		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, agentUserId?: string }): Promise<boolean> => false),
+		delete: jest.fn(async (_id: string, _data: { softDelete: boolean; agentUserId?: string }): Promise<boolean> => false),
 		list: jest.fn(async (_query: ListQueryInterface, _withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => {
 			return { content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 };
 		}),
@@ -113,8 +112,7 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 			userPreferenceServiceMock.delete.mockResolvedValueOnce(false);
 			userServiceMock.delete.mockResolvedValueOnce(false);
 
-			await expect(deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', agentUser))
-				.rejects.toMatchObject(new Error('User not deleted'));
+			await expect(deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', agentUser)).rejects.toMatchObject(new Error('User not deleted'));
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(userServiceMock.delete).toHaveBeenCalledTimes(1);
@@ -135,33 +133,34 @@ describe('Modules :: App :: User :: UseCases :: DeleteUserUseCase', () => {
 			userServiceMock.getById.mockResolvedValueOnce(userEntity);
 			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
 
-			await expect(deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', otherAgentUser))
-				.rejects.toMatchObject(new Error('agentUser not allowed to delete this user!'));
+			await expect(deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', otherAgentUser)).rejects.toMatchObject(
+				new Error('agentUser not allowed to delete this user!'),
+			);
 			expect(exceptionsMock.business).toHaveBeenCalledWith({
-				message: 'agentUser not allowed to delete this user!'
+				message: 'agentUser not allowed to delete this user!',
 			});
 		});
 
 		test('Should throw a not found error', async () => {
-			userServiceMock.getById.mockRejectedValueOnce(exceptionsMock.notFound({
-				message: 'User not founded by ID!',
-			}));
+			userServiceMock.getById.mockRejectedValueOnce(
+				exceptionsMock.notFound({
+					message: 'User not founded by ID!',
+				}),
+			);
 
-			await expect(deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', agentUser))
-				.rejects.toMatchObject(new Error('User not founded by ID!'));
+			await expect(deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', agentUser)).rejects.toMatchObject(new Error('User not founded by ID!'));
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
 			expect(exceptionsMock.notFound).toHaveBeenCalledWith({
-				message: 'User not founded by ID!'
+				message: 'User not founded by ID!',
 			});
 		});
 
 		test('Should throw a unauthorized error', async () => {
-			await expect(deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d'))
-				.rejects.toMatchObject(new Error('Invalid agentUser'));
+			await expect(deleteUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d')).rejects.toMatchObject(new Error('Invalid agentUser'));
 			expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
-				message: 'Invalid agentUser'
+				message: 'Invalid agentUser',
 			});
 		});
 	});

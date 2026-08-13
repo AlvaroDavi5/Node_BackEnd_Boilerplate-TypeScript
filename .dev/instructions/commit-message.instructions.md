@@ -1,6 +1,6 @@
 ---
-name: "Commit Message"
-description: "Use when generating or suggesting git commit messages. Enforces Conventional Commits format, CommitLint config-conventional types, scope extraction from branch name (e.g. DEV-123), and project-specific body/footer length rules."
+name: 'Commit Message'
+description: 'Use when generating or suggesting git commit messages. Enforces Conventional Commits format, CommitLint config-conventional types, scope extraction from branch name (e.g. DEV-123), and project-specific body/footer length rules.'
 ---
 
 # Commit Message
@@ -40,42 +40,43 @@ description: "Use when generating or suggesting git commit messages. Enforces Co
 3. If no such code is found, scope is optional — use a short module/area name if helpful (e.g. `auth`, `user`, `database`).
 
 Examples:
-| Branch | Scope |
-|---|---|
-| `feat/TEC-123-add_login` | `TEC-123` |
-| `feature/DEV-123-add-login` | `DEV-123` |
-| `fix/PROJ-456-null-pointer` | `PROJ-456` |
+
+| Branch                      | Scope                          |
+| --------------------------- | ------------------------------ |
+| `feat/TEC-123-add_login`    | `TEC-123`                      |
+| `feature/DEV-123-add-login` | `DEV-123`                      |
+| `fix/PROJ-456-null-pointer` | `PROJ-456`                     |
 | `chore/update-dependencies` | `deps` (optional, descriptive) |
-| `main` | *(omit scope)* |
+| `main`                      | _(omit scope)_                 |
 
 ## Allowed Types
 
 From `@commitlint/config-conventional` and this project's `.releaserc.json`:
 
-| Type | When to Use |
-|---|---|
-| `feat` | New feature for the user |
-| `fix` | Bug fix for the user |
-| `perf` | Performance improvement |
-| `refactor` | Code change that is neither a fix nor a feature |
-| `test` | Adding or correcting tests |
-| `docs` | Documentation only changes |
-| `style` | Formatting, whitespace — no logic change |
-| `build` | Changes to build system or external dependencies |
-| `ci` | Changes to CI/CD configuration or scripts |
-| `chore` | Maintenance tasks not modifying src or test files |
-| `revert` | Reverts a previous commit |
+| Type       | When to Use                                       |
+| ---------- | ------------------------------------------------- |
+| `feat`     | New feature for the user                          |
+| `fix`      | Bug fix for the user                              |
+| `perf`     | Performance improvement                           |
+| `refactor` | Code change that is neither a fix nor a feature   |
+| `test`     | Adding or correcting tests                        |
+| `docs`     | Documentation only changes                        |
+| `style`    | Formatting, whitespace — no logic change          |
+| `build`    | Changes to build system or external dependencies  |
+| `ci`       | Changes to CI/CD configuration or scripts         |
+| `chore`    | Maintenance tasks not modifying src or test files |
+| `revert`   | Reverts a previous commit                         |
 
 ## Special Scopes (affect semantic versioning)
 
-| Type + Scope | Release effect |
-|---|---|
-| `build(release)` | minor release |
-| `refactor(perf*)` | minor release |
-| `chore(build)` | minor release |
-| `chore(fix)` | patch release |
-| `ci(fix)` | patch release |
-| `*(no-release)` | no release triggered |
+| Type + Scope      | Release effect       |
+| ----------------- | -------------------- |
+| `build(release)`  | minor release        |
+| `refactor(perf*)` | minor release        |
+| `chore(build)`    | minor release        |
+| `chore(fix)`      | patch release        |
+| `ci(fix)`         | patch release        |
+| `*(no-release)`   | no release triggered |
 
 Use `BREAKING CHANGE` or `BREAKING CHANGES` in the footer to trigger a major release.
 

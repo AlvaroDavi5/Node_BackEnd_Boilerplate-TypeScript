@@ -2,7 +2,6 @@ import { transports, format } from 'winston';
 import { LogLevelEnum } from '@common/enums/logLevel.enum';
 import { dataParserHelperMock } from '@dev/mocks/mockedModules';
 
-
 export interface LoggerInterface {
 	error: (...args: unknown[]) => void;
 	warn: (...args: unknown[]) => void;
@@ -29,14 +28,7 @@ function getMessageFormatter() {
 	const contextFormatter = (ctx: string): string => `${purpleConsoleColor}${ctx}${defaultConsoleColor}`;
 
 	return format.printf((info) => {
-		const {
-			level,
-			message,
-			timestamp,
-			stack: errorStack,
-			context: ctx,
-			meta,
-		} = info;
+		const { level, message, timestamp, stack: errorStack, context: ctx, meta } = info;
 		const metadata = meta as MetadataInterface;
 		const context = (ctx ?? metadata?.context) as string | undefined;
 
@@ -69,11 +61,7 @@ function getMessageFormatter() {
 
 export function getLoggerOptions(serviceName: string, environment: string, context: string | undefined, logsPath: string, showDetailedLogs: boolean) {
 	const messageFormatter = getMessageFormatter();
-	const defaultFormat = format.combine(
-		format.timestamp(),
-		format.errors({ stack: showDetailedLogs }),
-		messageFormatter,
-	);
+	const defaultFormat = format.combine(format.timestamp(), format.errors({ stack: showDetailedLogs }), messageFormatter);
 
 	const consoleMaxLevel = showDetailedLogs === true ? LogLevelEnum.DEBUG : LogLevelEnum.HTTP;
 	const fileMaxLevel = showDetailedLogs === true ? LogLevelEnum.HTTP : LogLevelEnum.WARN;

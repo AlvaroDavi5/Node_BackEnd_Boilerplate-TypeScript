@@ -11,11 +11,10 @@ import { fromDateTimeToISO, getDateTimeNow } from '@common/utils/dates.util';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
-
 type wsErrorResponseType = ErrorInterface & {
-	receivedEvent: string,
-	receivedData: unknown,
-	timestamp: string,
+	receivedEvent: string;
+	receivedData: unknown;
+	timestamp: string;
 };
 
 @Catch()
@@ -27,8 +26,13 @@ export default class WebSocketExceptionsFilter extends AbstractExceptionsFilter 
 		super(logger, dataParserHelper);
 	}
 
-	private buildWsErrorResponse(exception: unknown, event: string, data: unknown): {
-		errorEvent: string, errorResponse: ErrorInterface & { timestamp: string },
+	private buildWsErrorResponse(
+		exception: unknown,
+		event: string,
+		data: unknown,
+	): {
+		errorEvent: string;
+		errorResponse: ErrorInterface & { timestamp: string };
 	} {
 		let errorResponse: wsErrorResponseType = {
 			name: (exception as ErrorOrExceptionToFilter)?.name,
@@ -71,14 +75,11 @@ export default class WebSocketExceptionsFilter extends AbstractExceptionsFilter 
 		const socketId = socket?.id;
 		const clientIp = socket?.handshake?.address;
 
-		if (socketId)
-			this.logger.setSocketId(socketId);
-		if (clientIp)
-			this.logger.setClientIp(clientIp);
+		if (socketId) this.logger.setSocketId(socketId);
+		if (clientIp) this.logger.setClientIp(clientIp);
 
 		this.capture(exception, {
 			data: { socketId, event, payload: data },
-			// eslint-disable-next-line camelcase
 			user: { socketId, ip_address: clientIp },
 		});
 

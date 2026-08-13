@@ -2,7 +2,6 @@ import UserEntity from '@domain/entities/User.entity';
 import UserStrategy from '@app/user/strategies/User.strategy';
 import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 
-
 describe('Modules :: App :: User :: Strategies :: UserStrategy', () => {
 	const userStrategy = new UserStrategy();
 

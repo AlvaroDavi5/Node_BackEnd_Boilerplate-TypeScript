@@ -5,7 +5,6 @@ import { returingNumber } from '@shared/internal/types/returnTypeFunc';
 import { PaginationInterface } from '@shared/internal/interfaces/listPaginationInterface';
 import AbstractEntity from './AbstractEntity.entity';
 
-
 export default abstract class AbstractListEntity<T extends AbstractEntity> implements PaginationInterface<T> {
 	public content: T[] = [];
 

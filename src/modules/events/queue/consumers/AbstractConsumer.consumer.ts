@@ -9,7 +9,6 @@ import { ConfigsInterface } from '@core/configs/envs.config';
 import { captureException } from '@common/utils/sentryCalls.util';
 import { QueueNamesEnum } from '@common/enums/queueNames.enum';
 
-
 type queueCredentialsKeyType = Exclude<keyof ConfigsInterface['integration']['aws']['sqs'], 'apiVersion' | 'maxAttempts'>;
 
 @Injectable()
@@ -44,7 +43,7 @@ export default abstract class AbstractQueueConsumer {
 		this.logger = logger;
 
 		const {
-			[queueCredentialsKey]: { queueName, queueUrl }
+			[queueCredentialsKey]: { queueName, queueUrl },
 		} = this.configService.get<ConfigsInterface['integration']['aws']['sqs']>('integration.aws.sqs')!;
 
 		this.consumerName = consumerName;
@@ -76,8 +75,7 @@ export default abstract class AbstractQueueConsumer {
 		}
 
 		const done = await this.messageHandler.execute(message);
-		if (done)
-			await this.deleteMessage(message);
+		if (done) await this.deleteMessage(message);
 		this.resetErrorsCount();
 	}
 
@@ -122,8 +120,7 @@ export default abstract class AbstractQueueConsumer {
 
 	private increaseError(error: Error): void {
 		this.errorsCount += 1;
-		if (this.errorsCount < 10)
-			return;
+		if (this.errorsCount < 10) return;
 
 		captureException(error, { user: { consumer: this.consumerName, queueUrl: this.queueUrl } });
 		throw error;

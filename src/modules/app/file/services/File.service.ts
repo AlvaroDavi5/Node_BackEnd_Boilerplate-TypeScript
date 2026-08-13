@@ -10,7 +10,6 @@ import ContentTypeConstants from '@common/constants/ContentType.constants';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { RequestFileInterface } from '@shared/internal/interfaces/endpointInterface';
 
-
 @Injectable()
 export default class FileService implements OnModuleInit {
 	private uploadService!: UploadService;
@@ -28,15 +27,21 @@ export default class FileService implements OnModuleInit {
 	}
 
 	public async onModuleInit(): Promise<void> {
-		if (!this.isTestEnv) { // ! lazy loads not works in test environment
+		if (!this.isTestEnv) {
+			// ! lazy loads not works in test environment
 			const reportsModuleRef = await this.lazyModuleLoader.load(() => ReportsModule);
 			this.uploadService = await reportsModuleRef.resolve(UploadService, { id: 1 });
 		}
 	}
 
-	public async downloadFile(fileNameHeader: string, filePathHeader: string, acceptHeader = ''): Promise<{
-		contentType: string, fileName: string,
-		content: Buffer | StreamableFile | string,
+	public async downloadFile(
+		fileNameHeader: string,
+		filePathHeader: string,
+		acceptHeader = '',
+	): Promise<{
+		contentType: string;
+		fileName: string;
+		content: Buffer | StreamableFile | string;
 	}> {
 		const {
 			application: { OCTET_STREAM: streamContentType },
@@ -53,14 +58,16 @@ export default class FileService implements OnModuleInit {
 			if (this.isTestEnv) {
 				const testBuffer = Buffer.from('TEST CONTENT', 'ascii');
 				return {
-					fileName, contentType,
+					fileName,
+					contentType,
 					content: new StreamableFile(testBuffer, { length: testBuffer.length, type: contentType }),
 				};
 			}
 
 			const fileBuffer = await this.uploadService.getFile(filePath);
 			return {
-				fileName, contentType,
+				fileName,
+				contentType,
 				content: new StreamableFile(fileBuffer, { length: fileBuffer.length, type: contentType }),
 			};
 		} catch (error) {
@@ -70,10 +77,14 @@ export default class FileService implements OnModuleInit {
 		}
 	}
 
-	public async uploadFile(file: RequestFileInterface, fileNameHeader: string, acceptHeader = ''): Promise<{
-		filePath: string,
-		fileContentType: string,
-		uploadTag: string | null,
+	public async uploadFile(
+		file: RequestFileInterface,
+		fileNameHeader: string,
+		acceptHeader = '',
+	): Promise<{
+		filePath: string;
+		fileContentType: string;
+		uploadTag: string | null;
 	}> {
 		const {
 			text: { PLAIN: plainTextContentType, CSV: csvContentType, XML: xmlContentType },
@@ -85,11 +96,21 @@ export default class FileService implements OnModuleInit {
 		} = this.contentTypeConstants;
 
 		const acceptableContentTypes = [
-			plainTextContentType, csvContentType, xmlContentType,
-			pdfContentType, jsonContentType, zipContentType,
-			gifContentType, jpegContentType, pngContentType, svgContentType,
-			mpegAudioContentType, wavAudioContentType,
-			mpegVideoContentType, mp4ContentType, webmContentType,
+			plainTextContentType,
+			csvContentType,
+			xmlContentType,
+			pdfContentType,
+			jsonContentType,
+			zipContentType,
+			gifContentType,
+			jpegContentType,
+			pngContentType,
+			svgContentType,
+			mpegAudioContentType,
+			wavAudioContentType,
+			mpegVideoContentType,
+			mp4ContentType,
+			webmContentType,
 			formDataContentType,
 		];
 		const expectedContentType = file.mimetype ?? acceptHeader;
@@ -126,8 +147,7 @@ export default class FileService implements OnModuleInit {
 
 	private getFileNameWithExtension(fullFileName: string): string[] {
 		const fileNameParts = fullFileName.trim().split('.');
-		if (fileNameParts.length < 2)
-			return [fullFileName];
+		if (fileNameParts.length < 2) return [fullFileName];
 
 		const fileExtension = fileNameParts[fileNameParts.length - 1];
 		const fileNameWithoutExtension = fileNameParts.slice(0, -1).join('-');

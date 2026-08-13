@@ -2,7 +2,8 @@
 
 ## Running Locally
 
-1. Install project dependencies  
+1. Install project dependencies
+
 ```shell
 npm install
 ```
@@ -10,6 +11,7 @@ npm install
 2. Install [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
 3. Configure AWS CLI
+
 ```shell
 $ aws configure
 > AWS Access Key ID [****]: mock
@@ -19,6 +21,7 @@ $ aws configure
 ```
 
 4. Run scripts
+
 ```shell
 npm run db:migration-run && npm run db:seed # create database entities and populate database registers
 npm run mock-dependencies # create message queue and storager and start external services mock
@@ -47,7 +50,8 @@ npm run send-message # send event message to queue
 
 ## Environment Preparation
 
-1. Copy dotenv file  
+1. Copy dotenv file
+
 ```shell
 cp envs/.env.local ./.env # copy development local example
 source ./.env # load envs on shell session
@@ -114,4 +118,4 @@ kind delete cluster --name boilerplate-cluster
 kubectl delete -f=<resource_config_path> # or kubectl delete -n <resource_namespace> <resource_type> <resource_name>
 ```
 
-___
+---

@@ -1,7 +1,4 @@
-import {
-	Controller, Req, Res, Version, Get, Headers, Param, Query, Body,
-	UseGuards, UseFilters, UseInterceptors
-} from '@nestjs/common';
+import { Controller, Req, Res, Version, Get, Headers, Param, Query, Body, UseGuards, UseFilters, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse } from '@nestjs/swagger';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import HttpExceptionsFilter from '@api/filters/HttpExceptions.filter';
@@ -11,7 +8,6 @@ import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import { ApiVersionsEnum } from '@common/enums/apiVersions.enum';
 import type { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
-
 @ApiTags('HealthCheck')
 @Controller('/check')
 @UseGuards(CustomThrottlerGuard)
@@ -19,9 +15,7 @@ import type { RequestInterface, ResponseInterface } from '@shared/internal/inter
 @UseInterceptors(ResponseInterceptor)
 @exceptionsResponseDecorator()
 export default class HealthController {
-	constructor(
-		private readonly httpMessagesConstants: HttpMessagesConstants,
-	) { }
+	constructor(private readonly httpMessagesConstants: HttpMessagesConstants) {}
 
 	@ApiOperation({
 		summary: 'Check API',
@@ -43,7 +37,7 @@ export default class HealthController {
 				statusCode: 200,
 				statusMessage: 'Endpoint founded successfully.',
 			},
-		}
+		},
 	})
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
@@ -55,10 +49,15 @@ export default class HealthController {
 		@Body() body: unknown,
 		@Res({ passthrough: true }) response: ResponseInterface,
 	): {
-		baseUrl?: string, url: string, method: string,
-		headers: Record<string, string | undefined>,
-		pathParams: Record<string, unknown>, queryParams: unknown, body: unknown,
-		statusCode: number, statusMessage: string,
+		baseUrl?: string;
+		url: string;
+		method: string;
+		headers: Record<string, string | undefined>;
+		pathParams: Record<string, unknown>;
+		queryParams: unknown;
+		body: unknown;
+		statusCode: number;
+		statusMessage: string;
 	} {
 		// [METHOD]:{STATUS_CODE} http://url/:param1/:param2?query1=X&query2=Y { 'body': {} }
 
@@ -89,7 +88,7 @@ export default class HealthController {
 	@ApiOkResponse({
 		schema: {
 			example: 'OK',
-		}
+		},
 	})
 	@ApiConsumes('text/plain')
 	@ApiProduces('text/plain')

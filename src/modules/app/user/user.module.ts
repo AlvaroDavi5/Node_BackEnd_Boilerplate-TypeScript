@@ -12,12 +12,9 @@ import UserPreferenceService from './services/UserPreference.service';
 import UserRepository from './repositories/user/User.repository';
 import UserPreferenceRepository from './repositories/userPreference/UserPreference.repository';
 
-
 @Module({
 	imports: [],
-	controllers: [
-		UserController,
-	],
+	controllers: [UserController],
 	providers: [
 		UserStrategy,
 		LoginUserUseCase,
@@ -33,4 +30,4 @@ import UserPreferenceRepository from './repositories/userPreference/UserPreferen
 	],
 	exports: [],
 })
-export default class UserModule { }
+export default class UserModule {}

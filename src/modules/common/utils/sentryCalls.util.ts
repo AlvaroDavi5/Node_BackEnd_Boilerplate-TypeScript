@@ -1,12 +1,8 @@
-import {
-	SeverityLevel, logger as sentryLogger,
-	captureException as captureSentryException, captureMessage as captureSentryMessage
-} from '@sentry/nestjs';
+import { SeverityLevel, logger as sentryLogger, captureException as captureSentryException, captureMessage as captureSentryMessage } from '@sentry/nestjs';
 import externalErrorParser from '@common/utils/externalErrorParser.util';
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 import { LogLevelEnum } from '@common/enums/logLevel.enum';
 import { ExceptionMetadataInterface } from '@shared/internal/interfaces/errorInterface';
-
 
 function parseLogLevelToSentrySeverity(logLevel: LogLevelEnum): SeverityLevel {
 	if (logLevel === LogLevelEnum.WARN) {
@@ -23,16 +19,11 @@ function parseLogLevelToSentrySeverity(logLevel: LogLevelEnum): SeverityLevel {
 }
 
 function parseExceptionStatusCodeToSentrySeverity(statusCode: number): SeverityLevel {
-	if (statusCode < HttpStatusEnum.OK)
-		return 'debug';
-	if (statusCode < HttpStatusEnum.MULTIPLE_CHOICES)
-		return 'info';
-	if (statusCode < HttpStatusEnum.BAD_REQUEST)
-		return 'log';
-	if (statusCode < HttpStatusEnum.INTERNAL_SERVER_ERROR)
-		return 'warning';
-	if (statusCode === HttpStatusEnum.SERVICE_UNAVAILABLE || statusCode === HttpStatusEnum.GATEWAY_TIMEOUT)
-		return 'fatal';
+	if (statusCode < HttpStatusEnum.OK) return 'debug';
+	if (statusCode < HttpStatusEnum.MULTIPLE_CHOICES) return 'info';
+	if (statusCode < HttpStatusEnum.BAD_REQUEST) return 'log';
+	if (statusCode < HttpStatusEnum.INTERNAL_SERVER_ERROR) return 'warning';
+	if (statusCode === HttpStatusEnum.SERVICE_UNAVAILABLE || statusCode === HttpStatusEnum.GATEWAY_TIMEOUT) return 'fatal';
 
 	return 'error';
 }

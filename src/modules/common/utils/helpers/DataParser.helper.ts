@@ -1,27 +1,21 @@
 import { Readable } from 'stream';
 import { Injectable } from '@nestjs/common';
 
-
 @Injectable()
 export default class DataParserHelper {
 	public toString(data: unknown, returnUndefined = false): string {
-		if (typeof data === 'string')
-			return data;
-		if (typeof data === 'undefined')
-			return returnUndefined ? 'undefined' : '';
-		if (typeof data === 'symbol')
-			return data.toString();
+		if (typeof data === 'string') return data;
+		if (typeof data === 'undefined') return returnUndefined ? 'undefined' : '';
+		if (typeof data === 'symbol') return data.toString();
 
-		if (data instanceof Error)
-			return this.parseErrorToString(data);
+		if (data instanceof Error) return this.parseErrorToString(data);
 
 		if (typeof data === 'object') {
 			if (Array.isArray(data)) {
 				return `[${this.parseArrayToString(data, returnUndefined)}]`;
 			}
 
-			if (!data)
-				return String(data);
+			if (!data) return String(data);
 
 			return this.parseObjectToString(data, String(data));
 		}
@@ -40,7 +34,7 @@ export default class DataParserHelper {
 				return 'Circular Reference';
 			}
 			seen.add(array);
-			return array.map((element) => Array.isArray(element) ? `[${visit(element)}]` : this.toString(element, returnUndefined)).join(',');
+			return array.map((element) => (Array.isArray(element) ? `[${visit(element)}]` : this.toString(element, returnUndefined))).join(',');
 		};
 		return visit(data);
 	}
@@ -75,17 +69,13 @@ export default class DataParserHelper {
 	}
 
 	public async toBuffer(data: string | Uint8Array | Buffer | Readable | ReadableStream | Blob, encoding: BufferEncoding): Promise<Buffer> {
-		if (Buffer.isBuffer(data))
-			return data;
+		if (Buffer.isBuffer(data)) return data;
 
-		if (typeof data === 'string')
-			return Buffer.from(data, encoding);
+		if (typeof data === 'string') return Buffer.from(data, encoding);
 
-		if (data instanceof Uint8Array)
-			return Buffer.from(data);
+		if (data instanceof Uint8Array) return Buffer.from(data);
 
-		if (data instanceof Readable)
-			return await this.readableToBuffer(data);
+		if (data instanceof Readable) return await this.readableToBuffer(data);
 
 		if (typeof Blob !== 'undefined' && data instanceof Blob) {
 			const arrayBuffer = await data.arrayBuffer();

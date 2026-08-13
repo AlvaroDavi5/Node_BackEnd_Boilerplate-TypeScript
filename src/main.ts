@@ -12,35 +12,26 @@ import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
-
 async function startNestApplication(): Promise<void> {
-	const nestApp = await NestFactory.create<NestFastifyApplication>(
-		CoreModule,
-		fastifyAdapter,
-		createNestApplicationOptions,
-	);
+	const nestApp = await NestFactory.create<NestFastifyApplication>(CoreModule, fastifyAdapter, createNestApplicationOptions);
 	nestListenConfig(nestApp);
 	nestApiConfig(nestApp);
 
 	const { environment, appPort } = nestApp.get<ConfigService>(ConfigService, {}).get<ConfigsInterface['application']>('application')!;
 
-	if (environment !== EnvironmentsEnum.PRODUCTION)
-		swaggerDocConfig(nestApp);
+	if (environment !== EnvironmentsEnum.PRODUCTION) swaggerDocConfig(nestApp);
 
-	if (environment === EnvironmentsEnum.DEVELOPMENT)
-		writeFileSync('./docs/nestGraph.json', nestApp.get(SerializedGraph, {}).toString());
+	if (environment === EnvironmentsEnum.DEVELOPMENT) writeFileSync('./docs/nestGraph.json', nestApp.get(SerializedGraph, {}).toString());
 
-	await nestApp.listen({ port: appPort, host: '0.0.0.0' })
-		.catch((error: ErrorInterface | Error) => {
-			validateKnownExceptions(error);
-		});
+	await nestApp.listen({ port: appPort, host: '0.0.0.0' }).catch((error: ErrorInterface | Error) => {
+		validateKnownExceptions(error);
+	});
 }
 
 startNestApplication().catch((error: Error) => {
-	// eslint-disable-next-line no-console
+	// oxlint-disable-next-line no-console
 	console.error(error);
-	if (process.env.NODE_ENV === EnvironmentsEnum.DEVELOPMENT)
-		writeFileSync('./docs/nestGraph.json', PartialGraphHost.toString() ?? '');
+	if (process.env.NODE_ENV === EnvironmentsEnum.DEVELOPMENT) writeFileSync('./docs/nestGraph.json', PartialGraphHost.toString() ?? '');
 	process.exit(ProcessExitStatusEnum.FAILURE);
 });
 

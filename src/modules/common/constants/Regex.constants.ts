@@ -1,10 +1,9 @@
 import { Injectable } from '@nestjs/common';
 
-
 interface CustomRegEx {
-	name: string,
-	message: (attributeName: string) => string,
-	regex: RegExp,
+	name: string;
+	message: (attributeName: string) => string;
+	regex: RegExp;
 }
 
 @Injectable()
@@ -31,7 +30,6 @@ export default class RegExConstants {
 	}
 
 	private parseRegEx(regexSrc: string): RegExp {
-		// eslint-disable-next-line security/detect-non-literal-regexp
 		return new RegExp(regexSrc);
 	}
 
@@ -40,7 +38,8 @@ export default class RegExConstants {
 		const requiredAsciiPattern = this.getRegExSource(/!-~/);
 		const passwordLimitPattern = this.getRegExSource(/9,60/);
 
-		// eslint-disable-next-line max-len
-		return this.parseRegEx(`^(?=.*[${requiredCharsPattern}])(?=.*[${requiredAsciiPattern}])[${requiredCharsPattern}${requiredAsciiPattern}].{${passwordLimitPattern}}$`);
+		return this.parseRegEx(
+			`^(?=.*[${requiredCharsPattern}])(?=.*[${requiredAsciiPattern}])[${requiredCharsPattern}${requiredAsciiPattern}].{${passwordLimitPattern}}$`,
+		);
 	}
 }

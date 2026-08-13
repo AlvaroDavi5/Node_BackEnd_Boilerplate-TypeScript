@@ -11,7 +11,6 @@ import { ListQueryInterface, PaginationInterface } from '@shared/internal/interf
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 
-
 describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 	// // mocks
 	const exceptionsMock = {
@@ -36,7 +35,7 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 		update: jest.fn(async (_id: string, _data: IUpdateUser): Promise<UserEntity> => {
 			throw new Error('GenericError');
 		}),
-		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, agentUserId?: string }): Promise<boolean> => false),
+		delete: jest.fn(async (_id: string, _data: { softDelete: boolean; agentUserId?: string }): Promise<boolean> => false),
 		list: jest.fn(async (_query: ListQueryInterface, _withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => {
 			return { content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 };
 		}),
@@ -116,12 +115,13 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 			userServiceMock.getByEmail.mockResolvedValueOnce(null);
 			userServiceMock.create.mockResolvedValueOnce(userEntity);
 			userPreferenceServiceMock.create.mockResolvedValueOnce(userPreferenceEntity);
-			userServiceMock.getById.mockRejectedValueOnce(exceptionsMock.notFound({
-				message: 'User not founded by ID!',
-			}));
+			userServiceMock.getById.mockRejectedValueOnce(
+				exceptionsMock.notFound({
+					message: 'User not founded by ID!',
+				}),
+			);
 
-			await expect(createUserUseCase.execute(userEntity.getAttributes(), agentUser))
-				.rejects.toMatchObject(new Error('User not founded by ID!'));
+			await expect(createUserUseCase.execute(userEntity.getAttributes(), agentUser)).rejects.toMatchObject(new Error('User not founded by ID!'));
 			expect(userServiceMock.create).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.create).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
@@ -129,7 +129,7 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalled();
 			expect(httpMessagesConstantsMock.messages.conflict).not.toHaveBeenCalled();
 			expect(exceptionsMock.notFound).toHaveBeenCalledWith({
-				message: 'User not founded by ID!'
+				message: 'User not founded by ID!',
 			});
 		});
 
@@ -137,23 +137,21 @@ describe('Modules :: App :: User :: UseCases :: CreateUserUseCase', () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
 			userServiceMock.getByEmail.mockResolvedValueOnce(userEntity);
 
-			await expect(createUserUseCase.execute(userEntity.getAttributes(), agentUser))
-				.rejects.toMatchObject(new Error('User already exists!'));
+			await expect(createUserUseCase.execute(userEntity.getAttributes(), agentUser)).rejects.toMatchObject(new Error('User already exists!'));
 			expect(userServiceMock.create).not.toHaveBeenCalled();
 			expect(userPreferenceServiceMock.create).not.toHaveBeenCalled();
 			expect(userServiceMock.getById).not.toHaveBeenCalled();
 			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
 			expect(httpMessagesConstantsMock.messages.conflict).toHaveBeenCalledWith('User');
 			expect(exceptionsMock.conflict).toHaveBeenCalledWith({
-				message: 'User already exists!'
+				message: 'User already exists!',
 			});
 		});
 
 		test('Should throw a unauthorized error', async () => {
-			await expect(createUserUseCase.execute({} as unknown as CreateUserInputDto))
-				.rejects.toMatchObject(new Error('Invalid agentUser'));
+			await expect(createUserUseCase.execute({} as unknown as CreateUserInputDto)).rejects.toMatchObject(new Error('Invalid agentUser'));
 			expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
-				message: 'Invalid agentUser'
+				message: 'Invalid agentUser',
 			});
 		});
 	});

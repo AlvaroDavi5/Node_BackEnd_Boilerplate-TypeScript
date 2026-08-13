@@ -4,7 +4,6 @@ import FileReaderHelper from '@common/utils/helpers/FileReader.helper';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { configServiceMock } from '@dev/mocks/mockedModules';
 
-
 describe('Modules :: Common :: Utils :: Helpers :: FileReaderHelper', () => {
 	const fileReaderHelper = new FileReaderHelper(configServiceMock as unknown as ConfigService, new DataParserHelper());
 

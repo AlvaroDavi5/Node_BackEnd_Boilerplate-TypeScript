@@ -8,7 +8,6 @@ import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { configServiceMock, dataParserHelperMock } from '@dev/mocks/mockedModules';
 import LoginUserInputDto from '../dto/user/LoginUserInput.dto';
 
-
 export default class LoginUserValidatorPipe implements PipeTransform<LoginUserInputDto, LoginUserSchemaInterface> {
 	private readonly schemaValidator: SchemaValidator;
 

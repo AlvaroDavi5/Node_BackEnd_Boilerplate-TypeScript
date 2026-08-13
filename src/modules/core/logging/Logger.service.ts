@@ -9,7 +9,6 @@ import { captureMessage, captureLog } from '@common/utils/sentryCalls.util';
 import { LogLevelEnum } from '@common/enums/logLevel.enum';
 import { LoggerInterface, MetadataInterface, getLoggerOptions } from './logger';
 
-
 @Injectable({ scope: Scope.TRANSIENT })
 export default class LoggerService implements LoggerInterface {
 	private contextName!: string;
@@ -83,9 +82,7 @@ export default class LoggerService implements LoggerInterface {
 		message: string;
 		meta: MetadataInterface;
 	} {
-		const inquirerName = typeof this.inquirer === 'string'
-			? this.inquirer
-			: this.inquirer?.constructor?.name;
+		const inquirerName = typeof this.inquirer === 'string' ? this.inquirer : this.inquirer?.constructor?.name;
 		const contextName = this.getContextName() ?? inquirerName;
 		this.setContextName(contextName);
 
@@ -109,23 +106,20 @@ export default class LoggerService implements LoggerInterface {
 						const responseMessage = res.message ? this.dataParserHelper.toString(res.message) : undefined;
 						const responseMetadata = res.metadata
 							? this.dataParserHelper.toString({
-								message: res.metadata?.message,
-								detail: res.metadata?.detail,
-							})
+									message: res.metadata?.message,
+									detail: res.metadata?.detail,
+								})
 							: undefined;
 
-						if (responseMessage)
-							errorStacks.push(this.colorizeStack(responseMessage));
-						if (responseMetadata)
-							errorStacks.push(this.colorizeStack(responseMetadata));
+						if (responseMessage) errorStacks.push(this.colorizeStack(responseMessage));
+						if (responseMetadata) errorStacks.push(this.colorizeStack(responseMetadata));
 					}
 				} else if (arg instanceof AxiosError) {
 					const { response } = arg;
 
 					if (typeof response === 'object') {
 						const responseMessage = response.data ? this.dataParserHelper.toString(response.data) : undefined;
-						if (responseMessage)
-							errorStacks.push(this.colorizeStack(responseMessage));
+						if (responseMessage) errorStacks.push(this.colorizeStack(responseMessage));
 					}
 				}
 
@@ -133,16 +127,13 @@ export default class LoggerService implements LoggerInterface {
 					if (Array.isArray(arg.stack)) {
 						const strStack: string[] = arg.stack.map((stack) => this.colorizeStack(stack));
 						errorStacks.push(...strStack);
-					} else
-						errorStacks.push(this.colorizeStack(arg.stack));
+					} else errorStacks.push(this.colorizeStack(arg.stack));
 				}
 			}
 		});
 
 		metadata.stack = errorStacks.length > 0 ? errorStacks : undefined;
-		const message = Array.isArray(args)
-			? args.map((arg) => this.dataParserHelper.toString(arg, true)).join(', ')
-			: this.dataParserHelper.toString(args, true);
+		const message = Array.isArray(args) ? args.map((arg) => this.dataParserHelper.toString(arg, true)).join(', ') : this.dataParserHelper.toString(args, true);
 
 		return {
 			message,
@@ -236,16 +227,9 @@ export const RequestLoggerProvider: Provider = {
 	provide: REQUEST_LOGGER_PROVIDER,
 	scope: Scope.REQUEST,
 
-	inject: [
-		INQUIRER,
-		ConfigService,
-		DataParserHelper,
-	],
-	useFactory: (
-		inquirer: string | object,
-		configService: ConfigService,
-		dataParserHelper: DataParserHelper,
-	): LoggerService => new LoggerService(inquirer, configService, dataParserHelper),
+	inject: [INQUIRER, ConfigService, DataParserHelper],
+	useFactory: (inquirer: string | object, configService: ConfigService, dataParserHelper: DataParserHelper): LoggerService =>
+		new LoggerService(inquirer, configService, dataParserHelper),
 
 	durable: false,
 };

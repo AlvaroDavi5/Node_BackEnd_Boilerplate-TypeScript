@@ -7,7 +7,6 @@ import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import ConnectionsModule from './connections/connections.module';
 import { formatGraphQlError } from './utils/errors.util';
 
-
 const { application: appConfigs } = envsConfig();
 
 @Module({
@@ -26,4 +25,4 @@ const { application: appConfigs } = envsConfig();
 	providers: [],
 	exports: [],
 })
-export default class GraphQlModule { }
+export default class GraphQlModule {}

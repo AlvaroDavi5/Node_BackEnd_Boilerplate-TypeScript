@@ -1,7 +1,4 @@
-import {
-	Controller, Param,
-	Sse, UseGuards
-} from '@nestjs/common';
+import { Controller, Param, Sse, UseGuards } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiOkResponse, ApiParam } from '@nestjs/swagger';
 import { interval, Observable, switchMap, take } from 'rxjs';
 import { IViewSubscription } from '@domain/entities/Subscription.entity';
@@ -10,15 +7,12 @@ import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.deco
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import { ResponseSseInterface } from '@shared/internal/interfaces/endpointInterface';
 
-
 @ApiTags('Server-Sent Events')
 @Controller('/events')
 @UseGuards(CustomThrottlerGuard)
 @exceptionsResponseDecorator()
 export default class ServerEventsController {
-	constructor(
-		private readonly getSubscriptionUseCase: GetSubscriptionUseCase,
-	) { }
+	constructor(private readonly getSubscriptionUseCase: GetSubscriptionUseCase) {}
 
 	@ApiOperation({
 		summary: 'Server-Sent Events',
@@ -30,13 +24,11 @@ export default class ServerEventsController {
 	@ApiOkResponse({
 		schema: {
 			example: { number: 1, text: 'OK' },
-		}
+		},
 	})
 	@ApiConsumes('text/plain')
 	@ApiProduces('text/event-stream')
-	getSubscription(
-		@Param('subscriptionId') subscriptionId: string,
-	): Observable<ResponseSseInterface<IViewSubscription>> {
+	getSubscription(@Param('subscriptionId') subscriptionId: string): Observable<ResponseSseInterface<IViewSubscription>> {
 		const fiveSeconds = 5000;
 		const eventLimit = 10;
 
@@ -51,7 +43,7 @@ export default class ServerEventsController {
 						data: {
 							attempt: index + 1,
 							data: subscription,
-						}
+						},
 					};
 				} catch (error) {
 					return {
@@ -59,10 +51,10 @@ export default class ServerEventsController {
 						data: {
 							attempt: index + 1,
 							error: error as Error,
-						}
+						},
 					};
 				}
-			})
+			}),
 		);
 	}
 }

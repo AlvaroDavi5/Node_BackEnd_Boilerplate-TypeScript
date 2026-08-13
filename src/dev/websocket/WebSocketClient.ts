@@ -4,12 +4,11 @@ import { LoggerInterface } from '@core/logging/logger';
 import { secondsToMilliseconds } from '@common/utils/dates.util';
 import { dataParserHelperMock } from '../mocks/mockedModules';
 
-
 export default class WebSocketClient {
 	private readonly clientSocket!: ClientSocket;
 	private readonly logger: LoggerInterface;
 
-	constructor({ configs, logger }: { configs: ConfigsInterface, logger: LoggerInterface }) {
+	constructor({ configs, logger }: { configs: ConfigsInterface; logger: LoggerInterface }) {
 		const appConfigs = configs.application;
 		const socketUrl = appConfigs.url;
 
@@ -30,10 +29,7 @@ export default class WebSocketClient {
 	}
 
 	public send(event: string, msg: unknown): void {
-		this.clientSocket.emit(
-			String(event),
-			this.formatMessageBeforeSend(msg),
-		);
+		this.clientSocket.emit(String(event), this.formatMessageBeforeSend(msg));
 	}
 
 	public listen(event: string, callback: (...args: unknown[]) => void): void {

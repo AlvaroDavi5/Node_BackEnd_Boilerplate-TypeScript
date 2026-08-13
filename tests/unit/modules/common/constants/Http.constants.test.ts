@@ -1,6 +1,5 @@
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 
-
 describe('Modules :: Common :: Constants :: HttpMessagesConstants', () => {
 	const httpMessagesConstants = new HttpMessagesConstants();
 

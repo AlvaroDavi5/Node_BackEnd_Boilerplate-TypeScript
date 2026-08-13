@@ -3,22 +3,19 @@ import UserEntity from '@domain/entities/User.entity';
 import { getObjKeys } from '@common/utils/dataValidations.util';
 import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 
-
 @Injectable()
 export default class UserStrategy {
 	public isAllowedToManageUser(agentUser: UserAuthInterface, userData: UserEntity): boolean {
 		const isTheSameUsername = agentUser?.username === userData.getEmail();
 		const isTheSameId = agentUser?.clientId === userData.getId();
 
-		if (isTheSameUsername && isTheSameId)
-			return true;
+		if (isTheSameUsername && isTheSameId) return true;
 
 		return false;
 	}
 
 	public mustUpdate<EA = unknown, IA = unknown>(entityAttributes: EA, inputAttributes: IA): boolean {
-		if (!entityAttributes || !inputAttributes)
-			return false;
+		if (!entityAttributes || !inputAttributes) return false;
 		const attributesToUpdate = getObjKeys<IA>(inputAttributes);
 
 		let mustUpdate = false;
@@ -29,14 +26,11 @@ export default class UserStrategy {
 			let hasValueChanged = false;
 
 			if (isUpdatedField) {
-				if (typeof inputField === 'object' && inputField)
-					hasValueChanged = this.mustUpdate(entityField, inputField);
-				else
-					hasValueChanged = inputField !== entityField;
+				if (typeof inputField === 'object' && inputField) hasValueChanged = this.mustUpdate(entityField, inputField);
+				else hasValueChanged = inputField !== entityField;
 			}
 
-			if (isUpdatedField && hasValueChanged)
-				mustUpdate = true;
+			if (isUpdatedField && hasValueChanged) mustUpdate = true;
 		});
 
 		return mustUpdate;

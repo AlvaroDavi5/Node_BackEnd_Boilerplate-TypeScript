@@ -170,7 +170,7 @@ services:
       - default_network
       - monitoring_network
     volumes:
-      - ./infra/loki-config.yaml:/etc/loki/local-config.yaml
+      - ./infra/grafana/loki-config.yaml:/etc/loki/local-config.yaml
   # Loki Logs Agent
   logs_tracker:
     container_name: Logs_Loki_Promtail
@@ -180,7 +180,7 @@ services:
     networks:
       - default_network
     volumes:
-      - ./infra/promtail-config.yaml:/etc/loki/promtail.yaml
+      - ./infra/grafana/promtail-config.yaml:/etc/loki/promtail.yaml
       - ./logs/logs.log:/app/logs.log
       - /var/log:/var/log
       - /var/lib/docker/containers:/var/lib/docker/containers

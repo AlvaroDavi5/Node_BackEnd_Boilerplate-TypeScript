@@ -13,7 +13,6 @@ import { EmitterEventsEnum } from '@domain/enums/events.enum';
 import EventEmitterClient from '@events/emitter/EventEmitter.client';
 import CacheAccessHelper from '@common/utils/helpers/CacheAccess.helper';
 
-
 @Injectable()
 export default class SubscriptionService implements OnModuleInit {
 	private eventEmitterClient!: EventEmitterClient;
@@ -30,12 +29,17 @@ export default class SubscriptionService implements OnModuleInit {
 		private readonly logger: LoggerService,
 		private readonly cacheAccessHelper: CacheAccessHelper,
 	) {
-		const { datalake: { db, collections: { subscriptions } } } = this.mongoClient.databases;
+		const {
+			datalake: {
+				db,
+				collections: { subscriptions },
+			},
+		} = this.mongoClient.databases;
 		this.datalakeDatabase = db;
 		this.subscriptionsCollection = this.mongoClient.getCollection(this.datalakeDatabase, subscriptions);
 
-		const subscriptionsExpirationTime = this.configService
-			.get<ConfigsInterface['cache']['expirationTime']['subscriptions']>('cache.expirationTime.subscriptions')!;
+		const subscriptionsExpirationTime =
+			this.configService.get<ConfigsInterface['cache']['expirationTime']['subscriptions']>('cache.expirationTime.subscriptions')!;
 		this.subscriptionsTimeToLive = subscriptionsExpirationTime;
 	}
 
@@ -80,8 +84,7 @@ export default class SubscriptionService implements OnModuleInit {
 
 		if (subscriptionDatabaseId) {
 			foundedSubscription = await this.mongoClient.get(this.subscriptionsCollection, subscriptionDatabaseId);
-			if (foundedSubscription?._id)
-				await this.saveOnCache(subscriptionId, new SubscriptionEntity(foundedSubscription).getAttributes());
+			if (foundedSubscription?._id) await this.saveOnCache(subscriptionId, new SubscriptionEntity(foundedSubscription).getAttributes());
 		} else
 			throw this.exceptions.conflict({
 				message: 'Subscription not created or updated!',
@@ -105,10 +108,9 @@ export default class SubscriptionService implements OnModuleInit {
 	}
 
 	public async list(useCache = true): Promise<SubscriptionEntity[]> {
-		let foundedSubscriptions = await this.listFromCache() as Record<string, unknown>[];
+		let foundedSubscriptions = (await this.listFromCache()) as Record<string, unknown>[];
 
-		if (!useCache || !foundedSubscriptions.length)
-			foundedSubscriptions = await this.mongoClient.findMany(this.subscriptionsCollection, {});
+		if (!useCache || !foundedSubscriptions.length) foundedSubscriptions = await this.mongoClient.findMany(this.subscriptionsCollection, {});
 
 		return foundedSubscriptions.map((subscription) => new SubscriptionEntity(subscription));
 	}

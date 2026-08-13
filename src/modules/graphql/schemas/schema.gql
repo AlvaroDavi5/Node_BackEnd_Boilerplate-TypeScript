@@ -2,28 +2,44 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-"""user preference entity"""
+"""
+user preference entity
+"""
 type UserPreferenceEntity {
-  """Database register ID"""
-  id: String!
+	"""
+	Database register ID
+	"""
+	id: String!
 
-  """User ID"""
-  userId: String!
+	"""
+	User ID
+	"""
+	userId: String!
 
-  """User profile image path"""
-  imagePath: String
+	"""
+	User profile image path
+	"""
+	imagePath: String
 
-  """User default theme"""
-  defaultTheme: String
+	"""
+	User default theme
+	"""
+	defaultTheme: String
 
-  """User creation timestamp"""
-  createdAt: DateTime!
+	"""
+	User creation timestamp
+	"""
+	createdAt: DateTime!
 
-  """User updated timestamp"""
-  updatedAt: DateTime
+	"""
+	User updated timestamp
+	"""
+	updatedAt: DateTime
 
-  """User deleted timestamp"""
-  deletedAt: DateTime
+	"""
+	User deleted timestamp
+	"""
+	deletedAt: DateTime
 }
 
 """
@@ -31,59 +47,87 @@ A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date
 """
 scalar DateTime
 
-"""Subscription entity"""
+"""
+Subscription entity
+"""
 type SubscriptionEntity {
-  """Database register ID"""
-  databaseId: String!
+	"""
+	Database register ID
+	"""
+	databaseId: String!
 
-  """WebSocket ID"""
-  subscriptionId: String!
+	"""
+	WebSocket ID
+	"""
+	subscriptionId: String!
 
-  """Client machine ID"""
-  clientId: String
+	"""
+	Client machine ID
+	"""
+	clientId: String
 
-  """User creation timestamp"""
-  createdAt: DateTime!
+	"""
+	User creation timestamp
+	"""
+	createdAt: DateTime!
 
-  """User updated timestamp"""
-  updatedAt: DateTime
+	"""
+	User updated timestamp
+	"""
+	updatedAt: DateTime
 
-  """Listen new connections flag"""
-  newConnectionsListen: Boolean!
+	"""
+	Listen new connections flag
+	"""
+	newConnectionsListen: Boolean!
 }
 
 type Query {
-  listConnections: [SubscriptionEntity!]!
-  findConnection(subscriptionId: String!): SubscriptionEntity!
+	listConnections: [SubscriptionEntity!]!
+	findConnection(subscriptionId: String!): SubscriptionEntity!
 }
 
 type Mutation {
-  createConnection(createConnectionInput: CreateConnectionInputDto!): SubscriptionEntity!
-  updateConnection(updateConnectionInput: UpdateConnectionInputDto!): SubscriptionEntity!
-  removeConnection(subscriptionId: String!): SubscriptionEntity!
+	createConnection(createConnectionInput: CreateConnectionInputDto!): SubscriptionEntity!
+	updateConnection(updateConnectionInput: UpdateConnectionInputDto!): SubscriptionEntity!
+	removeConnection(subscriptionId: String!): SubscriptionEntity!
 }
 
 input CreateConnectionInputDto {
-  """WebSocket ID"""
-  subscriptionId: String! = ""
+	"""
+	WebSocket ID
+	"""
+	subscriptionId: String! = ""
 
-  """Client machine ID"""
-  clientId: String = null
+	"""
+	Client machine ID
+	"""
+	clientId: String = null
 
-  """Listen new connections flag"""
-  newConnectionsListen: Boolean! = false
+	"""
+	Listen new connections flag
+	"""
+	newConnectionsListen: Boolean! = false
 }
 
 input UpdateConnectionInputDto {
-  """WebSocket ID"""
-  subscriptionId: String! = ""
+	"""
+	WebSocket ID
+	"""
+	subscriptionId: String! = ""
 
-  """Client machine ID"""
-  clientId: String = null
+	"""
+	Client machine ID
+	"""
+	clientId: String = null
 
-  """Listen new connections flag"""
-  newConnectionsListen: Boolean! = false
+	"""
+	Listen new connections flag
+	"""
+	newConnectionsListen: Boolean! = false
 
-  """Database register ID"""
-  id: String! = ""
+	"""
+	Database register ID
+	"""
+	id: String! = ""
 }

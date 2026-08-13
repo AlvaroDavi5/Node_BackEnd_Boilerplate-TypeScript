@@ -4,9 +4,9 @@ metadata:
   name: node-backend-boilerplate-system
   description: Node.js Backend Boilerplate System
   tags:
-      - container
-      - docker
-      - linux
-      - node
+    - container
+    - docker
+    - linux
+    - node
 spec:
   owner: devs

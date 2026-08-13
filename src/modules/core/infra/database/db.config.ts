@@ -3,7 +3,6 @@ import envsConfig from '@core/configs/envs.config';
 import UsersModel from './models/Users.model';
 import UserPreferencesModel from './models/UserPreferences.model';
 
-
 function getDialect(dialect: string): 'mysql' | 'postgres' | 'sqlite' | 'mssql' {
 	switch (dialect?.toLowerCase()) {
 		case 'mysql':
@@ -32,10 +31,7 @@ export const dbConfig: DataSourceOptions = {
 	charset: db.charset,
 	timezone: db.timezone,
 	logging: app.showExternalLogs,
-	entities: [
-		UsersModel,
-		UserPreferencesModel,
-	],
+	entities: [UsersModel, UserPreferencesModel],
 	migrations: ['build/src/modules/core/infra/database/migrations/**/*.js'],
 	subscribers: [],
 	pool: {

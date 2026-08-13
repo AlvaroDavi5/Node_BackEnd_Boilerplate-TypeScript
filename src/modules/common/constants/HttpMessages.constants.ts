@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-
 @Injectable()
 export default class HttpMessagesConstants {
 	public readonly messages = {
@@ -19,6 +18,6 @@ export default class HttpMessagesConstants {
 		notAcceptable: (element: string) => `${element} is not acceptable!`,
 		notImplemented: (element: string) => `${element} is not implemented!`,
 		serviceUnavailable: (element: string) => `${element} is unavailable!`,
-		unrecognizedError: () => 'Unrecognized error!'
+		unrecognizedError: () => 'Unrecognized error!',
 	};
 }

@@ -5,6 +5,7 @@
 	"quoteProps": "as-needed",
 	"semi": true,
 	"trailingComma": "all",
+	"printWidth": 160,
 	"bracketSpacing": true,
 	"arrowParens": "always",
 	"objectWrap": "preserve",

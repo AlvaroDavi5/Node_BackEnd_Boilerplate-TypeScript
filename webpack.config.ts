@@ -29,9 +29,7 @@ const config: webpack.Configuration = {
 			allowlist: ['webpack/hot/poll?1000'],
 		}),
 	],
-	plugins: [
-		new webpack.HotModuleReplacementPlugin(),
-	],
+	plugins: [new webpack.HotModuleReplacementPlugin()],
 };
 
 export default config;

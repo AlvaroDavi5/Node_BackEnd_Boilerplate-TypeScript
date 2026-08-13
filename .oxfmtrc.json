@@ -10,12 +10,5 @@
 	"arrowParens": "always",
 	"objectWrap": "preserve",
 	"sortPackageJson": false,
-	"ignorePatterns": [
-		"node_modules",
-		"build",
-		"coverage",
-		"site",
-		".scannerwork",
-		"CHANGELOG.md"
-	]
+	"ignorePatterns": ["node_modules", "build", "coverage", "site", ".scannerwork", "CHANGELOG.md"]
 }

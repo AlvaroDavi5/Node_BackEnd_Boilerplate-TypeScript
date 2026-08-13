@@ -8,7 +8,7 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 
 ### Architecture
 
-[Back-End Architecture](https://google.com)  
+[Back-End Architecture](https://google.com)
 
 <div align='center'>
 	<br>
@@ -25,7 +25,7 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 </div>
 
 ![Nest Modules Graph](./docs/img/graph.png)  
-![Nest Classes](./docs/img/classes.png)  
+![Nest Classes](./docs/img/classes.png)
 
 ---
 
@@ -37,11 +37,11 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 - **Nest.js**: TypeScript Framework for Back-End;
 - **Fastify**: Robust and performatic tooling for HTTP servers;
 - **Socket.io**: WebSocket library;
-- **AWS-SDK**: A Node.js SDK to access AWS resources, such as:  
-	> _SQS_: Queue management service;  
-	> _SNS_: Topic notification service;  
-	> _S3_: Files storage service;  
-	> _Cognito_: Users authenticator service;  
+- **AWS-SDK**: A Node.js SDK to access AWS resources, such as:
+  > _SQS_: Queue management service;  
+  > _SNS_: Topic notification service;  
+  > _S3_: Files storage service;  
+  > _Cognito_: Users authenticator service;
 - **TypeORM**: ORM for databases;
 - **PostgreSQL**: Relational (SQL) database;
 - **MongoDB**: Schematic and document-oriented NoSQL database;
@@ -61,26 +61,27 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 
 ### Services
 
-- [Application Interface (API)](http://localhost:3000/)  
-	* `/` - WebSocket Root Endpoint  
-	* `/api` - REST Root Endpoint  
-		- `/api/docs` - Swagger API Documentation (Page)  
-		- `/api/docs.yml` - Swagger API Documentation (YAML)  
-		- `/api/docs.json` - Swagger API Documentation (JSON)  
-	* `/graphql` - GraphQL Endpoint  
-- [Mocked Service Page](http://localhost:4000/)  
-- [Nest.js DevTools Page](http://localhost:8000/)  
-- [Adminer Page](http://localhost:8080/)  
-- [Mongo Express Page](http://localhost:8081/)  
-- [Redis Commander Page](http://localhost:8082/)  
-- [Jenkins Page](http://localhost:9000/)  
-- [SonarQube Page](http://localhost:9001/)  
-- [Grafana Page](http://localhost:9002/)  
-- [BackStage Page](http://localhost:9003/)  
+- [Application Interface (API)](http://localhost:3000/)
+  - `/` - WebSocket Root Endpoint
+  - `/api` - REST Root Endpoint
+    - `/api/docs` - Swagger API Documentation (Page)
+    - `/api/docs.yml` - Swagger API Documentation (YAML)
+    - `/api/docs.json` - Swagger API Documentation (JSON)
+  - `/graphql` - GraphQL Endpoint
+- [Mocked Service Page](http://localhost:4000/)
+- [Nest.js DevTools Page](http://localhost:8000/)
+- [Adminer Page](http://localhost:8080/)
+- [Mongo Express Page](http://localhost:8081/)
+- [Redis Commander Page](http://localhost:8082/)
+- [Jenkins Page](http://localhost:9000/)
+- [SonarQube Page](http://localhost:9001/)
+- [Grafana Page](http://localhost:9002/)
+- [BackStage Page](http://localhost:9003/)
 
 ## Running Locally
 
-1. Install project dependencies  
+1. Install project dependencies
+
 ```shell
 npm install
 ```
@@ -88,6 +89,7 @@ npm install
 2. Install [AWS CLI](https://docs.aws.amazon.com/cli/latest/userguide/getting-started-install.html)
 
 3. Configure AWS CLI
+
 ```shell
 $ aws configure
 > AWS Access Key ID [****]: mock
@@ -97,6 +99,7 @@ $ aws configure
 ```
 
 4. Run scripts
+
 ```shell
 npm run db:migration-run && npm run db:seed # create database entities and populate database registers
 npm run mock-dependencies # create message queue and storager and start external services mock
@@ -125,7 +128,8 @@ npm run send-message # send event message to queue
 
 ## Environment Preparation
 
-1. Copy dotenv file  
+1. Copy dotenv file
+
 ```shell
 cp envs/.env.local ./.env # copy development local example
 source ./.env # load envs on shell session
@@ -194,81 +198,81 @@ kind delete cluster --name boilerplate-cluster
 kubectl delete -f=<resource_config_path> # or kubectl delete -n <resource_namespace> <resource_type> <resource_name>
 ```
 
-___
+---
 
 ## TO DO
 
 - **CI/CD**
-	- [ ] Jenkins
+  - [ ] Jenkins
 - **Deployment**
-	- [x] Heroku
+  - [x] Heroku
 - **Tests**
-	* _Integration_
-		- [ ] Modules
-			- [ ] API
-				- [ ] Controllers
-				- [ ] DTO
-				- [ ] Pipes
-				- [ ] Schemas
-			- [ ] App
-				- [ ] API
-					- [ ] Controllers
-					- [ ] DTO
-					- [ ] Pipes
-					- [ ] Schemas
-				- [ ] Repositories
-				- [ ] Services
-			- [ ] Core
-				- [ ] Configs
-				- [ ] Cron
-					- [ ] Tasks
-				- [ ] Infra
-					- [ ] Models
-					- [ ] Repositories
-					- [ ] Integration
-						- [ ] Rest
-				- [ ] Logging
-				- [ ] Start
-			- [ ] Domain
-			- [ ] Events
-				- [ ] Queue
-					- [ ] Handlers
-						- [ ] Schemas
-				- [ ] Websocket
-			- [ ] Graphql
-				- [ ] DTO
-				- [ ] Services
-	* _End-to-End_
-		- [ ] Modules
-			- [ ] API
-				- [ ] Controllers
-				- [ ] Filters
-				- [ ] Guards
-				- [ ] Middlewares
-			- [ ] App
-				- [ ] API
-					- [ ] controllers
-			- [ ] Core
-				- [ ] Cron
-					- [ ] Jobs
-				- [ ] Infra
-					- [ ] Cache
-					- [ ] Data
-					- [ ] Database
-						- [ ] Models
-						- [ ] Repositories
-					- [ ] Integration
-						- [ ] AWS
-					- [ ] Providers
-			- [ ] Domain
-			- [ ] Events
-				- [ ] Queue
-					- [ ] Consumers
-					- [ ] Producers
-				- [ ] Websocket
-					- [ ] Client
-					- [ ] Guards
-					- [ ] Server
-			- [ ] Graphql
-				- [ ] DTO
-				- [ ] Resolvers
+  - _Integration_
+    - [ ] Modules
+      - [ ] API
+        - [ ] Controllers
+        - [ ] DTO
+        - [ ] Pipes
+        - [ ] Schemas
+      - [ ] App
+        - [ ] API
+          - [ ] Controllers
+          - [ ] DTO
+          - [ ] Pipes
+          - [ ] Schemas
+        - [ ] Repositories
+        - [ ] Services
+      - [ ] Core
+        - [ ] Configs
+        - [ ] Cron
+          - [ ] Tasks
+        - [ ] Infra
+          - [ ] Models
+          - [ ] Repositories
+          - [ ] Integration
+            - [ ] Rest
+        - [ ] Logging
+        - [ ] Start
+      - [ ] Domain
+      - [ ] Events
+        - [ ] Queue
+          - [ ] Handlers
+            - [ ] Schemas
+        - [ ] Websocket
+      - [ ] Graphql
+        - [ ] DTO
+        - [ ] Services
+  - _End-to-End_
+    - [ ] Modules
+      - [ ] API
+        - [ ] Controllers
+        - [ ] Filters
+        - [ ] Guards
+        - [ ] Middlewares
+      - [ ] App
+        - [ ] API
+          - [ ] controllers
+      - [ ] Core
+        - [ ] Cron
+          - [ ] Jobs
+        - [ ] Infra
+          - [ ] Cache
+          - [ ] Data
+          - [ ] Database
+            - [ ] Models
+            - [ ] Repositories
+          - [ ] Integration
+            - [ ] AWS
+          - [ ] Providers
+      - [ ] Domain
+      - [ ] Events
+        - [ ] Queue
+          - [ ] Consumers
+          - [ ] Producers
+        - [ ] Websocket
+          - [ ] Client
+          - [ ] Guards
+          - [ ] Server
+      - [ ] Graphql
+        - [ ] DTO
+        - [ ] Resolvers

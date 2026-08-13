@@ -12,11 +12,11 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 - **Nest.js**: TypeScript Framework for Back-End;
 - **Fastify**: Robust and performatic tooling for HTTP servers;
 - **Socket.io**: WebSocket library;
-- **AWS-SDK**: A Node.js SDK to access AWS resources, such as:  
-	> _SQS_: Queue management service;  
-	> _SNS_: Topic notification service;  
-	> _S3_: Files storage service;  
-	> _Cognito_: Users authenticator service;  
+- **AWS-SDK**: A Node.js SDK to access AWS resources, such as:
+  > _SQS_: Queue management service;  
+  > _SNS_: Topic notification service;  
+  > _S3_: Files storage service;  
+  > _Cognito_: Users authenticator service;
 - **TypeORM**: ORM for databases;
 - **PostgreSQL**: Relational (SQL) database;
 - **MongoDB**: Schematic and document-oriented NoSQL database;
@@ -36,19 +36,19 @@ Node.js Boilerplate for Back-End using TypeScript and Nest.js.
 
 ### Services
 
-- [Application Interface (API)](http://localhost:3000/)  
-	* `/` - WebSocket Root Endpoint  
-	* `/api` - REST Root Endpoint  
-		- `/api/docs` - Swagger API Documentation (Page)  
-		- `/api/docs.yml` - Swagger API Documentation (YAML)  
-		- `/api/docs.json` - Swagger API Documentation (JSON)  
-	* `/graphql` - GraphQL Endpoint  
-- [Mocked Service Page](http://localhost:4000/)  
-- [Nest.js DevTools Page](http://localhost:8000/)  
-- [Adminer Page](http://localhost:8080/)  
-- [Mongo Express Page](http://localhost:8081/)  
-- [Redis Commander Page](http://localhost:8082/)  
-- [Jenkins Page](http://localhost:9000/)  
-- [SonarQube Page](http://localhost:9001/)  
-- [Grafana Page](http://localhost:9002/)  
-- [BackStage Page](http://localhost:9003/)  
+- [Application Interface (API)](http://localhost:3000/)
+  - `/` - WebSocket Root Endpoint
+  - `/api` - REST Root Endpoint
+    - `/api/docs` - Swagger API Documentation (Page)
+    - `/api/docs.yml` - Swagger API Documentation (YAML)
+    - `/api/docs.json` - Swagger API Documentation (JSON)
+  - `/graphql` - GraphQL Endpoint
+- [Mocked Service Page](http://localhost:4000/)
+- [Nest.js DevTools Page](http://localhost:8000/)
+- [Adminer Page](http://localhost:8080/)
+- [Mongo Express Page](http://localhost:8081/)
+- [Redis Commander Page](http://localhost:8082/)
+- [Jenkins Page](http://localhost:9000/)
+- [SonarQube Page](http://localhost:9001/)
+- [Grafana Page](http://localhost:9002/)
+- [BackStage Page](http://localhost:9003/)

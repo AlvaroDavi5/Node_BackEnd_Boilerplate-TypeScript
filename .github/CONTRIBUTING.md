@@ -7,21 +7,21 @@ Thanks for contributing to **Node BackEnd Boilerplate**. This document describes
 - [Requirements](#requirements)
 - [Getting Started](#getting-started)
 - [Editor Configuration](#editor-configuration)
-	- [EditorConfig](#editorconfig)
-	- [Visual Studio Code](#visual-studio-code)
+  - [EditorConfig](#editorconfig)
+  - [Visual Studio Code](#visual-studio-code)
 - [Linter — Oxlint](#linter--oxlint)
-	- [Import Order](#import-order)
+  - [Import Order](#import-order)
 - [Formatter — Oxfmt](#formatter--oxfmt)
 - [Type Checking](#type-checking)
 - [Tests](#tests)
 - [Git Hooks — Lefthook](#git-hooks--lefthook)
 - [Commit Standards](#commit-standards)
-	- [Format](#format)
-	- [Allowed Types](#allowed-types)
-	- [Scope](#scope)
-	- [Length Rules](#length-rules)
-	- [Breaking Changes](#breaking-changes)
-	- [Assisted Commits — Commitizen](#assisted-commits--commitizen)
+  - [Format](#format)
+  - [Allowed Types](#allowed-types)
+  - [Scope](#scope)
+  - [Length Rules](#length-rules)
+  - [Breaking Changes](#breaking-changes)
+  - [Assisted Commits — Commitizen](#assisted-commits--commitizen)
 - [Releases — Semantic Release](#releases--semantic-release)
 - [Pull Requests](#pull-requests)
 
@@ -29,11 +29,11 @@ Thanks for contributing to **Node BackEnd Boilerplate**. This document describes
 
 Declared in [`package.json`](../package.json) under `engines`:
 
-| Tool | Version |
-| --- | --- |
-| [Node.js](https://nodejs.org/en/docs) | `>=24.0.x <=24.x.x` |
-| [npm](https://docs.npmjs.com/) | `>=12.0.x <=12.x.x` |
-| Yarn | `0` — **not supported** |
+| Tool                                  | Version                 |
+| ------------------------------------- | ----------------------- |
+| [Node.js](https://nodejs.org/en/docs) | `>=24.0.x <=24.x.x`     |
+| [npm](https://docs.npmjs.com/)        | `>=12.0.x <=12.x.x`     |
+| Yarn                                  | `0` — **not supported** |
 
 > **npm is the only supported package manager.** The repository ships a single lockfile ([`package-lock.json`](../package-lock.json)) and `engines.yarn` is pinned to `0` on purpose, so `yarn install` aborts during `package.json` validation. Do not commit a `yarn.lock` or a `pnpm-lock.yaml`.
 
@@ -57,16 +57,16 @@ The `postinstall` script installs the Git hooks, so hooks are active right after
 
 Global defaults (`[*]`):
 
-| Setting | Value |
-| --- | --- |
-| `charset` | `utf-8` |
-| `indent_style` | `tab` |
-| `indent_size` / `tab_width` | `2` |
-| `quote_type` | `single` |
-| `max_line_length` | `160` |
-| `trim_trailing_whitespace` | `true` |
-| `end_of_line` | `lf` |
-| `insert_final_newline` | `true` |
+| Setting                     | Value    |
+| --------------------------- | -------- |
+| `charset`                   | `utf-8`  |
+| `indent_style`              | `tab`    |
+| `indent_size` / `tab_width` | `2`      |
+| `quote_type`                | `single` |
+| `max_line_length`           | `160`    |
+| `trim_trailing_whitespace`  | `true`   |
+| `end_of_line`               | `lf`     |
+| `insert_final_newline`      | `true`   |
 
 Per-language overrides:
 
@@ -118,16 +118,16 @@ Notable enforced rules — see the [Oxlint rule reference](https://oxc.rs/docs/g
 
 Imports are recommended to follow this order:
 
-| # | Group | Examples |
-| --- | --- | --- |
-| 1 | `builtin` | `node:crypto`, `path` |
-| 2 | `external` | `@nestjs/common`, `typeorm` |
-| 3 | `internal` — path aliases | `@core/*`, `@domain/*`, `@app/*`, `@api/*`, `@graphql/*`, `@events/*`, `@common/*`, `@dev/*`, `tests/*` |
-| 4 | `internal` — `@shared/*` | `@shared/internal/interfaces/*` — always **last** among the aliases |
-| 5 | `parent` | `../services/User.service` |
-| 6 | `sibling` | `./User.entity` |
-| 7 | `index` | `./` |
-| 8 | `object` / `type` | `import type { … }` |
+| #   | Group                     | Examples                                                                                                |
+| --- | ------------------------- | ------------------------------------------------------------------------------------------------------- |
+| 1   | `builtin`                 | `node:crypto`, `path`                                                                                   |
+| 2   | `external`                | `@nestjs/common`, `typeorm`                                                                             |
+| 3   | `internal` — path aliases | `@core/*`, `@domain/*`, `@app/*`, `@api/*`, `@graphql/*`, `@events/*`, `@common/*`, `@dev/*`, `tests/*` |
+| 4   | `internal` — `@shared/*`  | `@shared/internal/interfaces/*` — always **last** among the aliases                                     |
+| 5   | `parent`                  | `../services/User.service`                                                                              |
+| 6   | `sibling`                 | `./User.entity`                                                                                         |
+| 7   | `index`                   | `./`                                                                                                    |
+| 8   | `object` / `type`         | `import type { … }`                                                                                     |
 
 Additional conventions:
 
@@ -167,16 +167,16 @@ npm run format        # check formatting only (fails on drift)
 npm run format:fix    # rewrite files in place
 ```
 
-| Option | Value |
-| --- | --- |
-| `singleQuote` / `jsxSingleQuote` | `true` |
-| `quoteProps` | `as-needed` |
-| `semi` | `true` |
-| `trailingComma` | `all` |
-| `bracketSpacing` | `true` |
-| `arrowParens` | `always` |
-| `objectWrap` | `preserve` |
-| `sortPackageJson` | `false` |
+| Option                           | Value       |
+| -------------------------------- | ----------- |
+| `singleQuote` / `jsxSingleQuote` | `true`      |
+| `quoteProps`                     | `as-needed` |
+| `semi`                           | `true`      |
+| `trailingComma`                  | `all`       |
+| `bracketSpacing`                 | `true`      |
+| `arrowParens`                    | `always`    |
+| `objectWrap`                     | `preserve`  |
+| `sortPackageJson`                | `false`     |
 
 Ignored paths: `node_modules`, `build`, `coverage`, `site`, `.scannerwork`, `CHANGELOG.md` (the changelog is generated).
 
@@ -208,17 +208,17 @@ Each suite also accepts `:watch`, `:coverage` and `:#it` (filters tests tagged `
 
 Hooks are managed by [Lefthook](https://lefthook.dev/configuration/) through [`lefthook.yml`](../lefthook.yml) and installed by the `postinstall` script.
 
-| Hook | Jobs |
-| --- | --- |
-| `commit-msg` | `npx commitlint --edit $1` — validates the commit message |
+| Hook                    | Jobs                                                                                                                     |
+| ----------------------- | ------------------------------------------------------------------------------------------------------------------------ |
+| `commit-msg`            | `npx commitlint --edit $1` — validates the commit message                                                                |
 | `pre-commit` (parallel) | `npm run typecheck`; `npx oxlint --config .oxlintrc.json {staged_files} --deny-warnings` over staged `*.{js,ts,jsx,tsx}` |
-| `pre-push` | `npm run build`; `npm run security-check`; `npm run test:unit`; `npm run test:integration` |
+| `pre-push`              | `npm run build`; `npm run security-check`; `npm run test:unit`; `npm run test:integration`                               |
 
 Run `npx lefthook install` manually if hooks are ever missing. Do not bypass them with `--no-verify` unless a maintainer asks you to.
 
 ## Commit Standards
 
-Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) — the syntax that drives [Semantic Versioning](https://semver.org/) (a.k.a. *semantic commits*). They are validated by [commitlint](https://commitlint.js.org/) with [`@commitlint/config-conventional`](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional), configured in [`commitlint.config.ts`](../commitlint.config.ts).
+Commit messages follow [Conventional Commits](https://www.conventionalcommits.org/en/v1.0.0/) — the syntax that drives [Semantic Versioning](https://semver.org/) (a.k.a. _semantic commits_). They are validated by [commitlint](https://commitlint.js.org/) with [`@commitlint/config-conventional`](https://github.com/conventional-changelog/commitlint/tree/master/%40commitlint/config-conventional), configured in [`commitlint.config.ts`](../commitlint.config.ts).
 
 ### Format
 
@@ -237,19 +237,19 @@ Commit messages follow [Conventional Commits](https://www.conventionalcommits.or
 
 ### Allowed Types
 
-| Type | When to use | Release effect |
-| --- | --- | --- |
-| `feat` | New feature for the user | minor |
-| `fix` | Bug fix for the user | patch |
-| `perf` | Performance improvement | patch |
-| `refactor` | Change that is neither a fix nor a feature | none¹ |
-| `test` | Adding or correcting tests | none |
-| `docs` | Documentation only | none |
-| `style` | Formatting, whitespace — no logic change | none |
-| `build` | Build system or external dependencies | none¹ |
-| `ci` | CI/CD configuration or scripts | none¹ |
-| `chore` | Maintenance not touching `src` or `test` files | none¹ |
-| `revert` | Reverts a previous commit | patch |
+| Type       | When to use                                    | Release effect |
+| ---------- | ---------------------------------------------- | -------------- |
+| `feat`     | New feature for the user                       | minor          |
+| `fix`      | Bug fix for the user                           | patch          |
+| `perf`     | Performance improvement                        | patch          |
+| `refactor` | Change that is neither a fix nor a feature     | none¹          |
+| `test`     | Adding or correcting tests                     | none           |
+| `docs`     | Documentation only                             | none           |
+| `style`    | Formatting, whitespace — no logic change       | none           |
+| `build`    | Build system or external dependencies          | none¹          |
+| `ci`       | CI/CD configuration or scripts                 | none¹          |
+| `chore`    | Maintenance not touching `src` or `test` files | none¹          |
+| `revert`   | Reverts a previous commit                      | patch          |
 
 ¹ Unless combined with one of the [special scopes](#releases--semantic-release).
 
@@ -265,10 +265,10 @@ The scope is optional. Rules used in this project:
 
 Enforced by [`commitlint.config.ts`](../commitlint.config.ts) plus the conventional preset:
 
-| Part | Limit |
-| --- | --- |
-| Header | 100 characters |
-| Body lines | 200 characters (`body-max-line-length`) |
+| Part         | Limit                                     |
+| ------------ | ----------------------------------------- |
+| Header       | 100 characters                            |
+| Body lines   | 200 characters (`body-max-line-length`)   |
 | Footer lines | 150 characters (`footer-max-line-length`) |
 
 ### Breaking Changes
@@ -330,26 +330,26 @@ npm run versioning    # semantic-release
 
 Custom release rules — these override the defaults from the table above:
 
-| Type + Scope | Effect |
-| --- | --- |
-| `*(no-release)` | no release |
-| `build(release)` | minor |
-| `refactor(perf*)` | minor |
-| `chore(build)` | minor |
-| `chore(fix)` | patch |
-| `ci(fix)` | patch |
+| Type + Scope      | Effect     |
+| ----------------- | ---------- |
+| `*(no-release)`   | no release |
+| `build(release)`  | minor      |
+| `refactor(perf*)` | minor      |
+| `chore(build)`    | minor      |
+| `chore(fix)`      | patch      |
+| `ci(fix)`         | patch      |
 
 ## Pull Requests
 
 1. Branch off `develop` using a descriptive name — include the task code when there is one (`feat/DEV-123-add-login`).
 2. Keep commits conventional; add or update tests for your change.
 3. Before pushing, make sure the local gates pass:
-	```bash
-	npm run typecheck
-	npm run lint:strict
-	npm run format
-	npm run test
-	```
+   ```bash
+   npm run typecheck
+   npm run lint:strict
+   npm run format
+   npm run test
+   ```
 4. Open the pull request against `develop` and fill in [`pull_request_template.md`](pull_request_template.md).
 5. CI must be green — [`build-application.yml`](workflows/build-application.yml), [`security-check.yml`](workflows/security-check.yml), [`codeql-analysis.yml`](workflows/codeql-analysis.yml) and [`sonarqube.yml`](workflows/sonarqube.yml).
 

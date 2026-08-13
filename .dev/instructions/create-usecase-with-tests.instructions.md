@@ -1,7 +1,7 @@
 ---
-name: "Create Usecase With Tests"
-description: "Use when implementing a new NestJS usecase and its unit test file. Enforces project test structure, mock patterns, scenario coverage (success, failure, exceptions), and NestJS TestingModule setup."
-applyTo: "{src,tests}/**/*.{ts,js}"
+name: 'Create Usecase With Tests'
+description: 'Use when implementing a new NestJS usecase and its unit test file. Enforces project test structure, mock patterns, scenario coverage (success, failure, exceptions), and NestJS TestingModule setup.'
+applyTo: '{src,tests}/**/*.{ts,js}'
 ---
 
 # Create Usecase With Tests
@@ -106,6 +106,7 @@ describe('Modules :: <ModuleName> :: UseCases :: <UseCaseName>', () => {
 ## Scenarios to Cover
 
 Derive from the business rules of the usecase:
+
 - All success paths through `execute()`.
 - Each guard/validation that triggers a business/notFound/conflict/unauthorized exception.
 - Each dependency that can throw (propagation test: verify the error bubbles correctly).

@@ -1,6 +1,6 @@
 # Architecture
 
-[Back-End Architecture](https://google.com)  
+[Back-End Architecture](https://google.com)
 
 <div align='center'>
 	<br>
@@ -17,4 +17,4 @@
 </div>
 
 ![Nest Modules Graph](./img/graph.png)  
-![Nest Classes](./img/classes.png)  
+![Nest Classes](./img/classes.png)

@@ -41,6 +41,6 @@
 	"unwantedRecommendations": [
 		// ! This project lints with Oxlint and formats with Oxfmt plus EditorConfig
 		"dbaeumer.vscode-eslint",
-		"esbenp.prettier-vscode",
+		"esbenp.prettier-vscode"
 	]
 }

@@ -3,7 +3,7 @@ name: find-edge-cases
 description: Hunt the edge cases in code at a fixed point (commit, branch, tag, `HEAD`, `HEAD~5`) — boundary inputs, empty/null, overflow, concurrency, time, and failure modes the code doesn't handle — and validate each with a concrete trigger before presenting it, so the user decides on real cases, not speculation. Use when the user asks what could break, what edge cases are missed, to stress-test a function or change, or to check robustness before shipping.
 ---
 
-An **edge case** is a boundary input or state the code meets but doesn't handle correctly. A candidate becomes a real edge case only when you can name its **trigger** — the concrete input or state that drives *this* code to a crash, wrong result, corruption, or hang. **No trigger, no edge case.** The skill's job is to separate real cases from speculation and hand the user only the validated ones, each with the evidence to decide.
+An **edge case** is a boundary input or state the code meets but doesn't handle correctly. A candidate becomes a real edge case only when you can name its **trigger** — the concrete input or state that drives _this_ code to a crash, wrong result, corruption, or hang. **No trigger, no edge case.** The skill's job is to separate real cases from speculation and hand the user only the validated ones, each with the evidence to decide.
 
 The review is **report-only**: anticipate, detect, assert, present. It never edits code — the user acts on the findings.
 
@@ -55,7 +55,7 @@ For each candidate, test it against the code as it exists at the fixed point. It
 
 Then construct the **trigger**: the concrete input / state, plus the exact line where the code breaks and what it does wrong. If you cannot construct a trigger — a guard neutralizes it, it's unreachable, or the outcome is actually fine — the candidate is **speculation**; drop it. This assertion is the point of the skill: the user's time is spent only on cases proven real.
 
-Completion: every candidate resolved to *validated* (has a trigger) or *dropped* (guard / unreachable / no bad outcome) — no candidate carried forward without a trigger.
+Completion: every candidate resolved to _validated_ (has a trigger) or _dropped_ (guard / unreachable / no bad outcome) — no candidate carried forward without a trigger.
 
 ### 5. Present for decision
 
@@ -73,11 +73,11 @@ Every finding is a structured block. A finding without a trigger is a **format f
 2. **Edge case** — the family and the boundary, in one line.
 3. **Trigger** — the concrete input / state that reaches the code, and the line where it breaks. This is the assertion that the case is real — mandatory, no finding without one.
 4. **Consequence** — what goes wrong: the crash, wrong value, corruption, or hang. State the outcome, not a severity label.
-5. **Current behaviour** — what the code does today at that input, including any guard that *almost* covers it.
+5. **Current behaviour** — what the code does today at that input, including any guard that _almost_ covers it.
 6. **Decision** — the options (handle / accept / out of scope), with a one-line suggested handling only if obvious.
 
 Add an input→output table when it clarifies expected vs actual:
 
-| Input | Expected | Code produces |
-| --- | --- | --- |
+| Input        | Expected   | Code produces     |
+| ------------ | ---------- | ----------------- |
 | `[]` (empty) | return `0` | throws at line 48 |

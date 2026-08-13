@@ -1,10 +1,7 @@
-import {
-	init as initSentry, consoleIntegration, captureConsoleIntegration
-} from '@sentry/nestjs';
+import { init as initSentry, consoleIntegration, captureConsoleIntegration } from '@sentry/nestjs';
 import { nodeProfilingIntegration } from '@sentry/profiling-node';
 import envsConfig from '@core/configs/envs.config';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
-
 
 const {
 	application: { environment, showExternalLogs, sentryDsn },
@@ -15,11 +12,7 @@ initSentry({
 	dsn: sentryDsn,
 	enabled: environment === EnvironmentsEnum.PRODUCTION,
 	environment,
-	integrations: [
-		nodeProfilingIntegration(),
-		captureConsoleIntegration(),
-		consoleIntegration(),
-	],
+	integrations: [nodeProfilingIntegration(), captureConsoleIntegration(), consoleIntegration()],
 	profilesSampleRate: 0.1,
 	tracesSampleRate: 0.1,
 	tracePropagationTargets: [],
@@ -37,4 +30,3 @@ initSentry({
 	},
 	_experiments: { enableLogs: true },
 });
-

@@ -3,7 +3,6 @@ import { WebSocketEventsEnum } from '@domain/enums/events.enum';
 import createWebSocketClient from '@dev/websocket/createWebSocketClient';
 import { loggerProviderMock } from '@dev/mocks/mockedModules';
 
-
 function formatMessageAfterReceiveHelper(message: unknown): string {
 	let msg = '';
 	try {
@@ -15,9 +14,7 @@ function formatMessageAfterReceiveHelper(message: unknown): string {
 }
 
 function createSocketClient() {
-	console.info(
-		'\n # Creating socket client \n'
-	);
+	console.info('\n # Creating socket client \n');
 
 	const webSocketClient = createWebSocketClient({
 		configs: envsConfig(),
@@ -40,6 +37,5 @@ function createSocketClient() {
 		},
 	});
 }
-
 
 createSocketClient();

@@ -1,4 +1,3 @@
-
 export enum TimeZonesEnum {
 	America_LosAngeles = 'America/Los_Angeles', // GMT -7
 	America_NewYork = 'America/New_York', // GMT -5

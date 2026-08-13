@@ -1,6 +1,4 @@
-
 import { MigrationInterface, QueryRunner } from 'typeorm';
-
 
 export class TimestampColumns1719714634700 implements MigrationInterface {
 	name = 'TimestampColumns1719714634700';
@@ -23,4 +21,3 @@ export class TimestampColumns1719714634700 implements MigrationInterface {
 		await queryRunner.query('ALTER TABLE "UserPreferences" ALTER COLUMN "createdAt" SET DEFAULT \'2024-06-30 02:24:41.028771\'');
 	}
 }
-

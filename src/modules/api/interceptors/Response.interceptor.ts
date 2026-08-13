@@ -9,13 +9,12 @@ import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { maskBuffer, maskObjectSensitiveData } from '@common/utils/masks.util';
 import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
-
 @Injectable({ scope: Scope.REQUEST })
 export default class ResponseInterceptor implements NestInterceptor {
 	constructor(
 		private readonly dataParserHelper: DataParserHelper,
 		@Inject(REQUEST_LOGGER_PROVIDER) private readonly logger: LoggerService,
-	) { }
+	) {}
 
 	public intercept(context: ExecutionContext, next: CallHandler<unknown>): Observable<unknown> | Promise<Observable<unknown>> {
 		const requestDateNow = fromDateTimeToEpoch(getDateTimeNow(TimeZonesEnum.America_SaoPaulo), 'milliseconds', true);
@@ -51,21 +50,19 @@ export default class ResponseInterceptor implements NestInterceptor {
 
 		this.logger.http(`REQUESTED - [${reqMethod}] ${path} { pathParams: ${pathParams}, queryParams: ${queryParams}, body: ${reqBody}, userId: ${userId} }`);
 
-		return next
-			.handle()
-			.pipe(
-				tap((responseData: unknown): void => {
-					const resData = this.parseResponseDataToString(responseData);
-					const timestamp = this.getTimestamp(requestDateMs);
-					this.logger.http(`RESPONDING - [${reqMethod}] ${path} (${timestamp} ms): ${resData}`);
-				}),
-				catchError((responseError: Error): Observable<void> => {
-					const resErr = this.parseResponseDataToString(responseError);
-					const timestamp = this.getTimestamp(requestDateMs);
-					this.logger.http(`RESPONDING ERROR - [${reqMethod}] ${path} (${timestamp} ms): ${resErr}`);
-					throw responseError;
-				})
-			);
+		return next.handle().pipe(
+			tap((responseData: unknown): void => {
+				const resData = this.parseResponseDataToString(responseData);
+				const timestamp = this.getTimestamp(requestDateMs);
+				this.logger.http(`RESPONDING - [${reqMethod}] ${path} (${timestamp} ms): ${resData}`);
+			}),
+			catchError((responseError: Error): Observable<void> => {
+				const resErr = this.parseResponseDataToString(responseError);
+				const timestamp = this.getTimestamp(requestDateMs);
+				this.logger.http(`RESPONDING ERROR - [${reqMethod}] ${path} (${timestamp} ms): ${resErr}`);
+				throw responseError;
+			}),
+		);
 	}
 
 	private getRequestPath(request: RequestInterface): string {
@@ -104,9 +101,7 @@ export default class ResponseInterceptor implements NestInterceptor {
 
 	private getTimestamp(requestDateMs: number | undefined): string {
 		const responseDateMs = fromDateTimeToEpoch(getDateTimeNow(TimeZonesEnum.America_SaoPaulo), 'milliseconds', true);
-		const timestamp = !isNullOrUndefined(requestDateMs)
-			? String(Math.abs(responseDateMs - requestDateMs))
-			: 'UNDEFINED';
+		const timestamp = !isNullOrUndefined(requestDateMs) ? String(Math.abs(responseDateMs - requestDateMs)) : 'UNDEFINED';
 
 		return timestamp;
 	}

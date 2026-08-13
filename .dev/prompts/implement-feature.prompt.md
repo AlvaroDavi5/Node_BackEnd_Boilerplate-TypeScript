@@ -1,7 +1,7 @@
 ---
-name: "implement-feature"
-description: "Generic feature implementation session. Accepts a feature specification in English or Portuguese, routes work to the appropriate agent(s), and applies the relevant instructions and skills."
-argument-hint: "Paste the feature specification. Optionally specify: agent (programmer | reviewer | tester | all), instructions, and skills to apply."
+name: 'implement-feature'
+description: 'Generic feature implementation session. Accepts a feature specification in English or Portuguese, routes work to the appropriate agent(s), and applies the relevant instructions and skills.'
+argument-hint: 'Paste the feature specification. Optionally specify: agent (programmer | reviewer | tester | all), instructions, and skills to apply.'
 ---
 
 <!--
@@ -12,16 +12,20 @@ Provide a feature specification and optionally configure which agent(s) and addi
 # Feature Implementation Session
 
 ### Feature Specification
+
 > Describe the feature in English or Portuguese. Include: module, business rules, inputs, outputs, dependencies, and acceptance criteria.
 
 ### Agent
+
 `<programmer | reviewer | tester | all>`  
 **Default**: all (runs programmer → reviewer → tester in sequence)
 
 ### Instructions (optional)
+
 > List any additional instruction files to apply, e.g. architecture-flow-and-code-style, create-usecase-with-tests
 
 ### Skills (optional)
+
 > List any skills to activate, e.g. find-edge-cases, staged-security-review
 
 ---
@@ -58,6 +62,7 @@ Activates the [Tester Agent](../agents/tester.agent.md).
 ### `all` (default)
 
 Runs all three agents in sequence:
+
 1. **Programmer** — implements the feature.
 2. **Reviewer** — reviews the staged changes for edge cases and security.
 3. **Tester** — creates tests covering all scenarios.

@@ -10,7 +10,6 @@ import EventsQueueHandler from './queue/handlers/EventsQueue.handler';
 import EventsQueueConsumer from './queue/consumers/EventsQueue.consumer';
 import EventsQueueProducer from './queue/producers/EventsQueue.producer';
 
-
 @Module({
 	imports: [
 		SqsModule.registerAsync({
@@ -20,22 +19,8 @@ import EventsQueueProducer from './queue/producers/EventsQueue.producer';
 			}),
 		}),
 	],
-	controllers: [
-		ServerEventsController,
-	],
-	providers: [
-		GetSubscriptionUseCase,
-		SubscriptionService,
-		EventEmitterClient,
-		WebSocketServer,
-		EventsQueueHandler,
-		EventsQueueConsumer,
-		EventsQueueProducer,
-	],
-	exports: [
-		EventEmitterClient,
-		WebSocketServer,
-		EventsQueueConsumer,
-	],
+	controllers: [ServerEventsController],
+	providers: [GetSubscriptionUseCase, SubscriptionService, EventEmitterClient, WebSocketServer, EventsQueueHandler, EventsQueueConsumer, EventsQueueProducer],
+	exports: [EventEmitterClient, WebSocketServer, EventsQueueConsumer],
 })
-export default class EventsModule { }
+export default class EventsModule {}

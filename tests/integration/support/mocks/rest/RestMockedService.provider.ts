@@ -6,13 +6,9 @@ import { requestMethodType, requestQueryType, requestBodyType } from '@shared/in
 import { RestClientResponseInterface } from '@shared/external/interfaces/RestClientInterface';
 import AbstractRestClient from './AbstractRestClient.client';
 
-
 @Injectable()
 export default class RestMockedServiceProvider extends AbstractRestClient {
-	constructor(
-		configService: ConfigService,
-		logger: LoggerService,
-	) {
+	constructor(configService: ConfigService, logger: LoggerService) {
 		const { serviceName } = configService.get<ConfigsInterface['integration']['rest']['mockedService']>('integration.rest.mockedService')!;
 
 		super({
@@ -30,8 +26,10 @@ export default class RestMockedServiceProvider extends AbstractRestClient {
 	}
 
 	public requestHook(
-		requestMethod: requestMethodType, requestEndpoint: string,
-		queryParams?: requestQueryType, body?: requestBodyType,
+		requestMethod: requestMethodType,
+		requestEndpoint: string,
+		queryParams?: requestQueryType,
+		body?: requestBodyType,
 	): RestClientResponseInterface<unknown> {
 		this.logger.info('Requesting webhook endpoint');
 

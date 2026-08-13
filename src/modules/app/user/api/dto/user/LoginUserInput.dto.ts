@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsString, IsNotEmpty } from 'class-validator';
 import { LoginUserSchemaInterface } from '@app/user/api/schemas/user/loginUser.schema';
 
-
 export default class LoginUserInputDto implements LoginUserSchemaInterface {
 	@ApiProperty({ type: String, example: 'tester.user@nomail.com', default: '', nullable: false, required: true })
 	@IsString()

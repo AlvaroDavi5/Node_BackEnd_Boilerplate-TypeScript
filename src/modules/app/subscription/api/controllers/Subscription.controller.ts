@@ -9,7 +9,6 @@ import authSwaggerDecorator from '@api/decorators/authSwagger.decorator';
 import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.decorator';
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 
-
 @ApiTags('Subscriptions')
 @Controller('/subscriptions')
 @UseGuards(CustomThrottlerGuard, AuthGuard)
@@ -18,9 +17,7 @@ import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 @authSwaggerDecorator()
 @exceptionsResponseDecorator()
 export default class SubscriptionController {
-	constructor(
-		private readonly subscriptionService: SubscriptionService,
-	) { }
+	constructor(private readonly subscriptionService: SubscriptionService) {}
 
 	@ApiOperation({
 		summary: 'List Subscriptions',

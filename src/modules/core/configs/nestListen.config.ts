@@ -8,14 +8,13 @@ import { getObjValues } from '@common/utils/dataValidations.util';
 import { captureException } from '@common/utils/sentryCalls.util';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
-
 function getHttpsOptions(): Pick<NestApplicationOptions, 'httpsOptions'> {
 	try {
 		return {
 			httpsOptions: {
 				key: readFileSync('key.pem'),
 				cert: readFileSync('cert.pem'),
-			}
+			},
 		};
 	} catch (_error) {
 		return { httpsOptions: undefined };
@@ -34,13 +33,14 @@ export default (nestApp: INestApplication): void => {
 	nestApp.enableShutdownHooks();
 
 	let logger: LoggerInterface | Console;
-	nestApp.resolve<LoggerService>(LoggerService)
+	nestApp
+		.resolve<LoggerService>(LoggerService)
 		.then((loggerService) => {
 			loggerService.setContextName('NestApplication');
 			logger = loggerService;
 		})
 		.catch((err: unknown) => {
-			// eslint-disable-next-line no-console
+			// oxlint-disable-next-line no-console
 			console.error(err);
 			logger = console;
 		});
@@ -53,10 +53,12 @@ export default (nestApp: INestApplication): void => {
 		logger.error(`App received ${ProcessEventsEnum.UNHANDLED_REJECTION}`, `reason: ${reason}`);
 		nestApp.close();
 	});
-	getObjValues<ProcessSignalsEnum>(ProcessSignalsEnum).map((procSignal) => process.on(procSignal, (signal) => {
-		logger.warn(`App received signal: ${signal}`);
-		nestApp.close();
-	}));
+	getObjValues<ProcessSignalsEnum>(ProcessSignalsEnum).map((procSignal) =>
+		process.on(procSignal, (signal) => {
+			logger.warn(`App received signal: ${signal}`);
+			nestApp.close();
+		}),
+	);
 };
 
 export function validateKnownExceptions(error: ErrorInterface | Error): void {

@@ -20,7 +20,6 @@ import EventsQueueConsumer from '@events/queue/consumers/EventsQueue.consumer';
 import { EnvironmentsEnum } from '@common/enums/environments.enum';
 import { ProcessExitStatusEnum } from '@common/enums/processEvents.enum';
 
-
 @Injectable()
 export default class LifecycleService implements OnModuleInit, OnApplicationBootstrap, OnModuleDestroy, BeforeApplicationShutdown, OnApplicationShutdown {
 	private readonly appConfigs: ConfigsInterface['application'];
@@ -105,8 +104,7 @@ export default class LifecycleService implements OnModuleInit, OnApplicationBoot
 		this.logger.warn('Exiting Application');
 
 		const shouldExit = this.appConfigs.environment !== EnvironmentsEnum.TEST;
-		if (shouldExit)
-			process.exit(ProcessExitStatusEnum.SUCCESS);
+		if (shouldExit) process.exit(ProcessExitStatusEnum.SUCCESS);
 	}
 
 	private listenEvents(): void {

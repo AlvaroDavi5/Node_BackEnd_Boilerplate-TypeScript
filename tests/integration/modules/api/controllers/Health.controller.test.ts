@@ -11,7 +11,6 @@ import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { configServiceMock } from '@dev/mocks/mockedModules';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/integration/support/mocks/setupUtils';
 
-
 describe('Modules :: API :: HealthController', () => {
 	let nestTestApp: NestFastifyApplication;
 
@@ -31,20 +30,14 @@ describe('Modules :: API :: HealthController', () => {
 	beforeAll(async () => {
 		const nestTestingModule: TestingModule = await Test.createTestingModule({
 			imports: [],
-			controllers: [
-				HealthController,
-			],
-			providers: [
-				{ provide: ConfigService, useValue: configServiceMock },
-				HttpMessagesConstants,
-				DataParserHelper,
-				LoggerService,
-				RequestLoggerProvider,
-			],
+			controllers: [HealthController],
+			providers: [{ provide: ConfigService, useValue: configServiceMock }, HttpMessagesConstants, DataParserHelper, LoggerService, RequestLoggerProvider],
 			exports: [],
 		})
-			.overrideGuard(CustomThrottlerGuard).useValue(customThrottlerGuardMock)
-			.overrideProvider(HttpMessagesConstants).useValue(httpMessagesConstantsMock)
+			.overrideGuard(CustomThrottlerGuard)
+			.useValue(customThrottlerGuardMock)
+			.overrideProvider(HttpMessagesConstants)
+			.useValue(httpMessagesConstantsMock)
 			.compile();
 
 		nestTestApp = nestTestingModule.createNestApplication<NestFastifyApplication>(fastifyAdapter, createNestTestApplicationOptions);
@@ -60,8 +53,7 @@ describe('Modules :: API :: HealthController', () => {
 
 	describe('# [GET] /api/check', () => {
 		test('Should get success', async () => {
-			const response = await request(await nestTestApp.getHttpServer())
-				.get('/api/check?key=value');
+			const response = await request(await nestTestApp.getHttpServer()).get('/api/check?key=value');
 
 			expect(response.statusCode).toBe(200);
 			expect(response.body).toEqual({

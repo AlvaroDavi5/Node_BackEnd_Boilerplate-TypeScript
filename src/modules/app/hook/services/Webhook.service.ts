@@ -11,7 +11,6 @@ import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { requestMethodType } from '@shared/internal/types/restClientTypes';
 import { RegisterEventHookInterface } from '../api/schemas/registerEventHook.schema';
 
-
 @Injectable()
 export default class WebhookService {
 	public readonly hooksTimeToLive: number;
@@ -29,30 +28,23 @@ export default class WebhookService {
 
 	public async pullHook(hookSchema: string, data: Record<string, unknown>): Promise<void> {
 		const hookSchemaList = await this.list(hookSchema);
-		const mockedServiceBaseUrl = this.configService
-			.get<ConfigsInterface['integration']['rest']['mockedService']['baseUrl']>('integration.rest.mockedService.baseUrl')!;
+		const mockedServiceBaseUrl =
+			this.configService.get<ConfigsInterface['integration']['rest']['mockedService']['baseUrl']>('integration.rest.mockedService.baseUrl')!;
 
 		const hooksToPull: Promise<unknown>[] = [];
 		const hooksToDelete: Promise<unknown>[] = [];
 		const epochDateNow = fromDateTimeToEpoch(getDateTimeNow(TimeZonesEnum.America_SaoPaulo), 'seconds', false);
 
 		for (const { key, value: hook } of hookSchemaList) {
-			const epochSentAt = hook?.sendAt
-				? fromDateTimeToEpoch(fromJSDateToDateTime(hook.sendAt, TimeZonesEnum.America_SaoPaulo), 'seconds', false)
-				: 0;
+			const epochSentAt = hook?.sendAt ? fromDateTimeToEpoch(fromJSDateToDateTime(hook.sendAt, TimeZonesEnum.America_SaoPaulo), 'seconds', false) : 0;
 
 			if (epochDateNow > epochSentAt) {
 				const responseEndpoint = hook?.responseEndpoint ?? mockedServiceBaseUrl;
 				const responseMethod = hook?.responseMethod?.toLowerCase() as requestMethodType;
 
-				if (responseMethod && responseEndpoint)
-					hooksToPull.push(this.restMockedServiceProvider.requestHook<void>(
-						responseMethod, responseEndpoint,
-						{}, data));
+				if (responseMethod && responseEndpoint) hooksToPull.push(this.restMockedServiceProvider.requestHook<void>(responseMethod, responseEndpoint, {}, data));
 
-				const hookId = this.cacheAccessHelper.getId(
-					this.cacheAccessHelper.getId(key, CacheEnum.HOOKS),
-					hookSchema);
+				const hookId = this.cacheAccessHelper.getId(this.cacheAccessHelper.getId(key, CacheEnum.HOOKS), hookSchema);
 				hooksToDelete.push(this.delete(hookId, hookSchema));
 			}
 		}
@@ -85,18 +77,19 @@ export default class WebhookService {
 		return deleted > 0;
 	}
 
-	public async list(additionalPattern = ''): Promise<{
-		key: string;
-		value: RegisterEventHookInterface | null;
-	}[]> {
+	public async list(additionalPattern = ''): Promise<
+		{
+			key: string;
+			value: RegisterEventHookInterface | null;
+		}[]
+	> {
 		const pattern = `${CacheEnum.HOOKS}:${additionalPattern}:*`;
 		const result = await this.redisClient.getByKeyPattern<RegisterEventHookInterface>(pattern);
 		return result.map(({ key, value }) => ({ key, value: this.payloadBuilder(value as RegisterEventHookInterface) }));
 	}
 
 	private payloadBuilder(data: RegisterEventHookInterface): RegisterEventHookInterface {
-		if (data?.sendAt && typeof data.sendAt === 'string')
-			data.sendAt = new Date(data.sendAt);
+		if (data?.sendAt && typeof data.sendAt === 'string') data.sendAt = new Date(data.sendAt);
 
 		return data;
 	}

@@ -51,9 +51,8 @@ docker-compose.yml
 .tool-versions
 .editorconfig
 commitlint.config.js
-.eslintignore
-.eslintrc.json
-.prettierrc
+.oxlintrc.json
+.oxfmtrc.json
 # infra and docs
 /docs
 /infra

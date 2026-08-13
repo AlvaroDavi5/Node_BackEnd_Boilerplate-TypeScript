@@ -5,26 +5,22 @@ import { ThemesEnum } from '@domain/enums/themes.enum';
 import { IViewUserPreference } from '@domain/entities/UserPreference.entity';
 import { getObjValues } from '@common/utils/dataValidations.util';
 
-
 export type UserPreferenceBuildParamsInterface = BuildParamsInterface<IViewUserPreference>;
 
 function buildSelectParams(): FindOptionsSelect<UserPreferencesModel> {
 	const select: FindOptionsSelect<UserPreferencesModel> = {
 		id: true,
-		defaultTheme: true, imagePath: true,
-		createdAt: true, updatedAt: true,
+		defaultTheme: true,
+		imagePath: true,
+		createdAt: true,
+		updatedAt: true,
 		deletedAt: true,
 	};
 
 	return select;
-};
+}
 
-function buildWhereParams({
-	id,
-	userId,
-	imagePath,
-	defaultTheme,
-}: UserPreferenceBuildParamsInterface): FindOptionsWhere<UserPreferencesModel> {
+function buildWhereParams({ id, userId, imagePath, defaultTheme }: UserPreferenceBuildParamsInterface): FindOptionsWhere<UserPreferencesModel> {
 	const where: FindOptionsWhere<UserPreferencesModel> = {};
 
 	if (id) {
@@ -42,7 +38,7 @@ function buildWhereParams({
 	}
 
 	return where;
-};
+}
 
 export const userPreferenceQueryParamsBuilder = {
 	buildParams: (data: UserPreferenceBuildParamsInterface): FindManyOptions<UserPreferencesModel> => {
@@ -54,5 +50,5 @@ export const userPreferenceQueryParamsBuilder = {
 			where,
 			relations: { user: true },
 		};
-	}
+	},
 };

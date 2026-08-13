@@ -5,18 +5,10 @@ import SubscriptionModule from './subscription/subscription.module';
 import HookModule from './hook/hook.module';
 import FileModule from './file/file.module';
 
-
 @Module({
-	imports: [
-		UserModule,
-		SubscriptionModule,
-		FileModule,
-		HookModule,
-	],
-	controllers: [
-		HealthController,
-	],
+	imports: [UserModule, SubscriptionModule, FileModule, HookModule],
+	controllers: [HealthController],
 	providers: [],
 	exports: [],
 })
-export default class AppModule { }
+export default class AppModule {}

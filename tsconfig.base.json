@@ -2,8 +2,8 @@
 	"$schema": "https://json.schemastore.org/tsconfig",
 	"compilerOptions": {
 		/*
-		* Visit https://aka.ms/tsconfig.json to read more about this file
-		*/
+		 * Visit https://aka.ms/tsconfig.json to read more about this file
+		 */
 		/* Projects */
 		"incremental": true,
 		// "composite": true,
@@ -13,14 +13,8 @@
 		// "disableReferencedProjectLoad": true,
 		/* Language and Environment */
 		"target": "es2024",
-		"lib": [
-			"ES2024",
-			"DOM"
-		],
-		"types": [
-			"node",
-			"jest"
-		],
+		"lib": ["ES2024", "DOM"],
+		"types": ["node", "jest"],
 		"jsx": "preserve",
 		"experimentalDecorators": true,
 		"emitDecoratorMetadata": true,
@@ -35,39 +29,17 @@
 		"moduleResolution": "nodenext",
 		"baseUrl": "./",
 		"rootDir": "./",
-		"rootDirs": [
-			"src",
-			"scripts",
-			"tests"
-		],
+		"rootDirs": ["src", "scripts", "tests"],
 		"paths": {
-			"@dev/*": [
-				"src/dev/*"
-			],
-			"@core/*": [
-				"src/modules/core/*"
-			],
-			"@common/*": [
-				"src/modules/common/*"
-			],
-			"@domain/*": [
-				"src/modules/domain/*"
-			],
-			"@app/*": [
-				"src/modules/app/*"
-			],
-			"@api/*": [
-				"src/modules/api/*"
-			],
-			"@graphql/*": [
-				"src/modules/graphql/*"
-			],
-			"@events/*": [
-				"src/modules/events/*"
-			],
-			"@shared/*": [
-				"src/shared/*"
-			]
+			"@dev/*": ["src/dev/*"],
+			"@core/*": ["src/modules/core/*"],
+			"@common/*": ["src/modules/common/*"],
+			"@domain/*": ["src/modules/domain/*"],
+			"@app/*": ["src/modules/app/*"],
+			"@api/*": ["src/modules/api/*"],
+			"@graphql/*": ["src/modules/graphql/*"],
+			"@events/*": ["src/modules/events/*"],
+			"@shared/*": ["src/shared/*"]
 		},
 		// "typeRoots": [],
 		// "types": [],
@@ -133,26 +105,12 @@
 		"skipLibCheck": false,
 		"pretty": true
 	},
-	"include": [
-		"src/**/*.ts"
-	],
-	"exclude": [
-		"node_modules",
-		"build",
-		"scripts",
-		"tests",
-		"**/*.test.ts",
-		"**/*.spec.ts",
-		"**/*.test.js"
-	],
+	"include": ["src/**/*.ts"],
+	"exclude": ["node_modules", "build", "scripts", "tests", "**/*.test.ts", "**/*.spec.ts", "**/*.test.js"],
 	"ts-node": {
-		"require": [
-			"tsconfig-paths/register"
-		]
+		"require": ["tsconfig-paths/register"]
 	},
 	"typeAcquisition": {
-		"include": [
-			"jest"
-		]
+		"include": ["jest"]
 	}
 }

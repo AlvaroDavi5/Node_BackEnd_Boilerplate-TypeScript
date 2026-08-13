@@ -9,11 +9,10 @@ import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 import { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
-
 type httpErrorResponseType = ErrorInterface & {
-	error: string,
-	description?: string,
-	timestamp: string,
+	error: string;
+	description?: string;
+	timestamp: string;
 };
 
 @Catch()
@@ -25,7 +24,7 @@ export default class HttpExceptionsFilter extends AbstractExceptionsFilter imple
 		super(logger, dataParserHelper);
 	}
 
-	private buildHttpErrorResponse(exception: unknown): { status: number, errorResponse: httpErrorResponseType } {
+	private buildHttpErrorResponse(exception: unknown): { status: number; errorResponse: httpErrorResponseType } {
 		const excep = exception as ErrorOrExceptionToFilter & { response: Record<string, string> };
 		let errorResponse: httpErrorResponseType = {
 			error: excep.name,
@@ -70,19 +69,16 @@ export default class HttpExceptionsFilter extends AbstractExceptionsFilter imple
 		const requestId = request?.id;
 		const clientIp = request?.ip ?? request?.socket?.remoteAddress;
 
-		if (requestId)
-			this.logger.setRequestId(requestId);
-		if (clientIp)
-			this.logger.setClientIp(clientIp);
+		if (requestId) this.logger.setRequestId(requestId);
+		if (clientIp) this.logger.setClientIp(clientIp);
 
 		this.capture(exception, {
 			data: { requestId },
 			user: {
-				// eslint-disable-next-line camelcase
 				ip_address: clientIp,
 				username: request.user?.username as string,
 				id: request.user?.clientId as string,
-			}
+			},
 		});
 
 		const { status, errorResponse } = this.buildHttpErrorResponse(exception);

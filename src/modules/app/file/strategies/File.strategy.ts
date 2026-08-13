@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import ContentTypeConstants from '@common/constants/ContentType.constants';
 
-
 @Injectable()
 export default class FileStrategy {
 	public defineEncoding(fileName: string, contentType?: string): BufferEncoding {
@@ -16,19 +15,23 @@ export default class FileStrategy {
 
 		const textContents = [plainTextContentType, csvContentType, xmlContentType, jsonContentType];
 		const binariesContents = [
-			pdfContentType, zipContentType,
-			gifContentType, jpegContentType, pngContentType, svgContentType,
-			mpegAudioContentType, wavAudioContentType,
-			mpegVideoContentType, mp4ContentType, webmContentType,
+			pdfContentType,
+			zipContentType,
+			gifContentType,
+			jpegContentType,
+			pngContentType,
+			svgContentType,
+			mpegAudioContentType,
+			wavAudioContentType,
+			mpegVideoContentType,
+			mp4ContentType,
+			webmContentType,
 		];
 
 		if (contentType)
-			if (textContents.includes(contentType))
-				return 'utf8';
-			else if (binariesContents.includes(contentType))
-				return 'binary';
-		if (binariesExtensions.some((extension) => fileName.includes(extension)))
-			return 'binary';
+			if (textContents.includes(contentType)) return 'utf8';
+			else if (binariesContents.includes(contentType)) return 'binary';
+		if (binariesExtensions.some((extension) => fileName.includes(extension))) return 'binary';
 		return 'utf8';
 	}
 }

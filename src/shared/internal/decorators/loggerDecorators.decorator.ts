@@ -1,4 +1,4 @@
-/* eslint-disable no-console, @typescript-eslint/no-restricted-types */
+/* oxlint-disable typescript/no-restricted-types */
 
 export function classLoggerDecorator(): ClassDecorator {
 	return <TFunction extends Function>(target: TFunction) => {

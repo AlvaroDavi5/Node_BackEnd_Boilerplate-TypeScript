@@ -3,7 +3,6 @@ import { v4 as uuidV4 } from 'uuid';
 import envsConfig, { ConfigsInterface } from '@core/configs/envs.config';
 import { LoggerInterface } from '@core/logging/logger';
 
-
 export const configServiceMock = {
 	get: (propertyPath?: string): any => {
 		let scopedProperty = envsConfig();
@@ -12,25 +11,23 @@ export const configServiceMock = {
 			const splitedPaths = propertyPath.split('.') as (keyof ConfigsInterface)[];
 
 			for (const scopedPath of splitedPaths) {
-				if (scopedPath.length)
-					scopedProperty = scopedProperty[String(scopedPath) as keyof ConfigsInterface] as unknown as ConfigsInterface;
+				if (scopedPath.length) scopedProperty = scopedProperty[String(scopedPath) as keyof ConfigsInterface] as unknown as ConfigsInterface;
 			}
 
 			return scopedProperty;
-		} else
-			return scopedProperty;
+		} else return scopedProperty;
 	},
 };
 
 export const cryptographyServiceMock = {
 	generateUuid: (): string => {
 		return uuidV4();
-	}
+	},
 };
 
 export const loggerProviderMock: LoggerInterface & {
-	setContextName: (context: string) => void,
-	setRequestId: (requestId: string) => void,
+	setContextName: (context: string) => void;
+	setRequestId: (requestId: string) => void;
 } = {
 	error: console.error,
 	warn: console.warn,
@@ -51,17 +48,15 @@ export const dataParserHelperMock = {
 		const defaultParse = String(data);
 		const circularReference = '[Circular]';
 
-		if (typeof data === 'string')
-			return data;
-		if (typeof data === 'undefined')
-			return returnUndefined ? 'undefined' : '';
+		if (typeof data === 'string') return data;
+		if (typeof data === 'undefined') return returnUndefined ? 'undefined' : '';
 		if (typeof data === 'object') {
 			if (!data) {
 				return defaultParse;
 			}
 
 			if (Array.isArray(data)) {
-				const parsedData = data.map((element) => element === data ? circularReference : String(element));
+				const parsedData = data.map((element) => (element === data ? circularReference : String(element)));
 				return parsedData.join(', ');
 			}
 

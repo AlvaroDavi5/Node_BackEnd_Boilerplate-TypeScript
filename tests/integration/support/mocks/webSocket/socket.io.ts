@@ -1,5 +1,3 @@
-
-// eslint-disable-next-line max-classes-per-file
 export class Server {
 	httpServer: unknown;
 	options!: unknown;
@@ -10,10 +8,7 @@ export class Server {
 		this.options = options || {};
 
 		this.sockets = {
-			fetchSockets: () => [
-				{ id: '#1' },
-				{ id: '#2' },
-			],
+			fetchSockets: () => [{ id: '#1' }, { id: '#2' }],
 		};
 	}
 
@@ -21,7 +16,7 @@ export class Server {
 		return this;
 	}
 
-	public on(_ev: string, _listener?: ((...args: unknown[]) => void)): this {
+	public on(_ev: string, _listener?: (...args: unknown[]) => void): this {
 		return this;
 	}
 
@@ -41,7 +36,7 @@ export class Server {
 export class ServerSocket {
 	public readonly id: string;
 	public connected: boolean;
-	public broadcast: { emit: (ev: string, ...args: unknown[]) => boolean; };
+	public broadcast: { emit: (ev: string, ...args: unknown[]) => boolean };
 
 	constructor() {
 		this.id = 'mockedSocket';
@@ -51,7 +46,7 @@ export class ServerSocket {
 		};
 	}
 
-	public on(_ev: string, _listener?: ((...args: unknown[]) => void)): this {
+	public on(_ev: string, _listener?: (...args: unknown[]) => void): this {
 		return this;
 	}
 

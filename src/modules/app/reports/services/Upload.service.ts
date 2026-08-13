@@ -7,7 +7,6 @@ import FileStrategy from '@app/file/strategies/File.strategy';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { RequestFileInterface } from '@shared/internal/interfaces/endpointInterface';
 
-
 @Injectable({ scope: Scope.TRANSIENT })
 export default class UploadService {
 	private readonly fileStrategy: FileStrategy = new FileStrategy();
@@ -23,14 +22,13 @@ export default class UploadService {
 		this.uploadBucket = s3Configs.bucketName;
 	}
 
-	public async uploadFile(fileName: string, file: RequestFileInterface): Promise<{ filePath: string, uploadTag: string | null }> {
+	public async uploadFile(fileName: string, file: RequestFileInterface): Promise<{ filePath: string; uploadTag: string | null }> {
 		let uploadTag: string | null = null;
 		const fileBuffer = await file.toBuffer();
 		const filePath = `upload/reports/${fileName}`;
 
 		const isValidFile = fileBuffer?.length;
-		if (isValidFile)
-			uploadTag = await this.s3Client.uploadFile(this.uploadBucket, filePath, fileBuffer);
+		if (isValidFile) uploadTag = await this.s3Client.uploadFile(this.uploadBucket, filePath, fileBuffer);
 
 		return { filePath, uploadTag };
 	}

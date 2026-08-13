@@ -5,7 +5,6 @@ import { fastifyAdapter } from '@core/configs/nestApi.config';
 import CoreModule from '@core/core.module';
 import { createNestTestApplicationOptions, startNestApplication } from 'tests/e2e/support/mocks/setupUtils';
 
-
 jest.setTimeout(1.2 * 5000);
 describe('API :: UserController', () => {
 	let nestTestApp: NestFastifyApplication;
@@ -54,8 +53,7 @@ describe('API :: UserController', () => {
 		});
 
 		test('Invalid Token response', async () => {
-			const response = await request(await nestTestApp.getHttpServer())
-				.get('/api/users');
+			const response = await request(await nestTestApp.getHttpServer()).get('/api/users');
 
 			expect(response.statusCode).toBe(498);
 			expect(response.body).toMatchObject({
@@ -83,10 +81,7 @@ describe('API :: UserController', () => {
 			expect(response.body).toMatchObject({
 				error: 'BadRequestException',
 				name: 'Bad Request',
-				message: [
-					'password should not be empty',
-					'password must be a string',
-				],
+				message: ['password should not be empty', 'password must be a string'],
 				statusCode: 400,
 			});
 		});

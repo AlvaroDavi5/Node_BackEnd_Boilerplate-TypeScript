@@ -17,7 +17,8 @@
 		"vscode.github-authentication",
 		// Editor Configs
 		"editorconfig.editorconfig",
-		"dbaeumer.vscode-eslint",
+		// Oxc language server: ships both the Oxlint linter and the Oxfmt formatter
+		"oxc.oxc-vscode",
 		"visualstudioexptteam.vscodeintellicode",
 		"visualstudioexptteam.intellicode-api-usage-examples",
 		// Code Documentation and Bookmarks
@@ -36,5 +37,10 @@
 		// Coding Assistance
 		"ms-vsliveshare.vsliveshare",
 		"wix.vscode-import-cost"
+	],
+	"unwantedRecommendations": [
+		// ! This project lints with Oxlint and formats with Oxfmt plus EditorConfig
+		"dbaeumer.vscode-eslint",
+		"esbenp.prettier-vscode"
 	]
 }

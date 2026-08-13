@@ -1,5 +1,5 @@
 analytics:
- reporting_enabled: false
+  reporting_enabled: false
 
 auth_enabled: false
 

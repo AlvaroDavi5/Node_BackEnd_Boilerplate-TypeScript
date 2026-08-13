@@ -7,28 +7,11 @@ import DataParserHelper from './utils/helpers/DataParser.helper';
 import CacheAccessHelper from './utils/helpers/CacheAccess.helper';
 import FileReaderHelper from './utils/helpers/FileReader.helper';
 
-
 @Global()
 @Module({
 	imports: [],
 	controllers: [],
-	providers: [
-		HttpMessagesConstants,
-		RequestRateLimitConstants,
-		ContentTypeConstants,
-		RegExConstants,
-		DataParserHelper,
-		CacheAccessHelper,
-		FileReaderHelper,
-	],
-	exports: [
-		HttpMessagesConstants,
-		RequestRateLimitConstants,
-		ContentTypeConstants,
-		RegExConstants,
-		DataParserHelper,
-		CacheAccessHelper,
-		FileReaderHelper,
-	],
+	providers: [HttpMessagesConstants, RequestRateLimitConstants, ContentTypeConstants, RegExConstants, DataParserHelper, CacheAccessHelper, FileReaderHelper],
+	exports: [HttpMessagesConstants, RequestRateLimitConstants, ContentTypeConstants, RegExConstants, DataParserHelper, CacheAccessHelper, FileReaderHelper],
 })
-export default class CommonModule { }
+export default class CommonModule {}

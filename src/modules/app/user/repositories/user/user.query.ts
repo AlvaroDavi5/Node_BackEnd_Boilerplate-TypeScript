@@ -5,39 +5,44 @@ import { ThemesEnum } from '@domain/enums/themes.enum';
 import { IViewUser } from '@domain/entities/User.entity';
 import { getObjValues } from '@common/utils/dataValidations.util';
 
-
 interface UserSelectRestrictInterface {
-	withoutPassword: boolean,
-	withoutSensitiveData: boolean,
+	withoutPassword: boolean;
+	withoutSensitiveData: boolean;
 }
 
 export type UserBuildParamsInterface = BuildParamsInterface<IViewUser> & UserSelectRestrictInterface;
 
-function buildSelectParams({
-	withoutPassword,
-	withoutSensitiveData,
-}: UserSelectRestrictInterface): FindOptionsSelect<UsersModel> {
+function buildSelectParams({ withoutPassword, withoutSensitiveData }: UserSelectRestrictInterface): FindOptionsSelect<UsersModel> {
 	const selectSensitiveData = withoutSensitiveData === false;
 	const selectPassword = withoutPassword === false;
 
 	const select: FindOptionsSelect<UsersModel> = {
-		id: true, fullName: true,
-		email: true, password: selectPassword,
-		phone: selectSensitiveData, fu: true,
-		docType: true, document: selectSensitiveData,
-		createdAt: true, updatedAt: true,
-		deletedAt: true, deletedBy: true,
+		id: true,
+		fullName: true,
+		email: true,
+		password: selectPassword,
+		phone: selectSensitiveData,
+		fu: true,
+		docType: true,
+		document: selectSensitiveData,
+		createdAt: true,
+		updatedAt: true,
+		deletedAt: true,
+		deletedBy: true,
 	};
 
 	return select;
-};
+}
 
 function buildWhereParams({
 	id,
 	searchTerm,
-	fullName, email,
-	phone, fu,
-	docType, document,
+	fullName,
+	email,
+	phone,
+	fu,
+	docType,
+	document,
 	preference,
 	selectSoftDeleted,
 }: UserBuildParamsInterface): FindOptionsWhere<UsersModel>[] {
@@ -73,12 +78,9 @@ function buildWhereParams({
 
 	where.push(partialWhere);
 	return where;
-};
+}
 
-function buildPaginationParams({
-	limit, page,
-	order, sortBy,
-}: UserBuildParamsInterface): PaginationOptionsInterface<UsersModel> {
+function buildPaginationParams({ limit, page, order, sortBy }: UserBuildParamsInterface): PaginationOptionsInterface<UsersModel> {
 	const paginationParams: PaginationOptionsInterface<UsersModel> = {};
 
 	if (limit && page) {
@@ -94,7 +96,7 @@ function buildPaginationParams({
 	}
 
 	return paginationParams;
-};
+}
 
 export const userQueryParamsBuilder = {
 	buildParams: (data: UserBuildParamsInterface): FindManyOptions<UsersModel> => {
@@ -108,5 +110,5 @@ export const userQueryParamsBuilder = {
 			...pagination,
 			relations: { preference: true },
 		};
-	}
+	},
 };

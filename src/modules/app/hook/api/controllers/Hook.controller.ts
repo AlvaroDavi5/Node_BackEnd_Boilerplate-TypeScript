@@ -1,8 +1,4 @@
-import {
-	Controller, Res,
-	Put, Query,
-	UseGuards, UseFilters, UseInterceptors,
-} from '@nestjs/common';
+import { Controller, Res, Put, Query, UseGuards, UseFilters, UseInterceptors } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiProduces, ApiConsumes, ApiCreatedResponse, ApiNotAcceptableResponse } from '@nestjs/swagger';
 import WebhookService from '@app/hook/services/Webhook.service';
 import RegisterEventHookValidatorPipe from '@app/hook/api/pipes/HookValidator.pipe';
@@ -17,7 +13,6 @@ import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 import HttpMessagesConstants from '@common/constants/HttpMessages.constants';
 import type { ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
-
 @ApiTags('Webhooks')
 @Controller('/hook')
 @UseGuards(CustomThrottlerGuard, AuthGuard)
@@ -29,7 +24,7 @@ export default class HookController {
 	constructor(
 		private readonly httpMessagesConstants: HttpMessagesConstants,
 		private readonly webHookService: WebhookService,
-	) { }
+	) {}
 
 	@ApiOperation({
 		summary: 'Register Event Hook',
@@ -42,14 +37,14 @@ export default class HookController {
 			example: {
 				statusMessage: 'Hook event register created successfully.',
 			},
-		}
+		},
 	})
 	@ApiNotAcceptableResponse({
 		schema: {
 			example: {
 				statusMessage: 'Hook event register is not acceptable!',
 			},
-		}
+		},
 	})
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')

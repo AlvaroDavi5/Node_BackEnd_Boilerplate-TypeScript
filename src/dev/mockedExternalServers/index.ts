@@ -2,7 +2,6 @@ import Fastify, { FastifyInstance } from 'fastify';
 import formbody from '@fastify/formbody';
 import mockedServiceRoutes from './mockedService/router';
 
-
 export default class Server {
 	private fastifyServer: FastifyInstance;
 
@@ -23,12 +22,8 @@ export default class Server {
 
 		try {
 			await this.fastifyServer.listen({ port: serverPort, host: '0.0.0.0' });
-			console.log(
-				`\nMOCKED_SERVERS_URL='http://localhost:${serverPort}/'`
-			);
-			console.log(
-				`Mocked external servers listening at PORT: ${serverPort}\n`
-			);
+			console.log(`\nMOCKED_SERVERS_URL='http://localhost:${serverPort}/'`);
+			console.log(`Mocked external servers listening at PORT: ${serverPort}\n`);
 		} catch (err) {
 			this.fastifyServer.log.error(err);
 			process.exit(1);

@@ -1,6 +1,5 @@
 import { Injectable } from '@nestjs/common';
 
-
 @Injectable()
 export default class CacheAccessHelper {
 	public generateKey(id: string, keyPattern = ''): string {

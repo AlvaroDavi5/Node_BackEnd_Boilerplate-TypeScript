@@ -5,5 +5,6 @@ nav:
   - Architecture: architecture.md
   - System Overview: system-overview.md
   - Tests: testing.md
+  - Linting: linting.md
 plugins:
   - techdocs-core

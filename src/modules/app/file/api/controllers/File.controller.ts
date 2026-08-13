@@ -1,8 +1,4 @@
-import {
-	Controller, Req, Res,
-	Get, Post, Headers, UseInterceptors, UseGuards, UseFilters, StreamableFile,
-	BadRequestException
-} from '@nestjs/common';
+import { Controller, Req, Res, Get, Post, Headers, UseInterceptors, UseGuards, UseFilters, StreamableFile, BadRequestException } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiBody, ApiHeaders, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse } from '@nestjs/swagger';
 import FileService from '@app/file/services/File.service';
 import AuthGuard from '@api/guards/Auth.guard';
@@ -13,7 +9,6 @@ import exceptionsResponseDecorator from '@api/decorators/exceptionsResponse.deco
 import CustomThrottlerGuard from '@common/guards/CustomThrottler.guard';
 import type { RequestInterface, ResponseInterface } from '@shared/internal/interfaces/endpointInterface';
 
-
 @ApiTags('Files')
 @Controller('/files')
 @UseGuards(CustomThrottlerGuard, AuthGuard)
@@ -22,9 +17,7 @@ import type { RequestInterface, ResponseInterface } from '@shared/internal/inter
 @authSwaggerDecorator()
 @exceptionsResponseDecorator()
 export default class FileController {
-	constructor(
-		private readonly fileService: FileService,
-	) { }
+	constructor(private readonly fileService: FileService) {}
 
 	@ApiOperation({
 		summary: 'Download File',
@@ -40,9 +33,7 @@ export default class FileController {
 	})
 	@ApiConsumes('application/json')
 	@ApiProduces('application/octet-stream', 'text/plain')
-	@ApiHeaders([
-		{ name: 'accept', allowEmptyValue: true },
-	])
+	@ApiHeaders([{ name: 'accept', allowEmptyValue: true }])
 	public async downloadFile(
 		@Headers() headers: Record<string, string | undefined>,
 		@Headers('fileName') fileNameHeader: string,
@@ -81,9 +72,7 @@ export default class FileController {
 	})
 	@ApiConsumes('multipart/form-data')
 	@ApiProduces('application/json')
-	@ApiHeaders([
-		{ name: 'accept', allowEmptyValue: true },
-	])
+	@ApiHeaders([{ name: 'accept', allowEmptyValue: true }])
 	@ApiBody({
 		required: true,
 		schema: {
@@ -101,9 +90,9 @@ export default class FileController {
 		@Headers('fileName') fileNameHeader: string | undefined,
 		@Req() request: RequestInterface,
 	): Promise<{
-		filePath: string,
-		fileContentType: string,
-		uploadTag: string | null,
+		filePath: string;
+		fileContentType: string;
+		uploadTag: string | null;
 	}> {
 		const file = await request.file();
 		if (!file) {

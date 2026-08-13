@@ -11,7 +11,6 @@ import { ListQueryInterface, PaginationInterface } from '@shared/internal/interf
 import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 
-
 describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 	// // mocks
 	const exceptionsMock = {
@@ -37,7 +36,7 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 		update: jest.fn(async (_id: string, _data: IUpdateUser): Promise<UserEntity> => {
 			throw new Error('GenericError');
 		}),
-		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, agentUserId?: string }): Promise<boolean> => false),
+		delete: jest.fn(async (_id: string, _data: { softDelete: boolean; agentUserId?: string }): Promise<boolean> => false),
 		list: jest.fn(async (_query: ListQueryInterface, _withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => {
 			return { content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 };
 		}),
@@ -89,16 +88,10 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 		test('Should return updated user', async () => {
 			const userEntity = new UserEntity({ id: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', email: 'user.test@nomail.test' });
 			const userPreferenceEntity = new UserPreferenceEntity({ id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: userEntity.getId() });
-			userServiceMock.getById
-				.mockResolvedValueOnce(userEntity)
-				.mockResolvedValueOnce(userEntity);
-			userPreferenceServiceMock.getByUserId
-				.mockResolvedValueOnce(userPreferenceEntity)
-				.mockResolvedValueOnce(userPreferenceEntity);
+			userServiceMock.getById.mockResolvedValueOnce(userEntity).mockResolvedValueOnce(userEntity);
+			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity).mockResolvedValueOnce(userPreferenceEntity);
 			userStrategyMock.isAllowedToManageUser.mockReturnValueOnce(true);
-			userStrategyMock.mustUpdate
-				.mockReturnValueOnce(true)
-				.mockReturnValueOnce(true);
+			userStrategyMock.mustUpdate.mockReturnValueOnce(true).mockReturnValueOnce(true);
 			userServiceMock.update.mockImplementationOnce(async (_id: string, data: IUpdateUser): Promise<UserEntity> => {
 				if (data.email) userEntity.setEmail(data.email);
 				if (data.password) userEntity.setPhone(data.password);
@@ -117,10 +110,14 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 				return userPreferenceEntity;
 			});
 
-			const result = await updateUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
-				phone: '+55999999999',
-				preference: { defaultTheme: ThemesEnum.DEFAULT }
-			}, agentUser);
+			const result = await updateUserUseCase.execute(
+				'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+				{
+					phone: '+55999999999',
+					preference: { defaultTheme: ThemesEnum.DEFAULT },
+				},
+				agentUser,
+			);
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(2);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(2);
 			expect(userServiceMock.update).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
@@ -142,27 +139,32 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 			userServiceMock.getById.mockResolvedValueOnce(userEntity);
 			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
 			userStrategyMock.isAllowedToManageUser.mockReturnValueOnce(true);
-			userStrategyMock.mustUpdate
-				.mockReturnValueOnce(true)
-				.mockReturnValueOnce(true);
-			userServiceMock.update.mockRejectedValueOnce(exceptionsMock.conflict({
-				message: 'User not updated!',
-			}));
+			userStrategyMock.mustUpdate.mockReturnValueOnce(true).mockReturnValueOnce(true);
+			userServiceMock.update.mockRejectedValueOnce(
+				exceptionsMock.conflict({
+					message: 'User not updated!',
+				}),
+			);
 
-			await expect(updateUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
-				phone: '+55999999999',
-				preference: { defaultTheme: ThemesEnum.DEFAULT }
-			}, agentUser))
-				.rejects.toMatchObject(new Error('User not updated!'));
+			await expect(
+				updateUserUseCase.execute(
+					'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+					{
+						phone: '+55999999999',
+						preference: { defaultTheme: ThemesEnum.DEFAULT },
+					},
+					agentUser,
+				),
+			).rejects.toMatchObject(new Error('User not updated!'));
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.update).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
 				phone: '+55999999999',
-				preference: { defaultTheme: 'DEFAULT' }
+				preference: { defaultTheme: 'DEFAULT' },
 			});
 			expect(userPreferenceServiceMock.update).not.toHaveBeenCalled();
 			expect(exceptionsMock.conflict).toHaveBeenCalledWith({
-				message: 'User not updated!'
+				message: 'User not updated!',
 			});
 		});
 
@@ -173,39 +175,50 @@ describe('Modules :: App :: User :: UseCases :: UpdateUserUseCase', () => {
 			userServiceMock.getById.mockResolvedValueOnce(userEntity);
 			userPreferenceServiceMock.getByUserId.mockResolvedValueOnce(userPreferenceEntity);
 
-			await expect(updateUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
-				phone: '+55999999999',
-				preference: { defaultTheme: ThemesEnum.DEFAULT }
-			}, otherAgentUser))
-				.rejects.toMatchObject(new Error('agentUser not allowed to update this user!'));
+			await expect(
+				updateUserUseCase.execute(
+					'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+					{
+						phone: '+55999999999',
+						preference: { defaultTheme: ThemesEnum.DEFAULT },
+					},
+					otherAgentUser,
+				),
+			).rejects.toMatchObject(new Error('agentUser not allowed to update this user!'));
 			expect(exceptionsMock.business).toHaveBeenCalledWith({
-				message: 'agentUser not allowed to update this user!'
+				message: 'agentUser not allowed to update this user!',
 			});
 		});
 
 		test('Should throw a not found error', async () => {
-			userServiceMock.getById.mockRejectedValueOnce(exceptionsMock.notFound({
-				message: 'User not founded by ID!',
-			}));
+			userServiceMock.getById.mockRejectedValueOnce(
+				exceptionsMock.notFound({
+					message: 'User not founded by ID!',
+				}),
+			);
 
-			await expect(updateUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', {
-				phone: '+55999999999',
-				preference: { defaultTheme: ThemesEnum.DEFAULT }
-			}, agentUser))
-				.rejects.toMatchObject(new Error('User not founded by ID!'));
+			await expect(
+				updateUserUseCase.execute(
+					'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+					{
+						phone: '+55999999999',
+						preference: { defaultTheme: ThemesEnum.DEFAULT },
+					},
+					agentUser,
+				),
+			).rejects.toMatchObject(new Error('User not founded by ID!'));
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userServiceMock.getById).toHaveBeenCalledWith('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(userPreferenceServiceMock.getByUserId).not.toHaveBeenCalled();
 			expect(exceptionsMock.notFound).toHaveBeenCalledWith({
-				message: 'User not founded by ID!'
+				message: 'User not founded by ID!',
 			});
 		});
 
 		test('Should throw a unauthorized error', async () => {
-			await expect(updateUserUseCase.execute('', {}))
-				.rejects.toMatchObject(new Error('Invalid agentUser'));
+			await expect(updateUserUseCase.execute('', {})).rejects.toMatchObject(new Error('Invalid agentUser'));
 			expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
-				message: 'Invalid agentUser'
+				message: 'Invalid agentUser',
 			});
 		});
 	});

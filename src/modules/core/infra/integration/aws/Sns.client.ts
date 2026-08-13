@@ -1,16 +1,22 @@
 import { Injectable } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import {
-	SNSClient, Topic,
-	ListTopicsCommand, CreateTopicCommand, DeleteTopicCommand,
-	SubscribeCommand, UnsubscribeCommand, PublishCommand,
-	CreateTopicCommandInput, SubscribeCommandInput, PublishCommandInput,
+	SNSClient,
+	Topic,
+	ListTopicsCommand,
+	CreateTopicCommand,
+	DeleteTopicCommand,
+	SubscribeCommand,
+	UnsubscribeCommand,
+	PublishCommand,
+	CreateTopicCommandInput,
+	SubscribeCommandInput,
+	PublishCommandInput,
 } from '@aws-sdk/client-sns';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
 import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
-
 
 interface EmailPublishTargets {
 	protocol: 'email';
@@ -29,11 +35,7 @@ interface LambdaPublishTargets {
 	targetArn?: string;
 }
 
-export type IPublishTargetsOptions =
-	| EmailPublishTargets
-	| SmsPublishTargets
-	| SqsPublishTargets
-	| LambdaPublishTargets;
+export type IPublishTargetsOptions = EmailPublishTargets | SmsPublishTargets | SqsPublishTargets | LambdaPublishTargets;
 export type protocolType = IPublishTargetsOptions['protocol'];
 
 type IPublishParams = IPublishTargetsOptions & {
@@ -53,18 +55,21 @@ export default class SnsClient {
 		private readonly logger: LoggerService,
 		private readonly dataParserHelper: DataParserHelper,
 	) {
-		const { sns: { apiVersion, maxAttempts }, credentials: {
-			region, endpoint, accessKeyId, secretAccessKey, sessionToken,
-		} } = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
+		const {
+			sns: { apiVersion, maxAttempts },
+			credentials: { region, endpoint, accessKeyId, secretAccessKey, sessionToken },
+		} = this.configService.get<ConfigsInterface['integration']['aws']>('integration.aws')!;
 		const showExternalLogs = this.configService.get<ConfigsInterface['application']['showExternalLogs']>('application.showExternalLogs')!;
 
 		this.snsClient = new SNSClient({
-			endpoint, region, apiVersion, maxAttempts,
+			endpoint,
+			region,
+			apiVersion,
+			maxAttempts,
 			credentials: { accessKeyId, secretAccessKey, sessionToken },
 			logger: showExternalLogs ? this.logger : undefined,
 		});
 	}
-
 
 	private formatMessageBeforeSend(message: unknown = {}): string {
 		return this.dataParserHelper.toString(message);
@@ -78,7 +83,7 @@ export default class SnsClient {
 			Attributes: {
 				FifoTopic: String(isFifoTopic),
 				ContentBasedDeduplication: String(isFifoTopic),
-			}
+			},
 		};
 
 		return params;
@@ -150,8 +155,7 @@ export default class SnsClient {
 		try {
 			const result = await this.snsClient.send(new CreateTopicCommand(this.createParams(topicName)));
 
-			if (!result?.TopicArn)
-				throw this.exceptions.internal({ message: 'Topic not created' });
+			if (!result?.TopicArn) throw this.exceptions.internal({ message: 'Topic not created' });
 
 			return result.TopicArn;
 		} catch (error) {
@@ -161,9 +165,11 @@ export default class SnsClient {
 
 	public async deleteTopic(topicArn: string): Promise<boolean> {
 		try {
-			const result = await this.snsClient.send(new DeleteTopicCommand({
-				TopicArn: topicArn,
-			}));
+			const result = await this.snsClient.send(
+				new DeleteTopicCommand({
+					TopicArn: topicArn,
+				}),
+			);
 
 			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
 			return statusCode >= 200 && statusCode < 300;
@@ -174,12 +180,9 @@ export default class SnsClient {
 
 	public async subscribeTopic(protocol: protocolType, topicArn: string, to: string): Promise<string> {
 		try {
-			const result = await this.snsClient.send(new SubscribeCommand(
-				this.subscribeParams(protocol, topicArn, to)
-			));
+			const result = await this.snsClient.send(new SubscribeCommand(this.subscribeParams(protocol, topicArn, to)));
 
-			if (!result?.SubscriptionArn)
-				throw this.exceptions.internal({ message: 'Not Subscribed in topic' });
+			if (!result?.SubscriptionArn) throw this.exceptions.internal({ message: 'Not Subscribed in topic' });
 
 			return result.SubscriptionArn;
 		} catch (error) {
@@ -189,9 +192,11 @@ export default class SnsClient {
 
 	public async unsubscribeTopic(subscriptionArn: string): Promise<boolean> {
 		try {
-			const result = await this.snsClient.send(new UnsubscribeCommand({
-				SubscriptionArn: subscriptionArn
-			}));
+			const result = await this.snsClient.send(
+				new UnsubscribeCommand({
+					SubscriptionArn: subscriptionArn,
+				}),
+			);
 
 			const statusCode = result?.$metadata?.httpStatusCode ?? 500;
 			return statusCode >= 200 && statusCode < 300;
@@ -204,8 +209,7 @@ export default class SnsClient {
 		try {
 			const result = await this.snsClient.send(new PublishCommand(this.publishParams(params)));
 
-			if (!result?.MessageId)
-				throw this.exceptions.internal({ message: 'Message not published' });
+			if (!result?.MessageId) throw this.exceptions.internal({ message: 'Message not published' });
 
 			return result.MessageId;
 		} catch (error) {

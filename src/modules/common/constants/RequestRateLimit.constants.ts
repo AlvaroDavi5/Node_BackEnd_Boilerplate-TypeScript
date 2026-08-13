@@ -2,7 +2,6 @@ import { Injectable } from '@nestjs/common';
 import { ThrottlerOptions } from '@nestjs/throttler';
 import { minutesToSeconds, secondsToMilliseconds } from '@common/utils/dates.util';
 
-
 @Injectable()
 export default class RequestRateLimitConstants {
 	// * 3 requests per second

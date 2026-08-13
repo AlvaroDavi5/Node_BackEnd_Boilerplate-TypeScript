@@ -6,7 +6,6 @@ import UserPreferenceService from '@app/user/services/UserPreference.service';
 import UserStrategy from '@app/user/strategies/User.strategy';
 import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 
-
 @Injectable()
 export default class DeleteUserUseCase {
 	constructor(
@@ -14,7 +13,7 @@ export default class DeleteUserUseCase {
 		private readonly userPreferenceService: UserPreferenceService,
 		private readonly userStrategy: UserStrategy,
 		private readonly exceptions: Exceptions,
-	) { }
+	) {}
 
 	public async execute(id: string, agentUser?: UserAuthInterface): Promise<void> {
 		if (!agentUser?.clientId)

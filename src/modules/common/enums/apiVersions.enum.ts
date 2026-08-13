@@ -1,4 +1,3 @@
-
 export enum ApiVersionsEnum {
 	DEFAULT = '',
 	V1 = 'v1',

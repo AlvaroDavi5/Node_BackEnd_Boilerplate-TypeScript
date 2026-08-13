@@ -2,14 +2,11 @@ import EventEmitter from 'events';
 import { Injectable } from '@nestjs/common';
 import LoggerService from '@core/logging/Logger.service';
 
-
 @Injectable()
 export default class EventEmitterClient {
 	private readonly eventEmitter: EventEmitter;
 
-	constructor(
-		private readonly logger: LoggerService,
-	) {
+	constructor(private readonly logger: LoggerService) {
 		this.eventEmitter = new EventEmitter();
 	}
 

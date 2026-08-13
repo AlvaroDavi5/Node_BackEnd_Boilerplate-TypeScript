@@ -1,4 +1,3 @@
-
 type RedisStatus = 'wait' | 'reconnecting' | 'connecting' | 'connect' | 'ready' | 'close' | 'end';
 type RedisKey = string | Buffer;
 type Callback<T = unknown> = (err?: Error | null, result?: T) => void;

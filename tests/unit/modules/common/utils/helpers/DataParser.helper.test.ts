@@ -120,15 +120,20 @@ describe('Modules :: Common :: Utils :: Helpers :: DataParserHelper', () => {
 		});
 
 		test('Should return a stringified function', () => {
+			// ? a function stringifies to its own source text, so collapse whitespace to keep the assertion independent from formatting
+			const collapseWhitespace = (value: string): string => value.replace(/\s+/g, ' ');
+
 			expect(
-				dataParserHelper.toString(function testFunction() {
-					return;
-				}),
+				collapseWhitespace(
+					dataParserHelper.toString(function testFunction() {
+						return;
+					}),
+				),
 			).toBe('function testFunction() { return; }');
 			const arrowFunction = () => {
 				return;
 			};
-			expect(dataParserHelper.toString(arrowFunction)).toBe('() => { return; }');
+			expect(collapseWhitespace(dataParserHelper.toString(arrowFunction))).toBe('() => { return; }');
 		});
 
 		test('Should return a stringified undefined', () => {

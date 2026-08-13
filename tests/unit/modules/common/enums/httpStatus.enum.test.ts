@@ -1,6 +1,5 @@
 import { HttpStatusEnum } from '@common/enums/httpStatus.enum';
 
-
 describe('Modules :: Common :: Enums :: HttpStatus', () => {
 	describe('# Status Code', () => {
 		test('Should return the same value', () => {

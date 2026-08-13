@@ -5,8 +5,7 @@ import LoggerService from '@core/logging/Logger.service';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { configServiceMock, dataParserHelperMock } from '@dev/mocks/mockedModules';
 
-
-type dateInputType = (string | Date) | (() => string | Date) | undefined | null
+type dateInputType = (string | Date) | (() => string | Date) | undefined | null;
 
 export default class ParseDatePipe implements PipeTransform<dateInputType, Date> {
 	private readonly exceptions: Exceptions;
@@ -24,8 +23,7 @@ export default class ParseDatePipe implements PipeTransform<dateInputType, Date>
 			throw this.exceptions.contract({
 				message: 'Date is required',
 			});
-		if (typeof value === 'function')
-			value = value();
+		if (typeof value === 'function') value = value();
 
 		const transformedValue: Date = new Date(value);
 		if (isNaN(transformedValue.getTime())) {

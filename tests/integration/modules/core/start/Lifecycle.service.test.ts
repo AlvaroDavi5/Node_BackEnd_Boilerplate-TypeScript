@@ -17,7 +17,6 @@ import WebSocketServer from '@events/websocket/server/WebSocket.server';
 import { configServiceMock } from '@dev/mocks/mockedModules';
 import { mockObservable } from 'tests/integration/support/mocks/mockObservable';
 
-
 describe('Modules :: Core :: Start :: LifecycleService', () => {
 	let nestTestingModule: TestingModule;
 
@@ -109,7 +108,7 @@ describe('Modules :: Core :: Start :: LifecycleService', () => {
 
 			expect(mockObservable.call).toHaveBeenCalledWith('Builded host module');
 			expect(mockObservable.call).toHaveBeenCalledWith(
-				'Closing HTTP server, disconnecting websocket clients, stopping crons and consumers and destroying cloud integrations'
+				'Closing HTTP server, disconnecting websocket clients, stopping crons and consumers and destroying cloud integrations',
 			);
 			expect(httpAdapterHostMock.httpAdapter.close).toHaveBeenCalledTimes(1);
 			expect(webSocketServerMock.disconnectAllSockets).toHaveBeenCalledTimes(1);

@@ -5,7 +5,6 @@ import { ICreateUser } from '@domain/entities/User.entity';
 import RegExConstants from '@common/constants/Regex.constants';
 import { UserPreferenceInputDto } from '../userPreference/UserPreferenceInput.dto';
 
-
 const regExConstants = new RegExConstants();
 const { regex: onlyNumericDigitsRegex } = regExConstants.onlyNumericDigitsPattern;
 
@@ -39,8 +38,7 @@ export default class CreateUserInputDto implements ICreateUser {
 	@IsString()
 	@IsOptional()
 	@Transform(({ value }: { value?: string }) => {
-		if (!value)
-			return value;
+		if (!value) return value;
 		return value.replace(onlyNumericDigitsRegex, '');
 	})
 	public document?: string;

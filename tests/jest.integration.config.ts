@@ -5,15 +5,10 @@ const config: Config = {
 	rootDir: '../',
 
 	// A list of paths to directories that Jest should use to search for files in
-	roots: [
-		'<rootDir>/tests/integration',
-	],
+	roots: ['<rootDir>/tests/integration'],
 
 	// The paths to modules that run some code to configure or set up the testing environment before each test
-	setupFiles: [
-		'dotenv/config',
-		'<rootDir>/tests/integration/support/setup.ts',
-	],
+	setupFiles: ['dotenv/config', '<rootDir>/tests/integration/support/setup.ts'],
 
 	// Stop running tests after `n` failures
 	// bail: 0,
@@ -28,9 +23,7 @@ const config: Config = {
 	coverageDirectory: 'coverage/integration',
 
 	// An array of glob patterns indicating a set of files for which coverage information should be collected
-	collectCoverageFrom: [
-		'src/**/*.{ts,ts,js,js}'
-	],
+	collectCoverageFrom: ['src/**/*.{ts,ts,js,js}'],
 
 	// An array of regexp pattern strings used to skip coverage collection
 	coveragePathIgnorePatterns: [
@@ -54,12 +47,7 @@ const config: Config = {
 	coverageProvider: 'babel',
 
 	// A list of reporter names that Jest uses when writing coverage reports
-	coverageReporters: [
-		'json',
-		'text',
-		'lcov',
-		'clover'
-	],
+	coverageReporters: ['json', 'text', 'lcov', 'clover'],
 
 	// An object that configures minimum threshold enforcement for coverage results
 	coverageThreshold: {
@@ -67,8 +55,8 @@ const config: Config = {
 			statements: 50,
 			branches: 90,
 			functions: 80,
-			lines: 30
-		}
+			lines: 30,
+		},
 	},
 
 	// A path to a custom dependency extractor
@@ -94,19 +82,10 @@ const config: Config = {
 	maxWorkers: '50%',
 
 	// An array of directory names to be searched recursively up from the requiring module's location
-	moduleDirectories: [
-		'node_modules',
-		'src',
-	],
+	moduleDirectories: ['node_modules', 'src'],
 
 	// An array of file extensions your modules use
-	moduleFileExtensions: [
-		'ts',
-		'tsx',
-		'js',
-		'jsx',
-		'json',
-	],
+	moduleFileExtensions: ['ts', 'tsx', 'js', 'jsx', 'json'],
 
 	// A map from regular expressions to module names or to arrays of module names that allow to stub out resources with a single module
 	moduleNameMapper: {
@@ -193,15 +172,10 @@ const config: Config = {
 	// ],
 
 	// The regexp pattern or array of patterns that Jest uses to detect test files
-	testRegex: [
-		'.*\\.test\\.ts$',
-		'.*\\.spec\\.ts$',
-	],
+	testRegex: ['.*\\.test\\.ts$', '.*\\.spec\\.ts$'],
 
 	// An array of regexp pattern strings that are matched against all test paths, matched tests are skipped
-	testPathIgnorePatterns: [
-		'node_modules/',
-	],
+	testPathIgnorePatterns: ['node_modules/'],
 
 	// This option sets the URL for the jsdom environment. It is reflected in properties such as location.href
 	// testURL: 'http://localhost',
@@ -212,7 +186,8 @@ const config: Config = {
 	// A map from regular expressions to paths to transformers
 	transform: {
 		'^.+\\.(t|j)s$': [
-			'ts-jest', {
+			'ts-jest',
+			{
 				tsconfig: 'tsconfig.test.json',
 				diagnostics: false,
 			},
@@ -221,9 +196,7 @@ const config: Config = {
 	},
 
 	// An array of regexp pattern strings that are matched against all source file paths, matched files will skip transformation
-	transformIgnorePatterns: [
-		'<rootDir>/node_modules/'
-	],
+	transformIgnorePatterns: ['<rootDir>/node_modules/'],
 
 	// An array of regexp pattern strings that are matched against all modules before the module loader will automatically return a mock for them
 	// unmockedModulePathPatterns: undefined,

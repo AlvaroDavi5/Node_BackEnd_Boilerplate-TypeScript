@@ -1,7 +1,6 @@
 import { BadGatewayException, BadRequestException, GoneException, NotFoundException } from '@nestjs/common';
 import externalErrorParser from '@common/utils/externalErrorParser.util';
 
-
 describe('Modules :: Common :: Utils :: ExternalErrorParser', () => {
 	describe('# Parse error to known error', () => {
 		test('unknown error to 500', () => {

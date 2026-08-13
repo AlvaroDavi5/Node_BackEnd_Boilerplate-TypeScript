@@ -8,7 +8,6 @@ import SchemaValidator from '@common/utils/validators/SchemaValidator.validator'
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import { configServiceMock, dataParserHelperMock } from '@dev/mocks/mockedModules';
 
-
 export default class RegisterEventHookValidatorPipe implements PipeTransform<RegisterEventHookInputDto, RegisterEventHookInterface> {
 	private readonly schemaValidator: SchemaValidator;
 

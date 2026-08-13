@@ -9,7 +9,6 @@ import { ListQueryInterface, PaginationInterface } from '@shared/internal/interf
 import { ErrorInterface } from '@shared/internal/interfaces/errorInterface';
 import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 
-
 describe('Modules :: App :: User :: UseCases :: GetUserUseCase', () => {
 	// // mocks
 	const exceptionsMock = {
@@ -31,7 +30,7 @@ describe('Modules :: App :: User :: UseCases :: GetUserUseCase', () => {
 		update: jest.fn(async (_id: string, _data: IUpdateUser): Promise<UserEntity> => {
 			throw new Error('GenericError');
 		}),
-		delete: jest.fn(async (_id: string, _data: { softDelete: boolean, agentUserId?: string }): Promise<boolean> => false),
+		delete: jest.fn(async (_id: string, _data: { softDelete: boolean; agentUserId?: string }): Promise<boolean> => false),
 		list: jest.fn(async (_query: ListQueryInterface, _withoutSensibleData = true): Promise<PaginationInterface<UserEntity>> => {
 			return { content: [], pageNumber: 0, pageSize: 0, totalPages: 0, totalItems: 0 };
 		}),
@@ -97,24 +96,24 @@ describe('Modules :: App :: User :: UseCases :: GetUserUseCase', () => {
 
 	describe('# Exceptions', () => {
 		test('Should throw a not found error', async () => {
-			userServiceMock.getById.mockRejectedValueOnce(exceptionsMock.notFound({
-				message: 'User not founded by ID!',
-			}));
+			userServiceMock.getById.mockRejectedValueOnce(
+				exceptionsMock.notFound({
+					message: 'User not founded by ID!',
+				}),
+			);
 
-			await expect(getUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', agentUser))
-				.rejects.toMatchObject(new Error('User not founded by ID!'));
+			await expect(getUserUseCase.execute('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', agentUser)).rejects.toMatchObject(new Error('User not founded by ID!'));
 			expect(userServiceMock.getById).toHaveBeenCalledTimes(1);
 			expect(userPreferenceServiceMock.getByUserId).toHaveBeenCalled();
 			expect(exceptionsMock.notFound).toHaveBeenCalledWith({
-				message: 'User not founded by ID!'
+				message: 'User not founded by ID!',
 			});
 		});
 
 		test('Should throw a unauthorized error', async () => {
-			await expect(getUserUseCase.execute(''))
-				.rejects.toMatchObject(new Error('Invalid agentUser'));
+			await expect(getUserUseCase.execute('')).rejects.toMatchObject(new Error('Invalid agentUser'));
 			expect(exceptionsMock.unauthorized).toHaveBeenCalledWith({
-				message: 'Invalid agentUser'
+				message: 'Invalid agentUser',
 			});
 		});
 	});

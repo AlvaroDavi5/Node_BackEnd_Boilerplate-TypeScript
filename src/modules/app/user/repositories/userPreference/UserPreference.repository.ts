@@ -9,7 +9,6 @@ import UserPreferenceEntity from '@domain/entities/UserPreference.entity';
 import userPreferenceMapper from './userPreference.mapper';
 import { userPreferenceQueryParamsBuilder, UserPreferenceBuildParamsInterface } from './userPreference.query';
 
-
 @Injectable()
 export default class UserPreferenceRepository extends AbstractRepository<UserPreferencesModel, UserPreferenceEntity, UserPreferenceBuildParamsInterface> {
 	constructor(

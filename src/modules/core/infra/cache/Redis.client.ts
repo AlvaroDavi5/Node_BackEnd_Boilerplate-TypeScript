@@ -5,7 +5,6 @@ import { ConfigsInterface } from '@core/configs/envs.config';
 import Exceptions from '@core/errors/Exceptions';
 import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 
-
 @Injectable()
 export default class RedisClient {
 	private readonly redisClient: IORedis;
@@ -68,7 +67,7 @@ export default class RedisClient {
 		const disconnectedStatus = ['wait', 'close', 'end'];
 
 		try {
-			return await this.redisClient.quit() === 'OK' && disconnectedStatus.includes(this.redisClient.status);
+			return (await this.redisClient.quit()) === 'OK' && disconnectedStatus.includes(this.redisClient.status);
 		} catch (_error) {
 			return false;
 		}
@@ -77,8 +76,7 @@ export default class RedisClient {
 	public async listKeys(): Promise<string[]> {
 		const result = await this.redisClient.keys('*');
 
-		if (!result)
-			return [];
+		if (!result) return [];
 
 		return result;
 	}
@@ -87,7 +85,7 @@ export default class RedisClient {
 		const value = await this.redisClient.get(String(key));
 		const result = value ? this.parseValue(value) : null;
 
-		return result as (VT | null);
+		return result as VT | null;
 	}
 
 	/**
@@ -103,25 +101,27 @@ export default class RedisClient {
 		return result;
 	}
 
-	public async getByKeyPattern<VT = unknown>(pattern: string): Promise<{
-		key: string,
-		value: VT | null,
-	}[]> {
+	public async getByKeyPattern<VT = unknown>(
+		pattern: string,
+	): Promise<
+		{
+			key: string;
+			value: VT | null;
+		}[]
+	> {
 		const keys = await this.redisClient.keys(pattern);
-		const getByKeyPromises = keys.map(
-			async (key: string) => {
-				const value = this.parseValue<VT>(String(await this.redisClient.get(key)));
+		const getByKeyPromises = keys.map(async (key: string) => {
+			const value = this.parseValue<VT>(String(await this.redisClient.get(key)));
 
-				return {
-					key,
-					value,
-				};
-			}
-		);
+			return {
+				key,
+				value,
+			};
+		});
 		const result = await Promise.allSettled(getByKeyPromises);
 
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
-		return result.map(({ status: _, ...args }) => ({ ...(args as any)?.value ?? {} }));
+		// oxlint-disable-next-line typescript/no-explicit-any
+		return result.map(({ status: _, ...args }) => ({ ...((args as any)?.value ?? {}) }));
 	}
 
 	public async getValuesByKeyPattern<VT = unknown>(key: string): Promise<(VT | null)[]> {
@@ -151,7 +151,7 @@ export default class RedisClient {
 
 	public async remove(keyPattern: string): Promise<void> {
 		const scanValue = `${keyPattern}:*`;
-		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		// oxlint-disable-next-line typescript/no-explicit-any
 		const stream = this.redisClient.scanStream(scanValue as any);
 
 		stream.on('data', (keys: string[]) => {

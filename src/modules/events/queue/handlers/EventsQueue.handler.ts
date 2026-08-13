@@ -15,7 +15,6 @@ import DataParserHelper from '@common/utils/helpers/DataParser.helper';
 import SchemaValidator from '@common/utils/validators/SchemaValidator.validator';
 import eventPayloadSchema, { EventPayloadInterface } from './schemas/eventPayload.schema';
 
-
 @Injectable()
 export default class EventsQueueHandler implements OnModuleInit {
 	private subscriptionService!: SubscriptionService;
@@ -53,7 +52,6 @@ export default class EventsQueueHandler implements OnModuleInit {
 
 		try {
 			return this.dataParserHelper.toObject(message.Body);
-
 		} catch (error) {
 			throw this.exceptions.internal({
 				message: 'Invalid message parsing',
@@ -77,7 +75,8 @@ export default class EventsQueueHandler implements OnModuleInit {
 			this.logger.error(error);
 
 			const unprocessedMessagesCollection = this.mongoClient.getCollection(datalake.db, datalake.collections.unprocessedMessages);
-			const saved = await this.mongoClient.insertOne(unprocessedMessagesCollection, message)
+			const saved = await this.mongoClient
+				.insertOne(unprocessedMessagesCollection, message)
 				.then(() => {
 					return true;
 				})
@@ -101,12 +100,10 @@ export default class EventsQueueHandler implements OnModuleInit {
 				this.subscriptionService.emit(value, WebSocketRoomsEnum.NEW_CONNECTIONS);
 				break;
 			case QueueSchemasEnum.DISABLE_ALL_ROUTES:
-				if (this.validatedBeforeEmitEvent(value))
-					this.eventEmitterClient.send(EmitterEventsEnum.DISABLE_ALL_ROUTES, value?.payload?.disable);
+				if (this.validatedBeforeEmitEvent(value)) this.eventEmitterClient.send(EmitterEventsEnum.DISABLE_ALL_ROUTES, value?.payload?.disable);
 				break;
 			case QueueSchemasEnum.DISABLE_LOGIN:
-				if (this.validatedBeforeEmitEvent(value))
-					this.eventEmitterClient.send(EmitterEventsEnum.DISABLE_LOGIN, value?.payload?.disable);
+				if (this.validatedBeforeEmitEvent(value)) this.eventEmitterClient.send(EmitterEventsEnum.DISABLE_LOGIN, value?.payload?.disable);
 				break;
 			default:
 				this.logger.warn('Unhandled event:', value);

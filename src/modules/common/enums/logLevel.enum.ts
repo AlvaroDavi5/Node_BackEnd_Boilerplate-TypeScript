@@ -1,4 +1,3 @@
-
 export enum LogLevelEnum {
 	// NOTE - ordered by level priority
 	ERROR = 'error',

@@ -8,7 +8,6 @@ import UserPreferenceService from '@app/user/services/UserPreference.service';
 import { delay } from '@common/utils/promises.util';
 import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 
-
 @Injectable()
 export default class LoginUserUseCase {
 	private readonly MIN_DELAY_MS = 150;
@@ -20,9 +19,9 @@ export default class LoginUserUseCase {
 		private readonly cryptographyService: CryptographyService,
 		private readonly exceptions: Exceptions,
 		private readonly logger: LoggerService,
-	) { }
+	) {}
 
-	public async execute(data: { email: string, password: string }): Promise<{ user: UserEntity, token: string }> {
+	public async execute(data: { email: string; password: string }): Promise<{ user: UserEntity; token: string }> {
 		const userWithoutPassword = false;
 
 		try {
@@ -42,15 +41,16 @@ export default class LoginUserUseCase {
 
 			const elapsedMs = Date.now() - startTime;
 			const hasRemainingDelay = elapsedMs < this.MIN_DELAY_MS;
-			if (hasRemainingDelay)
-				await delay(this.MIN_DELAY_MS - elapsedMs);
+			if (hasRemainingDelay) await delay(this.MIN_DELAY_MS - elapsedMs);
 
 			this.userService.validatePassword(user.getPassword(), data.password);
 			user.setPassword('');
 
-			const preference = await this.userPreferenceService.getByUserId(foundedUser.getId()).catch(() => null).catch(() => null);
-			if (preference)
-				user.setPreference(preference);
+			const preference = await this.userPreferenceService
+				.getByUserId(foundedUser.getId())
+				.catch(() => null)
+				.catch(() => null);
+			if (preference) user.setPreference(preference);
 
 			const userAuthToEncode: UserAuthInterface = {
 				clientId: user.getId(),

@@ -7,23 +7,22 @@ import AbstractEntity from '@common/classes/AbstractEntity.entity';
 import { isNullOrUndefined } from '@common/utils/dataValidations.util';
 import { returingString, returingBoolean, returingDate } from '@shared/internal/types/returnTypeFunc';
 
-
 const dateTimeExample = fromISOToDateTime('2024-06-10T03:52:50.885Z', false, TimeZonesEnum.America_SaoPaulo);
 const dateExample = fromDateTimeToJSDate(dateTimeExample, false);
 const getDateNow = () => fromDateTimeToJSDate(getDateTimeNow(TimeZonesEnum.America_SaoPaulo));
 
 interface SubscriptionInterface {
-	id?: string,
-	subscriptionId?: string,
+	id?: string;
+	subscriptionId?: string;
 	dataValues: {
-		clientId?: string,
-		[key: string]: unknown,
-		readonly createdAt: Date,
-		updatedAt?: Date,
-	},
+		clientId?: string;
+		[key: string]: unknown;
+		readonly createdAt: Date;
+		updatedAt?: Date;
+	};
 	listen: {
-		newConnections: boolean,
-	},
+		newConnections: boolean;
+	};
 }
 
 export type ICreateSubscription = Omit<SubscriptionInterface, 'id' | 'subscriptionId'>;
@@ -37,7 +36,9 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 	@ApiProperty({
 		type: String,
 		example: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
-		default: '', nullable: false, required: false,
+		default: '',
+		nullable: false,
+		required: false,
 		description: 'Database register ID',
 	})
 	@Field(returingString, { defaultValue: '', nullable: false, description: 'Database register ID' })
@@ -70,7 +71,7 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 	@IsBoolean()
 	public newConnectionsListen = false;
 
-	// eslint-disable-next-line complexity
+	// oxlint-disable-next-line complexity
 	constructor(dataValues: Partial<IViewSubscription & Record<string, unknown>> = {}) {
 		super();
 
@@ -111,24 +112,21 @@ export default class SubscriptionEntity extends AbstractEntity<SubscriptionInter
 		return this.databaseId;
 	}
 	public setDatabaseId(id: string): void {
-		if (id.length > 0)
-			this.databaseId = id;
+		if (id.length > 0) this.databaseId = id;
 	}
 
 	public getSubscriptionId(): string {
 		return this.subscriptionId;
 	}
 	public setSubscriptionId(subscriptionId: string): void {
-		if (subscriptionId.length > 0)
-			this.subscriptionId = subscriptionId;
+		if (subscriptionId.length > 0) this.subscriptionId = subscriptionId;
 	}
 
 	public getClientId(): string | null {
 		return this.clientId;
 	}
 	public setClientId(clientId: string): void {
-		if (clientId.length > 0)
-			this.clientId = clientId;
+		if (clientId.length > 0) this.clientId = clientId;
 	}
 
 	public listenNewConnections(): void {

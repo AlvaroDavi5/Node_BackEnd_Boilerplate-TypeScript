@@ -1,4 +1,3 @@
-
 export enum HttpStatusEnum {
 	// Informationals
 	CONTINUE = 100,

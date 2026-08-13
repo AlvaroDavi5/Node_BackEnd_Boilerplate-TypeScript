@@ -1,9 +1,20 @@
 import {
 	OnModuleInit,
-	Controller, Req, Res, ParseUUIDPipe,
-	Param, Query, Body,
-	Get, Post, Put, Patch, Delete,
-	UseGuards, UseFilters, UseInterceptors,
+	Controller,
+	Req,
+	Res,
+	ParseUUIDPipe,
+	Param,
+	Query,
+	Body,
+	Get,
+	Post,
+	Put,
+	Patch,
+	Delete,
+	UseGuards,
+	UseFilters,
+	UseInterceptors,
 } from '@nestjs/common';
 import { ApiOperation, ApiTags, ApiParam, ApiProduces, ApiConsumes, ApiOkResponse, ApiCreatedResponse, ApiNoContentResponse } from '@nestjs/swagger';
 import { ModuleRef } from '@nestjs/core';
@@ -38,7 +49,6 @@ import CreateUserInputDto from '../dto/user/CreateUserInput.dto';
 import UpdateUserInputDto from '../dto/user/UpdateUserInput.dto';
 import LoginUserInputDto from '../dto/user/LoginUserInput.dto';
 
-
 @ApiTags('Users')
 @Controller('/users')
 @UseGuards(CustomThrottlerGuard)
@@ -65,8 +75,7 @@ export default class UserController implements OnModuleInit {
 		const eventEmitterClient = this.moduleRef.get(EventEmitterClient, { strict: false });
 
 		eventEmitterClient.listen(EmitterEventsEnum.DISABLE_LOGIN, (disabled: unknown) => {
-			if (typeof disabled === 'boolean')
-				this.loginDisabled = disabled;
+			if (typeof disabled === 'boolean') this.loginDisabled = disabled;
 		});
 	}
 
@@ -86,9 +95,7 @@ export default class UserController implements OnModuleInit {
 	})
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
-	public async listUsers(
-		@Query(ListQueryValidatorPipe) query: ListQueryInputDto,
-	): Promise<PaginationInterface<IViewUser>> {
+	public async listUsers(@Query(ListQueryValidatorPipe) query: ListQueryInputDto): Promise<PaginationInterface<IViewUser>> {
 		const { content, ...listInfo } = await this.listUsersUseCase.execute(query);
 		const mappedContent = content.map((entity) => entity.getAttributes());
 
@@ -109,10 +116,7 @@ export default class UserController implements OnModuleInit {
 	@ApiCreatedResponse({ type: UserEntity })
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
-	public async createUser(
-		@Req() request: RequestInterface,
-		@Body(CreateUserValidatorPipe) body: CreateUserInputDto,
-	): Promise<IViewUser> {
+	public async createUser(@Req() request: RequestInterface, @Body(CreateUserValidatorPipe) body: CreateUserInputDto): Promise<IViewUser> {
 		const { user } = request;
 
 		const result = await this.createUserUseCase.execute(body, user);
@@ -134,16 +138,13 @@ export default class UserController implements OnModuleInit {
 				token: 'XXX',
 				...new UserEntity({}).getAttributes(),
 			},
-		}
+		},
 	})
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
-	public async loginUser(
-		@Body(LoginUserValidatorPipe) body: LoginUserInputDto,
-	): Promise<IViewUser & { token: string }> {
+	public async loginUser(@Body(LoginUserValidatorPipe) body: LoginUserInputDto): Promise<IViewUser & { token: string }> {
 		// NOTE - gracefull degradation
-		if (this.loginDisabled)
-			this.throwMaintenanceException();
+		if (this.loginDisabled) this.throwMaintenanceException();
 
 		const { user, token } = await this.loginUserUseCase.execute(body);
 
@@ -162,10 +163,7 @@ export default class UserController implements OnModuleInit {
 	@ApiOkResponse({ type: UserEntity })
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
-	public async getUser(
-		@Req() request: RequestInterface,
-		@Param('userId', ParseUUIDPipe) userId: string,
-	): Promise<IViewUser> {
+	public async getUser(@Req() request: RequestInterface, @Param('userId', ParseUUIDPipe) userId: string): Promise<IViewUser> {
 		const { user } = request;
 
 		const result = await this.getUserUseCase.execute(userId, user);
@@ -209,11 +207,7 @@ export default class UserController implements OnModuleInit {
 	@ApiNoContentResponse({})
 	@ApiConsumes('application/json')
 	@ApiProduces('application/json')
-	public async deleteUser(
-		@Req() request: RequestInterface,
-		@Res() response: ResponseInterface,
-		@Param('userId', ParseUUIDPipe) userId: string,
-	): Promise<void> {
+	public async deleteUser(@Req() request: RequestInterface, @Res() response: ResponseInterface, @Param('userId', ParseUUIDPipe) userId: string): Promise<void> {
 		const { user } = request;
 
 		await this.deleteUserUseCase.execute(userId, user);

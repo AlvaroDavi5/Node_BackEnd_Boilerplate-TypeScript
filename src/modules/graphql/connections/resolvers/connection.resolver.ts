@@ -4,12 +4,9 @@ import ConnectionsService from '../services/Connection.service';
 import CreateConnectionInputDto from '../dto/CreateConnectionInput.dto';
 import UpdateConnectionInputDto from '../dto/UpdateConnectionInput.dto';
 
-
 @Resolver(() => SubscriptionEntity)
 export default class ConnectionResolver {
-	constructor(
-		private readonly connectionsService: ConnectionsService,
-	) { }
+	constructor(private readonly connectionsService: ConnectionsService) {}
 
 	@Mutation(() => SubscriptionEntity)
 	public async createConnection(@Args('createConnectionInput') createConnectionInputDto: CreateConnectionInputDto): Promise<SubscriptionEntity> {

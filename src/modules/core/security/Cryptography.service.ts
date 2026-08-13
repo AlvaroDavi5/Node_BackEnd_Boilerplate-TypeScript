@@ -7,17 +7,14 @@ import { v4 as uuidV4 } from 'uuid';
 import { ConfigsInterface } from '@core/configs/envs.config';
 import { jwtExpirationType, jwtEncode, jwtDecode } from '@shared/internal/types/jwtParamsTypes';
 
-
-type hashAlgorithmType = 'md5' | 'sha256' | 'sha512'
+type hashAlgorithmType = 'md5' | 'sha256' | 'sha512';
 type rsaAlgorithmType = 'RSA-SHA256';
 
 @Injectable()
 export default class CryptographyService {
 	private readonly secret: string;
 
-	constructor(
-		private readonly configService: ConfigService,
-	) {
+	constructor(private readonly configService: ConfigService) {
 		const { secretKey } = this.configService.get<ConfigsInterface['security']>('security')!;
 		this.secret = secretKey;
 	}
@@ -61,7 +58,7 @@ export default class CryptographyService {
 		inputEncoding: BufferEncoding,
 		outputFormat: crypto.BinaryToTextEncoding,
 		data: string,
-		salt?: string
+		salt?: string,
 	): string | null {
 		const toHash = data + this.secret + (salt ?? '');
 		return this.hashing(toHash, inputEncoding, algorithm, outputFormat);
@@ -75,9 +72,12 @@ export default class CryptographyService {
 		});
 	}
 
-	public decodeJwt<CT extends object = object>(token: string): {
-		content: jwtDecode<CT> | null,
-		invalidSignature: boolean, expired: boolean,
+	public decodeJwt<CT extends object = object>(
+		token: string,
+	): {
+		content: jwtDecode<CT> | null;
+		invalidSignature: boolean;
+		expired: boolean;
 	} {
 		try {
 			const decoded = verify(token, this.secret, {
@@ -95,8 +95,7 @@ export default class CryptographyService {
 			let expired = false;
 			let invalidSignature = false;
 
-			if (error instanceof TokenExpiredError)
-				expired = true;
+			if (error instanceof TokenExpiredError) expired = true;
 			if (!expired && error instanceof JsonWebTokenError) {
 				invalidSignature = error.message === 'invalid signature';
 				expired = error.message === 'jwt expired';
@@ -125,9 +124,12 @@ export default class CryptographyService {
 	}
 
 	public contentRSASign(
-		data: string, inputEncoding: BufferEncoding,
-		privateKeyContent: string, algorithm: rsaAlgorithmType,
-		outputFormat: crypto.BinaryToTextEncoding): string | null {
+		data: string,
+		inputEncoding: BufferEncoding,
+		privateKeyContent: string,
+		algorithm: rsaAlgorithmType,
+		outputFormat: crypto.BinaryToTextEncoding,
+	): string | null {
 		try {
 			const rsaSign = crypto.createSign(algorithm);
 			rsaSign.update(data, inputEncoding);
@@ -138,8 +140,12 @@ export default class CryptographyService {
 	}
 
 	public symmetricAESEncrypt(
-		data: string, inputEncoding: BufferEncoding, keyContent: string,
-		outputEncoding: BufferEncoding, iv?: string): { encrypted: string | null, iv: string } {
+		data: string,
+		inputEncoding: BufferEncoding,
+		keyContent: string,
+		outputEncoding: BufferEncoding,
+		iv?: string,
+	): { encrypted: string | null; iv: string } {
 		const IV = iv ?? crypto.randomBytes(12).toString('hex');
 
 		try {
@@ -154,9 +160,12 @@ export default class CryptographyService {
 	}
 
 	public symmetricAESDecrypt(
-		data: string, inputEncoding: BufferEncoding,
-		keyContent: string, iv: string,
-		outputEncoding: BufferEncoding): { decrypted: string | null, iv: string } {
+		data: string,
+		inputEncoding: BufferEncoding,
+		keyContent: string,
+		iv: string,
+		outputEncoding: BufferEncoding,
+	): { decrypted: string | null; iv: string } {
 		try {
 			const decipher = crypto.createCipheriv('aes-256-gcm', Buffer.from(keyContent, 'hex'), Buffer.from(iv, 'hex'));
 			const hexDecrypted = decipher.update(data, inputEncoding, 'hex') + decipher.final('hex');
@@ -169,9 +178,12 @@ export default class CryptographyService {
 	}
 
 	public asymmetricRSAEncrypt(
-		data: string, inputEncoding: BufferEncoding,
-		keyType: 'public' | 'private', keyContent: string,
-		outputEncoding: BufferEncoding): string | null {
+		data: string,
+		inputEncoding: BufferEncoding,
+		keyType: 'public' | 'private',
+		keyContent: string,
+		outputEncoding: BufferEncoding,
+	): string | null {
 		try {
 			const dataBuffer = Buffer.from(data, inputEncoding);
 			const key: crypto.RsaPrivateKey | crypto.RsaPublicKey = {
@@ -187,9 +199,12 @@ export default class CryptographyService {
 	}
 
 	public asymmetricRSADecrypt(
-		data: string, inputEncoding: BufferEncoding,
-		keyType: 'public' | 'private', keyContent: string,
-		outputEncoding: BufferEncoding): string | null {
+		data: string,
+		inputEncoding: BufferEncoding,
+		keyType: 'public' | 'private',
+		keyContent: string,
+		outputEncoding: BufferEncoding,
+	): string | null {
 		try {
 			const dataBuffer = Buffer.from(data, inputEncoding);
 			const key: crypto.RsaPrivateKey | crypto.RsaPublicKey = {

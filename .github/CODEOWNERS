@@ -52,9 +52,8 @@ jest.*                                @AlvaroDavi5
 /.husky/*                             @AlvaroDavi5
 lefthook.yml                          @AlvaroDavi5
 .gitignore                            @AlvaroDavi5
-.eslintignore                         @AlvaroDavi5
-.eslintrc.json                        @AlvaroDavi5
-.prettierrc                           @AlvaroDavi5
+.oxlintrc.json                        @AlvaroDavi5
+.oxfmtrc.json                         @AlvaroDavi5
 .editorconfig                         @AlvaroDavi5
 commitlint.config.js                  @AlvaroDavi5
 nodemon*                              @AlvaroDavi5

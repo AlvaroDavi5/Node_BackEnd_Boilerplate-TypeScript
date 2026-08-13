@@ -1,7 +1,6 @@
 import { DateTime, DateObjectUnits } from 'luxon';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 
-
 // SECTION - date parse
 
 // STUB - JS Date
@@ -9,27 +8,20 @@ export function fromJSDateToDateTime(jsDate: Date, timeZone: TimeZonesEnum): Dat
 	return DateTime.fromJSDate(jsDate, { zone: timeZone });
 }
 export function fromDateTimeToJSDate(dateTime: DateTime, utc = false): Date {
-	if (utc)
-		return dateTime.toUTC().toJSDate();
+	if (utc) return dateTime.toUTC().toJSDate();
 	return dateTime.toJSDate();
 }
 
 // STUB - Unix Epoch
 export function fromEpochToDateTime(epoch: number, format: 'milliseconds' | 'seconds', timeZone: TimeZonesEnum): DateTime {
-	if (format === 'milliseconds')
-		return DateTime.fromMillis(epoch, { zone: timeZone });
-	else
-		return DateTime.fromSeconds(epoch, { zone: timeZone });
+	if (format === 'milliseconds') return DateTime.fromMillis(epoch, { zone: timeZone });
+	else return DateTime.fromSeconds(epoch, { zone: timeZone });
 }
 export function fromDateTimeToEpoch(dateTime: DateTime, format: 'milliseconds' | 'seconds', utc = false): number {
-	const epochDateTime = utc
-		? dateTime.toUTC()
-		: dateTime;
+	const epochDateTime = utc ? dateTime.toUTC() : dateTime;
 
-	if (format === 'milliseconds')
-		return epochDateTime.toMillis();
-	else
-		return epochDateTime.toSeconds();
+	if (format === 'milliseconds') return epochDateTime.toMillis();
+	else return epochDateTime.toSeconds();
 }
 
 // STUB - ISO Date
@@ -37,8 +29,7 @@ export function fromISOToDateTime(isoString: string, useStrZone: boolean, timeZo
 	return DateTime.fromISO(isoString, { setZone: useStrZone, zone: timeZone });
 }
 export function fromDateTimeToISO(dateTime: DateTime, utc = false): string {
-	if (utc)
-		return dateTime.toUTC().toISO() ?? '';
+	if (utc) return dateTime.toUTC().toISO() ?? '';
 	return dateTime.toISO() ?? '';
 }
 // !SECTION

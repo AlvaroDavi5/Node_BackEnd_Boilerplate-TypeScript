@@ -2,7 +2,6 @@ import { Injectable, Provider, Scope } from '@nestjs/common';
 import { LoggerInterface } from '@core/logging/logger';
 import { mockObservable } from '../mockObservable';
 
-
 type logLevelType = 'error' | 'warn' | 'info' | 'debug' | 'log';
 
 @Injectable({ scope: Scope.TRANSIENT })
@@ -13,14 +12,11 @@ export default class LoggerService implements LoggerInterface {
 		const shouldLog = this.showLogs === true && ['error', 'warn'].includes(level);
 
 		args.forEach((arg: unknown) => {
-			if (mockObservable?.call)
-				mockObservable.call(arg);
-			if (shouldLog)
-				console[String(level) as logLevelType](arg);
+			if (mockObservable?.call) mockObservable.call(arg);
+			if (shouldLog) console[String(level) as logLevelType](arg);
 		});
 	}
 
-	/* eslint-disable @typescript-eslint/no-empty-function */
 	public getContextName(): string {
 		return 'LoggerServiceMock';
 	}
@@ -33,26 +29,25 @@ export default class LoggerService implements LoggerInterface {
 		return 'request_id';
 	}
 
-	public setRequestId(_requestId: string | undefined): void { }
+	public setRequestId(_requestId: string | undefined): void {}
 
 	public getMessageId(): string | undefined {
 		return 'message_id';
 	}
 
-	public setMessageId(_messageId: string | undefined): void { }
+	public setMessageId(_messageId: string | undefined): void {}
 
 	public getSocketId(): string | undefined {
 		return 'socket_id';
 	}
 
-	public setSocketId(_socketId: string | undefined): void { }
+	public setSocketId(_socketId: string | undefined): void {}
 
 	public getClientIp(): string | undefined {
 		return 'client_ip';
 	}
 
-	public setClientIp(_clientIp: string | undefined): void { }
-	/* eslint-enable @typescript-eslint/no-empty-function */
+	public setClientIp(_clientIp: string | undefined): void {}
 
 	public error(...args: unknown[]): void {
 		this.log('error', args);

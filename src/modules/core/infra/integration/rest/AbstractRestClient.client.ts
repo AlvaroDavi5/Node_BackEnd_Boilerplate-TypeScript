@@ -5,26 +5,33 @@ import externalErrorParser from '@common/utils/externalErrorParser.util';
 import { requestMethodType, requestQueryType, requestBodyType } from '@shared/internal/types/restClientTypes';
 import { RestClientResponseInterface } from '@shared/external/interfaces/RestClientInterface';
 
-
 export default abstract class AbstractRestClient {
 	protected readonly logger: LoggerService;
 	protected readonly client: AxiosInstance;
 	protected readonly serviceName: string;
 
 	constructor({
-		serviceName, baseUrl,
-		timeout, maxRetries, maxRedirects,
+		serviceName,
+		baseUrl,
+		timeout,
+		maxRetries,
+		maxRedirects,
 		logger,
 	}: {
-		baseUrl: string, serviceName: string, timeout: number, maxRetries: number, maxRedirects: number,
-		logger: LoggerService,
+		baseUrl: string;
+		serviceName: string;
+		timeout: number;
+		maxRetries: number;
+		maxRedirects: number;
+		logger: LoggerService;
 	}) {
 		this.logger = logger;
 		this.serviceName = serviceName;
 
 		this.client = axios.create({
 			baseURL: baseUrl,
-			timeout, maxRedirects,
+			timeout,
+			maxRedirects,
 			beforeRedirect: (options, responseDetails): void => {
 				this.logger.warn('Request redirected - ', options, responseDetails);
 			},
@@ -59,15 +66,19 @@ export default abstract class AbstractRestClient {
 	}
 
 	protected async makeRequest<RI = unknown>(
-		method: requestMethodType, endpoint: string,
-		query?: requestQueryType, body?: requestBodyType
+		method: requestMethodType,
+		endpoint: string,
+		query?: requestQueryType,
+		body?: requestBodyType,
 	): Promise<RestClientResponseInterface<RI>> {
 		this.logger.http(`REQUESTING - ${this.serviceName}: [${method.toUpperCase()}] '${endpoint}'`);
 
 		try {
 			const { data, status, headers } = await this.client.request<RI>({
-				method, url: endpoint,
-				params: query, data: body,
+				method,
+				url: endpoint,
+				params: query,
+				data: body,
 			});
 
 			this.logger.verbose(`RESPONSE - ${this.serviceName}: [${method.toUpperCase()}] '${endpoint}'`, { data, status, headers });

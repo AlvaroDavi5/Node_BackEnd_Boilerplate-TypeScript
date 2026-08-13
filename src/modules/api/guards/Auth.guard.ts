@@ -6,14 +6,13 @@ import CryptographyService from '@core/security/Cryptography.service';
 import { RequestInterface } from '@shared/internal/interfaces/endpointInterface';
 import { UserAuthInterface } from '@shared/internal/interfaces/userAuthInterface';
 
-
 @Injectable({ scope: Scope.DEFAULT })
 export default class AuthGuard implements CanActivate {
 	constructor(
 		private readonly cryptographyService: CryptographyService,
 		private readonly logger: LoggerService,
 		private readonly exceptions: Exceptions,
-	) { }
+	) {}
 
 	public canActivate(context: ExecutionContext): boolean {
 		const request = context.switchToHttp().getRequest<RequestInterface>();
@@ -21,10 +20,8 @@ export default class AuthGuard implements CanActivate {
 		const requestId = request?.id;
 		const clientIp = request?.ip ?? request?.socket?.remoteAddress;
 
-		if (requestId)
-			this.logger.setRequestId(requestId);
-		if (clientIp)
-			this.logger.setClientIp(clientIp);
+		if (requestId) this.logger.setRequestId(requestId);
+		if (clientIp) this.logger.setClientIp(clientIp);
 
 		this.logger.verbose(`Running guard in '${context.getType()}' context`);
 

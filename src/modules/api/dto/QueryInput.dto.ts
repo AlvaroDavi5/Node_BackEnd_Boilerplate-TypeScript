@@ -2,7 +2,6 @@ import { ApiProperty } from '@nestjs/swagger';
 import { IsOptional, IsString, IsNumberString, IsBooleanString, IsEnum } from 'class-validator';
 import { ListQueryInterface } from '@shared/internal/interfaces/listPaginationInterface';
 
-
 export class ListQueryInputDto implements ListQueryInterface {
 	@ApiProperty({ type: Number, example: 5, default: undefined, nullable: false, required: false, description: 'Results amount by page' })
 	@IsOptional()
@@ -20,9 +19,13 @@ export class ListQueryInputDto implements ListQueryInterface {
 	public order?: 'ASC' | 'DESC';
 
 	@ApiProperty({
-		type: String, enum: ['createdAt', 'updatedAt', 'deletedAt'], example: 'createdAt',
-		default: undefined, nullable: false, required: false,
-		description: 'Sort by attribute'
+		type: String,
+		enum: ['createdAt', 'updatedAt', 'deletedAt'],
+		example: 'createdAt',
+		default: undefined,
+		nullable: false,
+		required: false,
+		description: 'Sort by attribute',
 	})
 	@IsOptional()
 	@IsEnum(['createdAt', 'updatedAt', 'deletedAt'])

@@ -1,6 +1,5 @@
 import Exceptions from '@core/errors/Exceptions';
 
-
 describe('Infra :: Errors :: Exceptions', () => {
 	const exceptions = new Exceptions();
 
@@ -206,7 +205,6 @@ describe('Infra :: Errors :: Exceptions', () => {
 
 	describe('# Parsing', () => {
 		test('Should return a Internal exception', () => {
-			// eslint-disable-next-line dot-notation
 			const parser = exceptions['parseToString'];
 
 			const obj = {

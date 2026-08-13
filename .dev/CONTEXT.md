@@ -10,18 +10,18 @@ Full reference: [`docs/system-overview.md`](../docs/system-overview.md)
 
 ### Main Technologies
 
-|        Technology        | Role                                                            |
+| Technology               | Role                                                            |
 | ------------------------ | --------------------------------------------------------------- |
 | **TypeScript / Node.js** | Runtime and language                                            |
-|        **NestJS**        | Back-end framework                                              |
-|        **Fastify**       | HTTP server adapter                                             |
-|        **Socket.io**     | WebSocket library                                               |
-|          **Joi**         | Schema validation                                               |
-|        **AWS SDK**       | SQS (queues), SNS (notifications), S3 (storage), Cognito (auth) |
-|        **TypeORM**       | ORM — PostgreSQL and MongoDB                                    |
-|        **PostgreSQL**    | Relational (SQL) database                                       |
-|         **MongoDB**      | Document-oriented NoSQL database                                |
-|         **Redis**        | Cache / in-memory key-value store                               |
+| **NestJS**               | Back-end framework                                              |
+| **Fastify**              | HTTP server adapter                                             |
+| **Socket.io**            | WebSocket library                                               |
+| **Joi**                  | Schema validation                                               |
+| **AWS SDK**              | SQS (queues), SNS (notifications), S3 (storage), Cognito (auth) |
+| **TypeORM**              | ORM — PostgreSQL and MongoDB                                    |
+| **PostgreSQL**           | Relational (SQL) database                                       |
+| **MongoDB**              | Document-oriented NoSQL database                                |
+| **Redis**                | Cache / in-memory key-value store                               |
 
 ## Execution
 
@@ -42,7 +42,7 @@ npm run start:dev
 ### Useful Scripts
 
 | Script                      | Purpose                                       |
-|-----------------------------|-----------------------------------------------|
+| --------------------------- | --------------------------------------------- |
 | `npm run start:dev`         | Start in development mode (watch)             |
 | `npm run db:migration-run`  | Run TypeORM migrations                        |
 | `npm run db:seed`           | Seed database with initial data               |
@@ -78,13 +78,13 @@ The application exposes a GraphQL endpoint at `/graphql`. Use `@Resolver()`, `@Q
 
 ```graphql
 query {
-  listConnections {
-    databaseId
-    subscriptionId
-    clientId
-    createdAt
-    newConnectionsListen
-  }
+	listConnections {
+		databaseId
+		subscriptionId
+		clientId
+		createdAt
+		newConnectionsListen
+	}
 }
 ```
 
@@ -92,17 +92,13 @@ query {
 
 ```graphql
 mutation {
-  createConnection(createConnectionInput: {
-    subscriptionId: "xSFPA_XAuTtAB"
-    clientId: "Alvaro#5"
-    newConnectionsListen: true
-  }) {
-    databaseId
-    subscriptionId
-    clientId
-    newConnectionsListen
-    createdAt
-  }
+	createConnection(createConnectionInput: { subscriptionId: "xSFPA_XAuTtAB", clientId: "Alvaro#5", newConnectionsListen: true }) {
+		databaseId
+		subscriptionId
+		clientId
+		newConnectionsListen
+		createdAt
+	}
 }
 ```
 
@@ -114,14 +110,14 @@ Use NestJS `@Resolver()`, `@Query()`, `@Mutation()`, and `@Args()` decorators fr
 
 The `infra/` directory contains all deployment and observability configuration:
 
-| Path                         | Purpose                                                        |
-|------------------------------|----------------------------------------------------------------|
-| `infra/docker/`              | Dockerfiles for production and development builds              |
-| `infra/kubernetes/`          | Kubernetes manifests — namespace, deployment, service, secrets |
-| `infra/backstage/`           | BackStage catalog and API definition files                     |
-| `infra/grafana.properties`   | Grafana datasource and dashboard configuration                 |
-| `infra/loki-config.yaml`     | Loki log aggregation configuration                             |
-| `infra/promtail-config.yaml` | Promtail log scraping configuration (feeds Loki)               |
+| Path                                 | Purpose                                                        |
+| ------------------------------------ | -------------------------------------------------------------- |
+| `infra/docker/`                      | Dockerfiles for production and development builds              |
+| `infra/kubernetes/`                  | Kubernetes manifests — namespace, deployment, service, secrets |
+| `infra/backstage/`                   | BackStage catalog and API definition files                     |
+| `infra/grafana/grafana.properties`   | Grafana datasource and dashboard configuration                 |
+| `infra/grafana/loki-config.yaml`     | Loki log aggregation configuration                             |
+| `infra/grafana/promtail-config.yaml` | Promtail log scraping configuration (feeds Loki)               |
 
 ### Docker
 
@@ -132,6 +128,7 @@ The `infra/` directory contains all deployment and observability configuration:
 ### Kubernetes
 
 Manifests under `infra/kubernetes/`:
+
 - `cluster/` — Kind cluster config for local development.
 - `namespaces/` — `boilerplate-namespace`.
 - `deployments/` — main application deployment.
@@ -142,5 +139,5 @@ Manifests under `infra/kubernetes/`:
 
 - **Grafana** (`localhost:9002`) reads metrics and logs. Config at `infra/grafana.properties`.
 - **Loki** aggregates logs from the application container.
-- **Promtail** scrapes container stdout/stderr and ships to Loki. Config at `infra/promtail-config.yaml`.
+- **Promtail** scrapes container stdout/stderr and ships to Loki.
 - **Sentry** captures runtime errors and traces (configured via `SENTRY_DSN` env var).

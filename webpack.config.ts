@@ -1,4 +1,3 @@
-/* eslint-disable import/no-extraneous-dependencies */
 import { join } from 'path';
 import webpack from 'webpack';
 import nodeExternals from 'webpack-node-externals';
@@ -30,9 +29,7 @@ const config: webpack.Configuration = {
 			allowlist: ['webpack/hot/poll?1000'],
 		}),
 	],
-	plugins: [
-		new webpack.HotModuleReplacementPlugin(),
-	],
+	plugins: [new webpack.HotModuleReplacementPlugin()],
 };
 
 export default config;

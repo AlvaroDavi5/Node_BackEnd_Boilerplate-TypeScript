@@ -4,13 +4,6 @@
 	"compilerOptions": {
 		"isolatedModules": true
 	},
-	"include": [
-		"src/**/*.ts",
-		"tests/**/*.ts"
-	],
-	"exclude": [
-		"node_modules",
-		"build",
-		"scripts"
-	]
+	"include": ["src/**/*.ts", "tests/**/*.ts"],
+	"exclude": ["node_modules", "build", "scripts"]
 }

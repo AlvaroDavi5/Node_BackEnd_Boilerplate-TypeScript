@@ -8,7 +8,6 @@ import UserPreferenceService from '@app/user/services/UserPreference.service';
 import UserPreferenceRepository from '@app/user/repositories/userPreference/UserPreference.repository';
 import { configServiceMock } from '@dev/mocks/mockedModules';
 
-
 describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 	let nestTestingModule: TestingModule;
 	let userPreferenceService: UserPreferenceService;
@@ -47,29 +46,36 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 
 	describe('# Create User Preference', () => {
 		test('Should create a user preference successfully', async () => {
-			userPreferenceRepositoryMock.create.mockResolvedValueOnce(new UserPreferenceEntity({
-				userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
-				defaultTheme: 'DARK',
-			} as any));
+			userPreferenceRepositoryMock.create.mockResolvedValueOnce(
+				new UserPreferenceEntity({
+					userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+					defaultTheme: 'DARK',
+				} as any),
+			);
 
-			const createdUserPreference = await userPreferenceService.create(new UserPreferenceEntity({
-				userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
-				defaultTheme: 'DARK',
-			} as any));
+			const createdUserPreference = await userPreferenceService.create(
+				new UserPreferenceEntity({
+					userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+					defaultTheme: 'DARK',
+				} as any),
+			);
 			expect(userPreferenceRepositoryMock.create).toHaveBeenCalledTimes(1);
 			expect(createdUserPreference?.getUserId()).toBe('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d');
 			expect(createdUserPreference?.getDefaultTheme()).toBe('DARK');
 		});
 
 		test('Should not create a user preference', async () => {
-			await expect(userPreferenceService.create(new UserPreferenceEntity({
-				userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
-				defaultTheme: 'DARK',
-			} as any)))
-				.rejects.toMatchObject({
-					name: 'internal',
-					message: 'Error to comunicate with database',
-				});
+			await expect(
+				userPreferenceService.create(
+					new UserPreferenceEntity({
+						userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+						defaultTheme: 'DARK',
+					} as any),
+				),
+			).rejects.toMatchObject({
+				name: 'internal',
+				message: 'Error to comunicate with database',
+			});
 			expect(userPreferenceRepositoryMock.create).toHaveBeenCalledTimes(1);
 		});
 	});
@@ -77,7 +83,8 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 	describe('# Get User Preference', () => {
 		test('Should find a user preference successfully', async () => {
 			const userPreferenceEntity = new UserPreferenceEntity({
-				id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+				id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+				userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
 			});
 			userPreferenceRepositoryMock.findOne.mockResolvedValueOnce(userPreferenceEntity);
 
@@ -87,11 +94,10 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 		});
 
 		test('Should not find a user preference', async () => {
-			await expect(userPreferenceService.getByUserId('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d'))
-				.rejects.toMatchObject({
-					name: 'internal',
-					message: 'Error to comunicate with database',
-				});
+			await expect(userPreferenceService.getByUserId('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d')).rejects.toMatchObject({
+				name: 'internal',
+				message: 'Error to comunicate with database',
+			});
 			expect(userPreferenceRepositoryMock.findOne).toHaveBeenCalledTimes(1);
 		});
 	});
@@ -99,30 +105,40 @@ describe('Modules :: App :: User :: Services :: UserPreferenceService', () => {
 	describe('# Update User Preference', () => {
 		test('Should update a user preference successfully', async () => {
 			const userPreferenceEntity = new UserPreferenceEntity({
-				id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', defaultTheme: 'DEFAULT',
+				id: 'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+				userId: 'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+				defaultTheme: 'DEFAULT',
 			} as any);
 			userPreferenceRepositoryMock.update.mockImplementationOnce(
 				async (_id: string, dataValues: Partial<UserPreferencesModel>): Promise<UserPreferenceEntity | null> => {
 					if (dataValues?.defaultTheme) userPreferenceEntity.setDefaultTheme(dataValues.defaultTheme);
 					if (dataValues?.imagePath) userPreferenceEntity.setImagePath(dataValues.imagePath);
 					return userPreferenceEntity;
-				});
+				},
+			);
 
-			const updatedUserPreference = await userPreferenceService.update('b5483856-1bf7-4dae-9c21-d7ea4dd30d1d', new UserPreferenceEntity({
-				defaultTheme: 'DARK',
-			}).getAttributes());
+			const updatedUserPreference = await userPreferenceService.update(
+				'b5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+				new UserPreferenceEntity({
+					defaultTheme: 'DARK',
+				}).getAttributes(),
+			);
 			expect(userPreferenceRepositoryMock.update).toHaveBeenCalledTimes(1);
 			expect(updatedUserPreference?.getDefaultTheme()).toBe('DARK');
 		});
 
 		test('Should not update a user preference', async () => {
-			await expect(userPreferenceService.update('a5483856-1bf7-4dae-9c21-d7ea4dd30d1d', new UserPreferenceEntity({
-				defaultTheme: 'DARK',
-			}).getAttributes()))
-				.rejects.toMatchObject({
-					name: 'internal',
-					message: 'Error to comunicate with database',
-				});
+			await expect(
+				userPreferenceService.update(
+					'a5483856-1bf7-4dae-9c21-d7ea4dd30d1d',
+					new UserPreferenceEntity({
+						defaultTheme: 'DARK',
+					}).getAttributes(),
+				),
+			).rejects.toMatchObject({
+				name: 'internal',
+				message: 'Error to comunicate with database',
+			});
 			expect(userPreferenceRepositoryMock.update).toHaveBeenCalledTimes(1);
 		});
 	});

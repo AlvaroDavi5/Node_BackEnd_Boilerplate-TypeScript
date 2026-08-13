@@ -5,7 +5,6 @@ import SyncCronTask from '@core/cron/tasks/SyncCron.task';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 import { CronJobsEnum } from '../cronJobs.enum';
 
-
 @Injectable()
 export default class SyncCronJob {
 	public readonly name: string;

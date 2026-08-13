@@ -6,7 +6,6 @@ import compression from 'compression';
 import { getObjValues } from '@common/utils/dataValidations.util';
 import { HttpMethodsEnum } from '@common/enums/httpMethods.enum';
 
-
 export const fastifyAdapter = new FastifyAdapter({
 	bodyLimit: 10 * 1024 * 1024,
 	routerOptions: {

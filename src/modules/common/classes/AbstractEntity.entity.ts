@@ -1,10 +1,8 @@
 import { fromISOToDateTime, fromDateTimeToJSDate, getDateTimeNow } from '@common/utils/dates.util';
 import { TimeZonesEnum } from '@common/enums/timeZones.enum';
 
-
 export default abstract class AbstractEntity<I = unknown> {
-
-	public validate(): { value: unknown, valid: boolean, error: Error | null } {
+	public validate(): { value: unknown; valid: boolean; error: Error | null } {
 		let value: unknown = null;
 		let valid = false;
 		let error: Error | null = null;

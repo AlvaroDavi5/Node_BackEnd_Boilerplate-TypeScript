@@ -5,7 +5,6 @@ import { Logger } from 'winston';
 import LoggerService from '@core/logging/Logger.service';
 import { dbConfig } from './db.config';
 
-
 export async function testConnection(connection: DataSource, logger?: Logger | LoggerService | Console): Promise<boolean> {
 	try {
 		await connection.query('select version()').then(() => {
@@ -47,21 +46,15 @@ const DatabaseConnectionProvider: Provider = {
 	provide: DATABASE_CONNECTION_PROVIDER,
 	scope: Scope.DEFAULT,
 
-	inject: [
-		LoggerService,
-	],
-	useFactory: async (
-		logger: LoggerService,
-		..._args: unknown[]
-	): Promise<DataSource> => {
+	inject: [LoggerService],
+	useFactory: async (logger: LoggerService, ..._args: unknown[]): Promise<DataSource> => {
 		const connection = new DataSource(dbConfig);
 		logger.setContextName('DatabaseConnectionProvider');
 
 		try {
 			const isInitialized = await testConnection(connection);
 
-			if (isInitialized)
-				return connection;
+			if (isInitialized) return connection;
 			return await connection.initialize();
 		} catch (error) {
 			logger.error(error);

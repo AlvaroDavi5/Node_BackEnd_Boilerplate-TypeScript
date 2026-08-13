@@ -1,7 +1,6 @@
 import { isNullOrUndefined, isEmpty, getObjKeys, getObjValues } from '@common/utils/dataValidations.util';
 import { checkFieldsExistence, replaceFields, cloneObject } from '@common/utils/objectRecursiveFunctions.util';
 
-
 describe('Modules :: Common :: Utils :: DataObjects', () => {
 	describe('# Data Validations', () => {
 		test('Check nullish and definition', () => {
@@ -19,7 +18,6 @@ describe('Modules :: Common :: Utils :: DataObjects', () => {
 			expect(isEmpty({})).toBeTruthy();
 			expect(isEmpty({ key: 'value' })).toBeFalsy();
 		});
-
 
 		test('Get object keys and values', () => {
 			expect(getObjKeys(null)).toEqual([]);

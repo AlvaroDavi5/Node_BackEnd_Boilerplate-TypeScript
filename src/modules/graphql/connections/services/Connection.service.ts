@@ -5,14 +5,11 @@ import SubscriptionService from '@app/subscription/services/Subscription.service
 import CreateConnectionInputDto from '../dto/CreateConnectionInput.dto';
 import UpdateConnectionInputDto from '../dto/UpdateConnectionInput.dto';
 
-
 @Injectable()
 export default class ConnectionService implements OnModuleInit {
 	private subscriptionService!: SubscriptionService;
 
-	constructor(
-		private readonly moduleRef: ModuleRef,
-	) { }
+	constructor(private readonly moduleRef: ModuleRef) {}
 
 	public onModuleInit(): void {
 		this.subscriptionService = this.moduleRef.get(SubscriptionService, { strict: false });

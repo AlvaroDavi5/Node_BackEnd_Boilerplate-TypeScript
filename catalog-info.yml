@@ -5,6 +5,11 @@ metadata:
   description: Node.js Boilerplate for Back-End using TypeScript
   annotations:
     github.com/project-slug: AlvaroDavi5/Node_BackEnd_Boilerplate-TypeScript
+    # TechDocs build only works when this component is registered via a github.com URL
+    # (or the github integration/dir: locally) since that resolves through GithubUrlReader,
+    # which supports readTree. When registered via a raw.githubusercontent.com url location,
+    # it resolves through FetchUrlReader instead, which only supports readUrl and fails
+    # TechDocs generation with "FetchUrlReader does not implement readTree".
     backstage.io/techdocs-ref: dir:.
   tags:
     - backend

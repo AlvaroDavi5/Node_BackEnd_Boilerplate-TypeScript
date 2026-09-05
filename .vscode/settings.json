@@ -35,6 +35,15 @@
 	"git.enableSmartCommit": true,
 	"git.openRepositoryInParentFolders": "always",
 	// Extensions
+	"material-icon-theme.activeIconPack": "nest",
+	"vsicons.presets.nestjs": true,
+	"vsicons.presets.angular": false,
+	"vsicons.presets.tsOfficial": true,
+	"vsicons.presets.jsOfficial": true,
+	"oxc.enable.oxlint": true,
+	"oxc.enable.oxfmt": true,
+	"eslint.enable": false,
+	"eslint.format.enable": false,
 	"oxc.configPath": ".oxlintrc.json",
 	"oxc.fmt.configPath": ".oxfmtrc.json",
 	"diffEditor.ignoreTrimWhitespace": false,
@@ -45,11 +54,8 @@
 	"[ignore]": {
 		"editor.defaultFormatter": "EditorConfig.EditorConfig"
 	},
-	"[dbml]": {
-		"editor.defaultFormatter": "matt-meyers.vscode-dbml"
-	},
-	"[apiblueprint]": {
-		"editor.defaultFormatter": "develiteio.api-blueprint-viewer"
+	"[editorconfig]": {
+		"editor.defaultFormatter": "EditorConfig.EditorConfig"
 	},
 	"[chatagent]": {
 		"editor.defaultFormatter": "vscode.markdown-language-features"
@@ -66,10 +72,16 @@
 	"[markdown]": {
 		"editor.defaultFormatter": "vscode.markdown-language-features"
 	},
-	"[typescript]": {
-		"editor.defaultFormatter": "vscode.typescript-language-features"
+	"[dbml]": {
+		"editor.defaultFormatter": "matt-meyers.vscode-dbml"
+	},
+	"[apiblueprint]": {
+		"editor.defaultFormatter": "develiteio.api-blueprint-viewer"
 	},
 	"[javascript]": {
+		"editor.defaultFormatter": "vscode.typescript-language-features"
+	},
+	"[typescript]": {
 		"editor.defaultFormatter": "vscode.typescript-language-features"
 	},
 	"[dockerfile]": {
@@ -89,9 +101,7 @@
 	},
 	"json.schemas": [
 		{
-			"fileMatch": [
-				"/package.json"
-			],
+			"fileMatch": ["/package.json"],
 			"url": "https://json.schemastore.org/package",
 			"schema": true
 		}

@@ -6,6 +6,8 @@ applyTo: '{src,tests,scripts}/**/*.{ts,js}'
 
 # Architecture Flow And Code Style
 
+Use when implementing or refactoring backend features in NestJS/TypeScript. Enforces architecture flow trigger -> logic_provider -> data_provider, provider responsibilities, naming conventions, immutability and clean code practices.
+
 ## Mandatory Architecture Flow
 
 - Respect this execution order: `trigger -> logic_provider -> data_provider`.
@@ -83,9 +85,10 @@ Responsibilities:
 
 ## Formatting and Lint
 
-- All generated and modified code must pass Oxlint rules defined in `.oxlintrc.json`.
-- Formatting must match Oxfmt (`.oxfmtrc.json`) and the EditorConfig rules in `.editorconfig` (tabs, single quotes, LF, 160 columns).
-- Do not bypass lint rules with `// oxlint-disable` unless there is a documented reason.
+- All generated and modified code must pass the project's configured linter/formatter, whichever toolchain the project uses:
+  - **ESLint + Prettier**: code must pass ESLint rules defined in `eslint.config.ts`, and formatting must match the Prettier configuration in the project.
+  - **Oxc (oxlint + oxfmt)**: code must pass oxlint rules defined in the project's `.oxlintrc.json` (or equivalent), and formatting must match the project's oxfmt configuration.
+- Do not bypass lint rules with `// eslint-disable` or the equivalent oxlint suppression comment (`// oxlint-disable`) unless there is a documented reason.
 
 ## Implementation Checklist
 
@@ -96,4 +99,4 @@ Responsibilities:
 - [ ] Complex conditions are extracted to named booleans.
 - [ ] `const` is used wherever reassignment is not needed.
 - [ ] Naming conventions (`camelCase`, `PascalCase`, `SNAKE_CASE`) are respected.
-- [ ] Code passes Oxlint linting and Oxfmt formatting.
+- [ ] Code passes lint and formatting checks (ESLint/Prettier or oxlint/oxfmt, per the project's toolchain).

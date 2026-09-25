@@ -77,7 +77,7 @@ tests/
 
 ## Unit Tests
 
-All unit test patterns, mock rules, describe label format, scenario groups, exception assertion pattern, and scenarios to cover are defined in [`create-usecase-with-tests.instructions.md`](./../instructions/create-usecase-with-tests.instructions.md) — follow them strictly.
+All unit test patterns, mock rules, describe label format, scenario groups, exception assertion pattern, and scenarios to cover are defined in [`create-usecase-with-tests.instructions.md`](../instructions/create-usecase-with-tests.instructions.md) — follow them strictly.
 
 ## Integration Tests
 

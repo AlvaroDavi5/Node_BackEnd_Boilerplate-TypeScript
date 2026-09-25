@@ -1,6 +1,7 @@
 ---
 name: find-edge-cases
 description: Hunt the edge cases in code at a fixed point (commit, branch, tag, `HEAD`, `HEAD~5`) — boundary inputs, empty/null, overflow, concurrency, time, and failure modes the code doesn't handle — and validate each with a concrete trigger before presenting it, so the user decides on real cases, not speculation. Use when the user asks what could break, what edge cases are missed, to stress-test a function or change, or to check robustness before shipping.
+user-invocable: true
 ---
 
 An **edge case** is a boundary input or state the code meets but doesn't handle correctly. A candidate becomes a real edge case only when you can name its **trigger** — the concrete input or state that drives _this_ code to a crash, wrong result, corruption, or hang. **No trigger, no edge case.** The skill's job is to separate real cases from speculation and hand the user only the validated ones, each with the evidence to decide.

@@ -13,10 +13,11 @@ initSentry({
 	enabled: environment === EnvironmentsEnum.PRODUCTION,
 	environment,
 	integrations: [nodeProfilingIntegration(), captureConsoleIntegration(), consoleIntegration()],
-	profilesSampleRate: 0.1,
+	profileSessionSampleRate: 0.1,
+	profileLifecycle: 'trace',
 	tracesSampleRate: 0.1,
 	tracePropagationTargets: [],
-	sendDefaultPii: true,
+	dataCollection: { userInfo: true },
 	release: `${packageName}@${packageVersion}`,
 	debug: showExternalLogs,
 	beforeSend(event, _hint) {

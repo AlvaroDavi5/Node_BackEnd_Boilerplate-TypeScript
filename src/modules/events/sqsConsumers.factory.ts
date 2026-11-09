@@ -1,4 +1,4 @@
-import { SqsConsumerOptions } from '@ssut/nestjs-sqs/dist/sqs.types';
+import type { SqsConsumerOptions } from '@events/queue/sqs/sqs.types';
 import { SQSClient } from '@aws-sdk/client-sqs';
 import envsConfig from '@core/configs/envs.config';
 import { secondsToMilliseconds } from '@common/utils/dates.util';
